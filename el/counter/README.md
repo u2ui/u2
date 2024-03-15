@@ -1,4 +1,4 @@
-# &lt;u1-counter&gt; - element
+# &lt;u2-counter&gt; - element
 Animated Number Counter
 
 ## Features
@@ -13,14 +13,14 @@ Animated Number Counter
 - Counter elements get a css variable `--finalWidth` which is set to their `min-width` by default.
 - Use the inner HTML as fallback.
 
-## Ussage
+## Usage
 
 ```html
-<u1-counter from=-11.0 value=200.0>200.0</u1-counter>
+<u2-counter from=-11.0 value=200.0>200.0</u2-counter>
 ```
 
 ```css
-u1-counter {
+u2-counter {
     font-size:3rem;
     text-align:right;
     padding:.3em;
@@ -31,17 +31,32 @@ u1-counter {
 ## Install
 
 ```html
-<link href="../../../counter.el@x.x.x/counter.min.css" rel=stylesheet>
-<script src="../../../counter.el@x.x.x/counter.min.js" type=module>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/counter/counter.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/counter/counter.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/counter.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/counter.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/counter/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/counter/tests/test.html)  
+
+## Ussage
+
+```html
+<u2-counter from=-11.0 value=200.0>200.0</u2-counter>
+```
+
+```css
+u2-counter {
+    font-size:3rem;
+    text-align:right;
+    padding:.3em;
+    background:var(--color-area);
+}
+```
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

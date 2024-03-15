@@ -326,7 +326,7 @@ summary::after {
 	float: right;
 	transition: transform .2s;
 	/* customize
-	font-family:--u1-ico-font;
+	font-family:--u2-ico-font;
 	background-image: var(--ico-chevron);
 	background-position: center;
 	background-repeat: no-repeat;

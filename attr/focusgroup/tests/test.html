@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../../../u1/tests/test-init.js" type=module></script>
-        <title>Attribute u1-focusgroup tests</title>
+        <script src="../../../u2/tests/test-init.js" type=module></script>
+        <title>Attribute u2-focusgroup tests</title>
 
         <link rel=stylesheet href="../../../base.css/full.css">
         <link rel=stylesheet href="../../../classless.css/variables.css">
@@ -17,9 +17,9 @@
     <body>
 
     <section>
-        <h2>u1-focusgroup</h2>
+        <h2>u2-focusgroup</h2>
 
-        <div style="display:flex; gap:1rem" u1-focusgroup>
+        <div style="display:flex; gap:1rem" u2-focusgroup>
             <button>press left or up key to focus the previous button</button>
             <button disabled>disabled</button>
             <button>press right or down key to focus the next button</button>
@@ -27,7 +27,7 @@
     </section>
 
     <section>
-        <h2>u1-focusgroup="wrap remember"</h2>
+        <h2>u2-focusgroup="wrap remember"</h2>
         <p>
             <strong>Wrap:</strong> If the last element has focus the next will be the first element.
         </p>
@@ -35,7 +35,7 @@
             <strong>Remember:</strong> If you come back to the group the last focused element will be focused. (The others can not be focused by tab-key.)
         </p>
 
-        <div style="display:flex; gap:1rem" u1-focusgroup="wrap remember">
+        <div style="display:flex; gap:1rem" u2-focusgroup="wrap remember">
             <label>1. <input type="checkbox"></label>
             <label>2. <input type="checkbox"></label>
             <label>3. <input type="checkbox"></label>
@@ -43,16 +43,16 @@
     </section>
 
     <section>
-        <h2>u1-focusgroup="horizontal" / "vertical"</h2>
+        <h2>u2-focusgroup="horizontal" / "vertical"</h2>
 
-        <fieldset style="display:flex; gap:1rem; " u1-focusgroup="horizontal">
+        <fieldset style="display:flex; gap:1rem; " u2-focusgroup="horizontal">
             <legend>horizontal</legend>
             <div tabindex="0">1</div>
             <div tabindex="-1">tabindex=-1</div>
             <div tabindex="0">2</div>
         </fieldset>
 
-        <fieldset style="display:flex; gap:1; flex-direction: column;" u1-focusgroup="vertical">
+        <fieldset style="display:flex; gap:1; flex-direction: column;" u2-focusgroup="vertical">
             <legend>vertical</legend>
             <div tabindex="0">1</div>
             <div tabindex="0">2</div>
@@ -67,7 +67,7 @@
         <script>
         const shadow = shadowTest.attachShadow({mode: 'open'});
         shadow.innerHTML = `
-            <div style="display:flex; gap:1rem" u1-focusgroup>
+            <div style="display:flex; gap:1rem" u2-focusgroup>
                 <button>press left or up key to focus the previous button</button>
                 <button>press right or down key to focus the next button</button>
             </div>
@@ -78,7 +78,7 @@
     <section>
         <h2>Using different input fields</h2>
 
-        <div style="display:flex; flex-direction:column; gap:1rem" u1-focusgroup>
+        <div style="display:flex; flex-direction:column; gap:1rem" u2-focusgroup>
             <label>
                 text
                 <input type="text">
@@ -125,30 +125,30 @@
  </style>
 </head>
 <body>
- <div u1-focusgroup>
+ <div u2-focusgroup>
    <input type="checkbox">
    <input type="checkbox">
  </div>
- <fieldset u1-focusgroup>
+ <fieldset u2-focusgroup>
    <legend>shopping list</legend>
-   <label u1-focusgroup="extends wrap"><input type="checkbox">Apples</label>
-   <label u1-focusgroup="extends"><input type="checkbox">Bananas</label>
-   <label u1-focusgroup="extends wrap"><input type="checkbox">Carrots</label>
-   <label u1-focusgroup="extends"><input type="checkbox">Tomatoes</label>
+   <label u2-focusgroup="extends wrap"><input type="checkbox">Apples</label>
+   <label u2-focusgroup="extends"><input type="checkbox">Bananas</label>
+   <label u2-focusgroup="extends wrap"><input type="checkbox">Carrots</label>
+   <label u2-focusgroup="extends"><input type="checkbox">Tomatoes</label>
  </fieldset>
  <p>Pretend radio buttons (wrapping)</p>
- <div u1-focusgroup="wrap">
+ <div u2-focusgroup="wrap">
    <span tabindex="0" class="fakeradio"></span>
    <span tabindex="-1" class="fakeradio"></span>
    <span tabindex="-1" class="fakeradio"></span>
    <span tabindex="-1" class="fakeradio"></span>
  </div>
  <p>vertical menu (with horizontal submenus)</p>
- <div u1-focusgroup="vertical" role="menu">
+ <div u2-focusgroup="vertical" role="menu">
   <div tabindex=0 role="menuitem">menu item 1</div>
   <div tabindex=-1 role="menuitem">menu item 2</div>
   <div tabindex=-1 role="menuitem">menu item 3</div>
-  <div tabindex=-1 u1-focusgroup="extends horizontal wrap" aria-orientation="horizontal" style="display: flex;justify-content: space-evenly" >
+  <div tabindex=-1 u2-focusgroup="extends horizontal wrap" aria-orientation="horizontal" style="display: flex;justify-content: space-evenly" >
     <span tabindex=-1 role="menuitem">sub 3.1</span>
     <span tabindex=-1 role="menuitem">sub 3.2</span>
   </div>

@@ -1,9 +1,9 @@
-// checks for the "u1-target" query parameter and calls the on/off functions
-// e.g. ?u1-target=details1+checkbox3+dialog1
+// checks for the "u2-target" query parameter and calls the on/off functions
+// e.g. ?u2-target=details1+checkbox3+dialog1
 
 const observers = new Set();
 
-export class U1TargetObserver {
+export class U2TargetObserver {
 	constructor(opts) {
 		this.opts = opts;
 		observers.add(this);
@@ -35,7 +35,7 @@ let actives = new Set();
 
 function checkTargets(){
 	const newest = new Set();
-	const param = new URL(location).searchParams.get('u1-target');
+	const param = new URL(location).searchParams.get('u2-target');
 	if (param) {
         for (const item of param.split(' ')) {
             const el = item && document.getElementById(item);
@@ -64,12 +64,12 @@ checkTargets();
 // togglelParam
 export function toggleParam(id, force, replace){
 	const url = new URL(location);
-	const targets = new Set((url.searchParams.get('u1-target')||'').split(' '));
+	const targets = new Set((url.searchParams.get('u2-target')||'').split(' '));
     const isPresent = targets.has(id);
     const shouldAdd = force ?? !isPresent;
     if (shouldAdd === isPresent) return;
     shouldAdd ? targets.add(id) : targets.delete(id);
-    url.searchParams.set('u1-target', [...targets].join(' '));
+    url.searchParams.set('u2-target', [...targets].join(' '));
     history[replace?'replaceState':'pushState'](null, '', url.href);
     checkTargets();
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
-    <script src="../../../u1/tests/test-init.js" type=module></script>
+    <script src="../../../u2/tests/test-init.js" type=module></script>
 
     <link rel=stylesheet href="../../../base.css/full.css">
     <link rel=stylesheet href="../../../classless.css/variables.css">
@@ -27,13 +27,13 @@
 
     <section>
         <h2>Test Simple text (attribute autoplay, loop)</h2>
-        <u1-typewriter autoplay loop>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u1-typewriter>
+        <u2-typewriter autoplay loop>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u2-typewriter>
 
         <h2>Attribute autoplay</h2>
         <p>start / stops when visible / hidden</p>
         <div style="overflow:auto; height:100px;">
             <div style="margin-bottom:100px">scroll down!</div>
-            <u1-typewriter autoplay loop>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u1-typewriter>
+            <u2-typewriter autoplay loop>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u2-typewriter>
         </div>
 
         <h2>API</h2>
@@ -41,21 +41,21 @@
         <button onclick="tw1.pause()">pause()</button>
         <button onclick="tw1.reset()">reset()</button>
         <br>
-        <u1-typewriter id=tw1 audio style="font-family:'Special Elite'">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u1-typewriter>
+        <u2-typewriter id=tw1 audio style="font-family:'Special Elite'">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u2-typewriter>
         <script>
-            tw1.addEventListener('u1-typewriter-end', () => {
-                alert('event "u1-typewriter-end" fired');
+            tw1.addEventListener('u2-typewriter-end', () => {
+                alert('event "u2-typewriter-end" fired');
             });
         </script>
 
         <h2>Test formated Text and CSS</h2>
-        style.setProperty('--u1-typewriter-speed', this.value): <input value=30 type=range onchange="tw2.style.setProperty('--u1-typewriter-speed', this.value)" min=10 max=500>
+        style.setProperty('--u2-typewriter-speed', this.value): <input value=30 type=range onchange="tw2.style.setProperty('--u2-typewriter-speed', this.value)" min=10 max=500>
         <br>
-        <u1-typewriter autoplay loop id=tw2 style="--u1-typewriter-speed:30">
+        <u2-typewriter autoplay loop id=tw2 style="--u2-typewriter-speed:30">
             Non visible chars on this pre-element are display:none
             <pre style="overflow:visible">Lorem <b>ips<i>um</i></b> dolor<br>sit <i>amet</i>, consectetur <a href="#">adipiscing</a></pre>
             The end.
-        </u1-typewriter>
+        </u2-typewriter>
         <style contenteditable style="display:block">
 #tw2 {
     display:block;

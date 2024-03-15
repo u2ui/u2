@@ -14,7 +14,7 @@ class mesonry {
         const container = this.el;
         const widthContainer = container.clientWidth;
         if (!widthContainer) return;
-        let minWidth = cssLengthToPixelsStyle(container, '--u1-Items-width') || 200;
+        let minWidth = cssLengthToPixelsStyle(container, '--u2-Items-width') || 200;
         const rowGap = cssLengthToPixelsStyle(container, 'row-gap') ?? 0;
         const columnGap = cssLengthToPixelsStyle(container, 'column-gap') ?? 0;
         minWidth = Math.min(widthContainer, minWidth);
@@ -47,7 +47,7 @@ function sortByHeight(a, b){
 import {SelectorObserver} from '../../js/SelectorObserver/SelectorObserver.js'
 new SelectorObserver({
     on: el => new mesonry(el),
-}).observe('[u1-masonry]');
+}).observe('[u2-masonry]');
 
 
 /* helper */

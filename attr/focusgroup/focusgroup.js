@@ -19,7 +19,7 @@ addEventListener('keydown', e => {
 		if (target.tagName === 'TEXTAREA') return;
 	}
 
-	const tmp = container.getAttribute('u1-focusgroup').split(' ');
+	const tmp = container.getAttribute('u2-focusgroup').split(' ');
 	const options = Object.fromEntries(tmp.map(o => [o, true]));
 	if (!options.horizontal && !options.vertical) {
 		options.horizontal = true;
@@ -56,7 +56,7 @@ addEventListener('keydown', e => {
 addEventListener('focusin', e => {
 	const {target, container} = eventTargets(e);
 	if (!container) return;
-	const remember = container.getAttribute('u1-focusgroup').split(' ').includes('remember');
+	const remember = container.getAttribute('u2-focusgroup').split(' ').includes('remember');
 	if (!remember) return;
 	groupItems(container).forEach(el => el.setAttribute('tabindex', el === target ? '0' : '-1'));
 });
@@ -64,7 +64,7 @@ addEventListener('focusin', e => {
 
 
 function groupItems(container) {
-	const selector = ' :not(u1-focusgroup) a[href], button, input, select, textarea, [contenteditable], [tabindex]';
+	const selector = ' :not(u2-focusgroup) a[href], button, input, select, textarea, [contenteditable], [tabindex]';
 	const elements = [...container.querySelectorAll(selector)];
 
 	// handle slotted elements, beta
@@ -79,13 +79,13 @@ function groupItems(container) {
 
 function eventTargets(event){
 	let target = event.target;
-	let container = target.closest('[u1-focusgroup]');
+	let container = target.closest('[u2-focusgroup]');
 	if (!container) { // inside shadow dom
 		target = event.originalTarget; // only for firefox?
 		if (!target) return {};
-		container = target.closest('[u1-focusgroup]');
+		container = target.closest('[u2-focusgroup]');
 	}
-	if (!container) container = target.assignedSlot?.closest('[u1-focusgroup]'); // if slotted, ok?
+	if (!container) container = target.assignedSlot?.closest('[u2-focusgroup]'); // if slotted, ok?
 	return {
 		target,
 		container

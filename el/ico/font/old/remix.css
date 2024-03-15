@@ -11,5 +11,5 @@
     font-weight: 400;
     src: url(https://cdn.jsdelivr.net/npm/remixicon-ligatures@2.5.0/fonts/RemixFilled.woff2) format('woff2');
   }
-  u1-ico[font=remix] { --u1-ico-font:RemixFilled; }
-  u1-ico[font=remix][variant=outlined] { --u1-ico-font:RemixOutlined; }
+  u2-ico[font=remix] { --u2-ico-font:RemixFilled; }
+  u2-ico[font=remix][variant=outlined] { --u2-ico-font:RemixOutlined; }

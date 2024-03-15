@@ -9,7 +9,7 @@
           {
             "kind": "class",
             "description": "A custom HTML element for displaying icons from any icon set, icon font, or SVG directory.",
-            "name": "u1-ico",
+            "name": "u2-ico",
             "members": [],
             "events": [],
             "attributes": [
@@ -30,14 +30,14 @@
             ],
             "cssProperties": [
                 {
-                  "name": "--u1-ico-dir",
+                  "name": "--u2-ico-dir",
                   "type": {
                     "text": "string"
                   },
                   "description": "The directory where the SVG icons are located."
                 },
                 {
-                  "name": "--u1-ico-font",
+                  "name": "--u2-ico-font",
                   "type": {
                     "text": "string"
                   },
@@ -47,14 +47,14 @@
             "superclass": {
               "name": "HTMLElement"
             },
-            "tagName": "u1-ico",
+            "tagName": "u2-ico",
             "customElement": true
           }
         ],
         "exports": [
           {
             "kind": "custom-element-definition",
-            "name": "u1-ico",
+            "name": "u2-ico",
             "declaration": {
               "name": "uIco",
               "module": "ico.js"

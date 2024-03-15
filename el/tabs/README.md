@@ -1,4 +1,4 @@
-# &lt;u1-tabs&gt; - element
+# &lt;u2-tabs&gt; - element
 rendering tabs
 
 ## Features
@@ -11,7 +11,7 @@ rendering tabs
 ## Usage
 
 ```html
-<u1-tabs>
+<u2-tabs>
     <h4>Tab 1</h4>
     <article>content 1</article>
     <div slot="title" selected>Tab 2</div>
@@ -22,11 +22,11 @@ rendering tabs
         nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
         reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
     </div>
-</u1-tabs>
+</u2-tabs>
 ```
 
 ```css
-u1-tabs {
+u2-tabs {
     max-height:30rem;
 }
 ```
@@ -34,17 +34,17 @@ u1-tabs {
 ## Install
 
 ```html
-<link href="../../../tabs.el@x.x.x/tabs.css" rel=stylesheet>
-<script src="../../../tabs.el@x.x.x/tabs.min.js" type=module></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tabs/tabs.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tabs/tabs.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/tabs.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/tabs.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/tabs/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/tabs/tests/test.html)  
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

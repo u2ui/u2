@@ -1,24 +1,15 @@
 # base.css
 ⏚ Usefull css defaults
 
-## Usage
-
-```html
-<link rel=stylesheet href="../../../norm.css/norm.min.css">
-<link rel=stylesheet href="../../../base.css/base.min.css">
-<link rel=stylesheet href="../../../base.css/print.min.css" media=print>
-<link rel=stylesheet href="../../../base.css/nomotion.min.css" media=prefers-reduced-motion>
-```
-
 ## Demos
 
-[nomotion.html](http://gcdn.li/u1ui/base.css@main/tests/nomotion.html)  
-[test.html](http://gcdn.li/u1ui/base.css@main/tests/test.html)  
+[nomotion.html](http://gcdn.li/u2ui/u2@main/css/base/tests/nomotion.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/css/base/tests/test.html)  
 
 ## Description
 
 - lightweight
-- based on https://github.com/u1ui/norm.css.  
+- based on https://github.com/u2ui/norm.css.  
 - There is a beta.css for styles not yet definite
 
 ## Resources
@@ -29,6 +20,6 @@ https://github.com/elad2412/the-new-css-reset/blob/main/css/reset.css
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

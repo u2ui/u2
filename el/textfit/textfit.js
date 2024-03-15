@@ -66,4 +66,4 @@ class textfit extends HTMLElement {
     }
 }
 
-customElements.define('u1-textfit', textfit);
+customElements.define('u2-textfit', textfit);

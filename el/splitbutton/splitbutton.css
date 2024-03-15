@@ -1,9 +1,9 @@
 /* functional styles */
-u1-splitbutton {
+u2-splitbutton {
     position:relative;
     display:inline-block;
 }
-u1-splitbutton menu {
+u2-splitbutton menu {
     position:absolute;
     z-index:1;
     isolation: isolate;
@@ -16,30 +16,30 @@ u1-splitbutton menu {
     visibility: hidden;
     transition: all .2s .1s;
 }
-u1-splitbutton menu > li {
+u2-splitbutton menu > li {
     list-style:none;
     margin:0;
     padding:.05em;
 }
-u1-splitbutton menu > li > button {
+u2-splitbutton menu > li > button {
     width:100%;
 }
-u1-splitbutton :is(:hover, :focus) + menu,
-u1-splitbutton menu:is(:hover, :focus-within) {
+u2-splitbutton :is(:hover, :focus) + menu,
+u2-splitbutton menu:is(:hover, :focus-within) {
     opacity:1;
     visibility: visible;
 }
 
 /* minimal styled */
-u1-splitbutton menu {
+u2-splitbutton menu {
     background:var(--color-bg, Canvas);
     border: 1px solid var(--color-text, CanvasText);
     border-radius: calc(var(--radius) + 2px);
 }
-u1-splitbutton menu hr {
+u2-splitbutton menu hr {
     margin:.2em 0;
 }
-u1-splitbutton menu button:not(:focus, :hover) {
+u2-splitbutton menu button:not(:focus, :hover) {
     background-color:transparent;
     color: var(--color-text, CanvasText);
 }

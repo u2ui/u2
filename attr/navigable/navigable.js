@@ -1,8 +1,8 @@
 import {TargetObserver} from './TargetObserver.js';
-import {U1TargetObserver, toggleParam} from './U1TargetObserver.js';
+import {U2TargetObserver, toggleParam} from './U2TargetObserver.js';
 
 
-// translate hash-links to "u1-navigable"-elements into "u1-target"-params
+// translate hash-links to "u2-navigable"-elements into "u2-target"-params
 new TargetObserver({
 	on: (el) => {
 		toggleParam(el.id, true, true);
@@ -10,47 +10,47 @@ new TargetObserver({
 		url.hash = '';
 		history.replaceState(null, '', url.href);
 	},
-	matches: '[u1-navigable]'
+	matches: '[u2-navigable]'
 })
 
 
 /* dialog element */
 // TODO: there is no open-event, so we can not change the url if its opened by .showModal() mybe "invoke-event" some day?
-new U1TargetObserver({
+new U2TargetObserver({
     on:  el => !el.open && el.showModal(),
     off: el => el.close(),
-    matches: 'dialog[u1-navigable]',
+    matches: 'dialog[u2-navigable]',
 });
 addEventListener('close',e=>{
 	const el = e.target;
-	if (!el.matches('dialog[u1-navigable]')) return;
+	if (!el.matches('dialog[u2-navigable]')) return;
 	toggleParam(el.id, false);
 },true);
 
 
 /* details */
-new U1TargetObserver({
+new U2TargetObserver({
 	on:  el => el.open = true,
 	off: el => el.open = false,
-	matches: 'details[u1-navigable]',
+	matches: 'details[u2-navigable]',
 });
 addEventListener('toggle',e=>{
 	const el = e.target;
-	if (!el.matches('details[u1-navigable][id]')) return;
+	if (!el.matches('details[u2-navigable][id]')) return;
 	if (el.open) toggleParam(el.id, true);
 	else toggleParam(el.id, false);
 },true);
 
 
 /* checkbox and radio */
-new U1TargetObserver({
+new U2TargetObserver({
 	on:  el => el.checked = true,
 	off: el => el.checked = false,
-	matches: 'input:is([type=checkbox],[type=radio])[u1-navigable]',
+	matches: 'input:is([type=checkbox],[type=radio])[u2-navigable]',
 });
 addEventListener('change',e=>{
 	const el = e.target;
-	if (!el.matches('input:is([type=checkbox],[type=radio])[u1-navigable][id]')) return;
+	if (!el.matches('input:is([type=checkbox],[type=radio])[u2-navigable][id]')) return;
 
 	if (el.type === 'radio') {
 		const elements = el.form ? el.form.elements[el.name] : document.getElementsByName(el.name);
@@ -63,14 +63,14 @@ addEventListener('change',e=>{
 
 
 /* popover */
-new U1TargetObserver({
+new U2TargetObserver({
     on: el => el.showPopover(),
     off: el => el.hidePopover(),
-    matches: '[popover][u1-navigable]',
+    matches: '[popover][u2-navigable]',
 });
 addEventListener('toggle', e => {
     const el = e.target;
-    if (!el.matches('[popover][u1-navigable][id]')) return;
+    if (!el.matches('[popover][u2-navigable][id]')) return;
 	const newState = e.newState;
 	toggleParam(el.id, newState === 'open');
 }, true);
@@ -78,10 +78,10 @@ addEventListener('toggle', e => {
 
 
 // beta
-// u1 unified api
-addEventListener('u1-activate', e => {
-    if (!e.target.hasAttribute('u1-navigable')) return;
-	if (!e.target.hasAttribute('id')) { console.warn('element with a u1-navigable attribute must have an id'); return; }
+// u2 unified api
+addEventListener('u2-activate', e => {
+    if (!e.target.hasAttribute('u2-navigable')) return;
+	if (!e.target.hasAttribute('id')) { console.warn('element with a u2-navigable attribute must have an id'); return; }
 	//e.preventDefault(); // needed?
 	location.href = '#' + e.target.id;
 });

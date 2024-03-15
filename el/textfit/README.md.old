@@ -1,0 +1,32 @@
+# &lt;u2-textfit&gt; - element
+Exactly fit text
+
+## Ussage
+
+```html
+<u2-textfit>ABCD</u2-textfit>
+```
+
+```css
+u2-textfit {
+    font-size: clamp(20px, var(--gen-font-size), 400px);
+}
+```
+
+## Install
+
+```html
+<link href="../../../textfit.el@x.x.x/textfit.min.css" rel=stylesheet>
+<script src="../../../textfit.el@x.x.x/textfit.min.js" type=module>
+```
+
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/textfit.el@main/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/textfit.el@main/tests/test.html)  
+
+## About
+
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
+- Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
+

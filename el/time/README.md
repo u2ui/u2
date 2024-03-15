@@ -1,4 +1,4 @@
-# &lt;u1-time&gt; - element
+# &lt;u2-time&gt; - element
 The better time-element, e.g. live changing relative dates
 
 ## Features
@@ -9,25 +9,25 @@ The better time-element, e.g. live changing relative dates
 ## Usage
 
 ```html
-<u1-time datetime="2013-04-01T18:02" type=relative lang=de>1. April 2013 18:02</u1-time>.
+<u2-time datetime="2013-04-01T18:02" type=relative lang=de>1. April 2013 18:02</u2-time>.
 ```
 
 ```css
-u1-time {
+u2-time {
 }
 ```
 
 ## Install
 
 ```html
-<link href="../../../time.el@x.x.x/time.min.css" rel=stylesheet>
-<script src="../../../time.el@x.x.x/time.min.js" type=module></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/time/time.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/time/time.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/time.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/time.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/time/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/time/tests/test.html)  
 
 ## Attributes
 
@@ -67,6 +67,6 @@ https://github.com/github/relative-time-element
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

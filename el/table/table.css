@@ -1,27 +1,27 @@
-u1-table {
+u2-table {
     display:block;
     overflow: auto;
 }
-u1-table[\:overflows][break] > table {
+u2-table[\:overflows][break] > table {
     display: block;
 }
-u1-table[\:overflows][break] > table > thead {
+u2-table[\:overflows][break] > table > thead {
     display:none;
 }
-u1-table[\:overflows][break] > table > * { /* group */
+u2-table[\:overflows][break] > table > * { /* group */
     display: block;
 }
-u1-table[\:overflows][break] > table > * > * { /* row */
+u2-table[\:overflows][break] > table > * > * { /* row */
     display: block;
 }
-u1-table[\:overflows][break] > table > * > * > * { /* cell */
+u2-table[\:overflows][break] > table > * > * > * { /* cell */
     display: flex;
     /* justify-content: space-between;*/
     gap: 0 1rem;
     padding: .2rem 0;
     padding-right:0;
 }
-u1-table[\:overflows][break] > table > * > * > *::before { /* cell */
+u2-table[\:overflows][break] > table > * > * > *::before { /* cell */
     content: attr(aria-label);
     display: block;
     font-weight: bold;
@@ -30,7 +30,7 @@ u1-table[\:overflows][break] > table > * > * > *::before { /* cell */
 
 
 /* trs in a grid *
-u1-table[\:overflows][break] tbody {
+u2-table[\:overflows][break] tbody {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min-content, 15rem));
   grid-gap: 1rem;
@@ -41,19 +41,19 @@ u1-table[\:overflows][break] tbody {
 /*
 left right using table
 
-u1-table[broken] > table {
+u2-table[broken] > table {
     display:table;
 }
-u1-table[broken] > table > * { /* group * /
+u2-table[broken] > table > * { /* group * /
     display:contents;
 }
-u1-table[broken] > table > * > tr {
+u2-table[broken] > table > * > tr {
     display:table-row-group;
 }
-u1-table[broken] > table > * > tr > * { /* cell * /
+u2-table[broken] > table > * > tr > * { /* cell * /
     display: table-row;
 }
-u1-table[broken] > table > * > * > ::before {
+u2-table[broken] > table > * > * > ::before {
     display:table-cell;
 }
 */

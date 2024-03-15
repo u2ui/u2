@@ -33,32 +33,32 @@
 }
 
 /* idea: bigger hit-areas */
-.u1-hitBig {
+.u2-hitBig {
     position:relative;
 }
-.u1-hitBig::after {
+.u2-hitBig::after {
     content:'';
     position:absolute;
     inset: calc( var(--hit-padding, .5rem) * -1 );
     background:#f001;
 }
 
-/* rename to u1-pad? */
-.u1-p {
+/* rename to u2-pad? */
+.u2-p {
     padding:1rem;
 }
-.u1-p :first-child {
+.u2-p :first-child {
     margin-top:0;
 }
-.u1-p :last-child {
+.u2-p :last-child {
     margin-bottom:0;
 }
 
 /*
-.u1-grow {
+.u2-grow {
     flex-grow:1;
 }
-.u1-flex-col {
+.u2-flex-col {
     display:flex;
     flex-direction:column;
 }
@@ -74,7 +74,7 @@ tailwind: .w-full
 bootstrap: .w-100
 codyhouse: .width-100%
 bulma: .is-fullwidth
-.u1-width-full {
+.u2-width-full {
     width:100%;
     width:-moz-available;
     width:-webkit-fill-available;

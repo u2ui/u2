@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <title>Attribute u1-href tests</title>
+        <title>Attribute u2-href tests</title>
 
         <link rel=stylesheet href="../../../base.css/full.css">
         <link rel=stylesheet href="../../../classless.css/variables.css">
@@ -16,17 +16,17 @@
     <body>
 
 <style>
-[u1-intersect] {
+[u2-intersect] {
     border:2px solid;
     padding:2rem;
     margin:5rem auto;
     background:red;
     width:50%;
 }
-[u1-intersect].u1-intersected {
+[u2-intersect].u2-intersected {
     background:green;
 }
-[u1-intersect~="above"] {
+[u2-intersect~="above"] {
     background:orange;
 }
 
@@ -36,28 +36,28 @@
 <div style="position:fixed; top:0; left:0; right:0; bottom:0; opacity:0.2; z-index:-1; border:20vh solid #A49CE1; border-width:20vh 20vw"></div>
 
 <div>
-    <div u1-intersect style="height:20vh; --u1-intersect-margin:0%;  --u1-intersect-threshold:0;" >
-        --u1-intersect-margin:0;<br>
-        --u1-intersect-threshold:0;
+    <div u2-intersect style="height:20vh; --u2-intersect-margin:0%;  --u2-intersect-threshold:0;" >
+        --u2-intersect-margin:0;<br>
+        --u2-intersect-threshold:0;
     </div>
-    <div u1-intersect style="height:20vh; --u1-intersect-margin:-20%;  --u1-intersect-threshold:0;" >
-        --u1-intersect-margin:-20%;<br>
-        --u1-intersect-threshold:0;
+    <div u2-intersect style="height:20vh; --u2-intersect-margin:-20%;  --u2-intersect-threshold:0;" >
+        --u2-intersect-margin:-20%;<br>
+        --u2-intersect-threshold:0;
     </div>
-    <div u1-intersect style="height:20vh; --u1-intersect-margin:-20%;  --u1-intersect-threshold:1;" >
-        --u1-intersect-margin:-20%;<br>
-        --u1-intersect-threshold:1;
+    <div u2-intersect style="height:20vh; --u2-intersect-margin:-20%;  --u2-intersect-threshold:1;" >
+        --u2-intersect-margin:-20%;<br>
+        --u2-intersect-threshold:1;
     </div>
-    <div u1-intersect style="height:20vh; --u1-intersect-margin:-20%;  --u1-intersect-threshold:0.25;" >
-        --u1-intersect-margin:-20%;<br>
-        --u1-intersect-threshold:0.25;
+    <div u2-intersect style="height:20vh; --u2-intersect-margin:-20%;  --u2-intersect-threshold:0.25;" >
+        --u2-intersect-margin:-20%;<br>
+        --u2-intersect-threshold:0.25;
     </div>
-    <div u1-intersect style="height:20vh;" class=selector1>
+    <div u2-intersect style="height:20vh;" class=selector1>
 <style style="display:block; font-size:.9rem">
-.selector1:not([u1-intersect~="0.5"]) {
+.selector1:not([u2-intersect~="0.5"]) {
     background:red;
 }
-.selector1:not([u1-intersect~="0.5"])[u1-intersect~="above"] {
+.selector1:not([u2-intersect~="0.5"])[u2-intersect~="above"] {
     background:orange;
 }
 </style>

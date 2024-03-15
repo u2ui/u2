@@ -10,7 +10,7 @@
         <link rel=stylesheet href="../../../classless.css/classless.css">
         <link rel=stylesheet href="../../../classless.css/more.css">
         <link rel=stylesheet href="../../../classless.css/simple.css">
-        <script type=module src="../../../u1/tests/test-init.js"></script>
+        <script type=module src="../../../u2/tests/test-init.js"></script>
 
 <body>
 
@@ -22,11 +22,11 @@
     <button onclick="toggleParam('details1', null)">toggle</button>
     <button onclick="toggleParam('details1', null, true)">toggle, no browser-back-history</button>
 
-    <details u1-navigable id=details1>
+    <details u2-navigable id=details1>
         <summary>summary 1</summary>
         More rext
     </details>
-    <details u1-navigable id=details2>
+    <details u2-navigable id=details2>
         <summary>summary 2</summary>
         More rext
     </details>
@@ -36,19 +36,19 @@
 
 <script type=module>
 
-import {U1TargetObserver, toggleParam} from "../U1TargetObserver.js";
+import {U2TargetObserver, toggleParam} from "../U2TargetObserver.js";
 window.toggleParam = toggleParam;
 
 
-new U1TargetObserver({
+new U2TargetObserver({
     on:  el => el.open = true,
     off: el => el.open = false,
-    matches:'details[u1-navigable]',
+    matches:'details[u2-navigable]',
 });
 
 addEventListener('toggle',e=>{
 	const el = e.target;
-	if (!el.matches('details[u1-navigable][id]')) return;
+	if (!el.matches('details[u2-navigable][id]')) return;
 	if (el.open) {
         toggleParam(el.id, true);
 	} else {

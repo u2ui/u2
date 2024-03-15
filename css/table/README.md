@@ -1,9 +1,9 @@
-# .u1-table - class
+# .u2-table - class
 Better tables
 
 ## Features
 
-- adds at the table definded paddings `--u1-Col-gap` `--u1-Col-gap` `--u1-Row-gap`
+- adds at the table definded paddings `--u2-Col-gap` `--u2-Col-gap` `--u2-Row-gap`
 - makes non-table elements table-like
 - Use modifier classes: 
     - Flex: To make table rows flex and break rows on smaller screens
@@ -14,7 +14,7 @@ Better tables
 ## Usage
 
 ```html
-<table class="u1-table -Flex -NoSideGaps -Sticky -Fields">
+<table class="u2-table -Flex -NoSideGaps -Sticky -Fields">
     <thead>
         <tr>
             <th>Name
@@ -41,25 +41,19 @@ Better tables
 ```
 
 ```css
-.u1-table {
-    --u1-Gap:2rem;
-    --u1-Col-gap:1rem;
+.u2-table {
+    --u2-Gap:2rem;
+    --u2-Col-gap:1rem;
 }
-```
-
-## Install
-
-```html
-<link href="../../../table.class@x.x.x/table.min.css" rel=stylesheet>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/table.class@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/table.class@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/css/table/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/css/table/tests/test.html)  
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../../../u1/tests/test-init.js" type=module></script>
-        <title>u1-ico Test</title>
+        <script src="../../../u2/tests/test-init.js" type=module></script>
+        <title>u2-ico Test</title>
 
         <link rel=stylesheet href="../../../base.css/full.css">
 
@@ -17,10 +17,10 @@
 <body>
 
     <section>
-        <h2>.u1-table class</h1>
+        <h2>.u2-table class</h1>
             <style contenteditable>
-.u1-table { border: 2px solid orange; }
-.u1-table > * > * { border-bottom: 2px solid black; } /* tr */
+.u2-table { border: 2px solid orange; }
+.u2-table > * > * { border-bottom: 2px solid black; } /* tr */
     </style>
     </section>
 
@@ -47,26 +47,26 @@
             </label>
             <h3>Set css-variables</h3>
             <label>
-                --u1-Gap
-                <input name="--u1-Gap">
+                --u2-Gap
+                <input name="--u2-Gap">
             </label><br>
             <label>
-                --u1-Row-Gap
-                <input name="--u1-Row-gap">
+                --u2-Row-Gap
+                <input name="--u2-Row-gap">
             </label><br>
             <label>
-                --u1-Col-Gap
-                <input name="--u1-Col-gap">
+                --u2-Col-Gap
+                <input name="--u2-Col-gap">
             </label><br>
         </form>
         <style>
-        :where(#demo .u1-table > * > * > *) {
+        :where(#demo .u2-table > * > * > *) {
             outline:1px solid #0001;
         }
         </style>
         <script type=module>
         let form = demo.querySelector('form')
-        let tables = Array.from(demo.querySelectorAll('.u1-table'));
+        let tables = Array.from(demo.querySelectorAll('.u2-table'));
         function write(){
             for (let el of form.elements) {
                 tables.forEach(table=>{
@@ -83,7 +83,7 @@
         </script>
         <div style="overflow:auto; padding:1rem; resize:both;">
             <h4>css Table</h4>
-            <div class="u1-table">
+            <div class="u2-table">
                 <div>
                     <label>
                         <span>Name</span>
@@ -97,7 +97,7 @@
             </div>
             <h4>Real Table</h4>
             <div style="height:200px; overflow:auto; position:relative">
-                <table class="u1-table">
+                <table class="u2-table">
                     <thead>
                         <tr>
                             <th>Name
@@ -140,7 +140,7 @@
         <section class=fieldsAlign>
             <h2>Fields align with "label"</h2>
             <div style="overflow:auto">
-                <div class="u1-table -Fields" style="width:max-content">
+                <div class="u2-table -Fields" style="width:max-content">
                     <div>
                         <label>
                             <span>Theme</span>
@@ -177,7 +177,7 @@
                 }
             </style>
             <div style="overflow:auto; resize:both; padding:1rem">
-                <div class="u1-table -Flex -Fields">
+                <div class="u2-table -Flex -Fields">
                     <div>
                         <label>
                             <span>Theme</span>

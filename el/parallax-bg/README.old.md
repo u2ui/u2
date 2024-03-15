@@ -10,14 +10,14 @@ Highly fantastic Parallax backgrounds
 - light weight
 
 ## Demos
-https://raw.githack.com/u1ui/parallax-bg.el/main/tests/demo.html  
-https://raw.githack.com/u1ui/parallax-bg.el/main/tests/minimal.html  
-https://raw.githack.com/u1ui/parallax-bg.el/main/tests/test.html  
-https://raw.githack.com/u1ui/parallax-bg.el/main/tests/visible.html  
+https://raw.githack.com/u2ui/parallax-bg.el/main/tests/demo.html  
+https://raw.githack.com/u2ui/parallax-bg.el/main/tests/minimal.html  
+https://raw.githack.com/u2ui/parallax-bg.el/main/tests/test.html  
+https://raw.githack.com/u2ui/parallax-bg.el/main/tests/visible.html  
 
 ## Ussage
 
-Create a element "u1-parallax-bg". It will be the parallax background of the closest element with the class `u1-parallax-bg-stage` or the closest positioned element (offsetParent).
+Create a element "u2-parallax-bg". It will be the parallax background of the closest element with the class `u2-parallax-bg-stage` or the closest positioned element (offsetParent).
 
 ```js
 import '../../../parallax-bg.el@x.x.x/parallax-bg.min.js';
@@ -26,13 +26,13 @@ import '../../../parallax-bg.el@x.x.x/parallax-bg.min.js';
 ```html
 <link rel=stylesheet href="../../../parallax-bg.el@x.x.x/parallax-bg.min.css">
 
-<div class=u1-parallax-bg-stage>
+<div class=u2-parallax-bg-stage>
 
     <h1> Content </h1>
 
-    <u1-parallax-bg style="--parallax-bg-speed:.7">
+    <u2-parallax-bg style="--parallax-bg-speed:.7">
         <img src="myCat.jpg" style="position:absolute; inset:0">
-    </u1-parallax-bg>
+    </u2-parallax-bg>
     
 </div>
 ```
@@ -42,4 +42,4 @@ The stylesheet and the class `parallax-bg-stage` on the parent element are optio
 
 # Also interesting
 Parallax scrolling Elements (not Backgrounds)
-https://github.com/u1ui/parallax.attr
+https://github.com/u2ui/parallax.attr

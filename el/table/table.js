@@ -1,5 +1,5 @@
 
-// creation of the u1-table element
+// creation of the u2-table element
 // todo? add roles like "table" to ensure it is a table even if untabeled using css?
 
 class Table extends HTMLElement {
@@ -46,7 +46,7 @@ class Table extends HTMLElement {
 
         this.resizeLimite = this.resizeLimite == null ? 1 : this.resizeLimite+1;
         if (this.resizeLimite>20) {
-            console.warn('debug: u1-table element resized to often');
+            console.warn('debug: u2-table element resized to often');
             setTimeout(()=>{
                 this.resizeLimite = 0;
             }, 400);
@@ -208,4 +208,4 @@ class Column {
     }
 }
 
-customElements.define('u1-table', Table);
+customElements.define('u2-table', Table);

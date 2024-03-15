@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
-    <!-- <script src="../../../u1/tests/test-init.js" type=module></script> -->
+    <!-- <script src="../../../u2/tests/test-init.js" type=module></script> -->
 
     <script src="../alert.js" type=module></script>                 
     <link rel=stylesheet href="../alert.css">
@@ -12,23 +12,23 @@
 
 <section>
 
-    <u1-alert open variant="info" dismissible icon="home">
+    <u2-alert open variant="info" dismissible icon="home">
         This is a dismissible success alert with an icon, and a lot of text to make it wrap. More text to make it wrap and just more and more
         <button slot=action>OK</button>
         <button slot=action>Cancel</button>
-    </u1-alert>
+    </u2-alert>
 
 </section>
 
 
 <style>
-    u1-alert {
+    u2-alert {
         border-width: 0 0 0 3px;
     }
-    u1-alert::part(close) {
+    u2-alert::part(close) {
         opacity:0.3;
     }
-    u1-alert::part(icon) {
+    u2-alert::part(icon) {
         font-size:2em;
     }            
 </style>

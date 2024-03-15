@@ -9,7 +9,7 @@
           {
             "kind": "class",
             "description": "A custom HTML element for displaying QR codes.",
-            "name": "u1Qrcode",
+            "name": "u2Qrcode",
             "members": [],
             "events": [],
             "attributes": [],
@@ -17,16 +17,16 @@
             "superclass": {
               "name": "HTMLElement"
             },
-            "tagName": "u1-qrcode",
+            "tagName": "u2-qrcode",
             "customElement": true
           }
         ],
         "exports": [
           {
             "kind": "custom-element-definition",
-            "name": "u1-qrcode",
+            "name": "u2-qrcode",
             "declaration": {
-              "name": "u1Qrcode",
+              "name": "u2Qrcode",
               "module": "qrcode.js"
             }
           }

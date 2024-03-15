@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <!--script src="../../../u2/tests/test-init.js" type=module></script-->
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../../../el/code/code.js" type=module></script>
+    <link rel=stylesheet href="../../../el/code/code.css">
+
+    <script src="../../ico.el/ico.js" type=module></script>
+    <link rel=stylesheet href="../../ico.el/ico.css">
+
+<body>
+
+<section>
+
+
+
+<style>    
+
+    body {
+        --color-red: oklch(70% 0.138 25);
+        --color-green: oklch(70% 0.138 165);
+        --color-yellow: oklch(70% 0.138 84);
+        --color-blue: oklch(70% 0.138 223);
+    }
+
+    #u2-notification-stack {
+        display:flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: stretch;
+        gap:.8rem;
+
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        max-width: 20rem;
+        width: 100%;
+        
+        overflow:auto;
+
+        padding: 2vmin;
+        z-index: 1000;
+        pointer-events:none;
+        & > * {
+            pointer-events: initial;
+        }
+    }
+
+    u2-alert {
+        /* border-radius:.5em; */
+        font-size: max(13px, .8rem);
+        padding: 1em;
+        background: white;
+        box-shadow: 0 0 .3em #0004;
+        border-top:.2em solid var(--color);
+        --u2-ico-dir: 'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
+    }
+    u2-alert:not([open], :focus-within, :hover) {
+        display:none;
+    }
+
+    /* animation */
+    @keyframes alert-animation {
+        from {
+            transform: scale(0.8);
+            opacity: 0.2;
+            margin-bottom:-4rem;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    u2-alert[open] {
+        will-change: transform, opacity, margin;
+        animation: alert-animation 0.2s ease-in;
+    }
+    u2-alert[type=success] { --color: var(--color-green); }
+    u2-alert[type=warn] { --color: var(--color-yellow); }
+    u2-alert[type=error] { --color: var(--color-red); }
+    u2-alert[type=info] { --color: var(--color-blue); }
+</style>
+
+<script type="module">
+// IMPLEMENTATION:
+
+import '../../focusgroup.attr/focusgroup.js';
+import '../../ico.el/ico.js';
+// import style-sheet:
+const style = document.createElement('link');
+style.rel = 'stylesheet';
+style.href = '../../ico.el/ico.css';
+document.head.appendChild(style);
+
+const toolsContainer = null;
+function getToolsContainer() {
+    const el = document.getElementById('u2-notification-stack');
+    if (el) return el;
+    const div = document.createElement('div');
+    div.id = 'u2-notification-stack';
+    document.body.appendChild(div);
+    return div;
+}
+
+
+class alert extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});
+        this.shadowRoot.innerHTML = `
+            <style>
+                @import url('../../../ico.el/ico.css');
+                :host {
+                    display:flex;
+                    flex-wrap:wrap;
+                    align-items:center;
+                    justify-content:stretch;
+                    gap:1.5em;
+                }
+                slot {
+                    display:block;
+                }
+                [name=action] {
+                    display: flex;
+                    justify-content: end;                    
+                    flex-wrap: wrap;
+                    gap: .5em;
+                    flex: 1 1 auto;
+                }
+            </style>
+            <slot name=icon>
+                <u2-ico icon=info></u2-ico>
+            </slot>
+            <slot style="flex:1 1 auto;"></slot>
+            <slot name=action u2-focusgroup="remember"></slot>
+        `;
+    }
+    connectedCallback() {
+        this.setAttribute('role', 'alert');
+    }
+    
+    show() {
+        this.setAttribute('open', '');
+        this.setAttribute('aria-live', 'assertive');
+        getToolsContainer().appendChild(this);
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => this.hide(), 5000);
+    }
+    hide() {
+        this.removeAttribute('open');
+    }
+}
+
+
+customElements.define('u2-alert', alert);
+
+alert.info = function(message, options) {
+    const el = document.createElement('u2-alert');
+    el.textContent = message;
+    el.setAttribute('type', 'info');
+    const icon = document.createElement('u2-ico');
+    icon.setAttribute('icon', 'info');
+    icon.setAttribute('slot', 'icon');
+    icon.style.color = 'var(--color)';
+    el.append(icon);
+    el.show();
+    return el;
+}
+alert.success = function(message, options) {
+    const el = alert.info(message, options);
+    el.setAttribute('type', 'success');
+    return el;
+}
+alert.warn = function(message, options) {
+    const el = alert.info(message, options);
+    el.setAttribute('type', 'warn');
+    return el;
+}
+alert.error = function(message, options) {
+    const el = alert.info(message, options);
+    el.setAttribute('type', 'error');
+    return el;
+}
+
+
+
+alert.error('Something went wrong');
+setTimeout(()=>alert.info('Hi was geht?'),2000)
+setTimeout(()=>alert.warn('Achtung!'),2300)
+
+
+window.alert = alert;
+
+</script>
+
+
+<section>
+    <h2>Alert</h2>
+
+    <u2-alert open>
+        Something went wrong<br>
+        <small>Details here, if any ...</small>
+        <button slot=action onclick="alert.warn('Achtung!')">OK</button>
+        <button slot=action>Cancel</button>
+    </u2-alert>
+
+</section>
+
+
+
+</div>
+
+
+

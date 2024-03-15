@@ -1,6 +1,6 @@
 // todo add privet fields
 /* element */
-class u1Carousel extends HTMLElement {
+class u2Carousel extends HTMLElement {
 	constructor() {
 		super();
 
@@ -68,7 +68,7 @@ class u1Carousel extends HTMLElement {
 			:host([mode=slide]) > slot.body {
 				width:100%; /* needed bud why? */
 				display:flex;
-				transition: transform var(--u1-carousel-animation-speed, .7s) ease-out;
+				transition: transform var(--u2-carousel-animation-speed, .7s) ease-out;
 				will-change: transform;
 				overflow: visible;
 			}
@@ -96,7 +96,7 @@ class u1Carousel extends HTMLElement {
 				display:flex;
 			}
 			:host([mode=fade]) .body::slotted(*) {
-				transition:opacity var(--u1-carousel-animation-speed, .7s) ease-in-out;
+				transition:opacity var(--u2-carousel-animation-speed, .7s) ease-in-out;
 				will-change: opacity;
 				opacity:0;
 				margin-left:-100% !important;
@@ -142,9 +142,9 @@ class u1Carousel extends HTMLElement {
 		if (name === 'mode') this.mode = newValue;
 	}
 	set mode(mode){
-		if (!u1Carousel.mode[mode]) mode = 'slide';
+		if (!u2Carousel.mode[mode]) mode = 'slide';
 		this.setAttribute('mode', mode);
-		this.handler = u1Carousel.mode[mode];
+		this.handler = u2Carousel.mode[mode];
 		this.handler.init && this.handler.init.call(this);
 	}
 	get mode(){
@@ -167,7 +167,7 @@ class u1Carousel extends HTMLElement {
 			}
 			this.active = target;
 
-			target.dispatchEvent(new CustomEvent('u1-carousel.slide',{
+			target.dispatchEvent(new CustomEvent('u2-carousel.slide',{
 				bubbles:true,
 				detail:{
 					slide:target,
@@ -197,11 +197,11 @@ class u1Carousel extends HTMLElement {
 		return sibling;
 	}
 	play(){
-		this.addEventListener('u1-carousel.slide', this._nextDelayed);
+		this.addEventListener('u2-carousel.slide', this._nextDelayed);
 		this._nextDelayed();
 	}
 	stop(){
-		this.removeEventListener('u1-carousel.slide', this._nextDelayed)
+		this.removeEventListener('u2-carousel.slide', this._nextDelayed)
 		clearTimeout(this._nextDelayedTimeout);
 	}
 	_nextDelayed(){
@@ -219,7 +219,7 @@ class u1Carousel extends HTMLElement {
 		},speed);
 	}
 	customProperty(property){
-		return getComputedStyle(this).getPropertyValue('--u1-carousel-'+property);
+		return getComputedStyle(this).getPropertyValue('--u2-carousel-'+property);
 	}
 	connectedCallback() {
 		this.hasAttribute('play') && this.play();
@@ -228,10 +228,10 @@ class u1Carousel extends HTMLElement {
 }
 
 
-u1Carousel.mode = {};
+u2Carousel.mode = {};
 
 // scroll
-u1Carousel.mode.scroll = {
+u2Carousel.mode.scroll = {
 	slideTo:function(target){
 		let left = target.offsetLeft - this.slider.offsetLeft;
 		this.slider.scroll({ // todo: better calculation of offset
@@ -260,7 +260,7 @@ u1Carousel.mode.scroll = {
 }
 
 // slide
-u1Carousel.mode.slide = {
+u2Carousel.mode.slide = {
 	init:function(){
 		//this.addSwipe();
 	},
@@ -269,14 +269,14 @@ u1Carousel.mode.slide = {
 	},
 }
 // fade (entirely done by css)
-u1Carousel.mode.fade = {
+u2Carousel.mode.fade = {
 	init:function(){
 		this.slider.style.transform = ''; // if changed from mode=slide
 	}
 }
 
 
-customElements.define('u1-carousel', u1Carousel)
+customElements.define('u2-carousel', u2Carousel)
 
 
 // slide on target
@@ -284,7 +284,7 @@ function hashchange(){
 	if (!location.hash) return;
 	const el = document.getElementById(location.hash.substring(1));
 	if (!el) return;
-	const slide = el.closest('u1-carousel > *');
+	const slide = el.closest('u2-carousel > *');
 	if (!slide) return;
 	const sliderEl = slide.parentElement;
 	sliderEl.slideTo(slide);
@@ -294,27 +294,27 @@ addEventListener('hashchange', hashchange);
 // slide on focus
 addEventListener('focusin', e=>{
 	const el = document.activeElement;
-	const slide = el.closest('u1-carousel > *');
+	const slide = el.closest('u2-carousel > *');
 	if (!slide) return;
 	const sliderEl = slide.parentElement;
 	sliderEl.slideTo(slide);
 });
 // keyboard nav
 addEventListener('keydown', ({target,code})=>{
-	if (target.tagName !== 'U1-CAROUSEL') return;
+	if (target.tagName !== 'U2-CAROUSEL') return;
 	if (code === 'ArrowRight') target.next();
 	if (code === 'ArrowLeft')  target.prev();
 });
 
 /* sync */
-addEventListener('u1-carousel.slide', e=>{
+addEventListener('u2-carousel.slide', e=>{
 	const group = e.detail.slider.getAttribute('sync');
-	group && document.querySelectorAll('u1-carousel[sync="'+group+'"]').forEach( el => el.slideTo(e.detail.index) );
+	group && document.querySelectorAll('u2-carousel[sync="'+group+'"]').forEach( el => el.slideTo(e.detail.index) );
 });
 /*  */
 
 /*
-u1Carousel.prototype.addSwipe = function(){
+u2Carousel.prototype.addSwipe = function(){
 	c1.c1Use('pointerObserver',function(){
 		var pO = this.pointerObserver = new c1.pointerObserver(this);
 		var startX = 0;

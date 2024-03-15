@@ -22,18 +22,10 @@ alert, prompt, confirm but async
 }
 ```
 
-[doc](https://doc.deno.land/../../../dialog.js@x/dialog.js)
-
-## Install
-
-```js
-import * as module from "../../../dialog.js@x.x.x/dialog.min.js"
-```
-
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/dialog.js@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/dialog.js@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/dialog/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/js/dialog/tests/test.html)  
 
 ## Pro-Tip
 
@@ -46,6 +38,6 @@ await confirm('test');
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

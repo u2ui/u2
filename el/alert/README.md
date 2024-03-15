@@ -1,4 +1,4 @@
-# &lt;u1-alert&gt; - element
+# &lt;u2-alert&gt; - element
 Prominent hints, alerts, and facts
 
 ## Features
@@ -11,21 +11,21 @@ Prominent hints, alerts, and facts
 ## Usage
 
 ```html
-<u1-alert open variant="info" dismissible icon="home">
+<u2-alert open variant="info" dismissible icon="home">
     This is a dismissible success alert with an icon, and a lot of text to make it wrap. More text to make it wrap and just more and more
     <button slot=action>OK</button>
     <button slot=action>Cancel</button>
-</u1-alert>
+</u2-alert>
 ```
 
 ```css
-u1-alert {
+u2-alert {
     border-width: 0 0 0 3px;
 }
-u1-alert::part(close) {
+u2-alert::part(close) {
     opacity:0.3;
 }
-u1-alert::part(icon) {
+u2-alert::part(icon) {
     font-size:2em;
 }
 ```
@@ -52,17 +52,17 @@ u1-alert::part(icon) {
 ## Install
 
 ```html
-<link href="../../../alert.el@x.x.x/alert.min.css" rel=stylesheet>
-<script src="../../../alert.el@x.x.x/alert.min.js" type=module></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/alert/alert.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/alert/alert.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/alert.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/alert.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/alert/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/alert/tests/test.html)  
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

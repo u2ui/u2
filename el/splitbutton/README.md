@@ -1,22 +1,22 @@
-# &lt;u1-splitbutton&gt; - element
+# &lt;u2-splitbutton&gt; - element
 Buttons with options
 
 asdf
 
-## Ussage
+## Usage
 
 ```html
-<u1-splitbutton>
+<u2-splitbutton>
     <button>Add Item</button>
     <menu>
         <li><button>Special Item</button>
         <li><button>Super Item</button>
     </menu>
-</u1-splitbutton>
+</u2-splitbutton>
 ```
 
 ```css
-u1-splitbutton menu {
+u2-splitbutton menu {
    box-shadow:var(--shadow);
    border:none;
 }
@@ -25,17 +25,36 @@ u1-splitbutton menu {
 ## Install
 
 ```html
-<link href="../../../splitbutton.el@x.x.x/splitbutton.min.css" rel=stylesheet>
-<script src="../../../splitbutton.el@x.x.x/splitbutton.min.js" type=module>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/splitbutton/splitbutton.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/splitbutton/splitbutton.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/splitbutton.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/splitbutton.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/splitbutton/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/splitbutton/tests/test.html)  
+
+## Ussage
+
+```html
+<u2-splitbutton>
+    <button>Add Item</button>
+    <menu>
+        <li><button>Special Item</button>
+        <li><button>Super Item</button>
+    </menu>
+</u2-splitbutton>
+```
+
+```css
+u2-splitbutton menu {
+   box-shadow:var(--shadow);
+   border:none;
+}
+```
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

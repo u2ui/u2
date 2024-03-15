@@ -5,11 +5,11 @@ CSS normalization for crossbrowser compatibility
 
 - lightweight
 - maintained & up to date
-- ***No opinionated styles.*** (use https://github.com/u1ui/base.css for it).
+- ***No opinionated styles.*** (use https://github.com/u2ui/base.css for it).
 
 ## Demos
 
-[test.html](http://gcdn.li/u1ui/norm.css@main/tests/test.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/css/norm/tests/test.html)  
 
 ## Resources / Alternatives
 
@@ -32,6 +32,6 @@ Firefox: https://searchfox.org/mozilla-central/source/layout/style/res/html.css
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

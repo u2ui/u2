@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <title>u1-ico Test</title>
+        <title>u2-ico Test</title>
 
         <link rel=stylesheet href="../../../base.css/full.css">
 
@@ -13,7 +13,7 @@
         <link rel=stylesheet href="../../../classless.css/more.css">
 
 
-        <script type=module src="../../../u1/auto.min.js"></script>
+        <script type=module src="../../../u2/auto.min.js"></script>
 
 
         <link rel="stylesheet" href="../font/Material Icons.css">
@@ -25,7 +25,7 @@
 <body>
 
 <style>
-    u1-ico[state=fail] {
+    u2-ico[state=fail] {
         color:red;
         font-size:10px;
     }
@@ -35,16 +35,16 @@
     <h2>Comparison tool</h2>
     <input style="width:100%" id=namesInp value="star search menu home facebook chevron-right link">
     <div style="overflow:auto; white-space:nowrap; max-height:60vh">
-        <table id=table class="u1-table -Sticky">
+        <table id=table class="u2-table -Sticky">
             <thead>
             <tbody>
-                <tr style="--u1-ico-dir:'https://cdn.jsdelivr.net/npm/bytesize-icons@1.4.0/dist/icons/'">
+                <tr style="--u2-ico-dir:'https://cdn.jsdelivr.net/npm/bytesize-icons@1.4.0/dist/icons/'">
                     <td>
         </table>
     </div>
 
     <style style="display:block" contenteditable style="font-size:12px">
-        u1-ico {
+        u2-ico {
             color:#05a;
             /* Use with caution: */
             xfill: currentColor;
@@ -136,11 +136,11 @@
             for (let [set,url] of Object.entries(directories)) {
                 let link = url.split(/{icon.*}/i)[0];
                 str +=
-                `<tr style="--u1-ico-dir:'${url}';">
+                `<tr style="--u2-ico-dir:'${url}';">
                     <th>
                         <a href="${link}" target="${set}">${set}</a>`;
                 for (let name of names) {
-                    str += '<td style="text-align:center"><u1-ico icon="'+name+'">-</u1-ico>';
+                    str += '<td style="text-align:center"><u2-ico icon="'+name+'">-</u2-ico>';
                 }
             }
             document.getElementById('table').innerHTML = str;
@@ -157,7 +157,7 @@
 
             var dialog = document.createElement('dialog');
             dialog.innerHTML = 'loading...';
-            dialog.style.setProperty('--u1-ico-dir', "'"+href+"'");
+            dialog.style.setProperty('--u2-ico-dir', "'"+href+"'");
             dialog.style.width = '100vw';
             dialog.style.maxHeight = '100vh';
             dialog.style.overflow = 'auto';
@@ -173,21 +173,21 @@
                 curr = curr.files.find(item=>item.name===part);
             }
 
-            dialog.innerHTML = '<div id=icoList class=u1-grid></div>';
+            dialog.innerHTML = '<div id=icoList class=u2-grid></div>';
 
             curr.files.forEach(function(file){
                 let name = file.name;
                 if (!name.endsWith('.svg')) return;
                 let icon = name.replace('.svg','');
                 var item = document.createElement('div');
-                item.innerHTML = '<u1-ico xicon="'+icon+'">'+icon+'</u1-ico><br>'+icon;
+                item.innerHTML = '<u2-ico xicon="'+icon+'">'+icon+'</u2-ico><br>'+icon;
                 dialog.querySelector('#icoList').append(item);
             })
 
         });
 
         document.addEventListener('click',e=>{
-            const ico = e.target.closest('u1-ico');
+            const ico = e.target.closest('u2-ico');
             if (!ico) return;
             e.stopImmediatePropagation();
             navigator.clipboard.writeText(ico.innerHTML.trim());
@@ -209,18 +209,18 @@
         #table tr {
             vertical-align:middle;
         }
-        #table u1-ico {
+        #table u2-ico {
             font-size:30px;
             display:block;
             xvertical-align: middle;
         }
-        #table u1-ico[state=fail] {
+        #table u2-ico[state=fail] {
             font-size:12px;
         }
 
         #icoList {
-            --u1-Gap:1rem;
-            --u1-Items-width:9em;
+            --u2-Gap:1rem;
+            --u2-Items-width:9em;
             text-align:center;
             font-size:11px;
         }
@@ -230,13 +230,13 @@
             xborder:1px solid #eee;
             xbackground:#f8f8f8;
         }
-        #icoList u1-ico {
+        #icoList u2-ico {
             background:#fff;
             transition: .15s;
             transform:scale(1.001);
             margin-bottom:.5em;
         }
-        #icoList :hover u1-ico {
+        #icoList :hover u2-ico {
             transform:scale(2.1);
         }
     </style>
@@ -244,17 +244,17 @@
 
 
 <section>
-    using: --u1-ico-dir:"https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg"
-    <div style="--u1-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg'">
-        <u1-ico icon=search></u1-ico>
-        <u1-ico icon=facebook></u1-ico>
-        <u1-ico icon=alarm></u1-ico>
+    using: --u2-ico-dir:"https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg"
+    <div style="--u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg'">
+        <u2-ico icon=search></u2-ico>
+        <u2-ico icon=facebook></u2-ico>
+        <u2-ico icon=alarm></u2-ico>
     </div>
 
-    using: --u1-ico-font:'Material Icons' (as reference)
-    <div style="--u1-ico-font:'Material Icons'">
-        <u1-ico>search</u1-ico>
-        <u1-ico icon=facebook></u1-ico>
-        <u1-ico icon=alarm></u1-ico>
+    using: --u2-ico-font:'Material Icons' (as reference)
+    <div style="--u2-ico-font:'Material Icons'">
+        <u2-ico>search</u2-ico>
+        <u2-ico icon=facebook></u2-ico>
+        <u2-ico icon=alarm></u2-ico>
     </div>
 </section>

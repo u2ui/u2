@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
-    <script src="../../../u1/tests/test-init.js" type=module></script>
-    <script src="../../u1/auto.js" type=module></script>
+    <script src="../../../u2/tests/test-init.js" type=module></script>
+    <script src="../../u2/auto.js" type=module></script>
     <title>Test</title>
 
     <link rel=stylesheet href="../../../base.css/full.css">
@@ -17,7 +17,7 @@
     <style>
         body {
             place-content: initial;
-            --u1-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
         }
     </style>
 
@@ -29,7 +29,7 @@
 
 <section>
 
-    <u1-tree>
+    <u2-tree>
         <ul>
             <li aria-expanded="true">Folder 1
                 <ul>
@@ -51,34 +51,34 @@
                     <li>File 3.2
                 </ul>
         </ul>
-    </u1-tree>
+    </u2-tree>
 
     <style>
-        u1-tree .focus {
+        u2-tree .focus {
             xoutline: 1px solid red !important;
         }
-        u1-tree [role="group"] {
+        u2-tree [role="group"] {
             font-weight:normal;
             color:black;
         }
-        u1-tree :focus {
+        u2-tree :focus {
             color:red;
         }
-        u1-tree :focus {
+        u2-tree :focus {
             outline:none;
         }
-        u1-tree li[aria-selected=true] {
+        u2-tree li[aria-selected=true] {
             font-weight:bold;
         }
-        u1-tree li::before {
+        u2-tree li::before {
             content:' ';
             white-space: pre;
             font-family:monospace
         }
-        u1-tree li[aria-expanded]::before {
+        u2-tree li[aria-expanded]::before {
             content:'▸';
         }
-        u1-tree li[aria-expanded=true]::before {
+        u2-tree li[aria-expanded=true]::before {
             content:'▾';
         }
     </style>

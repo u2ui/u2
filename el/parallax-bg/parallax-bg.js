@@ -63,7 +63,7 @@ function addListeners(){
 
 const style = document.createElement('style');
 style.innerHTML =
-    '.u1-parallax-bg-stage { position:relative; } '+
+    '.u2-parallax-bg-stage { position:relative; } '+
     'parallax-bg { position:absolute; top:0; bottom:0; left:0; right:0; z-index:-1; will-change:transform; background-size:cover; } '+
 document.head.prepend(style);
 
@@ -115,7 +115,7 @@ class ParallaxBg extends HTMLElement {
     }
 	connectedCallback() {
         /*
-        let stage = this.closest('.u1-parallax-bg-stage');
+        let stage = this.closest('.u2-parallax-bg-stage');
         if (!stage) {
             stage = this.parentNode;
             stage.setAttribute('parallax-bg-stage','');
@@ -195,4 +195,4 @@ class ParallaxBg extends HTMLElement {
     }
 }
 
-customElements.define('u1-parallax-bg', ParallaxBg)
+customElements.define('u2-parallax-bg', ParallaxBg)

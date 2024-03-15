@@ -3,7 +3,7 @@
 <head>
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
-    <script src="../../../u1/tests/test-init.js" type=module></script>
+    <script src="../../../u2/tests/test-init.js" type=module></script>
     
 
     <link rel=stylesheet href="../../../base.css/full.css">
@@ -21,7 +21,7 @@
 
 <h3>Set datetime attribute</h3>
 <p lang=de>
-    Zurückgestellt: <u1-time datetime="" id=testSet></u1-time><br>
+    Zurückgestellt: <u2-time datetime="" id=testSet></u2-time><br>
     <button onclick="testSet.setAttribute('datetime', Date.now());">reset</button>
     <script>
         testSet.setAttribute('datetime', Date.now());
@@ -131,32 +131,32 @@
 
 <h3>English; type=relative</h3>
 <p lang=en>
-    A cold winter month <u1-time datetime="2011-11" type=relative>many years ago</u1-time>
+    A cold winter month <u2-time datetime="2011-11" type=relative>many years ago</u2-time>
 </p>
 
 <h3>English from &lt;head&gt; type=relative</h3>
 <p>
-    Google released Gmail Blue <u1-time datetime="2013-04-01" type=relative>on 2013-04-01</u1-time>.
+    Google released Gmail Blue <u2-time datetime="2013-04-01" type=relative>on 2013-04-01</u2-time>.
 </p>
 
 <h3>Deutsch, type=relative</h3>
 <p lang=de>
-    Weltuntergang <u1-time datetime="2050-01-01" type=relative>am 2050-01-01</u1-time>.
+    Weltuntergang <u2-time datetime="2050-01-01" type=relative>am 2050-01-01</u2-time>.
 </p>
 
 
 
 <h3>no type and no innerHTML => relative</h3>
 <p>
-    Google released Gmail Blue <u1-time datetime="2013-04-01"></u1-time>.
+    Google released Gmail Blue <u2-time datetime="2013-04-01"></u2-time>.
 </p>
 
 <h3>type=date</h3>
 <p>
-    <u1-time datetime="2013-04-01T18:00" type=date>on 2013-04-01</u1-time>.
+    <u2-time datetime="2013-04-01T18:00" type=date>on 2013-04-01</u2-time>.
 </p>
 
 <h3>type=date weekday=none hour minute month=long</h3>
 <p>
-    <u1-time datetime="2013-04-01T18:00" type=date weekday="none" month=long hour minute></u1-time>.
+    <u2-time datetime="2013-04-01T18:00" type=date weekday="none" month=long hour minute></u2-time>.
 </p>

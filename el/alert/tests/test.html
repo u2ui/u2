@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
-    <script src="../../../u1/tests/test-init.js" type=module></script>
-    <!-- <script src="../../u1/auto.js" type=module></script> -->
+    <script src="../../../u2/tests/test-init.js" type=module></script>
+    <!-- <script src="../../u2/auto.js" type=module></script> -->
     <title>Test</title>
 
     <link rel=stylesheet href="../../../css/base/full.css">
@@ -37,56 +37,56 @@
 <section>
 
     <h2>[variant]</h2>
-    <u1-alert open>This is an alert without a variant</u1-alert>
-    <u1-alert open variant="success">This is a "success" alert</u1-alert>
-    <u1-alert open variant="warn">This is a "warn" alert</u1-alert>
-    <u1-alert open variant="error">This is an "error" alert</u1-alert>
-    <u1-alert open variant="info">This is an "info" alert</u1-alert>
+    <u2-alert open>This is an alert without a variant</u2-alert>
+    <u2-alert open variant="success">This is a "success" alert</u2-alert>
+    <u2-alert open variant="warn">This is a "warn" alert</u2-alert>
+    <u2-alert open variant="error">This is an "error" alert</u2-alert>
+    <u2-alert open variant="info">This is an "info" alert</u2-alert>
     
     <h2>[dismissable]</h2>
-    <u1-alert open dismissible>This is a dismissible success alert</u1-alert>
+    <u2-alert open dismissible>This is a dismissible success alert</u2-alert>
 
     <h2>[icon]</h2>
-    <u1-alert open icon="home">This is a success alert with an icon (home)</u1-alert>
+    <u2-alert open icon="home">This is a success alert with an icon (home)</u2-alert>
 
     <h2>buttons</h2>
-    <u1-alert open dismissible>
+    <u2-alert open dismissible>
         This is a dismissible success alert with an icon
         <button slot=action>OK</button>
         <button slot=action>Cancel</button>
-    </u1-alert>
+    </u2-alert>
 
-    <u1-code trim editable>
+    <u2-code trim editable>
         <style>
-            u1-alert {
+            u2-alert {
               border-width: 0 0 0 3px;
               background: color-mix(in srgb, var(--color), #fff 90%);
               box-shadow: none;
             }
-            u1-alert::part(close) {
+            u2-alert::part(close) {
                 opacity:0.3;
                 border-left: 1px solid #0002;
                 &:hover {
                     opacity:1;
                 }
             }
-            u1-alert::part(icon) {
+            u2-alert::part(icon) {
                 font-size:2em;
                 opacity:.7;
             }            
         </style>
-    </u1-code>
+    </u2-code>
 
     <h2>Playground (everything)</h2>
 
     <div id=play>
-        <u1-alert open variant="info" dismissible icon="home">
+        <u2-alert open variant="info" dismissible icon="home">
             This is a dismissible success alert with an icon, and a lot of text to make it wrap. More text to make it wrap and just more and more
             <button slot=action>OK</button>
             <button slot=action>Cancel</button>
-        </u1-alert>
+        </u2-alert>
     </div>
 
-    <u1-code trim editable element="play"> </u1-code>
+    <u2-code trim editable element="play"> </u2-code>
     
 </section>

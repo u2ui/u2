@@ -7,11 +7,11 @@ class Dialog {
     constructor(options) {
 
         const element = this.element = d.createElement('dialog');
-        element.classList.add('u1x-modal');
+        element.classList.add('u2x-modal');
         element.innerHTML = 
             `<form method=dialog>
                 ${options.body}
-                ${options.buttons?'<div class=-buttons u1-focusgroup></div>':''}
+                ${options.buttons?'<div class=-buttons u2-focusgroup></div>':''}
             </form>`;
 
         const btnCont = element.querySelector('.-buttons');
@@ -130,7 +130,7 @@ const d = document;
 d.head.insertAdjacentHTML(
     'afterbegin',
     '<style>'+
-    '.u1x-modal .-buttons {'+
+    '.u2x-modal .-buttons {'+
         'display:flex;'+
         'flex-wrap:wrap;'+
         'justify-content:flex-end;'+

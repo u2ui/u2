@@ -1,4 +1,4 @@
-# [u1-focusgroup] - attribute
+# [u2-focusgroup] - attribute
 Focus movement by arrow keys
 
 ## Features
@@ -18,7 +18,7 @@ https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer
 ## Usage
 
 ```html
-<div u1-focusgroup="wrap remember">
+<div u2-focusgroup="wrap remember">
     <button>press left</button>
     <button>or right</button>
     <button>to focus the next button</button>
@@ -28,16 +28,16 @@ https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer
 ## Install
 
 ```html
-<script src="../../../focusgroup.attr@x.x.x/focusgroup.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/focusgroup/focusgroup.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/focusgroup.attr@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/focusgroup.attr@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/focusgroup/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/attr/focusgroup/tests/test.html)  
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

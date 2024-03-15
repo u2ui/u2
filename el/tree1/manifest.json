@@ -18,19 +18,19 @@
                     ],
                     "events": [
                         {
-                            "name": "u1-tree1-expand",
+                            "name": "u2-tree1-expand",
                             "type": {
                                 "text": "Event"
                             }
                         },
                         {
-                            "name": "u1-tree1-collapse",
+                            "name": "u2-tree1-collapse",
                             "type": {
                                 "text": "Event"
                             }
                         },
                         {
-                            "name": "u1-tree1-select",
+                            "name": "u2-tree1-select",
                             "type": {
                                 "text": "Event"
                             }
@@ -39,14 +39,14 @@
                     "attributes": [
                     ],
                     "superclass": { "name": "HTMLElement" },
-                    "tagName": "u1-tree",
+                    "tagName": "u2-tree",
                     "customElement": true
                 }
             ],
             "exports": [
                 {
                     "kind": "custom-element-definition",
-                    "name": "u1-tree",
+                    "name": "u2-tree",
                     "declaration": {
                         "name": "tree",
                         "module": "tree.js"

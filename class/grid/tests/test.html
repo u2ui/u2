@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../../../u1/tests/test-init.js" type=module></script>
+        <script src="../../../u2/tests/test-init.js" type=module></script>
         <title></title>
 
         <link rel=stylesheet href="../../../base.css/full.css">
@@ -19,7 +19,7 @@
 <section>
     <h1>grid class</h1>
     <div style="resize:both; overflow: auto; border:1px solid red">
-        <div class=u1-grid>
+        <div class=u2-grid>
             <div>item1<br>heigter</div>
             <div>item2</div>
             <div>item3</div>
@@ -31,13 +31,13 @@
     </div>
 </section>
 
-<style contenteditable style="display:block">.u1-grid > * {
+<style contenteditable style="display:block">.u2-grid > * {
     border:1px solid black;
     padding:.5em;
 }
 
-@container u1-items (max-width: 250px) {
-    .u1-grid::before {
+@container u2-items (max-width: 250px) {
+    .u2-grid::before {
         display: block;
         content: "smaller than 250px";
         background: red;

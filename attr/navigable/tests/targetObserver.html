@@ -20,13 +20,13 @@
     <a href="#dialog1">navigate to #dialog1</a>
     <!--todo: button onclick="dialog1.showModal()">open by javascript</button-->
 
-    <dialog id="dialog1" u1-navigable>
+    <dialog id="dialog1" u2-navigable>
         dialog 1 is open
         <br>
         <a href="#dialog2">navigate to #dialog2</a>
     </dialog>
 
-    <dialog id="dialog2" u1-navigable>
+    <dialog id="dialog2" u2-navigable>
         dialog 2 is open
     </dialog>
 
@@ -43,14 +43,14 @@ new TargetObserver({
     out: el => {
         el.close()
     },
-    matches: 'dialog[u1-navigable]',
+    matches: 'dialog[u2-navigable]',
 });
 
 addEventListener('close',e=>{
 	const target = e.target;
 	if (!target.id) return;
 	if (e.target.id !== location.hash.substring(1)) return;
-	if (!target.matches('dialog[u1-navigable]')) return;
+	if (!target.matches('dialog[u2-navigable]')) return;
 
 	history.back();
 	e.preventDefault();

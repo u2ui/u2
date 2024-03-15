@@ -1,4 +1,4 @@
-# &lt;u1-ico&gt; - element
+# &lt;u2-ico&gt; - element
 Universal icon-element
 
 ## Features
@@ -11,13 +11,13 @@ Universal icon-element
 ## Usage
 
 ```html
-<u1-ico icon="book">Alt text</u1-ico>
-<u1-ico>star</u1-ico>
+<u2-ico icon="book">Alt text</u2-ico>
+<u2-ico>star</u2-ico>
 ```
 
 ```css
-u1-ico {
-    --u1-ico-dir: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/icons/';
+u2-ico {
+    --u2-ico-dir: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/icons/';
     color:darkblue;
     font-size:2rem;
 }
@@ -26,21 +26,21 @@ u1-ico {
 ## Install
 
 ```html
-<link href="../../../ico.el@x.x.x/ico.min.css" rel=stylesheet>
-<script src="../../../ico.el@x.x.x/ico.min.js" type=module></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/ico/ico.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/ico/ico.min.js" type=module></script>
 ```
 
 ## Demos
 
-[emojis.html](http://gcdn.li/u1ui/ico.el@main/tests/emojis.html)  
-[fonts.html](http://gcdn.li/u1ui/ico.el@main/tests/fonts.html)  
-[ico-directory.html](http://gcdn.li/u1ui/ico.el@main/tests/ico-directory.html)  
-[minimal.html](http://gcdn.li/u1ui/ico.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/ico.el@main/tests/test.html)  
+[emojis.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/emojis.html)  
+[fonts.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/fonts.html)  
+[ico-directory.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/ico-directory.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/test.html)  
 
 ## Variant "icon-directory"
 
-Use the css-property `--u1-ico-dir:https://x.y/icons-directory/` to define where the icons are located.  
+Use the css-property `--u2-ico-dir:https://x.y/icons-directory/` to define where the icons are located.  
 The value must be in quotes.  
 
 ### Placeholder "{icon}"
@@ -48,7 +48,7 @@ The value must be in quotes.
 If the icon is not located at the end of the path (https://x.y/star.svg), you can use this placeholder:  
 ```css
 html {
-    --u1-ico-dir:'https://x.y/24x-{icon}/baseline.svg';
+    --u2-ico-dir:'https://x.y/24x-{icon}/baseline.svg';
 }
 ```
 
@@ -59,14 +59,14 @@ But if your prefered Icon-Set uses other naming conventions, you can use the pla
 
 ```css
 html {
-    --u1-ico-dir:'https://cdn.jsdelivr.net/npm/@adobe/spectrum-css-workflow-icons@1.4.2/24/{IconName}';
+    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@adobe/spectrum-css-workflow-icons@1.4.2/24/{IconName}';
 }
 ```
 
 ### Some icon sets
 
 See it in action:
-[ico-directory.html](https://raw.githack.com/u1ui/ico.el/main/tests/ico-directory.html)
+[ico-directory.html](https://raw.githack.com/u2ui/ico.el/main/tests/ico-directory.html)
 
 | Icon set   | Directory |
 | --------   | --------- |
@@ -122,21 +122,21 @@ Define the font used for the icons:
     src: url(my-icon-font.woff2) format('woff2');
 }
 html {
-    --u1-ico-font:'my icon font';
+    --u2-ico-font:'my icon font';
 }
 ```
 
-Note: `--u1-ico-dir` is stronger then `--u1-ico-font`.
+Note: `--u2-ico-dir` is stronger then `--u2-ico-font`.
 
 ## Variant "SVG":
 
 Just put you svg inside the element:
 ```html
-<u1-ico><svg>...</svg></u1-ico>
+<u2-ico><svg>...</svg></u2-ico>
 ```
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

@@ -3,14 +3,14 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <title>Attribute u1-href tests</title>
+        <title>Attribute u2-href tests</title>
 
         <link rel=stylesheet href="../../../base.css/full.css">
         <link rel=stylesheet href="../../../classless.css/variables.css">
         <link rel=stylesheet href="../../../classless.css/classless.css">
         <link rel=stylesheet href="../../../classless.css/more.css">
         <link rel=stylesheet href="../../../classless.css/simple.css">
-        <script type=module src="../../../u1/tests/test-init.js"></script>
+        <script type=module src="../../../u2/tests/test-init.js"></script>
 
         <script src="../navigable.js" type=module></script>
 
@@ -24,27 +24,27 @@
     <br>
     <a href="#dialog2">navigate to #dialog2 (nested)</a> -->
 
-    <dialog id="dialog1" u1-navigable>
+    <dialog id="dialog1" u2-navigable>
         dialog 1 is open
         <br>
         <a href="#dialog2">navigate to #dialog2</a>
 
-        <dialog id="dialog2" u1-navigable>
+        <dialog id="dialog2" u2-navigable>
             dialog 2 is open
         </dialog>
 
         <section>
             <h1>Checkbox</h1>
-            <input type=checkbox u1-navigable id=checkbox1>
-            <input type=checkbox u1-navigable id=checkbox2>
-            <input type=checkbox u1-navigable id=checkbox3>
+            <input type=checkbox u2-navigable id=checkbox1>
+            <input type=checkbox u2-navigable id=checkbox2>
+            <input type=checkbox u2-navigable id=checkbox3>
         </section>
 
         <section>
             <h1>Radiobutton</h1>
-            <input type=radio u1-navigable name=radio1 id=radio1>
-            <input type=radio u1-navigable name=radio1 id=radio2>
-            <input type=radio u1-navigable name=radio1 id=radio3>
+            <input type=radio u2-navigable name=radio1 id=radio1>
+            <input type=radio u2-navigable name=radio1 id=radio2>
+            <input type=radio u2-navigable name=radio1 id=radio3>
         </section>
 
 
@@ -61,11 +61,11 @@
 
     <a href="#details1">navigate to #details1</a>
     <!-- todo: <button onclick="dialog1.showModal()">open by javascript</button> -->
-    <details u1-navigable id=details1>
+    <details u2-navigable id=details1>
         <summary>summary 1</summary>
         More text
     </details>
-    <details u1-navigable id=details2>
+    <details u2-navigable id=details2>
         <summary>summary 2</summary>
         More text
     </details>
@@ -79,7 +79,7 @@
     <a href="#popover1">Toggle Popover (href)</a>
     <br>
     <button popovertarget="popover1">Toggle Popover (popovertarget)</button>
-    <div id=popover1 popover u1-navigable>
+    <div id=popover1 popover u2-navigable>
         <p>Popover content</p>
         <button popovertarget="popover1" popovertargetaction="hide">Close</button>
     </div>

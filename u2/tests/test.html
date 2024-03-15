@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Demo Page | U2-Design-System</title>
+        <script src="./test-init.js" type=module></script>
+        <script src="../auto.js" type=module></script>
+
+        <script type="module">
+            import {contextMenu} from '../../contextmenu.js/contextmenu.js';
+            contextMenu.add([{
+                label:'About u2-ui',
+                shortcut:'ctrl+F1',
+                action(e) { alert('todo') },
+                icon: 'info'
+            },{
+                label:'View Source',
+                action(e) { open('https://github.com/u2ui/u2/blob/main/tests/test.html') },
+                icon: 'code'
+            }]);
+        </script>
+
+<body>
+    <style>
+    section,
+    body > footer,
+    body > header {
+        padding-top:2rem;
+        padding-bottom:2rem;
+    }
+    body > footer {
+        border-top:.1em solid var(--color);
+        text-align:center;
+    }
+    .u2-card1 {
+        text-align:center;
+        background-color:var(--color-bg);
+        background-color:var(--color-light);
+        font-size:.9rem;
+    }
+    u2-tabs [role=tabpanel] {
+        border: 1px solid var(--color-line);
+        margin-top:-1px;
+        max-height:30rem;
+    }
+    </style>
+
+
+    <div class=u2-card1 u2-parallax style="position:absolute; top:200px; right:20px; width:13em; --u2-parallax-speed:.1; font-size:12px; padding:10px;">
+        <h2>Costumize</h2>
+        <label>
+            Hue<br>
+            <input type=range min=0 max=360 oninput="document.documentElement.style.setProperty('--hsl-h', this.value)">
+        </label>
+        <label>
+            Saturation<br>
+            <input type=range min=0 max=100 oninput="document.documentElement.style.setProperty('--hsl-s', this.value+'%')">
+        </label>
+        <label>
+            Lightness<br>
+            <input type=range min=0 max=60 oninput="document.documentElement.style.setProperty('--hsl-l', this.value+'%')">
+        </label>
+        <label>
+            Font Size<br>
+            <input type=range min=7 max=20 step=".25" oninput="document.documentElement.style.setProperty('font-size', 'calc('+this.value+'px + .7vmin)')">
+        </label>
+    </div>
+
+    <header role=banner style="text-align:center; box-shadow:var(--shadow);" class=u2-parallax-bg-stage>
+        <u2-parallax-bg style="background-color:black">
+            <u2-carousel play tabindex=0 style="position:absolute; inset:0">
+                <img src="https://picsum.photos/2000/700?random=1" alt="x" loading=lazy width=2000 height=700>
+                <img src="https://picsum.photos/2000/700?random=2" alt="x" loading=lazy width=2000 height=700>
+                <img src="https://picsum.photos/2000/700?random=3" alt="x" loading=lazy width=2000 height=700>
+                <img src="https://picsum.photos/2000/700?random=4" alt="x" loading=lazy width=2000 height=700>
+                <img src="https://picsum.photos/2000/700?random=5" alt="x" loading=lazy width=2000 height=700>
+                <img src="https://picsum.photos/2000/700?random=6" alt="x" loading=lazy width=2000 height=700>
+                <img src="https://picsum.photos/2000/700?random=7" alt="x" loading=lazy width=2000 height=700>
+            </u2-carousel>
+        </u2-parallax-bg>
+        <h1 class=u2-width style="color:white; margin-top:20rem; margin-bottom:1rem; filter:drop-shadow(0 0 10px black)">
+            <u2-typewriter autoplay loop>
+                <u2-textfit contenteditable style="font-weight:bold">U2 Design System</u2-textfit>
+                <u2-textfit contenteditable>Presentation</u2-textfit></u2-typewriter>
+        </h1>
+    </header>
+
+    <main class=u2-width>
+
+        <section class=u2-grid>
+            <div class=u2-card1 u2-href="#feaures">
+                <u2-ico>♥</u2-ico>
+                <h3>Features</h3>
+                <p>Progressive, declarative, responsive, easy...</p>
+                <a href="#feaures">more</a>
+            </div>
+            <div class=u2-card1 u2-href="#reposSec">
+                <u2-ico>🍽</u2-ico>
+                <h3>Repos</h3>
+                <p>Browse the overview of all modules...</p>
+                <a href="#repos">more</a>
+            </div>
+            <div class=u2-card1 u2-href="#customize">
+                <u2-ico>📱</u2-ico>
+                <script>
+                    const esc = html => html.replace(/[<>"']/g, c => `&${{'<':'lt', '>':'gt', '"':'quot', "'":'#039'}[c]};`);
+                    document.write('<u2-qrcode style="width:8rem; margin:auto">'+esc(location.href)+'</u2-qrcode>')
+                </script>
+            </div>
+        </section>
+
+        <section id=reposSec>
+            <h2>Usage</h2>
+            <p>For fast prototyping just insert this:</p>
+            <u2-code trim style="font-size:max(13px, .7rem); padding:.5rem">
+                <script type=text/html>
+                    <script src="../../../u2/auto.min.js" type=module crossorigin><\/script>
+                </script>
+            </u2-code>
+            <u2-alert open dismissible icon=star>
+                Don't forget to start the Project on Github
+                <a href="https://github.com/u2ui/u2" slot="action">Github</a>
+            </u2-alert>
+        </section>
+        <section id=reposSec>
+            <h2>Repos</h2>
+            <script type=module>
+                const repos = await fetch('../repos.json').then(res=>res.json());
+                const entries = repos.sort((r1,r2)=>{
+                    const ext1 = r1.name.replace(/^.*\.([^.]+)/,'$1');
+                    const ext2 = r2.name.replace(/^.*\.([^.]+)/,'$1');
+                    if (ext1 === 'el') return -1;
+                    if (ext2 === 'el') return 1;
+                    if(ext1 < ext2) return -1;
+                    if(ext1 > ext2) return 1;
+                    return 0;
+                });
+                let str = ''
+                for (let repo of entries) {
+                    let url = `https://github.com/u2ui/${repo.name}`;
+                    let release = repo.release_latest;
+
+                    let repoDate    = new Date(repo.pushed_at);
+                    let releaseDate = new Date(release.published_at);
+
+                    const masterNotPushed = repoDate > releaseDate
+                    str +=
+                    `<tr u2-href="${url}" style="--line-height:1.3">
+                        <td ${repo.description?`xaria-label="${repo.description}"`:''}>
+                            <a href="${url}"><b>${repo.name}</b></a>
+                            <br><small>${repo.description??''}</small>
+                        <td ${masterNotPushed?'style="color:#800"':''}>
+                            ${release.tag_name}
+                            <br><small><u2-time datetime="${repoDate.toISOString()}"></small>
+                        <td> <u2-counter>${repo.stargazers_count}</u2-counter> ⭐
+                        <td> ${repo.open_issues} 🐞
+                    `
+                }
+                document.getElementById('repos').innerHTML = str;
+
+            </script>
+            <figure style="max-height:60vh; overflow:auto; padding:0">
+                <table class="u2-table -Sticky">
+                    <thead>
+                        <tr>
+                            <th> Repo
+                            <th> Version
+                            <th> Stars
+                            <th> Issues
+                    <tbody id=repos>
+                </table>
+            </figure>
+        </section>
+
+        <section id=feaures>
+            <h2>Features</h2>
+            <ul>
+                <li>Easy to implement</li>
+                <li>Tooling optional</li>
+                <li>Small</li>
+                <li>Accessible</li>
+                <li>Responsive</li>
+                <li>No media-queries</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2>Default Styles</h2>
+            <u2-tabs>
+                <h2 slot="title">Inline Elements</h2>
+                <section>
+                    This is a paragraph with multiple inline elements. The <span>span</span> is not styled,
+                    but you may have <a href="#">some links with the a tag</a>; also you can
+                    <em>add emphasis with em</em> or <i>also with i</i>; Highlight the words by
+                    <strong>using strong</strong> or just <b>bold with the b tag</b>; of course, you can
+                    <u>underline</u> or <s>strikethrough text</s>; abbreviations are great, as you may have
+                    <abbr title="too many abbreviations">TMA</abbr>; <code>inline code</code> is cool too;
+                    <mark>Highlight text with mark</mark> or display a <kbd>Key</kbd>. You can also have
+                    <q>inline quotes with q</q>, or <samp>results from an operation with samp</samp> or a
+                    <var>variable</var>, also there's <small>small text</small>, text
+                    with<sup>superscript</sup>, or text with<sub>subscript</sub>... not to mention you can
+                    have time too. For example, this paragraph was originally written in <time>2020</time>.
+                    Not to forget about <dfn>definitions</dfn>! Also <del>del was deleted</del> and
+                    <ins>ins was inserted</ins>.
+                </section>
+
+                <h2 slot="title">Headings / Paragraphs</h2>
+                <section>
+                    <h1>Header 1 demo<br>with line break</h1>
+                    <p>A paragraph Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium delectus voluptatum ex excepturi ducimus sunt soluta? Omnis harum molestiae nisi facere veritatis? Laudantium repellat temporibus, molestiae rerum aperiam odio doloremque!</p>
+                    <p>One more paragarph dolor sit amet consectetur adipisicing elit. Accusantium delectus voluptatum ex excepturi ducimus sunt soluta? Omnis harum molestiae nisi facere veritatis? Laudantium repellat temporibus, molestiae rerum aperiam odio doloremque!</p>
+                    <h2>Header 2 demo<br>with line break</h2>
+                    <h3>Header 3 demo<br>with line break</h3>
+                    <h4>Header 4 demo<br>with line break</h4>
+                    <h5>Header 5 demo<br>with line break</h5>
+                    <h6>Header 6 demo<br>with line break</h6>
+                </section>
+
+                <h2 slot="title">Form</h2>
+                <section>
+                    <div class="u2-table -Fields -Flex">
+                        <div>
+                            <label>
+                                <span>Select</span>
+                                <span>
+                                    <select>
+                                        <option>Black</option>
+                                        <option>White</option>
+                                    </select>
+                                </span>
+                            </label>
+                            <label>
+                                <span>Input</span>
+                                <span><input></span>
+                            </label>
+                            <label>
+                                <span>Checkbox</span>
+                                <span><input type=checkbox></span>
+                            </label>
+                            <label>
+                                <span>Textfield</span>
+                                <span><textarea></textarea></span>
+                            </label>
+                            <label>
+                                <span>Range</span>
+                                <span><input type=range></span>
+                            </label>
+                            <label>
+                                <span>Date</span>
+                                <span><input type=date></span>
+                            </label>
+                            <label>
+                                <span>Time</span>
+                                <span><input type=time></span>
+                            </label>
+                            <label>
+                                <span></span>
+                                <span>
+                                    <button u2-confirm>
+                                        <u2-tooltip>
+                                            <small>A request for confirmation follows</small>
+                                        </u2-tooltip>
+                                        Button
+                                    </button>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+                
+            </u2-tabs>
+
+        </section>
+
+
+        <section id=compat>
+            <h2>Compatibility</h2>
+            <figure>
+                <table class=u2-table>
+                    <thead>
+                        <tr>
+                            <th> Browser
+                            <th> Version
+                    <tbody>
+                        <tr>
+                            <td> Firefox
+                            <td> latest 3
+                        <tr>
+                            <td> Edge
+                            <td> latest 3
+                        <tr>
+                            <td> Chrome
+                            <td> latest 3
+                        <tr>
+                            <td> Safari
+                            <td> 10.3
+                        <tr>
+                            <td> IE
+                            <td> no
+                </table>
+            </figure>
+        </section>
+
+        <section>
+            <h2>FAQ</h2>
+            <details>
+                <summary>no IE11?</summary>
+                <p>Since IE11 is slowly dying, we will no longer support it. When your next project goes online, this browser will no longer be relevant. Or your project without IE11 support, helps to kill IE11.</p>
+            </details>
+            <details>
+                <summary>What if JS is disabled?</summary>
+                <p>We make sure that there is always a usable CSS-only fallback.<br> Try our Demos without JS</p>
+            </details>
+            <details>
+                <summary>Compatibility with other Frameworks</summary>
+                <p>
+                    We try to make as few style breaks as possible.
+                    Nevertheless, we have useful default styles that could influence third code.
+                    For example, we have <code>* { box-sizing:border-box };</code>
+                    and line-heigths should be defined as "--line-height:1.3em";
+                    The inheritance of line-height is pretty broken, with our method we fix that.
+                </p>
+            </details>
+        </section>
+
+    </main>
+
+    <footer role=contentinfo>
+        <div class=u2-width>
+            <div class=u2-flex style="justify-content: space-between">
+                <div>
+                    <form class=u2-input aria-label="newsletter registration">
+                        <input placeholder="john@doh.com">
+                        <button>
+                            los <u2-ico inline style="vertical-align:baseline">🚀</u2-ico>
+                        </button>
+                    </form>
+                </div>
+                <div style="text-align:end">
+                    <ul class=u2-unstyle>
+                        <li>
+                            <button class=u2-unstyle  onclick="this.nextElementSibling.showModal()">About</button>
+                            <dialog u2-parallax>
+                                Made with ♥ by Tobias Buschor
+                            </dialog>
+                        <li> <a href="https://github.com/u2ui/" target=_blank>Github</a>
+                        <li> <a href="https://twitter.com/tobiasbu" target=_blank>Twitter</a>
+                        <li> <a href="#">Top</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>

@@ -1,11 +1,11 @@
-# .u1-invert - class
+# .u2-invert - class
 invert colors
 
-## Ussage
+## Usage
 
 ```html
 <h3>Normal H3</h3>
-<div class=u1-invert style="padding:2rem">
+<div class=u2-invert style="padding:2rem">
     <h3>This box...</h3>
     <p>
         ...is inverted
@@ -16,34 +16,53 @@ invert colors
 ```
 
 ```css
-.u1-invert {
+.u2-invert {
 }
 ```
 
 ## Install
 
 ```html
-<link href="../../../invert.class@x.x.x/invert.min.css" rel=stylesheet>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/invert/invert.min.css" rel=stylesheet>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/invert.class@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/invert.class@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/invert/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/class/invert/tests/test.html)  
+
+## Ussage
+
+```html
+<h3>Normal H3</h3>
+<div class=u2-invert style="padding:2rem">
+    <h3>This box...</h3>
+    <p>
+        ...is inverted
+        <a href="#">a link</a>
+    </p>
+    <button>button</button>
+</div>
+```
+
+```css
+.u2-invert {
+}
+```
 
 ## Note
 
 I am thinking of using an attribute for changing the theme.
 So that not only it can be inverted but also other theme-variants can be made.
-eg. `[u1-skin=invert], [u1-skin=theme], [u1-skin=dark], [u1-skin=light]`
+eg. `[u2-skin=invert], [u2-skin=theme], [u2-skin=dark], [u2-skin=light]`
 I am still looking for a suitable name for this purpose:
 
 ```css
-[u1-skin], [u1-theme], [u1-color], [u1-bg], [u1-palette], [u1-color-scheme], [u1-root]
+[u2-skin], [u2-theme], [u2-color], [u2-bg], [u2-palette], [u2-color-scheme], [u2-root]
 ```
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

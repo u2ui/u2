@@ -78,7 +78,7 @@ const units = {
 }
 
 
-define('u1-time', {
+define('u2-time', {
     attachShadow: { mode: 'open' },
 
     render() {

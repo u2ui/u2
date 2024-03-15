@@ -1,10 +1,10 @@
 /* slideshow
 inspiration: https://codepen.io/argyleink/pen/yLovWjz?editors=1100
 */
-u1-carousel {
+u2-carousel {
 	/* custom
-	--u1-carousel-slideshow-speed:6s;
-	--u1-carousel-animation-speed:1s;
+	--u2-carousel-slideshow-speed:6s;
+	--u2-carousel-animation-speed:1s;
 	*/
 	display:flex;
 	overflow:auto;
@@ -15,7 +15,7 @@ u1-carousel {
 	padding:0; /*  todo?: !important, always set padding on children */
 	/* align-items:center or stretch;  todo default? */
 }
-u1-carousel > :not([slot]) {
+u2-carousel > :not([slot]) {
 	width:100%;
     /* width:-moz-available; to be able to use margins, not working properly
     width:-webkit-fill-available; */
@@ -34,12 +34,12 @@ u1-carousel > :not([slot]) {
 
 /*
 todo: until js is loaded
-u1-carousel > [slot] {
+u2-carousel > [slot] {
 	display:none;
 }
 
 /* needed if padding
-u1-carousel > img:not([xyz]) { /* just make it stronger
+u2-carousel > img:not([xyz]) { /* just make it stronger
 	padding:0;
 }
 */

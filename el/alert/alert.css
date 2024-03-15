@@ -6,7 +6,7 @@ body {
 }
 
 
-u1-alert {
+u2-alert {
     display:block;
     font-size: max(13px, .8rem);
     padding: 1em;
@@ -16,14 +16,14 @@ u1-alert {
     border-style: solid;
     border-width: .2em 0 0 0;
 }
-u1-alert:not([open]) {
+u2-alert:not([open]) {
     display:none;
 }
 
-u1-alert[variant=success] { --color: var(--color-green); }
-u1-alert[variant=warn] { --color: var(--color-yellow); }
-u1-alert[variant=error] { --color: var(--color-red); }
-u1-alert[variant=info] { --color: var(--color-blue); }
+u2-alert[variant=success] { --color: var(--color-green); }
+u2-alert[variant=warn] { --color: var(--color-yellow); }
+u2-alert[variant=error] { --color: var(--color-red); }
+u2-alert[variant=info] { --color: var(--color-blue); }
 
 
 /* animation *
@@ -39,14 +39,14 @@ u1-alert[variant=info] { --color: var(--color-blue); }
     }
 }
 
-u1-alert[open] {
+u2-alert[open] {
     will-change: transform, opacity, margin;
     animation: alert-animation 0.2s ease-in;
 }
 
 
 
-/* #u1-notification-stack {
+/* #u2-notification-stack {
     display:flex;
     flex-direction: column;
     justify-content: start;

@@ -1,22 +1,22 @@
-# &lt;u1-carousel-nav&gt; - element
+# &lt;u2-carousel-nav&gt; - element
 null
 
-## Ussage
+## Usage
 
 ```html
-<u1-carousel-nav></u1-carousel-nav>
-<u1-carousel>
+<u2-carousel-nav></u2-carousel-nav>
+<u2-carousel>
     <div>Item 1</div>
     <div>Item 2</div>
     <div>Item 3</div>
-</u1-carousel>
+</u2-carousel>
 ```
 
 ```css
-u1-carousel-nav > * {
+u2-carousel-nav > * {
     transition:.3s;
 }
-u1-carousel-nav > .-active {
+u2-carousel-nav > .-active {
     transform:scale(1.2);
 }
 ```
@@ -24,17 +24,37 @@ u1-carousel-nav > .-active {
 ## Install
 
 ```html
-<link href="../../../carousel-nav.el@x.x.x/carousel-nav.min.css" rel=stylesheet>
-<script src="../../../carousel-nav.el@x.x.x/carousel-nav.min.js" type=module>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/carousel-nav/carousel-nav.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/carousel-nav/carousel-nav.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/carousel-nav.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/carousel-nav.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/test.html)  
+
+## Ussage
+
+```html
+<u2-carousel-nav></u2-carousel-nav>
+<u2-carousel>
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+</u2-carousel>
+```
+
+```css
+u2-carousel-nav > * {
+    transition:.3s;
+}
+u2-carousel-nav > .-active {
+    transform:scale(1.2);
+}
+```
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

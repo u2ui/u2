@@ -1,20 +1,20 @@
-# &lt;u1-code&gt; - element
+# &lt;u2-code&gt; - element
 Highlighted, editable code-blocks.
 
 ## Usage
 
 ```html
-<u1-code trim editable>
+<u2-code trim editable>
     <style>
         .foo {
             color: red;
         }
     </style>
-</u1-code>
+</u2-code>
 ```
 
 ```css
-u1-code {
+u2-code {
     font-size:15px;
     max-height:11rem;
 }
@@ -34,14 +34,14 @@ Slots:
 ## Install
 
 ```html
-<link href="../../../code.el@x.x.x/code.min.css" rel=stylesheet>
-<script src="../../../code.el@x.x.x/code.min.js" type=module></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/code/code.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/code/code.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/code.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/code.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/code/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/code/tests/test.html)  
 
 ## Attributes
 
@@ -51,6 +51,6 @@ Slots:
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

@@ -18,19 +18,19 @@
                     ],
                     "events": [
                         {
-                            "name": "u1-typewriter-play",
+                            "name": "u2-typewriter-play",
                             "type": {
                                 "text": "Event"
                             }
                         },
                         {
-                            "name": "u1-typewriter-end",
+                            "name": "u2-typewriter-end",
                             "type": {
                                 "text": "Event"
                             }
                         },
                         {
-                            "name": "u1-typewriter-pause",
+                            "name": "u2-typewriter-pause",
                             "type": {
                                 "text": "Event"
                             }
@@ -39,22 +39,22 @@
                     "attributes": [
                         {
                             "name": "autoplay",
-                            "u1-type": "boolean"
+                            "u2-type": "boolean"
                         },
                         {
                             "name": "loop",
-                            "u1-type": "boolean"
+                            "u2-type": "boolean"
                         }
                     ],
                     "superclass": { "name": "HTMLElement" },
-                    "tagName": "u1-typewriter",
+                    "tagName": "u2-typewriter",
                     "customElement": true
                 }
             ],
             "exports": [
                 {
                     "kind": "custom-element-definition",
-                    "name": "u1-typewriter",
+                    "name": "u2-typewriter",
                     "declaration": {
                         "name": "MyElement",
                         "module": "typewriter.js"

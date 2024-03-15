@@ -1,20 +1,20 @@
-# &lt;u1-typewriter&gt; - element
+# &lt;u2-typewriter&gt; - element
 Simple typewriter element
 
-## Ussage
+## Usage
 
 ```html
-<u1-typewriter autoplay loop audio>
+<u2-typewriter autoplay loop audio>
     <h2>Lorem ipsum</h2>
     <i>dolor</i> sit amet, <b>consectetur</b> adipiscing elit.
-</u1-typewriter>
+</u2-typewriter>
 ```
 
 ```css
-u1-typewriter {
-    --u1-typewriter-speed:100;
+u2-typewriter {
+    --u2-typewriter-speed:100;
 }
-u1-typewriter h2 .-Caret {
+u2-typewriter h2 .-Caret {
     color:hotpink;
 }
 ```
@@ -32,40 +32,58 @@ u1-typewriter h2 .-Caret {
 - element.play()
 - element.pause()
 - element.reset()
-- event "u1-typewriter-end"
+- event "u2-typewriter-end"
 
 ### CSS
 
 There no default CSS that will affect your styles.
 
 ```css
-u1-typewriter .-Char { ... } /* the char */
-u1-typewriter .-Active .-Char { ... } /* the active char */
-u1-typewriter .-Caret { ... } /* the caret (It moves and is in the active char element) */
+u2-typewriter .-Char { ... } /* the char */
+u2-typewriter .-Active .-Char { ... } /* the active char */
+u2-typewriter .-Caret { ... } /* the caret (It moves and is in the active char element) */
 ```
 
 ## Install
 
 ```html
-<link href="../../../typewriter.el@x.x.x/typewriter.min.css" rel=stylesheet>
-<script src="../../../typewriter.el@x.x.x/typewriter.min.js" type=module>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/typewriter/typewriter.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/typewriter/typewriter.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/typewriter.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/typewriter.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/typewriter/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/typewriter/tests/test.html)  
+
+## Ussage
+
+```html
+<u2-typewriter autoplay loop audio>
+    <h2>Lorem ipsum</h2>
+    <i>dolor</i> sit amet, <b>consectetur</b> adipiscing elit.
+</u2-typewriter>
+```
+
+```css
+u2-typewriter {
+    --u2-typewriter-speed:100;
+}
+u2-typewriter h2 .-Caret {
+    color:hotpink;
+}
+```
 
 ## ussage
 
 ```html
-<u1-typewriter autostart loop audio>
+<u2-typewriter autostart loop audio>
     Even <i>HTML</i> <u>content</u>
-</u1-typewriter>
+</u2-typewriter>
 ```
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

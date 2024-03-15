@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
-  <script src="../../../u1/tests/test-init.js" type=module></script>
+  <script src="../../../u2/tests/test-init.js" type=module></script>
   <title>Level.css TEST</title>
 
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,13 +42,13 @@
 
 <body>
 
-  <section id=u1-width style="padding:0; text-align:center;">
-    <h1>.u1-width</h1>
+  <section id=u2-width style="padding:0; text-align:center;">
+    <h1>.u2-width</h1>
     <div class=-viewport>
       simulated viewport
-      <div class=u1-width>
+      <div class=u2-width>
         <div>
-          <code>class="u1-width"</code>
+          <code>class="u2-width"</code>
           <p>
             This should be have with of --width<br>
             using max-width</br>
@@ -59,13 +59,13 @@
         </div>
       </div>
       <br>
-      <div class=u1-width style="max-width:40rem">
+      <div class=u2-width style="max-width:40rem">
         <div>
-          <code>class=u1-width style="max-width:40rem"</code>
-          <div class="u1-width">
+          <code>class=u2-width style="max-width:40rem"</code>
+          <div class="u2-width">
             <div>
               <h3>nested</h3>
-              <code>class="u1-width"</code>
+              <code>class="u2-width"</code>
               <p>
                 This also has a with of --width<br>
                 has no more padding
@@ -76,15 +76,15 @@
       </div>
     </div>
     <style>
-      #u1-width .-viewport {
+      #u2-width .-viewport {
         --width:30rem;
         overflow:hidden;
         contain: paint;
         margin:auto;
-        animation: u1-width 2s linear infinite alternate;
+        animation: u2-width 2s linear infinite alternate;
         background:#fff;
       }
-      @keyframes u1-width {
+      @keyframes u2-width {
         0% {
           max-width:calc(var(--width) + 30rem);
         }
@@ -93,13 +93,13 @@
         }
       }
 
-      #u1-width div {
+      #u2-width div {
         border:1px solid var(--color-dark);
       }
-      #u1-width .u1-width {
+      #u2-width .u2-width {
         background-color: #9E95DAbb;
       }
-      #u1-width .u1-width > div {
+      #u2-width .u2-width > div {
         background-color: #fffc;
       }
     </style>

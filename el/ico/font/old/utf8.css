@@ -28,27 +28,27 @@ http://emojisymbols.com/
 */
 
 /* good names */
-u1-ico[font=utf8][icon=close]:before { content:'✕' }
-u1-ico[font=utf8][icon=star]:before { content:'★' }
-u1-ico[font=utf8][icon=heart]:before { content:'♥' }
-u1-ico[font=utf8][icon=airplane]:before { content:'✈' }
-u1-ico[font=utf8][icon=check]:before { content:'✔' }
-u1-ico[font=utf8][icon=sun]:before { content:'☼' }
-u1-ico[font=utf8][icon=pensil]:before { content:'✎' }
-u1-ico[font=utf8][icon=previous]:before { content:'❮' }
-u1-ico[font=utf8][icon=next]:before { content:'❯' }
-u1-ico[font=utf8][icon=telefon]:before { content:'☎' }
-u1-ico[font=utf8][icon=cloud]:before { content:'☁' }
-u1-ico[font=utf8][icon=email]:before { content:'✉' }
-u1-ico[font=utf8][icon=drag_indicator]:before { content:'⠿' }
-u1-ico[font=utf8][icon=menu]:before { content:'≡' }
-u1-ico[font=utf8][icon=list]:before { content:'≔' }
-u1-ico[font=utf8][icon=music]:before { content:'🎜' }
+u2-ico[font=utf8][icon=close]:before { content:'✕' }
+u2-ico[font=utf8][icon=star]:before { content:'★' }
+u2-ico[font=utf8][icon=heart]:before { content:'♥' }
+u2-ico[font=utf8][icon=airplane]:before { content:'✈' }
+u2-ico[font=utf8][icon=check]:before { content:'✔' }
+u2-ico[font=utf8][icon=sun]:before { content:'☼' }
+u2-ico[font=utf8][icon=pensil]:before { content:'✎' }
+u2-ico[font=utf8][icon=previous]:before { content:'❮' }
+u2-ico[font=utf8][icon=next]:before { content:'❯' }
+u2-ico[font=utf8][icon=telefon]:before { content:'☎' }
+u2-ico[font=utf8][icon=cloud]:before { content:'☁' }
+u2-ico[font=utf8][icon=email]:before { content:'✉' }
+u2-ico[font=utf8][icon=drag_indicator]:before { content:'⠿' }
+u2-ico[font=utf8][icon=menu]:before { content:'≡' }
+u2-ico[font=utf8][icon=list]:before { content:'≔' }
+u2-ico[font=utf8][icon=music]:before { content:'🎜' }
 
 
 
 
 
 /* ok names? compare with material-icons and report if wrong*/
-u1-ico[font=utf8][icon=arrow_right]:before { content:'▶' }
-u1-ico[font=utf8][icon=arrow_left]:before { content:'◀' }
+u2-ico[font=utf8][icon=arrow_right]:before { content:'▶' }
+u2-ico[font=utf8][icon=arrow_left]:before { content:'◀' }

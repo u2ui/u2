@@ -1,6 +1,6 @@
 // icons from directory
-// [u1-ico] {
-//     --u1-ico-dir:'https://cdn.jsdelivr.net/npm/teenyicons@0.4.1/outline/x-{icon-name}.svg';
+// [u2-ico] {
+//     --u2-ico-dir:'https://cdn.jsdelivr.net/npm/teenyicons@0.4.1/outline/x-{icon-name}.svg';
 // }
 
 const uIco = class extends HTMLElement {
@@ -12,9 +12,9 @@ const uIco = class extends HTMLElement {
         if (this.firstElementChild) return; // skip if not text-only
 
         // fetch svg if --ui-ico-directory is set
-        let dir = getComputedStyle(this).getPropertyValue('--u1-ico-dir').trim();
+        let dir = getComputedStyle(this).getPropertyValue('--u2-ico-dir').trim();
         if (dir) {
-            if (dir[0]!=='"' && dir[0]!=="'") console.error('the value of --u1-ico-dir must be surrounded by quotes');
+            if (dir[0]!=='"' && dir[0]!=="'") console.error('the value of --u2-ico-dir must be surrounded by quotes');
             dir = dir.slice(1, -1);
             const inner = this.innerHTML.trim();
             const name = this.getAttribute('icon') || inner;
@@ -40,7 +40,7 @@ const uIco = class extends HTMLElement {
             return;
         }
 
-        // at the moment, "loaded" indicates to css, that it uses --u1-ico-dir
+        // at the moment, "loaded" indicates to css, that it uses --u2-ico-dir
         // let font = getComputedStyle(this).getPropertyValue('font-family');
         // if (font) {
         //     font = '1rem '+font;
@@ -56,7 +56,7 @@ const uIco = class extends HTMLElement {
     }
 }
 
-customElements.define('u1-ico', uIco);
+customElements.define('u2-ico', uIco);
 
 
 function dirTemplateToUrl(dir, name) {

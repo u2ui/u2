@@ -22,37 +22,37 @@
 <body>
 
     <header>
-        <h1>u1-tabs tests</h1>
+        <h1>u2-tabs tests</h1>
         As you use the browsers search funktion, you find the contents of the tab-panels. (chrome for now)
     </header>
 
     <section>
         <h2>Simple Tablist</h2>
-        <u1-tabs>
+        <u2-tabs>
             <h2>H2 as Tab</h2>
             <section>Heading Elements (h1-h6) are automatically used as tabs</section>
             <div slot=title>Div as Tab</div>
             <section>If you like to use other Elements as tabs, you have to add the attribute <code>slot="title"</code></section>
             <h2>Title 3</h2>
             <section>content panel 3</section>
-        </u1-tabs>
+        </u2-tabs>
     </section>
 
     <section>
         <h2>Tablist browser-navigatable tabs (beta)</h2>
-        <u1-tabs>
-            <h2 u1-navigatable id="nav1">H2 as Tab</h2>
+        <u2-tabs>
+            <h2 u2-navigatable id="nav1">H2 as Tab</h2>
             <section>Heading Elements (h1-h6) are automatically used as tabs</section>
-            <div slot=title u1-navigatable id="nav2">Div as Tab</div>
+            <div slot=title u2-navigatable id="nav2">Div as Tab</div>
             <section>If you like to use other Elements as tabs, you have to add the attribute <code>slot="title"</code></section>
-            <h2 u1-navigatable id="nav3">Title 3</h2>
+            <h2 u2-navigatable id="nav3">Title 3</h2>
             <section>content panel 3</section>
-        </u1-tabs>
+        </u2-tabs>
     </section>
 
     <section>
         <h2>max-height</h2>
-        <u1-tabs style="max-height:20rem">
+        <u2-tabs style="max-height:20rem">
             <h2>Title</h2>
             <section>
                 <p>Phosfluorescently aggregate premium collaboration and idea-sharing through strategic e-commerce. Authoritatively negotiate error-free channels through value-added processes. Globally matrix superior manufactured products whereas dynamic markets. Authoritatively disintermediate sustainable initiatives via revolutionary quality vectors. Monotonectally expedite fully tested synergy before transparent imperatives.</p>
@@ -65,12 +65,12 @@
             <section>content panel 2</section>
             <h2>Title 3</h2>
             <section>content panel 3</section>
-        </u1-tabs>
+        </u2-tabs>
     </section>
 
     <section>
         <h2>Too many tabs</h2>
-        <u1-tabs>
+        <u2-tabs>
             <h2>Title</h2>
             <section>content panel 1</section>
             <h2>Title 2</h2>
@@ -95,15 +95,15 @@
             <section>content panel 11</section>
             <h2>Title 12</h2>
             <section>content panel 12</section>
-        </u1-tabs>
+        </u2-tabs>
     </section>
 
     <section>
         <h2>Nested</h2>
-        <u1-tabs>
+        <u2-tabs>
             <h2>Title 1</h2>
 
-                <u1-tabs>
+                <u2-tabs>
                     <h3>Item 1.1</h3>
                     <section>Item 1 content</section>
                     <h3>Item 1.2</h3>
@@ -112,7 +112,7 @@
                     <section>Item 3 content</section>
                     <h3>Item 1.4</h3>
                     <section>Item 1 content</section>
-                </u1-tabs>
+                </u2-tabs>
 
             <h2>Title 2</h2>
             <section>content panel 2</section>
@@ -120,33 +120,33 @@
             <section>content panel 3</section>
             <h2>Title</h2>
             <section>content panel 1</section>
-        </u1-tabs>
+        </u2-tabs>
     </section>
 
 
     <style>
-        #styled u1-tabs {
+        #styled u2-tabs {
             border-radius: .5rem;
             border:1px solid;
             overflow:hidden;
             box-shadow:var(--shadow);
         }
-        #styled u1-tabs::part(tablist) {
+        #styled u2-tabs::part(tablist) {
             justify-content: center;
             color:#fff;
             background:var(--color);
         }
-        #styled u1-tabs::part(panels) {
+        #styled u2-tabs::part(panels) {
             background:#eee8;
         }
-        #styled u1-tabs [role="tab"] {
+        #styled u2-tabs [role="tab"] {
             padding:.5rem 1rem;
         }
-        #styled u1-tabs [role="tab"][aria-selected="true"] {
+        #styled u2-tabs [role="tab"][aria-selected="true"] {
             border-bottom-color: transparent;
             background:#0003;
         }
-        #styled u1-tabs [role="tab"]:focus {
+        #styled u2-tabs [role="tab"]:focus {
             border-bottom-color: transparent;
             background:#0005;
         }
@@ -157,11 +157,11 @@
 
     <section id=styled>
         <h2>Nested, styled</h2>
-        <u1-tabs>
+        <u2-tabs>
             <h2>Title 1</h2>
 
                 <div>
-                    <u1-tabs>
+                    <u2-tabs>
                         <h3>Item 1.1</h3>
                         <section>Item 1 content</section>
                         <h3>Item 1.2</h3>
@@ -170,7 +170,7 @@
                         <section>Item 3 content</section>
                         <h3>Item 1.4</h3>
                         <section>Item 1 content</section>
-                    </u1-tabs>
+                    </u2-tabs>
                 </div>
 
             <h2>Title 2</h2>
@@ -179,5 +179,5 @@
             <section>content panel 3</section>
             <h2>Title</h2>
             <section>content panel 1</section>
-        </u1-tabs>
+        </u2-tabs>
     </section>

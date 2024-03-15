@@ -9,30 +9,30 @@
 <body>
 
     <section>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
-        <div u1-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
+        <div u2-intersect></div>
     </section>
 
     <style>
-    [u1-intersect] {
-        --u1-intersect-margin:-10%;
-        --u1-intersect-threshold:1;
+    [u2-intersect] {
+        --u2-intersect-margin:-10%;
+        --u2-intersect-threshold:1;
         background:#fbb;
     }
-    [u1-intersect].u1-intersected { background:#bfb; }
-    [u1-intersect]::after {
+    [u2-intersect].u2-intersected { background:#bfb; }
+    [u2-intersect]::after {
         display:block;
         content:'below';
     }
-    [u1-intersect].u1-intersected::after { content:'intersected'; }
-    [u1-intersect~="above"]::after { content:'above' }
+    [u2-intersect].u2-intersected::after { content:'intersected'; }
+    [u2-intersect~="above"]::after { content:'above' }
     </style>

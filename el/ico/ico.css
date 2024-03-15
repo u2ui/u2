@@ -1,8 +1,8 @@
 html {
-  --u1-ico-font:'Segoe UI Symbol', 'Noto Emoji', sans-serif; /* noto on linux? */
+  --u2-ico-font:'Segoe UI Symbol', 'Noto Emoji', sans-serif; /* noto on linux? */
 }
 
-u1-ico {
+u2-ico {
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -16,9 +16,9 @@ u1-ico {
   text-rendering: optimizeLegibility; /* Safari and Chrome. */
   -moz-osx-font-smoothing: grayscale; /* Firefox. */
   font-feature-settings: 'liga'; /* IE only? */
-  font-family: var(--u1-ico-font) !important;
+  font-family: var(--u2-ico-font) !important;
 
-  fill:currentColor; /* for svg, dont use `u1-ico > svg { fill:currentColor }` because it can have the attribute fill="none" */
+  fill:currentColor; /* for svg, dont use `u2-ico > svg { fill:currentColor }` because it can have the attribute fill="none" */
 
   /* ok? */
   display: inline-block; /* inline-flex has an other baseline? */
@@ -31,14 +31,14 @@ u1-ico {
     - Some Icons on some Fonts may get cuted!
   */
 }
-u1-ico[icon]:before { /* todo if supported: :where([icon]::before) { */
+u2-ico[icon]:before { /* todo if supported: :where([icon]::before) { */
     content:attr(icon);
 }
 
 
 
 /* inline */
-u1-ico[inline] {
+u2-ico[inline] {
   overflow:visible;
   font-size:1em;
   /*
@@ -54,7 +54,7 @@ u1-ico[inline] {
 }
 
 /* direct svg and js-loaded */
-u1-ico > svg {
+u2-ico > svg {
   vertical-align:bottom;
   height:1em;
   width:auto;
@@ -62,20 +62,20 @@ u1-ico > svg {
   overflow:visible;
   margin:auto;
 }
-u1-ico path[fill]:not([fill=none]) { fill:currentColor; }
-u1-ico path[stroke]:not([stroke=none]) { stroke: currentColor; }
+u2-ico path[fill]:not([fill=none]) { fill:currentColor; }
+u2-ico path[stroke]:not([stroke=none]) { stroke: currentColor; }
 
 
 /* dir-variant */
-u1-ico[state]:not([state=loaded]) { /* js, but not yet loaded */
+u2-ico[state]:not([state=loaded]) { /* js, but not yet loaded */
   overflow:clip;
   width: 1em;
   height: 1em;
 }
-u1-ico[state]:before {
+u2-ico[state]:before {
   display:none;
 }
-u1-ico[state=fail]:before { /* js, but failed to load */
+u2-ico[state=fail]:before { /* js, but failed to load */
   display:block;
 }
 

@@ -72,14 +72,14 @@
             "superclass": {
               "name": "HTMLElement"
             },
-            "tagName": "u1-code",
+            "tagName": "u2-code",
             "customElement": true
           }
         ],
         "exports": [
           {
             "kind": "custom-element-definition",
-            "name": "u1-code",
+            "name": "u2-code",
             "declaration": {
               "name": "code",
               "module": "code.js"

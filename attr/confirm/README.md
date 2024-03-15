@@ -1,4 +1,4 @@
-# [u1-confirm] - attribute
+# [u2-confirm] - attribute
 Confirm before action
 
 ## Features
@@ -12,7 +12,7 @@ Confirm before action
 ## Usage
 
 ```html
-<form u1-confirm="Save name?" target=_blank>
+<form u2-confirm="Save name?" target=_blank>
     <label>Name: <input name=name></label>
     <button>save</button>
 </form>
@@ -21,16 +21,16 @@ Confirm before action
 ## Install
 
 ```html
-<script src="../../../confirm.attr@x.x.x/confirm.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/confirm/confirm.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/confirm.attr@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/confirm.attr@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/confirm/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/attr/confirm/tests/test.html)  
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

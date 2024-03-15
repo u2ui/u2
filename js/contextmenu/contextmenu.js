@@ -152,7 +152,7 @@ class MenuItem {
 const arrow = '<svg aria-hidden="true" style="display:block; height:1em" xmlns="http://www.w3.org/2000/svg" width="16" height="26" viewBox="0 0 16 26"><path d="m2 1 12 12L2 25" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-width:2"/></svg>';
 
 const css = `
-#u1ContextMenu { 
+#u2ContextMenu { 
     --bg: var(--color-bg, Canvas);
     --text: var(--color-text, CanvasText);
     --line: color-mix(in oklab, var(--text) 20%, var(--bg));
@@ -254,7 +254,7 @@ const css = `
 export const contextMenu = new Menu();
 const rootEl = contextMenu.el;
 
-rootEl.id = 'u1ContextMenu';
+rootEl.id = 'u2ContextMenu';
 rootEl.popover = 'auto';
 
 // todo: key navigation
@@ -298,7 +298,7 @@ rootEl.addEventListener('toggle', e => {
 const menuContainer = document.createElement('div');
 const shadowRoot = menuContainer.attachShadow({mode: 'open'});
 
-menuContainer.id = 'u1ContextMenuContainer';
+menuContainer.id = 'u2ContextMenuContainer';
 menuContainer.innerHTML = `<link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,200,0,0"/>`; // does not work in shadowdom
 
 shadowRoot.innerHTML = `

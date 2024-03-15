@@ -192,7 +192,7 @@ export class tree extends HTMLElement {
         if (!this.isExpandable()) return;
         if (doit == null) doit = !this.isExpanded();
 
-        const event = new CustomEvent(doit?'u1-tree1-expand':'u1-tree1-collapse', {bubbles: true});
+        const event = new CustomEvent(doit?'u2-tree1-expand':'u2-tree1-collapse', {bubbles: true});
         if (this.getAttribute('aria-live') && this.getAttribute('aria-busy') !== 'true') {
             event.load = promise=>{
                 this.setAttribute('aria-busy','true');
@@ -203,7 +203,7 @@ export class tree extends HTMLElement {
                         !this.items().length && this.removeAttribute('aria-expanded');
                     },100);
                 }).catch(data=>{
-                    console.warn('todo: u1-tree: failed to load');
+                    console.warn('todo: u2-tree: failed to load');
                 });
             }
         }
@@ -221,7 +221,7 @@ export class tree extends HTMLElement {
         this.root()._selected = this;
     }
     _select(){ // like selected but also fires event
-        const event = new CustomEvent('u1-tree1-select', {bubbles: true});
+        const event = new CustomEvent('u2-tree1-select', {bubbles: true});
         this.dispatchEvent(event);
         this.select();
     }
@@ -250,4 +250,4 @@ export class tree extends HTMLElement {
     }
 }
 
-customElements.define('u1-tree1', tree);
+customElements.define('u2-tree1', tree);

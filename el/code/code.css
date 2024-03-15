@@ -1,25 +1,25 @@
-u1-code {
+u2-code {
     font-family: Consolas, "Courier New", Courier, monospace;
     display:block;
     overflow:auto;
 }
-u1-code > :where(script, style) {
+u2-code > :where(script, style) {
     display:block;
 }
 
 /* new */
-u1-code:not(:has(>*)) {
+u2-code:not(:has(>*)) {
     white-space: pre;
 }
-u1-code > :is(pre, code, style, script, textarea),
-u1-code > pre > code {
+u2-code > :is(pre, code, style, script, textarea),
+u2-code > pre > code {
     padding:0;
     margin:0;
     font: inherit;
     display:block;
     background:transparent;
 }
-u1-code > :where(textarea) {
+u2-code > :where(textarea) {
     width:100%;
     border:0;
     height:10rem;
@@ -36,6 +36,6 @@ u1-code > :where(textarea) {
     */
 }
 
-u1-code:not(:defined) > [slot="tools"]{
+u2-code:not(:defined) > [slot="tools"]{
     display:none;
 }

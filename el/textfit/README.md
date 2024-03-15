@@ -1,14 +1,14 @@
-# &lt;u1-textfit&gt; - element
+# &lt;u2-textfit&gt; - element
 Exactly fit text
 
-## Ussage
+## Usage
 
 ```html
-<u1-textfit>ABCD</u1-textfit>
+<u2-textfit>ABCD</u2-textfit>
 ```
 
 ```css
-u1-textfit {
+u2-textfit {
     font-size: clamp(20px, var(--gen-font-size), 400px);
 }
 ```
@@ -16,17 +16,29 @@ u1-textfit {
 ## Install
 
 ```html
-<link href="../../../textfit.el@x.x.x/textfit.min.css" rel=stylesheet>
-<script src="../../../textfit.el@x.x.x/textfit.min.js" type=module>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/textfit/textfit.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/textfit/textfit.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/textfit.el@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/textfit.el@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/textfit/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/textfit/tests/test.html)  
+
+## Ussage
+
+```html
+<u2-textfit>ABCD</u2-textfit>
+```
+
+```css
+u2-textfit {
+    font-size: clamp(20px, var(--gen-font-size), 400px);
+}
+```
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

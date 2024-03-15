@@ -58,14 +58,14 @@
                     "superclass": {
                         "name": "HTMLElement"
                     },
-                    "tagName": "u1-alert",
+                    "tagName": "u2-alert",
                     "customElement": true
                 }
             ],
             "exports": [
                 {
                     "kind": "custom-element-definition",
-                    "name": "u1-alert",
+                    "name": "u2-alert",
                     "declaration": {
                         "name": "MyElement",
                         "module": "my-project/my-element.js"

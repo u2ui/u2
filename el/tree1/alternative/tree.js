@@ -1,5 +1,5 @@
 
-customElements.define('u1-tree', class extends HTMLElement {
+customElements.define('u2-tree', class extends HTMLElement {
     constructor() {
         super();
 

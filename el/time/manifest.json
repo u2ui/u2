@@ -9,7 +9,7 @@
           {
             "kind": "class",
             "description": "A better time-element, e.g. live changing relative dates",
-            "name": "u1-time",
+            "name": "u2-time",
             "members": [
               {
                 "kind": "method",
@@ -121,16 +121,16 @@
             "superclass": {
               "name": "HTMLElement"
             },
-            "tagName": "u1-time",
+            "tagName": "u2-time",
             "customElement": true
           }
         ],
         "exports": [
           {
             "kind": "custom-element-definition",
-            "name": "u1-time",
+            "name": "u2-time",
             "declaration": {
-              "name": "u1-time",
+              "name": "u2-time",
               "module": "time.js"
             }
           }

@@ -66,13 +66,13 @@
         src: url(https://cdn.jsdelivr.net/npm/twemoji-colr-font@14.0.2/twemoji.woff2) format('woff2');
     }
 
-    u1-ico.afterHack:after { /* chrome does not need :after-trick (why? => because it uses segoe ui symbol as font?) , but ff, not working in safari :( */
+    u2-ico.afterHack:after { /* chrome does not need :after-trick (why? => because it uses segoe ui symbol as font?) , but ff, not working in safari :( */
         content: "\00FE0E";
         font:inherit;
         /* for safari (it displays a stupid rect) */
         xopacity:0;
     }
-    u1-ico.proposed {
+    u2-ico.proposed {
         font-palette: dark;             /* ff-107 ch-101 s-15.4 */
         font-variant-emoji: text;       /* safari, ff-108 (seams not to work correct) */
         text-transform: text;           /* proposed */
@@ -112,7 +112,7 @@ http://emojisymbols.com/
 
 <h2>UTF-8 flat symbols system</h2>
 <div>
-    <input onchange="document.querySelectorAll('u1-ico').forEach(el=>{ [...el.innerHTML].length === 1 && (el.innerHTML = this.value) })">
+    <input onchange="document.querySelectorAll('u2-ico').forEach(el=>{ [...el.innerHTML].length === 1 && (el.innerHTML = this.value) })">
     <h3>Times</h3>
     <table>
         <tr>
@@ -121,87 +121,87 @@ http://emojisymbols.com/
             <td>proposed features
             <td>::after hack
             <td>ligatures
-        <tr style="--u1-ico-font:times">
+        <tr style="--u2-ico-font:times">
             <td> times
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'Segoe UI Symbol'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'Segoe UI Symbol'">
             <td> Segoe UI Symbol
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'segoe local'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'segoe local'">
             <td> Segoe UI Symbol local()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'Noto Emoji'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'Noto Emoji'">
             <td> Noto Emoji
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'NotoEmoji url'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'NotoEmoji url'">
             <td> NotoEmoji url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'Font Awesome url'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'Font Awesome url'">
             <td> Font Awesome url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'openmoji bw'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'openmoji bw'">
             <td> OpenMoji bw url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
 
-        <tr style="--u1-ico-font:'openmoji'">
+        <tr style="--u2-ico-font:'openmoji'">
             <td> OpenMoji url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'twemoji'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'twemoji'">
             <td> twemoji url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
 
-        <tr style="--u1-ico-font:'Material Icons url'">
+        <tr style="--u2-ico-font:'Material Icons url'">
             <td> Material Icons url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'Material Symbols Outlined url'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'Material Symbols Outlined url'">
             <td> Material Symbols Outlined url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
-        <tr style="--u1-ico-font:'LigatureSymbols url'">
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
+        <tr style="--u2-ico-font:'LigatureSymbols url'">
             <td> LigatureSymbols url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico>
-            <td> <u1-ico class="ligatures">search</u1-ico>
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico>
+            <td> <u2-ico class="ligatures">search</u2-ico>
 
 
-        <!--tr style="--u1-ico-font:'Emojione url'">
+        <!--tr style="--u2-ico-font:'Emojione url'">
             <td> Emojione url()
-            <td> <u1-ico>🔍</u1-ico>
-            <td> <u1-ico class="proposed">🔍</u1-ico>
-            <td> <u1-ico class="afterHack">🔍</u1-ico-->
+            <td> <u2-ico>🔍</u2-ico>
+            <td> <u2-ico class="proposed">🔍</u2-ico>
+            <td> <u2-ico class="afterHack">🔍</u2-ico-->
 
     </table>
 

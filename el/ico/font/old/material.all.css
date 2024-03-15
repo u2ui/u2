@@ -29,8 +29,8 @@
   font-weight: 400;
   src: url(https://fonts.gstatic.com/s/materialiconstwotone/v43/hESh6WRmNCxEqUmNyh3JDeGxjVVyMg4tHGctNCu0.woff2) format('woff2');
 }
-u1-ico[font=material]                   { --u1-ico-font:Material Icons; }
-u1-ico[font=material][variant=outlined] { --u1-ico-font:Material Icons Outlined; }
-u1-ico[font=material][variant=round]    { --u1-ico-font:Material Icons Round; }
-u1-ico[font=material][variant=sharp]    { --u1-ico-font:Material Icons Sharp; }
-u1-ico[font=material][variant=twotone]  { --u1-ico-font:Material Icons Two Tone; }
+u2-ico[font=material]                   { --u2-ico-font:Material Icons; }
+u2-ico[font=material][variant=outlined] { --u2-ico-font:Material Icons Outlined; }
+u2-ico[font=material][variant=round]    { --u2-ico-font:Material Icons Round; }
+u2-ico[font=material][variant=sharp]    { --u2-ico-font:Material Icons Sharp; }
+u2-ico[font=material][variant=twotone]  { --u2-ico-font:Material Icons Two Tone; }

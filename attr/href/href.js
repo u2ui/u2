@@ -10,21 +10,21 @@ document.addEventListener('click', e => {
 		if (textSelected && !shadowElSelected) return;
 	}
 	if (!e.target.closest) return; // some targets have no closest method?
-	const A = e.target.closest('[u1-href]');
+	const A = e.target.closest('[u2-href]');
 	if (!A) return;
 	if (e.target.closest('a,input,textarea,select,button,label')) return;
 	//if (e.target.closest('[onclick]')) return; //
 	//if (e.target.closest(c1.href.ignoreSelector)) return;
 	if (e.target.isContentEditable) return; // not if contenteditable
-	const href = A.getAttribute('u1-href'); // get the url
+	const href = A.getAttribute('u2-href'); // get the url
 	if (!href) return;
 
 	const url = new URL(href, location.href); // security check, as its not a standard attribute, puryfiers will probably not remove it
 	if (url.protocol === 'javascript:') return;
 
-	let target = A.getAttribute('u1-href-target'); // get the target
+	let target = A.getAttribute('u2-href-target'); // get the target
 	if (e.ctrlKey) target = '_blank'; // better random-string?
-	// var event = new CustomEvent('u1-href-navigate', { // trigger custom event with the ability to prevent Navigation
+	// var event = new CustomEvent('u2-href-navigate', { // trigger custom event with the ability to prevent Navigation
 	// 	cancelable: true,
 	// 	detail: {
 	// 		url: href,
@@ -39,4 +39,4 @@ document.addEventListener('click', e => {
 		location.href = href;
 	}
 });
-document.head.insertAdjacentHTML('afterbegin', '<style>:where([u1-href]){cursor:pointer}</style>');
+document.head.insertAdjacentHTML('afterbegin', '<style>:where([u2-href]){cursor:pointer}</style>');

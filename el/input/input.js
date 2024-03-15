@@ -1,7 +1,7 @@
 // See https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel
 
 
-customElements.define('u1-input', class extends HTMLElement {
+customElements.define('u2-input', class extends HTMLElement {
     constructor(...args) {
         super(...args);
 

@@ -18,7 +18,7 @@
                     ],
                     "events": [
                         {
-                            "name": "u1-carousel.slide",
+                            "name": "u2-carousel.slide",
                             "type": {
                                 "text": "Event"
                             }
@@ -27,24 +27,24 @@
                     "attributes": [
                         {
                             "name": "autoplay",
-                            "u1-type": "boolean"
+                            "u2-type": "boolean"
                         },
                         {
                             "name": "mode",
-                            "u1-type": ["slide","fade","scroll"]
+                            "u2-type": ["slide","fade","scroll"]
                         }
                     ],
                     "superclass": {
                         "name": "HTMLElement"
                     },
-                    "tagName": "u1-carousel",
+                    "tagName": "u2-carousel",
                     "customElement": true
                 }
             ],
             "exports": [
                 {
                     "kind": "custom-element-definition",
-                    "name": "u1-carousel",
+                    "name": "u2-carousel",
                     "declaration": {
                         "name": "MyElement",
                         "module": "my-project/my-element.js"

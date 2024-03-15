@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../../../u1/tests/test-init.js" type=module></script>
-        <title>Attribute u1-href tests</title>
+        <script src="../../../u2/tests/test-init.js" type=module></script>
+        <title>Attribute u2-href tests</title>
 
         <link rel=stylesheet href="../../../base.css/full.css">
         <link rel=stylesheet href="../../../classless.css/variables.css">
@@ -16,15 +16,15 @@
 
     <body>
 
-<div u1-href="https://github.com/u1ui" class=pseudoLink>
+<div u2-href="https://github.com/u2ui" class=pseudoLink>
     <h1>I am a DIV and i act like a link</h1>
     <ul>
-        <li>Elements using the u1-href-attribute have a cursor:pointer</li>
+        <li>Elements using the u2-href-attribute have a cursor:pointer</li>
         <li>Try <mark>ctrl-click</mark>, the link shoul open in a new tab</li>
         <li>Try <mark>right or middle mouse button</mark> the link does not work</li>
         <li>If you <mark>Select some text</mark> the link does not work</li>
         <li>
-            <button> if you click the button, the u1-href does not work</button>
+            <button> if you click the button, the u2-href does not work</button>
         </li>
         <li>
             <label>
@@ -39,25 +39,25 @@
     </ul>
 </div>
 
-<div u1-href="https://github.com/u1ui" u1-href-target=_blank class=pseudoLink>
-    A u1-href link with the attribute <code>u1-href-target="_blank"</code><br>
+<div u2-href="https://github.com/u2ui" u2-href-target=_blank class=pseudoLink>
+    A u2-href link with the attribute <code>u2-href-target="_blank"</code><br>
     Opens in a new window
 </div>
 
 
-<div u1-href="https://github.com/u1ui" class=pseudoLink tabindex="0">
-    This u1-href link is keyboard-accessible through it has "tabindex"-attribute<br>
+<div u2-href="https://github.com/u2ui" class=pseudoLink tabindex="0">
+    This u2-href link is keyboard-accessible through it has "tabindex"-attribute<br>
     It will not trigger navigation if it is focused and you press enter, should it?<br>
     If you have usecase, please let me know.
 </div>
 
 
-<div u1-href="./" class=pseudoLink>
+<div u2-href="./" class=pseudoLink>
     relative links "./"
 </div>
 
-<div u1-href=" &#14; jAvascript:alert('xss')" class=pseudoLink>
-    security, should not execute u1-href=" &amp;#14; jAvascript:alert('xss')"
+<div u2-href=" &#14; jAvascript:alert('xss')" class=pseudoLink>
+    security, should not execute u2-href=" &amp;#14; jAvascript:alert('xss')"
 </div>
 
 <style>

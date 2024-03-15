@@ -1,5 +1,5 @@
 
-customElements.define('u1-qrcode', class extends HTMLElement {
+customElements.define('u2-qrcode', class extends HTMLElement {
 
     constructor() {
         super();

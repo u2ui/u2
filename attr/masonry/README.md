@@ -1,4 +1,4 @@
-# [u1-masonry] - attribute
+# [u2-masonry] - attribute
 null
 
 handy util-attribute to make a masonry layout
@@ -10,7 +10,7 @@ handy util-attribute to make a masonry layout
 ## Usage
 
 ```html
-<div u1-masonry>
+<div u2-masonry>
     <div>item1<br>heigter</div>
     <div>item2</div>
     <div>item3</div>
@@ -22,12 +22,12 @@ handy util-attribute to make a masonry layout
 ```
 
 ```css
-[u1-masonry] {
-    --u1-Gap:2rem;
-    --u1-Col-gap:1rem;
-    --u1-Items-width:8rem;
+[u2-masonry] {
+    --u2-Gap:2rem;
+    --u2-Col-gap:1rem;
+    --u2-Items-width:8rem;
 }
-[u1-masonry] > * {
+[u2-masonry] > * {
     border:1px solid black;
     padding:.5em;
 }
@@ -36,16 +36,16 @@ handy util-attribute to make a masonry layout
 ## Install
 
 ```html
-<script src="../../../masonry.attr@x.x.x/masonry.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/masonry/masonry.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/masonry.attr@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/masonry.attr@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/masonry/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/attr/masonry/tests/test.html)  
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

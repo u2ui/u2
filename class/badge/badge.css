@@ -1,4 +1,4 @@
-.u1-badge {
+.u2-badge {
     background-color:var(--color-dark);
     color:var(--color-bg);
 
@@ -25,7 +25,7 @@
     */
 }
 
-.u1-badge:empty {
+.u2-badge:empty {
     min-width:  .6em;
     min-height: .6em;
     padding:0;

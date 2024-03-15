@@ -7,7 +7,7 @@ using grid:
 https://jsfiddle.net/x90cz65o/103/
 */
 
-.u1-table {
+.u2-table {
     display:table;
     border-collapse:collapse;
     width:100%;
@@ -17,73 +17,73 @@ https://jsfiddle.net/x90cz65o/103/
     border-spacing: 0; /* css-tables: border-spacing in not table-elements is already 0 *
     font-variant-numeric: tabular-nums; /* in base.css but not for css-tables
     */
-    --u1-Gap: 1rem;
-    --u1-Col-gap: var(--u1-Gap);
-    --u1-Row-gap: var(--u1-Gap);
+    --u2-Gap: 1rem;
+    --u2-Col-gap: var(--u2-Gap);
+    --u2-Row-gap: var(--u2-Gap);
 }
-.u1-table > * {
+.u2-table > * {
     display:table-row-group;
 }
-.u1-table > * > * {
+.u2-table > * > * {
     display:table-row;
 }
-.u1-table > * > * > * {
+.u2-table > * > * > * {
     display:table-cell;
-    padding: calc(var(--u1-Row-gap) / 2)  calc(var(--u1-Col-gap) / 2);
+    padding: calc(var(--u2-Row-gap) / 2)  calc(var(--u2-Col-gap) / 2);
 }
 
 
 /* .-Flex */
-.u1-table.-Flex {
+.u2-table.-Flex {
     display: block;
 }
-.u1-table.-Flex > * {
+.u2-table.-Flex > * {
     display: block;
 }
-.u1-table.-Flex > * > * { /* tr */
+.u2-table.-Flex > * > * { /* tr */
     display:flex;
     flex-wrap:wrap; /* only fields-table? */
     align-items: baseline;
-    padding:calc(var(--u1-Row-gap) / 2) 0;
+    padding:calc(var(--u2-Row-gap) / 2) 0;
 }
-.u1-table.-Flex > * > * > * { /* td */
+.u2-table.-Flex > * > * > * { /* td */
     flex-grow: 1;
     flex-shrink:0;
     flex-basis:10em;
     min-width:0;
-    padding:0 calc(var(--u1-Col-gap) / 2);
+    padding:0 calc(var(--u2-Col-gap) / 2);
     border:0 !important; /* overwrite inherit from sticky, and border makes no sense if flex */
     display:flex; /* new ok? better textarea-baseline */
     flex-direction:column;
 }
-.u1-table.-Flex.-NoSideGaps > * > * { column-gap:var(--u1-Col-gap); }
-.u1-table.-Flex.-NoSideGaps > * > * > * { padding:0; }
+.u2-table.-Flex.-NoSideGaps > * > * { column-gap:var(--u2-Col-gap); }
+.u2-table.-Flex.-NoSideGaps > * > * > * { padding:0; }
 
 
 /* .-Fields */
-.u1-table.-Fields input:not([type=radio], [type=checkbox], [type=date], [type=color]),
-.u1-table.-Fields textarea {
+.u2-table.-Fields input:not([type=radio], [type=checkbox], [type=date], [type=color]),
+.u2-table.-Fields textarea {
     width:100%;
     width:-moz-available;
     width:-webkit-fill-available;
 }
-.u1-table.-Fields > * > * > :first-child {
+.u2-table.-Fields > * > * > :first-child {
     width:var(--col-1-width, 9em);
     flex-basis:var(--col-1-width, 9em);
 }
 /* would be good for textarea align *
-.u1-table.-Flex.-Fields > * > * > * {
+.u2-table.-Flex.-Fields > * > * > * {
     display:flex;
 }
 */
 
-.u1-table.-NoSideGaps > * > * > :first-child { padding-left:0; }
-.u1-table.-NoSideGaps > * > * > :last-child { padding-right:0; }
+.u2-table.-NoSideGaps > * > * > :first-child { padding-left:0; }
+.u2-table.-NoSideGaps > * > * > :last-child { padding-right:0; }
 
 
 
 /* .-Sticky beta! */
-.u1-table.-Sticky {
+.u2-table.-Sticky {
     border-collapse: separate;
     /*
     Tables should be in a overflow:auto-wrapper (for mobile)
@@ -95,17 +95,17 @@ https://jsfiddle.net/x90cz65o/103/
     xdisplay:block;
     */
 }
-.u1-table.-Sticky > thead > * > th {
+.u2-table.-Sticky > thead > * > th {
     position:sticky;
     top:0;
     background-color:var(--color-bg);
 }
-.u1-table.-Sticky > * > * > * { /* border-collapse:separate prevents borders on tr */
+.u2-table.-Sticky > * > * > * { /* border-collapse:separate prevents borders on tr */
     border-bottom:inherit;
 }
 
 /*
-.u1-table.-Sticky > tbody > * > th {
+.u2-table.-Sticky > tbody > * > th {
     max-width:30%;
     width:30%;
     white-space: normal;
@@ -115,7 +115,7 @@ https://jsfiddle.net/x90cz65o/103/
 /*
 display:grid;(block) makes chrome first-textarea-line as baseline; makes but removes this from firefox needs inline
 bad hack, what if chrome implements two-values-display
-.u1-table textarea {
+.u2-table textarea {
     vertical-align: baseline;
     display: block;
     display: flex inline;

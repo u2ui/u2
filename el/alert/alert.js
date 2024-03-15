@@ -12,7 +12,7 @@ class alert extends HTMLElement {
                 @import url('../../../el/ico/ico.css');
                 :host:not([dismissible])::part(close) { display:none; } /* TODO: does not work in chrome */
                 :host {
-                    --u1-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+                    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
                 }
                 #container {
                     display:flex;
@@ -43,7 +43,7 @@ class alert extends HTMLElement {
                 slot[name=icon] {
                     font-size:1.7em;
                     color:var(--color);
-                    &::slotted(*), & > u1-ico {
+                    &::slotted(*), & > u2-ico {
                         display:block;
                         font-size:inherit;
                     }
@@ -61,10 +61,10 @@ class alert extends HTMLElement {
             <div id=container>
                 <div id=body>
                     <slot name=icon part=icon>
-                        <u1-ico icon=info></u1-ico>
+                        <u2-ico icon=info></u2-ico>
                     </slot>
                     <slot id=content></slot>
-                    <slot name=action u1-focusgroup></slot>
+                    <slot name=action u2-focusgroup></slot>
                 </div>
                 <button id=close part=close aria-label=close>&times;</button>
             </div>
@@ -73,7 +73,7 @@ class alert extends HTMLElement {
     connectedCallback() {
         const variant = this.getAttribute('variant');
         const icon = this.getAttribute('icon') || variant2Icon[variant] || 'info';
-        this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u1-ico icon=${icon}></u1-ico>`;
+        this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
         this.shadowRoot.querySelector('#close').onclick = () => this.hide();
         this.setAttribute('role', 'alert');
     }
@@ -102,11 +102,11 @@ class alert extends HTMLElement {
 
 const variant2Icon = {info:'info',success:'check',warn:'warning',error:'error'};
 
-customElements.define('u1-alert', alert);
+customElements.define('u2-alert', alert);
 
 /*
 alert = function(message, type, options) {
-    const el = document.createElement('u1-alert');
+    const el = document.createElement('u2-alert');
     el.textContent = message;
     options.icon && el.setAttribute('icon', options.icon);
     el.setAttribute('type', type??'info');
@@ -122,10 +122,10 @@ export error = (message, options) => alert(message, 'error', options);
 
 /*
 function getToolsContainer() {
-    const el = document.getElementById('u1-notification-stack');
+    const el = document.getElementById('u2-notification-stack');
     if (el) return el;
     const div = document.createElement('div');
-    div.id = 'u1-notification-stack';
+    div.id = 'u2-notification-stack';
     document.body.appendChild(div);
     return div;
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
-    <script src="../../../u1/tests/test-init.js" type=module></script>
+    <script src="../../../u2/tests/test-init.js" type=module></script>
 
     <link rel=stylesheet href="../../../base.css/full.css">
     <link rel=stylesheet href="../../../classless.css/variables.css">
@@ -30,34 +30,34 @@
 
     <button>
         focusable
-        <u1-tooltip tabindex=-1>Click on me and i will not disappear</u1-tooltip>
+        <u2-tooltip tabindex=-1>Click on me and i will not disappear</u2-tooltip>
     </button>
 
     <button aria-labelledby=shared>shared1</button>
     <button aria-labelledby=shared>shared2</button>
-    <u1-tooltip id=shared>Same tooltip for multiple elements</u1-tooltip>
+    <u2-tooltip id=shared>Same tooltip for multiple elements</u2-tooltip>
 
     <button>
-        <u1-tooltip>Saved the file</u1-tooltip>
+        <u2-tooltip>Saved the file</u2-tooltip>
         save
         <div aria-labelledby="nested1"" id="nested" style="background:black; display:inline">
-            <u1-tooltip>Nested test</u1-tooltip>
+            <u2-tooltip>Nested test</u2-tooltip>
             nested
         </div>
     </button>
 
     <button>
         ritch
-        <u1-tooltip tabindex="-1">
+        <u2-tooltip tabindex="-1">
             Super duper
             <a href="#">more</a>
-        </u1-tooltip>
+        </u2-tooltip>
     </button>
 
     <button>
-        <u1-tooltip>
+        <u2-tooltip>
             Longer text, Lorem Ispsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur consectetur, nisi nisl tincidunt nisi, eget porta nisl nisl euismod nisi.
-        </u1-tooltip>
+        </u2-tooltip>
         long text
     </button>
 
@@ -66,27 +66,27 @@
 
     <button style="margin-inline:auto; display:block">
         position=top
-        <u1-tooltip position="top">Tooltip</u1-tooltip>
+        <u2-tooltip position="top">Tooltip</u2-tooltip>
     </button>
     <button style="margin-inline:auto; display:block">
         position=left
-        <u1-tooltip position="left">Tooltip</u1-tooltip>
+        <u2-tooltip position="left">Tooltip</u2-tooltip>
     </button>
     <button style="margin-inline:auto; display:block">
         position=right
-        <u1-tooltip position="right">Tooltip</u1-tooltip>
+        <u2-tooltip position="right">Tooltip</u2-tooltip>
     </button>
     <button style="margin-inline:auto; display:block">
         position=bottom
-        <u1-tooltip position="bottom">Tooltip</u1-tooltip>
+        <u2-tooltip position="bottom">Tooltip</u2-tooltip>
     </button>
 
 
     <button style="position:absolute; bottom:2rem; left:2rem">
         Tooltip should stay in viewport
-        <u1-tooltip>
+        <u2-tooltip>
             Does it?
-        </u1-tooltip>
+        </u2-tooltip>
     </button>
 
     <br><br>
@@ -94,7 +94,7 @@
     <label>
         label
         <input aria-labelledby="ttinp" value="input">
-        <u1-tooltip id="ttinp">Tooltip using aria-labelledby</u1-tooltip>
+        <u2-tooltip id="ttinp">Tooltip using aria-labelledby</u2-tooltip>
     </label>
 
     <br><br>
@@ -104,17 +104,17 @@
         <li><span aria-labelledby="dyn">Banana</span>
         <li><span aria-labelledby="dyn">Orange</span>
     </ul>
-    <u1-tooltip id=dyn></u1-tooltip>
+    <u2-tooltip id=dyn></u2-tooltip>
     <script>
-        dyn.addEventListener('u1-show', function(e) {
+        dyn.addEventListener('u2-show', function(e) {
             dyn.innerHTML = `This is a great ${e.detail.target.innerText}`;
         });
     </script>
 
 
-    <u1-code editable trim>
+    <u2-code editable trim>
         <style>
-        u1-tooltip {
+        u2-tooltip {
             font-size:max(12px, .7rem);
             --line-height: 1.4em;
             padding:.5rem;
@@ -122,13 +122,13 @@
             color:var(--color-bg);
             border-radius:.3rem;
         }
-        u1-tooltip a {
+        u2-tooltip a {
             color:var(--color-light);
         }
 
 
         /* arrow */
-        u1-tooltip::after {
+        u2-tooltip::after {
             --size:1em;
             content: "";
             position:absolute;
@@ -139,39 +139,39 @@
             margin:auto;
             z-index:-1;
         }
-        u1-tooltip[\:position-x="after"]::after {
+        u2-tooltip[\:position-x="after"]::after {
             left:calc( var(--size) * -.5);
         }
-        u1-tooltip[\:position-x="before"]::after {
+        u2-tooltip[\:position-x="before"]::after {
             right:calc( var(--size) * -.5);
         }
-        u1-tooltip[\:position-x="center"]::after {
+        u2-tooltip[\:position-x="center"]::after {
             right:0;
             left:0;
         }
-        u1-tooltip[\:position-y="after"]::after {
+        u2-tooltip[\:position-y="after"]::after {
             top:calc( var(--size) * -.5);
         }
-        u1-tooltip[\:position-y="before"]::after {
+        u2-tooltip[\:position-y="before"]::after {
             bottom:calc( var(--size) * -.5);
         }
-        u1-tooltip[\:position-y="center"]::after {
+        u2-tooltip[\:position-y="center"]::after {
             top:0;
             bottom:0;
         }
         </style>
-    </u1-code>
+    </u2-code>
 
 
     <button onclick="dialog1.showModal()">
         Show dialog
-        <u1-tooltip>Test if tooltip works inside dialog</u1-tooltip>
+        <u2-tooltip>Test if tooltip works inside dialog</u2-tooltip>
     </button>
     <dialog id="dialog1">
        <h1>Dialog</h1>
         <button>
             focus or hover me
-            <u1-tooltip position=right>Test if tooltip works inside dialog</u1-tooltip>
+            <u2-tooltip position=right>Test if tooltip works inside dialog</u2-tooltip>
         </button>
         <br>
         If tooltips are not using popover attribute,<br>

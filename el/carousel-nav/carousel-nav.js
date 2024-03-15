@@ -1,12 +1,12 @@
 
 var style = document.createElement('style');
 style.innerHTML = `
-u1-carousel-nav {
+u2-carousel-nav {
 	display:flex;
 	justify-content:center;
 	margin:.5rem;
 }
-u1-carousel-nav > * {
+u2-carousel-nav > * {
 	xflex:0 0 auto;
 	width:1.2rem;
 	height:1.2rem;
@@ -23,10 +23,10 @@ u1-carousel-nav > * {
 	align-items:center;
 	opacity:.3;
 }
-u1-carousel-nav > :hover {
+u2-carousel-nav > :hover {
 	opacity:.6;
 }
-u1-carousel-nav > .-active {
+u2-carousel-nav > .-active {
 	opacity:1;
 }
 `
@@ -36,22 +36,22 @@ function refSlideshows(el) {
 	var grp = el.getAttribute('sync-group');
 	if (grp) {
 		var slides = [];
-		document.body.c1FindAll('u1-carousel[sync-group="'+grp+'"]').forEach(function(ssEl){
+		document.body.c1FindAll('u2-carousel[sync-group="'+grp+'"]').forEach(function(ssEl){
 			slides.push(ssEl);
 		});
 		return slides;
 	} else {
-		return [el.parentNode.querySelector('u1-carousel')];
+		return [el.parentNode.querySelector('u2-carousel')];
 	}
 }
 
-class u1CarouselNav extends HTMLElement {
+class u2CarouselNav extends HTMLElement {
 	constructor() {
 		super();
 	}
 
 	connectedCallback() {
-		customElements.whenDefined('u1-carousel').then(()=>{
+		customElements.whenDefined('u2-carousel').then(()=>{
 			var SS = refSlideshows(this)[0];
 
 			var items = SS._items();
@@ -64,7 +64,7 @@ class u1CarouselNav extends HTMLElement {
 				button.innerHTML = index+1;
 				this.append(button);
 			});
-			SS.addEventListener('u1-carousel.slide', e=>{
+			SS.addEventListener('u2-carousel.slide', e=>{
 				Array.from(this.children).forEach((button, index)=>{
 					button.classList.toggle('-active', e.detail.index === index);
 				});
@@ -72,4 +72,4 @@ class u1CarouselNav extends HTMLElement {
 		})
 	}
 }
-customElements.define('u1-carousel-nav', u1CarouselNav)
+customElements.define('u2-carousel-nav', u2CarouselNav)

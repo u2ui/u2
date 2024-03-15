@@ -1,4 +1,4 @@
-u1-tooltip {
+u2-tooltip {
     /* relevant */
     opacity: 0;
     visibility:hidden;
@@ -27,11 +27,11 @@ u1-tooltip {
     /* */
 }
 
-u1-tooltip[tabindex="-1"] {
+u2-tooltip[tabindex="-1"] {
     pointer-events:auto;
 }
 
-u1-tooltip:is(:focus-within, :hover, [open]) {
+u2-tooltip:is(:focus-within, :hover, [open]) {
     /* show transition */
     transition-duration:250ms;
     transition-delay: 150ms;
@@ -41,7 +41,7 @@ u1-tooltip:is(:focus-within, :hover, [open]) {
 
 
 /* css only fallback */
-u1-tooltip:not(:defined):not([id]) {
+u2-tooltip:not(:defined):not([id]) {
     :hover > &,
     :focus > & {
         left:auto;
@@ -55,7 +55,7 @@ u1-tooltip:not(:defined):not([id]) {
 
 
 /* arrow:
-u1-tooltip::after {
+u2-tooltip::after {
     --size:1em;
     content: "";
     position:absolute;
@@ -66,23 +66,23 @@ u1-tooltip::after {
     margin:auto;
     z-index:-1;
 }
-u1-tooltip[\:position-x="after"]::after {
+u2-tooltip[\:position-x="after"]::after {
     left:calc( var(--size) * -.5);
 }
-u1-tooltip[\:position-x="before"]::after {
+u2-tooltip[\:position-x="before"]::after {
     right:calc( var(--size) * -.5);
 }
-u1-tooltip[\:position-x="center"]::after {
+u2-tooltip[\:position-x="center"]::after {
     right:0;
     left:0;
 }
-u1-tooltip[\:position-y="after"]::after {
+u2-tooltip[\:position-y="after"]::after {
     top:calc( var(--size) * -.5);
 }
-u1-tooltip[\:position-y="before"]::after {
+u2-tooltip[\:position-y="before"]::after {
     bottom:calc( var(--size) * -.5);
 }
-u1-tooltip[\:position-y="center"]::after {
+u2-tooltip[\:position-y="center"]::after {
     top:0;
     bottom:0;
 }

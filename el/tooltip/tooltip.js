@@ -2,14 +2,14 @@ import {Placer} from '../../js/Placer/Placer.js';
 
 let idCounter = 0;
 
-customElements.define('u1-tooltip', class extends HTMLElement {
+customElements.define('u2-tooltip', class extends HTMLElement {
     constructor() {
         super();
         this.placer = new Placer(this, { x:'center', y:'after', margin:20 });
     }
     connectedCallback() {
         if (!this.id) { // if no id is set, set one an make it the tooltip for its parent
-            this.id = 'u1-tooltip-' + idCounter++;
+            this.id = 'u2-tooltip-' + idCounter++;
             this.parentNode.setAttribute('aria-labelledby', this.id);
         }
         const rootEl = document.body; // zzz if popover
@@ -20,11 +20,11 @@ customElements.define('u1-tooltip', class extends HTMLElement {
         // this.style.margin = '0';
     }
     _showFor(el){
-        let event = new CustomEvent('u1-tooltip-show', {bubbles: true, cancelable: true, detail: {tooltip: this} });
+        let event = new CustomEvent('u2-tooltip-show', {bubbles: true, cancelable: true, detail: {tooltip: this} });
         el.dispatchEvent(event);
         if (event.defaultPrevented) return;
 
-        let sEvent = new CustomEvent('u1-show', {bubbles: true, cancelable: true, detail: {target: el} });
+        let sEvent = new CustomEvent('u2-show', {bubbles: true, cancelable: true, detail: {target: el} });
         this.dispatchEvent(sEvent);
         if (event.defaultPrevented) return;
 
@@ -76,6 +76,6 @@ function getTooltipForElement(el) {
     const id = el.getAttribute('aria-labelledby') || el.getAttribute('aria-describedby');
     if (!id) return;
     const tooltip = document.getElementById(id);
-    if (!tooltip || tooltip.tagName !== 'U1-TOOLTIP') return;
+    if (!tooltip || tooltip.tagName !== 'U2-TOOLTIP') return;
     return tooltip;
 }

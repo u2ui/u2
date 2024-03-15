@@ -45,12 +45,12 @@ class _animationObserver {
         // this way we dont overwrite elements targeting by multiple observers,
         // but we have to match the selector for every observer
         this.style = document.createElement('style');
-        this.animationName = `u1-selObs-${animationCounter++}`;
+        this.animationName = `u2-selObs-${animationCounter++}`;
 
         this.style.innerHTML =
             `@keyframes ${this.animationName}{}\n`+
             `${selector}{animation:${this.animationName} .1ms}`+
-            `.u1sOTracked:not(${selector}){animation:${this.animationName} .1ms .1ms}`+
+            `.u2sOTracked:not(${selector}){animation:${this.animationName} .1ms .1ms}`+
             ``; // todo: :where() when supported
         document.head.append(this.style);
         aObservers.add(this);
@@ -64,7 +64,7 @@ document.addEventListener('animationstart', e => { // todo: remove/add listener 
     for (const observer of aObservers) {
         if (e.animationName === observer.animationName) {
             observer.on(e.target);
-            e.target.classList.add('u1sOTracked'); // can be removed if none of the listeners tracking it
+            e.target.classList.add('u2sOTracked'); // can be removed if none of the listeners tracking it
         }
     }
 });

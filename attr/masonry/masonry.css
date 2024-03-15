@@ -1,18 +1,18 @@
 /* css only */
-[u1-masonry] {
-    --u1-Items-width: 10rem;
-    --u1-Gap: 1rem;
-    --u1-Col-gap: var(--u1-Gap);
-    --u1-Row-gap: var(--u1-Gap);
+[u2-masonry] {
+    --u2-Items-width: 10rem;
+    --u2-Gap: 1rem;
+    --u2-Col-gap: var(--u2-Gap);
+    --u2-Row-gap: var(--u2-Gap);
     display: grid;
     /*
-    grid-column-gap: var(--u1-Col-gap);
-    grid-row-gap:    var(--u1-Row-gap);
+    grid-column-gap: var(--u2-Col-gap);
+    grid-row-gap:    var(--u2-Row-gap);
     */
-    column-gap: var(--u1-Col-gap); /* todo: safari 10.3, after it "column-gap" */
-    row-gap:    var(--u1-Row-gap);
-    /* grid-template-columns: repeat(auto-fill, minmax( var(--u1-Items-width), 1fr) ); /* min() not supported everywhere? */
-    grid-template-columns: repeat(auto-fill, minmax( min(var(--u1-Items-width), 100%) , 1fr) );
+    column-gap: var(--u2-Col-gap); /* todo: safari 10.3, after it "column-gap" */
+    row-gap:    var(--u2-Row-gap);
+    /* grid-template-columns: repeat(auto-fill, minmax( var(--u2-Items-width), 1fr) ); /* min() not supported everywhere? */
+    grid-template-columns: repeat(auto-fill, minmax( min(var(--u2-Items-width), 100%) , 1fr) );
     /* grid-auto-flow:dense; /* why */
 
 	grid-template-rows: masonry; /* native css only fallback (firefox, safari?) */
@@ -21,9 +21,9 @@
 
 
 /* js */
-[u1-masonry] > * {
+[u2-masonry] > * {
     margin:0 !important; /* should be 0 as items are placed absolute */
 }
-[u1-masonry].-Js > * {
+[u2-masonry].-Js > * {
 	position: absolute !important;
 }

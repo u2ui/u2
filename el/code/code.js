@@ -132,7 +132,7 @@ class code extends HTMLElement {
         this.element = this.getAttribute('element');
         if (this.element) {
             this.sourceElement = document.getElementById(this.element);
-            if (!this.sourceElement) console.error('u1-code: element not found', this.element);
+            if (!this.sourceElement) console.error('u2-code: element not found', this.element);
         } else {
             this.sourceElement = this.querySelector('pre>code,textarea,style,script') || this;
         }
@@ -154,7 +154,7 @@ class code extends HTMLElement {
     static get observedAttributes() { return ['trim'] }
 }
 
-customElements.define('u1-code', code);
+customElements.define('u2-code', code);
 
 
 function trimCode(value){

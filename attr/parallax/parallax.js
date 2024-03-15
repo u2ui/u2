@@ -14,7 +14,7 @@ function remove(el){
 }
 
 var styEl = document.createElement('style');
-styEl.innerHTML = '[u1-parallax]{z-index:1; will-change:transform;}';
+styEl.innerHTML = '[u2-parallax]{z-index:1; will-change:transform;}';
 document.head.prepend(styEl);
 
 const parallax = class {
@@ -24,10 +24,10 @@ const parallax = class {
     connect(){
         this.positionChange();
         let style = getComputedStyle(this.el);
-        //let direction = parseFloat(style.getPropertyValue('--u1-parallax-direction'));
+        //let direction = parseFloat(style.getPropertyValue('--u2-parallax-direction'));
         //if (isNaN(direction)) direction = 180;
         //this.angle = (direction + 90) / 180 * Math.PI;
-        this.speed = parseFloat(style.getPropertyValue('--u1-parallax-speed'));
+        this.speed = parseFloat(style.getPropertyValue('--u2-parallax-speed'));
         if (isNaN(this.speed)) this.speed = .8;
         onScroll() // todo: better solution?
     }
@@ -116,4 +116,4 @@ new SelectorObserver({
     off: (el) => {
         remove(el)
     }
-}).observe('[u1-parallax]');
+}).observe('[u2-parallax]');

@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <script src="../../../u1/tests/test-init.js" type=module></script>
-        <title>badge.class test | u1ui design system</title>
+        <script src="../../../u2/tests/test-init.js" type=module></script>
+        <title>badge.class test | u2ui design system</title>
 
         <link rel=stylesheet href="../../../base.css/full.css">
 
@@ -16,49 +16,49 @@
         <link rel=stylesheet href="../badge.css">
 <body>
 
-    <section id=u1-badge>
-        <h2>.u1-badge</h2>
+    <section id=u2-badge>
+        <h2>.u2-badge</h2>
 
         <h3>No Content</h3>
         <div>
-            ✉<sup class=u1-badge style="background-color:red"></sup>
-            ♞<sup class=u1-badge style="background-color:red"></sup>
+            ✉<sup class=u2-badge style="background-color:red"></sup>
+            ♞<sup class=u2-badge style="background-color:red"></sup>
         </div>
 
         <h3>Using span</h3>
         <div>
-          <span class=u1-badge>done</span>
-          <span class=u1-badge>todog</span>
-          <span class="u1-badge">warn</span>
+          <span class=u2-badge>done</span>
+          <span class=u2-badge>todog</span>
+          <span class="u2-badge">warn</span>
         </div>
 
         <h3>Using small</h3>
         <div>
-          Here: <small class=u1-badge>done</small>
-          <small class=u1-badge>done</small>
+          Here: <small class=u2-badge>done</small>
+          <small class=u2-badge>done</small>
         </div>
 
         <h3>Using sup</h3>
         <p>
-          <sup class=u1-badge>pro tip ★</sup> show here |
-          E-mails <sup class=u1-badge>3</sup>
+          <sup class=u2-badge>pro tip ★</sup> show here |
+          E-mails <sup class=u2-badge>3</sup>
         </p>
 
         <h3>Breaks</h3>
         <p style="max-width:200px">
-          <small class=u1-badge>super long badge containing more words</small>
+          <small class=u2-badge>super long badge containing more words</small>
         </p>
 
         <h3>Combining</h3>
         <p>
           <button>
             Notifications
-            <small class=u1-badge>5</small>
+            <small class=u2-badge>5</small>
           </button>
           <h1>
             Heading
-            <small class=u1-badge>5</small>
-            sup: <sup class=u1-badge>5</sup>
+            <small class=u2-badge>5</small>
+            sup: <sup class=u2-badge>5</sup>
           </h1>
         </p>
 
@@ -92,13 +92,13 @@ body {
 
       <section>
         <h2>Pulse (not integrated)</h2>
-        <span class="u1-badge -Pulse" style="--pulse-color:var(--color)">2</span>
+        <span class="u2-badge -Pulse" style="--pulse-color:var(--color)">2</span>
         &nbsp;&nbsp;
-        <span class="u1-badge -Pulse" style="background:red; --pulse-color:red"></span>
+        <span class="u2-badge -Pulse" style="background:red; --pulse-color:red"></span>
       </section>
 
       <style contenteditable>
-      .u1-badge.-Pulse {
+      .u2-badge.-Pulse {
         animation: 1.5s ease 0s infinite normal none running pulse;
       }
       @keyframes pulse {

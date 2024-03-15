@@ -4,7 +4,7 @@
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
     <title>test</title>
-    <script src="../../../u1/tests/test-init.js" type=module></script>
+    <script src="../../../u2/tests/test-init.js" type=module></script>
 
     <link rel=stylesheet href="../../../css/base/full.css">
     <link rel=stylesheet href="../../../css/classless/variables.css">
@@ -19,7 +19,7 @@
 
     <style>
     html {
-        --u1-ico-dir:'https://cdn.jsdelivr.net/npm/@adobe/spectrum-css-workflow-icons@1.4.2/24/{IconName}.svg';
+        --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@adobe/spectrum-css-workflow-icons@1.4.2/24/{IconName}.svg';
     }
     </style>
         
@@ -27,7 +27,7 @@
     <script src="../../../el/tooltip/tooltip.js" type=module></script>
 
     <style>
-    u1-tooltip {
+    u2-tooltip {
         font-size:max(12px, .7rem);
         background:var(--color-text);
         color:var(--color-bg);
@@ -54,36 +54,36 @@
     <section>
 
         <h2>pre > code (preferred) + buttons</h2>
-        <u1-code trim editable>
+        <u2-code trim editable>
 
-<pre><code>&lt;u1-code&gt;
+<pre><code>&lt;u2-code&gt;
     &lt;pre&gt;
         &lt;code&gt;
             Shows decoded innerHTML
         &lt;/code&gt;
     &lt;/pre&gt;
-&lt;/u1-code&gt;</code></pre>
+&lt;/u2-code&gt;</code></pre>
 
             <button slot=tools onclick="this.parentNode.requestFullscreen()">
-                <u1-ico icon=full-screen style="font-size:1.2rem"></u1-ico>
-                <u1-tooltip>Fullscreen</u1-tooltip>
+                <u2-ico icon=full-screen style="font-size:1.2rem"></u2-ico>
+                <u2-tooltip>Fullscreen</u2-tooltip>
             </button>
             <button slot=tools onclick="this.parentNode.copy()" style="bottom:0; top:auto">
-                <u1-ico icon=copy style="font-size:1.2rem"></u1-ico>
-                <u1-tooltip>Copy</u1-tooltip>
+                <u2-ico icon=copy style="font-size:1.2rem"></u2-ico>
+                <u2-tooltip>Copy</u2-tooltip>
             </button>
 
-        </u1-code>
+        </u2-code>
 
         <h2>direct, no tag</h2>
-        <u1-code trim editable language=html>
-            &lt;u1-code&gt;
+        <u2-code trim editable language=html>
+            &lt;u2-code&gt;
                 Shows decoded innerHTML
-            &lt;/u1-code&gt;
-        </u1-code>
+            &lt;/u2-code&gt;
+        </u2-code>
 
         <h2>foreign element (live! innerHTML)</h2>
-        <u1-code element=demo trim editable language=html> </u1-code>
+        <u2-code element=demo trim editable language=html> </u2-code>
         <div id=demo>
             <div style="padding:.5rem; border-radius:.5rem; margin-top:1rem; background:#0004">
                 Change the <b>code</b>
@@ -91,9 +91,9 @@
         </div>
 
         <h2>Style Tag (live!)</h2>
-        <u1-code trim editable>
+        <u2-code trim editable>
             <style>
-            u1-code {
+            u2-code {
                 padding:.5rem;
                 font-size:14px;
                 background:#fff;
@@ -102,31 +102,31 @@
                 border-radius:.5rem;
             }
             </style>
-        </u1-code>
+        </u2-code>
 
         <h2>Script Tag</h2>
-        <u1-code trim editable>
+        <u2-code trim editable>
             <script type=html>
                 <script type="html">
                     alert('Shows raw content');
                     alert('Exeption: /script> has to be translated to \\/script> to not break out');
                 <\/script>
             </script>
-        </u1-code>
+        </u2-code>
 
         <h2>Textarea</h2>
         <label>
             Label
 
-            <u1-code trim>
+            <u2-code trim>
                 <textarea>
-                &lt;u1-code&gt;
+                &lt;u2-code&gt;
                     &lt;textarea&gt;
-                        &amp;lt;u1-code&amp;gt;...
+                        &amp;lt;u2-code&amp;gt;...
                     &lt;/textarea&gt;
-                &lt;/u1-code&gt;
+                &lt;/u2-code&gt;
                 </textarea>
-            </u1-code>
+            </u2-code>
 
         </label>
         
@@ -134,22 +134,22 @@
 
         <label>
             Label
-            <u1-code trim style="min-height:140px; max-height:200px">
+            <u2-code trim style="min-height:140px; max-height:200px">
                 
-<textarea autocomplete=off autocorrect=off autocapitalize=off spellcheck=false>&lt;u1-code&gt;
-    This u1-code element has min-height:140px; max-height:200px
+<textarea autocomplete=off autocorrect=off autocapitalize=off spellcheck=false>&lt;u2-code&gt;
+    This u2-code element has min-height:140px; max-height:200px
     It resizes between these values even without css (only chromium for now)
-&lt;/u1-code&gt;</textarea>
-            </u1-code>
+&lt;/u2-code&gt;</textarea>
+            </u2-code>
 
         </label>
 
         <!--h2>Template tag</h2>
-        <u1-code trim editable>
+        <u2-code trim editable>
             <template>
                 Shows parsed DOM, useful?
                 <input type=checkbox checked>
             </template>
-        </u1-code-->
+        </u2-code-->
 
     </section>

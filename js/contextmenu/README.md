@@ -47,8 +47,6 @@ contextMenu.add([
 <button>button 2</button>
 ```
 
-[doc](https://doc.deno.land/../../../contextmenu.js@x/contextmenu.js)
-
 ## API
 
 ### contextMenu.add(items)
@@ -77,19 +75,13 @@ Adds a single menu item to the context menu. `item` is an object with the same p
 
 - return value: The menu item object.
 
-## Install
-
-```js
-import * as module from "../../../contextmenu.js@x.x.x/contextmenu.min.js"
-```
-
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/contextmenu.js@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/contextmenu.js@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/contextmenu/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/js/contextmenu/tests/test.html)  
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

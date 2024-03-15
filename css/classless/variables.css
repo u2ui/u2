@@ -15,7 +15,7 @@ html {
     --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) #0003;
 }
 
-html, [u1-skin] {
+html, [u2-skin] {
   --hs:var(--hsl-h), var(--hsl-s);
   --hsl:var(--hs), var(--hsl-l);
 

@@ -1,14 +1,14 @@
 
 const style = document.createElement('style');
 style.innerHTML = `
-u1-typewriter .-Symbol {
+u2-typewriter .-Symbol {
     position:relative;
 }
-u1-typewriter .-Char { opacity: 0; }
-u1-typewriter .-Active .-Char { opacity: 1; }
-u1-typewriter .-Caret {
+u2-typewriter .-Char { opacity: 0; }
+u2-typewriter .-Active .-Char { opacity: 1; }
+u2-typewriter .-Caret {
     position:absolute;
-    animation: u1-typewriter-caret-ani .5s infinite alternate;
+    animation: u2-typewriter-caret-ani .5s infinite alternate;
     height:1em;
     width:2px;
     margin:auto;
@@ -17,7 +17,7 @@ u1-typewriter .-Caret {
     left: .1em;
     background:currentColor;
 }
-@keyframes u1-typewriter-caret-ani {
+@keyframes u2-typewriter-caret-ani {
     0% { opacity: 1; }
     25% { opacity: 1; }
     50% { opacity: 0; }
@@ -59,17 +59,17 @@ class Typewriter extends HTMLElement {
 
     play(){
         this.pause();
-        this.dispatchEvent(new CustomEvent('u1-typewriter-play', {bubbles:true}));
+        this.dispatchEvent(new CustomEvent('u2-typewriter-play', {bubbles:true}));
         this._playNext();
     }
     _playNext() {
-        const speed = getComputedStyle(this).getPropertyValue('--u1-typewriter-speed') || 60;
+        const speed = getComputedStyle(this).getPropertyValue('--u2-typewriter-speed') || 60;
         this.playInterval = setTimeout(() => {
             this._playNext();
         }, speed);
         if (this.next() === false) {
             this.pause();
-            this.dispatchEvent(new CustomEvent('u1-typewriter-end', {bubbles:true}));
+            this.dispatchEvent(new CustomEvent('u2-typewriter-end', {bubbles:true}));
             if (this.hasAttribute('loop')) {
                 setTimeout(() => {
                     this.reset();
@@ -79,7 +79,7 @@ class Typewriter extends HTMLElement {
         }
     }
     pause() {
-        this.dispatchEvent(new CustomEvent('u1-typewriter-pause', {bubbles:true}));
+        this.dispatchEvent(new CustomEvent('u2-typewriter-pause', {bubbles:true}));
         clearInterval(this.playInterval);
     }
     next() {
@@ -100,7 +100,7 @@ class Typewriter extends HTMLElement {
     }
 
 }
-customElements.define('u1-typewriter', Typewriter);
+customElements.define('u2-typewriter', Typewriter);
 
 
 // find the next Char in children or sibling of the node but not outside the root
@@ -149,7 +149,7 @@ function separateChars(parent) {
 
 /* audio-extension */
 
-document.addEventListener('u1-typewriter-play', (e)=>{
+document.addEventListener('u2-typewriter-play', (e)=>{
     const el = e.target;
     if (!el.hasAttribute('audio')) return;
     if (!el.audioObj) {
@@ -160,7 +160,7 @@ document.addEventListener('u1-typewriter-play', (e)=>{
     el.audioObj.src = el.getAttribute('src') || import.meta.url + '/../typewriter.mp3';
     el.audioObj.play();
 });
-document.addEventListener('u1-typewriter-pause', e=>{
+document.addEventListener('u2-typewriter-pause', e=>{
     const el = e.target;
     el.audioObj && el.audioObj.pause();
 })

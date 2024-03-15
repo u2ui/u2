@@ -7,8 +7,8 @@ document.addEventListener('submit', e=>{
     const form = e.target;
     const btn = e.submitter;
     let element = null;
-    if (form.hasAttribute('u1-confirm')) element = form;
-    if (btn && btn.hasAttribute('u1-confirm')) element = btn;
+    if (form.hasAttribute('u2-confirm')) element = form;
+    if (btn && btn.hasAttribute('u2-confirm')) element = btn;
     if (!element) return;
     confirmEvent(e, element, ()=> form.requestSubmit(btn) );
 },true);
@@ -16,7 +16,7 @@ document.addEventListener('submit', e=>{
 // click
 document.addEventListener('click', e=>{
     if (resentConfirmed) return;
-    const element = e.target.closest('button[u1-confirm]');
+    const element = e.target.closest('button[u2-confirm]');
     if (!element) return;
     if (element.form && element.type==='submit') return; // handled by submit event. What about "reset"?
     confirmEvent(e, element, ()=> element.click() );
@@ -40,7 +40,7 @@ async function confirmEvent(e, element, then){
 
 function getMessage(el, lang) {
     // get lang of el
-    let msg = el.getAttribute('u1-confirm');
+    let msg = el.getAttribute('u2-confirm');
     if (msg) return msg;
     msg = sure[lang];
     if (msg) return msg;
@@ -71,7 +71,7 @@ const sure = {
 /* TODO: button and link confirm?
 document.addEventListener('click', async e=>{
     if (resentConfirmed) return;
-    let element = e.target.closest('[u1-confirm]');
+    let element = e.target.closest('[u2-confirm]');
     if (!element) return;
     if (element.form || element.tagName === 'FORM') {
         console.log('handled by submit event');

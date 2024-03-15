@@ -18,7 +18,7 @@
                     ],
                     "events": [
                         {
-                            "name": "u1-activate",
+                            "name": "u2-activate",
                             "type": {
                                 "text": "Event"
                             }
@@ -27,14 +27,14 @@
                     "attributes": [
                     ],
                     "superclass": { "name": "HTMLElement" },
-                    "tagName": "u1-tabs",
+                    "tagName": "u2-tabs",
                     "customElement": true
                 }
             ],
             "exports": [
                 {
                     "kind": "custom-element-definition",
-                    "name": "u1-tabs",
+                    "name": "u2-tabs",
                     "declaration": {
                         "name": "tabs",
                         "module": "tabs.js"

@@ -9,7 +9,7 @@ const tagToTab = {
     H6:1,
 };
 
-customElements.define('u1-tabs', class extends HTMLElement {
+customElements.define('u2-tabs', class extends HTMLElement {
 
     constructor() {
         super();
@@ -129,7 +129,7 @@ customElements.define('u1-tabs', class extends HTMLElement {
         if (target.slot === 'title') { // todo closest?
 
             // beta, should not be here but in "_selectTab"?
-            let event = new CustomEvent('u1-activate', { bubbles: true, cancelable: true });
+            let event = new CustomEvent('u2-activate', { bubbles: true, cancelable: true });
             target.dispatchEvent(event);
             if (event.defaultPrevented) return;
 
@@ -173,10 +173,10 @@ customElements.define('u1-tabs', class extends HTMLElement {
 
 });
 
-// beta, does not work if initial u1-target is already fired
+// beta, does not work if initial u2-target is already fired
 // problem: sometimes, on initial load, the event is fired before the listener is added
-document.addEventListener('u1-target', e => {
-    let tabs = document.querySelectorAll('u1-tabs > :target');
+document.addEventListener('u2-target', e => {
+    let tabs = document.querySelectorAll('u2-tabs > :target');
     for (let tab of tabs) tab.click();
 });
 

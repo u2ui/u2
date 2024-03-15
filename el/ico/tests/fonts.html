@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <!--script src="../../../u1/tests/test-init.js" type=module></script-->
-        <title>u1-ico Test</title>
+        <!--script src="../../../u2/tests/test-init.js" type=module></script-->
+        <title>u2-ico Test</title>
 
         <link rel=stylesheet href="../../../norm.css/norm.min.css">
         <link rel=stylesheet href="../../../base.css/base.min.css">
@@ -32,12 +32,12 @@
 <div style="display:flex; flex-wrap:wrap; gap:.2rem;" id=lsView>
     <script>
         for (let icon of '🧭︁,📞︁,+︁,👤︁,︁,'.split(',')) {
-            document.write('<div style="text-align:center"><u1-ico style="--u1-ico-font:\'Font Awesome\';">'+icon+'</u1-ico><div style="font-size:12px">'+icon+'</div></div>');
+            document.write('<div style="text-align:center"><u2-ico style="--u2-ico-font:\'Font Awesome\';">'+icon+'</u2-ico><div style="font-size:12px">'+icon+'</div></div>');
         }
     </script>
     <script>
         for (let icon of '︁,︁,︁,︁'.split(',')) {
-            document.write('<div style="text-align:center"><u1-ico style="--u1-ico-font:\'Font Awesome\';">'+icon+'</u1-ico><div style="font-size:12px">'+icon+'</div></div>');
+            document.write('<div style="text-align:center"><u2-ico style="--u2-ico-font:\'Font Awesome\';">'+icon+'</u2-ico><div style="font-size:12px">'+icon+'</div></div>');
         }
     </script>
 
@@ -45,33 +45,33 @@
 
 
 <h2>LigatureSymbols</h2>
-<div style="--u1-ico-font:'LigatureSymbols'">
+<div style="--u2-ico-font:'LigatureSymbols'">
     <div style="display:flex; flex-wrap:wrap; gap:.2rem" id=lsView>
         <script type=module>
             ligaturesFromFamily('LigatureSymbols').then(function(ligas){
                 var str = '';
                 for (let icon of Object.keys(ligas)) {
-                    str += '<div style="text-align:center"><u1-ico>'+icon+'</u1-ico><div style="font-size:18px">'+icon+'</div></div>';
+                    str += '<div style="text-align:center"><u2-ico>'+icon+'</u2-ico><div style="font-size:18px">'+icon+'</div></div>';
                 }
                 lsView.innerHTML = str;
             });
         </script>
         <script>
             for (let icon of 'twitter,youtube,copy,not_found'.split(',')) {
-                document.write('<div style="text-align:center"><u1-ico>'+icon+'</u1-ico><div style="font-size:12px">'+icon+'</div></div>');
+                document.write('<div style="text-align:center"><u2-ico>'+icon+'</u2-ico><div style="font-size:12px">'+icon+'</div></div>');
             }
         </script>
     </div>
 </div>
 
 <h2>Material Icons</h2>
-<div style="--u1-ico-font:'Material Icons'">
-    <!--select onchange="this.parentNode.style.setProperty('--u1-ico-font',this.value)">
-        <option value="Material Icons">--u1-ico-font:'Material Icons'</option>
-        <option value="Material Icons Outlined">--u1-ico-font:'Material Icons Outlined'</option>
-        <option value="Material Icons Round">--u1-ico-font:'Material Icons Round'</option>
-        <option value="Material Icons Sharp">--u1-ico-font:'Material Icons Sharp'</option>
-        <option value="Material Icons Two Tone">--u1-ico-font:'Material Icons Two Tone'</option>
+<div style="--u2-ico-font:'Material Icons'">
+    <!--select onchange="this.parentNode.style.setProperty('--u2-ico-font',this.value)">
+        <option value="Material Icons">--u2-ico-font:'Material Icons'</option>
+        <option value="Material Icons Outlined">--u2-ico-font:'Material Icons Outlined'</option>
+        <option value="Material Icons Round">--u2-ico-font:'Material Icons Round'</option>
+        <option value="Material Icons Sharp">--u2-ico-font:'Material Icons Sharp'</option>
+        <option value="Material Icons Two Tone">--u2-ico-font:'Material Icons Two Tone'</option>
     </select><br-->
     <div style="display:flex; flex-wrap:wrap; gap:.2rem" id=materialView>
         <script type=module>
@@ -79,7 +79,7 @@
             ligaturesFromFamily('Material Icons').then(function(ligas){
                 var str = '';
                 for (let icon of Object.keys(ligas)) {
-                    str += '<u1-ico title="'+icon+'">'+icon+'</u1-ico>';
+                    str += '<u2-ico title="'+icon+'">'+icon+'</u2-ico>';
                 }
                 materialView.innerHTML = str;
             });
@@ -87,27 +87,27 @@
         </script>
         <script>
             for (let icon of 'star,add,clear,call,snowboarding,not_found'.split(',')) {
-                document.write('<div style="text-align:center"><u1-ico>'+icon+'</u1-ico><div style="font-size:12px">'+icon+'</div></div>');
+                document.write('<div style="text-align:center"><u2-ico>'+icon+'</u2-ico><div style="font-size:12px">'+icon+'</div></div>');
             }
         </script>
     </div>
 </div>
 
 <h2>Remixicon Font</h2>
-<div style="--u1-ico-font:'RemixOutlined'">
+<div style="--u2-ico-font:'RemixOutlined'">
     <div style="display:flex; flex-wrap:wrap; gap:.2rem" id=remixView>
         <script type=module>
             ligaturesFromFamily('RemixOutlined').then(function(ligas){
                 var str = '';
                 for (let icon of Object.keys(ligas)) {
-                    str += '<u1-ico title="'+icon+'">'+icon+'</u1-ico>';
+                    str += '<u2-ico title="'+icon+'">'+icon+'</u2-ico>';
                 }
                 remixView.innerHTML = str;
             });
         </script>
         <script>
             for (let icon of 'star,heart,home,file,key,sun,not_found'.split(',')) {
-                document.write('<div style="text-align:center"><u1-ico>'+icon+'</u1-ico><div style="font-size:12px">'+icon+'</div></div>');
+                document.write('<div style="text-align:center"><u2-ico>'+icon+'</u2-ico><div style="font-size:12px">'+icon+'</div></div>');
             }
         </script>
     </div>

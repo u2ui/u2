@@ -22,8 +22,6 @@ placer.toElement(target);
 </button>
 ```
 
-[doc](https://doc.deno.land/../../../Placer.js@x/Placer.js)
-
 ## API
 
 ### Placer
@@ -44,19 +42,13 @@ placer.followElement(element); // place moverEl relative to element and follow i
 
 ```
 
-## Install
-
-```js
-import * as module from "../../../Placer.js@x.x.x/Placer.min.js"
-```
-
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/Placer.js@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/Placer.js@main/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/Placer/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/js/Placer/tests/test.html)  
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 

@@ -1,0 +1,29 @@
+# .u2-badge - class
+Rendering badges
+
+## Ussage
+
+```html
+Normal: <span class=u2-badge>Badge</span>
+Small: <small class=u2-badge>Badge</small>
+Super: <sup class=u2-badge>Badge</sup>
+Sub: <sub class=u2-badge>Badge</sub>
+Empty: <sup class=u2-badge style="background-color:red"></sup>
+```
+
+## Install
+
+```html
+<link href="../../../badge.class@x.x.x/badge.min.css" rel=stylesheet>
+```
+
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/badge.class@main/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/badge.class@main/tests/test.html)  
+
+## About
+
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
+- Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
+

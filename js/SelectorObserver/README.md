@@ -17,19 +17,11 @@ new SelectorObserver({
 </div>
 ```
 
-[doc](https://doc.deno.land/../../../SelectorObserver.js@x/SelectorObserver.js)
-
-## Install
-
-```js
-import * as module from "../../../SelectorObserver.js@x.x.x/SelectorObserver.min.js"
-```
-
 ## Demos
 
-[minimal.html](http://gcdn.li/u1ui/SelectorObserver.js@main/tests/minimal.html)  
-[test.html](http://gcdn.li/u1ui/SelectorObserver.js@main/tests/test.html)  
-[tests.html](http://gcdn.li/u1ui/SelectorObserver.js@main/tests/tests.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/SelectorObserver/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/js/SelectorObserver/tests/test.html)  
+[tests.html](http://gcdn.li/u2ui/u2@main/js/SelectorObserver/tests/tests.html)  
 
 ## Options - "checkAnimation" (beta)
 
@@ -44,6 +36,6 @@ Trigger only `on` and not `off` right now.
 
 ## About
 
-- MIT License, Copyright (c) 2022 <u1> (like all repositories in this organization) <br>
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
 
