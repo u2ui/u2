@@ -1,0 +1,9 @@
+RewriteEngine On
+# Internes Umschreiben der URL ohne Weiterleitung zum Client
+
+
+RewriteRule ^(.*).min.js$ $1.js [L]
+
+RewriteRule ^(.*).min.css$ $1.css [L]
+
+RewriteRule ^(.*)@[^/]+/(.*)$ $1/$2 [L]

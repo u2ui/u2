@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+    <script src="../confirm.js" type=module></script>
+
+
+<body>
+
+<section>
+
+    <h2>Tests</h2>
+
+    <form u1-confirm="send form?" id=theForm>
+        <label>
+            <input name="x">
+        </label>
+        <br>
+        <button u1-confirm="Send form using btn?">
+            send
+            <small>(u1-confirm on the button element)</small>
+        </button>
+        <br>
+        <button>
+            send
+            <small>(u1-confirm on the form element)</small>
+        </button>
+    </form>
+
+    <button onclick="theForm.requestSubmit()">requestSubmit</button>
+
+    <h2>Using submit-event <small>(and preventDefault)</small></h2>
+
+    <form u1-confirm="send form?" id=theForm2>
+        <label>
+            <input name="y">
+        </label>
+        <button>send</button>
+    </form>
+
+    <script>
+        theForm2.addEventListener('submit',e=>{
+            e.preventDefault();
+            var data = new FormData(theForm2)
+            console.log(data)
+        });
+    </script>
+
+    <h2>Not form related Button</h2>
+
+    <button u1-confirm="Would you like an alert()?" onclick="alert('clicked')">
+        without form
+        <small>klick me</small>
+    </button>
+
+    <h2>No message (default message)</h2>
+    <button u1-confirm onclick="alert('clicked')" lang=en>
+        [lang="en"]
+    </button>
+
+    <button u1-confirm onclick="alert('clicked')" lang=de>
+        [lang="de"]
+    </button>
+
+    <button u1-confirm onclick="alert('clicked')" lang=fr>
+        [lang="fr"]
+    </button>
+
+    <h2>Link (not working! implemented if needed)</h2>
+
+    <a u1-confirm="open U1Ui on github?" href="https://github.com/u1ui/u1" target="_blank">a link</a>
+
+</section>
