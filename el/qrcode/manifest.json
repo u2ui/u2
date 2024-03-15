@@ -1,0 +1,37 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "qrcode.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "A custom HTML element for displaying QR codes.",
+            "name": "u1Qrcode",
+            "members": [],
+            "events": [],
+            "attributes": [],
+            "cssProperties": [],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u1-qrcode",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u1-qrcode",
+            "declaration": {
+              "name": "u1Qrcode",
+              "module": "qrcode.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

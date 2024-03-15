@@ -1,0 +1,26 @@
+u1-tree1 {
+    display:block;
+}
+u1-tree1::part(row) {
+    white-space: nowrap;
+    cursor:pointer;
+}
+u1-tree1::part(row):focus {
+    outline:1px dotted black;
+}
+u1-tree1[aria-selected=true]::part(row) {
+    background:#00000008;
+}
+u1-tree1[draggable]::part(row) {
+    cursor:grab;
+}
+
+
+u1-tree1:not(:defined) {
+    padding-block-start:.2em;
+    display:list-item;
+    list-style-position: inside;
+    > u1-tree1 {
+        padding-inline-start:1.2em;
+    }
+}

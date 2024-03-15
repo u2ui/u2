@@ -1,0 +1,89 @@
+u1-tooltip {
+    /* relevant */
+    opacity: 0;
+    visibility:hidden;
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    z-index: 9999;
+    transition-property:opacity, visibility;
+
+    /* hide transition */
+    transition-duration:400ms;
+    transition-delay: 10ms;
+
+    /* customisable */
+    pointer-events: none;
+    padding: .5em .7em;
+    border:1px solid CanvasText; /* currentColor bug in ff: https://jsfiddle.net/cdtonmzu/109/ */
+    max-width:14rem;
+    background: Canvas;
+    color: CanvasText;
+
+    /* popover *
+    margin: 0;
+    overflow: visible;
+    display: block;
+    /* */
+}
+
+u1-tooltip[tabindex="-1"] {
+    pointer-events:auto;
+}
+
+u1-tooltip:is(:focus-within, :hover, [open]) {
+    /* show transition */
+    transition-duration:250ms;
+    transition-delay: 150ms;
+    visibility:visible;
+    opacity: 1;
+}
+
+
+/* css only fallback */
+u1-tooltip:not(:defined):not([id]) {
+    :hover > &,
+    :focus > & {
+        left:auto;
+        top:auto;
+        margin: 2rem 0;
+        visibility:visible;
+        opacity: 1;
+    }
+}
+/* */
+
+
+/* arrow:
+u1-tooltip::after {
+    --size:1em;
+    content: "";
+    position:absolute;
+    transform:rotate(45deg);
+    width:var(--size);
+    height:var(--size);
+    background-color: inherit;
+    margin:auto;
+    z-index:-1;
+}
+u1-tooltip[\:position-x="after"]::after {
+    left:calc( var(--size) * -.5);
+}
+u1-tooltip[\:position-x="before"]::after {
+    right:calc( var(--size) * -.5);
+}
+u1-tooltip[\:position-x="center"]::after {
+    right:0;
+    left:0;
+}
+u1-tooltip[\:position-y="after"]::after {
+    top:calc( var(--size) * -.5);
+}
+u1-tooltip[\:position-y="before"]::after {
+    bottom:calc( var(--size) * -.5);
+}
+u1-tooltip[\:position-y="center"]::after {
+    top:0;
+    bottom:0;
+}
+*/

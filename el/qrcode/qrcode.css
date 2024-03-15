@@ -1,0 +1,13 @@
+u1-qrcode {
+    color:var(--color-text, '#000');
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+
+    /* should fit in viewport *
+    max-height: 90vh; or better? clamp(200px, 100%, 90vh) * /
+    max-width: 90vw;
+    /**/
+}

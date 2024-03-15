@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <script type=module>
+    import {Placer} from "../Placer.js";
+    window.Placer = Placer;
+    </script>
+
+<body>
+
+<section>
+    <div id=moverEl style="position:absolute">move to</div>
+    <button id=target>
+        move to me
+    </button>
+</section>
+
+<script type=module>
+
+let placer = new Placer(moverEl, {
+    x:'after',
+    y:'after',
+    margin: 0,
+    stayInWindow: true,
+    switchSide: true,
+});
+
+placer.toElement(target);
+
+</script>

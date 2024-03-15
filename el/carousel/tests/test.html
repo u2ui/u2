@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+
+    <link rel=stylesheet href="../carousel.css">
+    <script src="../carousel.js" type=module></script>
+
+</head>
+
+<body>
+
+    <style contenteditable>
+    u1-carousel {
+        box-shadow: var(--shadow);
+        border:5px solid red;
+    }
+    u1-carousel > *:not(img) {
+        border:5px solid var(--color);
+        padding:2rem;
+    }
+    </style>
+
+    <section>
+        <h2>mode = slide</h2>
+        <u1-carousel mode=slide autoplay style="--u1-carousel-slideshow-speed:2s" tabindex="0">
+            <section>
+                <h2 slot="title">Title</h2>
+                If input focused, dont continue to play
+                <input>
+            </section>
+            <section>
+                <h2 slot="title">Title 2</h2>
+                <input>
+                <input><br>
+                Lorem Ipsum
+            </section>
+            <section>
+                <h2 slot="title">Title 3</h2>
+                <input>
+                Lorem Ipsum
+            </section>
+        </u1-carousel>
+    </section>
+
+    <section>
+        <h2>mode=scroll</h2>
+        <u1-carousel mode=scroll>
+            <section>
+                <h2 slot="title">Title</h2>
+                Lorem Ipsum
+            </section>
+            <section>
+                <h2 slot="title">Title 2</h2>
+                Lorem Ipsum
+            </section>
+            <section>
+                <h2 slot="title">Title 3</h2>
+                Lorem Ipsum
+            </section>
+        </u1-carousel>
+    </section>
+
+    <section>
+        <h2>mode=fade</h2>
+        <u1-carousel mode=fade>
+            <section>
+                <h2 slot="title">Title</h2>
+                Lorem Ipsum
+            </section>
+            <section>
+                <h2 slot="title">Title 2</h2>
+                Lorem Ipsum
+            </section>
+            <section>
+                <h2 slot="title">Title 3</h2>
+                Lorem Ipsum
+            </section>
+        </u1-carousel>
+    </section>
+
+
+
+    <section>
+        <h2>Compare modes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Mode
+                    <th>How it works
+                    <th>Custom Speed
+                    <th>Visible Overflow
+            <tbody>
+                <tr>
+                    <td>slide
+                    <td>moves using translateX
+                    <td>yes
+                    <td>possible (todo)
+                <tr>
+                    <td>fade
+                    <td>fades using opacity
+                    <td>yes
+                    <td>no
+                <tr>
+                    <td>scroll
+                    <td>moves using native scroll
+                    <td>no
+                    <td>no
+        </table>
+    </section>
+
+    <section>
+        <h2>Using images</h2>
+        <u1-carousel mode=slide autoplay style="--u1-carousel-slideshow-speed:2.2s">
+            <img src="https://picsum.photos/500/200?random=1" width="500" height="200">
+            <img src="https://picsum.photos/500/200?random=2" width="500" height="200">
+            <img src="https://picsum.photos/500/200?random=3" width="500" height="200">
+            <img src="https://picsum.photos/500/200?random=4" width="500" height="200">
+            <img src="https://picsum.photos/500/200?random=5" width="500" height="200">
+        </u1-carousel>
+    </section>

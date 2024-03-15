@@ -1,0 +1,113 @@
+/* https://dev.to/5t3ph/my-top-css-tips-as-shared-on-twitter-part-1-23e2 */
+/* https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */
+
+html {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    accent-color: var(--color); /* ch 93, ff 92, sa 15.4 */
+}
+a {
+    color: var(--color);
+    /* transition: color .2s; ff flickers on visited-color-change https://bugzilla.mozilla.org/show_bug.cgi?id=868975 */
+}
+/* a:visited {
+    color: var(--color-text);
+} */
+a:hover, a:focus {
+    color: var(--color-text);
+}
+hr {
+    color: var(--color-line);
+    margin: 2rem 0;
+    border-width:var(--line-width);
+}
+
+/* margin-trim on the container may be a good alternative, only safari for now */
+:is(h1,h2,h3,h4,h5,h6,p,ul,ol):first-child { margin-top:0; }
+:is(h1,h2,h3,h4,h5,h6,p,ul,ol):last-child { margin-bottom:0; }
+
+
+table {
+    width: 100%;
+    /* take margins into account (not working in firefox) width:-moz-available; width:-webkit-fill-available; */
+    word-break: normal;
+}
+td, th {
+    padding: .5em;
+}
+
+dialog {
+    background-color:var(--color-bg);
+    color:var(--color-text);
+}
+
+mark {
+    background-color: hsl(var(--hsl-h), 100%, 70%, 0.5);
+}
+
+/* focus/active style */
+:focus {
+    outline: .4rem solid hsl(var(--hsl), .2);
+    transition: .15s;
+}
+:focus:not(:focus-visible) { outline-width: 0; }
+:active:active { outline-width: .6rem; }
+
+
+/* FORM */
+
+/* all inputs, buttons */
+/* is:(input, textarea, select, button, .btn, ::file-selector-button, ::-webkit-file-upload-button) { forgiving :is-selector usable after safari 13.7 */
+input, textarea, select, button, .btn {
+    padding-inline: .4em;
+    padding-block: .3em;
+    font-family:inherit;
+    max-width: 100%;
+    /* todo: new ok? */
+    /* xborder: 1px solid; */
+    border-radius: var(--radius); /* remove? */
+    /* min-height:1.3em; todo? for select, input same height in chrome, firefox has same height if they have borders? or line-height: 1.2;? line-height can not be set on select */
+    border-width:var(--line-width);
+    border-color:var(--color-line);
+}
+
+
+/* file-input */
+[type=file] {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border: 0;
+    background-color: var(--color-light);
+}
+
+/* buttons */
+/* is:(button, .btn, ::file-selector-button, ::-webkit-file-upload-button) { forgiving :is-selector usable after safari 13.7 */
+button, .btn { /* The selector is not invalidated although ::-webkit-file-upload-button in ff is not working. */
+    background-color: var(--color);
+    color: var(--color-bg);
+    border-color: transparent;
+    padding-inline: 1em;
+    transition: background-color .1s; /* better every property? does not get along with focus-animation */
+
+    /* for .btn */
+	text-decoration:none;
+	display:inline-block;
+}
+/* button:hover:not(:disabled), :hover::file-selector-button, :hover::-webkit-file-upload-button, .btn:hover, button:focus { */
+button:hover:not(:disabled), .btn:hover, button:focus {
+    background-color: var(--color-dark);
+}
+button:disabled {
+    opacity: .5;
+}
+/* ::file-selector-button, ::-webkit-file-upload-button, select[size], / * chrome * / select[multiple] { */
+select[size], /* chrome */ select[multiple] {
+    border-top-right-radius: 0;/* recheck: border-end-end-radius supported? (-safari) */
+    border-bottom-right-radius: 0;
+    margin: 0 .5em 0 0;
+}
+
+:focus::placeholder {
+    opacity: .2;
+}

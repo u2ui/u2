@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+<body>
+
+<section>
+
+    <div id=placeMe style="position:absolute; top:0; left:0; padding:1rem; background:#eee; box-shadow: 0 0 10px #0007; z-index:9">
+        I go there
+    </div>
+
+
+    <script type=module style="display:block">
+import {Placer} from "../Placer.js";
+window.placer = new Placer(placeMe);
+    </script>
+
+    <button onclick="placer.toElement(this)">To this buttons bottom</button>
+
+    <div style="display:grid; place-items: center; height:50vh; border:1px solid;">
+        <button id=button onclick="placer.followElement(this)" style="position:relative">Follow me</button>
+    </div>
+
+    <select id="selectX">
+        <option>before
+        <option>prepend
+        <option>center
+        <option>append
+        <option>after
+    </select>
+    <select id="selectY">
+        <option>before
+        <option>prepend
+        <option>center
+        <option>append
+        <option>after
+    </select>
+    <br>
+    <button onclick="placer.setOptions({x:selectX.value, y:selectY.value})">Set Options</button>
+
+</section>

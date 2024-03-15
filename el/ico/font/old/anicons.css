@@ -1,0 +1,31 @@
+/* https://typogram.github.io/Anicons/use.html */
+
+@font-face {
+    font-family: 'Anicons Regular';
+    font-style: normal;
+    font-weight: 400;
+    xxxsrc: url(https://res.cloudinary.com/dr6lvwubh/raw/upload/v1581441981/Anicons/AniconsGX.ttf);
+    src: url(https://rawcdn.githack.com/Typogram/Anicons/9f441f3231e73ce0a395ede0070276779f13c882/webfonts/AniconsGX.ttf);
+
+}
+@font-face {
+    font-family: 'Anicons Color';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://rawcdn.githack.com/Typogram/Anicons/9f441f3231e73ce0a395ede0070276779f13c882/webfonts/AniconsColorGX.ttf);
+}
+
+u1-ico[font="anicon"] {
+    --u1-ico-font:"Anicons Regular";
+    transition: font-variation-settings .5s ease;
+    font-variation-settings: "TIME" 1;
+}
+u1-ico[font="anicon"][variant=color] {
+    --u1-ico-font:"Anicons Color";
+}
+
+:focus u1-ico[font=anicon][animate=focus] ,
+u1-ico[font=anicon][animate=hover]:hover ,
+u1-ico[font=anicon][animated] {
+    font-variation-settings: "TIME" 100;
+}

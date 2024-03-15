@@ -1,0 +1,353 @@
+// todo add privet fields
+/* element */
+class u1Carousel extends HTMLElement {
+	constructor() {
+		super();
+
+		let shadowRoot = this.attachShadow({mode:'open'});
+		const svg = '<svg viewBox="0 0 9 18" width="9" height="18"><path d="M1 1l7 8-7 8"/></svg>';
+
+		shadowRoot.innerHTML = `
+		<style>
+			:host {
+				position:relative;
+				contain: layout;
+			}
+			:host .-arrow {
+				position:absolute;
+				padding:1rem;
+				top:0;
+				bottom:0;
+				display:flex;
+				cursor:pointer;
+				border:0;
+				background:none;
+				user-select:none;
+				width:auto;
+				z-index:1;
+				align-items:center;
+				flex:0 0 auto; /* grow if controls are static */
+				stroke-linejoin:round;
+				stroke-linecap:round;
+				stroke-width:.1rem;
+				box-sizing:content-box;
+				contain:layout;
+			}
+			:host .-prev { left: 0; }
+			:host .-next { right: 0; }
+
+			:host > .-arrow svg {
+				fill:none;
+				flex:1 1 auto;
+				height: auto;
+				stroke:currentColor;
+				max-height:100%;
+			}
+			:host > .-prev svg {
+				transform:rotate(180deg);
+			}
+			:host([item-count="0"]) > .-arrow, :host([item-count="1"]) > .-arrow {
+				display:none;
+			}
+			:host > slot.body {
+				flex:1 1 auto; /* grow if controls are static */
+			}
+			::slotted([name=prev]) {
+				display:block;
+			}
+
+			/* slide */
+			:host([mode=slide]) {
+				/*
+				todo: important is too strong! what can i do to make just overwrite the css
+				clip: prevent focus-scroll
+				*/
+				overflow:hidden !important;
+				overflow:clip !important;
+			}
+			:host([mode=slide]) > slot.body {
+				width:100%; /* needed bud why? */
+				display:flex;
+				transition: transform var(--u1-carousel-animation-speed, .7s) ease-out;
+				will-change: transform;
+				overflow: visible;
+			}
+			/* scroll */
+			:host([mode=scroll]) {
+				overflow:visible !important;
+			}
+			:host([mode=scroll]) > slot.body {
+				display:flex;
+				overflow:auto !important;
+				scroll-snap-type: x mandatory;
+				scrollbar-width: none;  /* Firefox */
+			}
+			:host([mode=scroll]) > slot.body::-webkit-scrollbar {
+				display: none;  /* Safari and Chrome */
+			}
+
+			/* fade */
+			:host([mode=fade]) {
+				display:flex !important;
+				z-index:0;
+				overflow: visible !important;
+			}
+			:host([mode=fade]) .body {
+				display:flex;
+			}
+			:host([mode=fade]) .body::slotted(*) {
+				transition:opacity var(--u1-carousel-animation-speed, .7s) ease-in-out;
+				will-change: opacity;
+				opacity:0;
+				margin-left:-100% !important;
+			}
+			:host([mode=fade]) .body::slotted(:first-child)  {
+				margin-left:0 !important;
+			}
+			:host([mode=fade]) .body::slotted([aria-hidden=false]) {
+				opacity:1;
+				z-index:1;
+			}
+		</style>
+		<button part="control prev" class="-arrow -prev" aria-label="previous slide">
+			<slot name=prev>${svg}</slot>
+		</button>
+		<slot class=body tabindex=-1></slot>
+		<button part="control next" class="-arrow -next" aria-label="next slide">
+			<slot name=next>${svg}</slot>
+		</button>
+		`;
+
+		setTimeout(()=>{ !this.active && this.next(); }); // this way i can add eventlistener that reacts to the change
+		this._nextDelayed = this._nextDelayed.bind(this);
+
+
+		this.slider = this.shadowRoot.querySelector('slot.body');
+
+		this.mode = this.getAttribute('mode');
+
+		const prev = this.shadowRoot.querySelector('.-prev');
+		const next = this.shadowRoot.querySelector('.-next');
+		next.addEventListener('click',()=>this.next());
+		prev.addEventListener('click',()=>this.prev());
+
+	}
+	static get observedAttributes() {
+		return ['play', 'autoplay', 'mode'/*, 'tabindex'*/]; // zzz "play"
+	}
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (oldValue === newValue) return;
+		if (name === 'play') { console.warn('play is deprecated, use autoplay'); let play = this.hasAttribute('play'); this[play?'play':'stop'](); }  // zzz
+		if (name === 'autoplay') this[newValue===null?'stop':'play']();
+		if (name === 'mode') this.mode = newValue;
+	}
+	set mode(mode){
+		if (!u1Carousel.mode[mode]) mode = 'slide';
+		this.setAttribute('mode', mode);
+		this.handler = u1Carousel.mode[mode];
+		this.handler.init && this.handler.init.call(this);
+	}
+	get mode(){
+		return this.getAttribute('mode');
+	}
+	_items(){
+		return this.slider.assignedElements({flatten:true});
+	}
+	activeIndex(){
+		return Array.prototype.indexOf.call(this._items(), this.active);
+	}
+	slideTo(target){
+		if (typeof target === 'number') target = this._items()[target]; // by index
+
+		if (Array.from(this._items()).indexOf(target) === -1) console.error('target not a child of this slider!')
+
+		if (this.active !== target) { // just trigger if not active
+			for (let child of this._items()) {
+				child.setAttribute('aria-hidden', target !== child);
+			}
+			this.active = target;
+
+			target.dispatchEvent(new CustomEvent('u1-carousel.slide',{
+				bubbles:true,
+				detail:{
+					slide:target,
+					index:Array.prototype.indexOf.call(this._items(), target),
+					slider:this,
+				}
+			}));
+		}
+		this.handler.slideTo && this.handler.slideTo.call(this, target); // needed if not active?
+	}
+	next(){ this.slideTo(this._sibling('next')); }
+	prev(){ this.slideTo(this._sibling('prev')); }
+
+	_sibling(direction){
+		const items = this._items();
+		var sibling = this.active || items.at(-1);
+		const index = this.activeIndex();
+		if (!sibling) return; // no slide
+		while (1) {
+			var sibling = direction === 'prev'
+				? items[index-1] || items.at(-1)
+				: items[index+1] || items.at(0);
+			break; // also hidden
+			// if (sibling.offsetParent) break; // next visible // can cause infinite loops!!
+			if (sibling === this.active) break; // only one
+		}
+		return sibling;
+	}
+	play(){
+		this.addEventListener('u1-carousel.slide', this._nextDelayed);
+		this._nextDelayed();
+	}
+	stop(){
+		this.removeEventListener('u1-carousel.slide', this._nextDelayed)
+		clearTimeout(this._nextDelayedTimeout);
+	}
+	_nextDelayed(){
+		clearTimeout(this._nextDelayedTimeout);
+
+		let speed = this.customProperty('slideshow-speed');
+		if (speed==='') speed = '6000';
+		const unit = speed.match(/[^0-9]*$/)[0];
+		speed = parseFloat(speed);
+		if (unit === 's') speed *= 1000;
+
+		this._nextDelayedTimeout = setTimeout(()=>{
+			if (this.contains(document.activeElement)) return;
+			this.next();
+		},speed);
+	}
+	customProperty(property){
+		return getComputedStyle(this).getPropertyValue('--u1-carousel-'+property);
+	}
+	connectedCallback() {
+		this.hasAttribute('play') && this.play();
+		this.setAttribute('item-count', this._items().length); // todo, dynamic react on dynamic added slides, mutation observer?
+	}
+}
+
+
+u1Carousel.mode = {};
+
+// scroll
+u1Carousel.mode.scroll = {
+	slideTo:function(target){
+		let left = target.offsetLeft - this.slider.offsetLeft;
+		this.slider.scroll({ // todo: better calculation of offset
+			top: target.offsetTop,
+			left: left,
+			behavior: 'smooth'
+		});
+	},
+	init:function(){
+		this.slider.style.transform = ''; // if changed from mode=slide
+
+		this.slider.addEventListener('scroll',()=>{ // trigger on manual scroll
+			clearTimeout(this.scroll_slideing_timeout);
+			this.scroll_slideing_timeout = setTimeout(()=>{
+				const rect = this.slider.getBoundingClientRect();
+				const targets = document.elementsFromPoint(rect.left + rect.width/2, rect.top + rect.height/2);
+				for (let target of targets) {
+					if (target.parentElement === this) {
+						if (target !== this.active) this.slideTo(target);
+						break;
+					}
+				}
+			},100)
+		});
+	}
+}
+
+// slide
+u1Carousel.mode.slide = {
+	init:function(){
+		//this.addSwipe();
+	},
+	slideTo:function(target){
+		this.slider.style.transform = 'translateX(-'+(100*this.activeIndex())+'%)';
+	},
+}
+// fade (entirely done by css)
+u1Carousel.mode.fade = {
+	init:function(){
+		this.slider.style.transform = ''; // if changed from mode=slide
+	}
+}
+
+
+customElements.define('u1-carousel', u1Carousel)
+
+
+// slide on target
+function hashchange(){
+	if (!location.hash) return;
+	const el = document.getElementById(location.hash.substring(1));
+	if (!el) return;
+	const slide = el.closest('u1-carousel > *');
+	if (!slide) return;
+	const sliderEl = slide.parentElement;
+	sliderEl.slideTo(slide);
+}
+addEventListener('DOMContentLoaded', hashchange);
+addEventListener('hashchange', hashchange);
+// slide on focus
+addEventListener('focusin', e=>{
+	const el = document.activeElement;
+	const slide = el.closest('u1-carousel > *');
+	if (!slide) return;
+	const sliderEl = slide.parentElement;
+	sliderEl.slideTo(slide);
+});
+// keyboard nav
+addEventListener('keydown', ({target,code})=>{
+	if (target.tagName !== 'U1-CAROUSEL') return;
+	if (code === 'ArrowRight') target.next();
+	if (code === 'ArrowLeft')  target.prev();
+});
+
+/* sync */
+addEventListener('u1-carousel.slide', e=>{
+	const group = e.detail.slider.getAttribute('sync');
+	group && document.querySelectorAll('u1-carousel[sync="'+group+'"]').forEach( el => el.slideTo(e.detail.index) );
+});
+/*  */
+
+/*
+u1Carousel.prototype.addSwipe = function(){
+	c1.c1Use('pointerObserver',function(){
+		var pO = this.pointerObserver = new c1.pointerObserver(this);
+		var startX = 0;
+		pO.onstart = function(e){
+			//e.preventDefault(); // enable drag image, can not select text
+			startX = getComputedTranslate(this).x;
+			this.style.transform = 'translateX('+startX+'px)';
+			this.style.transition = 'none';
+		}
+		pO.onmove = function(){
+			var to = (this.startDiff().x*1) + startX;
+			this.style.transform = 'translateX('+to+'px)';
+		}
+		pO.onstop = function(){
+			var x = -getComputedTranslate(this).x;
+			var add = this.lastDiff().x * 50;
+			add = Math.max(-this.offsetWidth, Math.min(add, this.offsetWidth));
+			x -= add;
+			var next = Math.round(x / this.offsetWidth);
+			next = Math.max(0, Math.min(next, this.children.length-1));
+			next = this.children[next];
+			if (!next) next = this.active;
+			this.style.transition = '';
+			this.slideTo(next);
+		}
+	});
+}
+function getComputedTranslate(el) {
+	var style = getComputedStyle(el);
+	var matrix = new (window.WebKitCSSMatrix || window.MSCSSMatrix)(style.transform);
+	return {
+		x:matrix.m41,
+		y:matrix.m42,
+	}
+}
+*/

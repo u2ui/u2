@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>skin.attr test | U1 design-system</title>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../skin.css">
+
+    <script type=module src="../../../el/code/code.js"></script>
+    <link rel=stylesheet href="../../../el/code/code.css">
+
+    <style>
+        section {
+            padding:2rem;
+            margin:2rem;
+        }
+    </style>
+<body>
+
+    <section>
+        <h1>No skin attribute</h1>
+        <p>Some Text in a Paragraph Some Text in a Paragraph Some Text in a ParagraphSome Text in a Paragraph Some</p>
+        <hr>
+        <button>some button</button>
+        <input type=text>
+        <input type=checkbox>
+    </section>
+
+    <section u1-skin=invert>
+        <h1>[u1-skin=invert]</h1>
+        <p>Some Text in a Paragraph Some Text in a Paragraph Some Text in a ParagraphSome Text in a Paragraph Some</p>
+        <hr>
+        <button>some button</button>
+        <input type=text>
+        <input type=checkbox>
+    </section>
+
+
+    <section u1-skin=theme>
+        <h1>[u1-skin=theme]</h1>
+        <p>Some Text in a Paragraph Some Text in a Paragraph Some Text in a ParagraphSome Text in a Paragraph Some</p>
+        <hr>
+        <button>some button</button>
+        <input type=text>
+        <input type=checkbox>
+    </section>
+
+    <section>         
+        <h1>Custom Skins:</h1>
+    </section>
+
+    <section u1-skin=pink>
+        <h1>[u1-skin=pink]</h1>
+        <p>Some Text in a Paragraph Some Text in a Paragraph Some Text in a ParagraphSome Text in a Paragraph Some</p>
+
+        <u1-code trim editable style="background-color:var(--color-light); color:black; padding:1em">
+            <style>
+            [u1-skin=pink] {
+                --hsl-h: 330;
+                --hsl-l: 60%;
+            }
+            </style>
+        </u1-code>
+
+        <hr>
+
+        <button>some button</button>
+        <input type=text>
+        <input type=checkbox>
+    </section>
+
+    <section u1-skin=pink-theme>
+        <h1>[u1-skin=pink-theme]</h1>
+        <p>Some Text in a Paragraph Some Text in a Paragraph Some Text in a ParagraphSome Text in a Paragraph Some</p>
+
+        <u1-code trim editable style="background-color:var(--color-light); color:black; padding:1em">
+            <style>
+            [u1-skin=pink-theme] {
+                --hsl-h: 330;
+                --hsl-l: 60%;
+                --color: var(--color-light);
+                --color-bg:   hsl(var(--hsl));
+                --color-text: var(--color-light);
+            }
+            </style>
+        </u1-code>
+
+        <hr>
+
+        <button>some button</button>
+        <input type=text>
+        <input type=checkbox>
+    </section>

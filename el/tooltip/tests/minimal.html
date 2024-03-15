@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <script src="../tooltip.js" type=module></script>
+    <link rel=stylesheet href="../tooltip.css">
+
+<body>
+
+<section>
+    <button>
+        hover or focus
+        <u1-tooltip>now you see me</u1-tooltip>
+    </button>
+</section>
+
+<style>
+u1-tooltip {
+    pointer-events:auto;
+    font-size:max(12px, .7rem);
+    --line-height: 1.4em;
+    background:#666;
+    color:#fff;
+    border-radius:.2rem;
+}
+</style>

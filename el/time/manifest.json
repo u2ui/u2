@@ -1,0 +1,141 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "time.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "A better time-element, e.g. live changing relative dates",
+            "name": "u1-time",
+            "members": [
+              {
+                "kind": "method",
+                "name": "render",
+                "description": "Render the time element"
+              },
+              {
+                "kind": "method",
+                "name": "reset",
+                "description": "Reset the time element"
+              },
+              {
+                "kind": "method",
+                "name": "attributeChanged",
+                "description": "Handle attribute changes"
+              },
+              {
+                "kind": "method",
+                "name": "connected",
+                "description": "Handle element connection"
+              },
+              {
+                "kind": "method",
+                "name": "disconnected",
+                "description": "Handle element disconnection"
+              }
+            ],
+            "events": [],
+            "attributes": [
+              {
+                "name": "datetime",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The date and time to display, in ISO 8601 format"
+              },
+              {
+                "name": "lang",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The language to use for formatting the date and time"
+              },
+              {
+                "name": "type",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The type of display to use, either 'date' or 'relative'"
+              },
+              {
+                "name": "weekday",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The format to use for the weekday, either 'narrow', 'short', 'long', or 'none'"
+              },
+              {
+                "name": "year",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The format to use for the year, either 'numeric', '2-digit', or 'none'"
+              },
+              {
+                "name": "month",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The format to use for the month, either 'numeric', '2-digit', 'narrow', 'short', 'long', or 'none'"
+              },
+              {
+                "name": "day",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The format to use for the day, either 'numeric', '2-digit', or 'none'"
+              },
+              {
+                "name": "hour",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The format to use for the hour, either 'numeric', '2-digit', or 'none'"
+              },
+              {
+                "name": "minute",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The format to use for the minute, either 'numeric', '2-digit', or 'none'"
+              },
+              {
+                "name": "second",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The format to use for the second, either 'numeric', '2-digit', or 'none'"
+              },
+              {
+                "name": "mode",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The mode to use for the relative type, either 'narrow', 'short', or 'long'"
+              }
+            ],
+            "cssProperties": [],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u1-time",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u1-time",
+            "declaration": {
+              "name": "u1-time",
+              "module": "time.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

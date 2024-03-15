@@ -1,0 +1,41 @@
+u1-code {
+    font-family: Consolas, "Courier New", Courier, monospace;
+    display:block;
+    overflow:auto;
+}
+u1-code > :where(script, style) {
+    display:block;
+}
+
+/* new */
+u1-code:not(:has(>*)) {
+    white-space: pre;
+}
+u1-code > :is(pre, code, style, script, textarea),
+u1-code > pre > code {
+    padding:0;
+    margin:0;
+    font: inherit;
+    display:block;
+    background:transparent;
+}
+u1-code > :where(textarea) {
+    width:100%;
+    border:0;
+    height:10rem;
+
+    @supports (field-sizing:content) {
+        field-sizing:content;
+        height:auto;
+        resize: none;
+    }
+
+    /* does not work
+    min-height: -webkit-fill-available;
+    min-height: stretch;
+    */
+}
+
+u1-code:not(:defined) > [slot="tools"]{
+    display:none;
+}

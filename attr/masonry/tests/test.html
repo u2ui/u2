@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../../../u1/tests/test-init.js" type=module></script>
+        <title></title>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+
+        <link rel=stylesheet href="../masonry.css">
+        <script type=module src="../masonry.js"></script>
+<body>
+
+<section>
+    <h1>masonry attribute</h1>
+    <div style="resize:both; overflow: auto; border:1px solid red">
+        <div u1-masonry>
+            <div>item1<br>heigter</div>
+            <div>item2</div>
+            <div>item3</div>
+            <div id=dyn>item4</div>
+            <div>item5</div>
+            <div>item6</div>
+            <div>item7</div>
+        </div>
+    </div>
+</section>
+
+<style contenteditable style="display:block">[u1-masonry] > * {
+    border:1px solid black;
+    padding:.5em;
+}
+</style>
+
+<script>
+setTimeout(() => {
+    dyn.innerHTML += '<br>heigter after some time to test resize';
+}, 3000);
+</script>

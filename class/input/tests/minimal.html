@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>input.class test | U1 design-system</title>
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../input.css">
+
+<body>
+
+    <section>
+        <label class=u1-input>
+            <input value="test">
+            <button type=button>save</button>
+        </label>
+        <br>
+        <br>
+        <label class=u1-input>
+            <input value="1">
+            <button type=button style="order:-1">-</button>
+            <button type=button>+</button>
+        </label>
+        <label>
+            Normal input:
+            <input>
+        </label>
+    </section>
+
+    <style>
+        .u1-input {
+            border:2px solid;
+        }
+        .u1-input button {
+            padding:.2em .5em;
+            --line-height:1;
+        }
+    </style>

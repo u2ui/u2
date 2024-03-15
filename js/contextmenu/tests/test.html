@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+
+
+    <script src="../contextmenu.js" type=module></script>
+
+</head>
+
+<body>
+
+    <script type=module>
+        import {contextMenu} from '../contextmenu.js';
+
+        contextMenu.addItem('Icon as SVG',{
+            action: () => alert('Eine Section'),
+            icon: '<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0a4.5 4.5 0 1 1-.01-8.99A4.5 4.5 0 0 1 9.5 14z"/></svg>',
+        });
+
+        contextMenu.addItem('Shortcut',{
+            action: (e) => alert('triggered by: '+e.originalEvent.type),
+            icon: 'article_shortcut',
+            shortcut: 'Ctrl + M + K',
+        });
+
+        const more = contextMenu.addItem('Mehr', {icon: 'add_circle'});
+        more.addItem('This item has a label with very long text, is it truncated?',{
+            action: () => alert('should be truncated'),
+        });
+        more.addItem('Label with <b style="color:green">html</b> in it',{
+            action: () => alert('look at the source code'),
+        });
+        
+        contextMenu.addSeparator();
+
+
+        contextMenu.add({
+            'multi on menu': e=>console.log(e),
+            'multi on menu second': e=>console.log(e),
+        });
+
+
+        const addItems = contextMenu.addItem('multi on item').add({
+            'obj index 1': e=>console.log(e),
+            'obj index 2': {
+                'small': e=>alert('should have a min width'),
+                'ok?': e=>alert('should have a max width'),
+            },
+            'obj index 3': [
+                {label: 'array item 1',action: e=>console.log(e)},
+                '-',
+                {label: 'array item 2',action: e=>console.log(e), children: [
+                    {label: 'array item 2.1', action: e=>console.log(e)},
+                    {label: 'array item 2.2', action: e=>console.log(e)}
+                ],
+            }],
+        });
+
+        contextMenu.addItem('custom html',{
+            html: `
+                <div class=-item style="justify-content:center">
+                    <button role=menuitem>left</button>
+                    <button role=menuitem>center</button>
+                    <button role=menuitem>right</button>
+                </div>`,
+            selector: 'section'
+        });
+        contextMenu.addItem('checkbox (html)',{
+            html: `
+                <label class=-item>
+                    <span class=-icon><input type=checkbox></span>
+                    <span class=-label>Checkbox</span>
+                </label>`
+        });
+        contextMenu.addItem('input',{
+            html: `
+                <label class=-item>
+                    <span class=-label><input placeholder="value"></span>
+                </label>`,
+            selector: 'input, textarea',
+            onparse(e) {
+                const inp = this.el.querySelector('input');
+                inp.value = e.target.value;
+                inp.oninput = () => e.target.value = inp.value;
+            }
+        });
+
+
+    </script>
+
+
+    <section tabindex="0">
+        Dies ist eine section
+
+        <br>
+        <label>
+            <input type=text value=Hallo><br>
+        </label>
+        <label>
+            <input type=text value=World><br>
+        </label>
+
+    </section>
+
+
+    <style style="display:block" contenteditable>
+html {
+    --color: #88c4ff;
+    --color-bg:    #eef7ff;
+    --color-text:  #001040;
+}
+#u1ContextMenuContainer::part(menu) {
+    border-radius: .8em;
+    padding: .5em;
+}
+#u1ContextMenuContainer::part(item) {
+    border-radius: .5em;
+    overflow: hidden;
+}
+    </style>

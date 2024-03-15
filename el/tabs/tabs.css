@@ -1,0 +1,29 @@
+/*
+there are no style-fallbacks for tabs, as without js, they should be headings and paragraphs
+*/
+
+u1-tabs [role="tab"] {
+    border-bottom: solid transparent;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: .4rem 1rem;
+    margin: 0;
+    font-size:1rem;
+    font-weight:bold;
+    outline:0;
+    /* needed?:
+    border-width: 0 0 .2rem 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: inherit;
+    */
+}
+u1-tabs [role="tab"][aria-selected="true"] {
+    border-bottom-color: var(--color);
+}
+u1-tabs [role="tab"]:hover, [role="tab"]:focus {
+    background-color: #0000000a;
+}
+u1-tabs [role="tabpanel"] {
+    padding: 1rem;
+}

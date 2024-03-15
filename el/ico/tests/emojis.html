@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width">
+
+    <link rel=stylesheet href="../../../norm.css/norm.min.css">
+    <link rel=stylesheet href="../../../base.css/base.min.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+
+    <link rel="stylesheet" href="../ico.css">
+
+    <link rel="stylesheet" href="./util.css">
+    <script type=module src="../ico.js"></script>
+    <script type=module src="./util.js"></script>
+
+<body>
+
+<style>
+    @font-face {
+        font-family: 'segoe local';
+        src: local('Segoe UI Symbol');
+    }
+    @font-face {
+        font-family: 'Font Awesome url';
+        font-style: normal;
+        font-weight: 400;
+        xsrc: url(https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome/webfonts/fa-solid-900.woff2) format('woff2');
+        src: url(https://pro.fontawesome.com/releases/v6.0.0-beta1/webfonts/fa-solid-900.woff2) format('woff2');
+    }
+    @font-face {
+        font-family: 'LigatureSymbols url';
+        font-style: normal;
+        font-weight: 400;
+        src: url(https://rawcdn.githack.com/kudakurage/LigatureSymbols/d54f43cd72d190b7a3c0b2ee1644fac770b4a146/LigatureSymbols-2.11.woff) format('woff');
+    }
+    @font-face {
+        font-family: 'NotoEmoji url';
+        src: url(https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@2.038/fonts/NotoEmoji-Regular.ttf);
+    }
+    @font-face { /* http://emojione.com/developers/ */
+        font-family: 'Emojione url';
+        src: url("https://cdn.rawgit.com/Ranks/emojione/master/assets/fonts/emojione-svg.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: 'Material Icons url';
+        src: url(https://fonts.gstatic.com/s/materialicons/v129/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+    }
+    @font-face {
+        font-family: 'Material Symbols Outlined url';
+        src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v7/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzaxHMPdY43zj-jCxv3fzvRNU22ZXGJpEpjC_1v-p_4MrImHCIJIZrDCvHOej.woff2) format('woff2');
+    }
+    @font-face {
+        font-family: 'openmoji';
+        src: url(https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/font/OpenMoji-Color.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'openmoji bw';
+        src: url(https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/font/OpenMoji-Black.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'twemoji';
+        src: url(https://cdn.jsdelivr.net/npm/twemoji-colr-font@14.0.2/twemoji.woff2) format('woff2');
+    }
+
+    u1-ico.afterHack:after { /* chrome does not need :after-trick (why? => because it uses segoe ui symbol as font?) , but ff, not working in safari :( */
+        content: "\00FE0E";
+        font:inherit;
+        /* for safari (it displays a stupid rect) */
+        xopacity:0;
+    }
+    u1-ico.proposed {
+        font-palette: dark;             /* ff-107 ch-101 s-15.4 */
+        font-variant-emoji: text;       /* safari, ff-108 (seams not to work correct) */
+        text-transform: text;           /* proposed */
+        font-variant-color: monochrome; /* proposed */
+        font-color: monochrome;         /* proposed */
+    }
+
+/*
+https://stackoverflow.com/a/40020609/4865307
+https://docs.google.com/spreadsheets/d/1KQDH9uArJr-8m4UvAEd02ixaX_-wauSwjy9qYCwIOvE/edit#gid=645289137
+
+
+# emoji list
+https://apps.timwhitlock.info/emoji/tables/unicode
+https://www.unicode.org/emoji/charts/full-emoji-list.html
+
+# monochrome emoji fonts
+
+Noto Emoji
+https://www.fontspace.com/noto-emoji-font-f22283
+cdn: https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@2.038/fonts/NotoEmoji-Regular.ttf
+
+Symbola Font
+https://www.fontspace.com/symbola-font-f22021
+
+Code2003
+https://www.fontspace.com/code2003-font-f24444
+
+Unifont Font (pixelated)
+https://www.fontspace.com/unifont-font-f26370
+
+EmojiSymbols Font (c)blockworks - Kenichi Kaneko (attribution required)
+http://emojisymbols.com/
+
+*/
+</style>
+
+<h2>UTF-8 flat symbols system</h2>
+<div>
+    <input onchange="document.querySelectorAll('u1-ico').forEach(el=>{ [...el.innerHTML].length === 1 && (el.innerHTML = this.value) })">
+    <h3>Times</h3>
+    <table>
+        <tr>
+            <td>Font Family
+            <td> 🔍
+            <td>proposed features
+            <td>::after hack
+            <td>ligatures
+        <tr style="--u1-ico-font:times">
+            <td> times
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'Segoe UI Symbol'">
+            <td> Segoe UI Symbol
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'segoe local'">
+            <td> Segoe UI Symbol local()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'Noto Emoji'">
+            <td> Noto Emoji
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'NotoEmoji url'">
+            <td> NotoEmoji url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'Font Awesome url'">
+            <td> Font Awesome url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'openmoji bw'">
+            <td> OpenMoji bw url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+
+        <tr style="--u1-ico-font:'openmoji'">
+            <td> OpenMoji url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'twemoji'">
+            <td> twemoji url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+
+        <tr style="--u1-ico-font:'Material Icons url'">
+            <td> Material Icons url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'Material Symbols Outlined url'">
+            <td> Material Symbols Outlined url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+        <tr style="--u1-ico-font:'LigatureSymbols url'">
+            <td> LigatureSymbols url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico>
+            <td> <u1-ico class="ligatures">search</u1-ico>
+
+
+        <!--tr style="--u1-ico-font:'Emojione url'">
+            <td> Emojione url()
+            <td> <u1-ico>🔍</u1-ico>
+            <td> <u1-ico class="proposed">🔍</u1-ico>
+            <td> <u1-ico class="afterHack">🔍</u1-ico-->
+
+    </table>
+
+
+</div>

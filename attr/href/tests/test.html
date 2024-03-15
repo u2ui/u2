@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../../../u1/tests/test-init.js" type=module></script>
+        <title>Attribute u1-href tests</title>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+
+        <script src="../href.js"></script>
+
+    <body>
+
+<div u1-href="https://github.com/u1ui" class=pseudoLink>
+    <h1>I am a DIV and i act like a link</h1>
+    <ul>
+        <li>Elements using the u1-href-attribute have a cursor:pointer</li>
+        <li>Try <mark>ctrl-click</mark>, the link shoul open in a new tab</li>
+        <li>Try <mark>right or middle mouse button</mark> the link does not work</li>
+        <li>If you <mark>Select some text</mark> the link does not work</li>
+        <li>
+            <button> if you click the button, the u1-href does not work</button>
+        </li>
+        <li>
+            <label>
+                Label
+                <input value="and inputs also prevents navigation" style="width:200px">
+            </label>
+        </li>
+        <li contenteditable>
+            I am contenteditable, h1-href does not navigate
+        </li>
+        <li onclick="event.preventDefault()">I am a li that prevents the click-default, it also prevents c1-href from navigate (<code>onclick="event.preventDefault()"</code>)</li>
+    </ul>
+</div>
+
+<div u1-href="https://github.com/u1ui" u1-href-target=_blank class=pseudoLink>
+    A u1-href link with the attribute <code>u1-href-target="_blank"</code><br>
+    Opens in a new window
+</div>
+
+
+<div u1-href="https://github.com/u1ui" class=pseudoLink tabindex="0">
+    This u1-href link is keyboard-accessible through it has "tabindex"-attribute<br>
+    It will not trigger navigation if it is focused and you press enter, should it?<br>
+    If you have usecase, please let me know.
+</div>
+
+
+<div u1-href="./" class=pseudoLink>
+    relative links "./"
+</div>
+
+<div u1-href=" &#14; jAvascript:alert('xss')" class=pseudoLink>
+    security, should not execute u1-href=" &amp;#14; jAvascript:alert('xss')"
+</div>
+
+<style>
+li {
+    padding:1rem;
+}
+.pseudoLink {
+    margin:1rem;
+    border:1px solid red;
+    background:#ffe;
+    padding:1rem;
+}
+</style>

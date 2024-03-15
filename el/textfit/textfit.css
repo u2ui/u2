@@ -1,0 +1,6 @@
+u1-textfit {
+    display:block;
+    white-space:nowrap;
+    font-size:var(--gen-font-size);
+    font-size: clamp(11px, var(--gen-font-size), 400px);
+}

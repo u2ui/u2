@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+    <!-- <script src="../../u1/auto.js" type=module></script> -->
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../../../el/code/code.js" type=module></script>
+    <link  href="../../../el/code/code.css" rel=stylesheet>
+    <script src="../../tooltip.el/tooltip.js" type=module></script>
+    <link  href="../../tooltip.el/tooltip.css" rel=stylesheet>
+    <script src="../../ico.el/ico.js" type=module></script>
+    <link  href="../../ico.el/ico.css" rel=stylesheet>
+
+    <style>
+        body {
+            place-content: initial;
+            --u1-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+        }
+    </style>
+
+    <script src="../tree1.js" type=module></script>
+    <link href="../tree1.css" rel=stylesheet>
+
+<body>
+
+<section id=demo>
+    
+    <u1-tree1 aria-expanded=true>root
+        <u1-tree1 aria-expanded=true>Folder 2
+
+            <u1-tree1>File 2.1</u1-tree1>
+            <u1-tree1>Folder 2.2
+                <u1-tree1>
+                    <u1-ico slot=icon icon=home>x</u1-ico>
+                    Home
+                </u1-tree1>
+                <u1-tree1>
+                    <u1-ico slot=icon icon=star>x</u1-ico>
+                    Star
+                </u1-tree1>
+                <u1-tree1>
+                    <u1-ico slot=icon icon=search>x</u1-ico>
+                    Search
+                </u1-tree1>
+                <u1-tree1>
+                    <u1-ico slot=icon icon=accessible>x</u1-ico>
+                    Accessible
+                </u1-tree1>
+                <u1-tree1>
+                    <u1-ico slot=icon icon=alarm>x</u1-ico>
+                    <u1-tooltip tabindex=-1 style="padding:0">
+                        <table>
+                            <tr>
+                                <td>ID:
+                                <td>22
+                            <tr>
+                                <td>Module:
+                                <td>cms.cont.text
+                            <tr>
+                                <td>Name:
+                                <td>Text
+                        </table>
+                    </u1-tooltip>
+                    Alarm
+                </u1-tree1>
+            </u1-tree1>
+            <u1-tree1 draggable="true">
+                <u1-ico slot=icon icon=drag_indicator>x</u1-ico>
+                <label>
+                    Draggable
+                    <input placeholder="same baseline">
+                </label>
+                <button>clickable</button>
+            </u1-tree1>
+
+            <u1-tree1>
+                <input type=checkbox slot=icon id="check1">
+                Checkbox
+                <u1-tree1>
+                    <input type=checkbox slot=icon id="check2">
+                    Checkbox
+                </u1-tree1>
+                <u1-tree1>
+                    <input type=checkbox slot=icon id="check3">
+                    Checkbox
+                </u1-tree1>
+            </u1-tree1>
+
+        </u1-tree1>
+        <u1-tree1 aria-expanded=false aria-live=off>
+            Folder 3 (dynamic)
+        </u1-tree1>
+    </u1-tree1>
+
+</section>
+
+<section>
+
+    <u1-code element=demo editable trim> </u1-code>
+
+    <u1-code trim editable>
+    <style>
+    u1-tree1::part(row) {
+        border-radius:.3rem;
+    }
+    u1-tree1:focus::part(row) {
+        outline:.1rem solid var(--color);
+        background:transparent;
+    }
+    u1-tree1[aria-selected=true]::part(row) {
+        background:#00000008;
+    }
+    u1-tree1::part(row):hover {
+        background:#00000004;
+    }
+    u1-tree1[aria-grabbed=true] {
+        transition:.2s .2s;
+        opacity:.4;
+        outline-width:0 !important;
+    }
+    </style>
+    </u1-code>
+
+    <u1-code trim>
+    <script type=module>
+    /* load dynamic items */
+    document.addEventListener('u1-tree1-expand', event => {
+        const treeItem = event.target;
+        
+        // if load is present, it requires a promise that will load the items
+        // (indicated by `aria-expanded=false` and `aria-live=off`)
+        event.load?.(loadItems(treeItem));
+    });
+    const loadItems = async (item) => {
+        await delay(600);
+        item.innerHTML += '<u1-tree1><span slot=icon>🖼</span>Dynamic File 1</u1-tree1>';
+        item.innerHTML += '<u1-tree1><span slot=icon>📄</span>Document</u1-tree1>';
+        item.innerHTML += '<u1-tree1 aria-expanded=false aria-live=off>Folder</u1-tree1>';
+    }
+    </script>
+    </u1-code>
+
+    <script>
+        delay = function(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+
+
+</section>
+
+
+
+<script type=module>
+/* drag & drop experiment */
+
+const dropPositionIndicator = document.createElement('div');
+dropPositionIndicator.innerHTML = '➔';
+dropPositionIndicator.style.display = 'none';
+dropPositionIndicator.style.position = 'absolute';
+dropPositionIndicator.style.pointerEvents = 'none';
+dropPositionIndicator.style.zIndex = 1000;
+dropPositionIndicator.style.fontSize = '1.2rem';
+dropPositionIndicator.style.transform = 'translate(0, -50%)';
+document.body.appendChild(dropPositionIndicator);
+
+let dragSrcEl = null;
+
+const dragAndDropHandler = {
+    handleEvent(event) {
+        if (event.type !== 'dragstart' && !dragSrcEl) return;
+        if (!this['on' + event.type]) return
+        const target = event.target;
+        const closest = target.closest('u1-tree1');
+        if (!closest) return;
+        this['on' + event.type]({closest, target, event});
+    },
+    ondragstart({target, event}) {
+        if (target.tagName !== 'U1-TREE1') return;
+        dragSrcEl = target;
+        dragSrcEl.setAttribute('aria-grabbed', 'true'); // deprecated, but currently the best markup?
+        event.dataTransfer.effectAllowed = 'move'; // needed?
+    },
+    ondragover({closest, event}) {
+        event.preventDefault();
+
+        this.currentParent = closest;
+        this.currentNext = null;
+
+        const oHeight = closest.offsetHeight;
+        if (event.offsetY < oHeight * .2) {
+            this.currentParent = closest.parentNode;
+            this.currentNext = closest;
+        }
+        if (event.offsetY > oHeight * .7) {
+            this.currentParent = closest.parentNode;
+            this.currentNext = closest.nextElementSibling;
+        }
+        if (this.currentParent === closest && !this.expandTimer) {
+            this.resetExpandTimer(this.currentParent);
+        }
+
+        // indicator
+        let x = closest.shadowRoot.querySelector('[name=icon]').getBoundingClientRect().left - 50;
+        let y;
+        if (this.currentNext) {
+            y = this.currentNext.offsetTop;
+        } else {
+            y = closest.offsetTop + closest.offsetHeight / 2;
+        }
+        dropPositionIndicator.style.display = 'block';
+        dropPositionIndicator.style.top = y + 'px';
+        dropPositionIndicator.style.left = x + 'px';
+    },
+    ondragleave({closest}) {
+        this.resetExpandTimer();
+        closest.style.borderColor = 'transparent';
+    },
+    ondrop({closest, event}) {
+        event.stopPropagation();
+        event.preventDefault();
+        if (dragSrcEl !== closest) {
+            if (this.currentParent && dragSrcEl !== this.currentNext) {
+                if (this.currentNext) {
+                    this.currentParent.insertBefore(dragSrcEl, this.currentNext);
+                } else {
+                    this.currentParent.appendChild(dragSrcEl);
+                }
+            }
+            closest.toggleExpand(true);
+        }
+        closest.style.border = '';
+    },
+    ondragend() {
+        dropPositionIndicator.style.display = 'none';
+        dragSrcEl.removeAttribute('aria-grabbed');
+        dragSrcEl = null;
+    },
+    resetExpandTimer(item) {
+        clearTimeout(this.expandTimer);
+        this.expandTimer = null;
+        if (item) {
+            this.expandTimer = setTimeout(()=>{
+                this.expandTimer = null;
+                this.currentParent.toggleExpand(true);
+            }, 500);
+        }
+    },
+};
+['dragstart', 'dragover', 'dragenter','dragleave', 'drop', 'dragend'].forEach(eventType => {
+    document.addEventListener(eventType, dragAndDropHandler, false);
+});
+</script>
+    

@@ -1,0 +1,33 @@
+.u1-badge {
+    background-color:var(--color-dark);
+    color:var(--color-bg);
+
+    display:inline-flex;
+    padding:.2em .6em .2em .6em;
+    border-radius:1em;
+    line-height: var(--line-height);
+    --line-height:1.1;
+    font-weight:normal;
+
+    min-width:  1.6em;
+    min-height: 1.6em;
+    padding: .2em .5em .3em .5em;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    /*
+	box-decoration-break:clone; /* not needed for inlin-flex * /
+    vertical-align:middle;
+    margin-bottom:-.1em;
+    margin-top:-.1em;
+    transform: scale(0.99999999);
+    */
+}
+
+.u1-badge:empty {
+    min-width:  .6em;
+    min-height: .6em;
+    padding:0;
+    /* margin-left:-.1em; */
+}

@@ -1,0 +1,6 @@
+/* firefox wraps otherwise when opacity:0? *
+u1-typewriter {
+    -webkit-hyphens: none;
+    hyphens: none;
+}
+*/

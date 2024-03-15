@@ -1,0 +1,91 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "code.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "A custom HTML element for displaying highlighted, editable code blocks.",
+            "name": "code",
+            "members": [
+              {
+                "kind": "method",
+                "name": "copy",
+                "description": "Copies the code to the clipboard."
+              },
+              {
+                "kind": "getter",
+                "name": "language",
+                "description": "Gets the language of the code block."
+              },
+              {
+                "kind": "setter",
+                "name": "hightlightValue",
+                "description": "Sets the highlighted value of the code block."
+              },
+              {
+                "kind": "setter",
+                "name": "sourceValue",
+                "description": "Sets the source value of the code block."
+              },
+              {
+                "kind": "getter",
+                "name": "value",
+                "description": "Gets the value of the code block."
+              }
+            ],
+            "events": [],
+            "attributes": [
+              {
+                "name": "trim",
+                "type": {
+                  "text": "boolean"
+                },
+                "description": "Trims empty first and last lines, and most importantly, indentation."
+              },
+              {
+                "name": "editable",
+                "type": {
+                  "text": "boolean"
+                },
+                "description": "Makes the code block editable."
+              },
+              {
+                "name": "language",
+                "type": {
+                  "text": "string"
+                },
+                "description": "Defines the code language (auto-detect if not set)."
+              },
+              {
+                "name": "element",
+                "type": {
+                  "text": "string"
+                },
+                "description": "ID of the element whose innerHTML should be used as code."
+              }
+            ],
+            "cssProperties": [],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u1-code",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u1-code",
+            "declaration": {
+              "name": "code",
+              "module": "code.js"
+            }
+          }
+        ]
+      }
+    ]
+  }

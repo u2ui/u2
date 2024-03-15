@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>dialog.js minimal.html | U1 design-system</title>
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <script type=module>
+        import * as module from '../dialog.js';
+        window.module = module;
+    </script>
+
+<body>
+
+
+<section>
+    <button onclick="module.alert('Just a test').then(console.log)">run</button>
+</section>
+
+<style>
+:where(.\:modal, :modal) {
+    box-shadow: 0 0 1rem #0008;
+    border: 0;
+    border-radius: .3rem;
+}
+</style>

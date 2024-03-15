@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <script src="../../../u1/tests/test-init.js" type=module></script>
+  <title>Level.css TEST</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+  <link rel=stylesheet href="../../../base.css/full.css">
+  <link rel=stylesheet href="../../../classless.css/variables.css">
+  <link rel=stylesheet href="../../../classless.css/classless.css">
+  <link rel=stylesheet href="../../../classless.css/more.css">
+  <link rel=stylesheet href="../../../classless.css/aria.css">
+
+
+  <link rel="stylesheet" href="../width.css">
+
+
+  <!--script src="./test.js" type=module></script>
+  <link rel="stylesheet" href="../../themes/elegant.css" disabled>
+  <link rel="stylesheet" href="../../themes/brutalist.css" disabled>
+  <link rel="stylesheet" href="../../themes/lascaux.css"-->
+
+
+  <style>
+    section {
+      padding:2rem;
+      background-color:#eee;
+    }
+  </style>
+  <script>
+  addEventListener('click',function(){
+    document.documentElement.requestFullscreen()
+  })
+  </script>
+
+</head>
+
+<body>
+
+  <section id=u1-width style="padding:0; text-align:center;">
+    <h1>.u1-width</h1>
+    <div class=-viewport>
+      simulated viewport
+      <div class=u1-width>
+        <div>
+          <code>class="u1-width"</code>
+          <p>
+            This should be have with of --width<br>
+            using max-width</br>
+            Is is also horizontal centered </br>
+            And has a padding left and right </br>
+            box-sizing is explicit content-box
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class=u1-width style="max-width:40rem">
+        <div>
+          <code>class=u1-width style="max-width:40rem"</code>
+          <div class="u1-width">
+            <div>
+              <h3>nested</h3>
+              <code>class="u1-width"</code>
+              <p>
+                This also has a with of --width<br>
+                has no more padding
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <style>
+      #u1-width .-viewport {
+        --width:30rem;
+        overflow:hidden;
+        contain: paint;
+        margin:auto;
+        animation: u1-width 2s linear infinite alternate;
+        background:#fff;
+      }
+      @keyframes u1-width {
+        0% {
+          max-width:calc(var(--width) + 30rem);
+        }
+        100% {
+          max-width:530px;
+        }
+      }
+
+      #u1-width div {
+        border:1px solid var(--color-dark);
+      }
+      #u1-width .u1-width {
+        background-color: #9E95DAbb;
+      }
+      #u1-width .u1-width > div {
+        background-color: #fffc;
+      }
+    </style>
+  </section>

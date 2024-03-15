@@ -1,0 +1,43 @@
+[u1-skin] {
+    color: var(--color-text);
+    background-color: var(--color-bg);
+}
+
+[u1-skin=invert] {
+    --color-light: var(--color-init-dark);
+    --color-dark: var(--color-init-light);
+
+    --color-bg: var(--color-init-text);
+    --color-text: var(--color-init-bg);
+    --color-area: var(--color-light);
+
+    :has(>&)  {
+        --color-init: var(--color);
+        --color-init-light: var(--color-light);
+        --color-init-dark: var(--color-dark);
+    
+        --color-init-bg: var(--color-bg);
+        --color-init-text: var(--color-text);
+    }
+    [u1-skin]:has(>&) {
+        outline: 10px dotted red !important; /* invert can not be child of skin; */
+    }
+        
+}
+
+[u1-skin=theme] {
+    --color: var(--color-init-text);
+    --color-bg: var(--color-init);
+    --color-text: var(--color-init-bg);
+    :has(>&)  {
+        --color-init: var(--color);    
+        --color-init-bg: var(--color-bg);
+        --color-init-text: var(--color-text);
+    }
+}
+
+
+/*
+contrast text color by background lightness *
+https://jsfiddle.net/gqm0wvcn/4/
+*/

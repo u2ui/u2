@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title></title>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+
+        <script src="../TargetObserver.js" type=module></script>
+
+    <body>
+
+<section>
+    <h1>Dialog</h1>
+    <a href="#dialog1">navigate to #dialog1</a>
+    <!--todo: button onclick="dialog1.showModal()">open by javascript</button-->
+
+    <dialog id="dialog1" u1-navigable>
+        dialog 1 is open
+        <br>
+        <a href="#dialog2">navigate to #dialog2</a>
+    </dialog>
+
+    <dialog id="dialog2" u1-navigable>
+        dialog 2 is open
+    </dialog>
+
+</section>
+
+<script type=module>
+import {TargetObserver} from "../TargetObserver.js";
+
+/* dialog element */
+new TargetObserver({
+    in:  el => {
+        !el.open && el.showModal()
+    },
+    out: el => {
+        el.close()
+    },
+    matches: 'dialog[u1-navigable]',
+});
+
+addEventListener('close',e=>{
+	const target = e.target;
+	if (!target.id) return;
+	if (e.target.id !== location.hash.substring(1)) return;
+	if (!target.matches('dialog[u1-navigable]')) return;
+
+	history.back();
+	e.preventDefault();
+},true);
+
+
+/* divs */
+new TargetObserver({
+    out: el => {
+        el.hidden = true;
+    },
+    in:  el => {
+        el.hidden = false;
+    },
+    matches: '.div',
+});
+
+/* all */
+setTimeout(function(){ // test if it trigger after target changed
+    let obs = new TargetObserver({
+        on: el => console.log('on',el),
+        off: el => console.log('off',el)
+    });
+
+},1000)
+</script>
+
+<section>
+    <h1>Details</h1>
+
+    <a href="#div1">open div1</a><br>
+    <a href="#div2">open div2 (should also open div1)</a>
+
+    <div id="div1" hidden class="div">
+        div 1
+        <div id="div2" hidden class="div">
+            div 2
+            now open div 3
+        </div>
+    </div>
+
+    <br>
+
+    <a href="#div3">open div3</a><br>
+
+    <div id="div3" hidden class="div">div 3</div>
+
+    <style>
+    .div {
+        background:yellow;
+        border: 1px solid;
+        padding: 10px;
+        margin: 10px;
+    }
+    </style>
+</section>

@@ -1,0 +1,15 @@
+/* https://remixicon.com/ */
+@font-face {
+    font-family: 'RemixOutlined';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://cdn.jsdelivr.net/npm/remixicon-ligatures@2.5.0/fonts/RemixOutlined.woff2) format('woff2');
+  }
+  @font-face {
+    font-family: 'RemixFilled';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://cdn.jsdelivr.net/npm/remixicon-ligatures@2.5.0/fonts/RemixFilled.woff2) format('woff2');
+  }
+  u1-ico[font=remix] { --u1-ico-font:RemixFilled; }
+  u1-ico[font=remix][variant=outlined] { --u1-ico-font:RemixOutlined; }

@@ -1,0 +1,29 @@
+/* css only */
+[u1-masonry] {
+    --u1-Items-width: 10rem;
+    --u1-Gap: 1rem;
+    --u1-Col-gap: var(--u1-Gap);
+    --u1-Row-gap: var(--u1-Gap);
+    display: grid;
+    /*
+    grid-column-gap: var(--u1-Col-gap);
+    grid-row-gap:    var(--u1-Row-gap);
+    */
+    column-gap: var(--u1-Col-gap); /* todo: safari 10.3, after it "column-gap" */
+    row-gap:    var(--u1-Row-gap);
+    /* grid-template-columns: repeat(auto-fill, minmax( var(--u1-Items-width), 1fr) ); /* min() not supported everywhere? */
+    grid-template-columns: repeat(auto-fill, minmax( min(var(--u1-Items-width), 100%) , 1fr) );
+    /* grid-auto-flow:dense; /* why */
+
+	grid-template-rows: masonry; /* native css only fallback (firefox, safari?) */
+    position: relative !important; /* must be so */
+}
+
+
+/* js */
+[u1-masonry] > * {
+    margin:0 !important; /* should be 0 as items are placed absolute */
+}
+[u1-masonry].-Js > * {
+	position: absolute !important;
+}

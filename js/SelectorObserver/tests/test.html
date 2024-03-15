@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>u1-ico Test</title>
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+<body>
+
+<section>
+    <button onclick="targets.append(document.createElement('div'))">add item</button>
+    <button onclick="nonTargets.append(targets.lastElementChild )">remove item</button>
+    <h3>Targets</h3>
+    <div class=container id=targets>
+        <div></div>
+    </div>
+    <h3>Non targets</h3>
+    <div class=container id=nonTargets>
+    </div>
+</section>
+
+
+<script type=module style="display:block;">
+import {SelectorObserver} from '../SelectorObserver.js';
+let o = new SelectorObserver({
+    on: el => el.innerHTML = 'found!' ,
+    off: el => el.innerHTML = 'lost!' ,
+});
+o.observe('#targets > div');
+</script>
+
+<style>
+    .container {
+        display:flex;
+        flex-wrap:wrap;
+        background:#f5f5f5;
+    }
+    .container div {
+        background-color:var(--color-light);
+        margin:.5rem;
+        padding:.5rem;
+    }
+    #nonTargets div {
+        background-color: red;
+    }
+    button {
+        text-align: left;
+    }
+    button::after {
+        content: " " attr(onclick);
+        display: block;
+        font-size:.7rem;
+    }
+</style>

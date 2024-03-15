@@ -1,0 +1,66 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "ico.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "A custom HTML element for displaying icons from any icon set, icon font, or SVG directory.",
+            "name": "u1-ico",
+            "members": [],
+            "events": [],
+            "attributes": [
+              {
+                "name": "icon",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The name of the icon to display."
+              },
+              {
+                "name": "state",
+                "type": {
+                  "text": "string"
+                },
+                "description": "The state of the icon (loading, loaded, fail)."
+              }
+            ],
+            "cssProperties": [
+                {
+                  "name": "--u1-ico-dir",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The directory where the SVG icons are located."
+                },
+                {
+                  "name": "--u1-ico-font",
+                  "type": {
+                    "text": "string"
+                  },
+                  "description": "The font used for the icons."
+                }
+            ],            
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u1-ico",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u1-ico",
+            "declaration": {
+              "name": "uIco",
+              "module": "ico.js"
+            }
+          }
+        ]
+      }
+    ]
+  }

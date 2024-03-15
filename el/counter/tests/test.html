@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+    <link rel=stylesheet href="../counter.css">
+    <script src="../counter.js" type=module></script>
+
+</head>
+
+<body>
+
+    <header>
+        <h1>u1-counter</h1>
+    </header>
+
+    <section>
+        <h2>Test</h2>
+        <table>
+            <tr>
+                <td> Use "value"-Attribute:
+                <td align=right> <u1-counter value="5000"></u1-counter>
+            <tr>
+                <td> Use "value"-Attribute with digits "1.00" (not working when using innerHTML)
+                <td align=right> <u1-counter value="1.00"></u1-counter>
+            <tr>
+                <td> Attribute "from"
+                <td align=right> <u1-counter no-grouping from=1000 value="-1000"></u1-counter>
+            <tr>
+                <td> Attribute "no-grouping"
+                <td align=right> <u1-counter no-grouping>5000</u1-counter>
+            <tr>
+                <td> Use innerHTML:
+                <td align=right> <u1-counter>5000</u1-counter>
+        </table>
+    </section>
+
+    <section>
+        <h2>API tests</h2>
+        <u1-counter id=counter1>100000</u1-counter>
+        <label>
+            Set value: <input placeholder onchange="counter1.setAttribute('value', this.value)" style="width:5em">
+        </label>
+    </section>
+
+
+    <section>
+        <h2>Scroll test</h2>
+        <div style="overflow:auto; height:200px">
+            Scroll down to start the counter
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <u1-counter style="font-size:2em; margin:auto; padding:1rem; background:#999; border-radius:2rem">1386</u1-counter>
+            <u1-counter style="font-size:2em; margin:auto; padding:1rem; background:#999; border-radius:2rem">-10</u1-counter>
+            once-attribute: <u1-counter once style="font-size:2em; margin:auto; padding:1rem; background:#999; border-radius:2rem" value=876.0></u1-counter>
+        </div>
+    </section>
+
+
+
+    <section>
+        <h2>remove from dom and reattache</h2>
+
+        <div id=container3>
+            <u1-counter id=counter3 style="font-size:2em; margin:auto; padding:1rem; background:#999; border-radius:2rem">345</u1-counter>
+            <button id=button3>remove / attache</button>
+        </div>
+        <script>
+        let counter3 = window.counter3;
+        let to = null;
+        button3.onclick = ()=>{
+            counter3.remove();
+            clearTimeout(to);
+            to = setTimeout(()=>container3.append(counter3), 2000);
+        }
+        </script>
+
+    </section>

@@ -1,0 +1,123 @@
+/*
+use aria?
+No, css is representation
+https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/Grid_Role
+
+using grid:
+https://jsfiddle.net/x90cz65o/103/
+*/
+
+.u1-table {
+    display:table;
+    border-collapse:collapse;
+    width:100%;
+    /* todo?
+    width:-moz-available;
+    width:-webkit-fill-available;
+    border-spacing: 0; /* css-tables: border-spacing in not table-elements is already 0 *
+    font-variant-numeric: tabular-nums; /* in base.css but not for css-tables
+    */
+    --u1-Gap: 1rem;
+    --u1-Col-gap: var(--u1-Gap);
+    --u1-Row-gap: var(--u1-Gap);
+}
+.u1-table > * {
+    display:table-row-group;
+}
+.u1-table > * > * {
+    display:table-row;
+}
+.u1-table > * > * > * {
+    display:table-cell;
+    padding: calc(var(--u1-Row-gap) / 2)  calc(var(--u1-Col-gap) / 2);
+}
+
+
+/* .-Flex */
+.u1-table.-Flex {
+    display: block;
+}
+.u1-table.-Flex > * {
+    display: block;
+}
+.u1-table.-Flex > * > * { /* tr */
+    display:flex;
+    flex-wrap:wrap; /* only fields-table? */
+    align-items: baseline;
+    padding:calc(var(--u1-Row-gap) / 2) 0;
+}
+.u1-table.-Flex > * > * > * { /* td */
+    flex-grow: 1;
+    flex-shrink:0;
+    flex-basis:10em;
+    min-width:0;
+    padding:0 calc(var(--u1-Col-gap) / 2);
+    border:0 !important; /* overwrite inherit from sticky, and border makes no sense if flex */
+    display:flex; /* new ok? better textarea-baseline */
+    flex-direction:column;
+}
+.u1-table.-Flex.-NoSideGaps > * > * { column-gap:var(--u1-Col-gap); }
+.u1-table.-Flex.-NoSideGaps > * > * > * { padding:0; }
+
+
+/* .-Fields */
+.u1-table.-Fields input:not([type=radio], [type=checkbox], [type=date], [type=color]),
+.u1-table.-Fields textarea {
+    width:100%;
+    width:-moz-available;
+    width:-webkit-fill-available;
+}
+.u1-table.-Fields > * > * > :first-child {
+    width:var(--col-1-width, 9em);
+    flex-basis:var(--col-1-width, 9em);
+}
+/* would be good for textarea align *
+.u1-table.-Flex.-Fields > * > * > * {
+    display:flex;
+}
+*/
+
+.u1-table.-NoSideGaps > * > * > :first-child { padding-left:0; }
+.u1-table.-NoSideGaps > * > * > :last-child { padding-right:0; }
+
+
+
+/* .-Sticky beta! */
+.u1-table.-Sticky {
+    border-collapse: separate;
+    /*
+    Tables should be in a overflow:auto-wrapper (for mobile)
+    But it make sticky not work, because it gets a new sticky container :(
+    position:relative;
+    z-index:0;
+    xmax-height:60vh;
+    xoverflow:auto;
+    xdisplay:block;
+    */
+}
+.u1-table.-Sticky > thead > * > th {
+    position:sticky;
+    top:0;
+    background-color:var(--color-bg);
+}
+.u1-table.-Sticky > * > * > * { /* border-collapse:separate prevents borders on tr */
+    border-bottom:inherit;
+}
+
+/*
+.u1-table.-Sticky > tbody > * > th {
+    max-width:30%;
+    width:30%;
+    white-space: normal;
+}
+*/
+
+/*
+display:grid;(block) makes chrome first-textarea-line as baseline; makes but removes this from firefox needs inline
+bad hack, what if chrome implements two-values-display
+.u1-table textarea {
+    vertical-align: baseline;
+    display: block;
+    display: flex inline;
+}
+/**/

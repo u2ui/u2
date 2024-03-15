@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+    
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+
+    <script src="../time.js" type=module></script>
+    <!--link rel=stylesheet href="./tabs.css"-->
+
+<body>
+
+<h3>Set datetime attribute</h3>
+<p lang=de>
+    Zurückgestellt: <u1-time datetime="" id=testSet></u1-time><br>
+    <button onclick="testSet.setAttribute('datetime', Date.now());">reset</button>
+    <script>
+        testSet.setAttribute('datetime', Date.now());
+    </script>
+
+    <form onchange="Array.from(this.elements).forEach(e=>testSet.setAttribute(e.name, e.value))">
+        <label>
+            datetime
+            <select name=datetime>
+                <option value="2031-10-10T14:48:50">2031-10-10T14:48:50
+                <option value="1999-11-10T11:38:10">1999-11-10T11:38:10
+            </select>
+        </label>
+        <label>
+            lang
+            <select name=lang>
+                <option value="de">de
+                <option value="en">en
+                <option value="es">es
+                <option value="it">it
+                <option value="fr">fr
+            </select>
+        </label>
+        <label>
+        type
+            <select name=type>
+                <option value="relative">relative (default)
+                <option value="date">date
+            </select>
+        </label>
+        <label>
+            weekday
+            <select name=weekday>
+                <option value="short">short (default)
+                <option value="narrow">narrow
+                <option value="long">long
+                <option value="none">none
+            </select>
+        </label>
+        <label>
+            year
+            <select name=year>
+                <option value="numeric">numeric (default)
+                <option value="2-digit">2-digit
+                <option value="none">none
+            </select>
+        </label>
+        <label>
+            month
+            <select name=month>
+                <option value="numeric">numeric (default)
+                <option value="2-digit">2-digit
+                <option value="narrow">narrow
+                <option value="short">short
+                <option value="long">long
+                <option value="none">none
+            </select>
+        </label>
+        <label>
+            day
+            <select name=day>
+                <option value="numeric">numeric (default)
+                <option value="2-digit">2-digit
+                <option value="none">none
+            </select>
+        </label>
+        <label>
+            hour
+            <select name=hour>
+                <option value="none">none (default)
+                <option value="numeric">numeric
+                <option value="2-digit">2-digit
+            </select>
+        </label>
+        <label>
+            minute
+            <select name=minute>
+                <option value="none">none (default)
+                <option value="numeric">numeric
+                <option value="2-digit">2-digit
+            </select>
+        </label>
+        <label>
+            second
+            <select name=second>
+                <option value="none">none (default)
+                <option value="numeric">numeric
+                <option value="2-digit">2-digit
+            </select>
+        </label>
+        <label>
+            mode
+            <select name=mode>
+                <option value="short">short (default)
+                <option value="narrow">narrow
+                <option value="long">long        
+            </select>
+        </label>
+    </form>
+    <style>
+    label {
+        display:flex;
+        gap:1rem;
+    }
+    </style>
+</p>
+
+<h3>English; type=relative</h3>
+<p lang=en>
+    A cold winter month <u1-time datetime="2011-11" type=relative>many years ago</u1-time>
+</p>
+
+<h3>English from &lt;head&gt; type=relative</h3>
+<p>
+    Google released Gmail Blue <u1-time datetime="2013-04-01" type=relative>on 2013-04-01</u1-time>.
+</p>
+
+<h3>Deutsch, type=relative</h3>
+<p lang=de>
+    Weltuntergang <u1-time datetime="2050-01-01" type=relative>am 2050-01-01</u1-time>.
+</p>
+
+
+
+<h3>no type and no innerHTML => relative</h3>
+<p>
+    Google released Gmail Blue <u1-time datetime="2013-04-01"></u1-time>.
+</p>
+
+<h3>type=date</h3>
+<p>
+    <u1-time datetime="2013-04-01T18:00" type=date>on 2013-04-01</u1-time>.
+</p>
+
+<h3>type=date weekday=none hour minute month=long</h3>
+<p>
+    <u1-time datetime="2013-04-01T18:00" type=date weekday="none" month=long hour minute></u1-time>.
+</p>

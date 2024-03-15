@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../../../u1/tests/test-init.js" type=module></script>
+        <title></title>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+
+        <link rel=stylesheet href="../auto-grid.css">
+<body>
+
+<section>
+    <h1>auto-grid class</h1>
+    <div style="resize:both; overflow: auto; border:1px solid red">
+        <div class=u1-auto-grid>
+            <div>item1<br>heigter</div>
+            <div>item2</div>
+            <div>item3</div>
+            <div>item4</div>
+            <div>item5</div>
+            <div>item6</div>
+            <div>item7</div>
+        </div>
+    </div>
+</section>
+
+<style contenteditable style="display:block">.u1-auto-grid > * {
+    border:1px solid black;
+    padding:.5em;
+}
+
+@container u1-items (max-width: 250px) {
+    .u1-auto-grid::before {
+        display: block;
+        content: "smaller than 250px";
+        background: red;
+        color: white;
+        padding: .5em;
+    }
+}
+
+</style>

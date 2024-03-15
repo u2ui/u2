@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../carousel-nav.css">
+    <script src="../carousel-nav.js" type=module></script>
+
+<body>
+
+    <section>
+        <u1-carousel-nav></u1-carousel-nav>
+        <u1-carousel>
+            <div>Item 1</div>
+            <div>Item 2</div>
+            <div>Item 3</div>
+        </u1-carousel>
+    </section>
+
+    <style>
+    u1-carousel-nav > * {
+        transition:.3s;
+    }
+    u1-carousel-nav > .-active {
+        transform:scale(1.2);
+    }
+    </style>

@@ -1,0 +1,82 @@
+@import './class/invert.css';
+@import './class/p.css';
+
+
+/* namespace-less classes (well known / defacto standards) */
+/*
+## naming
+.sr-only:
+- tailwind
+- firefox-reader-mode
+
+.visually-hidden:
+- h5bp (main.css)
+- bootstrap
+- drupal
+- firefox-reader-mode
+*/
+.visually-hidden {
+    position: absolute !important;
+    padding:0 !important;
+    border:0 !important;
+    clip: rect(0, 0, 0, 0);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    overflow: clip; /* ch90 ff29 */
+    /*
+    content: url(); /* new idea, ok? screenreaders will read filename * /
+    contain:strict; /* performance? * /
+    white-space: nowrap; /* why * /
+    margin-left:-1px; /* can not reproduce  * /
+    */
+}
+
+/* idea: bigger hit-areas */
+.u1-hitBig {
+    position:relative;
+}
+.u1-hitBig::after {
+    content:'';
+    position:absolute;
+    inset: calc( var(--hit-padding, .5rem) * -1 );
+    background:#f001;
+}
+
+/* rename to u1-pad? */
+.u1-p {
+    padding:1rem;
+}
+.u1-p :first-child {
+    margin-top:0;
+}
+.u1-p :last-child {
+    margin-bottom:0;
+}
+
+/*
+.u1-grow {
+    flex-grow:1;
+}
+.u1-flex-col {
+    display:flex;
+    flex-direction:column;
+}
+
+https://meowni.ca/posts/monica-dot-css/
+
+.horizontal {display: flex; flex-direction: row; justify-content: space-between}
+.vertical {display: flex; flex-direction: column}
+.center {justify-content: center; align-items: center}
+.flex {flex: 1}
+
+tailwind: .w-full
+bootstrap: .w-100
+codyhouse: .width-100%
+bulma: .is-fullwidth
+.u1-width-full {
+    width:100%;
+    width:-moz-available;
+    width:-webkit-fill-available;
+}
+*/

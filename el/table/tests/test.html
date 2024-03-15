@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+    <title>dialog.js test.html | U1 design-system</title>
+
+    <link href="../../../base.css/full.css" rel=stylesheet>
+    <link href="../../../classless.css/variables.css" rel=stylesheet>
+    <link href="../../../classless.css/classless.css" rel=stylesheet>
+    <link href="../../../classless.css/more.css" rel=stylesheet>
+    <link href="../../../classless.css/simple.css" rel=stylesheet>
+    <link href="../../../table.class/table.css" rel=stylesheet>
+
+    <link href="../table.css" rel=stylesheet>
+    <script src="../table.js" type=module></script>
+
+<body>
+
+    <section>
+        <u1-table style="white-space:nowrap" id=test sortable break>
+            <table>
+                <thead>
+                    <tr>
+                        <th> Salut
+                        <th> Firstname
+                        <th> Lastname
+                        <th> Age
+                        <th> X
+                <tbody>
+                    <tr>
+                        <td> Herr
+                        <td> Wolfgang Amadeus
+                        <td> Mozart
+                        <td> 46
+                        <td> b
+                    <tr>
+                        <td> Mr.
+                        <td colspan=2 style="text-align:center"> <b>N Colspan 2</b>
+                        <td> 88
+                        <td> a
+                    <tr>
+                        <td> Frau
+                        <td> Provident, quisquam.
+                        <td> Omnis, quisquam.
+                        <td> 1
+                        <td> c
+                    <tr>
+                        <td> Mister
+                        <td> Provident, quisquam.
+                        <td> Laudens, quisquam.
+                        <td data-sortby=".5"> 6 month
+                        <td> z
+            </table>
+        </u1-table>
+    </section>
+
+    <section>
+        <h2>sortable=button (selector)</h2>
+        <u1-table style="white-space:nowrap; max-height:min(60vh, 20rem)" id=test2 sortable="button">
+            <table>
+                <thead>
+                    <tr>
+                        <th> Firstname
+                        <th> <button>Lastname</button>
+                        <th> <button>Age</button>
+                        <th> <button>X</button> not here
+                <tbody id=test2body>
+                    <tr>
+                        <td> Adam
+                        <td> Hungentobler
+                        <td> 88
+                        <td> a
+                    <tr>
+                        <td> Wolfgang Amadeus
+                        <td> Mozart
+                        <td> 46
+                        <td> b
+                    <tr>
+                        <td> Provident, quisquam.
+                        <td> Omnis, quisquam.
+                        <td> 1
+                        <td> c
+            </table>
+        </u1-table>
+        <button onclick="test2body.insertAdjacentHTML('beforeend',test2body.innerHTML)">double items</button>
+    </section>
+
+
+    <style contenteditable>
+        thead > tr > ::after {
+            content: "▲";
+            opacity:0;
+        }
+        thead > tr > [aria-sort=ascending]::after {
+            opacity:1;
+            content: "▲";
+        }
+        thead > tr > [aria-sort=descending]::after {
+            opacity:1;
+            content: "▼";
+        }
+    </style>
+
+    <script type=module>
+    // console.log(test.columns)
+    // console.log(test.columns.item(2))
+    // console.log(test.columns.item(2).cells);
+    </script>

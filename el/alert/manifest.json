@@ -1,0 +1,77 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "alert.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "alert",
+                    "members": [
+                    ],
+                    "events": [
+                    ],
+                    "attributes": [
+                        {
+                            "name": "variant",
+                            "type": ["info","success","warning","danger"]
+                        },
+                        {
+                            "name": "dismissable",
+                            "type": "boolean"
+                        },
+                        {
+                            "name": "icon",
+                            "type": "string"
+                        },
+                        {
+                            "name": "open",
+                            "type": "boolean"
+                        }
+                    ],
+                    "slots": [
+                        {
+                            "name": "action",
+                            "description": "Slot to add action buttons"
+                        }
+                    ],
+                    "CSSProperties": [
+                        {
+                            "name": "--color",
+                            "description": "The color of the alert, if not set, it will be determined by the variant.",
+                            "syntax": "<color>"
+                        }
+                    ],
+                    "CSSParts": [
+                        {
+                            "name": "icon",
+                            "description": "The icon part of the alert"
+                        },
+                        {
+                            "name": "close",
+                            "description": "The close (dismiss) button part of the alert"
+                        }
+                    ],
+                    "superclass": {
+                        "name": "HTMLElement"
+                    },
+                    "tagName": "u1-alert",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-element-definition",
+                    "name": "u1-alert",
+                    "declaration": {
+                        "name": "MyElement",
+                        "module": "my-project/my-element.js"
+                    }
+                }
+            ]
+        }
+    ]
+}

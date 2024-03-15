@@ -1,0 +1,56 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "carousel.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "carousel",
+                    "members": [
+                        {
+                            "kind": "method",
+                            "name": "slideTo"
+                        }
+                    ],
+                    "events": [
+                        {
+                            "name": "u1-carousel.slide",
+                            "type": {
+                                "text": "Event"
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "autoplay",
+                            "u1-type": "boolean"
+                        },
+                        {
+                            "name": "mode",
+                            "u1-type": ["slide","fade","scroll"]
+                        }
+                    ],
+                    "superclass": {
+                        "name": "HTMLElement"
+                    },
+                    "tagName": "u1-carousel",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-element-definition",
+                    "name": "u1-carousel",
+                    "declaration": {
+                        "name": "MyElement",
+                        "module": "my-project/my-element.js"
+                    }
+                }
+            ]
+        }
+    ]
+}

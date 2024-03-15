@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src=../../../u1/tests/test-init.js type=module></script>
+
+    <link rel=stylesheet href="../../norm.css/norm.css">
+    <link rel=stylesheet href="../../../css/base/base.css">
+    <link rel=stylesheet href="../variables.css">
+    <link rel=stylesheet href="../classless.css">
+
+    <style>
+        body {
+            padding:2rem;
+        }
+    </style>
+
+
+<body>
+
+    <section>
+        <h2>Global (html)</h2>
+        <ul>
+            <li>The color of native elements are in the theme-color
+            <li>background-color
+            <li>Text-color
+        </ul>
+
+        <label>
+            Checkbox
+            <input type=checkbox checked>
+        </label>
+
+        <label>
+            Range
+            <input type=range>
+        </label>
+
+
+        <h2>Links (a)</h2>
+        <a href="file://asfasf.asfasef.asfsef/asef.ch">Link color is the theme-color, also test hover and focus</a><br>
+        <a href="https://www.google.com/">Visited links</a>
+
+        <h2>Line (HR)</h2>
+
+        <hr>
+
+        <h2>Flow content</h2>
+        <p>Headings, Paragraphs, list.. have not margin-top if they are first and not margin-bottom if they are last</p>
+
+        <div style="border:1px solid">
+            <h1>This is a H1</h1>
+            <h6>This is a H6</h6>
+        </div>
+        <div style="border:1px solid">
+            <ul><li>This is a list</ul>
+            <p>This is a paragraph</p>
+        </div>
+
+        <h2>Tables</h2>
+        <ul>
+            <li>Stretched to available width
+            <!--li>Smaller font (.8rem)
+            <li>Rows have a border between -->
+            <li>cells have a padding of .5em
+        </ul>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Header 1
+                    <th>Header 2
+            <tbody>
+                <tr>
+                    <td>Cell 1
+                    <td>Cell 2
+                <tr>
+                    <td>Cell 1
+                    <td>Cell 2
+                <tr>
+                    <td>Cell 1
+                    <td>Cell 2
+
+        </table>
+
+        <h2>Focus</h2>
+
+        <ul>
+            <li>Every focued element has a outline, if focused by keyboard
+            <li>If the element is active, the outline gets bigger
+        </ul>
+
+        <label>
+            Test focus
+            <input>
+        </label>
+
+
+        <h2>Code</h2>
+        <p> to be continued..., generate this testpage from the css file?</p>
+    </section>
+
+
+</html>

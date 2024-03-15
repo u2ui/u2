@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Tests</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+
+<body>
+    <div id="mocha"></div>
+
+    <script src="https://unpkg.com/chai/chai.js"></script>
+    <script src="https://unpkg.com/mocha/mocha.js"></script>
+
+    <script class="mocha-init">
+        mocha.setup('bdd');
+        mocha.checkLeaks();
+    </script>
+
+    <div class=container id=container>
+        <div class=item id=el1>added before</div>
+    </div>
+
+    <script type=module>
+    import {SelectorObserver} from '../SelectorObserver.js';
+
+    describe('SelectorObserver', () => {
+        let lastAdded = null;
+        let lastRemoved = null;
+        let o = new SelectorObserver({
+            on: el => lastAdded = el ,
+            off : el => lastRemoved = el ,
+        });
+        const options = {};
+        o.observe('.container .item', options);
+
+        let el2 = document.createElement('div');
+        el2.classList.add('item');
+        el2.id = 'el2';
+        el2.innerHTML = 'dynamicly added';
+
+        it('found existing:', () => {
+            chai.expect(lastAdded).to.equal(el1);
+        });
+
+        it('add dynamicly:', done => {
+            lastAdded = lastRemoved = null;
+            el1.after(el2)
+            setTimeout(()=>{
+                chai.expect(lastAdded).to.equal(el2);
+                done();
+            },50)
+        });
+
+        it('remove class:', done => {
+            lastAdded = lastRemoved = null;
+            el2.classList.remove('item');
+            setTimeout(()=>{
+                chai.expect(lastRemoved).to.equal(el2);
+                el2.classList.add('item');
+                done();
+            },50)
+        });
+
+        it('nested, remove parent class: (should not work)', done => {
+            lastAdded = lastRemoved = null;
+            container.classList.remove('container');
+            setTimeout(()=>{
+                chai.expect(lastRemoved).to.equal(null);
+                container.classList.add('container');
+                done();
+            },50);
+        });
+
+        it('nested, remove parent class: (using deep)', done => {
+            lastAdded = lastRemoved = null;
+            options.deep = true;
+            container.classList.remove('container');
+            setTimeout(()=>{
+                chai.expect(lastRemoved).to.equal(el2);
+                container.classList.add('container');
+                done();
+            },50);
+        });
+
+        it('add wrapper:', done => {
+            lastAdded = lastRemoved = null;
+            el1.insertAdjacentHTML('afterend', '<div id=wrapper><div class=item id=el3>wrapped</div></div>');
+            setTimeout(()=>{
+                chai.expect(lastAdded.id).to.equal('el3');
+                done();
+            },50)
+        });
+
+        it('remove wrapper:', done => {
+            lastAdded = lastRemoved = null;
+            wrapper.remove();
+            setTimeout(()=>{
+                chai.expect(lastRemoved.id).to.equal('el3');
+                done();
+            },50)
+        });
+
+        it('move node but keep it matched to the selector:', done => {
+            lastAdded = lastRemoved = null;
+            el2.remove();
+            container.prepend(el2);
+            setTimeout(()=>{
+                chai.expect(lastRemoved.id).to.equal('el2');
+                chai.expect(lastAdded.id).to.equal('el2');
+                done();
+            },100)
+        });
+
+        it('add after disconnect:', done => {
+            lastAdded = lastRemoved = null;
+            o.disconnect();
+            el1.insertAdjacentHTML('afterend', '<div class=item id=afterDisconnect>after disconnect</div>');
+            setTimeout(()=>{
+                chai.expect(lastAdded).to.equal(null);
+                afterDisconnect.remove();
+                done();
+            });
+        });
+
+    });
+
+    /*
+    describe('SelectorObserver check by animationend', () => {
+        it('nested, add parent class:', done => {
+            let o = new SelectorObserver({
+                on: el => {
+                    chai.expect(el.id).to.equal('el1');
+                    done();
+                }
+            })
+            o.observe('.test #el1', {checkAnimation: true});
+            container.classList.add('test');
+        });
+        it('nested, remove parent class:', done => {
+            let o = new SelectorObserver({
+                off: el => {
+                    chai.expect(el.id).to.equal('el1');
+                    done();
+                }
+            })
+            o.observe('.test #el1', {checkAnimation: true});
+            container.classList.remove('test');
+        });
+    });
+    */
+
+
+    </script>
+    <script class="mocha-exec" type=module>
+      mocha.run();
+    </script>
+</body>
+
+</html>

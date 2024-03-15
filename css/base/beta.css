@@ -1,0 +1,18 @@
+*, ::before, ::after {
+	background-size: contain; /* or cover? */
+	background-position: 50% 50%;
+}
+[type=number] { text-align: end; }
+legend {
+	padding-left: .3em;
+	padding-right: .3em;
+}
+tbody, thead, tfoot {
+	vertical-align: inherit;
+}
+
+/*
+body {
+	background-image: var(--report-to);
+}
+*/

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title></title>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+        <script type=module src="../../../u1/tests/test-init.js"></script>
+
+<body>
+
+<section>
+    <h1>Details</h1>
+
+    <button onclick="toggleParam('details1', true)">open</button>
+    <button onclick="toggleParam('details1', false)">close</button>
+    <button onclick="toggleParam('details1', null)">toggle</button>
+    <button onclick="toggleParam('details1', null, true)">toggle, no browser-back-history</button>
+
+    <details u1-navigable id=details1>
+        <summary>summary 1</summary>
+        More rext
+    </details>
+    <details u1-navigable id=details2>
+        <summary>summary 2</summary>
+        More rext
+    </details>
+
+
+</section>
+
+<script type=module>
+
+import {U1TargetObserver, toggleParam} from "../U1TargetObserver.js";
+window.toggleParam = toggleParam;
+
+
+new U1TargetObserver({
+    on:  el => el.open = true,
+    off: el => el.open = false,
+    matches:'details[u1-navigable]',
+});
+
+addEventListener('toggle',e=>{
+	const el = e.target;
+	if (!el.matches('details[u1-navigable][id]')) return;
+	if (el.open) {
+        toggleParam(el.id, true);
+	} else {
+        toggleParam(el.id, false);
+	}
+},true);
+
+</script>

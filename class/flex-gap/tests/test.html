@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>u1-ico Test</title>
+        <script src="../../../u1/tests/test-init.js" type=module></script>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+
+        <link rel=stylesheet href="../flex-gap.css">
+<body>
+
+
+<section id=u1-flex-gap>
+    <h2>.u1-flex-gap (gap hack for safari)</h2>
+    <ul>
+        <li>Wrap by default</li>
+        <li>gaps by default (1rem)</li>
+        <li>no overflow:hidden</li>
+        <li>no minus margin on the right (prevent overflows)</li>
+    </ul>
+
+    <div class=wrapper>
+        <div class=u1-flex-gap>
+            <div>Item 1</div>
+            <div>Item 2</div>
+            <div style="margin-left:auto">margin-left:auto not working</div>
+        </div>
+    </div>
+    <div class=wrapper>
+        <div class=u1-flex-gap>
+            <div>Item 1</div>
+            <div style="margin-right:auto">margin-right:auto working</div>
+            <div>Item 3</div>
+        </div>
+    </div>
+    <div class=wrapper>
+        <div class=u1-flex-gap style=" --u1-Gap:.2em; --u1-Row-gap:.7em">
+            <div>Custom</div>
+            <div>row</div>
+            <div>and</div>
+            <div>col</div>
+            <div>gaps</div>
+            <div>Custom</div>
+            <div>row</div>
+            <div>and</div>
+            <div>col</div>
+            <div>gaps</div>
+            <div>Custom</div>
+            <div>row</div>
+            <div>and</div>
+            <div>col</div>
+            <div>gaps</div>
+        </div>
+    </div>
+
+    <style>
+        .wrapper {
+            border:2px solid green;
+            padding:10px;
+            margin:10px;
+            overflow:auto;
+            resize:horizontal
+        }
+        #u1-flex-gap .u1-flex-gap > * {
+            background: black;
+            color:white;
+            padding: 10px;
+        }
+    </style>
+
+</section>

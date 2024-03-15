@@ -1,0 +1,8 @@
+u1-counter {
+    text-align:center;
+    display:inline-block;
+    min-width:var(--finalWidth);
+    font-variant: tabular-nums;
+    font-feature-settings: "tnum";
+    box-sizing:content-box;
+}

@@ -1,0 +1,25 @@
+/* todo? all margins except right important? */
+
+.u1-flex {
+    --u1-Gap:1rem;
+    --u1-Row-gap:var(--u1-Gap);
+    --u1-Col-gap:var(--u1-Gap);
+    display:flex;
+    flex-wrap:wrap;
+    column-gap: var(--u1-Col-gap);
+    row-gap:    var(--u1-Row-gap);
+
+    /* would this be useful? *
+    --u1-Items-width: 10rem;
+    container-name: u1-items;
+    container-type: inline-size;
+    */
+}
+
+/* would this be useful? *
+.u1-flex > * {
+    flex: 0 0 var(--u1-Items-width);
+    container-name: u1-item;
+    container-type: inline-size;
+}
+*/

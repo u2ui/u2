@@ -1,0 +1,45 @@
+/* slideshow
+inspiration: https://codepen.io/argyleink/pen/yLovWjz?editors=1100
+*/
+u1-carousel {
+	/* custom
+	--u1-carousel-slideshow-speed:6s;
+	--u1-carousel-animation-speed:1s;
+	*/
+	display:flex;
+	overflow:auto;
+	scroll-snap-type: x mandatory;
+ 	/* if its a list */
+	list-style:none;
+	margin:0;
+	padding:0; /*  todo?: !important, always set padding on children */
+	/* align-items:center or stretch;  todo default? */
+}
+u1-carousel > :not([slot]) {
+	width:100%;
+    /* width:-moz-available; to be able to use margins, not working properly
+    width:-webkit-fill-available; */
+
+	flex-shrink:0;
+	scroll-snap-align: center;
+	/* ok? */
+	/* height:100%; /* vertical mode (needs height and flex-direction:column set on the slideshow) */
+	/* todo? especially for images
+	display:flex;
+	align-items:center;
+	justify-content: center;
+	object-fit: cover;
+	*/
+}
+
+/*
+todo: until js is loaded
+u1-carousel > [slot] {
+	display:none;
+}
+
+/* needed if padding
+u1-carousel > img:not([xyz]) { /* just make it stronger
+	padding:0;
+}
+*/

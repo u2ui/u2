@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../../../u1/tests/test-init.js" type=module></script>
+        <title>badge.class test | u1ui design system</title>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+
+        <link rel=stylesheet href="../badge.css">
+<body>
+
+    <section id=u1-badge>
+        <h2>.u1-badge</h2>
+
+        <h3>No Content</h3>
+        <div>
+            ✉<sup class=u1-badge style="background-color:red"></sup>
+            ♞<sup class=u1-badge style="background-color:red"></sup>
+        </div>
+
+        <h3>Using span</h3>
+        <div>
+          <span class=u1-badge>done</span>
+          <span class=u1-badge>todog</span>
+          <span class="u1-badge">warn</span>
+        </div>
+
+        <h3>Using small</h3>
+        <div>
+          Here: <small class=u1-badge>done</small>
+          <small class=u1-badge>done</small>
+        </div>
+
+        <h3>Using sup</h3>
+        <p>
+          <sup class=u1-badge>pro tip ★</sup> show here |
+          E-mails <sup class=u1-badge>3</sup>
+        </p>
+
+        <h3>Breaks</h3>
+        <p style="max-width:200px">
+          <small class=u1-badge>super long badge containing more words</small>
+        </p>
+
+        <h3>Combining</h3>
+        <p>
+          <button>
+            Notifications
+            <small class=u1-badge>5</small>
+          </button>
+          <h1>
+            Heading
+            <small class=u1-badge>5</small>
+            sup: <sup class=u1-badge>5</sup>
+          </h1>
+        </p>
+
+
+<h3>Text font-familie properties</h3>
+<p>Ascenders and descenders</p>
+<style contenteditable style="display:block">
+body {
+  xfont-family: "Arial", "Helvetica", sans-serif;
+  xfont-family: "Arial Black", "Arial", sans-serif;
+  xfont-family: "Book Antiqua", "Arial", sans-serif;
+  xfont-family: "Comic Sans MS", "Arial", sans-serif;
+  xfont-family: "Courier New", "Courier", monospace;
+  xfont-family: "Georgia", "Times New Roman", serif;
+  xfont-family: "Impact", "Arial", sans-serif;
+  xfont-family: "Lucida Console", "Courier", monospace;
+  xfont-family: "Lucida Sans Unicode", "Lucida Grande", "Helvetica", sans-serif;
+  xfont-family: "MS Sans Serif", "Arial", sans-serif;
+  xfont-family: "MS Serif", "Arial", sans-serif;
+  xfont-family: "Palatino Linotype", "Book Antiqua", "Palatino", serif;
+  xfont-family: "Tahoma", "Geneva", sans-serif;
+  xfont-family: "Times New Roman", "Times", serif;
+  xfont-family: "Trebuchet MS", "Lucida Grande", "Helvetica", sans-serif;
+  xfont-family: "Verdana", "Geneva", sans-serif;
+
+}
+</style>
+
+      </section>
+
+
+      <section>
+        <h2>Pulse (not integrated)</h2>
+        <span class="u1-badge -Pulse" style="--pulse-color:var(--color)">2</span>
+        &nbsp;&nbsp;
+        <span class="u1-badge -Pulse" style="background:red; --pulse-color:red"></span>
+      </section>
+
+      <style contenteditable>
+      .u1-badge.-Pulse {
+        animation: 1.5s ease 0s infinite normal none running pulse;
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 var(--pulse-color, black);
+        }
+        70% {
+          box-shadow: 0 0 0 0.5rem transparent;
+        }
+        100% {
+          box-shadow: 0 0 0 0 transparent;
+        }
+      }
+    </style>
+  </section>

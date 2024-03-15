@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+    <link rel=stylesheet href="../carousel.css">
+    <script src="../carousel.js" type=module></script>
+
+</head>
+<body>
+
+<style contenteditable>
+u1-carousel {
+    box-shadow: var(--shadow);
+}
+u1-carousel > * {
+    transition:.3s;
+}
+u1-carousel > [aria-hidden=true] {
+    opacity:.1;
+}
+</style>
+
+<section>
+    <h2>mode = slide</h2>
+    <u1-carousel mode=slide autoplay style="--u1-carousel-slideshow-speed:2s; padding:2rem" tabindex="0">
+        <u1-carousel mode=fade>
+            <img src="https://picsum.photos/500/200?random=1" width=500 height=200 alt="">
+            <img src="https://picsum.photos/500/200?random=2" width=500 height=200 alt="">
+            <img src="https://picsum.photos/500/200?random=3" width=500 height=200 alt="">
+            <img src="https://picsum.photos/500/200?random=4" width=500 height=200 alt="">
+            <img src="https://picsum.photos/500/200?random=5" width=500 height=200 alt="">
+        </u1-carousel>
+        <u1-carousel mode=fade>
+            <img src="https://picsum.photos/500/200?random=1" width=500 height=200 alt="">
+            <img src="https://picsum.photos/500/200?random=2" width=500 height=200 alt="">
+            <img src="https://picsum.photos/500/200?random=3" width=500 height=200 alt="">
+            <img src="https://picsum.photos/500/200?random=4" width=500 height=200 alt="">
+            <img src="https://picsum.photos/500/200?random=5" width=500 height=200 alt="">
+        </u1-carousel>
+    </u1-carousel>
+</section>

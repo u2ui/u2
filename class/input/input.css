@@ -1,0 +1,33 @@
+.u1-input {
+    display: inline-flex;
+    width: 13rem;
+    white-space: nowrap;
+    overflow: hidden;
+
+    border: 1px solid;
+    border-radius: .2em;
+}
+.u1-input > * {
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+}
+.u1-input > button {
+    flex: 0 1 auto;
+}
+.u1-input > input {
+    flex: 1 1 auto;
+    width: 4rem;
+}
+
+
+/*
+.u1-input {
+    border-radius:var(--radius);
+}
+.u1-input:focus-within {
+    outline: .4rem solid hsl(var(--hs), 25%, .2);
+    outline-offset:0;
+    transition: .15s;
+}
+*/

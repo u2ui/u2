@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../../../u1/tests/test-init.js" type=module></script>
+        <title>Attribute u1-focusgroup tests</title>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+
+        <script src="../focusgroup.js"></script>
+
+    <body>
+
+    <section>
+        <h2>u1-focusgroup</h2>
+
+        <div style="display:flex; gap:1rem" u1-focusgroup>
+            <button>press left or up key to focus the previous button</button>
+            <button disabled>disabled</button>
+            <button>press right or down key to focus the next button</button>
+        </div>
+    </section>
+
+    <section>
+        <h2>u1-focusgroup="wrap remember"</h2>
+        <p>
+            <strong>Wrap:</strong> If the last element has focus the next will be the first element.
+        </p>
+        <p>
+            <strong>Remember:</strong> If you come back to the group the last focused element will be focused. (The others can not be focused by tab-key.)
+        </p>
+
+        <div style="display:flex; gap:1rem" u1-focusgroup="wrap remember">
+            <label>1. <input type="checkbox"></label>
+            <label>2. <input type="checkbox"></label>
+            <label>3. <input type="checkbox"></label>
+        </div>
+    </section>
+
+    <section>
+        <h2>u1-focusgroup="horizontal" / "vertical"</h2>
+
+        <fieldset style="display:flex; gap:1rem; " u1-focusgroup="horizontal">
+            <legend>horizontal</legend>
+            <div tabindex="0">1</div>
+            <div tabindex="-1">tabindex=-1</div>
+            <div tabindex="0">2</div>
+        </fieldset>
+
+        <fieldset style="display:flex; gap:1; flex-direction: column;" u1-focusgroup="vertical">
+            <legend>vertical</legend>
+            <div tabindex="0">1</div>
+            <div tabindex="0">2</div>
+        </fieldset>
+    <section>
+
+    <section>
+        <h2>inside shadow dom</h2>
+
+        <div id=shadowTest></div>
+
+        <script>
+        const shadow = shadowTest.attachShadow({mode: 'open'});
+        shadow.innerHTML = `
+            <div style="display:flex; gap:1rem" u1-focusgroup>
+                <button>press left or up key to focus the previous button</button>
+                <button>press right or down key to focus the next button</button>
+            </div>
+        `;
+        </script>
+    </section>
+
+    <section>
+        <h2>Using different input fields</h2>
+
+        <div style="display:flex; flex-direction:column; gap:1rem" u1-focusgroup>
+            <label>
+                text
+                <input type="text">
+                horizontal does not work
+            </label>
+            <label>
+                checkbox
+                <input type="checkbox">
+                does work
+            </label>
+            <label>
+                radio
+                <input type="radio">
+                does work
+            </label>
+            <label>
+                select
+                <select><option>1</option><option>2</option></select>
+                vertical does not work
+            </label>
+            <label>
+                textarea
+                <textarea></textarea>
+                horizontal and vertical do not work
+            </label>
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+<!--
+    from microsoft focusgroup polyfill
+
+ <style>
+   span.fakeradio { display:inline-block; width:20px; height:20px; border-radius:50%; background:lightgray; }
+   span.fakeradio:focus { outline: 2px solid black; }
+   [role=menu] { display: flex; flex-direction: column; width: 250px; border: 1px solid black; }
+   [role=menuitem]:focus { outline: 2px solid blue; }
+ </style>
+</head>
+<body>
+ <div u1-focusgroup>
+   <input type="checkbox">
+   <input type="checkbox">
+ </div>
+ <fieldset u1-focusgroup>
+   <legend>shopping list</legend>
+   <label u1-focusgroup="extends wrap"><input type="checkbox">Apples</label>
+   <label u1-focusgroup="extends"><input type="checkbox">Bananas</label>
+   <label u1-focusgroup="extends wrap"><input type="checkbox">Carrots</label>
+   <label u1-focusgroup="extends"><input type="checkbox">Tomatoes</label>
+ </fieldset>
+ <p>Pretend radio buttons (wrapping)</p>
+ <div u1-focusgroup="wrap">
+   <span tabindex="0" class="fakeradio"></span>
+   <span tabindex="-1" class="fakeradio"></span>
+   <span tabindex="-1" class="fakeradio"></span>
+   <span tabindex="-1" class="fakeradio"></span>
+ </div>
+ <p>vertical menu (with horizontal submenus)</p>
+ <div u1-focusgroup="vertical" role="menu">
+  <div tabindex=0 role="menuitem">menu item 1</div>
+  <div tabindex=-1 role="menuitem">menu item 2</div>
+  <div tabindex=-1 role="menuitem">menu item 3</div>
+  <div tabindex=-1 u1-focusgroup="extends horizontal wrap" aria-orientation="horizontal" style="display: flex;justify-content: space-evenly" >
+    <span tabindex=-1 role="menuitem">sub 3.1</span>
+    <span tabindex=-1 role="menuitem">sub 3.2</span>
+  </div>
+  <div tabindex=-1 role="menuitem">menu item 4</div>
+ </div>
+-->

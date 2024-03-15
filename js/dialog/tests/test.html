@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+    <title>dialog.js test.html | U1 design-system</title>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+    <link rel=stylesheet href="../../table.class/table.css">
+
+    <script src="../../../el/code/code.js" type=module></script>
+    <link rel=stylesheet href="../../../el/code/code.css">
+
+</head>
+
+<body>
+
+<script type=module>
+    import * as dialog from '../dialog.js';
+    window.dialog = dialog;
+</script>
+
+
+<section>
+    <h2>alert, confirm, prompt</h2>
+
+    <button onclick="dialog.alert('Just a test').then(console.log)">alert</button>
+    <button onclick="console.log(alert('Just a test'))">native</button>
+    <br><br>
+    <button onclick="dialog.confirm('Really?').then(console.log)">confirm</button>
+    <button onclick="console.log(confirm('Really?'))">native</button>
+    <br><br>
+    <button onclick="dialog.prompt('value:','100').then(console.log)">prompt</button>
+    <button onclick="console.log(prompt('value:','100'))">native</button>
+
+    <h2>Tests</h2>
+
+    <button onclick="dialog.alert('Html content: <b>bold</b>')">Html content not parsed </button>
+    <br><br>
+    <button onclick="dialog.alert({body:'Html content: <b>bold</b>'})">Html parsed </button>
+    <br><br>
+    <button onclick="dialog.prompt({body:'Annuler?', lang:'fr'}, '👍')">option "lang" </button>
+    <br><br>
+    <button onclick="dialog.alert({body:'click on the backdrop',init:el=>el.classList.add('backdropClose')}).then(console.log)">backdropClose class</button>
+    <br><br>
+
+    <button id=formTestHtml>form(html) beta</button>
+    <script>
+    formTestHtml.addEventListener('click',async e=>{
+        const result = await dialog.form(`
+        <h2>Fill the form</h2>
+        <div>
+            Gender: &nbsp;
+            <label><input type=radio name=gender value=female required> Female </label>
+            <label><input type=radio name=gender value=male> Male </label>
+        </div>
+        <label>
+            Firstname:
+            <input name=firstname required style="width:100%">
+        </label>
+        <label>
+            Lastname:
+            <input name=lastname style="width:100%">
+        </label>
+        <label>
+            Accept AGB: 
+            <input type=checkbox name=agb value=1 required>
+        </label>
+        `);
+        result && dialog.alert('Thank you '+result.firstname+'!');
+        console.log(result)
+    });
+    </script>
+
+</section>
+
+<style> u1-code { font-size:14px; border:1px solid var(--color-line); padding:1rem; }  </style>
+
+<u1-code editable trim>
+    <style>
+
+dialog { transition: opacity 1s ease; opacity:0; }
+dialog[open] { opacity:1 }
+
+dialog:is(.\:modal, :modal) {
+    width: 18rem;
+    box-shadow: 0 0 1rem #0008;
+    border: 0;
+    border-radius: .3rem;
+    opacity:1;
+}
+/* dialog:where(.\:modal, :modal)[hidden] { opacity:0; transition-duration:1s; } close animation, still commented out in code */
+    </style>
+</u1-code>
+
+
+<!-- /* new variant using @starting-style and transition-behavior: allow-discrete; (chromium for now) */
+dialog[open] {
+  opacity: 1;
+  transform: translateY(0);
+}
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: translateY(-80vh);
+  }
+}
+dialog {
+  opacity: 0;
+  transform: translateY(-80vh);
+  transition: 0.4s ease-in-out; 
+  transition-behavior: allow-discrete;
+}
+
+dialog::backdrop {
+  background-color: rgb(0 0 0 / 0%);
+  transition: 0.4s ease-in-out; 
+  transition-behavior: allow-discrete;
+}
+dialog[open]::backdrop {
+  background-color: rgb(0 0 0 / 25%);
+}
+@starting-style {
+  dialog[open]::backdrop {
+    background-color: rgb(0 0 0 / 0%);
+  }
+}
+-->

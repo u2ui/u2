@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>u1-ico Test</title>
+
+        <link rel=stylesheet href="../../../base.css/full.css">
+
+        <link rel=stylesheet href="../../../classless.css/variables.css">
+        <link rel=stylesheet href="../../../classless.css/classless.css">
+        <link rel=stylesheet href="../../../classless.css/simple.css">
+        <link rel=stylesheet href="../../../classless.css/more.css">
+
+
+        <script type=module src="../../../u1/auto.min.js"></script>
+
+
+        <link rel="stylesheet" href="../font/Material Icons.css">
+        <link rel="stylesheet" href="../ico.css">
+        <script type=module src="../ico.js"></script>
+
+        <!--script type=module src="./util.js"></script>
+        <link rel="stylesheet" href="./util.css"-->
+<body>
+
+<style>
+    u1-ico[state=fail] {
+        color:red;
+        font-size:10px;
+    }
+</style>
+
+<section>
+    <h2>Comparison tool</h2>
+    <input style="width:100%" id=namesInp value="star search menu home facebook chevron-right link">
+    <div style="overflow:auto; white-space:nowrap; max-height:60vh">
+        <table id=table class="u1-table -Sticky">
+            <thead>
+            <tbody>
+                <tr style="--u1-ico-dir:'https://cdn.jsdelivr.net/npm/bytesize-icons@1.4.0/dist/icons/'">
+                    <td>
+        </table>
+    </div>
+
+    <style style="display:block" contenteditable style="font-size:12px">
+        u1-ico {
+            color:#05a;
+            /* Use with caution: */
+            xfill: currentColor;
+            xstroke: currentColor;
+            xstroke-width: 5%; /* % is dependent relative to the displayed size and not the defined size = better */
+            xstroke-linecap: round;
+            xstroke-linejoin: round;
+        }
+    </style>
+
+    <!--
+        todo: https://icones.js.org/
+    -->
+    <script type=module>
+        let directories = {
+            'Material':              'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg',
+            'Teenyicons':            'https://cdn.jsdelivr.net/npm/teenyicons@0.4.1/outline/',
+            'Feather':               'https://cdn.jsdelivr.net/npm/feather-icons@4.29.0/dist/icons/',
+            'Lucide':                'https://cdn.jsdelivr.net/npm/lucide-static@0.309.0/icons/',
+            'Bootstrap':             'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/icons/',
+            'Octicons':              'https://cdn.jsdelivr.net/npm/octicons@8.5.0/build/svg/',
+            'Bytesize':              'https://cdn.jsdelivr.net/npm/bytesize-icons@1.4.0/dist/icons/',
+            'Ionicons':              'https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/svg/',
+            'Tabler Icons':          'https://cdn.jsdelivr.net/npm/@tabler/icons@2.11.0/icons/',
+
+            'Phosphor Icons thin':   'https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.0.2/assets/thin/{icon}-thin.svg',
+            'Phosphor Icons regular':'https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.0.2/assets/regular/',
+            'Phosphor Icons light':  'https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.0.2/assets/light/{icon}-light.svg',
+            'Phosphor Icons fill':   'https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.0.2/assets/fill/{icon}-fill.svg',
+            'Phosphor Icons duotone':'https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.0.2/assets/duotone/{icon}-duotone.svg',
+            'Phosphor Icons bold':   'https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.0.2/assets/bold/{icon}-bold.svg',
+
+            'Unicons thinline':      'https://cdn.jsdelivr.net/npm/@iconscout/unicons@4.0.6/svg/thinline/',
+            'Unicons solid':         'https://cdn.jsdelivr.net/npm/@iconscout/unicons@4.0.6/svg/solid/',
+            //'Unicons monochrome':    'https://cdn.jsdelivr.net/npm/@iconscout/unicons@4.0.6/svg/monochrome/', // using classes does not work
+            'Unicons line':          'https://cdn.jsdelivr.net/npm/@iconscout/unicons@4.0.6/svg/line/',
+
+            'Fontawesome regular': 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/svgs/regular/',
+            'Fontawesome solid':   'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/svgs/solid/',
+            'Fontawesome brands':  'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/svgs/brands/',
+
+            'Heroicons outline':   'https://cdn.jsdelivr.net/npm/heroicons@2.0.16/outline/',
+            'Heroicons solid':     'https://cdn.jsdelivr.net/npm/heroicons@2.0.16/solid/',
+
+            'Dripicons':           'https://cdn.jsdelivr.net/npm/dripicons@2.0.0/SVG/',
+            'CoreUI Icons':        'https://cdn.jsdelivr.net/npm/@coreui/icons@2.0.1/svg/free/cil-',
+            'open-iconic':         'https://cdn.jsdelivr.net/npm/open-iconic@1.1.1/svg/',
+            'Radix':               'https://cdn.jsdelivr.net/gh/radix-ui/icons@3.1.0/packages/radix-icons/icons/15/',
+            'Typicons':            'https://cdn.jsdelivr.net/npm/typicons.font@2.1.2/src/svg/',
+            'Boxicons regular':    'https://cdn.jsdelivr.net/npm/boxicons@2.1.4/svg/regular/bx-',
+            'Boxicons solid':      'https://cdn.jsdelivr.net/npm/boxicons@2.1.4/svg/solid/bxs-',
+            'linearicons':         'https://cdn.jsdelivr.net/npm/linearicons@1.0.2/dist/svg/',
+            'FluentUI regular':    'https://cdn.jsdelivr.net/npm/@svg-icons/fluentui-system-regular@1.56.0/',
+            'FluentUI filled':     'https://cdn.jsdelivr.net/npm/@svg-icons/fluentui-system-filled@1.56.0/',
+            'Evil Icons':          'https://cdn.jsdelivr.net/npm/evil-icons@1.10.1/assets/icons/ei-',
+            'Eva Icons fill':      'https://cdn.jsdelivr.net/npm/eva-icons@1.1.3/fill/svg/',
+            'Eva Icons outline':   'https://cdn.jsdelivr.net/npm/eva-icons@1.1.3/outline/svg/{icon}-outline.svg',
+            'Zondicons':           'https://cdn.jsdelivr.net/npm/zondicons@1.2.0/',
+            'holasvg-icons':       'https://cdn.jsdelivr.net/gh/marianabeldi/holasvg-icons/icons/',
+            'Jam icons':           'https://cdn.jsdelivr.net/gh/michaelampr/jam@3.1.0/icons/',
+            'entypo':              'https://cdn.jsdelivr.net/npm/entypo@2.2.1/src/Entypo/',
+            'Adobe Spectrum':      'https://cdn.jsdelivr.net/npm/@adobe/spectrum-css-workflow-icons@1.4.2/24/{IconName}.svg',
+            'Momentum':            'https://cdn.jsdelivr.net/npm/@momentum-ui/icons@8.32.0/svg/{icon}_16.svg',
+            'mono icons':          'https://cdn.jsdelivr.net/npm/mono-icons@1.3.1/svg/',
+            'line awesome':        'https://cdn.jsdelivr.net/npm/line-awesome@1.3.0/svg/',
+            'flat color icons':    'https://cdn.jsdelivr.net/npm/flat-color-icons@1.1.0/svg/',
+            'icons8 windows-10-icons': 'https://cdn.jsdelivr.net/npm/windows-10-icons@1.0.1/svg/production/{icon_name}.svg',
+            'fticons':             'https://cdn.jsdelivr.net/npm/@financial-times/fticons@1.23.1/svg/',
+            'photon icons':        'https://cdn.jsdelivr.net/npm/photon-icons@5.4.0/icons/desktop/',
+            'devicons':            'https://cdn.jsdelivr.net/npm/devicons@1.8.0/!SVG/{icon_name}',
+            'Figma UI Icons':      'https://cdn.jsdelivr.net/npm/css.gg@2.0.0/icons/svg/',
+            'ifolio licons':       'https://cdn.jsdelivr.net/gh/ifolio/licons@master/svg/',
+            'Majesticons line':    'https://cdn.jsdelivr.net/npm/majesticons@2.1.2/line/{icon}-line.svg',
+            'Majesticons solid':   'https://cdn.jsdelivr.net/npm/majesticons@2.1.2/solid/{icon}.svg',
+            //'SF Symbols':          'https://cdn.jsdelivr.net/gh/brendanballon/sfsymbols-svg@1.0/symbols/{icon.name}.svg',
+            //'SF Symbols fill':     'https://cdn.jsdelivr.net/gh/brendanballon/sfsymbols-svg@1.0/symbols/{icon.name}.fill.svg',
+        }
+        let names = [];
+        function parseTable(){
+            names = namesInp.value.split(' ');
+            let str = '<thead><tr><th>Icon-Set';
+            for (let name of names) {
+
+                ///package/gh/:user/:repo@:version/:structure?
+                str += '<th style="text-align:center">'+name;
+            }
+            str += '<tbody>';
+
+            for (let [set,url] of Object.entries(directories)) {
+                let link = url.split(/{icon.*}/i)[0];
+                str +=
+                `<tr style="--u1-ico-dir:'${url}';">
+                    <th>
+                        <a href="${link}" target="${set}">${set}</a>`;
+                for (let name of names) {
+                    str += '<td style="text-align:center"><u1-ico icon="'+name+'">-</u1-ico>';
+                }
+            }
+            document.getElementById('table').innerHTML = str;
+        }
+        parseTable();
+        namesInp.addEventListener('change',parseTable)
+
+
+
+        // list all icons
+        document.getElementById('table').addEventListener('click', async function(e){
+
+            var href = e.target.closest('tr').querySelector('a').href;
+
+            var dialog = document.createElement('dialog');
+            dialog.innerHTML = 'loading...';
+            dialog.style.setProperty('--u1-ico-dir', "'"+href+"'");
+            dialog.style.width = '100vw';
+            dialog.style.maxHeight = '100vh';
+            dialog.style.overflow = 'auto';
+            document.body.append(dialog);
+            dialog.showModal();
+
+            const [, api, , path] = href.replace('cdn.jsdelivr.net', 'data.jsdelivr.com/v1/package').match(/(.*@[^/]+)(\/)(.*)/);
+            var parts = path.split('/');
+            var data = await fetch(api).then(res=>res.json());
+            var curr = data;
+            for (let part of parts) {
+                if (part === '') break;
+                curr = curr.files.find(item=>item.name===part);
+            }
+
+            dialog.innerHTML = '<div id=icoList class=u1-grid></div>';
+
+            curr.files.forEach(function(file){
+                let name = file.name;
+                if (!name.endsWith('.svg')) return;
+                let icon = name.replace('.svg','');
+                var item = document.createElement('div');
+                item.innerHTML = '<u1-ico xicon="'+icon+'">'+icon+'</u1-ico><br>'+icon;
+                dialog.querySelector('#icoList').append(item);
+            })
+
+        });
+
+        document.addEventListener('click',e=>{
+            const ico = e.target.closest('u1-ico');
+            if (!ico) return;
+            e.stopImmediatePropagation();
+            navigator.clipboard.writeText(ico.innerHTML.trim());
+            ico.style.backgroundColor = '#fe09';
+            ico.style.outline = '.1em solid #fe09';
+            ico.style.transition = '.1s';
+            setTimeout(() => {
+                ico.style.backgroundColor = '';
+                ico.style.outline = '';
+            }, 500);
+        },true)
+
+
+    </script>
+    <style>
+        #table {
+            font-size:12px;
+        }
+        #table tr {
+            vertical-align:middle;
+        }
+        #table u1-ico {
+            font-size:30px;
+            display:block;
+            xvertical-align: middle;
+        }
+        #table u1-ico[state=fail] {
+            font-size:12px;
+        }
+
+        #icoList {
+            --u1-Gap:1rem;
+            --u1-Items-width:9em;
+            text-align:center;
+            font-size:11px;
+        }
+        #icoList > * {
+            padding:.3rem .1rem;
+            --line-height:1.1em;
+            xborder:1px solid #eee;
+            xbackground:#f8f8f8;
+        }
+        #icoList u1-ico {
+            background:#fff;
+            transition: .15s;
+            transform:scale(1.001);
+            margin-bottom:.5em;
+        }
+        #icoList :hover u1-ico {
+            transform:scale(2.1);
+        }
+    </style>
+</section>
+
+
+<section>
+    using: --u1-ico-dir:"https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg"
+    <div style="--u1-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg'">
+        <u1-ico icon=search></u1-ico>
+        <u1-ico icon=facebook></u1-ico>
+        <u1-ico icon=alarm></u1-ico>
+    </div>
+
+    using: --u1-ico-font:'Material Icons' (as reference)
+    <div style="--u1-ico-font:'Material Icons'">
+        <u1-ico>search</u1-ico>
+        <u1-ico icon=facebook></u1-ico>
+        <u1-ico icon=alarm></u1-ico>
+    </div>
+</section>

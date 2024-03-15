@@ -1,0 +1,25 @@
+/* solid and brand are free */
+
+/*
+wow, i can use same font-family-name in two font-face-rules.
+disadvantage: both fonts are loaded regardless of used in content
+*/
+
+@font-face {
+  font-family: 'Font Awesome';
+  font-style: normal;
+  font-weight: 400;
+  xsrc: url(https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome/webfonts/fa-solid-900.woff2) format('woff2');
+  src: url(https://pro.fontawesome.com/releases/v6.0.0-beta1/webfonts/fa-solid-900.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome/webfonts/fa-brands-400.woff2) format('woff2');
+}
+
+html {
+  --u1-ico-font: 'Font Awesome', arial;
+}

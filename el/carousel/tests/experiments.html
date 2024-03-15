@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+    <link rel=stylesheet href="../carousel.css">
+    <script src="../carousel.js" type=module></script>
+
+</head>
+
+<body>
+
+    <style contenteditable>
+    u1-carousel {
+        box-shadow: var(--shadow);
+    }
+    u1-carousel::part(control) {
+        color:var(--color);
+        stroke-linecap: butt;
+        position: static;
+    }
+    u1-carousel > * {
+        transition:1s;
+    }
+    u1-carousel > [aria-hidden=true] {
+        opacity:.05;
+    }
+    </style>
+
+
+    <section>
+        <h2>Change attributes:</h2>
+
+        <label>
+            toggle autoplay <input type=checkbox onclick="ss.toggleAttribute('autoplay', this.checked)">
+        </label>
+
+        <form onchange="ss.setAttribute('mode', this.elements.mode.value)">
+            Mode:<br>
+            <label>
+                fade: <input type=radio name=mode value="fade">
+            </label>
+            <label>
+                slide: <input type=radio name=mode value="slide">
+            </label>
+            <label>
+                scroll: <input type=radio name=mode value="scroll">
+            </label>
+        </form>
+
+
+        <br>
+
+        <u1-carousel id=ss mode=slide autoplay style="--u1-carousel-slideshow-speed:2s;" tabindex="0">
+            <img src="https://picsum.photos/500/200?random=1" width="500" height="200" alt="picsum">
+            <img src="https://picsum.photos/500/200?random=2" width="500" height="200" alt="picsum">
+            <img src="https://picsum.photos/500/200?random=3" width="500" height="200" alt="picsum">
+            <img src="https://picsum.photos/500/200?random=4" width="500" height="200" alt="picsum">
+            <img src="https://picsum.photos/500/200?random=5" width="500" height="200" alt="picsum">
+
+            <svg slot=prev fill="currentColor" viewBox="0 0 48 48" width=40 style="transform:rotate(180deg)">
+                <path d="M4 24c0-.69.56-1.25 1.25-1.25H37.7l-12.83-12.6a1.25 1.25 0 1 1 1.76-1.8L41.6 23.1l.03.02a1.25 1.25 0 0 1-.04 1.8L26.63 39.64a1.25 1.25 0 1 1-1.76-1.78L37.7 25.25H5.25C4.56 25.25 4 24.69 4 24z"></path>
+            </svg>
+            <svg slot=next fill="currentColor" viewBox="0 0 48 48" width=40>
+                <path d="M4 24c0-.69.56-1.25 1.25-1.25H37.7l-12.83-12.6a1.25 1.25 0 1 1 1.76-1.8L41.6 23.1l.03.02a1.25 1.25 0 0 1-.04 1.8L26.63 39.64a1.25 1.25 0 1 1-1.76-1.78L37.7 25.25H5.25C4.56 25.25 4 24.69 4 24z"></path>
+            </svg>
+
+        </u1-carousel>
+
+</section>

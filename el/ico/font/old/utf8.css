@@ -1,0 +1,54 @@
+/*
+https://stackoverflow.com/a/40020609/4865307
+https://docs.google.com/spreadsheets/d/1KQDH9uArJr-8m4UvAEd02ixaX_-wauSwjy9qYCwIOvE/edit#gid=645289137
+
+
+# emoji list
+https://apps.timwhitlock.info/emoji/tables/unicode
+https://www.unicode.org/emoji/charts/full-emoji-list.html
+
+# monochrome emoji fonts
+
+Noto Emoji
+https://www.fontspace.com/noto-emoji-font-f22283
+cdn: https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@2.038/fonts/NotoEmoji-Regular.ttf
+
+Symbola Font
+https://www.fontspace.com/symbola-font-f22021
+
+Code2003
+https://www.fontspace.com/code2003-font-f24444
+
+Unifont Font (pixelated)
+https://www.fontspace.com/unifont-font-f26370
+
+EmojiSymbols Font (c)blockworks - Kenichi Kaneko (attribution required)
+http://emojisymbols.com/
+
+*/
+
+/* good names */
+u1-ico[font=utf8][icon=close]:before { content:'✕' }
+u1-ico[font=utf8][icon=star]:before { content:'★' }
+u1-ico[font=utf8][icon=heart]:before { content:'♥' }
+u1-ico[font=utf8][icon=airplane]:before { content:'✈' }
+u1-ico[font=utf8][icon=check]:before { content:'✔' }
+u1-ico[font=utf8][icon=sun]:before { content:'☼' }
+u1-ico[font=utf8][icon=pensil]:before { content:'✎' }
+u1-ico[font=utf8][icon=previous]:before { content:'❮' }
+u1-ico[font=utf8][icon=next]:before { content:'❯' }
+u1-ico[font=utf8][icon=telefon]:before { content:'☎' }
+u1-ico[font=utf8][icon=cloud]:before { content:'☁' }
+u1-ico[font=utf8][icon=email]:before { content:'✉' }
+u1-ico[font=utf8][icon=drag_indicator]:before { content:'⠿' }
+u1-ico[font=utf8][icon=menu]:before { content:'≡' }
+u1-ico[font=utf8][icon=list]:before { content:'≔' }
+u1-ico[font=utf8][icon=music]:before { content:'🎜' }
+
+
+
+
+
+/* ok names? compare with material-icons and report if wrong*/
+u1-ico[font=utf8][icon=arrow_right]:before { content:'▶' }
+u1-ico[font=utf8][icon=arrow_left]:before { content:'◀' }

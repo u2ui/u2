@@ -1,0 +1,22 @@
+{
+  "name": "u1-qrcode.el",
+  "version": "2.0.2",
+  "description": "qr-code element",
+  "main": "qrcode.js",
+  "author": "Tobias Buschor",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/u1ui/qrcode.el.git"
+  },
+  "keywords": [
+    "ui",
+  ],
+  "bugs": {
+    "url": "https://github.com/u1ui/qrcode.el/issues"
+  },
+  "homepage": "https://github.com/u1ui/qrcode.el#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

@@ -1,0 +1,70 @@
+body {
+    --color-red: oklch(70% 0.138 25);
+    --color-green: oklch(70% 0.138 165);
+    --color-yellow: oklch(70% 0.138 84);
+    --color-blue: oklch(70% 0.138 223);
+}
+
+
+u1-alert {
+    display:block;
+    font-size: max(13px, .8rem);
+    padding: 1em;
+    margin-block: 1em;
+    box-shadow: 0 0 .3em #0004;
+    border-color: var(--color);
+    border-style: solid;
+    border-width: .2em 0 0 0;
+}
+u1-alert:not([open]) {
+    display:none;
+}
+
+u1-alert[variant=success] { --color: var(--color-green); }
+u1-alert[variant=warn] { --color: var(--color-yellow); }
+u1-alert[variant=error] { --color: var(--color-red); }
+u1-alert[variant=info] { --color: var(--color-blue); }
+
+
+/* animation *
+@keyframes alert-animation {
+    from {
+        transform: scale(0.8);
+        opacity: 0.2;
+        margin-bottom:-4rem;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+u1-alert[open] {
+    will-change: transform, opacity, margin;
+    animation: alert-animation 0.2s ease-in;
+}
+
+
+
+/* #u1-notification-stack {
+    display:flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    gap:.8rem;
+
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    max-width: 20rem;
+    width: 100%;
+    
+    overflow:auto;
+
+    padding: 2vmin;
+    z-index: 1000;
+    pointer-events:none;
+    & > * {
+        pointer-events: initial;
+    }
+} */

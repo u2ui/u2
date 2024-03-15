@@ -1,0 +1,46 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "tooltip.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "tooltip",
+                    "toto_members": [
+                        {
+                            "kind": "property",
+                            "name": "select"
+                        }
+                    ],
+                    "events": [
+                        {
+                            "name": "u1-tooltip-show",
+                            "type": {
+                                "text": "Event"
+                            }
+                        }
+                    ],
+                    "attributes": [
+                    ],
+                    "superclass": { "name": "HTMLElement" },
+                    "tagName": "u1-tooltip",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-element-definition",
+                    "name": "u1-tooltip",
+                    "declaration": {
+                        "name": "tooltip",
+                        "module": "tooltip.js"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u1/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../base.css/full.css">
+    <link rel=stylesheet href="../../../classless.css/variables.css">
+    <link rel=stylesheet href="../../../classless.css/classless.css">
+    <link rel=stylesheet href="../../../classless.css/more.css">
+    <link rel=stylesheet href="../../../classless.css/aria.css">
+    <link rel=stylesheet href="../../../classless.css/simple.css">
+
+
+    <link rel=stylesheet href="../typewriter.css">
+    <script src="../typewriter.js" type=module></script>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+
+</head>
+
+<body style="display:block">
+
+    <section>
+        <h2>Test Simple text (attribute autoplay, loop)</h2>
+        <u1-typewriter autoplay loop>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u1-typewriter>
+
+        <h2>Attribute autoplay</h2>
+        <p>start / stops when visible / hidden</p>
+        <div style="overflow:auto; height:100px;">
+            <div style="margin-bottom:100px">scroll down!</div>
+            <u1-typewriter autoplay loop>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u1-typewriter>
+        </div>
+
+        <h2>API</h2>
+        <button onclick="tw1.play()">play()</button>
+        <button onclick="tw1.pause()">pause()</button>
+        <button onclick="tw1.reset()">reset()</button>
+        <br>
+        <u1-typewriter id=tw1 audio style="font-family:'Special Elite'">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</u1-typewriter>
+        <script>
+            tw1.addEventListener('u1-typewriter-end', () => {
+                alert('event "u1-typewriter-end" fired');
+            });
+        </script>
+
+        <h2>Test formated Text and CSS</h2>
+        style.setProperty('--u1-typewriter-speed', this.value): <input value=30 type=range onchange="tw2.style.setProperty('--u1-typewriter-speed', this.value)" min=10 max=500>
+        <br>
+        <u1-typewriter autoplay loop id=tw2 style="--u1-typewriter-speed:30">
+            Non visible chars on this pre-element are display:none
+            <pre style="overflow:visible">Lorem <b>ips<i>um</i></b> dolor<br>sit <i>amet</i>, consectetur <a href="#">adipiscing</a></pre>
+            The end.
+        </u1-typewriter>
+        <style contenteditable style="display:block">
+#tw2 {
+    display:block;
+    margin:2rem 0;
+    text-align: center;
+}
+#tw2 pre :not(.-Active) > .-Char {
+    display:none;
+}
+#tw2 .-Char {
+    display:inline-block;
+    min-width:.3rem;
+    transition:transform .4s;
+}
+#tw2 .-Symbol:not(.-Active) .-Char {
+    transform:scale(1.4);
+}
+#tw2 .-Symbol .-Caret {
+    color:hotpink;
+}
+        </style>
+
+    </section>

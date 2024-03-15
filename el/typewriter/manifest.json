@@ -1,0 +1,66 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "typewriter.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "carousel",
+                    "members": [
+                        {
+                            "kind": "method",
+                            "name": "play"
+                        }
+                    ],
+                    "events": [
+                        {
+                            "name": "u1-typewriter-play",
+                            "type": {
+                                "text": "Event"
+                            }
+                        },
+                        {
+                            "name": "u1-typewriter-end",
+                            "type": {
+                                "text": "Event"
+                            }
+                        },
+                        {
+                            "name": "u1-typewriter-pause",
+                            "type": {
+                                "text": "Event"
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "autoplay",
+                            "u1-type": "boolean"
+                        },
+                        {
+                            "name": "loop",
+                            "u1-type": "boolean"
+                        }
+                    ],
+                    "superclass": { "name": "HTMLElement" },
+                    "tagName": "u1-typewriter",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-element-definition",
+                    "name": "u1-typewriter",
+                    "declaration": {
+                        "name": "MyElement",
+                        "module": "typewriter.js"
+                    }
+                }
+            ]
+        }
+    ]
+}
