@@ -52,7 +52,15 @@ import * as fs from 'https://deno.land/std@0.100.0/fs/mod.ts';
 
 const base = './u2/';
 
+['attr', 'class', 'el', 'css'].forEach(async category=>{
+    for await (const entry of Deno.readDir(base+category)) {
+        if (!entry.isDirectory) continue;
+        writeReadMe(category, entry);
+    }
+    //writeReadMeCategory(entry);
+});
 
+/*
 for await (const entry of Deno.readDir(base)) {
     if (!entry.isDirectory) continue;
     const category = entry.name;
@@ -61,9 +69,8 @@ for await (const entry of Deno.readDir(base)) {
         if (!entry.isDirectory) continue;
         writeReadMe(category, entry);
     }
-
-    //writeReadMeCategory(entry);
 }
+*/
 
 
 async function writeReadMe(category, entry) {
