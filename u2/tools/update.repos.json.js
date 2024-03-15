@@ -60,18 +60,6 @@ const base = './u2/';
     //writeReadMeCategory(entry);
 });
 
-/*
-for await (const entry of Deno.readDir(base)) {
-    if (!entry.isDirectory) continue;
-    const category = entry.name;
-
-    for await (const entry of Deno.readDir(base+category)) {
-        if (!entry.isDirectory) continue;
-        writeReadMe(category, entry);
-    }
-}
-*/
-
 
 async function writeReadMe(category, entry) {
 console.log(category, entry.name)

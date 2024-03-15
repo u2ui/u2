@@ -6,12 +6,12 @@
         <!--script src="../../../u2/tests/test-init.js" type=module></script-->
         <title>u2-ico Test</title>
 
-        <link rel=stylesheet href="../../../norm.css/norm.min.css">
-        <link rel=stylesheet href="../../../base.css/base.min.css">
-        <link rel=stylesheet href="../../../classless.css/variables.css">
-        <link rel=stylesheet href="../../../classless.css/classless.css">
-        <link rel=stylesheet href="../../../classless.css/simple.css">
-        <link rel=stylesheet href="../../../classless.css/more.css">
+        <link rel=stylesheet href="../../../css/norm/norm.css">
+        <link rel=stylesheet href="../../../css/base/base.css">
+        <link rel=stylesheet href="../../../css/classless/variables.css">
+        <link rel=stylesheet href="../../../css/classless/classless.css">
+        <link rel=stylesheet href="../../../css/classless/simple.css">
+        <link rel=stylesheet href="../../../css/classless/more.css">
 
         <link rel="stylesheet" href="./util.css">
         <script type=module src="./util.js"></script>
@@ -32,12 +32,12 @@
 <div style="display:flex; flex-wrap:wrap; gap:.2rem;" id=lsView>
     <script>
         for (let icon of '🧭︁,📞︁,+︁,👤︁,︁,'.split(',')) {
-            document.write('<div style="text-align:center"><u2-ico style="--u2-ico-font:\'Font Awesome\';">'+icon+'</u2-ico><div style="font-size:12px">'+icon+'</div></div>');
+            document.write('<div style="text-align:center"><u2-ico style="--u2-ico-font:\'Font Awesome\';">'+icon+'</u2-ico><div style="--size:12px">'+icon+'</div></div>');
         }
     </script>
     <script>
         for (let icon of '︁,︁,︁,︁'.split(',')) {
-            document.write('<div style="text-align:center"><u2-ico style="--u2-ico-font:\'Font Awesome\';">'+icon+'</u2-ico><div style="font-size:12px">'+icon+'</div></div>');
+            document.write('<div style="text-align:center"><u2-ico style="--u2-ico-font:\'Font Awesome\';">'+icon+'</u2-ico><div style="--size:12px">'+icon+'</div></div>');
         }
     </script>
 

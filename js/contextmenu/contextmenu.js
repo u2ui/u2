@@ -303,7 +303,7 @@ menuContainer.innerHTML = `<link rel=stylesheet href="https://fonts.googleapis.c
 
 shadowRoot.innerHTML = `
 <style>
-@import "../../norm.css/norm.css";
+@import "../../css/norm/norm.css";
 @import "../../../css/base/base.css";
 ${css}
 </style>`;

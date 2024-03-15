@@ -4,8 +4,8 @@
 ## Usage
 
 ```html
-<link rel=stylesheet href="../../../norm.css/norm.min.css">
-<link rel=stylesheet href="../../../base.css/base.min.css">
+<link rel=stylesheet href="../../../css/norm/norm.css">
+<link rel=stylesheet href="../../../css/base/base.css">
 <link rel=stylesheet href="../../../base.css/print.min.css" media=print>
 <link rel=stylesheet href="../../../base.css/nomotion.min.css" media=prefers-reduced-motion>
 ```

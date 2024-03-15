@@ -1,37 +1,38 @@
 html {
-  --u2-ico-font:'Segoe UI Symbol', 'Noto Emoji', sans-serif; /* noto on linux? */
+    --u2-ico-font:'Segoe UI Symbol', 'Noto Emoji', sans-serif; /* noto on linux? */
 }
 
 u2-ico {
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  --line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  overflow-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased; /* all WebKit browsers. */
-  text-rendering: optimizeLegibility; /* Safari and Chrome. */
-  -moz-osx-font-smoothing: grayscale; /* Firefox. */
-  font-feature-settings: 'liga'; /* IE only? */
-  font-family: var(--u2-ico-font) !important;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    --line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    overflow-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased; /* all WebKit browsers. */
+    text-rendering: optimizeLegibility; /* Safari and Chrome. */
+    -moz-osx-font-smoothing: grayscale; /* Firefox. */
+    font-feature-settings: 'liga'; /* IE only? */
+    font-family: var(--u2-ico-font) !important;
 
-  fill:currentColor; /* for svg, dont use `u2-ico > svg { fill:currentColor }` because it can have the attribute fill="none" */
+    fill:currentColor; /* for svg, dont use `u2-ico > svg { fill:currentColor }` because it can have the attribute fill="none" */
 
-  /* ok? */
-  display: inline-block; /* inline-flex has an other baseline? */
-  text-align:center;
-  vertical-align:middle;
-  font-size: 1.5rem; /* 24px Preferred icon size, material-icons */
-  /* overflow:hidden
+    /* ok? */
+    display: inline-block; /* inline-flex has an other baseline? */
+    text-align:center;
+    vertical-align:middle;
+    --size: 1.5rem; /* 24px Preferred icon size, material-icons */
+    font-size: var(--size);
+    /* overflow:hidden
     + prevents layout-shift on font load.
     - But baseline gets to the box instead of the text.
     - Some Icons on some Fonts may get cuted!
-  */
+    */
 }
-u2-ico[icon]:before { /* todo if supported: :where([icon]::before) { */
+u2-ico[icon]:empty:before { /* todo if supported: :where([icon]::before) { */
     content:attr(icon);
 }
 
@@ -39,28 +40,28 @@ u2-ico[icon]:before { /* todo if supported: :where([icon]::before) { */
 
 /* inline */
 u2-ico[inline] {
-  overflow:visible;
-  font-size:1em;
-  /*
+    overflow:visible;
+    --size:1em;
+    /*
     best option?:
     centering using font-relative units
     1ex support: good
     1cap support: only firefox
     https://codepen.io/kizu/pen/dyeXPJP?editors=1100
-  */
-  vertical-align: -11%;
-  /* display: contents; todo? */
-  /* margin:auto;  todo: dont stretch if its a flex-item? */
+    */
+    vertical-align: -11%;
+    /* display: contents; todo? */
+    /* margin:auto;  todo: dont stretch if its a flex-item? */
 }
 
 /* direct svg and js-loaded */
 u2-ico > svg {
-  vertical-align:bottom;
-  height:1em;
-  width:auto;
-  min-width:1em;
-  overflow:visible;
-  margin:auto;
+    vertical-align:bottom;
+    height:1em;
+    width:auto;
+    min-width:1em;
+    overflow:visible;
+    margin:auto;
 }
 u2-ico path[fill]:not([fill=none]) { fill:currentColor; }
 u2-ico path[stroke]:not([stroke=none]) { stroke: currentColor; }
@@ -68,14 +69,14 @@ u2-ico path[stroke]:not([stroke=none]) { stroke: currentColor; }
 
 /* dir-variant */
 u2-ico[state]:not([state=loaded]) { /* js, but not yet loaded */
-  overflow:clip;
-  width: 1em;
-  height: 1em;
+    overflow:clip;
+    width: 1em;
+    height: 1em;
 }
 u2-ico[state]:before {
-  display:none;
+    display:none;
 }
 u2-ico[state=fail]:before { /* js, but failed to load */
-  display:block;
+    display:block;
 }
 

@@ -8,13 +8,10 @@ body {
 
 u2-alert {
     display:block;
-    font-size: max(13px, .8rem);
+    xfont-size: max(13px, .8rem);
     padding: 1em;
     margin-block: 1em;
-    box-shadow: 0 0 .3em #0004;
-    border-color: var(--color);
-    border-style: solid;
-    border-width: .2em 0 0 0;
+    border: var(--line-width,1px) solid var(--color);
 }
 u2-alert:not([open]) {
     display:none;

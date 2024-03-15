@@ -3,41 +3,45 @@
 //     --u2-ico-dir:'https://cdn.jsdelivr.net/npm/teenyicons@0.4.1/outline/x-{icon-name}.svg';
 // }
 
+
+/*
+const observeStyle = (
+	target,
+	property,
+	callback,
+	initialValue = ''
+) => {
+	let frameId, value
+	const css = getComputedStyle(target)
+	const observer = () => {
+		frameId = requestAnimationFrame(observer)
+		value = css.getPropertyValue(property).trim()
+		if (value !== initialValue) {
+			callback(initialValue = value);
+		}
+	}
+	observer()
+	return () => cancelAnimationFrame(frameId)
+}
+*/
+
 const uIco = class extends HTMLElement {
     constructor() {
         super();
     }
     connectedCallback() {
 
-        if (this.firstElementChild) return; // skip if not text-only
+        // observeStyle(this, '--u2-ico-dir', dir => {
+        //     this._handleIcon();
+        // });
 
-        // fetch svg if --ui-ico-directory is set
-        let dir = getComputedStyle(this).getPropertyValue('--u2-ico-dir').trim();
-        if (dir) {
-            if (dir[0]!=='"' && dir[0]!=="'") console.error('the value of --u2-ico-dir must be surrounded by quotes');
-            dir = dir.slice(1, -1);
-            const inner = this.innerHTML.trim();
-            const name = this.getAttribute('icon') || inner;
-            this.setAttribute('icon',name);
-            const path = dirTemplateToUrl(dir, name);
-            this.setAttribute('state','loading');
-//return;
-            loadSvgString(path).then(svg=>{
-                // if (path.origin !== location.origin) {} todo: sanitize svg
-                // requestAnimationFrame??
-                this.innerHTML = svg;
-                this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
-                if (inner) { // if the name was the content of the element, it was intended to be the label
-                    this.firstElementChild.setAttribute('aria-label', inner);
-                } else {
-                    this.firstElementChild.setAttribute('aria-hidden', 'true');
-                }
-                this.setAttribute('state','loaded');
-            }).catch(err=>{
-                console.error(err);
-                this.setAttribute('state','fail');
-            });
-            return;
+        if (this.firstElementChild) return; // skip if not text-only
+        if (!this.hasAttribute('icon')) {
+            const inner = this.textContent.trim();
+            if (inner) {
+                this.setAttribute('icon', inner);
+                this.setAttribute('aria-label', inner);
+            }
         }
 
         // at the moment, "loaded" indicates to css, that it uses --u2-ico-dir
@@ -52,8 +56,44 @@ const uIco = class extends HTMLElement {
         //         this.setAttribute('state','fail');
         //     });
         // }
-
     }
+    static get observedAttributes() {
+        return ['icon'];
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'icon') {
+            requestAnimationFrame(()=>{
+                this._handleIcon(); // wait for css to be applied
+            });
+        }
+    }
+    _handleIcon() {
+        //if (this.firstElementChild) return; // skip if not text-only
+
+        // fetch svg if --ui-ico-directory is set
+        let dir = getComputedStyle(this).getPropertyValue('--u2-ico-dir').trim();
+        if (dir && this.hasAttribute('icon')) {
+            if (dir[0]!=='"' && dir[0]!=="'") console.error('the value of --u2-ico-dir must be surrounded by quotes');
+            dir = dir.slice(1, -1);
+            const name = this.getAttribute('icon');
+            this.setAttribute('icon',name);
+            const path = dirTemplateToUrl(dir, name);
+            this.setAttribute('state','loading');
+            loadSvgString(path).then(svg=>{
+                // if (path.origin !== location.origin) {} todo: sanitize svg
+                // requestAnimationFrame??
+                this.innerHTML = svg;
+                this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
+                this.setAttribute('state','loaded');
+            }).catch(err=>{
+                console.error(err);
+                this.setAttribute('state','fail');
+            });
+        }
+    }
+        
+
 }
 
 customElements.define('u2-ico', uIco);
@@ -113,3 +153,5 @@ async function loadSvgString(url) {
     // external document
     return svg;
 }
+
+
