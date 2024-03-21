@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../../u2/tests/test-init.js" type=module></script>
+
+    <script src="../../../u2/auto.js" type=module></script>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../inline-behavior.js" type=module></script>
+    <style>
+        body {
+            max-width: 200rem;
+        }
+        [contenteditable] {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            min-height: 100px;
+        }
+        .rte {
+            --u2-rte:true;
+        }
+        .u2-flex {
+            gap:.4rem;
+        }
+        .u2-flex > * {
+            margin:0;
+            flex:1 1 18rem;
+        }
+        u2-code {
+            font-size:12px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+<section id=container>
+
+
+    <div class=u2-flex>
+        <div id=rte-1 class=rte contenteditable spellcheck=false>
+force p inside divs <span>span</span> more
+<p>paragraph</p>
+        </div>
+        <u2-code trim editable element=rte-1></u2-code>
+    </div>
+
+
+    <div class=u2-flex>
+        <ul id=rte-2 class=rte contenteditable spellcheck=false>
+force li inside ul
+<li>list item</li>
+<li>list item</li>
+<span>span</span> <span>span</span>
+        </ul>
+        <u2-code trim editable element=rte-2></u2-code>
+    </div>
+
+    <div class=u2-flex>
+        <p id=rte-3 class=rte contenteditable spellcheck=false>
+force br inside p
+        </p>
+        <u2-code trim editable element=rte-3></u2-code>
+    </div>
+
+    <div class=u2-flex>
+        <div id=rte-4 class=rte contenteditable spellcheck=false>
+<p>
+    <ul>
+        <li>Pharagraphs</li>
+        <li>should not contain</li>
+        <li>lists</li>
+    </ul>
+</p>
+        </div>
+        <u2-code trim editable element=rte-4></u2-code>
+    </div>
+
+</section>

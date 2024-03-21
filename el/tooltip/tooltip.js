@@ -12,7 +12,7 @@ customElements.define('u2-tooltip', class extends HTMLElement {
             this.id = 'u2-tooltip-' + idCounter++;
             this.parentNode.setAttribute('aria-labelledby', this.id);
         }
-        const rootEl = document.body; // zzz if popover
+        const rootEl = document.documentElement; // zzz if popover
         this.parentNode !== rootEl && rootEl.append(this); // zzz if popover
 
         /* popover */

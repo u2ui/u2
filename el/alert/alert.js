@@ -1,68 +1,67 @@
+const style = `
+@import url('../../../el/ico/ico.css');
+:host:not([dismissible])::part(close) { display:none; } /* TODO: does not work in chrome */
+:host {
+    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+}
+#container {
+    display:flex;
+    gap: 1em;
+}
+#body {
+    display:flex;
+    align-items: center;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+#close {
+    flex: 0 0 2rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    line-height: 1;
+}
+#content {
+    flex:1 1 12em;
+}
+slot {
+    display:block;
+}
+slot[name=icon] {
+    font-size:1.7em;
+    color:var(--color);
+    &::slotted(*), & > u2-ico {
+        display:block;
+        font-size:inherit;
+    }
+}
+slot[name=action] {
+    display: flex;
+    justify-content: end;                    
+    flex-wrap: wrap;
+    gap: .5em;
+    flex: 0 1 auto;
+    margin-inline-start: auto;
+}
+/* slot[name=action]:empty-slot { display:none; } not possible */`;
+
+
 class alert extends HTMLElement {
     constructor() {
         super();
 
-        // import only when needed
         import('../../attr/focusgroup/focusgroup.js');
         import('../ico/ico.js');
 
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = `
-            <style>
-                @import url('../../../el/ico/ico.css');
-                :host:not([dismissible])::part(close) { display:none; } /* TODO: does not work in chrome */
-                :host {
-                    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
-                }
-                #container {
-                    display:flex;
-                    gap: 1em;
-                }
-                #body {
-                    display:flex;
-                    align-items: center;
-                    flex: 1 1 auto;
-                    flex-wrap: wrap;
-                    gap: 1em;
-                }
-                #close {
-                    flex: 0 0 2rem;
-                    padding: 0;
-                    border: 0;
-                    background: none;
-                    font-size: 1.5em;
-                    cursor: pointer;
-                    line-height: 1;
-                }
-                #content {
-                    flex:1 1 12em;
-                }
-                slot {
-                    display:block;
-                }
-                slot[name=icon] {
-                    font-size:1.7em;
-                    color:var(--color);
-                    &::slotted(*), & > u2-ico {
-                        display:block;
-                        font-size:inherit;
-                    }
-                }
-                slot[name=action] {
-                    display: flex;
-                    justify-content: end;                    
-                    flex-wrap: wrap;
-                    gap: .5em;
-                    flex: 0 1 auto;
-                    margin-inline-start: auto;
-                }
-                /* slot[name=action]:empty-slot { display:none; } not possible */
-            </style>
+            <style>${style}</style>
             <div id=container>
                 <div id=body>
-                    <slot name=icon part=icon>
-                        <u2-ico icon=info></u2-ico>
-                    </slot>
+                    <slot name=icon part=icon></slot>
                     <slot id=content></slot>
                     <slot name=action u2-focusgroup></slot>
                 </div>

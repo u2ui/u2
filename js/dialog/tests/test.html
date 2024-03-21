@@ -12,7 +12,7 @@
     <link rel=stylesheet href="../../../css/classless/classless.css">
     <link rel=stylesheet href="../../../css/classless/more.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
-    <link rel=stylesheet href="../../table.class/table.css">
+    <link rel=stylesheet href="../../../class/table/table.css">
 
     <script src="../../../el/code/code.js" type=module></script>
     <link rel=stylesheet href="../../../el/code/code.css">
@@ -48,6 +48,10 @@
     <button onclick="dialog.prompt({body:'Annuler?', lang:'fr'}, '👍')">option "lang" </button>
     <br><br>
     <button onclick="dialog.alert({body:'click on the backdrop',init:el=>el.classList.add('backdropClose')}).then(console.log)">backdropClose class</button>
+    <br><br>
+    <button onclick="dialog.alert({audio:true, body:'Please inform the developer if the standard sound needs to be improved'})">default notification sound</button>
+    
+    <button onclick="dialog.alert({audio:'./notification.mp3', body:'sound'})">custom notification sound</button>
     <br><br>
 
     <button id=formTestHtml>form(html) beta</button>

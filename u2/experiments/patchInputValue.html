@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Test</title>
+
+        <script src="../tests/test-init.js" type=module></script>
+        <script src="../auto.js" type=module></script>
+        <link rel=stylesheet href="../../css/classless/simple.css">
+
+<body>
+
+
+<h2>set Input value and keep selection</h2>
+
+<input id=demo type=text value=home>
+
+<button id="btn">
+    set "093 893 34" and keep selection
+</button>
+
+
+<script>
+
+/* demo */
+
+btn.addEventListener('mousedown', function(e) {
+    setInputValueKeepSelection(demo, '093 893 34');
+    e.preventDefault();
+});
+
+demo.addEventListener('input', function(e) {
+    let value = e.target.value;
+
+    // value = value.replace(/[^0-9]/g, ""); // enfertne alle nicht zahlen
+    // if (value.length > 0 && value[0] !== "0") { // stelle sicher, dass am anfang eine 0 steht
+    //     value = "0" + value;
+    // }
+    // if (value.length > 10) { // stelle sicher, dass die zahl nicht länger als 10 zeichen ist
+    //     value = value.substring(0, 10);
+    // }
+    value = value.replace(/(\d{3})(?=\d)/g, '$1 '); // gruppiere in 3er gruppen von vorne
+
+    setInputValueKeepSelection(demo, value);
+});
+
+
+/* functions */
+function setInputValueKeepSelection(input, newValue) {
+    if (document.activeElement !== input) {
+        input.value = newValue;
+        return;
+    }
+    if (input.value === newValue) return;
+    const selectionStart = input.selectionStart;
+    const selectionEnd = input.selectionEnd;
+    const oldString = input.value;
+    const newPositionStart = positionAfterUpdate(oldString, selectionStart, newValue);
+    const newPositionEnd = positionAfterUpdate(oldString, selectionEnd, newValue);
+    input.value = newValue;
+    input.setSelectionRange(newPositionStart, newPositionEnd);
+}
+
+function positionAfterUpdate(initialString, initialPosition, newString) {
+    let minDistance = Infinity;
+    let newPosition = -1;
+    for (let i = 0; i <= newString.length; i++) {
+        const a = initialString.substring(0, initialPosition) + newString.substring(i);
+        const b = newString.substring(0, i) + initialString.substring(initialPosition);
+        const distance = levenshteinDistance(a, b);
+        if (distance < minDistance) {
+            minDistance = distance;
+            newPosition = i;
+        }
+    }
+    return newPosition;
+}
+
+function levenshteinDistance(a, b) {
+    // Vertausche a und b, wenn b länger als a ist, um Speicher zu sparen
+    if (a.length > b.length) [a, b] = [b, a];
+    let previousRow = Array(a.length + 1).fill().map((_, i) => i);
+    let currentRow = [];
+    for (let i = 1; i <= b.length; i++) {
+        currentRow = [i];
+        for (let j = 1; j <= a.length; j++) {
+            const cost = (a.charAt(j - 1) === b.charAt(i - 1)) ? 0 : 1;
+            currentRow[j] = Math.min(
+                currentRow[j - 1] + 1, // insertion
+                previousRow[j] + 1, // deletion
+                previousRow[j - 1] + cost // substitution
+            );
+        }
+        [previousRow, currentRow] = [currentRow, previousRow];
+    }
+    return previousRow[a.length];
+}
+
+// function xxxlevenshteinDistance(a, b) {
+//     const matrix = [];
+//     // Initialize matrix of zeros
+//     for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+//     for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+//     for (let i = 1; i <= b.length; i++) {
+//         for (let j = 1; j <= a.length; j++) {
+//             if (b.charAt(i - 1) === a.charAt(j - 1)) {
+//                 matrix[i][j] = matrix[i - 1][j - 1];
+//             } else {
+//                 matrix[i][j] = Math.min(
+//                     matrix[i - 1][j - 1] + 1, // substitution
+//                     Math.min(
+//                         matrix[i][j - 1] + 1, // insertion
+//                         matrix[i - 1][j] + 1 // deletion
+//                     )
+//                 );
+//             }
+//         }
+//     }
+//     return matrix[b.length][a.length];
+// }
+
+
+</script>

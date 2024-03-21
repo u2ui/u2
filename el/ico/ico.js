@@ -63,28 +63,23 @@ const uIco = class extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'icon') {
-            requestAnimationFrame(()=>{
-                this._handleIcon(); // wait for css to be applied
-            });
+            setTimeout(() => this._handleIcon(),20); // wait for css to be applied
+            //requestAnimationFrame(() => this._handleIcon()); // wait for css to be applied
         }
     }
     _handleIcon() {
-        //if (this.firstElementChild) return; // skip if not text-only
-
         // fetch svg if --ui-ico-directory is set
         let dir = getComputedStyle(this).getPropertyValue('--u2-ico-dir').trim();
         if (dir && this.hasAttribute('icon')) {
-            if (dir[0]!=='"' && dir[0]!=="'") console.error('the value of --u2-ico-dir must be surrounded by quotes');
             dir = dir.slice(1, -1);
             const name = this.getAttribute('icon');
-            this.setAttribute('icon',name);
             const path = dirTemplateToUrl(dir, name);
             this.setAttribute('state','loading');
             loadSvgString(path).then(svg=>{
                 // if (path.origin !== location.origin) {} todo: sanitize svg
-                // requestAnimationFrame??
-                this.innerHTML = svg;
+                this.innerHTML = svg; // requestAnimationFrame??
                 this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
+                this.firstElementChild.setAttribute('aria-hidden', 'true');
                 this.setAttribute('state','loaded');
             }).catch(err=>{
                 console.error(err);

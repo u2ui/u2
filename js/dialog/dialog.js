@@ -31,19 +31,29 @@ class Dialog {
                 if (i === 0) setTimeout(()=>el.focus());
             });
         }
-        options.init && options.init(this.element)
+        this.options = options;
+        options.init && options.init(this.element);
     }
     show(){
         const element = this.element;
         d.body.appendChild(element);
         element.showModal();
         element.classList.add(':modal'); // fallback for browsers that don't support :modal
+        if (this.options.audio) {
+            const url = this.options.audio === true ? import.meta.url + '/../notification.mp3' : this.options.audio;
+            const audio = new Audio();
+            audio.volume = 0.2;
+            audio.src = url;
+            audio.play();            
+        }
+
         return new Promise((resolve, reject)=>{
             element.addEventListener('close',()=>{
                 resolve(this.value);
                 element.remove();
             });
         });
+
     }
 }
 

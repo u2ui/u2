@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>u2-ico Test</title>
+
+        <script src="../../../u2/tests/test-init.js" type=module></script>
+        <script src="../../../u2/auto.js" type=module></script>
+
+        <link rel=stylesheet href="../../../css/classless/simple.css">
+        <link rel="stylesheet" href="../font/Material Icons.css">
+
+<style>
+    body {
+        --u2-ico-font: 'Material Icons';
+    }
+</style>
+
+<body>
+
+
+
+<section>
+    <h2>button</h2>
+    <div id=buttonDemo>
+        <button>
+            <u2-ico inline>home</u2-ico>
+            Home
+        </button>
+
+        <button>Home</button>
+    </div>
+    <u2-code element=buttonDemo trim editable> </u2-code>
+</div>
+
+<section id=badge>
+    <h2>.u1-badge</h2>
+    <div id=badgeDemo>
+        <u2-ico>home</u2-ico>
+        <sup class=u2-badge style="margin-left:-.7em; background-color: red;"></sup>
+    </div>
+    <u2-code element=badgeDemo trim editable> </u2-code>
+</section>
+

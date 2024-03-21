@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../../u2/tests/test-init.js" type=module></script>
+
+    <script src="../../../u2/auto.js" type=module></script>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../rte.js" type=module></script>
+    <style>
+        body {
+            max-width: 100rem;
+        }
+        [contenteditable] {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            min-height: 100px;
+        }
+        .u2-flex {
+            margin:2rem 0;
+            gap:.4rem;
+        }
+        .u2-flex > * {
+            margin:0;
+            padding:.5rem; 
+            flex:1 1 18rem;
+            border:1px solid black;
+        }
+        u2-code {
+            font-size:12px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+<section id=container>
+
+    <div class=u2-flex>
+        <div id=rte-1 class=rte contenteditable spellcheck=false>
+            <p>Some <b>text</b></p>
+            <p>image:</p>
+            <img width="200" height="150" alt="tick" src="https://fastly.picsum.photos/id/237/200/150.jpg?hmac=cP3GW-TQQWpntUpoHauvAWmCaKSFUngooZCPRN50Om8">
+
+        </div>
+        <u2-code trim editable element=rte-1></u2-code>
+    </div>
+
+    <div class=u2-flex>
+        <button id=rte-2 contenteditable class=rte spellcheck=false>Button is <b>editable</b></button>
+        <u2-code trim editable element=rte-2></u2-code>
+    </div>
+
+    <div class=u2-flex>
+        <div id=rte-3 class=rte contenteditable spellcheck=false>
+            <p>RTE 3</p>
+        </div>
+        <u2-code trim editable element=rte-3></u2-code>
+    </div>
+
+    <u2-code trim editable>
+        <style>
+        .rte {
+            --u2-rte:true;
+        }
+        #rte-3 {
+            --u2-rte-items: Bold Italic Insertunorderedlist Format;
+        }
+        ::highlight(u2-rte-selection) {
+            background-color: #faa;
+        }
+        #u2RteToolbar {
+            border-radius:.6em;
+            padding:.3rem;
+            & .-item {
+                border-radius:.35em;
+            }
+        }
+        </style>
+    </u2-code>
+
+    <u2-code trim>
+        <script type=module>
+        import "../ui.js";
+        import "../ui.items.js";
+        import * as state from "../events.js";
+
+        // const element = document.createElement('label');
+        // element.classList.add('-item')
+        // element.style.cssText = 'flex: 1 1 auto';
+        // element.innerHTML = '<input placeholder="replace">';
+        // window.Rte.ui.setItem('test',{
+        //     el: element,
+        //     name: 'Test',
+        //     icon: '🧪',
+        //     check() {
+        //         return true;
+        //     },
+        //     enable() {
+        //         return true;
+        //     }
+        // });
+        // element.addEventListener('input', e => {
+        //     state.range.deleteContents();
+        //     state.range.insertNode(document.createTextNode(e.target.value));
+        // });
+
+        Rte.ui.config.rteDef.main = ['LinkInput','Bold','Insertunorderedlist','Link','Removeformat','Format','Style', 'test'];
+        </script>
+    </u2-code>
+            
+</section>

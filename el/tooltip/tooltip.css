@@ -15,10 +15,17 @@ u2-tooltip {
     /* customisable */
     pointer-events: none;
     padding: .5em .7em;
-    border:1px solid CanvasText; /* currentColor bug in ff: https://jsfiddle.net/cdtonmzu/109/ */
     max-width:14rem;
     background: Canvas;
     color: CanvasText;
+
+    /* style */
+    font-size:max(12px, .7rem);
+    border-radius:.8em;
+    background: var(--color-text, CanvasText);
+    color: var(--color-bg, Canvas);
+    border:1px solid CanvasText; /* currentColor bug in ff: https://jsfiddle.net/cdtonmzu/109/ */
+
 
     /* popover *
     margin: 0;

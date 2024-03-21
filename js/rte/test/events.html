@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module></script>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+
+    <script src="../events.js" type=module></script>
+    <script src="../fixes.js" type=module></script>
+    <style>
+        [contenteditable] {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            min-height: 100px;
+        }
+        .rte {
+            --u2-rte:true;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+<section id=container>
+
+    <div class=u2RteTool style="border:1px solid #ccc; padding: 10px; margin: 10px; background-color: #f0f0f0;" tabindex="-1">
+        Tool example (should not call deactivate)
+        <button>Click me</button>
+    </div>
+
+    <div id=rte-1 class=rte contenteditable>
+        <h3>Rich Text Editor 1</h3>
+        Some Text
+        <img width="100" height="80" alt="tick" src="https://picsum.photos/200/160">
+    </div>
+
+    <div id=rte-2 class=rte contenteditable>
+        <h3>Rich Text Editor 2</h3>
+    </div>
+
+    <div id=no-rte contenteditable>
+        <p>This is not a rich text editor</p>
+    </div>
+
+    <div id="eventsEl"></div>
+</section>
+
+<script type=module>
+    // EventsExplorer
+    import {EventsExplorer} from "../../../u2/tools/eventsExplorer.js";
+    const EEx = new EventsExplorer(eventsEl, container, ['u2-rte-activate', 'u2-rte-deactivate', 'u2-rte-selectionchange', 'u2-rte-elementchange']);
+    EEx.start();
+
+</script>
+<style>
+    ::highlight(u2-rte-selection) {
+        background-color: #7afa;
+    }
+</style>
+

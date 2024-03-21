@@ -110,7 +110,6 @@ class code extends HTMLElement {
     setSourceValue(value){
         const el = this.sourceElement;
         if (el.tagName === 'TEXTAREA') { el.value = value; return; }
-
         if (this.element) {
             el.innerHTML = value;
         } else {
@@ -133,6 +132,16 @@ class code extends HTMLElement {
         if (this.element) {
             this.sourceElement = document.getElementById(this.element);
             if (!this.sourceElement) console.error('u2-code: element not found', this.element);
+            // todo: add observer to update value on mutation
+            const mO = new MutationObserver(()=>{
+                let value = this.getSourceValue();
+                if (this.trim) value = trimCode(value);
+                this.setHightlightValue(value);
+                this.textarea.value = value;
+            });
+            mO.observe(this.sourceElement, {childList:true, subtree:true, characterData:true});
+
+            
         } else {
             this.sourceElement = this.querySelector('pre>code,textarea,style,script') || this;
         }
@@ -141,12 +150,22 @@ class code extends HTMLElement {
             this.setAttribute('editable','');
         }
         let value = this.getSourceValue();
+        this.value = value;
+        // if (this.trim) value = trimCode(value);
+        // this.setHightlightValue(value);
+        // this.textarea.value = value;
+    }
+    get value(){
+        return this.textarea.value; // better this one
+        //return this.getSourceValue();
+    }
+    set value(value){
         if (this.trim) value = trimCode(value);
         this.setHightlightValue(value);
         this.textarea.value = value;
     }
-    get value(){
-        return this.getSourceValue();
+    setSelectionRange(start, end){
+        this.textarea.setSelectionRange(start, end);
     }
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'trim') this.trim = newValue!=null;

@@ -10,6 +10,7 @@ function customRender(obj){
         return encode(obj.outerHTML.substring(0, 50))+"...";
     }
 }
+function alertInit(el) { el.classList.add('backdropClose'); }
 
 import {alert} from '../../js/dialog/dialog.js';
 
@@ -47,19 +48,29 @@ export class EventsExplorer {
         let grow = 1;
         let activeTr = null;
         setInterval(() => {
-            if (!activeTr || grow > 20) return;
-            activeTr.style.borderBottomWidth = (grow++)+'px';
+            if (!activeTr || grow > 10) return;
+            grow = Math.max(1, grow);
+            activeTr.style.borderBottomWidth = (grow+=0.01)+'px';
             this.scrollToEnd();
-        },700);
+        },10);
         let renderEvent = (event)=>{
             let tr = document.createElement('tr');
             activeTr = tr;
             grow = 0;
             tr.style.borderBottom = '0px solid black';
-            tr.innerHTML = `<td>${event.type}<td>&lt;${event.target.tagName.toLowerCase()}&gt;<td>${event.eventPhase}<td class=-dump><button style="font-size:12px; margin:0">inspect</button>`;
+            const tag = event.target.tagName?.toLowerCase() ?? (event.target.nodeType === 3 ? '[text]' : '[unknown]');
+            const klass = event.target.className?.trim().replace(/\s+/g, '.').replace(/^(.)/, '.$1') || null;
+            const id = event.target.id ? '#'+event.target.id : null;
 
+            const typeDot = `<span style="color:${stringToColor(event.type)}">⬤</span>`;
+            const targetDot = `<span style="color:${stringToColor(tag+id+klass)}">⬤</span>`;
+
+            tr.innerHTML = 
+                `<td>${typeDot} ${event.type}
+                 <td>${targetDot} ${id??klass??tag}
+                 <td>${event.eventPhase}<td class=-dump><button style="font-size:12px; margin:0">inspect</button>`;
             tr.querySelector('.-dump').addEventListener('click', () => {
-                alert({body:dump(event, {depth:2, customRender})});
+                alert({body:dump(event, {depth:2, customRender}), init:alertInit});
                 dump(event, {depth:2})
             });
 
@@ -71,4 +82,29 @@ export class EventsExplorer {
             this.el.addEventListener(ev, renderEvent, true);
         }
     }
+}
+
+function fnv1aHash(str) {
+    let hash = 2166136261;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash ^ str.charCodeAt(i)) * 16777619;
+    }
+    return hash >>> 0; // Convert to unsigned 32-bit integer
+}
+
+function stringToColor(str) {
+    let hash = fnv1aHash(str);
+
+    let h = (hash >> 16) & 0xFF; // Extrahiere die höchsten 8 Bits für Hue
+    let s = (hash >> 8) & 0xFF; // Extrahiere die mittleren 8 Bits für Saturation
+    let l = hash & 0xFF; // Extrahiere die niedrigsten 8 Bits für Lightness
+
+    // Normalisiere die Werte in ihre jeweiligen Bereiche
+    h = (h % 360); // Hue zwischen 0 und 359
+    // Sättigung zwischen 60% und 100%
+    s = 60 + (s % 41);
+    // Helligkeit zwischen 30% und 50%, um extreme Dunkelheit/Helligkeit zu vermeiden
+    l = 30 + (l % 21);
+
+    return `hsl(${h}, ${s}%, ${l}%)`;
 }

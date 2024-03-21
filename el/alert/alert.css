@@ -8,7 +8,7 @@ body {
 
 u2-alert {
     display:block;
-    xfont-size: max(13px, .8rem);
+    font-size: max(13px, .8rem);
     padding: 1em;
     margin-block: 1em;
     border: var(--line-width,1px) solid var(--color);

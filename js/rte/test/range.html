@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module></script>
+
+    <script src="../../../u2/auto.js" type=module></script>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../old/range-selection.js" type=module></script>
+    <style>
+        body {
+            max-width: 200rem;
+        }
+        [contenteditable] {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            min-height: 100px;
+        }
+        .rte {
+            --u2-rte:true;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+<section id=container>
+
+
+    <div class="u2-flex" style="gap:.4rem">
+        <div id=rte-1 class=rte contenteditable style="margin:0; flex:1 1 18rem" spellcheck="false">
+some text
+<ul>
+    <li>This is a</li>
+    <li>list</li>
+    <li>to demonstrate</li>
+</ul>
+<p>paragraph</p>
+        </div>
+        <u2-code trim editable element="rte-1" style="margin:0; flex:1 1 18rem; font-size:12px"></u2-code>
+    </div>
+
+    <button id=btn>add inline-style red (class)</button>
+
+    <script type=module>
+    import {$range, $selection} from '../old/range-selection.js';
+
+
+    btn.onclick = ()=>{
+        $selection.setStart(x.firstChild, 0);
+        $selection.setEnd(x.firstChild, 3);
+        //console.log($selection.containingRootNodesForceElements())
+    }
+
+    </script>
+
+<span id="x">xxxxxx</span>
+
+</section>

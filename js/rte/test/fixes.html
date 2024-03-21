@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <!--script src="../../../u2/tests/test-init.js" type=module></script-->
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <style>
+        [contenteditable] {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            min-height: 100px;
+        }
+        .rte {
+            --u2-rte:true;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<section>
+    <h1>Fixes</h1>
+    <a id="reloadUrl">
+        Load fixes
+    </a>
+    <script>
+        const url = new URL(window.location.href);
+        const reloadUrl = document.getElementById('reloadUrl');
+        if (url.searchParams.has('noFixes')) {
+            url.searchParams.delete('noFixes');
+            reloadUrl.href = url.href;
+            reloadUrl.innerHTML = '<span style="color:red">fixed:✗</span><br> load with fixes';
+        } else {
+            import('../fixes.js').then(module => {
+                console.log('fixes loaded')
+            });
+            reloadUrl.href = url.href + '?noFixes';
+            reloadUrl.innerHTML = '<span style="color:green">fixed:✓</span><br> load without fixes';
+        }
+
+
+    </script>
+</section>
+
+</section>
+<section id=container>
+
+    <h2>Global</h2>
+    <ul>
+        <li>Contextmenu (right-click) should not change selection / place the caret
+    </ul>
+
+    <h2>Interactive elements</h2>
+    <ul>
+        <li>Should not work
+        <li>Caret should be placed correctly
+        <li>Tab-key-navigation should work
+    </ul>
+    <a href="https://schwups.ch" target="_blank">
+        <div contenteditable>
+            RTE inside "a" tag<br>
+        </div>  
+    </a>
+
+    <a href="https://schwups.ch" contenteditable>RTE as "a" tag</a>
+
+    <button contenteditable><span>RTE inside "button" tag</span></button>
+    <button contenteditable>RTE as "button" tag</button>
+
+    <ul>
+        <li>Space-key should insert space (chrome, firefox)
+        <li>Enter-key should insert line break (chrome)
+    </ul>
+    <form target="_blank">
+        <button contenteditable>Rich Text Editor</button>
+    </form>
+
+
+    <h2>image inside contenteditable</h2>
+    <ul>
+        <li>Image should be selectable by click (chrome)
+    </ul>
+    <div contenteditable>
+        image: <img width="100" height="80" alt="tick" src="https://picsum.photos/200/160">
+    </div>
+
+
+</section>

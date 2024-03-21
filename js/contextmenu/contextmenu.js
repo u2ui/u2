@@ -62,7 +62,7 @@ class Menu {
     }
     async _placer() {
         if (!this.__placer) {
-            const Placer = (await import('../Placer.js/Placer.js')).Placer;
+            const Placer = (await import('../../js/Placer/Placer.js')).Placer;
             this.__placer = new Placer(this.el, {x:'after', y:'prepend'});
         }
         return this.__placer;
@@ -102,7 +102,7 @@ class MenuItem {
         }
 
         if (options.shortcut) {
-            import('../shortcut.js/shortcut.js').then(({listen})=>{
+            import('../../js/shortcut/shortcut.js').then(({listen})=>{
                 listen(options.shortcut, event=>{
                     const target = options.selector ? !event.target.closest(options.selector) : false;
                     if (target) return; // ok?
@@ -152,10 +152,12 @@ class MenuItem {
 const arrow = '<svg aria-hidden="true" style="display:block; height:1em" xmlns="http://www.w3.org/2000/svg" width="16" height="26" viewBox="0 0 16 26"><path d="m2 1 12 12L2 25" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-width:2"/></svg>';
 
 const css = `
-#u2ContextMenu { 
+#u2ContextMenu {
     --bg: var(--color-bg, Canvas);
+    --bg: color-mix(in srgb, var(--color-bg, Canvas), #fff 80%);
     --text: var(--color-text, CanvasText);
-    --line: color-mix(in oklab, var(--text) 20%, var(--bg));
+    --text: color-mix(in srgb, var(--color-text, CanvasText), #000 80%);
+    --line: color-mix(in srgb, var(--text) 30%, var(--bg));
 
     &, & menu {
         position:fixed; 
@@ -189,7 +191,7 @@ const css = `
         display:none !important;
     }
     & li:focus-within {
-        background-color: color-mix(in oklab, var(--bg) 95%, var(--text));
+        background-color: color-mix(in srgb, var(--bg) 95%, var(--text));
     }
     & li[role=separator] {
         margin:.5em 0; 
@@ -303,7 +305,7 @@ menuContainer.innerHTML = `<link rel=stylesheet href="https://fonts.googleapis.c
 
 shadowRoot.innerHTML = `
 <style>
-@import "../../css/norm/norm.css";
+@import "../../../css/norm/norm.css";
 @import "../../../css/base/base.css";
 ${css}
 </style>`;
