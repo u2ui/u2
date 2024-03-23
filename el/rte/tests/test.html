@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <!-- <script src="../../../u2/tests/test-init.js" type=module></script> -->
+    <script src="../../../u2/auto.js" type=module></script>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <link href="../rte.css" rel=stylesheet>
+    <script src="../rte.js" type=module></script>
+
+</head>
+
+<body>
+
+
+<section id=container>
+
+    <u2-rte>
+        <p>Some <b>text</b></p>
+        <p>image:</p>
+        <img width="200" height="150" alt="tick" src="https://fastly.picsum.photos/id/237/200/150.jpg?hmac=cP3GW-TQQWpntUpoHauvAWmCaKSFUngooZCPRN50Om8">
+    </u2-rte>
+
+    <u2-rte>
+        <textarea>
+            <p>Some <b>Textarea</b> Content</p>
+            <p><i>Insane!</i></p>
+        </textarea>
+    </u2-rte>
+
+    <u2-rte format="markdown">
+        <textarea>
+# Markdown
+## Heading 2
+Some **bold** text
+- list item 1
+- list item 2
+
+![image](https://fastly.picsum.photos/id/237/200/150.jpg?hmac=cP3GW-TQQWpntUpoHauvAWmCaKSFUngooZCPRN50Om8)
+
+| Table | Header |
+|-------|--------|
+| cell  | cell   |
+        </textarea>
+    </u2-rte>
+            
+</section>

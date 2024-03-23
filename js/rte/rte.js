@@ -1,7 +1,7 @@
 
 import './fixes.js';
 import * as state from './events.js';
-//import './inline-behavior.js';
+//import './behavior.js';
 import {$range} from './range.js';
 
 //alert(1)

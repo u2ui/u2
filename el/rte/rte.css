@@ -1,0 +1,9 @@
+u2-rte {
+    display:block;
+    border:1px solid var(--color-line, #ccc);
+}
+
+u2-rte > textarea {
+    display:block;
+    width:100%;
+}

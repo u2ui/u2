@@ -1,7 +1,7 @@
 
 import {dump, encode} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@1.2.2/mod.min.js';
 
-function customRender(obj){
+function customRender(obj){ // zzz todo: from dump.js
     let isElement = false;
     try {
         isElement = obj instanceof Element && obj.tagName;

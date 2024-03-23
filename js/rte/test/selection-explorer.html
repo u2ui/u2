@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    
+    <script src="../../../u2/tests/test-init.js" type=module></script>
+
+    <script src="../../../u2/auto.js" type=module></script>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../range.js" type=module></script>
+    <style>
+        body {
+            max-width: 60rem;
+        }
+        [contenteditable] {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            min-height: 100px;
+        }
+        .rte {
+            --u2-rte:true;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+<section id=container>
+    
+    <div id=rte1 class=rte contenteditable style="margin:0; flex:1 1 18rem" spellcheck="false" autofocus>
+some text
+<p>paragraph</p>
+<ul>
+    <li>This is a</li>
+    <li>list</li>
+    <li>to demonstrate</li>    
+</ul>
+<p>
+    <img src="" alt="image" style="width:100px; height:100px; background:#bbb;">
+</p>
+<p>paragraph</p>
+    </div>
+
+
+    <pre id="out" style="margin:0; flex:1 1 18rem; font-size:13px"></pre>
+
+    <div style="display:flex">
+        <div id="selectionDump"> </div>
+        <div id="rangeDump"> </div>
+    </div>
+
+    <button onclick="$range().selectNode(rte1.firstElementChild).select()">run</button><br>
+    <button onclick="$range().selectNodeContents(rte1.firstElementChild).select()">run</button><br>
+    <button onclick="getSelection().selectAllChildren(rte1.firstElementChild)">run</button><br>
+
+
+
+    <script type=module>
+    import {$range} from '../range.js';
+    import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@x.x/mod.min.js';
+
+    window.$range = $range;
+
+    let ignoreMutation = false;
+    
+    function showRange() {
+
+        const range = $range.fromSelection();
+        if (range && rte1.contains(range.commonAncestorContainer)) {
+
+
+            // set dump content (bevore setting markers because it will split text nodes)
+            const realSelection = getSelection();
+            const realRange = realSelection.getRangeAt(0);
+            const r = {
+                //startContainer: realRange.startContainer, // todo in dump.js strange error
+                startOffset: realRange.startOffset,
+                endContainer: realRange.endContainer,
+                endOffset: realRange.endOffset,
+                collapsed: realRange.collapsed,
+                commonAncestorContainer: realRange.commonAncestorContainer,
+            }
+            const s = {
+                anchorNode: realSelection.anchorNode,
+                anchorOffset: realSelection.anchorOffset,
+                focusNode: realSelection.focusNode,
+                focusOffset: realSelection.focusOffset,
+                isCollapsed: realSelection.isCollapsed,
+                type: realSelection.type,
+                rangeCount: realSelection.rangeCount,
+                caretBidiLevel: realSelection.caretBidiLevel,
+            }
+            selectionDump.innerHTML = dump(s, {depth:2, order:0, inherited:true, customRender:domRender});
+            rangeDump.innerHTML = dump(r, {depth:2, order:0, inherited:true, customRender:domRender});
+
+            // set markers to get positions in innerHTML
+            ignoreMutation = true;
+            const startTextNode = document.createTextNode('marker_start_so9df8as0f0');
+            const endTextNode   = document.createTextNode('marker_end_laseg08a0egga');
+            
+            range.cloneRange().collapse(false).insertNode(endTextNode);
+            range.cloneRange().collapse(true).insertNode(startTextNode);
+
+            let code = rte1.innerHTML;
+
+            startTextNode.remove();
+            endTextNode.remove();
+
+            setTimeout(()=>ignoreMutation = false, 50);
+
+            const start = code.indexOf('marker_start_so9df8as0f0');
+            code = code.replace('marker_start_so9df8as0f0','');
+            const end = code.indexOf('marker_end_laseg08a0egga');
+            code = code.replace('marker_end_laseg08a0egga','');
+
+            // set <pre> content
+            const before = code.substring(0, start);
+            const between = code.substring(start, end);
+            const after = code.substring(end);
+            const cursor = '<span style="position:absolute; height:1.4rem; width:2px; background:#c00; margin-bottom:-3px"></span>';
+            out.innerHTML = 
+                escapeHtml(before) + 
+                '<span style="color:red">' + 
+                    cursor + 
+                    escapeHtml(between) + 
+                    cursor +
+                '</span>' + 
+                escapeHtml(after);
+
+        } else {
+            let code = rte1.innerHTML;
+            const escaped = escapeHtml(code);
+            if (escaped !== out.innerHTML){
+                out.innerHTML = escapeHtml(code);
+            }
+        }
+
+    }
+    
+    document.addEventListener('selectionchange',showRange);
+    
+    const mutationObserver = new MutationObserver((mutationsList, observer) => {
+        if (ignoreMutation) return;
+        showRange();
+    });
+    mutationObserver.observe(rte1, {childList: true, subtree: true, characterData: true});
+
+    showRange();
+
+
+
+    function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+
+    function domDumpRender(obj){
+        let isElement = false;
+        let isText = false;
+        try {
+            isElement = obj instanceof window.Element && obj.tagName;
+            isText = obj instanceof window.Text;
+        } catch {}
+        if (isElement) {
+            return escapeHtml(obj.outerHTML).substring(0, 70).trim()+"...";
+        }
+        if (isText) {
+            return escapeHtml(obj.textContent).substring(0, 60).trim()+"... [TextNode]";
+        }
+    }
+
+
+    </script>
+    
+
+
+</section>
+

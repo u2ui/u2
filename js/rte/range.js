@@ -4,7 +4,8 @@ export function $range(range) {
     return new Proxy(range, handler);
 }
 $range.fromSelection = function(){
-	return $range(selection.getRangeAt(0));
+	return selection.rangeCount ? $range(selection.getRangeAt(0)) : null;
+	//return $range(selection.getRangeAt(0));
 };
 
 const handler = {

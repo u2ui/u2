@@ -68,11 +68,13 @@ function patchItem(target, item) {
 }
 function hasUndo() {
     const history = histories.get(active);
+    if (!history) return;
     const count = history.items.length;
     return count && (history.current??count > 1);
 }
 function hasRedo() {
     const history = histories.get(active);
+    if (!history) return;
     return history.current !== undefined && history.current < history.items.length - 1;
 }
 

@@ -7,22 +7,25 @@ export let range = null; // the current selection range
 export let element = null; // the current element of the selection range
 
 addEventListener('focusin', function(event) {
-    if (!event.target.isContentEditable) return;
+    //const target = event.target;
+    const target = event.composedPath()[0];
+    if (!target.isContentEditable) return;
     // to enable rte for a contenteditable element set the custom property --u2-rte to true
-    if (getComputedStyle(event.target).getPropertyValue('--u2-rte')==='') return;
+    if (getComputedStyle(target).getPropertyValue('--u2-rte')==='') return;
 
-    focused = event.target;
+    focused = target;
 
-    if (active===event.target) return; // if the active element is the same as the event target return (can be if the rte toolbar was active)
+    if (active===target) return; // if the active element is the same as the event target return (can be if the rte toolbar was active)
 
-    active = event.target;
-    event.target.dispatchEvent(new CustomEvent('u2-rte-activate', {bubbles:true}));
+    active = target;
+    target.dispatchEvent(new CustomEvent('u2-rte-activate', {bubbles:true, composed:true}));
 
 },true);
 
 addEventListener('focusout', function(event) {
 
     if (!active) return; // is there an active rte
+
     if (event.relatedTarget === active) return; // happens when reenters from toolbar
     
     focused = null;
@@ -31,7 +34,7 @@ addEventListener('focusout', function(event) {
     if (event.relatedTarget && event.relatedTarget.closest('.u2RteTool')) return;
 
     // trigger a custom event u2-rte-inactive
-    active.dispatchEvent(new CustomEvent('u2-rte-deactivate', {bubbles:true}));
+    active.dispatchEvent(new CustomEvent('u2-rte-deactivate', {bubbles:true, composed:true}));
     active = null;
 
 },true);
@@ -41,7 +44,7 @@ document.addEventListener('selectionchange', (event)=>{
     if (!focused) return;
     if (window.u2DomChangeIgnore) return;
     range = getSelection().getRangeAt(0);
-    active.dispatchEvent(new CustomEvent('u2-rte-selectionchange', {bubbles:true}));
+    active.dispatchEvent(new CustomEvent('u2-rte-selectionchange', {bubbles:true, composed:true}));
 });
 
 
@@ -63,5 +66,5 @@ addEventListener('u2-rte-selectionchange', function() {
     if (newElement === active) newElement = null; // active (the rte itself) element is not an editable element
     if (newElement === element) return; // no change
     element = newElement; // todo?: is not available on selectionchange bevor this event is fired
-    active.dispatchEvent(new CustomEvent('u2-rte-elementchange', {bubbles:true, detail:{element}}));
+    active.dispatchEvent(new CustomEvent('u2-rte-elementchange', {bubbles:true, composed:true, detail:{element}}));
 });
