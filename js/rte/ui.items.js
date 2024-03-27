@@ -436,23 +436,25 @@ Rte.ui.config = {
 
 
 
-/*
+/* *
 { // show shy, todo: deprecated? css hyphens and text-wrap:balance are widely supported
 	Rte.ui.setItem('Shy',{
-		click(el) {
-			Rte.range.deleteContents();
-			Rte.range.insertNode(document.createTextNode('\u00AD'));
-console.warn('needed? shoud it be deprecated?');
+		click() {
+			const span = document.createElement('span');
+			span.className = 'qgRte-mark-char -Shy';
+			span.textContent = '\u00AD';
+			$range(state.range).deleteContents().insert(span).collapse().select();
 		},
-		el: c1.dom.fragment('<div class="-item -button">Weiches Trennzeichen einfügen</div>').firstChild
+		labels: {
+			de: 'Weiches Trennzeichen einfügen',
+			en: 'Insert soft hyphen',
+			fr: 'Insérer un trait d\'union doux',
+		},
+		//el: c1.dom.fragment('<div class="-item -button">Weiches Trennzeichen einfügen</div>').firstChild
 	});
-	document.head.append(
-		c1.dom.fragment(
-		'<style>'+
-		'.qgRte-mark-char.-Shy::after  { content:"-"; display:inline-block; color:red; opacity:.3; } '+
-		//'.qgRte-mark-char.-Nbsp::after { content:"•"; display:inline-block; color:red; opacity:.3; } '+
-		'</style>')
-	);
+	const style = document.createElement('style');
+	style.innerHTML = '.qgRte-mark-char.-Shy::after  { content:"-"; display:inline-block; color:#f88; opacity:.6; } ';
+	document.head.appendChild(style);
 
 	function addMarks(){
 		// remove
@@ -511,13 +513,12 @@ console.warn('needed? shoud it be deprecated?');
 	};
 
 }
-*/
+/* */
 
 /* *
 { // show line-breaks
-	document.head.append(
-		c1.dom.fragment(
-		'<style>'+
+	const style = document.createElement('style');
+	style.innerHTML = 
 		'.qgRte-mark-char.-Br::before { '+
 		'	content:"↵";'+
 		'	display:inline;'+
@@ -526,9 +527,22 @@ console.warn('needed? shoud it be deprecated?');
 		'	margin-left:.2em; '+
 		'	font-size:.82em; '+
 		'	pointer-events:none; '+ // I don't think it'll do any good
-		'}'+
-		'</style>')
-	);
+		'}'
+	document.head.appendChild(style);
+	// document.head.append(
+	// 	c1.dom.fragment(
+	// 	'<style>'+
+	// 	'.qgRte-mark-char.-Br::before { '+
+	// 	'	content:"↵";'+
+	// 	'	display:inline;'+
+	// 	'	display:contents;'+
+	// 	'	opacity:.3;'+
+	// 	'	margin-left:.2em; '+
+	// 	'	font-size:.82em; '+
+	// 	'	pointer-events:none; '+ // I don't think it'll do any good
+	// 	'}'+
+	// 	'</style>')
+	// );
 	function addMarks(){
 		if (!active) return;
 		active.querySelectorAll('br').forEach(br=>{
@@ -538,9 +552,9 @@ console.warn('needed? shoud it be deprecated?');
 			br.before(span);
 		});
 	}
-	Rte.on('activate',addMarks);
-	Rte.on('input',addMarks);
+	addEventListener('u2-rte-activate',addMarks);
+	addEventListener('u2-rte-deactivate',addMarks);
+	//Rte.on('activate',addMarks);
+	//Rte.on('input',addMarks);
 }
 /* */
-
-

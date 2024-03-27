@@ -1,68 +1,34 @@
-// zzz deno run -A --unstable .\update.repos.json.js
-// with username / password:
-// deno run -A --unstable ./u2/tools\update.repos.json.js nuxodin yourtoken
+// deno run -A --unstable ./u2/tools\update.repos.json.js
 
-/*
-let username = Deno.args[0];
-let token = Deno.args[1];
-
-if (!username) console.error('GITHUB_USERNAME not set');
-if (!token) console.error('GITHUB_TOKEN not set');
-
-let url = 'https://api.github.com/orgs/u2ui/repos?per_page=100';
-let headers = new Headers();
-headers.append('Authorization', 'Basic ' + btoa(username + ":" + token));
-
-const repos = await fetch(url, {method:'GET', headers}).then(res => res.json());
-
-var data = [];
-var reposData = new Map();
-for await (let repo of repos) {
-    let releasesUrl = repo.releases_url.replace('{/id}','?per_page=1');
-    const releases = await fetch(releasesUrl, {method:'GET', headers}).then(res=>res.json());
-    const release = releases[0];
-    if (!releases[0]) {
-        console.warn('no release found for ' + repo.name);
-        continue;
-    }
-    const obj = {
-        pushed_at:        repo.pushed_at,
-        name:             repo.name,
-        description:      repo.description,
-        open_issues:      repo.open_issues,
-        stargazers_count: repo.stargazers_count,
-        release_latest:{
-            tag_name:     release.tag_name,
-            published_at: release.published_at,
-        }
-    }
-
-    reposData.set(repo.name, obj);
-    data.push(obj)
-}
-
-var str = JSON.stringify(data, null, '  ');
-const write = Deno.writeTextFile("./u2/repos.json", str);
-write.then(() => console.log("File written!"));
-*/
-
-// automate contents
+const repos = {};
 
 import * as fs from 'https://deno.land/std@0.100.0/fs/mod.ts';
 
 const base = './u2/';
 
-['attr', 'class', 'el', 'css'].forEach(async category=>{
+['attr', 'class', 'el', 'css', 'js'].forEach(async category=>{
+    repos[category] = {};
     for await (const entry of Deno.readDir(base+category)) {
         if (!entry.isDirectory) continue;
-        writeReadMe(category, entry);
+        const data = await writeReadMe(category, entry);
+
+        repos[category][entry.name] = {
+            name: entry.name,
+            description: data.description,
+            beta: data.description.includes('beta'),
+            deprecated: data.description.includes('deprecated'),
+        };
     }
+
+    const str = JSON.stringify(repos, null, '  ');
+    const write = Deno.writeTextFile("./u2/u2/projects.json", str);
+    write.then(() => console.log("File written!"));
+    
     //writeReadMeCategory(entry);
 });
 
 
 async function writeReadMe(category, entry) {
-console.log(category, entry.name)
     const readme = base+category+'/'+entry.name+'/README.md';
     await fs.ensureFile(readme);
     let text = await Deno.readTextFile(readme);
@@ -121,14 +87,9 @@ console.log(category, entry.name)
         if (value) content += `## ${key}\n\n${value}\n\n`;
     })
 
-    // todo: remove old readme
-    // await Deno.remove(readme+'.old');
-
     Deno.writeTextFile(readme, content);
+    return {description: intro.split('\n')[1]??''};
 }
-
-
-
 
 
 
@@ -179,9 +140,6 @@ async function UsagePart(category, entry){
 
 function installPart(category, entry) {
     const name = entry.name;
-
-    // let version = reposData.get(entry.name)?.release_latest.tag_name;
-    // version = version ? version.replace('v','') : 'x.x.x';
     const baseUrl = 'https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/'+category+'/'+name+'/';
 
     let html = '';
@@ -196,7 +154,7 @@ function installPart(category, entry) {
     if (category === 'attr') {
         html = `<script src="${baseUrl}${name}.min.js" type=module></script>`;
     }
-    if (name.endsWith('.js')) {
+    if (category === 'js') {
         const js = `import * as module from "${baseUrl}${name}.min.js"`;
         return '```js\n'+js+'\n```';
     }

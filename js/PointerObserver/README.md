@@ -16,6 +16,12 @@ new PointerObserver(el).onmove = function(e){
 </div>
 ```
 
+## Install
+
+```js
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/PointerObserver/PointerObserver.min.js"
+```
+
 ## Demos
 
 [minimal.html](http://gcdn.li/u2ui/u2@main/js/PointerObserver/tests/minimal.html)  

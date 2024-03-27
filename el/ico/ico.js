@@ -43,6 +43,7 @@ const uIco = class extends HTMLElement {
                 this.setAttribute('aria-label', inner);
             }
         }
+        this._handleIcon();
 
         // at the moment, "loaded" indicates to css, that it uses --u2-ico-dir
         // let font = getComputedStyle(this).getPropertyValue('font-family');

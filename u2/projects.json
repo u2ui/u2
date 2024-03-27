@@ -1,0 +1,300 @@
+{
+  "attr": {
+    "confirm": {
+      "name": "confirm",
+      "description": "Confirm before action",
+      "beta": false,
+      "deprecated": false
+    },
+    "focusgroup": {
+      "name": "focusgroup",
+      "description": "Focus movement by arrow keys",
+      "beta": false,
+      "deprecated": false
+    },
+    "href": {
+      "name": "href",
+      "description": "Every element can be a link",
+      "beta": false,
+      "deprecated": false
+    },
+    "intersect": {
+      "name": "intersect",
+      "description": "declarativ intersection-observer",
+      "beta": false,
+      "deprecated": false
+    },
+    "masonry": {
+      "name": "masonry",
+      "description": "null",
+      "beta": false,
+      "deprecated": false
+    },
+    "navigable": {
+      "name": "navigable",
+      "description": "Make elements navigatable",
+      "beta": false,
+      "deprecated": false
+    },
+    "parallax": {
+      "name": "parallax",
+      "description": "Make every element scrolling at different speed",
+      "beta": false,
+      "deprecated": false
+    },
+    "skin": {
+      "name": "skin",
+      "description": "Change colors of a widget (beta)",
+      "beta": true,
+      "deprecated": false
+    }
+  },
+  "class": {
+    "badge": {
+      "name": "badge",
+      "description": "Rendering badges",
+      "beta": false,
+      "deprecated": false
+    },
+    "card1": {
+      "name": "card1",
+      "description": "card-class (beta)",
+      "beta": true,
+      "deprecated": false
+    },
+    "flex": {
+      "name": "flex",
+      "description": "Most wanted flexbox case",
+      "beta": false,
+      "deprecated": false
+    },
+    "grid": {
+      "name": "grid",
+      "description": "Most wanted grid case",
+      "beta": false,
+      "deprecated": false
+    },
+    "input": {
+      "name": "input",
+      "description": "custom inputs (beta)",
+      "beta": true,
+      "deprecated": false
+    },
+    "invert": {
+      "name": "invert",
+      "description": "invert colors",
+      "beta": false,
+      "deprecated": false
+    },
+    "reset": {
+      "name": "reset",
+      "description": "A class to reset Styles (beta)\r",
+      "beta": true,
+      "deprecated": false
+    }
+  },
+  "el": {
+    "alert": {
+      "name": "alert",
+      "description": "Prominent hints, alerts, and facts",
+      "beta": false,
+      "deprecated": false
+    },
+    "carousel": {
+      "name": "carousel",
+      "description": "Simple carousel component",
+      "beta": false,
+      "deprecated": false
+    },
+    "carousel-nav": {
+      "name": "carousel-nav",
+      "description": "null",
+      "beta": false,
+      "deprecated": false
+    },
+    "code": {
+      "name": "code",
+      "description": "Highlighted, editable code-blocks.",
+      "beta": false,
+      "deprecated": false
+    },
+    "counter": {
+      "name": "counter",
+      "description": "Animated Number Counter",
+      "beta": false,
+      "deprecated": false
+    },
+    "ico": {
+      "name": "ico",
+      "description": "Universal icon-element",
+      "beta": false,
+      "deprecated": false
+    },
+    "input": {
+      "name": "input",
+      "description": "undefined",
+      "beta": false,
+      "deprecated": false
+    },
+    "parallax-bg": {
+      "name": "parallax-bg",
+      "description": "Parallax backgrounds",
+      "beta": false,
+      "deprecated": false
+    },
+    "qrcode": {
+      "name": "qrcode",
+      "description": "QR-Code element",
+      "beta": false,
+      "deprecated": false
+    },
+    "rte": {
+      "name": "rte",
+      "description": "\"Rich\" Rich Text Editor (beta)",
+      "beta": true,
+      "deprecated": false
+    },
+    "splitbutton": {
+      "name": "splitbutton",
+      "description": "Buttons with options\r",
+      "beta": false,
+      "deprecated": false
+    },
+    "table": {
+      "name": "table",
+      "description": "Enhanced tables (sortable, responsive...)",
+      "beta": false,
+      "deprecated": false
+    },
+    "tabs": {
+      "name": "tabs",
+      "description": "rendering tabs",
+      "beta": false,
+      "deprecated": false
+    },
+    "textfit": {
+      "name": "textfit",
+      "description": "Exactly fit text",
+      "beta": false,
+      "deprecated": false
+    },
+    "time": {
+      "name": "time",
+      "description": "The better time-element, e.g. live changing relative dates",
+      "beta": false,
+      "deprecated": false
+    },
+    "tooltip": {
+      "name": "tooltip",
+      "description": "Tooltips",
+      "beta": false,
+      "deprecated": false
+    },
+    "tree1": {
+      "name": "tree1",
+      "description": "Treeview component",
+      "beta": false,
+      "deprecated": false
+    },
+    "typewriter": {
+      "name": "typewriter",
+      "description": "Simple typewriter element\r",
+      "beta": false,
+      "deprecated": false
+    }
+  },
+  "css": {
+    "base": {
+      "name": "base",
+      "description": "⏚ Usefull css defaults",
+      "beta": false,
+      "deprecated": false
+    },
+    "classes": {
+      "name": "classes",
+      "description": "deprecated",
+      "beta": false,
+      "deprecated": true
+    },
+    "classless": {
+      "name": "classless",
+      "description": "null",
+      "beta": false,
+      "deprecated": false
+    },
+    "flex": {
+      "name": "flex",
+      "description": "Most wanted flexbox case",
+      "beta": false,
+      "deprecated": false
+    },
+    "norm": {
+      "name": "norm",
+      "description": "CSS normalization for crossbrowser compatibility",
+      "beta": false,
+      "deprecated": false
+    },
+    "table": {
+      "name": "table",
+      "description": "Better tables",
+      "beta": false,
+      "deprecated": false
+    },
+    "unstyle": {
+      "name": "unstyle",
+      "description": "Unstyle elements eg. buttons\r",
+      "beta": false,
+      "deprecated": false
+    },
+    "width": {
+      "name": "width",
+      "description": "The main width of your layout\r",
+      "beta": false,
+      "deprecated": false
+    }
+  },
+  "js": {
+    "contextmenu": {
+      "name": "contextmenu",
+      "description": "context menus, simple and highly customisable",
+      "beta": false,
+      "deprecated": false
+    },
+    "dialog": {
+      "name": "dialog",
+      "description": "alert, prompt, confirm but async",
+      "beta": false,
+      "deprecated": false
+    },
+    "Placer": {
+      "name": "Placer",
+      "description": "Absolute place elements relative to others",
+      "beta": false,
+      "deprecated": false
+    },
+    "PointerObserver": {
+      "name": "PointerObserver",
+      "description": "Observe mouse and touches",
+      "beta": false,
+      "deprecated": false
+    },
+    "rte": {
+      "name": "rte",
+      "description": "",
+      "beta": false,
+      "deprecated": false
+    },
+    "SelectorObserver": {
+      "name": "SelectorObserver",
+      "description": "Monitor elements by CSS selector",
+      "beta": false,
+      "deprecated": false
+    },
+    "shortcut": {
+      "name": "shortcut",
+      "description": "Easy keyboard shortcuts",
+      "beta": false,
+      "deprecated": false
+    }
+  }
+}

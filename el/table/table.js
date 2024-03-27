@@ -1,5 +1,3 @@
-
-// creation of the u2-table element
 // todo? add roles like "table" to ensure it is a table even if untabeled using css?
 
 class Table extends HTMLElement {
@@ -13,14 +11,9 @@ class Table extends HTMLElement {
                 overflow: auto;
             }
             </style>
-            <!--div id=tools style="display:flex; justify-content:end">
-                <button type=button>fullscreen</button>
-                <select id=columnChooser></select>
-                <input type=search>
-            </div-->
             <slot></slot>
         `;
-        this.table = this.firstElementChild;
+        this.table = this.querySelector(':scope>table');
     }
     connectedCallback() {
         this.resizeObs = new ResizeObserver(entries => this._checkResize());
@@ -30,11 +23,6 @@ class Table extends HTMLElement {
         this.mutObs = new MutationObserver(mutations => this._checkMutations());
         this.mutObs.observe(this, {childList: true, subtree: true});
         this._checkMutations();
-
-        this.shadowRoot?.querySelector('#tools button')?.addEventListener('click', () => {
-            this.shadowRoot.querySelector('slot').requestFullscreen()
-        });
-
     }
 
     static get observedAttributes() { return ['sortable']; }
@@ -69,12 +57,6 @@ class Table extends HTMLElement {
                 const title = th.innerText;
                 const index = this.columns.indexOf(th);
 
-                /*
-                this.shadowRoot.querySelector('#columnChooser').appendChild(
-                    new Option(title, index)
-                );
-                */
-
                 // set aria-labels
                 for (const td of this.columns.item(index).cells) {
                     td.setAttribute('aria-label', title);
@@ -85,8 +67,7 @@ class Table extends HTMLElement {
     }
 
     get columns() {
-        if (!this._columns) this._columns = getTableColumns(this.table);
-        return this._columns;
+        return getTableColumns(this.table);
     }
 
 }
@@ -94,8 +75,8 @@ class Table extends HTMLElement {
 
 
 /* sortable */
-function makeSortable(table, ok=true) {
-    table[ok?'addEventListener':'removeEventListener']('click', sortableClick);
+function makeSortable(table, enable=true) {
+    table[enable?'addEventListener':'removeEventListener']('click', sortableClick);
 }
 function sortableClick(e){
     const table = this;
@@ -107,14 +88,13 @@ function sortableClick(e){
 
     const columns = getTableColumns(table);
     const index = columns.indexOf(th);
-    const group = table.querySelector('tbody');
-    const trs = group.children;
+    const tbody = table.querySelector('tbody');
 
     const ascending = th.getAttribute('aria-sort') !== 'ascending';
     for (const el of th.parentNode.children) el.removeAttribute('aria-sort');
     th.setAttribute('aria-sort', ascending ? 'ascending' : 'descending');
 
-    const tds = columns.item(index).cellsByGroup(group);
+    const tds = columns.item(index).cellsByGroup(tbody);
     tds
         .map( td => { return { td, val: td.getAttribute('data-sortby') ?? td.innerText.trim() }; } )
         .sort((a, b) => {
@@ -122,16 +102,16 @@ function sortableClick(e){
             const [v1, v2] = [a.val, b.val];
             return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
         })
-        .forEach(item => group.appendChild(item.td.parentNode) );
+        .forEach(item => tbody.appendChild(item.td.parentNode) );
 }
 
 
 
 
 
-/* columns */
-
-// use the factory function:
+/**
+ * The factory for the Columns class.
+ */
 const TableColMap = new WeakMap();
 const getTableColumns = (table) => {
     if (!TableColMap.has(table)) {
@@ -140,7 +120,15 @@ const getTableColumns = (table) => {
     return TableColMap.get(table);
 }
 
-/* are there memory leaks? */
+/**
+ * The Columns class represents a collection of the columns in a table.
+ * A Column is a collection of all its cells taking into account shifts caused by colspan.
+ *
+ * Example usage:
+ * const columns = new Columns(tableElement);
+ * columns.item(3).cells().forEach(...)
+ */
+
 class Columns {
     constructor(table) {
         this.table = table;
@@ -187,10 +175,6 @@ class Column {
             this.cellsByGroup(group).forEach(cell => cells.push(cell));
         }
         return cells;
-    }
-    get headerCells(){
-        const group = this.querySelector('thead');
-        return this.cellsByGroup(group);
     }
     cellsByGroup(group){
         const cells = [];

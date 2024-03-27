@@ -3,6 +3,7 @@
 <head>
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
+    <title>test</title>
     <script src="../../../u2/tests/test-init.js" type=module></script>
 
     <script src="../../../u2/auto.js" type=module></script>
@@ -14,7 +15,7 @@
     <link rel=stylesheet href="../../../css/classless/aria.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
-    <script src="../old/range-selection.js" type=module></script>
+    <script src="../range.js" type=module></script>
     <style>
         body {
             max-width: 200rem;
@@ -39,7 +40,7 @@
 
 
     <div class="u2-flex" style="gap:.4rem">
-        <div id=rte-1 class=rte contenteditable style="margin:0; flex:1 1 18rem" spellcheck="false">
+        <div id=rte1 class=rte contenteditable style="margin:0; flex:1 1 18rem" spellcheck="false">
 some text
 <ul>
     <li>This is a</li>
@@ -48,22 +49,110 @@ some text
 </ul>
 <p>paragraph</p>
         </div>
-        <u2-code trim editable element="rte-1" style="margin:0; flex:1 1 18rem; font-size:12px"></u2-code>
+
+        <u2-code id=editor1 trim editable xelement="rte1" style="margin:0; flex:1 1 18rem; font-size:12px"></u2-code>
+
     </div>
 
-    <button id=btn>add inline-style red (class)</button>
+    <button id=splitBoundaries>splitBoundaries</button>
+
+    <button id=affectedRootNodes>affectedRootNodes</button>
+    <button id=containingRootNodes>containingRootNodes</button>
+    <button id=containingRootNodesForceElements>containingRootNodesForceElements</button>
+    
+    <br>
+
+    <label>
+        <input type="checkbox" id="showRects"> show boundingClientRect (green normal, red:fixed)
+    </label>
+
+    <br>
+
 
     <script type=module>
-    import {$range, $selection} from '../old/range-selection.js';
+    import {$range} from '../range.js';
 
+    affectedRootNodes.onclick = ()=> {
+        let range = $range.fromSelection();
+        let nodes = range.affectedRootNodes();
+        console.log(nodes);
+    }
+    containingRootNodes.onclick = ()=> {
+        let range = $range.fromSelection();
+        let nodes = range.containingRootNodes();
+        console.log(nodes);
+    }
+    containingRootNodesForceElements.onclick = ()=> {
+        let range = $range.fromSelection();
+        range.commonAncestorContainer.normalize();
+        const all = range.containingRootNodesForceElements();
+        const toggleColor = all[0].style.color?'':'red';
+        const toggleOutline = all[0].style.outline?'':'1px solid red';
+        for (const el of all) {
+            el.style.color = toggleColor;
+            el.style.outline = toggleOutline;
+            el.querySelectorAll('*').forEach(el=>el.style.color = toggleColor);
+            if (el.getAttribute('style') === '') el.removeAttribute('style');
+            if (el.getAttribute('style') === '') el.removeAttribute('style');
+            if (el.tagName === 'SPAN' && el.attributes.length === 0) removeNode(el);
+        }
+    }
 
-    btn.onclick = ()=>{
-        $selection.setStart(x.firstChild, 0);
-        $selection.setEnd(x.firstChild, 3);
-        //console.log($selection.containingRootNodesForceElements())
+    splitBoundaries.onclick = ()=>{
+        let range = $range.fromSelection();
+        range.splitBoundaries();
+        addSplittedTextMarks(range.commonAncestorContainer);
+        editor1.value = rte1.innerHTML;
+    }
+
+    addEventListener('selectionchange', drawRects,true);
+    rte1.addEventListener('input', drawRects);
+
+    // removes node but not its children
+    function removeNode(el){
+        while (el.firstChild) el.parentNode.insertBefore(el.firstChild, el);
+        el.remove();
+    }
+
+    function addSplittedTextMarks(element) {
+        for (let node of element.childNodes) {
+            if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType == 3) {
+                node.data = '|'+node.data;
+            } else if (node.nodeType === 1) {
+                addSplittedTextMarks(node);
+            }
+        }
+    }
+
+    showRects.addEventListener('change', ()=>{
+        if (showRects.checked) {
+            clientRectPosition.style.display = 'block';
+            clientRectPositionOld.style.display = 'block';
+        } else {
+            clientRectPosition.style.display = 'none';
+            clientRectPositionOld.style.display = 'none';
+        }
+    });
+
+    function drawRects() {
+        let range = $range.fromSelection();
+        const rect = range.boundingClientRect();
+        if (!rect) return;
+        clientRectPosition.style.left = rect.left+'px';
+        clientRectPosition.style.top = rect.top+'px';
+        clientRectPosition.style.width = rect.width+'px';
+        clientRectPosition.style.height = rect.height+'px';
+        const rectOld = range.getBoundingClientRect();
+        clientRectPositionOld.style.left = rectOld.left+'px';
+        clientRectPositionOld.style.top = rectOld.top+'px';
+        clientRectPositionOld.style.width = rectOld.width+'px';
+        clientRectPositionOld.style.height = rectOld.height+'px';
     }
 
     </script>
+
+<div id="clientRectPosition" style="position:fixed; top:0; left:0; background:#f999; padding:.2em; transform:translateX(-.12em); pointer-events:none" hidden></div>
+<div id="clientRectPositionOld" style="position:fixed; top:0; left:0; background:#afa9; padding:.2em; transform:translateX(-.12em); pointer-events:none" hidden></div>
 
 <span id="x">xxxxxx</span>
 

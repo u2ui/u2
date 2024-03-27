@@ -1,6 +1,5 @@
 
 let css = `
-
 :host {
     display:block;
 }

@@ -4,10 +4,13 @@ import {$range} from './range.js';
 import * as state from './events.js';
 
 
+const elsRoot = import.meta.resolve('../../el/');
 import '../../el/tooltip/tooltip.js';
+import '../../el/ico/ico.js';
 
 const css = `
-@import '../../../el/tooltip/tooltip.css';
+@import '${elsRoot}tooltip/tooltip.css';
+@import '${elsRoot}ico/ico.css';
 
 [contenteditable]:focus td {
 	outline:1px dashed #F4E2DC;
@@ -36,6 +39,11 @@ const css = `
     max-width: min(17rem, 100vw);
     transition:.14s;
     transition-property:top, left, opacity;
+
+    /* overwrite popover default: */
+    margin:0;
+    overflow: visible;
+    border:0;
 
     & [hidden] { display:none !important; }
 
@@ -92,6 +100,7 @@ const css = `
         justify-content: center;
         line-height:1.2;
         padding:.6em;
+        color:inherit;
     }
     & .-item:hover {
         background:#fff4;
@@ -166,9 +175,11 @@ let uiMouseover = 0;
 
 window.Rte.ui = {
 	init() {
+
 		const my = this;
 		my.div = document.createElement('div');
 		my.div.id = 'u2RteToolbar';
+        my.div.popover = 'true';
         my.div.classList.add('u2RteTool');
         my.div.tabIndex = -1;
 
@@ -187,6 +198,8 @@ window.Rte.ui = {
 
             document.documentElement.appendChild(my.div);
             my.div.hidden = false;
+            my.div.showPopover && my.div.showPopover();
+
             e.target.addEventListener('keydown', shortcutListener, false);
 		});
         addEventListener('u2-rte-deactivate', function(e) {
@@ -252,7 +265,7 @@ window.Rte.ui = {
 			// }
 		}
 		opt.click && opt.el.addEventListener('click',e=>{
-			Rte.manipulate( ()=>opt.click(e) ); // todo: manipulate schon hier??
+			Rte.manipulate( ()=>opt.click(e) );
 		}, false);
 
         this.items[name] = opt;

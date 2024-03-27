@@ -1,18 +1,8 @@
 
-import {dump, encode} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@1.2.2/mod.min.js';
-
-function customRender(obj){ // zzz todo: from dump.js
-    let isElement = false;
-    try {
-        isElement = obj instanceof Element && obj.tagName;
-    } catch {}
-    if (isElement) {
-        return encode(obj.outerHTML.substring(0, 50))+"...";
-    }
-}
-function alertInit(el) { el.classList.add('backdropClose'); }
-
+import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
 import {alert} from '../../js/dialog/dialog.js';
+
+function alertInit(el) { el.classList.add('backdropClose'); }
 
 export class EventsExplorer {
     constructor(into, el, events) {
@@ -38,10 +28,10 @@ export class EventsExplorer {
     clear(){
         this.tbody.innerHTML = '';
     }
-    scrollToEnd() {
+    scrollToEnd(minPadding=230) {
         const div = this.into.querySelector('.-listWrapper');
+        if (div.scrollTop + div.clientHeight < div.scrollHeight - minPadding) return;
         div.scrollTop = div.scrollHeight;
-//        this.into.querySelector('div').scrollTo({
     }
     start() {
         this.clear();
@@ -51,13 +41,14 @@ export class EventsExplorer {
             if (!activeTr || grow > 10) return;
             grow = Math.max(1, grow);
             activeTr.style.borderBottomWidth = (grow+=0.01)+'px';
-            this.scrollToEnd();
+            this.scrollToEnd(10);
         },10);
         let renderEvent = (event)=>{
             let tr = document.createElement('tr');
             activeTr = tr;
             grow = 0;
             tr.style.borderBottom = '0px solid black';
+
             const tag = event.target.tagName?.toLowerCase() ?? (event.target.nodeType === 3 ? '[text]' : '[unknown]');
             const klass = event.target.className?.trim().replace(/\s+/g, '.').replace(/^(.)/, '.$1') || null;
             const id = event.target.id ? '#'+event.target.id : null;
@@ -70,19 +61,19 @@ export class EventsExplorer {
                  <td>${targetDot} ${id??klass??tag}
                  <td>${event.eventPhase}<td class=-dump><button style="font-size:12px; margin:0">inspect</button>`;
             tr.querySelector('.-dump').addEventListener('click', () => {
-                alert({body:dump(event, {depth:2, customRender}), init:alertInit});
-                dump(event, {depth:2})
+                alert({body:dump(event, {depth:2, customRender:domRender, inherited:true}), init:alertInit});
             });
 
             this.tbody.append(tr);
             this.scrollToEnd();
         }
         for (const ev of this.events) {
-            //this.el.addEventListener(ev, renderEvent, false);
             this.el.addEventListener(ev, renderEvent, true);
         }
     }
 }
+
+
 
 function fnv1aHash(str) {
     let hash = 2166136261;

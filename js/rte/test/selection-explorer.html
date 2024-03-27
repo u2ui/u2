@@ -104,39 +104,66 @@ some text
             selectionDump.innerHTML = dump(s, {depth:2, order:0, inherited:true, customRender:domRender});
             rangeDump.innerHTML = dump(r, {depth:2, order:0, inherited:true, customRender:domRender});
 
-            // set markers to get positions in innerHTML
+
             ignoreMutation = true;
+
+            //addSplitMarkers(rte1);
+
+
+            // set markers to get positions in innerHTML
             const startTextNode = document.createTextNode('marker_start_so9df8as0f0');
             const endTextNode   = document.createTextNode('marker_end_laseg08a0egga');
             
+            const sRange = range.cloneRange().collapse(false);
             range.cloneRange().collapse(false).insertNode(endTextNode);
             range.cloneRange().collapse(true).insertNode(startTextNode);
 
             let code = rte1.innerHTML;
 
+
+
+            // remove markers
+            //removeSplitMarkers(rte1);
+
             startTextNode.remove();
             endTextNode.remove();
+           
+            range.startContainer.parentNode.normalize();
+            range.endContainer.parentNode.normalize();
 
-            setTimeout(()=>ignoreMutation = false, 50);
+            setTimeout(()=>ignoreMutation = false, 150);
 
-            const start = code.indexOf('marker_start_so9df8as0f0');
-            code = code.replace('marker_start_so9df8as0f0','');
-            const end = code.indexOf('marker_end_laseg08a0egga');
-            code = code.replace('marker_end_laseg08a0egga','');
+            ///code = replaceSplitMarkers(code);
 
-            // set <pre> content
-            const before = code.substring(0, start);
-            const between = code.substring(start, end);
-            const after = code.substring(end);
-            const cursor = '<span style="position:absolute; height:1.4rem; width:2px; background:#c00; margin-bottom:-3px"></span>';
-            out.innerHTML = 
-                escapeHtml(before) + 
-                '<span style="color:red">' + 
-                    cursor + 
-                    escapeHtml(between) + 
-                    cursor +
-                '</span>' + 
-                escapeHtml(after);
+
+            const cursor = '<span style="position:absolute; height:1.4rem; width:2px; background:#c00; margin-bottom:-3px; z-index:2"></span>';
+
+            let outHtml = escapeHtml(code);
+            outHtml = outHtml.replace('marker_start_so9df8as0f0', cursor);
+            outHtml = outHtml.replace('marker_end_laseg08a0egga', cursor);
+
+            // const splitCursor = '<span style="position:absolute; height:1.4rem; width:1px; background:#999; margin-bottom:-3px"></span>';
+            // outHtml = outHtml.replace(/marker_split_so9df8as0f0/g, splitCursor);
+
+            out.innerHTML = outHtml;
+
+            // const start = code.indexOf('marker_start_so9df8as0f0');
+            // code = code.replace('marker_start_so9df8as0f0','');
+            // const end = code.indexOf('marker_end_laseg08a0egga');
+            // code = code.replace('marker_end_laseg08a0egga','');
+
+            // // set <pre> content
+            // const before = code.substring(0, start);
+            // const between = code.substring(start, end);
+            // const after = code.substring(end);
+            // out.innerHTML = 
+            //     escapeHtml(before) + 
+            //     '<span style="color:red">' + 
+            //         cursor + 
+            //         escapeHtml(between) + 
+            //         cursor +
+            //     '</span>' + 
+            //     escapeHtml(after);
 
         } else {
             let code = rte1.innerHTML;
@@ -148,7 +175,10 @@ some text
 
     }
     
-    document.addEventListener('selectionchange',showRange);
+    document.addEventListener('selectionchange',()=>{
+        if (ignoreMutation) return;
+        showRange();
+    });
     
     const mutationObserver = new MutationObserver((mutationsList, observer) => {
         if (ignoreMutation) return;
@@ -170,21 +200,24 @@ some text
     }
 
 
-    function domDumpRender(obj){
-        let isElement = false;
-        let isText = false;
-        try {
-            isElement = obj instanceof window.Element && obj.tagName;
-            isText = obj instanceof window.Text;
-        } catch {}
-        if (isElement) {
-            return escapeHtml(obj.outerHTML).substring(0, 70).trim()+"...";
-        }
-        if (isText) {
-            return escapeHtml(obj.textContent).substring(0, 60).trim()+"... [TextNode]";
-        }
-    }
-
+    // function addSplitMarkers(el) {
+    //     for (let node of [...el.childNodes]) {
+    //         if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 3) {
+    //             node.before(document.createTextNode('marker_split_so9df8as0f0'));
+    //         } else if (node.nodeType === 1) {
+    //             addSplitMarkers(node);
+    //         }
+    //     }
+    // }
+    // function removeSplitMarkers(el) {
+    //     for (let node of [...el.childNodes]) {
+    //         if (node.nodeType === 3 && node.data === 'marker_split_so9df8as0f0') {
+    //             node.remove();
+    //         } else if (node.nodeType === 1) {
+    //             removeSplitMarkers(node);
+    //         }
+    //     }
+    // }
 
     </script>
     

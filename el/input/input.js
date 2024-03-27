@@ -10,27 +10,28 @@ customElements.define('u2-input', class extends HTMLElement {
         <style>
         :host {
             display: inline-flex;
-            border: 1px solid;
+            border: 3px solid black;
         }
         ::slotted(input), ::slotted(textarea), ::slotted(select) {
             margin: 0;
-            border: 0;
+            border: 0 !important;
+            outline: 0 !important;
         }
         button {
             border: 0;
             background-color: transparent;
         }
         </style>
-        <slot><input></slot>
-        <button part=clear hidden>✕</button>
+        <slot name=start></slot>
+        <slot></slot>
+        <slot name=end></slot>
+        <button part=clear>✕</button>
         `;
     }
 
     connectedCallback() {
         this.realInput = this.querySelector('input,textarea,select');
-        if (this.realInput) this._syncRealToFake()
-    }
-    disconnectedCallback() {
+        if (this.realInput) this._syncRealToFake();
     }
 
     _syncRealToFake() {
@@ -62,15 +63,7 @@ customElements.define('u2-input', class extends HTMLElement {
         }
         return this.realInput.value;
     }
-    set checked(value) {
-
-    }
 });
-
-
-
-
-
 
 
 

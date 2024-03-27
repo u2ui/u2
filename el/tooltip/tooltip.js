@@ -16,8 +16,7 @@ customElements.define('u2-tooltip', class extends HTMLElement {
         this.parentNode !== rootEl && rootEl.append(this); // zzz if popover
 
         /* popover */
-        // this.setAttribute('popover','auto');
-        // this.style.margin = '0';
+        this.setAttribute('popover','auto');
     }
     _showFor(el){
         let event = new CustomEvent('u2-tooltip-show', {bubbles: true, cancelable: true, detail: {tooltip: this} });
@@ -32,7 +31,7 @@ customElements.define('u2-tooltip', class extends HTMLElement {
     }
     showFor(el){
         /* popover */
-        //this.showPopover();
+        //this.showPopover && this.showPopover();
 
         this.setAttribute('open','');
         this.placer.toElement(el); // todo z-index top
@@ -44,7 +43,7 @@ customElements.define('u2-tooltip', class extends HTMLElement {
         this.removeAttribute('open');
 
         /* popover */
-        //this.hidePopover();
+        //this.hidePopover && this.hidePopover();
     }
     attributeChangedCallback(name, old, value) {
         if (name === 'position') {

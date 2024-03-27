@@ -64,6 +64,23 @@ const extensions = {
 		const r = this.original;
 		let pos = r.getBoundingClientRect();
 		if (r.collapsed && pos.top === 0 && pos.left === 0) {
+			if (r.endContainer.nodeType === 1) {
+				const nextNode = r.endContainer.childNodes[r.endOffset];
+				
+				if (!nextNode) return;
+
+				if (nextNode.tagName === 'BR') { // if its a newline
+					return nextNode.getBoundingClientRect();
+				}
+				if (nextNode.nodeType === 3) { // if its before a textnode (Do pseudo-elements get messed up? (::marker))
+					const nRange = document.createRange();
+					nRange.selectNodeContents(nextNode);
+					nRange.collapse(true);
+					return nRange.getBoundingClientRect();
+				}
+			}
+			console.warn('collapsed range, but no boundingClientRect', r.startContainer, r.startOffset, r.endContainer, r.endOffset);
+			/* this is bad as it causes selectionchange and mutation events
 			window.u2DomChangeIgnore = true;
 			let tmpNode = document.createTextNode('\ufeff');
 			r.insertNode(tmpNode);
@@ -71,25 +88,63 @@ const extensions = {
 			r.setStartAfter(tmpNode);
 			tmpNode.remove();
 			requestAnimationFrame(()=> window.u2DomChangeIgnore = false );
+			*/
 		}
 		return pos;
 	},
 	splitBoundaries() {
 		let node = this.startContainer;
-		if (node.data) {
-			const startNode = node.splitText(this.startOffset);
-			//this.setStart(startNode,0);
+		if (node.data && this.startOffset > 0) {
+			node.splitText(this.startOffset);
 			this.setStartAfter(node);
 		}
 		node = this.endContainer;
-		if (node.data) {
+		if (node.data && this.endOffset < node.data.length) {
 			node.splitText(this.endOffset);
-			//this.setEnd(node,node.data.length);
-			console.log(node)
-			this.setEndAfter(node)
+			this.setEndAfter(node);
 		}
+	},
+	affectedRootNodes() {
+		const r = this.original;
+		let el = r.startContainer;
+		if (el.nodeType === 1 && r.startOffset > 0) el = el.childNodes[r.startOffset];
+		let end = r.endContainer;
+		if (end.nodeType === 1 && r.endOffset < end.childNodes.length) end = end.childNodes[r.endOffset-1];
+		const els = [];
+		let prev = null;
+		do {
+			if (el === end) break;
+			if (el.contains && el.contains(end)) continue;
+			if (prev && prev.contains && prev.contains(el)) continue;
+			prev = el;
+			els.push(el);
+		} while (el = nextNode(el))
+		els.push(el);
+		return els;
+	},
+	containingRootNodes() {
+		this.splitBoundaries();
+		return this.affectedRootNodes();
+	},
+	containingRootNodesForceElements() {
+		var nodes = this.containingRootNodes(),
+			newNodes = [];
+		for (var i=0, el; el=nodes[i++];) { // todo: summarize following textNodes
+			if (el.nodeType === 3) {
+				if (el.data.trim() === '') continue;
+				const nEl = document.createElement('span');
+				el.parentNode.insertBefore( nEl, el );
+				nEl.appendChild(el);
+				el = nEl;
+			}
+			newNodes.push(el);
+		}
+		if (newNodes[0]) {
+			this.setStartBefore(nodes[0]);
+			this.setEndAfter(nodes[nodes.length-1]);
+		}
+		return newNodes;
 	}
-	
 }
 
 const selection = getSelection();

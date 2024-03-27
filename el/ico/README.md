@@ -32,6 +32,7 @@ u2-ico {
 
 ## Demos
 
+[combinations.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/combinations.html)  
 [emojis.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/emojis.html)  
 [fonts.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/fonts.html)  
 [ico-directory.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/ico-directory.html)  

@@ -9,6 +9,7 @@ export let element = null; // the current element of the selection range
 addEventListener('focusin', function(event) {
     //const target = event.target;
     const target = event.composedPath()[0];
+
     if (!target.isContentEditable) return;
     // to enable rte for a contenteditable element set the custom property --u2-rte to true
     if (getComputedStyle(target).getPropertyValue('--u2-rte')==='') return;
@@ -44,6 +45,8 @@ document.addEventListener('selectionchange', (event)=>{
     if (!focused) return;
     if (window.u2DomChangeIgnore) return;
     range = getSelection().getRangeAt(0);
+    //range = focused.getRootNode().getSelection().getRangeAt(0); // shadow dom?
+
     active.dispatchEvent(new CustomEvent('u2-rte-selectionchange', {bubbles:true, composed:true}));
 });
 

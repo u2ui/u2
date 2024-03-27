@@ -24,10 +24,10 @@ u2-tooltip {
     border-radius:.8em;
     background: var(--color-text, CanvasText);
     color: var(--color-bg, Canvas);
-    border:1px solid CanvasText; /* currentColor bug in ff: https://jsfiddle.net/cdtonmzu/109/ */
+    border:1px solid var(--color-text, CanvasText);
 
 
-    /* popover *
+    /* popover */
     margin: 0;
     overflow: visible;
     display: block;
@@ -41,7 +41,7 @@ u2-tooltip[tabindex="-1"] {
 u2-tooltip:is(:focus-within, :hover, [open]) {
     /* show transition */
     transition-duration:250ms;
-    transition-delay: 150ms;
+    transition-delay: 160ms;
     visibility:visible;
     opacity: 1;
 }

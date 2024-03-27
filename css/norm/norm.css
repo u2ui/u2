@@ -73,3 +73,19 @@
 	-webkit-user-select: none;
 	user-select: none;
 }
+:where([popover]) {
+    position: fixed;
+    width: fit-content;
+    height: fit-content;
+    color: canvastext;
+    background-color: canvas;
+    inset: 0;
+    margin: auto;
+    border-width: initial;
+    border-style: solid;
+    border-color: initial;
+    border-image: initial;
+    padding: 0.25em;
+    overflow: auto;
+	display: none;
+}

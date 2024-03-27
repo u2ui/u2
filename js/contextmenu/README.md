@@ -75,6 +75,12 @@ Adds a single menu item to the context menu. `item` is an object with the same p
 
 - return value: The menu item object.
 
+## Install
+
+```js
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/contextmenu/contextmenu.min.js"
+```
+
 ## Demos
 
 [minimal.html](http://gcdn.li/u2ui/u2@main/js/contextmenu/tests/minimal.html)  

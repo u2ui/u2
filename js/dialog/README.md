@@ -22,6 +22,12 @@ alert, prompt, confirm but async
 }
 ```
 
+## Install
+
+```js
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/dialog/dialog.min.js"
+```
+
 ## Demos
 
 [minimal.html](http://gcdn.li/u2ui/u2@main/js/dialog/tests/minimal.html)  
