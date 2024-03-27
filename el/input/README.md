@@ -1,54 +1,81 @@
 # &lt;u2-input&gt; - element
-undefined
+input elements (very beta)
 
 ## Usage
 
 ```html
-<input type=text>
+<label>
+    Normal Input: <input type=text>
+</label>
 
-<u2-input type=textarea>inhalt</u2-input>
+<label>
+    u2-input textarea:
+    <u2-input type=textarea>inhalt</u2-input>
+</label>
 
-<u2-input type=text>inhalt</u2-input>
+<label>
+    u2-input text:
+    <u2-input type=text>inhalt</u2-input>
+</label>
 
-<u2-input type=checkbox on="on" off="off">on</u2-input>
+<label>
+    u2-input checkbox:
+    <u2-input type=checkbox on=on off=off>on</u2-input>
+</label>
 
-<u2-input type=select>
-</u2-input>
+<label>
+    u2-input select:
+    <u2-input type=select></u2-input>
+</label>
 
-<u2-input>
-    <input type=text>
-</u2-input>
+<label>
+    u2-input text:
+    <u2-input><input type=text></u2-input>
+</label>
 
-<u2-input>
-    <input type=checkbox value="yes" checked>
-</u2-input>
+<label>
+    <u2-input>
+        <input type=checkbox value="yes" checked>
+    </u2-input>
+</label>
 
-<u2-input>
-    <select>
-        <option value="1">One
-        <option value="2" selected>Two
-        <option value="3">Three
-    </select>
-</u2-input>
+<label>
+    <u2-input>
+        <select>
+            <option value="1">One
+            <option value="2" selected>Two
+            <option value="3">Three
+        </select>
+    </u2-input>
+</label>
 
-<u2-input>
-    <textarea name="test">
-        diest ist
-        der Inhalt
-    </textarea>
-</u2-input>
+<label>
+        <u2-input>
+        <textarea name="test">
+            diest ist
+            der Inhalt
+        </textarea>
+    </u2-input>
+</label>
 
-<u2-input>
-    <input type=date>
-</u2-input>
+<label>
+    <u2-input>
+        <input type=date>
+    </u2-input>
+</label>
 
-<u2-input>
-    <input type=datetime-local>
-</u2-input>
+
+<label>
+    <u2-input>
+        <input type=datetime-local>
+    </u2-input>
+</label>
 ```
 
 ```css
-
+u2-input:focus-within {
+    border-color: green;
+}
 ```
 
 ## Install

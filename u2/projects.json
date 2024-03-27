@@ -24,12 +24,6 @@
       "beta": false,
       "deprecated": false
     },
-    "masonry": {
-      "name": "masonry",
-      "description": "null",
-      "beta": false,
-      "deprecated": false
-    },
     "navigable": {
       "name": "navigable",
       "description": "Make elements navigatable",
@@ -132,7 +126,13 @@
     },
     "input": {
       "name": "input",
-      "description": "undefined",
+      "description": "input elements (very beta)",
+      "beta": true,
+      "deprecated": false
+    },
+    "masonry": {
+      "name": "masonry",
+      "description": "Masonry layout with CSS grid fallback",
       "beta": false,
       "deprecated": false
     },
@@ -198,7 +198,7 @@
     },
     "typewriter": {
       "name": "typewriter",
-      "description": "Simple typewriter element\r",
+      "description": "Simple typewriter element",
       "beta": false,
       "deprecated": false
     }

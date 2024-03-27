@@ -1,33 +1,32 @@
-# [u2-masonry] - attribute
-null
+# &lt;u2-masonry&gt; - element
+Masonry layout with CSS grid fallback
 
-handy util-attribute to make a masonry layout
-
-- default gap (from classless.css variables)
+- default gap
 - grid fallback
 - grid masonry fallback if supported
+- reorder is animatable
 
 ## Usage
 
 ```html
-<div u2-masonry>
+<u2-masonry style="max-width:30rem; margin:auto">
     <div>item1<br>heigter</div>
-    <div>item2</div>
+    <div>item2<br>heigter</div>
     <div>item3</div>
-    <div>item4</div>
+    <div>item4<br>heigter</div>
     <div>item5</div>
-    <div>item6</div>
+    <div>item6<br>heigter</div>
     <div>item7</div>
-</div>
+</u2-masonry>
 ```
 
 ```css
-[u2-masonry] {
-    --u2-Gap:2rem;
-    --u2-Col-gap:1rem;
+u2-masonry {
+    gap:1rem;
+    column-gap:2rem;
     --u2-Items-width:8rem;
 }
-[u2-masonry] > * {
+u2-masonry > * {
     border:1px solid black;
     padding:.5em;
 }
@@ -36,13 +35,14 @@ handy util-attribute to make a masonry layout
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/masonry/masonry.min.js" type=module></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/masonry/masonry.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/masonry/masonry.min.js" type=module></script>
 ```
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/masonry/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/attr/masonry/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/masonry/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/masonry/tests/test.html)  
 
 ## About
 
