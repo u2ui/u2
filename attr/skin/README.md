@@ -6,10 +6,9 @@ Change the skin of a widget (beta)
 
 ## Description
 
-[u2-skin=invert] will invert the colors of the widget (switches among other things the background color and the text color)
-css variables cannot be switched to the same element, so nested inversions will not work.
+`[u2-skin=invert]` will invert the colors of the widget (switches among other things the background color and the text color).
 
-[u2-skin=theme] will use the theme color (`--color`) as background color
+`[u2-skin=theme]` will use the theme color (`--color`) as background color
 
 Custom skins can easily be added.
 Just change `--hsl-h` for example:
