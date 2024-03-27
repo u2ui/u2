@@ -10,8 +10,12 @@ customElements.define('u2-input', class extends HTMLElement {
         <style>
         :host {
             display: inline-flex;
-            border: 3px solid black;
+            align-items: center;
+            border: 2px solid black;
         }
+        [name=start]::slotted(*) { margin-inline-start: 0.5em; }
+        [name=end]::slotted(*) { margin-inline-end: 0.5em; }
+
         ::slotted(input), ::slotted(textarea), ::slotted(select) {
             margin: 0;
             border: 0 !important;
@@ -25,7 +29,6 @@ customElements.define('u2-input', class extends HTMLElement {
         <slot name=start></slot>
         <slot></slot>
         <slot name=end></slot>
-        <button part=clear>✕</button>
         `;
     }
 

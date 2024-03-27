@@ -137,7 +137,7 @@
       "description": "null",
       "beta": false,
       "deprecated": false,
-      "css": true,
+      "css": false,
       "js": true
     },
     "code": {
@@ -166,7 +166,7 @@
     },
     "input": {
       "name": "input",
-      "description": "Input elements (very alpha)\r",
+      "description": "Input elements (very alpha)",
       "beta": false,
       "deprecated": false,
       "css": true,

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+    <!-- <script src="../../../u2/tests/test-init.js" type=module async></script> -->
+    <link rel=stylesheet href="../../../css/norm/norm.css">
+    <link rel=stylesheet href="../../../css/base/base.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+
+    
+    <style>
+        label {
+            display:block;
+            margin-block:1rem;
+        }
+    </style>
+    
+    <link rel=stylesheet href="../input.css">
+    <script src="../input.js" type=module async></script>
+
+<body>
+
+<section>
+
+    <label>
+        Normal Input: <input type=text>
+    </label>
+
+    <label>
+        u2-input text:
+        <u2-input type=text>inhalt</u2-input>
+    </label>
+
+    <label>
+        u2-input with start slot:
+        <u2-input type=text>
+            <span slot=start>☎</span>
+            <input type="tel">
+        </u2-input>
+    </label>
+
+
+    
+
+    <label>
+        u2-input textarea:
+        <u2-input type=textarea>inhalt</u2-input>
+    </label>
+
+    <label>
+        u2-input checkbox:
+        <u2-input type=checkbox on=on off=off>on</u2-input>
+    </label>
+
+    <label>
+        u2-input select:
+        <u2-input type=select></u2-input>
+    </label>
+
+    <label>
+        u2-input text:
+        <u2-input><input type=text></u2-input>
+    </label>
+
+    <label>
+        <u2-input>
+            <input type=checkbox value="yes" checked>
+        </u2-input>
+    </label>
+
+    <label>
+        <u2-input>
+            <select>
+                <option value="1">One
+                <option value="2" selected>Two
+                <option value="3">Three
+            </select>
+        </u2-input>
+    </label>
+
+    <label>
+            <u2-input>
+            <textarea name="test">
+                diest ist
+                der Inhalt
+            </textarea>
+        </u2-input>
+    </label>
+
+    <label>
+        <u2-input>
+            <input type=date>
+        </u2-input>
+    </label>
+
+
+    <label>
+        <u2-input>
+            <input type=datetime-local>
+        </u2-input>
+    </label>
+
+</section>
+
+<style>
+u2-input:focus-within {
+    border-color: green;
+}
+</style>
