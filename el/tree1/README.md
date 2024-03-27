@@ -86,7 +86,7 @@ treeElement.addEventListener('u2-tree1-select', (e) => { ... });
 
 ```html
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tree1/tree1.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tree1/tree1.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tree1/tree1.min.js" type=module async></script>
 ```
 
 ## Demos

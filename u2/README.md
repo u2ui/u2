@@ -25,7 +25,7 @@ U2 is a design system that is intended to fulfill the following goals:
 Just add this script to have all the u2-stuff available on demand (without including them):  
 "basic css", "u2-classes", "u2-attributes", "u2-custom-elements"  
 ```html
-<script type=module src="../../../u2/auto.min.js"></script>
+<script type=module async src="../../../u2/auto.min.js"></script>
 ```
 
 This demo will give you an idea of how to develop:  

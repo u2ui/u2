@@ -12,7 +12,7 @@ highlighted, editable code-blocks.
 
 ```html
 <link rel=stylesheet href="../../../code.el@x/code.css">
-<scrip src="../../../code.el@x/code.js" type=module></script>
+<scrip src="../../../code.el@x/code.js" type=module async></script>
 
 <u2-code trim>
     <pre>

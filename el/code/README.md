@@ -35,7 +35,7 @@ Slots:
 
 ```html
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/code/code.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/code/code.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/code/code.min.js" type=module async></script>
 ```
 
 ## Demos

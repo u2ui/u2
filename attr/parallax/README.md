@@ -27,7 +27,7 @@ Make every element scrolling at different speed
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/parallax/parallax.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/parallax/parallax.min.js" type=module async></script>
 ```
 
 ## Demos

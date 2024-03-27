@@ -35,7 +35,7 @@ u2-tabs {
 
 ```html
 <link href="../../../tabs.el@x.x.x/tabs.css" rel=stylesheet>
-<script src="../../../tabs.el@x.x.x/tabs.min.js" type=module></script>
+<script src="../../../tabs.el@x.x.x/tabs.min.js" type=module async></script>
 ```
 
 ## Demos

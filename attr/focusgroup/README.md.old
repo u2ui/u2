@@ -28,7 +28,7 @@ https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer
 ## Install
 
 ```html
-<script src="../../../focusgroup.attr@x.x.x/focusgroup.min.js" type=module></script>
+<script src="../../../focusgroup.attr@x.x.x/focusgroup.min.js" type=module async></script>
 ```
 
 ## Demos

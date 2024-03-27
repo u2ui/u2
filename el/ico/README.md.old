@@ -27,7 +27,7 @@ u2-ico {
 
 ```html
 <link href="../../../ico.el@x.x.x/ico.min.css" rel=stylesheet>
-<script src="../../../ico.el@x.x.x/ico.min.js" type=module></script>
+<script src="../../../ico.el@x.x.x/ico.min.js" type=module async></script>
 ```
 
 ## Demos

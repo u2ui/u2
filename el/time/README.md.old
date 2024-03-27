@@ -21,7 +21,7 @@ u2-time {
 
 ```html
 <link href="../../../time.el@x.x.x/time.min.css" rel=stylesheet>
-<script src="../../../time.el@x.x.x/time.min.js" type=module></script>
+<script src="../../../time.el@x.x.x/time.min.js" type=module async></script>
 ```
 
 ## Demos

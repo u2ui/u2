@@ -35,7 +35,7 @@ u2-tabs {
 
 ```html
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tabs/tabs.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tabs/tabs.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tabs/tabs.min.js" type=module async></script>
 ```
 
 ## Demos

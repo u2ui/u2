@@ -37,7 +37,7 @@ Just change `--hsl-h` for example:
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/skin/skin.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/skin/skin.min.js" type=module async></script>
 ```
 
 ## Demos

@@ -35,7 +35,7 @@ Slots:
 
 ```html
 <link href="../../../code.el@x.x.x/code.min.css" rel=stylesheet>
-<script src="../../../code.el@x.x.x/code.min.js" type=module></script>
+<script src="../../../code.el@x.x.x/code.min.js" type=module async></script>
 ```
 
 ## Demos

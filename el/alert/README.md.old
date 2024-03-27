@@ -53,7 +53,7 @@ u2-alert::part(icon) {
 
 ```html
 <link href="../../../alert.el@x.x.x/alert.min.css" rel=stylesheet>
-<script src="../../../alert.el@x.x.x/alert.min.js" type=module></script>
+<script src="../../../alert.el@x.x.x/alert.min.js" type=module async></script>
 ```
 
 ## Demos

@@ -146,13 +146,13 @@ function installPart(category, entry) {
     if (category === 'el') {
         html = dedent(`
         <link href="${baseUrl}${name}.min.css" rel=stylesheet>
-        <script src="${baseUrl}${name}.min.js" type=module></script>`);
+        <script src="${baseUrl}${name}.min.js" type=module async></script>`);
     }
     if (category === 'class') {
         html = `<link href="${baseUrl}${name}.min.css" rel=stylesheet>`;
     }
     if (category === 'attr') {
-        html = `<script src="${baseUrl}${name}.min.js" type=module></script>`;
+        html = `<script src="${baseUrl}${name}.min.js" type=module async></script>`;
     }
     if (category === 'js') {
         const js = `import * as module from "${baseUrl}${name}.min.js"`;

@@ -82,7 +82,7 @@ u2-input:focus-within {
 
 ```html
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/input/input.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/input/input.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/input/input.min.js" type=module async></script>
 ```
 
 ## Demos

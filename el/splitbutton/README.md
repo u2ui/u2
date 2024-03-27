@@ -26,7 +26,7 @@ u2-splitbutton menu {
 
 ```html
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/splitbutton/splitbutton.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/splitbutton/splitbutton.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/splitbutton/splitbutton.min.js" type=module async></script>
 ```
 
 ## Demos

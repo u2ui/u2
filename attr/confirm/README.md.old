@@ -21,7 +21,7 @@ Confirm before action
 ## Install
 
 ```html
-<script src="../../../confirm.attr@x.x.x/confirm.min.js" type=module></script>
+<script src="../../../confirm.attr@x.x.x/confirm.min.js" type=module async></script>
 ```
 
 ## Demos

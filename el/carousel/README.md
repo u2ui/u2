@@ -35,7 +35,7 @@ u2-carousel > :not([slot]) {
 
 ```html
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/carousel/carousel.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/carousel/carousel.min.js" type=module></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/carousel/carousel.min.js" type=module async></script>
 ```
 
 ## Demos
