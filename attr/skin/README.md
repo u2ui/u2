@@ -1,5 +1,24 @@
 # [u2-skin] - attribute
-Change colors of a widget (beta)
+Change the skin of a widget (beta)
+
+- Recalculates css color-variables
+- Sets the background and the text color
+
+## Description
+
+[u2-skin=invert] will invert the colors of the widget (switches among other things the background color and the text color)
+css variables cannot be switched to the same element, so nested inversions will not work.
+
+[u2-skin=theme] will use the theme color (`--color`) as background color
+
+Custom skins can easily be added.
+Just change `--hsl-h` for example:
+    
+```css
+[skin=pink] {
+    --hsl-h: 330;
+}
+```
 
 ## Usage
 
@@ -27,18 +46,6 @@ Change colors of a widget (beta)
 [minimal.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/test.html)  
 
-## Description
-
-[u2-skin=invert] will invert the colors of the widget (switches among other things the background color and the text color)
-css variables cannot be switched to the same element, so nested inversions will not work.
-
-[u2-skin=theme] will use the theme color as background color
-
-## Note
-
-This is a beta version. 
-I am wondering if I should implement "invert" and "theme-background" with separate attributes or classes.
-And also other considerations...
 
 ## About
 
