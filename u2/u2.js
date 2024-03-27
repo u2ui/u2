@@ -7,7 +7,6 @@ export async function repos(){
 
         for (const category in data) {
             for (const repo in data[category]) {
-                cachedRepos[repo] = data[category][repo];
                 cachedRepos[category+'/'+repo] = data[category][repo];
             }
         }

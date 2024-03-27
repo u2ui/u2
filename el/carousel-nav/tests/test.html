@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
     <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
 
     <link rel=stylesheet href="../../../css/base/full.css">
     <link rel=stylesheet href="../../../css/classless/variables.css">
@@ -13,8 +14,8 @@
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
 
-    <link rel=stylesheet href="../../carousel.el/carousel.css">
-    <script src="../../carousel.el/carousel.js" type=module async></script>
+    <link href="../../../el/carousel/carousel.css" rel=stylesheet>
+    <script src="../../../el/carousel/carousel.js" type=module async></script>
 
     <script src="../carousel-nav.js" type=module async></script>
 
@@ -48,12 +49,14 @@
     </section>
 
 
-    <style contenteditable>
-    u2-carousel-nav > * {
-        transition:.3s;
-        color:inherit;
-    }
-    u2-carousel-nav > .-active {
-        transform:scale(1.3);
-    }
-    </style>
+    <u2-code editable trim>
+        <style>
+        u2-carousel-nav > * {
+            transition:.3s;
+            color:inherit;
+        }
+        u2-carousel-nav > .-active {
+            transform:scale(1.3);
+        }
+        </style>
+    </u2-code>

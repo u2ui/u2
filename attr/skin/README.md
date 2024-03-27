@@ -4,21 +4,6 @@ Change the skin of a widget (beta)
 - Recalculates css color-variables
 - Sets the background and the text color
 
-## Description
-
-`[u2-skin=invert]` will invert the colors of the widget (switches among other things the background color and the text color).
-
-`[u2-skin=theme]` will use the theme color (`--color`) as background color
-
-Custom skins can easily be added.
-Just change `--hsl-h` for example:
-    
-```css
-[skin=pink] {
-    --hsl-h: 330;
-}
-```
-
 ## Usage
 
 ```html
@@ -45,6 +30,20 @@ Just change `--hsl-h` for example:
 [minimal.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/test.html)  
 
+## Description
+
+`[u2-skin=invert]` will invert the colors of the widget (switches among other things the background color and the text color).
+
+`[u2-skin=theme]` will use the theme color (`--color`) as background color
+
+Custom skins can easily be added.
+Just change `--hsl-h` for example:
+    
+```css
+[skin=pink] {
+    --hsl-h: 330;
+}
+```
 
 ## About
 

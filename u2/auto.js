@@ -28,7 +28,7 @@ if (debug) { // top level await safari >= 15.1
 import {importCss} from './utils.js';
 import {latestUrlCached, repos} from './u2.js';
 
-await repos();
+const projects = await repos();
 
 let prio = 1;
 setTimeout(()=>prio = 2);
@@ -69,8 +69,6 @@ setTimeout(()=>{
 impCss(rootUrl+'css/classless/variables'+min+'.css');
 impCss(rootUrl+'css/classless/classless'+min+'.css');
 impCss(rootUrl+'css/classless/more'+min+'.css');
-//impCss(rootUrl+'css/classless/aria'+min+'.css');
-//impCss(rootUrl+'css/classless/simple'+min+'.css');
 
 
 ////////////////////////////////////////////////////////////////
@@ -84,26 +82,34 @@ function newNode(node){
     if (node.tagName.startsWith('U2-')) {
         let name = node.tagName.substring(3).toLowerCase();
         if (customElements.get('u2-'+name)) return; // skip if registred
-        const base = rootUrl + 'el/' + name + '/' + name + min;
-        impCss(base + '.css'/*, {for:node}*/);
-        impJs(base + '.js');
+        loadProject('el', name);
     }
     let classList = node.classList;
     for (let i=0, l=classList.length; i<l; i++) {
         let klass = classList[i]
         if (!klass.startsWith('u2-')) continue;
         let name = klass.substring(3);
-        impCss(rootUrl + 'class/' + name + '/' + name + min + '.css');
+        loadProject('class', name);
     }
     const attris = node.attributes;
     for (let i=0, l=attris.length; i<l; i++) {
         let attr = attris[i]
         if (!attr.name.startsWith('u2-')) continue;
         let name = attr.name.substring(3).replace(/-.*/,''); // example: u2-href-target => href
-        // todo: how to check if already added manually?
-        impJs(rootUrl + 'attr/' + name + '/' + name + min + '.js');
+        loadProject('attr', name);
     }
 }
+
+function loadProject(category, name){
+    const id = category + '/' + name;
+    const meta = projects[id];
+    if (!meta) { console.warn('u2: project not found:', name); return; }
+    const hasJs = meta.js ?? (category==='el' || category==='attr');
+    const hasCss = meta.css ?? (category==='el' || category==='class');
+    hasCss &&  impCss(rootUrl + id + '/' + name + min + '.css');
+    hasJs && impJs(rootUrl + id + '/' + name + min + '.js');
+}
+
 function newNodeRoot(node){
     if (!node.tagName) return;
     newNode(node);

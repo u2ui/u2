@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+
+
+<body>
+
+<section>
+
+    <div contenteditable id="myEditor">
+        Start typing here...
+    </div>
+
+</section>
+
+<style>
+#myEditor {
+    --u2-rte:true;
+    --u2-rte-items:Bold Italic Code;
+}
+</style>
+
+
+<script type=module>
+    import  "../rte.js";
+</script>

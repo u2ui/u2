@@ -4,43 +4,57 @@
       "name": "confirm",
       "description": "Confirm before action",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "focusgroup": {
       "name": "focusgroup",
       "description": "Focus movement by arrow keys",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "href": {
       "name": "href",
       "description": "Every element can be a link",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "intersect": {
       "name": "intersect",
       "description": "declarativ intersection-observer",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "navigable": {
       "name": "navigable",
       "description": "Make elements navigatable",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "parallax": {
       "name": "parallax",
       "description": "Make every element scrolling at different speed",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "skin": {
       "name": "skin",
-      "description": "Change colors of a widget (beta)",
+      "description": "Change the skin of a widget (beta)",
       "beta": true,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     }
   },
   "class": {
@@ -48,43 +62,57 @@
       "name": "badge",
       "description": "Rendering badges",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "card1": {
       "name": "card1",
       "description": "card-class (beta)",
       "beta": true,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "flex": {
       "name": "flex",
       "description": "Most wanted flexbox case",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "grid": {
       "name": "grid",
       "description": "Most wanted grid case",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "input": {
       "name": "input",
       "description": "custom inputs (beta)",
       "beta": true,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "invert": {
       "name": "invert",
       "description": "invert colors",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "reset": {
       "name": "reset",
       "description": "A class to reset Styles (beta)\r",
       "beta": true,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     }
   },
   "el": {
@@ -92,115 +120,153 @@
       "name": "alert",
       "description": "Prominent hints, alerts, and facts",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "carousel": {
       "name": "carousel",
       "description": "Simple carousel component",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "carousel-nav": {
       "name": "carousel-nav",
       "description": "null",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "code": {
       "name": "code",
       "description": "Highlighted, editable code-blocks.",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "counter": {
       "name": "counter",
       "description": "Animated Number Counter",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "ico": {
       "name": "ico",
       "description": "Universal icon-element",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "input": {
       "name": "input",
-      "description": "input elements (very beta)",
-      "beta": true,
-      "deprecated": false
+      "description": "Input elements (very alpha)\r",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "masonry": {
       "name": "masonry",
       "description": "Masonry layout with CSS grid fallback",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "parallax-bg": {
       "name": "parallax-bg",
       "description": "Parallax backgrounds",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "qrcode": {
       "name": "qrcode",
       "description": "QR-Code element",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "rte": {
       "name": "rte",
       "description": "\"Rich\" Rich Text Editor (beta)",
       "beta": true,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "splitbutton": {
       "name": "splitbutton",
-      "description": "Buttons with options\r",
+      "description": "Buttons with options",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "table": {
       "name": "table",
       "description": "Enhanced tables (sortable, responsive...)",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "tabs": {
       "name": "tabs",
       "description": "rendering tabs",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "textfit": {
       "name": "textfit",
       "description": "Exactly fit text",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "time": {
       "name": "time",
       "description": "The better time-element, e.g. live changing relative dates",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "tooltip": {
       "name": "tooltip",
       "description": "Tooltips",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "tree1": {
       "name": "tree1",
       "description": "Treeview component",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     },
     "typewriter": {
       "name": "typewriter",
       "description": "Simple typewriter element",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": true
     }
   },
   "css": {
@@ -208,49 +274,65 @@
       "name": "base",
       "description": "⏚ Usefull css defaults",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "classes": {
       "name": "classes",
       "description": "deprecated",
       "beta": false,
-      "deprecated": true
+      "deprecated": true,
+      "css": true,
+      "js": false
     },
     "classless": {
       "name": "classless",
       "description": "null",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "flex": {
       "name": "flex",
       "description": "Most wanted flexbox case",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "norm": {
       "name": "norm",
       "description": "CSS normalization for crossbrowser compatibility",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "table": {
       "name": "table",
       "description": "Better tables",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "unstyle": {
       "name": "unstyle",
       "description": "Unstyle elements eg. buttons\r",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     },
     "width": {
       "name": "width",
       "description": "The main width of your layout\r",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": true,
+      "js": false
     }
   },
   "js": {
@@ -258,43 +340,57 @@
       "name": "contextmenu",
       "description": "context menus, simple and highly customisable",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "dialog": {
       "name": "dialog",
       "description": "alert, prompt, confirm but async",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "Placer": {
       "name": "Placer",
       "description": "Absolute place elements relative to others",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "PointerObserver": {
       "name": "PointerObserver",
       "description": "Observe mouse and touches",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "rte": {
       "name": "rte",
-      "description": "",
+      "description": "Easily Make Elements Editable with Intuitive Controls",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "SelectorObserver": {
       "name": "SelectorObserver",
       "description": "Monitor elements by CSS selector",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     },
     "shortcut": {
       "name": "shortcut",
       "description": "Easy keyboard shortcuts",
       "beta": false,
-      "deprecated": false
+      "deprecated": false,
+      "css": false,
+      "js": true
     }
   }
 }

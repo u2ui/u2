@@ -3,6 +3,7 @@
 const repos = {};
 
 import * as fs from 'https://deno.land/std@0.100.0/fs/mod.ts';
+console.log(fs)
 
 const base = './u2/';
 
@@ -10,13 +11,18 @@ const base = './u2/';
     repos[category] = {};
     for await (const entry of Deno.readDir(base+category)) {
         if (!entry.isDirectory) continue;
+        const name = entry.name;
         const data = await writeReadMe(category, entry);
 
-        repos[category][entry.name] = {
-            name: entry.name,
+        const css = fs.existsSync(`${base}${category}/${name}/${name}.css`);
+        const js = fs.existsSync(`${base}${category}/${name}/${name}.js`);
+        repos[category][name] = {
+            name,
             description: data.description,
             beta: data.description.includes('beta'),
             deprecated: data.description.includes('deprecated'),
+            css, // todo: only set if not default for category
+            js,
         };
     }
 
