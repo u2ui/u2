@@ -3,8 +3,8 @@ const debug = myUrl.searchParams.get('debug');
 
 
 
-let root = new URL('https://cdn.jsdelivr.net/gh/u2ui/');
-root = new URL(myUrl.origin + myUrl.pathname + '/../../'); console.log('%cuncomment localhost!','color:red;font-size:1.2em');
+//const root = new URL('https://cdn.jsdelivr.net/gh/u2ui/');
+const root = new URL(myUrl.origin + myUrl.pathname + '/../../'); //console.log('%cuncomment localhost!','color:red;font-size:1.2em');
 let rootUrl = root.toString();
 
 let min = '.min';

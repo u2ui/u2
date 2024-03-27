@@ -1,53 +1,51 @@
 
 
-class mesonry {
-    constructor(el){
-        this.el = el;
-        this.el.classList.add('-Js');
-        this.rObserver = new ResizeObserver(() => {
-            this.render();
-        });
-        this.rObserver.observe(el);
+class mesonry extends HTMLElement{    
+    constructor(){
+        super();
+        this.classList.add('-Js');
+        this.rObserver = new ResizeObserver(() => this.render());
+    }
+    connectedCallback(){
         this.render();
+        this.rObserver.observe(this);
     }
     render(){
-        const container = this.el;
-        const widthContainer = container.clientWidth;
+        const widthContainer = this.clientWidth;
         if (!widthContainer) return;
-        let minWidth = cssLengthToPixelsStyle(container, '--u2-Items-width') || 200;
-        const rowGap = cssLengthToPixelsStyle(container, 'row-gap') ?? 0;
-        const columnGap = cssLengthToPixelsStyle(container, 'column-gap') ?? 0;
+        let minWidth = cssLengthToPixelsStyle(this, '--u2-Items-width') || 200;
+        const rowGap = cssLengthToPixelsStyle(this, 'row-gap') ?? 0;
+        const columnGap = cssLengthToPixelsStyle(this, 'column-gap') ?? 0;
+
         minWidth = Math.min(widthContainer, minWidth);
     
         const columns = Math.floor((widthContainer + columnGap) / (minWidth + columnGap));
         const columnWidth = (widthContainer - columnGap * (columns - 1)) / columns;
-        const children = container.children;
         const columnHeights = [];
         for (let i = 0; i < columns; i++){
             columnHeights[i] = [i, 0];
         }
-        var i=0, current;
-        while (current = children[i++]){
-            if (current.offsetParent === null) continue;
-            current.style.width = columnWidth + 'px';
-            current.style.left = columnHeights[0][0] * (columnWidth + columnGap) + 'px';
-            current.style.top  = columnHeights[0][1] + 'px';
-            columnHeights[0][1] += current.offsetHeight + rowGap;
-            columnHeights.sort(sortByHeight);
-            this.rObserver.observe(current);
-        }
-        container.style.height = columnHeights[columns - 1][1] - rowGap + 'px'; // subtract rowGap because there is no gap after the last item
+        requestAnimationFrame(() => {
+            for (const current of this.children){
+                if (current.offsetParent === null) continue;
+                current.style.width = columnWidth + 'px';
+                current.style.left = columnHeights[0][0] * (columnWidth + columnGap) + 'px';
+                current.style.top  = columnHeights[0][1] + 'px';
+                columnHeights[0][1] += current.offsetHeight + rowGap;
+                columnHeights.sort(sortByHeight);
+                this.rObserver.observe(current); // performance ok?
+            }
+            this.style.height = columnHeights[columns - 1][1] - rowGap + 'px';
+        });
     }    
 }
+
+customElements.define('u2-masonry', mesonry);
+
 
 function sortByHeight(a, b){
     return a[1] - b[1] || a[0] - b[0];
 }
-
-import {SelectorObserver} from '../../js/SelectorObserver/SelectorObserver.js'
-new SelectorObserver({
-    on: el => new mesonry(el),
-}).observe('[u2-masonry]');
 
 
 /* helper */

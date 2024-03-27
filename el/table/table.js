@@ -1,4 +1,3 @@
-// todo? add roles like "table" to ensure it is a table even if untabeled using css?
 
 class Table extends HTMLElement {
     constructor() {

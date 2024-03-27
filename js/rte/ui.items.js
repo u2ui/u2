@@ -133,16 +133,15 @@ import('./ui/items/code.js');
 	};
 	let opts = Rte.ui.setSelect('Format',{
 		click(e) {
-			let tag = e.target.getAttribute('value');
+			const tag = e.target.getAttribute('value');
 			tag && document.execCommand('formatblock',false,tag);
-			let stat = document.queryCommandValue('formatblock');
-			for (let el of opts.children) {
-				el.className = el.tagName.toLowerCase()===stat ? '-selected' : '';
-			}
 		},
 		check() {
 			const stat = document.queryCommandValue('formatblock');
-			const show = formatTrans[stat]?.[lang] || formatTrans[stat]?.en;
+			for (const el of opts.children) {
+				el.className = el.tagName.toLowerCase()===stat ? '-selected' : '';
+			}
+			const show = formatTrans[stat]?.[lang] || formatTrans[stat]?.en || 'Format';
 			opts.previousElementSibling.innerHTML = state.element ? show : 'Format';
 		},
 		enable(e) {
@@ -166,12 +165,12 @@ import('./ui/items/code.js');
 // 	let sopts = Rte.ui.setSelect('Style', {
 // 		check() {
 // 			check();
-// 			let classes = Rte.element && Rte.element.className.split(' ').filter(useClass).join(' ') || 'Style';
+// 			let classes = state.element && state.element.className.split(' ').filter(useClass).join(' ') || 'Style';
 // 			sopts.previousElementSibling.innerHTML = classes;
 // 		},
 // 		click() {
 // 			sopts.innerHTML = '';
-// 			let el = qgSelection.isElement() || getSelection().isCollapsed ? Rte.element : null;
+// 			let el = qgSelection.isElement() || getSelection().isCollapsed ? state.element : null;
 // 			// if (el === active) return;
 // 			let classes = getPossibleClasses(el);
 // 			for (let sty of Object.keys(classes)) {
@@ -279,7 +278,7 @@ Rte.ui.setItem('LinkTarget', {
 		return target && target !== '_self';
 	},
 	click(){
-		let el = Rte.element.closest('a');
+		let el = state.element.closest('a');
 		let active = this.el.classList.contains('active');
 		el.setAttribute('target', active?'_self':'_blank');
 		Rte.trigger('input');
@@ -293,8 +292,8 @@ Rte.ui.setItem('LinkTarget', {
 	let el = c1.dom.fragment('<table style="clear:both"><tr><td style="width:84px">Titel<td><input>').firstChild;
 	let inp = el.c1Find('input');
 	inp.addEventListener('keyup', function() {
-		Rte.element.setAttribute('title',inp.value);
-		!inp.value && Rte.element.removeAttribute('title');
+		state.element.setAttribute('title',inp.value);
+		!inp.value && state.element.removeAttribute('title');
 		Rte.trigger('input');
 	});
 	Rte.ui.setItem('AttributeTitle',{
@@ -305,46 +304,58 @@ Rte.ui.setItem('LinkTarget', {
 	});
 }
 
-/* Image Attributes */ {
-	// let inp = c1.dom.fragment(
-	// 	'<table>'+
-	// 		'<tr><td style="width:84px">Breite:<td><input class=-x>'+
-	// 		'<tr><td>Höhe:<td><input class=-y>'+
-	// 		'<tr><td title="Alternativer Text">Alt-Text:<td><input class=-alt>'+
-	// 	'</table>').firstChild;
-	let inp = document.createElement('table');
-	inp.innerHTML =
-		'<tr><td style="width:84px">Breite:<td><input class=-x>'+
-		'<tr><td>Höhe:<td><input class=-y>'+
-		'<tr><td title="Alternativer Text">Alt-Text:<td><input class=-alt>';
+// /* Image Attributes */
+// { 
+// 	let inp = document.createElement('table');
+// 	inp.innerHTML =
+// 		'<tr><td style="width:84px">Breite:<td><input class=-x>'+
+// 		'<tr><td>Höhe:<td><input class=-y>'+
+// 		'<tr><td title="Alternativer Text">Alt-Text:<td><input class=-alt>';
 
+// 	inp.addEventListener('keyup',e=>{
+// 		let img = state.element;
+// 		img.style.width  = inp.querySelector('.-x').value+'px';
+// 		img.style.height = inp.querySelector('.-y').value+'px';
+// 		img.setAttribute('alt', inp.querySelector('.-alt').value);
+// 		if (e.target.classList.contains('-x') || e.target.classList.contains('-y')) {
+// 			state.element.dispatchEvent(new Event('qgResize',{bubbles:true}));
+// 		}
+// 		active.dispatchEvent(new Event('input',{'bubbles':true,'cancelable':true})); // used!
+// 	})
+// 	Rte.ui.setItem('ImageDimension', {
+// 		check(el) {
+// 			inp.querySelector('.-x').value = el.offsetWidth;
+// 			inp.querySelector('.-y').value = el.offsetHeight;
+// 			inp.querySelector('.-alt').value = el.getAttribute('alt');
+// 		},
+// 		el:inp,
+// 		enable:'img'
+// 	});
+// }
+/* Image Attributes */
+{
+	const el = document.createElement('label');
+	el.innerHTML = '<small>Alternativer Text:</small><input placeholder="Alternative Text">';
+	let inp = el.querySelector('input');
 	inp.addEventListener('keyup',e=>{
-		let img = Rte.element;
-		img.style.width  = inp.c1Find('.-x').value+'px';
-		img.style.height = inp.c1Find('.-y').value+'px';
-		img.setAttribute('alt', inp.c1Find('.-alt').value);
-		if (e.target.classList.contains('-x') || e.target.classList.contains('-y')) {
-			Rte.element.dispatchEvent(new Event('qgResize',{bubbles:true}));
-		}
-		active.dispatchEvent(new Event('input',{'bubbles':true,'cancelable':true})); // used!
-		Rte.trigger('input'); // used?
+		let img = state.element;
+		img.setAttribute('alt', inp.value);
+		active.dispatchEvent(new Event('input',{'bubbles':true,'cancelable':true}));
 	})
-	Rte.ui.setItem('ImageDimension', {
+	Rte.ui.setItem('alt-text', {
 		check(el) {
-			inp.c1Find('.-x').value = el.offsetWidth;
-			inp.c1Find('.-y').value = el.offsetHeight;
-			inp.c1Find('.-alt').value = el.getAttribute('alt');
+			inp.value = el.getAttribute('alt');
 		},
-		el:inp,
+		el:el,
 		enable:'img'
 	});
 }
 
 
-var imgSizeCache = {};
+const imgSizeCache = {};
 function ImageRealSize(url, cb) {
 	if (!imgSizeCache[url]) {
-		var nImg = new Image();
+		const nImg = new Image();
 		nImg.src = url;
 		nImg.onload = function() {
 			cb.apply(null, imgSizeCache[url] = [nImg.width, nImg.height]);
@@ -359,7 +370,7 @@ function ImageRealSize(url, cb) {
 Rte.ui.setItem('ImgOriginal', {
 	enable: 'img',
 	click(e) {
-		let img = Rte.element;
+		let img = state.element;
 		let url = img.getAttribute('src').replace(/\/(w|h|zoom|vpos|hpos|dpr)-[^\/]+/g,'');
 		ImageRealSize(url, function(w,h) {
 			w /= 2; h /= 2; // vorgängig wird dem Server per Cookie mitteilt, dass er die doppelte Auflösung ausliefern soll
@@ -372,7 +383,7 @@ Rte.ui.setItem('ImgOriginal', {
 			img.style.width = '';
 			img.style.maxWidth = '100%';
 			img.style.height = 'auto';
-			Rte.element.dispatchEvent(new Event('qgResize',{bubbles:true})); // new
+			state.element.dispatchEvent(new Event('qgResize',{bubbles:true})); // new
 			Rte.trigger('input');
 			Rte.trigger('elementchange');
 		}
@@ -387,7 +398,7 @@ import {TableHandles} from '../c1/tableHandles.mjs?qgUniq=bbcd4cc';
 	let handles = new TableHandles();
 	Rte.on('deactivate',() => handles.hide() );
 	function positionize() {
-		let e = Rte.element;
+		let e = state.element;
 		if (!e) return;
 		td = e.closest('td');
 		if (active && active.contains(td)) {

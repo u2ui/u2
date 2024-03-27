@@ -105,6 +105,14 @@ const css = `
     & .-item:hover {
         background:#fff4;
     }
+    & .-item.active {
+        color: var(--color, #0099ff);
+        color: color-mix(in srgb, var(--color, #0099ff), #fff 30%);
+    }
+    & .-item.-button {
+        width:auto;
+        flex:auto;
+    }
     & .-item.-select {
         width:8em;
         position:relative;
@@ -121,18 +129,18 @@ const css = `
         transform:translateY(-50%);
         font-size:.7em;
     }
-    & .-item.-button {
-        width:auto;
-        flex:auto;
-    }
     
     & .-state {
+        /* button reset: */
+        background:transparent;
+        padding:0;
+        margin:0;
+
         overflow:hidden;
         white-space:nowrap;
     }
     
     & .-options {
-        display:none;
         padding:.2em;
         position: absolute;
         left:-1px;
@@ -146,8 +154,18 @@ const css = `
         min-width:100%;
         cursor:pointer;
     }
+    & .-options {
+        opacity:0;
+        visibility:hidden;
+        transition:.2s .1s;
+    }
+    & .-select:is(:hover, :focus-within) .-options {
+        opacity:1;
+        visibility:visible;
+    }
+
     & .-options > * {
-        padding:.4rem .4rem !important;
+        padding:.3rem !important;
         white-space: nowrap;
         display:block !important;
         clear:both !important;
@@ -160,10 +178,6 @@ const css = `
         color: #fff;
     }
     
-    & .-item.active {
-        color: var(--color, #0099ff);
-        color: color-mix(in srgb, var(--color, #0099ff), #fff 30%);
-    }
 }
 `;
 
@@ -211,11 +225,11 @@ window.Rte.ui = {
 		});
         addEventListener('u2-rte-selectionchange', function() {
 			for (let item of Object.values(my.items)){
-				if (!item.enable || item.enable(Rte.element)) {
+				if (!item.enable || item.enable(state.element)) {
 					item.enabled = true;
 					item.el.removeAttribute('hidden');
 					if (item.check) {
-						const act = item.check(Rte.element) ? 'add' : 'remove';
+						const act = item.check(state.element) ? 'add' : 'remove';
 						item.el.classList[act]('active');
 					}
 				} else {
@@ -272,14 +286,9 @@ window.Rte.ui = {
 		return opt.el;
 	},
 	setSelect(name, opt) {
-		let timeout = null;
         let el = document.createElement('div');
         el.className = '-item -select';
-        el.innerHTML = '<div class=-state></div><div class=-options></div>';
-
-		el.addEventListener('mousedown', e=> { opts.style.display = 'block'; e.preventDefault(); });
-		el.addEventListener('mouseover', e=> clearTimeout(timeout) );
-		el.addEventListener('mouseout',  e=> timeout = setTimeout(()=> opts.style.display = 'none' ,300) );
+        el.innerHTML = '<button class=-state></button><div class=-options></div>';
         let opts = el.querySelector(':scope>.-options');
 		opt.el = el;
 		this.setItem(name,opt);

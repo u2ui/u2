@@ -4,13 +4,11 @@ import * as state from './events.js';
 //import './behavior.js';
 import {$range} from './range.js';
 
-//alert(1)
 window.Rte = {
 	manipulate(fn) {
 		setTimeout(function() {
 			state.active.focus(); // firefox
 			const range = $range(state.range);
-			//range.splitBoundaries();
 			range.select();
 			fn && fn();
 		}, 80);
