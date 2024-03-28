@@ -6,7 +6,9 @@ Input elements (very alpha)
 ```html
 <label>
     <u2-input>
-        <input>
+        <span slot=start>☎</span>
+        <input type="tel">
+        <span slot=end>☎</span>
     </u2-input>
 </label>
 ```

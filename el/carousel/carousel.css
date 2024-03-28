@@ -16,7 +16,8 @@ u2-carousel {
 	/* align-items:center or stretch;  todo default? */
 }
 u2-carousel > :not([slot]) {
-	width:100%;
+	inline-size:100%;
+	box-sizing: border-box;
     /* width:-moz-available; to be able to use margins, not working properly
     width:-webkit-fill-available; */
 

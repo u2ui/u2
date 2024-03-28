@@ -59,12 +59,23 @@ customElements.define('u2-tooltip', class extends HTMLElement {
 });
 
 
+
+document.addEventListener('mouseenter',function(e){
+    if (e.target.shadowRoot) {
+        e.target.shadowRoot.addEventListener('mouseenter',checkOn,true);
+        e.target.shadowRoot.addEventListener('mouseleave',checkOff,true);
+    }
+},true); // on document: chrome
+
+
 document.addEventListener('mouseenter',checkOn,true); // on document: chrome
 addEventListener('focusin',checkOn,true);
 document.addEventListener('mouseleave',checkOff,true);
 addEventListener('focusout',checkOff,true);
 
+
 function checkOn(e){
+    // todo: composedPath() for shadowdom? console.log(e.composedPath())
     getTooltipForElement(e.target)?._showFor(e.target);
 }
 function checkOff(e){

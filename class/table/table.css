@@ -29,7 +29,8 @@ https://jsfiddle.net/x90cz65o/103/
 }
 .u2-table > * > * > * {
     display:table-cell;
-    padding: calc(var(--u2-Row-gap) / 2)  calc(var(--u2-Col-gap) / 2);
+    padding-inline: calc(var(--u2-Col-gap) / 2);
+    padding-block: calc(var(--u2-Row-gap) / 2);
 }
 
 
@@ -44,14 +45,16 @@ https://jsfiddle.net/x90cz65o/103/
     display:flex;
     flex-wrap:wrap; /* only fields-table? */
     align-items: baseline;
-    padding:calc(var(--u2-Row-gap) / 2) 0;
+    padding-block: calc(var(--u2-Row-gap) / 2);
+    padding-inline: 0;
 }
 .u2-table.-Flex > * > * > * { /* td */
     flex-grow: 1;
     flex-shrink:0;
     flex-basis:10em;
     min-width:0;
-    padding:0 calc(var(--u2-Col-gap) / 2);
+    padding-block: 0;
+    padding-inline: calc(var(--u2-Col-gap) / 2);
     border:0 !important; /* overwrite inherit from sticky, and border makes no sense if flex */
     display:flex; /* new ok? better textarea-baseline */
     flex-direction:column;
@@ -68,7 +71,7 @@ https://jsfiddle.net/x90cz65o/103/
     width:-webkit-fill-available;
 }
 .u2-table.-Fields > * > * > :first-child {
-    width:var(--col-1-width, 9em);
+    inline-size: var(--col-1-width, 9em);
     flex-basis:var(--col-1-width, 9em);
 }
 /* would be good for textarea align *
@@ -77,8 +80,8 @@ https://jsfiddle.net/x90cz65o/103/
 }
 */
 
-.u2-table.-NoSideGaps > * > * > :first-child { padding-left:0; }
-.u2-table.-NoSideGaps > * > * > :last-child { padding-right:0; }
+.u2-table.-NoSideGaps > * > * > :first-child { padding-inline-start:0; }
+.u2-table.-NoSideGaps > * > * > :last-child { padding-inline-end:0; }
 
 
 

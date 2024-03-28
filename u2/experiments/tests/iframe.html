@@ -4,107 +4,32 @@
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
     <title>Test</title>
-    <!--script src="../../../u2/tests/test-init.js" type=module></script-->
+    <script src="../../../u2/tests/test-init.js" type=module></script>
 
     <link rel=stylesheet href="../../../css/base/full.css">
     <link rel=stylesheet href="../../../css/classless/variables.css">
     <link rel=stylesheet href="../../../css/classless/classless.css">
     <link rel=stylesheet href="../../../css/classless/more.css">
-    <link rel=stylesheet href="../../../css/classless/aria.css">
 
-    <script src="../../../el/code/code.js" type=module async></script>
-    <link rel=stylesheet href="../../../el/code/code.css">
-
-    <script src="../../ico.el/ico.js" type=module async></script>
-    <link rel=stylesheet href="../../ico.el/ico.css">
+    <script src="../../tools/dev-iframe.js" type=module async></script>
 
 <body>
 
 <section>
 
-    <form class="test-change">
-        <label>
-            No js <input type="checkbox" name="no-js">
+        <label style="text-align:center; padding:.6em">
+            <input id=set oninput="dFrame.setAttribute('src', this.value)" placeholder="https://url..." style="display:block; margin:auto; width:77%;" autofocus>
         </label>
-        <label>
-            No U2 css <input type="checkbox" name="nou2css">
-        </label>
-        <label>
-            Writing mode
-            <select name="writing-mode">
-                <option value="horizontal-tb">horizontal-tb
-                <option value="vertical-rl">vertical-rl
-                <option value="vertical-lr">vertical-lr
-            </select>
-        </label>
-        <label>
-            Text Direction
-            <select name="direction">
-                <option value="ltr">left to right</option>
-                <option value="rtl">right to left</option>
-            </select>
-        </label>
-    </form>
+        <dev-iframe id="dFrame"></dev-iframe>
 
-    <script type=module>
-    const frame = document.querySelector('iframe');
-    const form = document.querySelector('.test-change');
-
-    form.addEventListener('change', e => {
-        const data = Object.fromEntries(new FormData(form));
-
-        let sandbox = 'allow-same-origin allow-modals allow-forms';
-        if (!data['no-js']) sandbox += ' allow-scripts';
-
-        frame.contentDocument.isOld = true;
-        frame.sandbox = sandbox;
-        frame.onload = () => run();
-        frame.src = frame.src
-        const interval = setInterval(() => {
-            if (frame.contentDocument.isOld) return;
-            if (frame.contentDocument.readyState !== 'interactive') return;
-            clearInterval(interval);
-            run();
-        }, 10);
-        let run = ()=>{
-            clearInterval(interval);
-            run = ()=>{}
-            frame.contentDocument.documentElement.style.writingMode = data['writing-mode'];
-            frame.contentDocument.documentElement.dir = data['direction'];
-            if (data['nou2css']) {
-                frame.contentDocument.querySelectorAll('link').forEach(link => {
-                    if (link.href.includes('base.css/base')) link.remove();
-                    if (link.href.includes('base.css/full')) link.remove();
-                    if (link.href.includes('classless.css/variables')) link.remove();
-                    if (link.href.includes('classless.css/classless')) link.remove();
-                    if (link.href.includes('classless.css/more')) link.remove();
-                });
-
-            }
-        }
-    });
-    </script>
-
-    <style>
-        .wrap { /* firefox needs a wrapper to be resizable */
-            display:flex;
-            overflow: auto;
-            resize: both;
-            height: 50rem;
-            border: 1px solid #ccc;
-            width: 90vw;
-            margin:auto;
-        }
-        iframe {
-            border:0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-
-    <div class="wrap">
-        <iframe src="http://localhost/u2ui/tree1.el/tests/test.html"></iframe>
-    </div>
+        <script>
+            set.addEventListener('input', function() {
+                dFrame.setAttribute('src', this.value);
+                localStorage.setItem('dev-iframe-app-url', this.value);
+            });
+            dFrame.setAttribute('src', localStorage.getItem('dev-iframe-app-url') || 'http://localhost/u2ui/u2/el/tree1/tests/test.html');
+            set.value = dFrame.getAttribute('src');
+        </script>
 
 
 </section>

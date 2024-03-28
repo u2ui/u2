@@ -77,6 +77,13 @@ class code extends HTMLElement {
             this.setHightlightValue(e.target.value);
             this.setSourceValue(e.target.value);
         });
+
+        this.sourceMutationObserver = new MutationObserver(()=>{
+            // let value = this.getSourceValue();
+            // if (this.trim) value = trimCode(value);
+            this.value = this.getSourceValue();
+        });
+
     }
     copy(){
         let code = this.shadowRoot.querySelector('#code').textContent;
@@ -110,7 +117,7 @@ class code extends HTMLElement {
     setSourceValue(value){
         const el = this.sourceElement;
         if (el.tagName === 'TEXTAREA') { el.value = value; return; }
-        if (this.element) {
+        if (this.isForeign) {
             el.innerHTML = value;
         } else {
             el.textContent = value;
@@ -120,7 +127,7 @@ class code extends HTMLElement {
         const el = this.sourceElement;
         if (el.tagName === 'TEXTAREA') return el.value;
         if (el.tagName === 'SCRIPT') return el.textContent.replaceAll('\\/script>','/script>');
-        if (this.element) {
+        if (this.isForeign) {
             return el.innerHTML;
         } else {
             return el.textContent;
@@ -128,20 +135,10 @@ class code extends HTMLElement {
     }
     connectedCallback() {
 
-        this.element = this.getAttribute('element');
-        if (this.element) {
-            this.sourceElement = document.getElementById(this.element);
-            if (!this.sourceElement) console.error('u2-code: element not found', this.element);
-            // todo: add observer to update value on mutation
-            const mO = new MutationObserver(()=>{
-                let value = this.getSourceValue();
-                if (this.trim) value = trimCode(value);
-                this.setHightlightValue(value);
-                this.textarea.value = value;
-            });
-            mO.observe(this.sourceElement, {childList:true, subtree:true, characterData:true});
-
-            
+        const elementId = this.getAttribute('element');
+        if (elementId) {
+            this.setForeignElement(document.getElementById(elementId));
+            return;
         } else {
             this.sourceElement = this.querySelector('pre>code,textarea,style,script') || this;
         }
@@ -149,11 +146,16 @@ class code extends HTMLElement {
         if (this.sourceElement.tagName === 'TEXTAREA') {
             this.setAttribute('editable','');
         }
-        let value = this.getSourceValue();
-        this.value = value;
-        // if (this.trim) value = trimCode(value);
-        // this.setHightlightValue(value);
-        // this.textarea.value = value;
+
+        this.value = this.getSourceValue();
+    }
+    setForeignElement(element){
+        this.isForeign = true;
+        this.sourceElement = element;
+        if (!element) console.error('u2-code: element not found');
+        this.sourceMutationObserver.disconnect();
+        this.sourceMutationObserver.observe(element, {subtree:true, characterData:true, attributes:true, childList:true});
+        this.value = this.getSourceValue();
     }
     get value(){
         return this.textarea.value; // better this one

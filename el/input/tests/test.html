@@ -5,6 +5,7 @@
     <meta name=viewport content="width=device-width">
     <title>test</title>
     <!-- <script src="../../../u2/tests/test-init.js" type=module async></script> -->
+    <script src="../../../u2/auto.js" type=module async></script>
     <link rel=stylesheet href="../../../css/norm/norm.css">
     <link rel=stylesheet href="../../../css/base/base.css">
     <link rel=stylesheet href="../../../css/classless/classless.css">
@@ -13,6 +14,9 @@
 
     
     <style>
+        body {
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+        }
         label {
             display:block;
             margin-block:1rem;
@@ -26,88 +30,122 @@
 
 <section>
 
-    <label>
-        Normal Input: <input type=text>
-    </label>
+    <table style="width:auto" class="u2-table">
+        <tr>
+            <td> <input type=text>
+            <th> Normal input
+        <tr>
+            <td> <u2-input type=text>inhalt</u2-input>
+            <th> u2-input text
+        <tr>
+            <td> 
+                <u2-input type=text>
+                    <span slot=start>☎</span>
+                    <input type="tel">
+                </u2-input>
+            <th> u2-input with start slot
+        <tr>
+            <td> <u2-input type=textarea>inhalt</u2-input>
+            <th> u2-input textarea
+        <tr>
+            <td> <u2-input type=checkbox on=on off=off>on</u2-input>
+            <th> u2-input checkbox
+        <tr>
+            <td>
+                <u2-input type=select></u2-input>
+            <th> u2-input select
+        <tr>
+            <td> <u2-input><input type=text></u2-input>
+            <th> text with inner
+        <tr>
+            <td> 
+                <u2-input>
+                    <input type=checkbox value="yes" checked>
+                </u2-input>
+            <th> input with inner
+        <tr>
+            <td>
+                <u2-input>
+                    <select>
+                        <option value="1">One
+                        <option value="2" selected>Two
+                        <option value="3">Three
+                    </select>
+                </u2-input>
+            <th> Select with inner
 
-    <label>
-        u2-input text:
-        <u2-input type=text>inhalt</u2-input>
-    </label>
+        <tr>
+            <td>
+                <u2-input>
+                    <textarea name="test">
+                        diest ist
+                        der Inhalt
+                    </textarea>
+                </u2-input>
+            <th> Textarea with inner
+        <tr>
+            <td>
+                <u2-input>
+                    <input type="date">
+                </u2-input>
+            <th> Date with inner
+        <tr>
+            <td>
+            <th> 
+    </table>
 
-    <label>
-        u2-input with start slot:
-        <u2-input type=text>
-            <span slot=start>☎</span>
-            <input type="tel">
-        </u2-input>
-    </label>
 
 
+    <h3>u2-input with combinations</h3>
+    <br>
+    before
+    <u2-input>
+        <u2-ico slot=start icon=person inline></u2-ico>
+        <u2-tooltip>Username</u2-tooltip>
+        <input type="text">
+        <button slot=end style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+            <u2-ico icon=save inline></u2-ico>
+        </button>
+    </u2-input>
+    baseline correct?
+    <u2-input>
+        <button slot=start style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+            <u2-ico icon=minus inline></u2-ico>
+        </button>
+        <input type=number style="text-align:center; appearance: textfield;">
+        <button slot=end style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+            <u2-ico icon=plus inline></u2-ico>
+        </button>
+    </u2-input>
+    after
     
+    <h3>font-size</h3>
+    <u2-input style="font-size:10px">
+        <u2-ico slot=start inline icon=person></u2-ico>
+        <u2-tooltip>Username</u2-tooltip>
+        <input type="text">
+        <button slot=end style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+            <u2-ico icon=save inline></u2-ico>
+        </button>
+    </u2-input>
 
-    <label>
-        u2-input textarea:
-        <u2-input type=textarea>inhalt</u2-input>
-    </label>
+    <br>
 
-    <label>
-        u2-input checkbox:
-        <u2-input type=checkbox on=on off=off>on</u2-input>
-    </label>
-
-    <label>
-        u2-input select:
-        <u2-input type=select></u2-input>
-    </label>
-
-    <label>
-        u2-input text:
-        <u2-input><input type=text></u2-input>
-    </label>
-
-    <label>
-        <u2-input>
-            <input type=checkbox value="yes" checked>
-        </u2-input>
-    </label>
-
-    <label>
-        <u2-input>
-            <select>
-                <option value="1">One
-                <option value="2" selected>Two
-                <option value="3">Three
-            </select>
-        </u2-input>
-    </label>
-
-    <label>
-            <u2-input>
-            <textarea name="test">
-                diest ist
-                der Inhalt
-            </textarea>
-        </u2-input>
-    </label>
-
-    <label>
-        <u2-input>
-            <input type=date>
-        </u2-input>
-    </label>
-
-
-    <label>
-        <u2-input>
-            <input type=datetime-local>
-        </u2-input>
-    </label>
-
+    <u2-input style="font-size:40px; inline-size:auto;">
+        <button slot=start style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+            <u2-ico icon=minus inline></u2-ico>
+        </button>
+        <input type=number style="text-align:center; appearance: textfield; flex:0 0 3em; width:3em">
+        <button slot=end style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+            <u2-ico icon=plus inline></u2-ico>
+        </button>
+    </u2-input>
+    
 </section>
 
 <style>
-u2-input:focus-within {
-    border-color: green;
+u2-input:has(:focus-visible) {
+    transition: .15s;
+    outline: .4rem solid hsl(130 90% 60% / .2);
 }
 </style>

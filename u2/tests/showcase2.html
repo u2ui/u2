@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <meta name=viewport content="width=device-width">
+        <title>U2 design system | Showcase</title>
+        <script src="./test-init.js" type=module async></script>
+        <script src="../tools/dev-iframe.js" type=module async></script>
+        
+
+        <style>
+        html {
+            --hsl-h:275.4;
+            --hsl-s:45%;
+            --hsl-l:45%;
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/';
+        }
+        u2-tabs [role="tabpanel"] {
+            padding:2rem;
+        }
+        u2-code {
+            font-size: max(.8rem, 13px);
+        }
+        #nav h2 {
+            margin-top:1rem;
+            margin-bottom: .3rem;
+            padding-bottom: .3rem;
+            border-bottom: 1px solid var(--color-line);
+            font-weight:600;
+        }
+        #repos > div {
+            scroll-margin:2rem;
+            min-height:30rem;
+        }
+        #repos > div > section {
+            max-width:min(50rem, 100vw);
+            margin:4rem auto;
+            box-shadow:0 0 1.5rem #0003;
+        }
+        #repos > div > section > header {
+            padding:1rem;
+            display:flex;
+            gap:1rem;
+            justify-content:space-between;
+            background:var(--color);
+            color:var(--color-bg);
+        }
+        #repos > div > section > header u2-ico {
+            --size:2em;
+            color:var(--color-bg);
+        }
+        </style>
+
+<body style="display:flex; flex-wrap:wrap;">
+
+    <aside style="flex:1 1 auto; background:var(--color-light)">
+        <nav style="position:sticky; top:0; bottom:0; height:100vh; padding:1.5rem; overflow:auto">
+            <img src="../../../u2/u2/tools/logo/u1.svg" width=259 height=114 style="width: 8rem" alt="u2-logo">
+            <ul id=nav></ul>
+        </nav>
+    </aside>
+
+    <main style="flex:199 1 auto">
+
+        <section id=reposSec>
+            <script type=module>
+
+                import {addShadowRoot} from "../auto.js?debug=1";
+                import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@1.2.2/mod.min.js';
+
+                const repos = await fetch('../projects.json').then(res=>res.json());
+
+                const extToName = {
+                    'el':'Elements',
+                    'attr':'Attributes',
+                    'js':'JavaScript',
+                    'class':'Classes',
+                    'css':'Stylesheets',
+                };
+
+                //let str = '';
+                let navStr = '';
+                for (const [ext, entries] of Object.entries(repos)) {
+                    if (ext == 'undefined') continue;
+                    if (ext == 'css') continue;
+                    navStr += `<li><h2>${extToName[ext]}</h2></li>`;
+
+                    for (let [name, repo] of Object.entries(entries)) {
+
+                        const div = document.createElement('div');
+                        div.id = 'repo_'+name;
+                        document.getElementById('repos').append(div);
+
+                        (async function(){
+
+                            //let url = `https://github.com/u2ui/u2/tree/main/el/alert`
+                            let url = `https://github.com/u2ui/u2/tree/main/${ext}/${name}`;
+
+                            const localUrl = '../../' + ext + '/' + name;
+
+                            const str =
+                            `
+                            <section>
+                                <header>
+                                    <div style="flex:1 1 auto">
+                                        <h2 style="margin-bottom:0">${repo.name}</h2>
+                                        <small>${repo.description}</small>
+                                    </div>
+                                    <a href="${url}" target=github rel=noopener><u2-ico>github</u2-ico></a>
+                                </header>
+                                <dev-iframe src="${localUrl}/tests/minimal.html"></dev-iframe>
+                            </section>
+                            `;
+
+                            div.innerHTML = str;
+
+                            // if (ext === 'el') {
+                            //     let manifestUrl = localUrl+`/manifest.json`;
+                            //     Promise.all([
+                            //         import('../tools/eventsExplorer.js'),
+                            //         fetch(manifestUrl).then(response=>response.json())
+                            //     ]).then(([{EventsExplorer}, manifest])=>{
+                            //         div.querySelector('.-tabs').insertAdjacentHTML('beforeend',
+                            //             `<h3 slot=title>Events</h3>
+                            //             <div class=-events style="overflow:auto; max-height:30rem"></div>`);
+                            //         const events = manifest.modules[0].declarations[0].events;
+                            //         const eventNames = events.map(ev=>ev.name);
+                            //         const eventsExpl = new EventsExplorer(
+                            //                 div.querySelector('.-events'),
+                            //                 div.querySelector('.demo'),
+                            //                 eventNames);
+                            //         eventsExpl.start();
+                            //     }).catch(()=>{}); // no manifest available
+                            // }
+                        })();
+
+                        navStr += `
+                        <li>
+                            <a href="#repo_${repo.name}">${repo.name}</a>
+                        </li>
+                        `
+                    }
+                }
+                document.getElementById('nav').innerHTML = navStr;
+
+                function rescrollToHash(){
+                    if (location.hash) location.hash = location.hash.slice(1);
+                }
+                setTimeout(rescrollToHash,300)
+                setTimeout(rescrollToHash,1000)
+                setTimeout(rescrollToHash,1500)
+            </script>
+
+
+            <div id=repos></div>
+        </section>
+    </main>

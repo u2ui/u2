@@ -28,7 +28,7 @@ hr {
 
 
 table {
-    width: 100%;
+    inline-size: 100%;
     /* take margins into account (not working in firefox) width:-moz-available; width:-webkit-fill-available; */
     word-break: normal;
 }
@@ -62,7 +62,8 @@ input, textarea, select, button, .btn {
     padding-inline: .4em;
     padding-block: .3em;
     font-family:inherit;
-    max-width: 100%;
+    xmax-width: 100%;
+    max-inline-size: 100%;
     /* todo: new ok? */
     /* xborder: 1px solid; */
     border-radius: var(--radius); /* remove? */

@@ -2,8 +2,6 @@ const myUrl = new URL(import.meta.url);
 const debug = myUrl.searchParams.get('debug');
 
 
-
-//const root = new URL('https://cdn.jsdelivr.net/gh/u2ui/');
 const root = new URL(myUrl.origin + myUrl.pathname + '/../../'); //console.log('%cuncomment localhost!','color:red;font-size:1.2em');
 let rootUrl = root.toString();
 
@@ -26,7 +24,7 @@ if (debug) { // top level await safari >= 15.1
 }
 
 import {importCss} from './utils.js';
-import {latestUrlCached, repos} from './u2.js';
+import {repos, latestUrl} from './u2.js';
 
 const projects = await repos();
 
@@ -35,13 +33,13 @@ setTimeout(()=>prio = 2);
 setTimeout(()=>prio = 3, 2000);
 const needed = { js:{}, css:{} };
 function impJs(url){
-    if (useLatest) url = latestUrlCached(url);
+    if (useLatest) url = latestUrl(url);
     if (!url || url in needed.js) return;
     needed.js[url] = prio;
     return import(url);
 }
 function impCss(url, options={}){
-    if (useLatest) url = latestUrlCached(url)
+    if (useLatest) url = latestUrl(url)
     if (!url || url in needed.css) return;
     importCss(url, options).then(res=>{
         if (res.available) needed.css[url]=0; // already loaded

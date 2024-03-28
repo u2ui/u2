@@ -14,12 +14,12 @@ body > header {
     padding-block: 2rem;
 }
 body > footer {
-    border-top:.1em solid var(--color);
+    border-block-start: .1em solid var(--color);
     text-align:center;
 }
 
 body > header {
-    border-bottom:.1em solid var(--color);
+    border-block-end: .1em solid var(--color);
 }
 
 
@@ -28,16 +28,19 @@ table {
 }
 tr:not(:last-child) {
     border-style:solid; /* new: not on td/th any problems? */
-    border-width:0 0 var(--line-width) 0;
     border-color:var(--color-line);
+    border-block-width: 0 var(--line-width);
+    border-inline-width: 0;
 }
 
 
 blockquote {
     margin: 0;
     padding: .5rem;
-    padding-left: 1rem;
-    border-left: .3rem solid var(--color);
+    
+    padding-inline-start: 1rem;
+    border-inline-start: .3rem solid var(--color);
+
     background-color: var(--color-light);
     font-size: .8em;
 }
@@ -51,7 +54,8 @@ pre {
 }
 code {
     font-size: .9em;
-    padding: 0 .3em;
+    padding-inline: .3em;
+    padding-block: .1em;
     background-color: var(--color-light);
     white-space: pre-wrap;
     -webkit-box-decoration-break: clone;
@@ -63,7 +67,8 @@ code {
 /* figure */
 figure {
     padding:0;
-    margin: 1rem auto;
+    margin-block: 1rem;
+    margin-inline: auto;
     box-shadow: var(--shadow);
     border-radius: var(--radius);
     overflow:auto;

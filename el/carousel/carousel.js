@@ -16,8 +16,9 @@ class u2Carousel extends HTMLElement {
 			:host .-arrow {
 				position:absolute;
 				padding:1rem;
-				top:0;
-				bottom:0;
+				xtop:0;
+				xbottom:0;
+				inset-block:0;
 				display:flex;
 				cursor:pointer;
 				border:0;
@@ -33,8 +34,8 @@ class u2Carousel extends HTMLElement {
 				box-sizing:content-box;
 				contain:layout;
 			}
-			:host .-prev { left: 0; }
-			:host .-next { right: 0; }
+			:host .-prev { inset-inline-start: 0; }
+			:host .-next { inset-inline-end: 0; }
 
 			:host > .-arrow svg {
 				fill:none;
@@ -265,7 +266,9 @@ u2Carousel.mode.slide = {
 		//this.addSwipe();
 	},
 	slideTo:function(target){
-		this.slider.style.transform = 'translateX(-'+(100*this.activeIndex())+'%)';
+		const wMode = getComputedStyle(this.slider).getPropertyValue('writing-mode'); // trigger reflow
+		const vertical = wMode.includes('vertical');
+		this.slider.style.transform = vertical ? 'translateY(-'+target.offsetTop+'px)' : 'translateX(-'+target.offsetLeft+'px)';
 	},
 }
 // fade (entirely done by css)

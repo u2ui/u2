@@ -9,26 +9,43 @@ customElements.define('u2-input', class extends HTMLElement {
         shadowRoot.innerHTML = `
         <style>
         :host {
-            display: inline-flex;
-            align-items: center;
-            border: 2px solid black;
+            border-radius: var(--radius);
+            display:inline-block;
+            inline-size:13em;
         }
-        [name=start]::slotted(*) { margin-inline-start: 0.5em; }
-        [name=end]::slotted(*) { margin-inline-end: 0.5em; }
+        .input {
+            display: flex;
+            align-items: center;
+            border: 1px solid;
+            border-radius: inherit;
+            overflow:clip;
+        }
+        [name=start]::slotted(*) { margin-inline-start: .4rem; }
+        [name=end]::slotted(*) { margin-inline-end: .4rem; }
 
         ::slotted(input), ::slotted(textarea), ::slotted(select) {
             margin: 0;
             border: 0 !important;
             outline: 0 !important;
+            flex:1 1 auto;
+            inline-size:100% !important;
         }
         button {
             border: 0;
             background-color: transparent;
         }
+        .baselineKeeper { /* dirty trick, first char defines the baseline, otherwise the sibling elements would no longer be at the same baseline */
+            width:0;
+            overflow:hidden;
+            xdisplay:inline-block;
+        }
         </style>
-        <slot name=start></slot>
-        <slot></slot>
-        <slot name=end></slot>
+        <div class=input>
+            <span class=baselineKeeper>&nbsp;</span>
+            <slot name=start></slot>
+            <slot></slot>
+            <slot name=end></slot>
+        </div>
         `;
     }
 
@@ -48,12 +65,17 @@ customElements.define('u2-input', class extends HTMLElement {
 
     static get observedAttributes() { return ['type'] }
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'type') {
+        if (name === 'type' && oldValue !== newValue) {
             if (newValue === 'textarea') {
-                this.innerHTML = '<textarea></textarea>';
+                this.realInput?.remove();
+                this.realInput = document.createElement('textarea');
+                this.appendChild(this.realInput);
             }
             if (newValue === 'checkbox') {
-                this.innerHTML = '';
+                this.realInput?.remove();
+                this.realInput = document.createElement('input');
+                this.realInput.type = 'checkbox';
+                this.appendChild(this.realInput);
             }
         }
     }

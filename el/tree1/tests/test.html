@@ -15,10 +15,10 @@
 
     <script src="../../../el/code/code.js" type=module async></script>
     <link  href="../../../el/code/code.css" rel=stylesheet>
-    <script src="../../tooltip.el/tooltip.js" type=module async></script>
-    <link  href="../../tooltip.el/tooltip.css" rel=stylesheet>
-    <script src="../../ico.el/ico.js" type=module async></script>
-    <link  href="../../ico.el/ico.css" rel=stylesheet>
+    <script src="../../../el/tooltip/tooltip.js" type=module async></script>
+    <link  href="../../../el/tooltip/tooltip.css" rel=stylesheet>
+    <script src="../../../el/ico/ico.js" type=module async></script>
+    <link  href="../../../el/ico/ico.css" rel=stylesheet>
 
     <style>
         body {
@@ -32,7 +32,7 @@
 
 <body>
 
-<section id=demo>
+<section id=demo class=main>
     
     <u2-tree1 aria-expanded=true>root
         <u2-tree1 aria-expanded=true>Folder 2
@@ -108,7 +108,7 @@
     <u2-code element=demo editable trim> </u2-code>
 
     <u2-code trim editable>
-    <style>
+    <style class=main>
     u2-tree1::part(row) {
         border-radius:.3rem;
     }
@@ -131,7 +131,7 @@
     </u2-code>
 
     <u2-code trim>
-    <script type=module>
+    <script type=module class=main>
     /* load dynamic items */
     document.addEventListener('u2-tree1-expand', event => {
         const treeItem = event.target;

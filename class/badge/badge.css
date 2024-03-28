@@ -1,9 +1,8 @@
 .u2-badge {
-    background-color:var(--color-dark);
-    color:var(--color-bg);
+    background-color:var(--color-dark, CanvasText);
+    color:var(--color-bg, Canvas);
 
     display:inline-flex;
-    padding:.2em .6em .2em .6em;
     border-radius:1em;
     line-height: var(--line-height);
     --line-height:1.1;
@@ -11,13 +10,16 @@
 
     min-width:  1.6em;
     min-height: 1.6em;
-    padding: .2em .5em .3em .5em;
+    padding-inline: .6em;
+    padding-block: .2em .25em;
     justify-content: center;
     align-items: center;
     text-align: center;
 
+    box-sizing: border-box;
+
     /*
-	box-decoration-break:clone; /* not needed for inlin-flex * /
+	box-decoration-break:clone; /* not needed for inline-flex * /
     vertical-align:middle;
     margin-bottom:-.1em;
     margin-top:-.1em;

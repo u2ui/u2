@@ -80,7 +80,9 @@ const uIco = class extends HTMLElement {
                 // if (path.origin !== location.origin) {} todo: sanitize svg
                 this.innerHTML = svg; // requestAnimationFrame??
                 this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
-                this.firstElementChild.setAttribute('aria-hidden', 'true');
+                const svgEl = this.firstElementChild;
+                svgEl.removeAttribute('xmlns');
+                svgEl.setAttribute('aria-hidden', 'true');
                 this.setAttribute('state','loaded');
             }).catch(err=>{
                 console.error(err);

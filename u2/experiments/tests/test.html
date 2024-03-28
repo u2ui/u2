@@ -16,8 +16,8 @@
     <script src="../../../el/code/code.js" type=module async></script>
     <link rel=stylesheet href="../../../el/code/code.css">
 
-    <script src="../../ico.el/ico.js" type=module async></script>
-    <link rel=stylesheet href="../../ico.el/ico.css">
+    <script src="../../../el/ico/ico.js" type=module async></script>
+    <link rel=stylesheet href="../../../el/ico/ico.css">
 
 <body>
 
@@ -97,11 +97,11 @@
 // IMPLEMENTATION:
 
 import '../../focusgroup.attr/focusgroup.js';
-import '../../ico.el/ico.js';
+import '../../../el/ico/ico.js';
 // import style-sheet:
 const style = document.createElement('link');
 style.rel = 'stylesheet';
-style.href = '../../ico.el/ico.css';
+style.href = '../../../el/ico/ico.css';
 document.head.appendChild(style);
 
 const toolsContainer = null;
@@ -121,7 +121,7 @@ class alert extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = `
             <style>
-                @import url('../../../ico.el/ico.css');
+                @import url('../../../../el/ico/ico.css');
                 :host {
                     display:flex;
                     flex-wrap:wrap;

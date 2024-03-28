@@ -1,5 +1,5 @@
-import {render, html, svg} from 'https://unpkg.com/uhtml@3.1.0/esm/index.js?module';
-import {repos, latestUrlCached, latestUrl, parseUrl} from './u2.js';
+import {render, html} from 'https://unpkg.com/uhtml@3.1.0/esm/index.js?module';
+import {repos, latestUrlCached} from './u2.js';
 
 let win = null;
 export function open(){
@@ -8,7 +8,6 @@ export function open(){
     win = window.open('about:blank', 'u2-config', 'popup,width=800,height=640');
     win.focus()
     const doc = win.document;
-
 
     // Problem: depencencies in this script are also tracked...
     doc.write (
@@ -28,7 +27,7 @@ export function open(){
                     }
                     pre {
                         font-size:12px;
-                        max-height:70vh;
+                        xmax-height:70vh;
                     }
                 </style>
             <body>`
@@ -42,34 +41,8 @@ export function open(){
 
 async function renderUi(el){
     const code = await exportCode();
-    const repoVersions = await versionCheck();
     render(el,
         html`
-        <details>
-            <summary>Versioncheck</summary>
-            <div style="overflow:auto; max-height:70vh">
-                <table>
-                    <thead>
-                        <th>Repo
-                        <th>New version
-                        <th>Old version
-                    <tbody>
-                    ${Object.entries(repoVersions).map(([repo, v])=>{
-                        return html`
-                        <tr>
-                            <td>${repo}
-                            <td>${v.newVersion}
-                            <td>${v.oldVersions.map(data=>{
-                                return html`
-                                <span style="display:inline-block">${data.vers||'no version'}
-                                    <button title="view in console" onclick="${()=>console.log(data.node)}" class=u2-unstyle><u2-ico>info</u2-ico></button>
-                                </span> &nbsp; `
-                            })}
-                            `
-                    })}
-                </table>
-            </div>
-        </details>
         <details>
             <summary>needed HTML</summary>
             <button onclick="${()=>win.navigator.clipboard.writeText(code)}">copy to clipboard</button>
@@ -104,36 +77,9 @@ const exportCode = async function(){
     console.log(cssText);
 
 
-    let strJs  = Object.entries(needed.js).map(([url,prio])=>'<script src="'+latestUrlCached(url)+'" type=module crossorigin></script>').join('\n');
+    let strJs  = Object.entries(needed.js).map(([url,prio])=>'<script src="'+latestUrlCached(url)+'" type=module crossorigin async></script>').join('\n');
     let strCssNonCritical = Object.entries(needed.css).filter(([,prio])=>prio>1).map(([url,prio])=>'<link rel="stylesheet" href="'+latestUrlCached(url)+'" crossorigin>').join('\n');
     return strCss +'\n' + strJs + '\n' + '\n<!-- non critical at the end -->\n' + strCssNonCritical;
 }
 
 
-const versionCheck = async function(){
-    await repos();
-    const urls = [];
-    document.querySelectorAll('script').forEach(el=>{
-        urls.push({url:el.src, node:el});
-    })
-    document.querySelectorAll('link[rel=stylesheet]').forEach(el=>{
-        urls.push({url:el.href,node:el});
-    })
-
-    const reposObj = {};
-    urls.forEach(obj=>{
-        const {url, node} = obj;
-        if (!url.match('u2ui')) return;
-        const newUrl = latestUrlCached(url);
-        if (!newUrl) return;
-        if (newUrl === url) return;
-        const {repo, vers:oldVers} = parseUrl(url);
-        const newVers = parseUrl(newUrl).vers;
-        if (oldVers === newVers) return;
-        reposObj[repo] ??= {}
-        reposObj[repo].newVersion = newVers;
-        reposObj[repo].oldVersions ??= [];
-        reposObj[repo].oldVersions.push({vers:oldVers, node});
-    });
-    return reposObj;
-}

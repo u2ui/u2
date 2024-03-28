@@ -15,7 +15,7 @@ alert, prompt, confirm but async
 ```
 
 ```css
-:where(.\:modal, :modal) {
+dialog:where(.\:modal, :modal) {
     box-shadow: 0 0 1rem #0008;
     border: 0;
     border-radius: .3rem;
