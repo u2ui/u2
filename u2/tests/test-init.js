@@ -33,13 +33,3 @@ u2-code {
 }
 </style>
 `);
-
-
-/*
-addEventListener('DOMContentLoaded', ()=>{
-    const head = document.createElement('header');
-    head.style.width = '100%';
-    head.innerHTML = '';
-    document.body.prepend(head);
-})
-*/

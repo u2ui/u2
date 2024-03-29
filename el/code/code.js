@@ -21,7 +21,7 @@ class code extends HTMLElement {
             white-space:pre;
         }
         #code {
-            width:max-content;
+            inline-size:max-content;
         }
         textarea {
             display:none;
@@ -78,11 +78,16 @@ class code extends HTMLElement {
             this.setSourceValue(e.target.value);
         });
 
+        this.textarea.addEventListener('blur', e => { // if textarea is focused, the code is not updated
+            if (this.unUpdatedValue == null) return;
+            this.value = this.unUpdatedValue;
+        });
+
         this.sourceMutationObserver = new MutationObserver(()=>{
-            // let value = this.getSourceValue();
-            // if (this.trim) value = trimCode(value);
+//            if (this._recentlySetSourceValue) return;
             this.value = this.getSourceValue();
         });
+
 
     }
     copy(){
@@ -115,6 +120,10 @@ class code extends HTMLElement {
         });
     }
     setSourceValue(value){
+
+        // //this._recentlySetSourceValue = true;
+        // setTimeout(()=>this._recentlySetSourceValue = false);
+
         const el = this.sourceElement;
         if (el.tagName === 'TEXTAREA') { el.value = value; return; }
         if (this.isForeign) {
@@ -163,8 +172,19 @@ class code extends HTMLElement {
     }
     set value(value){
         if (this.trim) value = trimCode(value);
+
+        if (value === this.textarea.value) return;
+
+        // setInputValueKeepSelection(this.textarea, value); way too slow
+        this.unUpdatedValue = null;
+        if (this.textarea.matches(':focus')) {
+            this.unUpdatedValue = value;
+            return;
+        }
+
         this.setHightlightValue(value);
         this.textarea.value = value;
+
     }
     setSelectionRange(start, end){
         this.textarea.setSelectionRange(start, end);
@@ -198,3 +218,102 @@ function htmlEncode(input) {
         return '&#'+i.charCodeAt(0)+';';
     });
 }
+
+
+
+/* helper */
+
+
+/* functions */
+function setInputValueKeepSelection(input, newValue) {
+    // if (document.activeElement !== input) { // not good for shadow dom
+    //     input.value = newValue;
+    //     return;
+    // }
+    if (!input.matches(':focus')) {
+        input.value = newValue;
+        return;
+    }
+    if (input.value === newValue) return;
+    const selectionStart = input.selectionStart;
+    const selectionEnd = input.selectionEnd;
+    const oldString = input.value;
+    const newPositionStart = positionAfterUpdate(oldString, selectionStart, newValue);
+    const newPositionEnd = positionAfterUpdate(oldString, selectionEnd, newValue);
+    input.value = newValue;
+    input.setSelectionRange(newPositionStart, newPositionEnd);
+}
+
+function positionAfterUpdate(initialString, initialPosition, newString) {
+    let minDistance = Infinity;
+    let newPosition = -1;
+    for (let i = 0; i <= newString.length; i++) {
+        const a = initialString.substring(0, initialPosition) + newString.substring(i);
+        const b = newString.substring(0, i) + initialString.substring(initialPosition);
+        const distance = levenshteinDistance(a, b);
+        if (distance < minDistance) {
+            minDistance = distance;
+            newPosition = i;
+        }
+    }
+    return newPosition;
+}
+
+
+
+function levenshteinDistance(a, b) {
+    if (a.length > b.length) [a, b] = [b, a];
+    var previousRow = Array.from({length: a.length + 1}, (_, i) => i);
+    var currentRow = new Array(a.length + 1);
+    for (var i = 1; i <= b.length; i++) {
+        currentRow[0] = i;
+        for (var j = 1; j <= a.length; j++) {
+            var cost = a[j - 1] === b[i - 1] ? 0 : 1;
+            currentRow[j] = Math.min(
+                currentRow[j - 1] + 1,
+                previousRow[j] + 1,
+                previousRow[j - 1] + cost
+            );
+        }
+        [previousRow, currentRow] = [currentRow, previousRow];
+    }
+    return previousRow[a.length];
+}
+
+
+
+// function xxxlevenshteinDistance(a, b) {
+//     const matrix = [];
+//     // Initialize matrix of zeros
+//     for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+//     for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+//     for (let i = 1; i <= b.length; i++) {
+//         for (let j = 1; j <= a.length; j++) {
+//             if (b.charAt(i - 1) === a.charAt(j - 1)) {
+//                 matrix[i][j] = matrix[i - 1][j - 1];
+//             } else {
+//                 matrix[i][j] = Math.min(
+//                     matrix[i - 1][j - 1] + 1, // substitution
+//                     Math.min(
+//                         matrix[i][j - 1] + 1, // insertion
+//                         matrix[i - 1][j] + 1 // deletion
+//                     )
+//                 );
+//             }
+//         }
+//     }
+//     return matrix[b.length][a.length];
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+

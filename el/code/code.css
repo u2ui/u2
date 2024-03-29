@@ -5,6 +5,7 @@ u2-code {
 }
 u2-code > :where(script, style) {
     display:block;
+    white-space: pre;
 }
 
 /* new */
@@ -20,13 +21,13 @@ u2-code > pre > code {
     background:transparent;
 }
 u2-code > :where(textarea) {
-    width:100%;
+    inline-size:100%;
     border:0;
-    height:10rem;
+    block-size:10rem;
 
     @supports (field-sizing:content) {
         field-sizing:content;
-        height:auto;
+        block-size:auto;
         resize: none;
     }
 

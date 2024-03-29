@@ -85,22 +85,25 @@
         <h2>foreign element (live! innerHTML)</h2>
         <u2-code element=demo trim editable language=html> </u2-code>
         <div id=demo contenteditable>
-            <div style="padding:.5rem; border-radius:.5rem; margin-top:1rem; background:#0004">
-                Change the <b>code</b>
+            <div style="padding:.5rem; border-radius:1em; background:#0004">
+                Change the <b>code</b> or change this box
+                <b style="font-size:1.3em">
+                    directly!
+                </b>
             </div>
         </div>
 
         <h2>Style Tag (live!)</h2>
         <u2-code trim editable>
-            <style>
-            u2-code {
-                padding:.5rem;
-                font-size:14px;
-                background:#fff;
-                box-shadow:0 0 .3rem #0003;
-                max-height:11rem;
-                border-radius:.5rem;
-            }
+            <style contenteditable>
+u2-code {
+    padding:.5rem;
+    font-size:14px;
+    background:#fff;
+    box-shadow:0 0 .3rem #0003;
+    max-block-size:11rem;
+    border-radius:.5rem;
+}
             </style>
         </u2-code>
 
@@ -134,11 +137,12 @@
 
         <label>
             Label
-            <u2-code trim style="min-height:140px; max-height:200px">
+            <u2-code trim style="min-height:140px; max-block-size:200px">
                 
 <textarea autocomplete=off autocorrect=off autocapitalize=off spellcheck=false>&lt;u2-code&gt;
-    This u2-code element has min-height:140px; max-height:200px
-    It resizes between these values even without css (only chromium for now)
+    For this test, you should deactivate javascript.
+    This u2-code element has min-height:140px; max-block-size:200px
+    It resizes between these values even without js (only chromium for now)
 &lt;/u2-code&gt;</textarea>
             </u2-code>
 
