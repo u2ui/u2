@@ -6,6 +6,7 @@ customElements.define('u2-tooltip', class extends HTMLElement {
     constructor() {
         super();
         this.placer = new Placer(this, { x:'center', y:'after', margin:20 });
+        this.setAttribute('role', 'tooltip');
     }
     connectedCallback() {
         if (!this.id) { // if no id is set, set one an make it the tooltip for its parent

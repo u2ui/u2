@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <!-- <script src="../../u2/auto.js" type=module async></script> -->
+
+    <link rel=stylesheet href="../../../css/base/full.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../../../el/code/code.js" type=module async></script>
+    <link  href="../../../el/code/code.css" rel=stylesheet>
+    <script src="../../../el/tooltip/tooltip.js" type=module async></script>
+    <link  href="../../../el/tooltip/tooltip.css" rel=stylesheet>
+    <script src="../../../el/ico/ico.js" type=module async></script>
+    <link  href="../../../el/ico/ico.css" rel=stylesheet>
+
+    <style>
+        body {
+            place-content: initial;
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+        }
+    </style>
+
+    <script src="../tree1.js" type=module async></script>
+    <link href="../tree1.css" rel=stylesheet>
+
+<body>
+
+<section id=demo class=main>
+    
+    <u2-tree1 aria-expanded=true>root
+        <u2-tree1 aria-expanded=true>Folder 2
+
+            <u2-tree1>File 2.1</u2-tree1>
+            <u2-tree1>Folder 2.2
+                <u2-tree1>
+                    <u2-ico slot=icon icon=home>x</u2-ico>
+                    Home
+                </u2-tree1>
+                <u2-tree1>
+                    <u2-ico slot=icon icon=star>x</u2-ico>
+                    Star
+                </u2-tree1>
+                <u2-tree1>
+                    <u2-ico slot=icon icon=search>x</u2-ico>
+                    Search
+                </u2-tree1>
+                <u2-tree1>
+                    <u2-ico slot=icon icon=accessible>x</u2-ico>
+                    Accessible
+                </u2-tree1>
+                <u2-tree1>
+                    <u2-ico slot=icon icon=alarm>x</u2-ico>
+                    Alarm
+                </u2-tree1>
+            </u2-tree1>
+
+            <u2-tree1>
+                <input type=checkbox slot=icon id="check1">
+                Checkbox
+                <u2-tree1>
+                    <input type=checkbox slot=icon id="check2">
+                    Checkbox
+                </u2-tree1>
+                <u2-tree1>
+                    <input type=checkbox slot=icon id="check3">
+                    Checkbox
+                </u2-tree1>
+            </u2-tree1>
+
+        </u2-tree1>
+
+    </u2-tree1>
+
+</section>
+
+<u2-code trim>
+    <script type=module class=main>
+    document.addEventListener('u2-tree1-expand', event => {
+        const childrenEl = event.target.shadowRoot.querySelector('[part=children]');
+        childrenEl.style.setProperty('--r-scroll-height', childrenEl.scrollHeight + 'px');
+    });
+    </script>
+</u2-code>
+
+<u2-code editable trim>
+<style class="main">
+    @keyframes u2-children-open {
+        0% {
+            max-height:0;
+            overflow:hidden;
+        }
+        99.9% {
+            max-height:calc(var(--r-scroll-height, 100vh) + 3rem);
+            overflow:hidden;
+        }
+        100% {
+            max-height:none;
+            overflow:visible;
+        }
+    }
+    @keyframes u2-children-close {
+        0% {
+            max-height:none;
+            overflow:visible;
+        }
+        0.1% {
+            max-height:calc(var(--r-scroll-height, 100vh) + 3rem);
+            overflow:hidden;
+        }
+        100% {
+            max-height:0;
+            overflow:hidden;
+        }
+    }
+    u2-tree1::part(children) {
+        display:block;
+        max-height:0;
+        overflow:hidden;
+        animation: u2-children-close .2s;
+    }
+    u2-tree1[aria-expanded=true]::part(children) {
+        max-height:none;
+        overflow:visible;
+        animation: u2-children-open .3s;
+    }
+</style>
+</u2-code>
+
+
+

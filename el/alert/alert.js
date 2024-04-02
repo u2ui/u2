@@ -74,10 +74,10 @@ class alert extends HTMLElement {
     }
     connectedCallback() {
         const variant = this.getAttribute('variant');
-        const icon = this.getAttribute('icon') || variant2Icon[variant] || 'info';
+        const icon = this.getAttribute('icon') || variantData[variant]?.icon || 'info';
         this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
         this.shadowRoot.querySelector('#close').onclick = () => this.hide();
-        this.setAttribute('role', 'alert');
+        this.shadowRoot.getElementById('container').setAttribute('role', variantData[variant]?.role || 'status');
     }
     // show() { // todo
     //     this.setAttribute('open', '');
@@ -103,6 +103,24 @@ class alert extends HTMLElement {
 }
 
 const variant2Icon = {info:'info',success:'check',warn:'warning',error:'error'};
+const variantData = {
+    info: {
+        icon: 'info',
+        role: 'status',
+    },
+    success: {
+        icon: 'check',
+        role: 'status',
+    },
+    warn: {
+        icon: 'warning',
+        role: 'alert',
+    },
+    error: {
+        icon: 'error',
+        role: 'alert',
+    }
+};
 
 customElements.define('u2-alert', alert);
 

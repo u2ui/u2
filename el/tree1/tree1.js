@@ -58,7 +58,7 @@ export class tree extends HTMLElement {
             <slot name=icon>📁</slot>
             <slot part=content></slot>
         </div>
-        <slot part=children name=children role=group></slot>`
+        <slot part=children name=children role=group part=group></slot>`
 
         this.row = shadow.querySelector('[part=row]');
 
@@ -198,7 +198,7 @@ export class tree extends HTMLElement {
                 promise.then(data => {
                     this.removeAttribute('aria-live');
                     this.removeAttribute('aria-busy');
-                    setTimeout(()=>{ // make unexpandable if no childs
+                    setTimeout(()=>{ // make unexpandable if no children
                         !this.items().length && this.removeAttribute('aria-expanded');
                     },100);
                 }).catch(data=>{
