@@ -40,21 +40,6 @@ h1 {
 
 [minimal.html](http://gcdn.li/u2ui/u2@main/class/reset/tests/minimal.html)  
 
-## Ussage
-
-```html
-<h1>Heading 1</h1>
-<div class=u2-reset>
-    <h1>Heading 1</h1>
-</div>
-```
-
-```css
-h1 {
-    margin:0 2rem;
-}
-```
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

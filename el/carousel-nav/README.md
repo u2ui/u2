@@ -33,26 +33,6 @@ u2-carousel-nav > .-active {
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/test.html)  
 
-## Ussage
-
-```html
-<u2-carousel-nav></u2-carousel-nav>
-<u2-carousel>
-    <div>Item 1</div>
-    <div>Item 2</div>
-    <div>Item 3</div>
-</u2-carousel>
-```
-
-```css
-u2-carousel-nav > * {
-    transition:.3s;
-}
-u2-carousel-nav > .-active {
-    transform:scale(1.2);
-}
-```
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

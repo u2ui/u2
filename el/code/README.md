@@ -3,14 +3,15 @@ Highlighted, editable code-blocks.
 
 ## Usage
 
+```js
+console.log('Hello World');
+```
+
 ```html
 <u2-code trim editable>
-    <style>
-        u2-code {
-            font-size:15px;
-            max-block-size:11rem;
-        }
-    </style>
+    <script>
+        console.log('Hello World');
+    </script>
 </u2-code>
 ```
 

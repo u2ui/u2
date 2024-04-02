@@ -20,14 +20,6 @@ Every element can be a link
 [minimal.html](http://gcdn.li/u2ui/u2@main/attr/href/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/href/tests/test.html)  
 
-## Ussage
-
-```html
-<div u2-href="http://schwups.ch" u2-href-target=_blank>
-    Pseudo link
-</div>
-```
-
 ## Description
 
 This attribute allows you to turn any element into a link by simply adding the `u2-href` attribute to it.

@@ -45,7 +45,6 @@ u2-parallax-bg div {
 [test.html](http://gcdn.li/u2ui/u2@main/el/parallax-bg/tests/test.html)  
 [visible.html](http://gcdn.li/u2ui/u2@main/el/parallax-bg/tests/visible.html)  
 
-
 ## Also interesting
 
 Parallax scrolling Elements (not Backgrounds)

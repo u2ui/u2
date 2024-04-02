@@ -113,6 +113,14 @@
       "deprecated": false,
       "css": true,
       "js": false
+    },
+    "unstyle": {
+      "name": "unstyle",
+      "description": "Unstyle elements eg. buttons",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": false
     }
   },
   "el": {
@@ -305,14 +313,6 @@
     "norm": {
       "name": "norm",
       "description": "CSS normalization for crossbrowser compatibility",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
-    "unstyle": {
-      "name": "unstyle",
-      "description": "Unstyle elements eg. buttons\r",
       "beta": false,
       "deprecated": false,
       "css": true,

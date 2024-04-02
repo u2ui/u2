@@ -20,11 +20,16 @@ Button:
 }
 ```
 
+## Install
+
+```html
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/unstyle/unstyle.min.css" rel=stylesheet>
+```
+
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/css/unstyle/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/css/unstyle/tests/test.html)  
-
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/unstyle/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/class/unstyle/tests/test.html)  
 
 ## About
 

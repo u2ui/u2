@@ -27,20 +27,6 @@ u2-qrcode {
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/qrcode/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/qrcode/tests/test.html)  
 
-## Ussage
-
-```html
-<u2-qrcode>Hello world</u2-qrcode>
-```
-
-```css
-u2-qrcode {
-    color:#555;
-    max-width:10rem;
-    margin:auto;
-}
-```
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

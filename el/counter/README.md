@@ -40,21 +40,6 @@ u2-counter {
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/counter/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/counter/tests/test.html)  
 
-## Ussage
-
-```html
-<u2-counter from=-11.0 value=200.0>200.0</u2-counter>
-```
-
-```css
-u2-counter {
-    font-size:3rem;
-    text-align:right;
-    padding:.3em;
-    background:var(--color-area);
-}
-```
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

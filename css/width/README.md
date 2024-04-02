@@ -35,25 +35,6 @@ html {
 [minimal.html](http://gcdn.li/u2ui/u2@main/css/width/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/css/width/tests/test.html)  
 
-## Ussage
-
-```html
-<div class=u2-width>
-    content
-    <div class=u2-width>nested (no padding)</div>
-</div>
-```
-
-```css
-html {
-    --width:20rem;
-}
-.u2-width {
-    outline:1px solid;
-    background-color:yellow;
-}
-```
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

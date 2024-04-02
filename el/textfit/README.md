@@ -25,18 +25,6 @@ u2-textfit {
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/textfit/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/textfit/tests/test.html)  
 
-## Ussage
-
-```html
-<u2-textfit>ABCD</u2-textfit>
-```
-
-```css
-u2-textfit {
-    font-size: clamp(20px, var(--gen-font-size), 400px);
-}
-```
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
