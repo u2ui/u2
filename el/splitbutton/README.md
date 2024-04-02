@@ -17,8 +17,8 @@ asdf
 
 ```css
 u2-splitbutton menu {
-   box-shadow:var(--shadow);
-   border:none;
+    box-shadow:var(--shadow);
+    border:none;
 }
 ```
 

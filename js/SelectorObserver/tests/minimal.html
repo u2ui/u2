@@ -6,16 +6,16 @@
 
 <body>
 
-    <section>
-        <div class=container id=SOTargets contenteditable>
-            Find all bold divs (press enter)
-        </div>
-    </section>
+<section class="main">
+    <div class=container id=SOTargets contenteditable>
+        Find all bold divs (press enter)
+    </div>
+</section>
 
-    <script type=module style="display:block;">
-        import {SelectorObserver} from '../SelectorObserver.js';
-        new SelectorObserver({
-            on: el => el.innerHTML = 'found!' ,
-            off: el => el.innerHTML = 'lost!' ,
-        }).observe('#SOTargets div');
-    </script>
+<script type=module class="main">
+    import {SelectorObserver} from '../SelectorObserver.js';
+    new SelectorObserver({
+        on: el => el.innerHTML = 'found!' ,
+        off: el => el.innerHTML = 'lost!' ,
+    }).observe('#SOTargets div');
+</script>

@@ -7,11 +7,12 @@
 
 <body>
 
-<section>
+<section class="main">
     <textarea id=testEl>write "abc" while holding the keys</textarea>
 </section>
 
-<script type=module>
+<script type=module class="main">
+
     import {listen} from '../shortcut.js';
 
     listen('a+b+c', () => {

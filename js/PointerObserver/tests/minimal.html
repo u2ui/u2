@@ -16,7 +16,7 @@
 
 <body>
 
-<section>
+<section class="main">
 
     <div id=el style="position:absolute;">
         StartObserving
@@ -24,9 +24,9 @@
 
 </section>
 
-<script type=module>
-    import {PointerObserver} from "../PointerObserver.js";
-    new PointerObserver(el).onmove = function(e){
-        console.log(this.pos);
-    }
+<script type=module class="main">
+import {PointerObserver} from "../PointerObserver.js";
+new PointerObserver(el).onmove = function(e){
+    console.log(this.pos);
+}
 </script>

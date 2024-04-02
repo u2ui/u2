@@ -4,6 +4,8 @@ Absolute place elements relative to others
 ## Usage
 
 ```js
+import {Placer} from "../Placer.js";
+
 let placer = new Placer(moverEl, {
     x:'after',
     y:'after',

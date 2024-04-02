@@ -21,11 +21,7 @@ Tooltips
 ```css
 u2-tooltip {
     pointer-events:auto;
-    font-size:max(12px, .7rem);
-    --line-height: 1.4em;
-    background:#666;
-    color:#fff;
-    border-radius:.2rem;
+    background:#a09;
 }
 ```
 

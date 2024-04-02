@@ -24,7 +24,7 @@ u2-counter {
     font-size:3rem;
     text-align:right;
     padding:.3em;
-    background:var(--color-area);
+    background:#eee;
 }
 ```
 

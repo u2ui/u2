@@ -6,20 +6,20 @@
     <script src="../../../u2/tests/test-init.js" type=module async></script>
 
     <script type=module>
-    import {Placer} from "../Placer.js";
-    window.Placer = Placer;
     </script>
 
 <body>
 
-<section>
+<section class="main">
     <div id=moverEl style="position:absolute">move to</div>
     <button id=target>
         move to me
     </button>
 </section>
 
-<script type=module>
+<script type=module class="main">
+
+import {Placer} from "../Placer.js";
 
 let placer = new Placer(moverEl, {
     x:'after',

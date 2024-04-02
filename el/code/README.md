@@ -6,8 +6,9 @@ Highlighted, editable code-blocks.
 ```html
 <u2-code trim editable>
     <style>
-        .foo {
-            color: red;
+        u2-code {
+            font-size:15px;
+            max-block-size:11rem;
         }
     </style>
 </u2-code>
