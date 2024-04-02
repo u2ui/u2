@@ -27,22 +27,6 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/PointerObs
 [minimal.html](http://gcdn.li/u2ui/u2@main/js/PointerObserver/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/js/PointerObserver/tests/test.html)  
 
-## Ussage
-
-```js
-import {PointerObserver} from "../PointerObserver.js";
-new PointerObserver(el).onmove = function(e){
-    console.log(this.pos);
-}
-```
-
-```html
-<div id=el style="position:absolute;">
-    StartObserving
-</div>
-```
-
-[doc](https://doc.deno.land/../../../PointerObserver.js@x/PointerObserver.js)
 
 ## About
 

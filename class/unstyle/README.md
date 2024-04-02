@@ -25,22 +25,6 @@ Button:
 [minimal.html](http://gcdn.li/u2ui/u2@main/css/unstyle/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/css/unstyle/tests/test.html)  
 
-## Ussage
-
-```html
-Button:
-<button class=u2-unstyle>button</button>
-<br>
-<label>
-    Input:
-    <input class=u2-unstyle value="usgin u2-unstyle">
-</label>
-```
-
-```css
-.u2-unstyle {
-}
-```
 
 ## About
 

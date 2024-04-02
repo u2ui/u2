@@ -65,7 +65,7 @@ class code extends HTMLElement {
 
 
         <div id=code></div>
-        <textarea autocomplete=off autocorrect=off autocapitalize=off spellcheck=false></textarea>
+        <textarea autocomplete=off autocorrect=off autocapitalize=off spellcheck=false autocorrect=off></textarea>
         <slot id=tools name=tools></slot>
         <link rel="stylesheet" href="${libRoot}styles/github.min.css">
         `;

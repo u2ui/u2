@@ -1,8 +1,6 @@
 # &lt;u2-splitbutton&gt; - element
 Buttons with options
 
-asdf
-
 ## Usage
 
 ```html

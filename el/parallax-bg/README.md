@@ -45,26 +45,6 @@ u2-parallax-bg div {
 [test.html](http://gcdn.li/u2ui/u2@main/el/parallax-bg/tests/test.html)  
 [visible.html](http://gcdn.li/u2ui/u2@main/el/parallax-bg/tests/visible.html)  
 
-## Ussage
-
-```html
-<div class=u2-parallax-bg-stage style="height:10rem">
-    <u2-parallax-bg>
-        <div style="background: linear-gradient(#ffa, #aff)">TEST</div>
-        <div style="background: linear-gradient(#afa, #aaa)">TEST</div>
-    </u2-parallax-bg>
-</div>
-```
-
-```css
-u2-parallax-bg {
-    --parallax-bg-speed:.7
-}
-u2-parallax-bg div {
-    display:grid;
-    place-items: center;
-}
-```
 
 ## Also interesting
 
