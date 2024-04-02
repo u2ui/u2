@@ -5,12 +5,14 @@
     <meta name=viewport content="width=device-width">
     <title>skin.attr test | U2 design-system</title>
 
+    <link rel=stylesheet href="../../../css/classless/classless.css">
+    <link rel=stylesheet href="../../../css/classless/variables.css">
     <link rel=stylesheet href="../skin.css">
 
 <body>
 
 
-<section>
+<section class="main">
     <h3>Normal H3</h3>
     <div u2-skin="invert" style="padding:1rem">
         <h3>Inverted</h3>
@@ -21,6 +23,17 @@
         <h3>Theme-color as background</h3>
         <button>button</button>
     </div>
+    <br>
+    <div u2-skin="pink" style="padding:1rem">
+        <h3>Theme-color as background</h3>
+        <button>button</button>
+    </div>
 </section>
 
-<style></style>
+<style class=main>
+    [u2-skin=pink] {
+        --hsl-h: 330;
+        --hsl-s: 90%;
+        --hsl-l: 70%;        
+    }
+</style>

@@ -16,7 +16,7 @@ Highlighted, editable code-blocks.
 ```css
 u2-code {
     font-size:15px;
-    max-height:11rem;
+    max-block-size:11rem;
 }
 ```
 

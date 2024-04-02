@@ -98,14 +98,6 @@
       "css": true,
       "js": false
     },
-    "invert": {
-      "name": "invert",
-      "description": "invert colors",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
     "reset": {
       "name": "reset",
       "description": "A class to reset Styles (beta)\r",

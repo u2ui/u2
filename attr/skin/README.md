@@ -17,6 +17,19 @@ Change the skin of a widget (beta)
     <h3>Theme-color as background</h3>
     <button>button</button>
 </div>
+<br>
+<div u2-skin="pink" style="padding:1rem">
+    <h3>Theme-color as background</h3>
+    <button>button</button>
+</div>
+```
+
+```css
+[u2-skin=pink] {
+    --hsl-h: 330;
+    --hsl-s: 90%;
+    --hsl-l: 70%;        
+}
 ```
 
 ## Install

@@ -23,7 +23,7 @@ class DevIframe extends HTMLElement {
             :host {
                 display: flex;
                 flex-direction: column;
-                height: 60rem;
+                xheight: 60rem;
                 border: 1px solid #ccc;
                 background:var(--color-bg, white);
                 --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.33/svg/{icon}/baseline.svg';
@@ -50,6 +50,7 @@ class DevIframe extends HTMLElement {
             #tools u2-ico { --size:1.6em; }
             #wrap {
                 width:90%;
+                height:20rem;
                 margin:2rem auto;
                 align-self:center;
                 flex: 1 1 auto;
@@ -65,6 +66,9 @@ class DevIframe extends HTMLElement {
             u2-code {
                 font-size: 13px;
                 line-height:1.7;
+            }
+            u2-tabs {
+                max-height: 30rem;
             }
             </style>
             <form id=tools>
@@ -108,13 +112,13 @@ class DevIframe extends HTMLElement {
             <div id=wrap>
                <iframe src=""></iframe>
             </div>
-            <u2-tabs style="max-height:30rem">
+            <u2-tabs>
                 <h2>HTML</h2>
-                <u2-code id=html trim editable></u2-code>
+                <u2-code id=html trim editable xlanguage=html></u2-code>
                 <h2>CSS</h2>
-                <u2-code id=css trim editable></u2-code>
+                <u2-code id=css trim editable xlanguage=css></u2-code>
                 <h2>JS</h2>
-                <u2-code id=js trim editable></u2-code>
+                <u2-code id=js trim editable xlanguage=javascript></u2-code>
             </u2-tabs>
             `;
 

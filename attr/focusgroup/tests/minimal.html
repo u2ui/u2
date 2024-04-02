@@ -9,10 +9,16 @@
 
 <body>
 
-    <section>
+    <section class=main>
         <div u2-focusgroup="wrap remember">
             <button>press left</button>
             <button>or right</button>
             <button>to focus the next button</button>
         </div>
     </section>
+
+    <style class=main>
+        [u2-focusgroup] [tabindex="0"] {
+            background: lightblue;
+        }
+    </style>

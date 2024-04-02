@@ -25,6 +25,12 @@ https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer
 </div>
 ```
 
+```css
+[u2-focusgroup] [tabindex="0"] {
+    background: lightblue;
+}
+```
+
 ## Install
 
 ```html

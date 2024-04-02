@@ -119,7 +119,7 @@ async function UsagePart(category, entry){
             content += '```js\n'+dedent(js).trim()+'\n```\n\n';
         }
 
-        let html = code.split('<section>')[1].split('<\/section>')[0];
+        let html = code.split(/<section[^>]*>/)[1].split('<\/section>')[0];
         if (html) {
             html = dedent(html);
             content += '```html\n'+html+'\n```\n\n';

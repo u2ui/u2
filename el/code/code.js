@@ -105,6 +105,7 @@ class code extends HTMLElement {
             if (type) return type.replace(/^text\/(x-)?/, '');
             return 'javascript';
         }
+        if (this.isForeign) return 'html';
         return false;
     }
     setHightlightValue(value){
