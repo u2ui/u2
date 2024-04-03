@@ -9,9 +9,11 @@ html {
 a {
     color: var(--color);
     /* transition: color .2s; ff flickers on visited-color-change https://bugzilla.mozilla.org/show_bug.cgi?id=868975 */
+    transition: color .2s;
 }
 /* a:visited {
-    color: var(--color-text);
+    xcolor: var(--color-dark);
+    color: hsl(calc(var(--hsl-h) + 64), var(--hsl-s), var(--hsl-l));
 } */
 a:hover, a:focus {
     color: var(--color-text);
@@ -28,8 +30,7 @@ hr {
 
 
 table {
-    inline-size: 100%;
-    /* take margins into account (not working in firefox) width:-moz-available; width:-webkit-fill-available; */
+    inline-size: 100%; /* take container margins into account: width:-moz-available; width:-webkit-fill-available; (not working in firefox) */
     word-break: normal;
 }
 td, th {
@@ -83,20 +84,18 @@ input, textarea, select, button, .btn {
 }
 
 /* buttons */
-/* is:(button, .btn, ::file-selector-button, ::-webkit-file-upload-button) { forgiving :is-selector usable after safari 13.7 */
-button, .btn { /* The selector is not invalidated although ::-webkit-file-upload-button in ff is not working. */
+button, .btn {
     background-color: var(--color);
     color: var(--color-bg);
     border-color: transparent;
     padding-inline: 1em;
     transition: background-color .1s; /* better every property? does not get along with focus-animation */
-
     /* for .btn */
 	text-decoration:none;
 	display:inline-block;
 }
-/* button:hover:not(:disabled), :hover::file-selector-button, :hover::-webkit-file-upload-button, .btn:hover, button:focus { */
-button:hover:not(:disabled), .btn:hover, button:focus {
+/* button:hover:not(:disabled), .btn:hover, button:focus { */
+:is(button, .btn):where(:not(disabled):hover, :focus) {
     background-color: var(--color-dark);
 }
 button:disabled {

@@ -31,19 +31,17 @@ html, [u2-skin] {
 }
 
 
-/* *
+/*
 @media (prefers-color-scheme: dark) {
   html {
-
-    --color-light:   hsl(var(--hs), calc(var(--hsl-l) * .7 ) );
-    --color-dark:    hsl(var(--hs), calc(var(--hsl-l) + (100% - var(--hsl-l)) * .9 ) );
+    --color-light:   hsl(var(--hs), calc(var(--hsl-l) * .1 ) );
+    --color-dark:    hsl(var(--hs), calc(var(--hsl-l) + (100% - var(--hsl-l)) * .7 ) );
 
     --color-bg:    hsl(var(--hs), calc(var(--hsl-l) * .4 ) );
     --color-text:  hsl(var(--hs), 99.5%);
   }
 }
-/* */
-
+*/
 
 /*
 
