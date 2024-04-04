@@ -101,7 +101,7 @@ function newNode(node){
 function loadProject(category, name){
     const id = category + '/' + name;
     const meta = projects[id];
-    if (!meta) { console.warn('u2: project not found:', name); return; }
+    if (!meta) { console.warn('u2: project not found:', category+'/'+name); return; }
     const hasJs = meta.js ?? (category==='el' || category==='attr');
     const hasCss = meta.css ?? (category==='el' || category==='class');
     hasCss &&  impCss(rootUrl + id + '/' + name + min + '.css');

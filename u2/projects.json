@@ -92,7 +92,7 @@
     },
     "input": {
       "name": "input",
-      "description": "custom inputs (beta)",
+      "description": "custom inputs (beta)\r",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -100,7 +100,7 @@
     },
     "reset": {
       "name": "reset",
-      "description": "A class to reset Styles (beta)\r",
+      "description": "A class to reset Styles (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -117,6 +117,14 @@
     "unstyle": {
       "name": "unstyle",
       "description": "Unstyle elements eg. buttons",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": false
+    },
+    "width": {
+      "name": "width",
+      "description": "The main width of your layout\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -313,14 +321,6 @@
     "norm": {
       "name": "norm",
       "description": "CSS normalization for crossbrowser compatibility",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
-    "width": {
-      "name": "width",
-      "description": "The main width of your layout\r",
       "beta": false,
       "deprecated": false,
       "css": true,

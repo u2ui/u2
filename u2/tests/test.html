@@ -69,7 +69,7 @@
 
     <header role=banner style="text-align:center; box-shadow:var(--shadow);" class=u2-parallax-bg-stage>
         <u2-parallax-bg style="background-color:black">
-            <u2-carousel play tabindex=0 style="position:absolute; inset:0">
+            <u2-carousel autoplay tabindex=0 style="position:absolute; inset:0">
                 <img src="https://picsum.photos/2000/700?random=1" alt="x" loading=lazy width=2000 height=700>
                 <img src="https://picsum.photos/2000/700?random=2" alt="x" loading=lazy width=2000 height=700>
                 <img src="https://picsum.photos/2000/700?random=3" alt="x" loading=lazy width=2000 height=700>
@@ -115,7 +115,7 @@
             <p>For fast prototyping just insert this:</p>
             <u2-code trim style="font-size:max(13px, .7rem); padding:.5rem">
                 <script type=text/html>
-                    <script src="../../../u2/auto.min.js" type=module crossorigin><\/script>
+                    <script src="../../../u2/auto.min.js" type=module crossorigin async><\/script>
                 </script>
             </u2-code>
             <u2-alert open dismissible icon=star>
@@ -334,7 +334,7 @@
                     <form class=u2-input aria-label="newsletter registration">
                         <input placeholder="john@doh.com">
                         <button>
-                            los <u2-ico inline style="vertical-align:baseline">🚀</u2-ico>
+                            los <u2-ico inline>🚀</u2-ico>
                         </button>
                     </form>
                 </div>
