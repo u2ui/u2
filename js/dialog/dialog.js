@@ -8,6 +8,7 @@ class Dialog {
 
         const element = this.element = d.createElement('dialog');
         element.classList.add('u2x-modal');
+        //element.setAttribute('role','alertdialog'); // todo: internals.role = 'alertdialog'; ?
         element.innerHTML = 
             `<form method=dialog>
                 ${options.body}

@@ -150,11 +150,8 @@ class DevIframe extends HTMLElement {
                 frame.contentDocument.documentElement.style.colorScheme = data['color-scheme'];
                 if (!data['u2css']) {
                     frame.contentDocument.querySelectorAll('link').forEach(link => {
-                        if (link.href.includes('css/base/base')) link.remove();
-                        if (link.href.includes('css/base/full')) link.remove();
-                        if (link.href.includes('css/classless/variables')) link.remove();
-                        if (link.href.includes('css/classless/classless')) link.remove();
-                        if (link.href.includes('css/classless/more')) link.remove();
+                        if (link.href.includes('css/base/')) link.remove();
+                        if (link.href.includes('css/classless/')) link.remove();
                     });
                 }
 

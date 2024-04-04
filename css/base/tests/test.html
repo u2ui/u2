@@ -7,9 +7,9 @@
 
   <title>U2 base.css TEST</title>
 
-  <link rel="stylesheet" href="../../css/norm/norm.css">
-  <link rel="stylesheet" href="../base.css">
-  <link rel="stylesheet" href="../beta.css">
+  <link href="../../norm/norm.css" id=normCss rel=stylesheet>
+  <link href="../base.css" id=baseCss rel=stylesheet>
+  <link href="../beta.css" id=betaCss rel=stylesheet disabled>
 
 
   <style>
@@ -30,6 +30,20 @@
 </head>
 
 <body>
+
+  <dialog open style="bottom:0; right:0; position:fixed">
+    <form onchange="normCss.disabled = this.elements[0].checked; baseCss.disabled = this.elements[1].checked; betaCss.disabled = this.elements[2].checked">
+      <label>
+        <input type=checkbox> disable norm.css
+      </label>
+      <label>
+        <input type=checkbox> disable base.css 
+      </label>
+      <label>
+        <input type=checkbox checked> disable beta.css
+      </label>
+    </form>
+  </dialog>
 
 <section>
   <div>
@@ -135,37 +149,37 @@
           <input type="text" value="This is not available" disabled> Text (disabled)
         </label>
         <label>
-          <input type="search"> Search
+          <input type=search> Search
         </label>
         <label>
-          <input type="tel"> Telephone
+          <input type=tel> Telephone
         </label>
         <label>
-          <input type="url" value="invalid should not be red (firefox)"> URL
+          <input type=url value="invalid should not be red (firefox)"> URL
         </label>
         <label>
-          <input type="email"> Email
+          <input type=email> Email
         </label>
         <label>
-          <input type="password"> Password
+          <input type=password> Password
         </label>
         <label>
-          <input type="date"> Date
+          <input type=date> Date
         </label>
         <label>
-          <input type="month"> Month
+          <input type=month> Month
         </label>
         <label>
-          <input type="week"> Week
+          <input type=week> Week
         </label>
         <label>
-          <input type="time"> Time
+          <input type=time> Time
         </label>
         <label>
-          <input type="datetime-local"> Datetime-local
+          <input type=datetimelocal"> Datetime-local
         </label>
         <label>
-          <input type="number"> Number
+          <input type=number placeholder="33"> Number
         </label>
         <label>
           <input name="datalist" list="datalist"> Datalist
@@ -180,10 +194,10 @@
           <textarea name="textarea"></textarea> Textarea
         </label>
         <label>
-          <input type="range"> Range
+          <input type=range> Range
         </label>
         <label>
-          <input type="color"> Color
+          <input type=color> Color
         </label>
     </fieldset>
   </form>
@@ -194,7 +208,7 @@
     <fieldset>
       <legend>Welcome to the form</legend>
         <label>
-          <input type="checkbox" name="checkbox"> Checkbox
+          <input type=checkbox name="checkbox"> Checkbox
         </label>
         <label>
            <input type="checkbox" name="checkbox" disabled> Checkbox disabled
@@ -393,4 +407,130 @@
       A small text to test line-height, and long so it breaks on the next line. Does it really break on the next line?
     </div>
   </div>
+</section>
+
+
+
+<section>
+  <h2>All-Elements</h2>
+  <a href="#x">a test</a>
+  <abbr>abbr test</abbr>
+  <address>address test</address>
+  <area>area test</area>
+  <article>article test</article>
+  <aside>aside test</aside>
+  <audio>audio test</audio>
+  <b>b test</b>
+  <base>base test</base>
+  <bdi>bdi test</bdi>
+  <bdo>bdo test</bdo>
+  <blockquote>blockquote test</blockquote>
+  <body>body test</body>
+  <br>br test</br>
+  <button>button test</button>
+  <canvas>canvas test</canvas>
+  <caption>caption test</caption>
+  <cite>cite test</cite>
+  <code>code test</code>
+  <col>col test</col>
+  <colgroup>colgroup test</colgroup>
+  <data>data test</data>
+  <datalist>datalist test</datalist>
+  <dd>dd test</dd>
+  <del>del test</del>
+  <details>
+    details test
+    <summary>summary test</summary>
+  </details>
+  <dfn>dfn test</dfn>
+  <dialog>dialog test</dialog>
+  <div>div test</div>
+  <dl>dl test</dl>
+  <dt>dt test</dt>
+  <em>em test</em>
+  <embed>embed test</embed>
+  <fencedframe>fencedframe Experimental test</fencedframe>
+  <fieldset>fieldset test</fieldset>
+  <figcaption>figcaption test</figcaption>
+  <figure>figure test</figure>
+  <footer>footer test</footer>
+  <form>form test</form>
+  <h1>h1 test</h1>
+  <head>head test</head>
+  <header>header test</header>
+  <hgroup>hgroup test</hgroup>
+  <hr>hr test</hr>
+  <html>html test</html>
+  <i>i test</i>
+  <iframe>iframe test</iframe>
+  <img>img test</img>
+  <input>input test</input>
+  <ins>ins test</ins>
+  <kbd>kbd test</kbd>
+  <label>label test</label>
+  <legend>legend test</legend>
+  <ul>
+    <li>li test</li>
+  </ul>
+  <link>link test</link>
+  <main>main test</main>
+  <map>map test</map>
+  <mark>mark test</mark>
+  <menu>menu test</menu>
+  <meta>meta test</meta>
+  <meter>meter test</meter>
+  <nav>nav test</nav>
+  <noscript>noscript test</noscript>
+  <object>object test</object>
+  <ol>ol test</ol>
+  <optgroup>optgroup test</optgroup>
+  <output>output test</output>
+  <p>p test</p>
+  <picture>picture test</picture>
+  <portal>portal experimental test</portal>
+  <pre>pre test</pre>
+  <progress>progress test</progress>
+  <q>q test</q>
+  <rp>rp test</rp>
+  <rt>rt test</rt>
+  <ruby>ruby test</ruby>
+  <s>s test</s>
+  <samp>samp test</samp>
+  <script>script test</script>
+  <search>search test</search>
+  <section>section test</section>
+  <label>
+    select test: <select>
+      <option>option test</option>
+    </select>
+  </label>
+  <slot>slot test</slot>
+  <small>small test</small>
+  <source>source test</source>
+  <span>span test</span>
+  <strong>strong test</strong>
+  <style>style test</style>
+  <sub>sub test</sub>
+  <sup>sup test</sup>
+  <table>table test</table>
+  <tbody>tbody test</tbody>
+  <tr>tr test</tr>
+  <td>td test</td>
+  <template>template test</template>
+  <label>
+    <textarea>textarea test</textarea>
+  </label>
+  <tfoot>tfoot test</tfoot>
+  <th>th test</th>
+  <thead>thead test</thead>
+  <time>time test</time>
+  <title>title test</title>
+  <track>track test</track>
+  <u>u test</u>
+  <ul>ul test</ul>
+  <var>var test</var>
+  <video>video test</video>
+  <wbr>wbr test</wbr>
+  <xmp>xmp test</xmp>
+
 </section>

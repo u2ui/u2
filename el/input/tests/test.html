@@ -30,70 +30,72 @@
 
 <section>
 
-    <table style="width:auto" class="u2-table">
-        <tr>
-            <td> <input type=text>
-            <th> Normal input
-        <tr>
-            <td> <u2-input type=text>inhalt</u2-input>
-            <th> u2-input text
-        <tr>
-            <td> 
-                <u2-input type=text>
-                    <span slot=start>☎</span>
-                    <input type="tel">
-                </u2-input>
-            <th> u2-input with start slot
-        <tr>
-            <td> <u2-input type=textarea>inhalt</u2-input>
-            <th> u2-input textarea
-        <tr>
-            <td> <u2-input type=checkbox on=on off=off>on</u2-input>
-            <th> u2-input checkbox
-        <tr>
-            <td>
-                <u2-input type=select></u2-input>
-            <th> u2-input select
-        <tr>
-            <td> <u2-input><input type=text></u2-input>
-            <th> text with inner
-        <tr>
-            <td> 
-                <u2-input>
-                    <input type=checkbox value="yes" checked>
-                </u2-input>
-            <th> input with inner
-        <tr>
-            <td>
-                <u2-input>
-                    <select>
-                        <option value="1">One
-                        <option value="2" selected>Two
-                        <option value="3">Three
-                    </select>
-                </u2-input>
-            <th> Select with inner
+    <form method=get>
+        <table style="width:auto" class="u2-table">
+            <tr>
+                <td> <input name=normal type=text>
+                <th> Normal input
+            <tr>
+                <td> <u2-input name=u2-text type=text>inhalt</u2-input>
+                <th> u2-input text
+            <tr>
+                <td> 
+                    <u2-input name=u2-tel type=text>
+                        <span slot=start>☎</span>
+                        <input type="tel">
+                    </u2-input>
+                <th> u2-input with start slot
+            <tr>
+                <td> <u2-input type=textarea>inhalt</u2-input>
+                <th> u2-input textarea
+            <tr>
+                <td> <u2-input type=checkbox on=on off=off>on</u2-input>
+                <th> u2-input checkbox
+            <tr>
+                <td>
+                    <u2-input type=select></u2-input>
+                <th> u2-input select
+            <tr>
+                <td> <u2-input><input type=text></u2-input>
+                <th> text with inner
+            <tr>
+                <td> 
+                    <u2-input>
+                        <input type=checkbox value="yes" checked>
+                    </u2-input>
+                <th> input with inner
+            <tr>
+                <td>
+                    <u2-input>
+                        <select>
+                            <option value="1">One
+                            <option value="2" selected>Two
+                            <option value="3">Three
+                        </select>
+                    </u2-input>
+                <th> Select with inner
 
-        <tr>
-            <td>
-                <u2-input>
-                    <textarea name="test">
-                        diest ist
-                        der Inhalt
-                    </textarea>
-                </u2-input>
-            <th> Textarea with inner
-        <tr>
-            <td>
-                <u2-input>
-                    <input type="date">
-                </u2-input>
-            <th> Date with inner
-        <tr>
-            <td>
-            <th> 
-    </table>
-
+            <tr>
+                <td>
+                    <u2-input>
+                        <textarea name="test">
+                            diest ist
+                            der Inhalt
+                        </textarea>
+                    </u2-input>
+                <th> Textarea with inner
+            <tr>
+                <td>
+                    <u2-input>
+                        <input type="date">
+                    </u2-input>
+                <th> Date with inner
+            <tr>
+                <td>
+                <th> 
+        </table>
+        <button>send</button>
+    </form>
 
 
     <h3>u2-input with combinations</h3>

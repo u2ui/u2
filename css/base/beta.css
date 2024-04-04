@@ -1,6 +1,8 @@
-*, ::before, ::after {
+:where(*, ::before, ::after) {
 	background-size: contain; /* or cover? */
 	background-position: 50% 50%;
+	border-style:solid; /* default to solid but 0px */
+	border-width:0;
 }
 [type=number] { text-align: end; }
 legend {

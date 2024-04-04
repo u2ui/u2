@@ -6,6 +6,7 @@ customElements.define('u2-input', class extends HTMLElement {
         super(...args);
 
         let shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
+
         shadowRoot.innerHTML = `
         <style>
         :host {

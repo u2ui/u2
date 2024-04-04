@@ -1,4 +1,3 @@
-
 let css = `
 :host {
     display:block;
@@ -48,9 +47,11 @@ let css = `
 
 
 export class tree extends HTMLElement {
+    //#internals;
     constructor() {
         super();
         const shadow = this.attachShadow({mode: 'open', delegatesFocus: true});
+        //this.#internals = this.attachInternals();
         shadow.innerHTML = `
         <style>${css}</style>
         <div part=row tabindex=-1>
@@ -124,6 +125,7 @@ export class tree extends HTMLElement {
             child.tagName === this.tagName && child.setAttribute('slot', 'children');
         }
         this.setAttribute('role', root === this ? 'tree' : 'treeitem');
+        //this.#internals.role = root === this ? 'tree' : 'treeitem';
 
         // make it selectable if its the root and no other is selected
         if (root === this && !root._activeElement) {
