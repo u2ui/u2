@@ -8,7 +8,7 @@
         <script src="../auto.js" type=module async></script>
 
         <script type="module">
-            import {contextMenu} from '../../contextmenu.js/contextmenu.js';
+            import {contextMenu} from '../../js/contextmenu/contextmenu.js';
             contextMenu.add([{
                 label:'About u2-ui',
                 shortcut:'ctrl+F1',
@@ -126,7 +126,7 @@
         <section id=reposSec>
             <h2>Repos</h2>
             <script type=module>
-                const repos = await fetch('../repos.json').then(res=>res.json());
+                const repos = await fetch('../projects.json').then(res=>res.json());
                 const entries = repos.sort((r1,r2)=>{
                     const ext1 = r1.name.replace(/^.*\.([^.]+)/,'$1');
                     const ext2 = r2.name.replace(/^.*\.([^.]+)/,'$1');

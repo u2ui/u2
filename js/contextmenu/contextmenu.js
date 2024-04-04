@@ -303,10 +303,11 @@ const shadowRoot = menuContainer.attachShadow({mode: 'open'});
 menuContainer.id = 'u2ContextMenuContainer';
 menuContainer.innerHTML = `<link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,200,0,0"/>`; // does not work in shadowdom
 
+const cssRoot = import.meta.resolve('../../css/');
 shadowRoot.innerHTML = `
 <style>
-@import "../../../css/norm/norm.css";
-@import "../../../css/base/base.css";
+@import "${cssRoot}norm/norm.css";
+@import "${cssRoot}base/base.css";
 ${css}
 </style>`;
 

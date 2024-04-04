@@ -24,7 +24,7 @@ if (debug) { // top level await safari >= 15.1
 }
 
 import {importCss} from './utils.js';
-import {repos, latestUrl} from './u2.js';
+import {repos} from './u2.js';
 
 const projects = await repos();
 
@@ -33,13 +33,11 @@ setTimeout(()=>prio = 2);
 setTimeout(()=>prio = 3, 2000);
 const needed = { js:{}, css:{} };
 function impJs(url){
-    if (useLatest) url = latestUrl(url);
     if (!url || url in needed.js) return;
     needed.js[url] = prio;
     return import(url);
 }
 function impCss(url, options={}){
-    if (useLatest) url = latestUrl(url)
     if (!url || url in needed.css) return;
     importCss(url, options).then(res=>{
         if (res.available) needed.css[url]=0; // already loaded

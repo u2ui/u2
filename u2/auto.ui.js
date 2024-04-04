@@ -1,5 +1,5 @@
 import {render, html} from 'https://unpkg.com/uhtml@3.1.0/esm/index.js?module';
-import {repos, latestUrlCached} from './u2.js';
+import {repos} from './u2.js';
 
 let win = null;
 export function open(){
@@ -66,19 +66,19 @@ const exportCode = async function(){
 
 
 
-    let strCss = Object.entries(needed.css).filter(([,prio])=>prio===1).map(([url,prio])=>'<link href="'+latestUrlCached(url)+'" rel="stylesheet" crossorigin>').join('\n');
+    let strCss = Object.entries(needed.css).filter(([,prio])=>prio===1).map(([url,prio])=>'<link href="'+url+'" rel="stylesheet" crossorigin>').join('\n');
 
     // todo: combined string (just in the console for now)
     let strCssPromizes = Object.entries(needed.css).filter(([,prio])=>prio===1).map(([url,prio])=>{
-        return fetch(latestUrlCached(url)).then(res=>res.text());
+        return fetch(url).then(res=>res.text());
     });
     const cssContents = await Promise.all(strCssPromizes);
     const cssText = cssContents.join('').replace(/\/\*[\s\S]*?\*\//g, '');
     console.log(cssText);
 
 
-    let strJs  = Object.entries(needed.js).map(([url,prio])=>'<script src="'+latestUrlCached(url)+'" type=module crossorigin async></script>').join('\n');
-    let strCssNonCritical = Object.entries(needed.css).filter(([,prio])=>prio>1).map(([url,prio])=>'<link rel="stylesheet" href="'+latestUrlCached(url)+'" crossorigin>').join('\n');
+    let strJs  = Object.entries(needed.js).map(([url,prio])=>'<script src="'+url+'" type=module crossorigin async></script>').join('\n');
+    let strCssNonCritical = Object.entries(needed.css).filter(([,prio])=>prio>1).map(([url,prio])=>'<link rel="stylesheet" href="'+url+'" crossorigin>').join('\n');
     return strCss +'\n' + strJs + '\n' + '\n<!-- non critical at the end -->\n' + strCssNonCritical;
 }
 
