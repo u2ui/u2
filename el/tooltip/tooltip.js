@@ -54,9 +54,7 @@ customElements.define('u2-tooltip', class extends HTMLElement {
             if (value === 'right')  this.placer.setOptions({y:'center',x:'after'});
         }
     }
-    static get observedAttributes() {
-        return ['position'];
-    }
+    static observedAttributes = ['position'];
 });
 
 

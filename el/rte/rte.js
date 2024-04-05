@@ -62,7 +62,7 @@ class rte extends HTMLElement {
     // attributeChangedCallback(name, oldValue, newValue) {
     //     if (name === 'format') this.format = newValue!=null;
     // }
-    // static get observedAttributes() { return ['format'] }
+    // static observedAttributes = ['format'];
 }
 
 customElements.define('u2-rte', rte);

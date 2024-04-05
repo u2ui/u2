@@ -58,9 +58,8 @@ const uIco = class extends HTMLElement {
         //     });
         // }
     }
-    static get observedAttributes() {
-        return ['icon'];
-    }
+
+    static observedAttributes = ['icon'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'icon') {

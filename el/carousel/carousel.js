@@ -133,9 +133,7 @@ class u2Carousel extends HTMLElement {
 		prev.addEventListener('click',()=>this.prev());
 
 	}
-	static get observedAttributes() {
-		return ['play', 'autoplay', 'mode'/*, 'tabindex'*/]; // zzz "play"
-	}
+	static observedAttributes = ['play', 'autoplay', 'mode'/*, 'tabindex'*/]; // zzz "play"
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
 		if (name === 'play') { console.warn('play is deprecated, use autoplay'); let play = this.hasAttribute('play'); this[play?'play':'stop'](); }  // zzz

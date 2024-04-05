@@ -168,10 +168,8 @@ class DevIframe extends HTMLElement {
         });
     }
 
-    // Beobachte Änderungen des 'src'-Attributs
-    static get observedAttributes() {
-        return ['src'];
-    }
+    static observedAttributes = ['src'];
+
 
     // Reagiere auf Änderungen des 'src'-Attributs
     attributeChangedCallback(name, oldValue, newValue) {

@@ -11,6 +11,7 @@
     <link rel=stylesheet href="../../../css/classless/classless.css">
     <link rel=stylesheet href="../../../css/classless/variables.css">
     <link rel=stylesheet href="../../../css/classless/more.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
 
     
     <style>
@@ -30,8 +31,8 @@
 
 <section>
 
-    <form method=get>
-        <table style="width:auto" class="u2-table">
+    <form method=get id=form>
+        <table style="xwidth:auto" class="u2-table -Fields">
             <tr>
                 <td> <input name=normal type=text>
                 <th> Normal input
@@ -46,27 +47,27 @@
                     </u2-input>
                 <th> u2-input with start slot
             <tr>
-                <td> <u2-input type=textarea>inhalt</u2-input>
+                <td> <u2-input name=textarea type=textarea>inhalt</u2-input>
                 <th> u2-input textarea
             <tr>
-                <td> <u2-input type=checkbox on=on off=off>on</u2-input>
+                <td> <u2-input name=checkbox type=checkbox on=on off=off>on</u2-input>
                 <th> u2-input checkbox
             <tr>
                 <td>
-                    <u2-input type=select></u2-input>
+                    <u2-input name=select type=select></u2-input>
                 <th> u2-input select
             <tr>
                 <td> <u2-input><input type=text></u2-input>
                 <th> text with inner
             <tr>
                 <td> 
-                    <u2-input>
+                    <u2-input name=checkbox-inner>
                         <input type=checkbox value="yes" checked>
                     </u2-input>
                 <th> input with inner
             <tr>
                 <td>
-                    <u2-input>
+                    <u2-input name="select_inner">
                         <select>
                             <option value="1">One
                             <option value="2" selected>Two
@@ -94,8 +95,37 @@
                 <td>
                 <th> 
         </table>
-        <button>send</button>
+        <button name=submitBtn value="1">Submit 1</button>
+        <button name=submitBtn value="2">Submit 2</button>
     </form>
+
+
+    <section id="dataOut"></section>
+
+    <section id="eventsOut"></section>
+
+    <script type="module">
+        function updateData(e) {
+            const data = new FormData(form, e?.submitter);
+            dataOut.innerHTML = dump(Object.fromEntries(data));
+        }
+        import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
+        form.addEventListener('input', updateData);
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            updateData(e);
+        });
+        updateData();
+
+
+        import {EventsExplorer} from '../../../u2/tools/eventsExplorer.js';
+        const eventsExpl = new EventsExplorer(
+            eventsOut,
+            form,
+            ['input', 'change', 'focus', 'blur', 'focusin', 'focusout', 'select', 'submit']
+        );
+        eventsExpl.start();
+    </script>
 
 
     <h3>u2-input with combinations</h3>
@@ -146,7 +176,7 @@
 </section>
 
 <style>
-u2-input:has(:focus-visible) {
+xu2-input:has(:focus-visible) {
     transition: .15s;
     outline: .4rem solid hsl(130 90% 60% / .2);
 }

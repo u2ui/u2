@@ -24,7 +24,7 @@ class Table extends HTMLElement {
         this._checkMutations();
     }
 
-    static get observedAttributes() { return ['sortable']; }
+    static observedAttributes = ['sortable'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'sortable') makeSortable(this.table, newValue !== null);
     }

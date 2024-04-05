@@ -16,8 +16,7 @@ class counter extends HTMLElement {
             }
         });
     }
-    // set value
-    static get observedAttributes() { return ['value', 'from', 'no-grouping', 'once'] }
+    static observedAttributes = ['value', 'from', 'no-grouping', 'once'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'value') this.value = newValue;
         if (name === 'from') this._start = parseFloat(newValue);

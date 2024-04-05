@@ -193,7 +193,8 @@ class code extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'trim') this.trim = newValue!=null;
     }
-    static get observedAttributes() { return ['trim'] }
+    static observedAttributes = ['trim'];
+
 }
 
 customElements.define('u2-code', code);

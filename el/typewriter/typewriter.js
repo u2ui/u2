@@ -44,7 +44,7 @@ class Typewriter extends HTMLElement {
 
     }
 
-    static get observedAttributes() { return ['autoplay', 'loop'] }
+    static observedAttributes = ['autoplay', 'loop'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'autoplay') this.intersectionObserver[newValue===null?'unobserve':'observe'](this);
     }

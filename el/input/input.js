@@ -48,6 +48,7 @@ customElements.define('u2-input', class extends HTMLElement {
             <slot name=end></slot>
         </div>
         `;
+        this._internals = this.attachInternals();
     }
 
     connectedCallback() {
@@ -59,14 +60,28 @@ customElements.define('u2-input', class extends HTMLElement {
         if (this.realInput.tagName === 'TEXTAREA') {
             this.setAttribute('type','textarea');
         }
-        this.setAttribute('value', this.realInput.value)
-        this.setAttribute('name', this.realInput.name)
+        this.setAttribute('value', this.realInput.value);
+        this.realInput.hasAttribute('name') && this.setAttribute('name', this.realInput.name);
+
+        this._internals.setFormValue(this.realInput.value);
+        this.realInput.addEventListener('input', e => {
+            this._internals.setFormValue(this.realInput.value, this.realInput.value);
+        //  this.dispatchEvent(new CustomEvent('input', { bubbles: true, cancelable: true }));
+        });
+        // this.realInput.addEventListener('change', e => {
+        //     this.dispatchEvent(new CustomEvent('change', { bubbles: true, cancelable: true }));
+        // });
+    }
+    formStateRestoreCallback(state, reason){
+        this.realInput.value = state;
     }
 
+    static observedAttributes = ['type', 'value'];
+    static formAssociated = true;
 
-    static get observedAttributes() { return ['type'] }
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'type' && oldValue !== newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'type') {
             if (newValue === 'textarea') {
                 this.realInput?.remove();
                 this.realInput = document.createElement('textarea');
@@ -79,8 +94,10 @@ customElements.define('u2-input', class extends HTMLElement {
                 this.appendChild(this.realInput);
             }
         }
+        if (name === 'value') {
+            this.realInput.value = newValue;
+        }
     }
-
 
     /* checkbox */
     get value(){
