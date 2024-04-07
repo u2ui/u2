@@ -13,6 +13,18 @@ tbody, thead, tfoot {
 	vertical-align: inherit;
 }
 
+select, summary, label, button:not(:disabled), [type=checkbox], [type=radio], [type=file], .btn, ::file-selector-button {
+	touch-action: manipulation;
+}
+button, ::file-selector-button, .btn {
+	user-select: none;
+}
+.btn {
+	inline-size: fit-content;
+	text-decoration: none;
+}
+
+
 /*
 body {
 	background-image: var(--report-to);

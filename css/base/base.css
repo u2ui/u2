@@ -72,14 +72,14 @@ nav ul { padding-inline-start:1.5em; }
 nav > ul { padding-inline-start:0; }
 
 /* clickable */
-select, summary, label, button:not(:disabled), [type=checkbox], [type=radio], [type=file], .btn {
+select, summary, label, button:not(:disabled), [type=checkbox], [type=radio], [type=file], ::file-selector-button, .btn {
 	cursor:pointer;
 }
 
 [inert] { opacity:.4; }
 
 /* form */
-input, textarea, select, button, .btn {
+input, textarea, select, button, ::file-selector-button, .btn {
 	padding:.2em;
 	border:1px solid rgba(0,0,0,.5);
 	font: inherit;
@@ -91,7 +91,7 @@ input, textarea, select, button, .btn {
 	line-height:var(--line-height); /* needed as font:inherit does inherit line-height */
 	--line-height:normal;
 }
-button, .btn {
+button, ::file-selector-button, .btn {
 	padding-inline:.7em;
 }
 select { background-color:Field; }

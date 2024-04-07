@@ -63,7 +63,6 @@ input, textarea, select, button, .btn {
     padding-inline: .4em;
     padding-block: .3em;
     font-family:inherit;
-    xmax-width: 100%;
     max-inline-size: 100%;
     /* todo: new ok? */
     /* xborder: 1px solid; */

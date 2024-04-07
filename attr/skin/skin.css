@@ -1,7 +1,15 @@
+
 [u2-skin] {
     color: var(--color-text);
     background-color: var(--color-bg);
+
+    ::selection {
+        color: var(--color-bg);
+        background-color: var(--color-text);
+    }
 }
+
+
 
 [u2-skin=invert] {
     --color-light: var(--color-init-dark);
