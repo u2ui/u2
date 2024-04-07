@@ -133,9 +133,10 @@
     document.addEventListener('u2-tree1-expand', event => {
         const treeItem = event.target;
         
-        // if load is present, it requires a promise that will load the items
+        // if load is present, it requires a (async) function that loads the items
         // (indicated by `aria-expanded=false` and `aria-live=off`)
-        event.load?.(loadItems(treeItem));
+        //event.load?.(loadItems(treeItem)); zzz
+        event.load?.(loadItems);
     });
     const loadItems = async (item) => {
         await delay(600);

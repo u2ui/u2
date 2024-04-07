@@ -195,7 +195,17 @@ export class tree extends HTMLElement {
 
         const event = new CustomEvent(doit?'u2-tree1-expand':'u2-tree1-collapse', {bubbles: true});
         if (this.getAttribute('aria-live') && this.getAttribute('aria-busy') !== 'true') {
-            event.load = promise=>{
+
+            event.load = fn=>{
+                
+                let promise;
+                if (typeof fn.then === 'function') {
+                    console.warn('event.load(promise) is deprecated, use event.load(fn)');
+                    promise = fn;
+                } else {
+                    promise = fn(this);
+                }
+                
                 this.setAttribute('aria-busy','true');
                 promise.then(data => {
                     this.removeAttribute('aria-live');
@@ -207,6 +217,7 @@ export class tree extends HTMLElement {
                     console.warn('todo: u2-tree: failed to load');
                 });
             }
+
         }
         this.dispatchEvent(event);
         this.setAttribute('aria-expanded', doit?'true':'false');

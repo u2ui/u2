@@ -57,7 +57,7 @@ This is either not expandable or like aria-expanded="false" if it has children.
 #### aria-live
 `<u2-tree1 aria-live></u2-tree1>`
 This indicates, that the node has to be loaded.  
-The `u2-tree1-collapse` event will get a property `event.load(promise)` to load their children.
+The `u2-tree1-collapse` event will get a property `event.load(asyncFn)` to load their children.
 
 ### Events
 
