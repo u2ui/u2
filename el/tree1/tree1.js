@@ -205,7 +205,7 @@ export class tree extends HTMLElement {
                 } else {
                     promise = fn(this);
                 }
-                
+
                 this.setAttribute('aria-busy','true');
                 promise.then(data => {
                     this.removeAttribute('aria-live');
@@ -214,7 +214,7 @@ export class tree extends HTMLElement {
                         !this.items().length && this.removeAttribute('aria-expanded');
                     },100);
                 }).catch(data=>{
-                    console.warn('todo: u2-tree: failed to load');
+                    console.warn('todo: u2-tree: failed to load', data);
                 });
             }
 

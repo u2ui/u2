@@ -6,10 +6,8 @@ const root = new URL(myUrl.origin + myUrl.pathname + '/../../'); //console.log('
 let rootUrl = root.toString();
 
 let min = '.min';
-let useLatest = true;
 if (root.host === 'localhost') {
     min = '';
-    useLatest = false;
 }
 
 // get faster cdn updates? https://purge.jsdelivr.net/gh/nuxodin/cleanup.js@latest/
@@ -55,9 +53,7 @@ window.u2.needed = needed;
 ////////////////////////////////////////////////////////////////
 
 impCss(rootUrl+'css/norm/norm'+min+'.css');
-//impCss(rootUrl+'norm.css/beta'+min+'.css');
 impCss(rootUrl+'css/base/base'+min+'.css');
-//impCss(rootUrl+'base.css/beta'+min+'.css');
 setTimeout(()=>{
     impCss(rootUrl+'css/base/print.css', {media:'print'});
     impCss(rootUrl+'css/base/nomotion.css', {media:'prefers-reduced-motion'});
