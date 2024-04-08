@@ -147,13 +147,14 @@ input:where([type=radio], [type=checkbox]):hover::after {
 
 [type=color] {
 	padding: 0;
-	border-radius: 100%;
+	border-radius: 99em;
 	width: 1.4em;
 	height: 1.4em;
 	border-width: 1px;
 	overflow: hidden;
 	box-shadow: 0 0 .5em #0003;
 	cursor: pointer;
+    vertical-align:-0.3em;
 }
 
 [type=color]::-moz-color-swatch {
