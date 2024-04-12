@@ -24,6 +24,12 @@ button, ::file-selector-button, .btn {
 	text-decoration: none;
 }
 
+/* useful? */
+dialog, [popover] {
+    &, &::backdrop {
+        transition-behavior: allow-discrete;
+    }
+}
 
 /*
 body {
