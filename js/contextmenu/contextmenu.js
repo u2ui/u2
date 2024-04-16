@@ -1,4 +1,3 @@
-let openTimeout;
 
 class Menu {
     constructor(menuItem) {
@@ -42,21 +41,13 @@ class Menu {
         return this.currentActive;
     }
     open() {
-        clearTimeout(openTimeout);
         if (!this.currentActive) return;
-        this.menuItem?.parentMenu?.children.forEach(m=>m._subMenu?.close());
         this.menuItem?.el.setAttribute('aria-expanded', true);
         this._placer().then(p =>{
-            this.el.classList.add('-open');
             p.followElement(this.el.parentElement);
         });
     }
-    openDelayed() {
-        clearTimeout(openTimeout);
-        openTimeout = setTimeout(()=>this.open(), 500);
-    }
     close() {
-        this.el.classList.remove('-open');
         this.menuItem?.el.removeAttribute('aria-expanded');
         this.children.forEach(m=>m._subMenu?.close());
     }
@@ -97,9 +88,9 @@ class MenuItem {
                 }
                 rootEl.hidePopover();
             });
-            btn.addEventListener('mouseenter', e => this._subMenu?.openDelayed() );
-            btn.addEventListener('focusin', e => this._subMenu?.openDelayed() );
         }
+        li.addEventListener('mouseenter', e => this.openSub() );
+        li.addEventListener('focusin', e => this.openSub() );
 
         if (options.shortcut) {
             import('../../js/shortcut/shortcut.js').then(({listen})=>{
@@ -116,6 +107,12 @@ class MenuItem {
         li.addEventListener('mousedown',  stopPropagation)
         li.addEventListener('touchstart', stopPropagation)
     }
+    openSub(){
+        if (this.el.getAttribute('aria-expanded') === 'true') return;
+        this.parentMenu.children.forEach(m=>m._subMenu?.close());
+        this._subMenu?.open(); 
+    }
+
     subMenu() {
         if (!this._subMenu) {
             this._subMenu = new Menu(this);
@@ -160,27 +157,27 @@ const css = `
     --line: color-mix(in srgb, var(--text) 30%, var(--bg));
 
     &, & menu {
-        position:fixed; 
-        top:0; 
-        box-shadow:0 0 .8em rgba(0,0,0,.08); 
+        position:fixed;
+        top:0;
+        box-shadow:0 0 .8em rgba(0,0,0,.08);
         list-style:none; 
-        font-family:Arial; 
-        font-size:14px; 
-        margin:0; 
-        padding:0; 
-        min-width:10em; 
-        cursor:default; 
+        font-family:Arial;
+        font-size:14px;
+        margin:0;
+        padding:0;
+        min-width:10em;
+        cursor:default;
         border: 1px solid var(--line);
-        background-color: var(--bg, Canvas); 
-        color: var(--text, CanvasText); 
+        background-color: var(--bg, Canvas);
+        color: var(--text, CanvasText);
     }
     & menu {
         display:none;
     }
-    & menu.-open {
+    & li[aria-expanded=true] > menu {
         display:block;
     }
-    & menu:focus-within {
+    & menu:focus-within { /* needed? */
         display:block;
     }
     & li {
