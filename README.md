@@ -1,5 +1,5 @@
 # u2 - Design System
-HTML Advanced: More Capabilities, Same Feel and Same Simplicity
+HTML Advanced: More Capabilities, Same Feel, Same Simplicity
 
 <p align="center">
   <img src="./u2/tools/logo/u1.svg">
