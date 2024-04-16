@@ -92,7 +92,7 @@
     },
     "input": {
       "name": "input",
-      "description": "custom inputs (beta)\r",
+      "description": "custom inputs (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -270,7 +270,7 @@
     },
     "tree1": {
       "name": "tree1",
-      "description": "Treeview component",
+      "description": "Treeview component\r",
       "beta": false,
       "deprecated": false,
       "css": true,

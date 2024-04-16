@@ -26,13 +26,16 @@ const base = './u2/';
         };
     }
 
+    // bug: hier wird bei jeder kategorie überschrieben
+    // todo: sollte nur einmal am ende gemacht werden
     const str = JSON.stringify(repos, null, '  ');
     const write = Deno.writeTextFile("./u2/u2/projects.json", str);
+
     write.then(() => console.log("File written!"));
-    
-    //writeReadMeCategory(entry);
+
 });
 
+console.log(repos);
 
 async function writeReadMe(category, entry) {
     const readme = base+category+'/'+entry.name+'/README.md';
