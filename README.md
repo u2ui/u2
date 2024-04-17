@@ -17,9 +17,9 @@ u2 is a design system that is intended to fulfill the following goals:
 
 ## Demos
 
-[boilerplate.html](http://gcdn.li/u2ui/u2@main/tests/boilerplate.html)  
-[showcase.html](http://gcdn.li/u2ui/u2@main/tests/showcase.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/tests/test.html)  
+[boilerplate.html](http://gcdn.li/u2ui/u2@main/u2/tests/boilerplate.html)  
+[showcase2.html](http://gcdn.li/u2ui/u2@main/u2/tests/showcase2.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/u2/tests/test.html)  
 
 ## Prototyping
 
