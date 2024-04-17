@@ -1,5 +1,5 @@
 
-var style = document.createElement('style');
+const style = document.createElement('style');
 style.innerHTML = `
 u2-carousel-nav {
 	display:flex;
@@ -7,7 +7,6 @@ u2-carousel-nav {
 	margin:.5rem;
 }
 u2-carousel-nav > * {
-	xflex:0 0 auto;
 	width:1.2rem;
 	height:1.2rem;
 	margin:.2rem;
@@ -33,9 +32,9 @@ u2-carousel-nav > .-active {
 document.head.prepend(style);
 
 function refSlideshows(el) {
-	var grp = el.getAttribute('sync-group');
+	const grp = el.getAttribute('sync-group');
 	if (grp) {
-		var slides = [];
+		const slides = [];
 		document.body.c1FindAll('u2-carousel[sync-group="'+grp+'"]').forEach(function(ssEl){
 			slides.push(ssEl);
 		});
@@ -52,14 +51,14 @@ class u2CarouselNav extends HTMLElement {
 
 	connectedCallback() {
 		customElements.whenDefined('u2-carousel').then(()=>{
-			var SS = refSlideshows(this)[0];
+			const SS = refSlideshows(this)[0];
 
-			var items = SS._items();
+			const items = SS._items();
 
 			if (items.length < 2) this.style.display = 'none';
 
 			items.forEach((item, index)=>{
-				var button = document.createElement('span');
+				const button = document.createElement('span');
 				button.addEventListener('click',()=>SS.slideTo(index));
 				button.innerHTML = index+1;
 				this.append(button);

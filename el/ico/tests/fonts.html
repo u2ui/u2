@@ -45,7 +45,7 @@
     <div style="display:flex; flex-wrap:wrap; gap:.2rem" id=lsView>
         <script type=module>
             ligaturesFromFamily('LigatureSymbols').then(function(ligas){
-                var str = '';
+                let str = '';
                 for (let icon of Object.keys(ligas)) {
                     str += '<div style="text-align:center"><u2-ico>'+icon+'</u2-ico><div style="font-size:18px">'+icon+'</div></div>';
                 }
@@ -73,7 +73,7 @@
         <script type=module>
             /*
             ligaturesFromFamily('Material Icons').then(function(ligas){
-                var str = '';
+                let str = '';
                 for (let icon of Object.keys(ligas)) {
                     str += '<u2-ico title="'+icon+'">'+icon+'</u2-ico>';
                 }
@@ -94,7 +94,7 @@
     <div style="display:flex; flex-wrap:wrap; gap:.2rem" id=remixView>
         <script type=module>
             ligaturesFromFamily('RemixOutlined').then(function(ligas){
-                var str = '';
+                let str = '';
                 for (let icon of Object.keys(ligas)) {
                     str += '<u2-ico title="'+icon+'">'+icon+'</u2-ico>';
                 }

@@ -149,9 +149,9 @@
         // list all icons
         document.getElementById('table').addEventListener('click', async function(e){
 
-            var href = e.target.closest('tr').querySelector('a').href;
+            const href = e.target.closest('tr').querySelector('a').href;
 
-            var dialog = document.createElement('dialog');
+            const dialog = document.createElement('dialog');
             dialog.innerHTML = 'loading...';
             dialog.style.setProperty('--u2-ico-dir', "'"+href+"'");
             dialog.style.width = '100vw';
@@ -161,9 +161,9 @@
             dialog.showModal();
 
             const [, api, , path] = href.replace('cdn.jsdelivr.net', 'data.jsdelivr.com/v1/package').match(/(.*@[^/]+)(\/)(.*)/);
-            var parts = path.split('/');
-            var data = await fetch(api).then(res=>res.json());
-            var curr = data;
+            const parts = path.split('/');
+            const data = await fetch(api).then(res=>res.json());
+            let curr = data;
             for (let part of parts) {
                 if (part === '') break;
                 curr = curr.files.find(item=>item.name===part);
@@ -175,7 +175,7 @@
                 let name = file.name;
                 if (!name.endsWith('.svg')) return;
                 let icon = name.replace('.svg','');
-                var item = document.createElement('div');
+                const item = document.createElement('div');
                 item.innerHTML = '<u2-ico xicon="'+icon+'">'+icon+'</u2-ico><br>'+icon;
                 dialog.querySelector('#icoList').append(item);
             })

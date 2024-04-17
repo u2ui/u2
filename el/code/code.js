@@ -266,12 +266,12 @@ function positionAfterUpdate(initialString, initialPosition, newString) {
 
 function levenshteinDistance(a, b) {
     if (a.length > b.length) [a, b] = [b, a];
-    var previousRow = Array.from({length: a.length + 1}, (_, i) => i);
-    var currentRow = new Array(a.length + 1);
-    for (var i = 1; i <= b.length; i++) {
+    const previousRow = Array.from({length: a.length + 1}, (_, i) => i);
+    const currentRow = new Array(a.length + 1);
+    for (let i = 1; i <= b.length; i++) {
         currentRow[0] = i;
-        for (var j = 1; j <= a.length; j++) {
-            var cost = a[j - 1] === b[i - 1] ? 0 : 1;
+        for (let j = 1; j <= a.length; j++) {
+            const cost = a[j - 1] === b[i - 1] ? 0 : 1;
             currentRow[j] = Math.min(
                 currentRow[j - 1] + 1,
                 previousRow[j] + 1,

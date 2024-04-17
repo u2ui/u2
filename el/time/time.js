@@ -30,7 +30,7 @@ const types = {
         };
         const options = {};
         for (let [key, opts] of Object.entries(defaults)) {
-            var val = el.getAttribute(key);
+            const val = el.getAttribute(key);
             if (val === null) {
                 if (opts.showAnyway) options[key] = opts.default;
                 continue;
@@ -87,7 +87,7 @@ define('u2-time', {
 
         let date = this.__date;
 
-        var valid = !isNaN(date);
+        const valid = !isNaN(date);
         if (valid) {
             let fn = types[this.__type];
             if (!fn) { console.warn('type ' + this.__type + ' is not supported'); return; }

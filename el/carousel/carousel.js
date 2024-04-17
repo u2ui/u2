@@ -182,11 +182,11 @@ class u2Carousel extends HTMLElement {
 
 	_sibling(direction){
 		const items = this._items();
-		var sibling = this.active || items.at(-1);
+		let sibling = this.active || items.at(-1);
 		const index = this.activeIndex();
 		if (!sibling) return; // no slide
 		while (1) {
-			var sibling = direction === 'prev'
+			sibling = direction === 'prev'
 				? items[index-1] || items.at(-1)
 				: items[index+1] || items.at(0);
 			break; // also hidden
@@ -317,8 +317,8 @@ addEventListener('u2-carousel.slide', e=>{
 /*
 u2Carousel.prototype.addSwipe = function(){
 	c1.c1Use('pointerObserver',function(){
-		var pO = this.pointerObserver = new c1.pointerObserver(this);
-		var startX = 0;
+		const pO = this.pointerObserver = new c1.pointerObserver(this);
+		let startX = 0;
 		pO.onstart = function(e){
 			//e.preventDefault(); // enable drag image, can not select text
 			startX = getComputedTranslate(this).x;
@@ -326,15 +326,15 @@ u2Carousel.prototype.addSwipe = function(){
 			this.style.transition = 'none';
 		}
 		pO.onmove = function(){
-			var to = (this.startDiff().x*1) + startX;
+			const to = (this.startDiff().x*1) + startX;
 			this.style.transform = 'translateX('+to+'px)';
 		}
 		pO.onstop = function(){
-			var x = -getComputedTranslate(this).x;
-			var add = this.lastDiff().x * 50;
+			let x = -getComputedTranslate(this).x;
+			const add = this.lastDiff().x * 50;
 			add = Math.max(-this.offsetWidth, Math.min(add, this.offsetWidth));
 			x -= add;
-			var next = Math.round(x / this.offsetWidth);
+			let next = Math.round(x / this.offsetWidth);
 			next = Math.max(0, Math.min(next, this.children.length-1));
 			next = this.children[next];
 			if (!next) next = this.active;
@@ -344,8 +344,8 @@ u2Carousel.prototype.addSwipe = function(){
 	});
 }
 function getComputedTranslate(el) {
-	var style = getComputedStyle(el);
-	var matrix = new (window.WebKitCSSMatrix || window.MSCSSMatrix)(style.transform);
+	const style = getComputedStyle(el);
+	const matrix = new (window.WebKitCSSMatrix || window.MSCSSMatrix)(style.transform);
 	return {
 		x:matrix.m41,
 		y:matrix.m42,
