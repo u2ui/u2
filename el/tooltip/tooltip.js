@@ -6,17 +6,13 @@ customElements.define('u2-tooltip', class extends HTMLElement {
     constructor() {
         super();
         this.placer = new Placer(this, { x:'center', y:'after', margin:20 });
-        this.setAttribute('role', 'tooltip');
     }
     connectedCallback() {
         if (!this.id) { // if no id is set, set one an make it the tooltip for its parent
             this.id = 'u2-tooltip-' + idCounter++;
             this.parentNode.setAttribute('aria-labelledby', this.id);
         }
-        const rootEl = document.documentElement; // zzz if popover
-        this.parentNode !== rootEl && rootEl.append(this); // zzz if popover
-
-        /* popover */
+        this.setAttribute('role', 'tooltip');
         this.setAttribute('popover','auto');
     }
     _showFor(el){
@@ -31,20 +27,17 @@ customElements.define('u2-tooltip', class extends HTMLElement {
         return this.showFor(el);
     }
     showFor(el){
-        /* popover */
-        //this.showPopover && this.showPopover();
-
-        this.setAttribute('open','');
-        this.placer.toElement(el); // todo z-index top
+        clearTimeout(this.hideTimeout);
+        setTimeout(()=>this.setAttribute('open',''),0); // to make sure the css transition is triggered
+        this.showPopover();
+        this.placer.toElement(el);
         this.setAttribute(':position-x', this.placer.positionX);
         this.setAttribute(':position-y', this.placer.positionY);
-
     }
     hide(){
         this.removeAttribute('open');
-
-        /* popover */
-        //this.hidePopover && this.hidePopover();
+        clearTimeout(this.hideTimeout);
+        this.hideTimeout = setTimeout(()=>this.hidePopover(),400); // wait for the css transition to finish
     }
     attributeChangedCallback(name, old, value) {
         if (name === 'position') {
@@ -64,7 +57,7 @@ document.addEventListener('mouseenter',function(e){
         e.target.shadowRoot.addEventListener('mouseenter',checkOn,true);
         e.target.shadowRoot.addEventListener('mouseleave',checkOff,true);
     }
-},true); // on document: chrome
+},true);
 
 
 document.addEventListener('mouseenter',checkOn,true); // on document: chrome

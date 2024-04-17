@@ -71,7 +71,17 @@ class code extends HTMLElement {
         `;
         // would be great, if in the case of a hightlighted textarea, the original textarea would be used
 
-        this.textarea = shadowRoot.querySelector('textarea');
+        this.sourceMutationObserver = new MutationObserver(()=>{
+            this.value = this.getSourceValue();
+        });
+            
+    }
+    connectedCallback() {
+        requestAnimationFrame(()=>this._init());
+    }
+    _init(){
+
+        this.textarea = this.shadowRoot.querySelector('textarea');
 
         this.textarea.addEventListener('input', e => {
             this.setHightlightValue(e.target.value);
@@ -83,12 +93,19 @@ class code extends HTMLElement {
             this.value = this.unUpdatedValue;
         });
 
-        this.sourceMutationObserver = new MutationObserver(()=>{
-//            if (this._recentlySetSourceValue) return;
-            this.value = this.getSourceValue();
-        });
+        const elementId = this.getAttribute('element');
+        if (elementId) {
+            this.setForeignElement(document.getElementById(elementId));
+            return;
+        } else {
+            this.sourceElement = this.querySelector('pre>code,textarea,style,script') || this;
+        }
 
+        if (this.sourceElement.tagName === 'TEXTAREA') {
+            this.setAttribute('editable','');
+        }
 
+        this.value = this.getSourceValue();
     }
     copy(){
         let code = this.shadowRoot.querySelector('#code').textContent;
@@ -142,22 +159,6 @@ class code extends HTMLElement {
         } else {
             return el.textContent;
         }
-    }
-    connectedCallback() {
-
-        const elementId = this.getAttribute('element');
-        if (elementId) {
-            this.setForeignElement(document.getElementById(elementId));
-            return;
-        } else {
-            this.sourceElement = this.querySelector('pre>code,textarea,style,script') || this;
-        }
-
-        if (this.sourceElement.tagName === 'TEXTAREA') {
-            this.setAttribute('editable','');
-        }
-
-        this.value = this.getSourceValue();
     }
     setForeignElement(element){
         this.isForeign = true;

@@ -21,7 +21,7 @@ u2 is a design system that is intended to fulfill the following goals:
 [showcase2.html](http://gcdn.li/u2ui/u2@main/u2/tests/showcase2.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/u2/tests/test.html)  
 
-## Prototyping
+## Quick Start
 
 Just add this script to have all the u2-stuff available on demand, without including them separately:  
 ```html

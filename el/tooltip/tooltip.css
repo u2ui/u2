@@ -1,3 +1,4 @@
+/* Currently, we cannot animate "hide" as after hidePopover() it might not be top-layer, potentially disrupting layouts. */
 u2-tooltip {
     /* relevant */
     opacity: 0;
@@ -30,7 +31,7 @@ u2-tooltip {
     /* popover */
     margin: 0;
     overflow: visible;
-    display: block;
+    /* display: block; bad, as it is not top-layer */
     /* */
 }
 
@@ -38,7 +39,7 @@ u2-tooltip[tabindex="-1"] {
     pointer-events:auto;
 }
 
-u2-tooltip:is(:focus-within, :hover, [open]) {
+u2-tooltip:is(:focus-within, :hover, [open]) { /* :popover-open will not animate */
     /* show transition */
     transition-duration:250ms;
     transition-delay: 160ms;
