@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
     <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module></script>
 
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/aria.css">
@@ -15,21 +16,24 @@
 </head>
 <body>
 
-<style contenteditable>
-u2-carousel {
-    box-shadow: var(--shadow);
-}
-u2-carousel > * {
-    transition:.3s;
-}
-u2-carousel > [aria-hidden=true] {
-    opacity:.1;
-}
-</style>
+<u2-code trim editable>
+    <style>
+    u2-carousel {
+        box-shadow: var(--shadow);
+    }
+    u2-carousel > * {
+        transition:.3s;
+    }
+    u2-carousel > [aria-hidden=true] {
+        opacity:.1;
+    }
+    </style>
+</u2-code>
 
 <section>
     <h2>mode = slide</h2>
-    <u2-carousel mode=slide autoplay style="--u2-carousel-slideshow-speed:2s; padding:2rem" tabindex="0">
+    <u2-carousel mode=slide autoplay style="--u2-carousel-slideshow-speed:2s; padding:3rem" tabindex="0">
+
         <u2-carousel mode=fade>
             <img src="https://picsum.photos/500/200?random=1" width=500 height=200 alt="">
             <img src="https://picsum.photos/500/200?random=2" width=500 height=200 alt="">
@@ -37,6 +41,7 @@ u2-carousel > [aria-hidden=true] {
             <img src="https://picsum.photos/500/200?random=4" width=500 height=200 alt="">
             <img src="https://picsum.photos/500/200?random=5" width=500 height=200 alt="">
         </u2-carousel>
+
         <u2-carousel mode=fade>
             <img src="https://picsum.photos/500/200?random=1" width=500 height=200 alt="">
             <img src="https://picsum.photos/500/200?random=2" width=500 height=200 alt="">
@@ -44,5 +49,6 @@ u2-carousel > [aria-hidden=true] {
             <img src="https://picsum.photos/500/200?random=4" width=500 height=200 alt="">
             <img src="https://picsum.photos/500/200?random=5" width=500 height=200 alt="">
         </u2-carousel>
+
     </u2-carousel>
 </section>

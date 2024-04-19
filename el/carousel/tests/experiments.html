@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
-    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <!--script src="../../../u2/tests/test-init.js" type=module async></script-->
+    <script src="../../../u2/auto.js" type=module async></script>
 
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/aria.css">
@@ -16,29 +17,30 @@
 
 <body>
 
-    <style contenteditable>
-    u2-carousel {
-        box-shadow: var(--shadow);
-    }
-    u2-carousel::part(control) {
-        color:var(--color);
-        stroke-linecap: butt;
-        position: static;
-    }
-    u2-carousel > * {
-        transition:1s;
-    }
-    u2-carousel > [aria-hidden=true] {
-        opacity:.05;
-    }
-    </style>
-
+    <u2-code editable trim>
+        <style>
+        u2-carousel {
+            box-shadow: var(--shadow);
+        }
+        u2-carousel::part(control) {
+            color:var(--color);
+            stroke-linecap: butt;
+            position: static;
+        }
+        u2-carousel > * {
+            transition:1s;
+        }
+        u2-carousel > [aria-hidden=true] {
+            opacity:.05;
+        }
+        </style>
+    </u2-code>
 
     <section>
         <h2>Change attributes:</h2>
 
         <label>
-            toggle autoplay <input type=checkbox onclick="ss.toggleAttribute('autoplay', this.checked)">
+            autoplay <input type=checkbox checked onclick="ss.toggleAttribute('autoplay', this.checked)">
         </label>
 
         <form onchange="ss.setAttribute('mode', this.elements.mode.value)">
@@ -53,7 +55,6 @@
                 scroll: <input type=radio name=mode value="scroll">
             </label>
         </form>
-
 
         <br>
 

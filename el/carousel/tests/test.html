@@ -1,32 +1,35 @@
 <!DOCTYPE HTML>
 <html lang=en>
 <head>
-    <meta charset="utf-8">
+    <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
     <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module></script>
 
     <link rel=stylesheet href="../../../css/classless/full.css">
-    <link rel=stylesheet href="../../../css/classless/aria.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
-
 
     <link rel=stylesheet href="../carousel.css">
     <script src="../carousel.js" type=module async></script>
 
-</head>
-
 <body>
 
-    <style contenteditable>
-    u2-carousel {
-        box-shadow: var(--shadow);
-        border:5px solid red;
-    }
-    u2-carousel > *:not(img) {
-        border:5px solid var(--color);
-        padding:2rem;
-    }
-    </style>
+    <u2-code editable trim>
+        <style>
+        u2-carousel {
+            box-shadow: var(--shadow);
+            border:5px solid var(--color-text);
+            padding:.3rem;
+            margin:.3rem;
+        }
+        u2-carousel > *:not(img) {
+            border:5px solid var(--color);
+            padding:.3rem;
+            padding:2rem;
+            margin:.3rem;
+        }
+        </style>
+    </u2-code>
 
     <section>
         <h2>mode = slide</h2>

@@ -52,6 +52,7 @@ class u2Carousel extends HTMLElement {
 			}
 			:host > slot.body {
 				flex:1 1 auto; /* grow if controls are static */
+                z-index: 0;
 			}
 			::slotted([name=prev]) {
 				display:block;
@@ -111,11 +112,11 @@ class u2Carousel extends HTMLElement {
 			}
 		</style>
 		<button part="control prev" class="-arrow -prev" aria-label="previous slide">
-			<slot name=prev>${svg}</slot>
+			<slot name=prev aria-hidden=true>${svg}</slot>
 		</button>
 		<slot class=body tabindex=-1></slot>
 		<button part="control next" class="-arrow -next" aria-label="next slide">
-			<slot name=next>${svg}</slot>
+			<slot name=next aria-hidden=true>${svg}</slot>
 		</button>
 		`;
 
@@ -264,9 +265,14 @@ u2Carousel.mode.slide = {
 		//this.addSwipe();
 	},
 	slideTo:function(target){
-		const wMode = getComputedStyle(this.slider).getPropertyValue('writing-mode'); // trigger reflow
+        const sliderStyle = getComputedStyle(this);
+		const wMode = sliderStyle.getPropertyValue('writing-mode'); // trigger reflow
+        const paddingStart = parseFloat(sliderStyle.getPropertyValue('padding-inline-start'));
 		const vertical = wMode.includes('vertical');
-		this.slider.style.transform = vertical ? 'translateY(-'+target.offsetTop+'px)' : 'translateX(-'+target.offsetLeft+'px)';
+        const XY = vertical ? 'Y' : 'X';
+        const translate = (vertical ? -target.offsetTop : -target.offsetLeft) + paddingStart;
+        console.log(translate, paddingStart)
+		this.slider.style.transform = `translate${XY}(${translate}px)`;
 	},
 }
 // fade (entirely done by css)
