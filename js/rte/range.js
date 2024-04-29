@@ -1,11 +1,10 @@
 
-export function $range(range) {
+export function $range(range) { // better name? rProxy, rangeProxy, ranger
 	if (!range) range = document.createRange();
     return new Proxy(range, handler);
 }
 $range.fromSelection = function(){
 	return selection.rangeCount ? $range(selection.getRangeAt(0)) : null;
-	//return $range(selection.getRangeAt(0));
 };
 
 const handler = {
@@ -60,26 +59,37 @@ const extensions = {
 	cloneRange(){
 		return $range(this.original.cloneRange());
 	},
-	boundingClientRect(){
+	boundingClientRect(){ // fixed getBoundingClientRect
 		const r = this.original;
 		let pos = r.getBoundingClientRect();
 		if (r.collapsed && pos.top === 0 && pos.left === 0) {
 			if (r.endContainer.nodeType === 1) {
 				const nextNode = r.endContainer.childNodes[r.endOffset];
 				
-				if (!nextNode) return;
-
-				if (nextNode.tagName === 'BR') { // if its a newline
-					return nextNode.getBoundingClientRect();
-				}
-				if (nextNode.nodeType === 3) { // if its before a textnode (Do pseudo-elements get messed up? (::marker))
-					const nRange = document.createRange();
-					nRange.selectNodeContents(nextNode);
-					nRange.collapse(true);
-					return nRange.getBoundingClientRect();
-				}
+                if (nextNode) {
+                    if (nextNode.tagName === 'BR') { // if its a newline
+                        return nextNode.getBoundingClientRect();
+                    }
+                    if (nextNode.tagName === 'IMG') {
+                        const rect = nextNode.getBoundingClientRect();
+                        return {top: rect.top, bottom:rect.bottom, left: rect.left, right: rect.right, width: 0, height: rect.height};
+                    }
+                    if (nextNode.nodeType === 3) { // if its before a textnode (Do pseudo-elements get messed up? (::marker))
+                        const nRange = document.createRange();
+                        nRange.selectNodeContents(nextNode);
+                        nRange.collapse(true);
+                        return nRange.getBoundingClientRect();
+                    }
+                }
+				const prevNode = r.endContainer.childNodes[r.endOffset-1];
+                if (prevNode) {
+                    if (prevNode.tagName === 'IMG') {
+                        const rect = prevNode.getBoundingClientRect();
+                        return {top: rect.top, bottom:rect.bottom, left: rect.right, right: rect.right, width: 0, height: rect.height};
+                    }
+                }
 			}
-			console.warn('collapsed range, but no boundingClientRect', r.startContainer, r.startOffset, r.endContainer, r.endOffset);
+			console.warn('collapsed range, but no boundingClientRect', r, r.startContainer, r.startOffset, r.endContainer, r.endOffset);
 			/* this is bad as it causes selectionchange and mutation events
 			window.u2DomChangeIgnore = true;
 			let tmpNode = document.createTextNode('\ufeff');
@@ -146,6 +156,7 @@ const extensions = {
 		return newNodes;
 	}
 }
+
 
 const selection = getSelection();
 
@@ -235,44 +246,7 @@ const nextPosition = function(node, offset, direction) {
 // };
 
 
-// range.prototype.affectedRootNodes = function() {
-// 	var el = this.oR.startContainer,
-// 		end = this.oR.endContainer,
-// 		els = [],
-// 		prev = null;
-// 	do {
-// 		if (el === end) break;
-// 		if (el.contains && el.contains(end)) continue;
-// 		if (prev && prev.contains && prev.contains(el)) continue;
-// 		prev = el;
-// 		els.push(el);
-// 	} while (el = nextNode(el))
-// 	els.push(el);
-// 	return els;
-// };
-// range.prototype.containingRootNodes = function() {
-// 	this.splitTextNodes();
-// 	return this.affectedRootNodes();
-// };
-// range.prototype.containingRootNodesForceElements = function() {
-// 	var nodes = this.containingRootNodes(),
-// 		newNodes = [];
-// 	for (var i=0, el; el=nodes[i++];) { // todo: summarize following textNodes
-// 		if (el.data) {
-// 			if (el.data.trim() === '') continue;
-// 			var nEl = document.createElement('span');
-// 			el.parentNode.insertBefore( nEl, el );
-// 			nEl.appendChild(el);
-// 			el = nEl;
-// 		}
-// 		newNodes.push(el);
-// 	}
-// 	if (newNodes[0]) {
-// 		this.setStartBefore(nodes[0]);
-// 		this.setEndAfter(nodes[nodes.length-1]);
-// 	}
-// 	return newNodes;
-// };
+
 
 
 

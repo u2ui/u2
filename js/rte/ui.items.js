@@ -118,6 +118,7 @@ Rte.ui.setItem('Hr', 					{cmd:'inserthorizontalrule', check:false, icon:'horizo
 
 import('./ui/items/undo.js');
 import('./ui/items/code.js');
+import('./ui/items/ai.js');
 
 /* Headings */
 {
@@ -352,6 +353,7 @@ Rte.ui.setItem('LinkTarget', {
 }
 
 
+/* original image *
 const imgSizeCache = {};
 function ImageRealSize(url, cb) {
 	if (!imgSizeCache[url]) {
@@ -364,9 +366,6 @@ function ImageRealSize(url, cb) {
 		cb.apply(null,imgSizeCache[url]);
 	}
 }
-
-
-/* original image *
 Rte.ui.setItem('ImgOriginal', {
 	enable: 'img',
 	click(e) {
@@ -439,11 +438,11 @@ import {TableHandles} from '../c1/tableHandles.mjs?qgUniq=bbcd4cc';
 }
 /* */
 
-Rte.ui.config = {
-	rteDef:{
-		main:['LinkInput','Bold','Italic','Insertunorderedlist','Insertorderedlist','Link','Removeformat','Format','Style','Strikethrough','Underlined','Hr','Code','Table','Shy',/*'ShowInvisibleChars',*/'LinkTarget','ImgOriginal','ImgOriginalRetina',/*'AttributeTitle',*/'ImageDimension','Tree']
-	},
-};
+// Rte.ui.config = { zzz
+// 	rteDef:{
+// 		main:['LinkInput','Bold','Italic','Insertunorderedlist','Insertorderedlist','Link','Removeformat','Format','Style','Strikethrough','Underlined','Hr','Code','Table','Shy',/*'ShowInvisibleChars',*/'LinkTarget','ImgOriginal','ImgOriginalRetina',/*'AttributeTitle',*/'ImageDimension','Tree']
+// 	},
+// };
 
 
 

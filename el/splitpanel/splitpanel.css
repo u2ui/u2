@@ -1,0 +1,17 @@
+u2-splitpanel {
+    display:flex;
+}
+
+u2-splitpanel > * {
+    overflow: auto;
+    flex:1 1 auto;
+    resize: horizontal;
+}
+
+u2-splitpanel[vertical] {
+    flex-direction: column;
+    & > * { resize: vertical; }
+}
+u2-splitpanel:defined > * {
+    resize: none !important;
+}

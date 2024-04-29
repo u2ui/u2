@@ -1,0 +1,12 @@
+u2-ai-texter {
+    border: 1px solid currentColor;
+    position: absolute;     
+    padding:0;
+    margin:0;
+    xmin-width: 12rem;
+
+}
+
+u2-ai-texter:not(:defined) {
+    display: none;
+}

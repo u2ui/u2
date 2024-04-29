@@ -1,9 +1,6 @@
 
 import '../../js/rte/rte.js';
 
-import Showdown from 'https://cdn.skypack.dev/showdown';
-import TurndownService from 'https://cdn.skypack.dev/turndown@7.1.1';
-
 class rte extends HTMLElement {
     constructor() {
         super();
@@ -25,16 +22,8 @@ class rte extends HTMLElement {
         this.editor = this.shadowRoot.getElementById('editor');
 
         this.editor.addEventListener('input', (event)=>{
-
             const html = this.editor.innerHTML;
-
-            let value = null;
-            if (this.getAttribute('format') === 'markdown') {
-                value = new TurndownService().turndown(html);
-            } else {
-                value = html;
-            }
-
+            const value = html;
             if (this.textarea) {
                 this.textarea.value = value;
             } else {
@@ -47,23 +36,21 @@ class rte extends HTMLElement {
         if (this.children.length === 1 && this.children[0].tagName === 'TEXTAREA') {
             this.textarea = this.children[0];
         }
-
         let sourceValue = this.textarea ? this.textarea.value : this.innerHTML;
-
-        if (this.getAttribute('format') === 'markdown') {
-            const converter = new Showdown.Converter();
-            converter.setOption('tables', true);
-            this.editor.innerHTML = converter.makeHtml(sourceValue);
-        } else {
-            this.editor.innerHTML = sourceValue;
-        }
-
+        this.editor.innerHTML = sourceValue;
+        
+        this._internals = this.attachInternals();
+        this._internals.role = 'textbox';
     }
-    // attributeChangedCallback(name, oldValue, newValue) {
-    //     if (name === 'format') this.format = newValue!=null;
-    // }
-    // static observedAttributes = ['format'];
 }
 
 customElements.define('u2-rte', rte);
 
+
+// import Showdown from 'https://cdn.skypack.dev/showdown';
+// const converter = new Showdown.Converter();
+// converter.setOption('tables', true);
+// this.editor.innerHTML = converter.makeHtml(sourceValue);
+
+// import TurndownService from 'https://cdn.skypack.dev/turndown@7.1.1';
+// value = new TurndownService().turndown(html);

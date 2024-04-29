@@ -44,6 +44,7 @@ some text
     <li>list</li>
     <li>to demonstrate</li>
 </ul>
+<img src="" width="40" height="40" alt="">
 <p>paragraph</p>
         </div>
 
@@ -148,8 +149,18 @@ some text
 
     </script>
 
-<div id="clientRectPosition" style="position:fixed; top:0; left:0; background:#f999; padding:.2em; transform:translateX(-.12em); pointer-events:none" hidden></div>
-<div id="clientRectPositionOld" style="position:fixed; top:0; left:0; background:#afa9; padding:.2em; transform:translateX(-.12em); pointer-events:none" hidden></div>
+<div id="clientRectPosition" class=clientRect style="--color:#f55" hidden></div>
+<div id="clientRectPositionOld" class=clientRect style="--color:#4f4" hidden></div>
+
+<style>
+.clientRect {
+    position:fixed; top:0; left:0; 
+    outline:.3rem solid color-mix(in srgb, var(--color), transparent 50%);
+    border:1px solid var(--color);
+    transform:translateX(-.1px);
+    pointer-events:none;
+}
+</style>
 
 <span id="x">xxxxxx</span>
 

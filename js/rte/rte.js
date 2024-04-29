@@ -1,15 +1,14 @@
 
 import './fixes.js';
+import './behavior.js';
 import * as state from './events.js';
-//import './behavior.js';
 import {$range} from './range.js';
 
 window.Rte = {
 	manipulate(fn) {
-		setTimeout(function() {
+		setTimeout(()=>{
 			state.active.focus(); // firefox
-			const range = $range(state.range);
-			range.select();
+			$range(state.range).select();
 			fn && fn();
 		}, 80);
 	},

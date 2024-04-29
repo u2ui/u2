@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../../../u2/auto.js" type=module async></script>
+
+
+    <link href="../splitpanel.css" rel=stylesheet>
+    <script src="../splitpanel.js" type=module async></script>
+
+<body>
+
+<section class="main">
+    <u2-splitpanel style="height:600px;">
+        <div contenteditable>hallo</div>
+        <u2-splitpanel vertical>
+            <div>hallo</div>
+            <div>welt </div>
+            <div>test </div>
+        </u2-splitpanel>
+    </u2-splitpanel>
+</section>  
+
+<u2-code trim editable>
+    <style class="main">
+        u2-splitpanel > :not(u2-splitpanel) {
+            padding:1rem;
+            background-color: #f8f8f8;
+        }
+        u2-splitpanel::part(divider) {
+            background-color: #e0e0e0;
+            --size:.3rem;
+        }
+        u2-splitpanel::part(divider):hover {
+            background-color: #bbb;
+        }
+    </style>
+</u2-code>

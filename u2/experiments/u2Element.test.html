@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Demo Page | U2-Design-System</title>
+        <script src="./test-init.js" type=module async></script>
+        <script src="../auto.js" type=module async></script>
+
+
+<body>
+
+
+    <script type=module>
+        import {U2Element} from './u2Element.js';
+
+        class myEl extends U2Element {
+            // static outerSheets = [
+            //     import.meta.resolve('./u2Element.css'),
+            // ];
+            // static shadowSheets = [
+            //     import.meta.resolve('./../../css/norm/norm.css'),
+            //     import.meta.resolve('./../../css/base/base.css'),
+            // ];
+            static outerCss = 'display:block';
+            static css = ' slot { background:red; display:inline-block; } ';
+            static shadow = 'Hi <slot></slot>';
+            onClick(event) {
+                console.log({
+                    event,
+                    scope: this,
+                })
+                alert('clicked (view console)');
+            }
+        }
+
+        console.log(myEl.prototype)
+
+        customElements.define('my-el', myEl);
+
+    </script>
+
+
+<my-el id="el1">My Element</my-el>
+<my-el>My Element 2</my-el>
+
+

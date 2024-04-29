@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <link href="../splitpanel.css" rel=stylesheet>
+    <script src="../splitpanel.js" type=module async></script>
+
+<body>
+
+<section class="main">
+    <u2-splitpanel style="height:80vh">
+        <div>hallo</div>
+        <u2-splitpanel vertical>
+            <div>welt </div>
+            <div>test </div>
+        </u2-splitpanel>
+    </u2-splitpanel>
+</section>
+
+<style class="main">
+    u2-splitpanel > :not(u2-splitpanel) {
+        padding:1rem;
+        background: #f8f8f8;
+    }
+</style>

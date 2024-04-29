@@ -28,6 +28,7 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/rte/rte.mi
 
 ## Demos
 
+[ai.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/ai.html)  
 [behavior.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/behavior.html)  
 [events.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/events.html)  
 [fixes.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/fixes.html)  

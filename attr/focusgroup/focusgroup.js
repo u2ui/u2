@@ -48,17 +48,23 @@ addEventListener('keydown', e => {
 	if (!next) return;
 
 	next.focus();
+
+    // remember
+    if (options.remember) {
+        items.forEach(el => el.setAttribute('tabindex', el === next ? '0' : '-1'));
+    }
+
 	e.preventDefault();
 });
 
 
-addEventListener('focusin', e => {
-	const {target, container} = eventTargets(e);
-	if (!container) return;
-	const remember = container.getAttribute('u2-focusgroup').split(' ').includes('remember');
-	if (!remember) return;
-	groupItems(container).forEach(el => el.setAttribute('tabindex', el === target ? '0' : '-1'));
-});
+// addEventListener('focusin', e => {
+// 	const {target, container} = eventTargets(e);
+// 	if (!container) return;
+// 	const remember = container.getAttribute('u2-focusgroup').split(' ').includes('remember');
+// 	if (!remember) return;
+// 	groupItems(container).forEach(el => el.setAttribute('tabindex', el === target ? '0' : '-1'));
+// });
 
 
 

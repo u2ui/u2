@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <!-- <script src="../../u2/auto.js" type=module async></script> -->
+    <title>Test</title>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <link href="../../../el/code/code.css" rel=stylesheet>
+    <script src="../../../el/code/code.js" type=module async></script>
+    
+    
+
+    <!--script src="../../../el/tooltip/tooltip.js" type=module async></script>
+    <link href="../../../el/tooltip/tooltip.css" rel=stylesheet>
+    <script src="../../../el/ico/ico.js" type=module async></script>
+    <link href="../../../el/ico/ico.css" rel=stylesheet> -->
+
+    <style>
+        body {
+            place-content: initial;
+        }
+    </style>
+
+    <link href="../ai-texter.css" rel=stylesheet>
+    <script src="../ai-texter.js" type=module async></script>
+
+<body>
+
+<section>
+
+    <h2>u2-ai-texter</h2>
+    <label>
+        same container
+        <textarea></textarea>
+        <u2-ai-texter api="https://api.groq.com/openai/v1/chat/completions" api-key="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"></u2-ai-texter>
+    </label>
+
+    
+    <h2>Using "for" attribute</h2>
+    <label>
+        Textarea 1
+        <textarea class="forTest"></textarea>
+    </label>
+    <label>
+        Textarea 1
+        <textarea class="forTest"></textarea>
+    </label>
+    <u2-ai-texter for=".forTest" api="https://api.groq.com/openai/v1/chat/completions" api-key="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"></u2-ai-texter>
+
+    <h2>Using custom buttons</h2>
+
+    <label>
+        Using custom buttons
+        <textarea></textarea>
+        <u2-ai-texter api="https://api.groq.com/openai/v1/chat/completions" api-key="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">
+            <button>korrektur</button>
+            <button>ausführlicher</button>
+        </u2-ai-texter>
+    </label>
+
+    <h2>Using contenteditable</h2>
+
+    <div contenteditable>
+        <p>Contenteditable</p>
+    </div>
+    <u2-ai-texter for="[contenteditable]" api="https://api.groq.com/openai/v1/chat/completions" api-key="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"></u2-ai-texter>
+
+</section>

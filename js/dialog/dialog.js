@@ -116,10 +116,10 @@ export function prompt(text, initial) {
 
 /* */
 export function form(html){
-
-    const dialog = new Dialog({
-        body:html,
-        buttons:[{title:'OK',then(){ // TODO: triggers by click but would be better by form.submit?
+    if (typeof html === 'string') html = { body: html };
+    const options = toOptions(html);
+    options.buttons = 
+        [{title:'OK',then(){ // TODO: triggers by click but would be better by form.submit?
             const form = dialog.element.querySelector('form');
             if (!form.checkValidity()) dialog.value = null;
             else {
@@ -128,8 +128,9 @@ export function form(html){
             }
         }},{title: translate(lang(), 'Cancel'), type:'button', then(){
             dialog.element.close();
-        }}],
-    });
+        }}];
+
+    const dialog = new Dialog(options);
     return dialog.show();
 }
 /* */

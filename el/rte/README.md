@@ -1,5 +1,5 @@
 # &lt;u2-rte&gt; - element
-"Rich" Rich Text Editor (beta)
+"Rich" Rich Text Editor (alpha)
 
 ## Usage
 

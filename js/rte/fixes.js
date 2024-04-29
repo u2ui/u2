@@ -59,7 +59,7 @@ document.addEventListener('keydown', e=>{
 	requestAnimationFrame(()=>{ // setTimeout sometimes after seconds called!
 		e.target.removeEventListener('input',checkInput);
 		if (changedSomething) return;
-        let range = $range(getSelection().getRangeAt(0));
+        const range = $range.fromSelection();
         let node = null;
         if (e.key === ' ') {
             const char = range.startOffset && range.cloneRange().setStart(range.startContainer, range.startOffset-1).toString();

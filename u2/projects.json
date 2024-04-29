@@ -132,6 +132,14 @@
     }
   },
   "el": {
+    "ai-texter": {
+      "name": "ai-texter",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "alert": {
       "name": "alert",
       "description": "Prominent hints, alerts, and facts",
@@ -212,10 +220,18 @@
       "css": true,
       "js": true
     },
+    "rating": {
+      "name": "rating",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "rte": {
       "name": "rte",
-      "description": "\"Rich\" Rich Text Editor (beta)",
-      "beta": true,
+      "description": "\"Rich\" Rich Text Editor (alpha)",
+      "beta": false,
       "deprecated": false,
       "css": true,
       "js": true
@@ -223,6 +239,14 @@
     "splitbutton": {
       "name": "splitbutton",
       "description": "Buttons with options",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "splitpanel": {
+      "name": "splitpanel",
+      "description": "",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -270,7 +294,7 @@
     },
     "tree1": {
       "name": "tree1",
-      "description": "Treeview component\r",
+      "description": "Treeview component",
       "beta": false,
       "deprecated": false,
       "css": true,

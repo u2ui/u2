@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <script src="../rte.js" type=module async></script>
+
+    <style>
+        body {
+            max-width: 100rem;
+        }
+        .rte {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            min-height: 100px;
+        }
+        .u2-flex {
+            margin:2rem 0;
+            gap:.4rem;
+        }
+        .u2-flex > * {
+            margin:0;
+            padding:.5rem; 
+            flex:1 1 18rem;
+            border:1px solid black;
+        }
+        u2-code {
+            font-size:12px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+<section id=container>
+
+    <div class=u2-flex>
+        <div id=rte-1 class=rte contenteditable spellcheck=false>
+            <p>
+                Nachdem die Weltraumsonde Voyager 1 monatelang nur Datenmüll zur Erde gesendet hat, ist der erste Schritt der Reparatur gelungen. Am Wochenende wurden zum ersten Mal wieder korrekte Daten zu Gesundheit und Status empfangen. Das hat die NASA jetzt publik gemacht und ergänzt, dass bald auch wieder wissenschaftliche Messdaten erwartet würden. Als die korrekten Daten am Samstag im Jet Propulsion Laboratory angekommen sind, ist beim verantwortlichen Team Jubel ausgebrochen, heißt es weiter. Es war das erste Mal seit November, dass von der am weitesten von der Erde entfernten Sonde wieder benutzbare Daten zu ihrem Zustand geschickt wurden.
+            </p>
+            <img width="200" height="150" alt="tick" src="https://fastly.picsum.photos/id/237/200/150.jpg?hmac=cP3GW-TQQWpntUpoHauvAWmCaKSFUngooZCPRN50Om8">
+        </div>
+        <u2-code trim editable element=rte-1></u2-code>
+    </div>
+
+    <h2>AI-Only</h2>
+    <div class=u2-flex>
+        <div id=rte-2 class=rte contenteditable spellcheck=false>
+            <p>
+                Nachdem die Weltraumsonde Voyager 1 monatelang nur Datenmüll zur Erde gesendet hat, ist der erste Schritt der Reparatur gelungen. Am Wochenende wurden zum ersten Mal wieder korrekte Daten zu Gesundheit und Status empfangen. Das hat die NASA jetzt publik gemacht und ergänzt, dass bald auch wieder wissenschaftliche Messdaten erwartet würden. Als die korrekten Daten am Samstag im Jet Propulsion Laboratory angekommen sind, ist beim verantwortlichen Team Jubel ausgebrochen, heißt es weiter. Es war das erste Mal seit November, dass von der am weitesten von der Erde entfernten Sonde wieder benutzbare Daten zu ihrem Zustand geschickt wurden.
+            </p>
+            <img width="200" height="150" alt="tick" src="https://fastly.picsum.photos/id/237/200/150.jpg?hmac=cP3GW-TQQWpntUpoHauvAWmCaKSFUngooZCPRN50Om8">
+        </div>
+        <u2-code trim editable element=rte-2></u2-code>
+    </div>
+
+
+    <u2-code trim editable>
+        <style>
+        body {
+            --u2-rte:true;
+        }
+        #rte-2 {
+            --u2-rte:true;
+            --u2-rte-items: ai;
+        }
+        </style>
+    </u2-code>
+
+
+            
+</section>

@@ -1,12 +1,11 @@
-/* Copyright (c) 2016 Tobias Buschor https://goo.gl/gl0mbf | MIT License https://goo.gl/HgajeK */
 
 import {$range} from './range.js';
 import * as state from './events.js';
 
-
-const elsRoot = import.meta.resolve('../../el/');
 import '../../el/tooltip/tooltip.js';
 import '../../el/ico/ico.js';
+
+const elsRoot = import.meta.resolve('../../el/');
 
 const css = `
 @import '${elsRoot}tooltip/tooltip.css';
@@ -193,7 +192,7 @@ window.Rte.ui = {
 		const my = this;
 		my.div = document.createElement('div');
 		my.div.id = 'u2RteToolbar';
-        my.div.popover = 'true';
+        my.div.popover = 'manual';
         my.div.classList.add('u2RteTool');
         my.div.tabIndex = -1;
 
@@ -211,13 +210,14 @@ window.Rte.ui = {
             }
 
             document.documentElement.appendChild(my.div);
-            my.div.hidden = false;
-            my.div.showPopover && my.div.showPopover();
+            //my.div.hidden = false;
+            my.div.showPopover();
 
             e.target.addEventListener('keydown', shortcutListener, false);
 		});
         addEventListener('u2-rte-deactivate', function(e) {
-            my.div.hidden = true;
+            //my.div.hidden = true;
+            my.div.hidePopover();
             e.target.removeEventListener('keydown', shortcutListener, false);
 			// setTimeout(()=>{ // need timeout because inputs inside have to blur first (ff, no chrome)
 			// 	!Rte.active && my.div.parentNode && document.documentElement.removeChild(my.div);

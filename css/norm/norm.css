@@ -73,6 +73,7 @@
 	-webkit-user-select: none;
 	user-select: none;
 }
+
 :where([popover]) {
     position: fixed;
     width: fit-content;
