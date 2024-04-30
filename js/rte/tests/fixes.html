@@ -38,7 +38,7 @@
             reloadUrl.href = url.href;
             reloadUrl.innerHTML = '<span style="color:red">fixed:✗</span><br> load with fixes';
         } else {
-            import('../fixes.js').then(module => {
+            import('../src/fixes.js').then(module => {
                 console.log('fixes loaded')
             });
             reloadUrl.href = url.href + '?noFixes';

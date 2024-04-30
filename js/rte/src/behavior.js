@@ -156,6 +156,13 @@ document.addEventListener('input',function(e){
 /* */
 
 
+
+// remove node and replace it by its children
+Node.prototype.removeNode = function() {
+    this.replaceWith(...this.childNodes);
+};
+
+
 // qgExecCommand('enableInlineTableEditing', false, false); // bug: if i first click in the table the nativ handles appear
 // document.addEventListener('DOMContentLoaded',function(){
 // 	qgExecCommand('enableObjectResizing', false, false);

@@ -4,7 +4,7 @@ import * as state from '../../events.js';
 
 Rte.ui.setItem('ai', {
     icon: 'smart-toy',
-    labels: { en: 'Magic-Helper' },
+    labels: { en: 'Magic-Editor' },
     async click() {
 
         const activeRte = state.active;
@@ -13,10 +13,10 @@ Rte.ui.setItem('ai', {
         const dEl = document.createElement('dialog');
         dEl.className = 'u2RteAiDialog';
         dEl.innerHTML = `
-            <h2>Magic-Helper</h2>
+            <h2>Magic-Editor</h2>
             <form class=-promptForm>
                 <label style="display:block; text-align:center; margin-bottom:1rem">
-                    Prompt: 
+                    Anweisung: 
                     <input name=prompt autofocus list=u2RteAiList placeholder="Schlüsselwörter fett">
                     <button name=run>run</button>
                     <datalist id=u2RteAiList>
@@ -56,7 +56,7 @@ Rte.ui.setItem('ai', {
                 & .-views > div { flex:1 1 35rem; display:flex; flex-direction:column; }
                 & .-views > div > h2 { flex:0 0 auto; margin:0;}
 
-                & .-textBox { border:1px solid; padding:.5rem; flex:1 1 30rem; box-shadow: 0 0 1rem #0003; max-height: 30rem; overflow:auto; }
+                & .-textBox { border:1px solid; padding:.5rem; flex:1 1 auto; box-shadow: 0 0 1rem #0003; max-height: 30rem; overflow:auto; }
                 & .-buttons { display:flex; flex-wrap:wrap; justify-content:end; gap:1em; margin-top:1rem }
             }
             </style>

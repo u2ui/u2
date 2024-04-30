@@ -16,7 +16,7 @@ import  "../rte.js";
 ```css
 #myEditor {
     --u2-rte:true;
-    --u2-rte-items:Bold Italic Code;
+    --u2-rte-toolbar:Bold Italic Code;
 }
 ```
 

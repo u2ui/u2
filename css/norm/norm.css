@@ -67,12 +67,14 @@
 :where([inert]) { /* ch < 102 sf < 15.5 ff < 112 */
 	pointer-events: none;
 	cursor: default;
-}
-:where([inert], [inert] *) {
-	/* user-modify: read-only !important; no effect? */
 	-webkit-user-select: none;
 	user-select: none;
 }
+/* :where([inert], [inert] *) { too slow
+	/* user-modify: read-only !important; no effect? * /
+	-webkit-user-select: none;
+	user-select: none;
+} */
 
 :where([popover]) {
     position: fixed;

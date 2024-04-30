@@ -41,7 +41,7 @@ addEventListener('focusout', function(event) {
 },true);
 
 // do not add it on activate, because firefox does not fire selectionchange on fist focus
-document.addEventListener('selectionchange', (event)=>{
+document.addEventListener('selectionchange', ()=>{
     if (!focused) return;
     if (window.u2DomChangeIgnore) return;
     range = getSelection().getRangeAt(0);

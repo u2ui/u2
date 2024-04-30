@@ -12,7 +12,6 @@
     <link rel=stylesheet href="../../../css/classless/aria.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
-    <script src="../range.js" type=module async></script>
     <style>
         body {
             max-width: 200rem;
@@ -68,7 +67,7 @@ some text
 
 
     <script type=module>
-    import {$range} from '../range.js';
+    import {$range} from '../src/range.js';
 
     affectedRootNodes.onclick = ()=> {
         let range = $range.fromSelection();

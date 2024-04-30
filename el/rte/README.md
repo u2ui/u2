@@ -10,7 +10,7 @@
 ```css
 u2-rte {
     --u2-rte:true;
-    --u2-rte-items:Bold Italic;
+    --u2-rte-toolbar:Bold Italic;
 }
 ```
 

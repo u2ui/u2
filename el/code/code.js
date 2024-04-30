@@ -75,13 +75,12 @@ class code extends HTMLElement {
             this.value = this.getSourceValue();
         });
             
+        this.textarea = this.shadowRoot.querySelector('textarea');
     }
     connectedCallback() {
         requestAnimationFrame(()=>this._init());
     }
     _init(){
-
-        this.textarea = this.shadowRoot.querySelector('textarea');
 
         this.textarea.addEventListener('input', e => {
             this.setHightlightValue(e.target.value);
@@ -193,6 +192,9 @@ class code extends HTMLElement {
     }
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'trim') this.trim = newValue!=null;
+    }
+    focus(){
+        this.textarea.focus();
     }
     static observedAttributes = ['trim'];
 

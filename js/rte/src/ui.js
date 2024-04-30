@@ -1,11 +1,12 @@
 
 import {$range} from './range.js';
 import * as state from './events.js';
+import {Rte} from './rte.js';
 
-import '../../el/tooltip/tooltip.js';
-import '../../el/ico/ico.js';
+import '../../../el/tooltip/tooltip.js';
+import '../../../el/ico/ico.js';
 
-const elsRoot = import.meta.resolve('../../el/');
+const elsRoot = import.meta.resolve('../../../el/');
 
 const css = `
 @import '${elsRoot}tooltip/tooltip.css';
@@ -27,8 +28,6 @@ const css = `
 #u2RteToolbar {
     --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
 	position:absolute;
-	top:90px;
-	left:90px;
 	z-index:1999;
 	box-shadow: 0 0 10px rgba(0,0,0,.4);
 	font-size:14px;
@@ -38,8 +37,6 @@ const css = `
     max-width: min(17rem, 100vw);
     transition:.14s;
     transition-property:top, left, opacity;
-
-    /* overwrite popover default: */
     margin:0;
     overflow: visible;
     border:0;
@@ -202,29 +199,22 @@ window.Rte.ui = {
 
         addEventListener('u2-rte-activate', function(e) {
             my.mainContainer.innerHTML = '';
-            let names = getComputedStyle(e.target).getPropertyValue('--u2-rte-items').split(/\s+/).filter(name=>name.trim());
-            if (!names.length) names = Object.keys(my.items);
-            for (const name of names) {
-                if (!my.items[name]) continue;
-                my.mainContainer.appendChild(my.items[name].el);
+
+            for (let item of Rte.targetToolbarItems(e.target)) {
+                my.mainContainer.appendChild(item.el);
             }
 
             document.documentElement.appendChild(my.div);
-            //my.div.hidden = false;
             my.div.showPopover();
 
             e.target.addEventListener('keydown', shortcutListener, false);
 		});
         addEventListener('u2-rte-deactivate', function(e) {
-            //my.div.hidden = true;
             my.div.hidePopover();
             e.target.removeEventListener('keydown', shortcutListener, false);
-			// setTimeout(()=>{ // need timeout because inputs inside have to blur first (ff, no chrome)
-			// 	!Rte.active && my.div.parentNode && document.documentElement.removeChild(my.div);
-            // },1);
 		});
         addEventListener('u2-rte-selectionchange', function() {
-			for (let item of Object.values(my.items)){
+			for (let item of Object.values(Rte.items)){
 				if (!item.enable || item.enable(state.element)) {
 					item.enabled = true;
 					item.el.removeAttribute('hidden');
@@ -239,60 +229,24 @@ window.Rte.ui = {
 			}
 		});
 		const shortcutListener = function(e) {
-
 			if (e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey) {
 				const char = e.key;
-				for (let item of Object.values(my.items)){
+				for (let item of Object.values(Rte.items)){
 					if (item.enabled && item.shortcut === char) {
                         item.el.click();
 		                e.preventDefault();
 					}
 				}
 			}
-
 		};
 		my.div.addEventListener('mouseenter',() => {uiMouseover = 1;});
 		my.div.addEventListener('mouseleave',() => {uiMouseover = 0;});
 	},
 	setItem(name, opt) {
-        const icon = opt.icon || 'format-'+name.toLowerCase();
-		if (!opt.el) {
-			opt.el = document.createElement('button');
-			opt.el.className = '-item -'+name;
-            const label = opt.labels?.[lang] ?? opt.labels?.['en'] ?? name;
-            const shortcut = opt.shortcut ? `(Ctrl+${opt.shortcut})` : '';
-            opt.el.innerHTML = `<u2-ico icon="${icon}"></u2-ico><u2-tooltip>${label} ${shortcut}</u2-tooltip>`;
-		}
-		if (opt.cmd) {
-			if (!opt.click && opt.click != false) opt.click = ()=>{
-                document.execCommand(opt.cmd, false);
-            };
-			if (!opt.check && opt.check != false) opt.check = ()=>document.queryCommandState(opt.cmd);
-		}
-		const enable = opt.enable;
-		if (enable && enable.toLowerCase) {
-			opt.enable = el => el && el.matches(enable);
-			// opt.enable = el => { // todo?
-			// 	if (!el) return false;
-			// 	let target = el.closest(enable);
-			// 	return Rte.active !== target && Rte.active.contains(target);
-			// }
-		}
-		opt.click && opt.el.addEventListener('click',e=>{
-			Rte.manipulate( ()=>opt.click(e) );
-		}, false);
-
-        this.items[name] = opt;
-		return opt.el;
+        return Rte.setItem(name, opt);
 	},
 	setSelect(name, opt) {
-        let el = document.createElement('div');
-        el.className = '-item -select';
-        el.innerHTML = '<button class=-state></button><div class=-options></div>';
-        let opts = el.querySelector(':scope>.-options');
-		opt.el = el;
-		this.setItem(name,opt);
-		return opts;
+        return Rte.setSelect(name, opt);
 	},
 	items:{}
 };
@@ -300,7 +254,7 @@ window.Rte.ui = {
 Rte.ui.init();
 
 
-import('./../Placer/Placer.js').then(({Placer})=>{
+import('../../Placer/Placer.js').then(({Placer})=>{
     const placer = new Placer(Rte.ui.div, {
         x:'center',
         y:'after',

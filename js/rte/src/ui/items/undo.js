@@ -1,4 +1,4 @@
-const histories = new Map();
+const histories = new WeakMap();
 let active = null;
 let ignoreChanges = false;
 
@@ -23,7 +23,7 @@ function addToHistory(target) {
     history.items.push({
         html: target.innerHTML,
         selection: selection,
-        time: Date.now()
+        // time: Date.now() not used
     });
 }
 
@@ -55,7 +55,7 @@ function undo() {
 }
 function redo() {
     const history = histories.get(active);
-    if (history.current > history.items.length) return;
+    if (history.current >= history.items.length-1) return;
     history.current++;
     patchItem(active, history.items[history.current]);
 }
@@ -75,7 +75,7 @@ function hasUndo() {
 function hasRedo() {
     const history = histories.get(active);
     if (!history) return;
-    return history.current !== undefined && history.current < history.items.length - 1;
+    return history.current !== undefined && history.current < history.items.length-1;
 }
 
 
