@@ -27,7 +27,7 @@
         <div contenteditable>hallo</div>
         <u2-splitpanel vertical>
             <div>hallo</div>
-            <div draggable style="position:relative">
+            <div draggable>
                 <span u2-draghandle style="position:absolute; top:0; right:0;">
                     <u2-ico icon=drag-indicator></u2-ico>
                 </span>
@@ -58,7 +58,7 @@
             width:1.5rem;
             height:1.5rem;
             border-radius:99rem;
-            background:indianred;
+            background:var(--color, indianred);
         }
         u2-splitpanel::part(drop-indicator) {
             background-color: blue;

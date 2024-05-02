@@ -24,6 +24,7 @@ class splitpanel extends HTMLElement {
                 background: var(--divider-color, #ccc);
                 cursor: col-resize;
                 z-index:1;
+                touch-action: none;
             }
             [role=separator]:hover {
                 z-index:2;

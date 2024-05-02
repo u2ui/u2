@@ -6,6 +6,7 @@ u2-splitpanel > * {
     overflow: auto;
     flex:1 1 auto;
     resize: horizontal;
+    position:relative;
 }
 
 u2-splitpanel[vertical] {
