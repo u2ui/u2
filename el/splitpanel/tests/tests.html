@@ -10,6 +10,12 @@
 
     <script src="../../../u2/auto.js" type=module async></script>
 
+    <style>
+        body {
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
+        }
+    </style>
+
 
     <link href="../splitpanel.css" rel=stylesheet>
     <script src="../splitpanel.js" type=module async></script>
@@ -21,7 +27,12 @@
         <div contenteditable>hallo</div>
         <u2-splitpanel vertical>
             <div>hallo</div>
-            <div>welt </div>
+            <div draggable style="position:relative">
+                <span u2-draghandle style="position:absolute; top:0; right:0;">
+                    <u2-ico icon=drag-indicator></u2-ico>
+                </span>
+                welt
+            </div>
             <div>test </div>
         </u2-splitpanel>
     </u2-splitpanel>
@@ -35,10 +46,76 @@
         }
         u2-splitpanel::part(divider) {
             background-color: #e0e0e0;
-            --size:.3rem;
+            --size:.18rem;
         }
         u2-splitpanel::part(divider):hover {
             background-color: #bbb;
         }
+        u2-splitpanel::part(divider)::after {
+            content:'';
+            display:block;
+            margin:-.75rem;
+            width:1.5rem;
+            height:1.5rem;
+            border-radius:99rem;
+            background:indianred;
+        }
+        u2-splitpanel::part(drop-indicator) {
+            background-color: blue;
+            display:flex;
+        }
     </style>
 </u2-code>
+
+<script>
+
+const dragAndDropHandler = {
+    handleEvent(event) {
+        if (event.type !== 'dragstart' && !dragSrcEl) return;
+        if (!this['on' + event.type]) return
+        const target = event.target;
+        const closest = target.closest('u2-splitpanel > *');
+        if (!closest) return;
+        this['on' + event.type]({closest, target, event});
+    },
+    ondragstart({target, event}) {
+        if (target.parentNode.tagName !== 'U2-SPLITPANEL') return;
+        dragSrcEl = target;
+        dragSrcEl.setAttribute('aria-grabbed', 'true'); // deprecated, but currently the best markup?
+        event.dataTransfer.effectAllowed = 'move'; // needed?
+    },
+    ondragover({closest, event}) {
+        event.preventDefault();
+
+        const rect = closest.getBoundingClientRect();
+        const isVertical = closest.closest('u2-splitpanel').hasAttribute('vertical');
+        this.comesAfter = isVertical ? event.clientY > rect.top + rect.height / 2 : event.clientX > rect.left + rect.width / 2;
+
+        closest.parentNode.shadowRoot.querySelectorAll('#slots > *').forEach(el => el.part.remove('drop-indicator'));
+
+        let index = Array.from(closest.parentNode.children).indexOf(closest);
+        if (this.comesAfter) index++;
+        const divider = closest.parentNode.shadowRoot.querySelector('#slots > .divider-' + index);
+        divider.part.add('drop-indicator');
+    },
+    ondragleave({closest}) {
+        closest.parentNode.shadowRoot.querySelectorAll('#slots > *').forEach(el => el.part.remove('drop-indicator'));
+    },
+    ondrop({closest, event}) {
+        event.stopPropagation();
+        event.preventDefault();
+        if (dragSrcEl !== closest) {
+            this.comesAfter ? closest.after(dragSrcEl) : closest.before(dragSrcEl);
+        }
+        dragSrcEl = null;
+    },
+    ondragend() {
+        dragSrcEl.removeAttribute('aria-grabbed');
+        dragSrcEl = null;
+    },
+};
+['dragstart', 'dragover', 'dragenter','dragleave', 'drop', 'dragend'].forEach(eventType => {
+    document.addEventListener(eventType, dragAndDropHandler, false);
+});
+
+</script>

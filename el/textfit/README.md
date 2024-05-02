@@ -9,7 +9,7 @@ Exactly fit text
 
 ```css
 u2-textfit {
-    font-size: clamp(20px, var(--gen-font-size), 400px);
+    font-size: clamp(20px, var(--js-font-size), 400px);
 }
 ```
 

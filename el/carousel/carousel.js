@@ -271,7 +271,6 @@ u2Carousel.mode.slide = {
 		const vertical = wMode.includes('vertical');
         const XY = vertical ? 'Y' : 'X';
         const translate = (vertical ? -target.offsetTop : -target.offsetLeft) + paddingStart;
-        console.log(translate, paddingStart)
 		this.slider.style.transform = `translate${XY}(${translate}px)`;
 	},
 }

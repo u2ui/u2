@@ -53,9 +53,14 @@ const extensions = {
 		// if (node instanceof Array) for (n of node) this.insert(n);
 		// else {
 		if (typeof node === 'string') { node = document.createTextNode(node); }
+        console.log(node)
 		this.insertNode(node);
 		return this;
 	},
+    insertHtml(html){
+        this.insert(this.original.createContextualFragment(html));
+        return this;
+    },
 	cloneRange(){
 		return $range(this.original.cloneRange());
 	},
@@ -64,10 +69,16 @@ const extensions = {
 		let pos = r.getBoundingClientRect();
 		if (r.collapsed && pos.top === 0 && pos.left === 0) {
 			if (r.endContainer.nodeType === 1) {
+                if (r.startContainer.tagName === 'HR') {
+                    return r.startContainer.getBoundingClientRect();
+                }
+
 				const nextNode = r.endContainer.childNodes[r.endOffset];
-				
                 if (nextNode) {
                     if (nextNode.tagName === 'BR') { // if its a newline
+                        return nextNode.getBoundingClientRect();
+                    }
+                    if (nextNode.tagName === 'HR') { // if its a newline
                         return nextNode.getBoundingClientRect();
                     }
                     if (nextNode.tagName === 'IMG') {
@@ -78,7 +89,10 @@ const extensions = {
                         const nRange = document.createRange();
                         nRange.selectNodeContents(nextNode);
                         nRange.collapse(true);
-                        return nRange.getBoundingClientRect();
+                        const rect = nRange.getBoundingClientRect();
+                        if (rect.top !== 0) {
+                            return nRange.getBoundingClientRect();
+                        }
                     }
                 }
 				const prevNode = r.endContainer.childNodes[r.endOffset-1];
@@ -88,7 +102,10 @@ const extensions = {
                         return {top: rect.top, bottom:rect.bottom, left: rect.right, right: rect.right, width: 0, height: rect.height};
                     }
                 }
-			}
+                if (prevNode.tagName === 'HR') { // if its a newline
+                    return prevNode.getBoundingClientRect();
+                }
+        }
 			console.warn('collapsed range, but no boundingClientRect', r, r.startContainer, r.startOffset, r.endContainer, r.endOffset);
 			/* this is bad as it causes selectionchange and mutation events
 			window.u2DomChangeIgnore = true;

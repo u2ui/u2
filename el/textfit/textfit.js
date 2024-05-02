@@ -62,7 +62,7 @@ class textfit extends HTMLElement {
         const space = this.clientWidth; // how wide is the content, with the smallest font-size possible
         let fs = (space / widthAt100px) * 100
 
-        this.style.setProperty('--gen-font-size', fs+'px');
+        this.style.setProperty('--js-font-size', fs+'px');
     }
 }
 

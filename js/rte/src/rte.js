@@ -37,6 +37,7 @@ window.Rte = {
             const shortcut = opt.shortcut ? `(Ctrl+${opt.shortcut})` : '';
             opt.el.innerHTML = `<u2-ico icon="${icon}"></u2-ico><u2-tooltip>${label} ${shortcut}</u2-tooltip>`;
 		}
+
 		if (opt.cmd) {
 			if (!opt.click && opt.click != false) opt.click = ()=>document.execCommand(opt.cmd, false);
 			if (!opt.check && opt.check != false) opt.check = ()=>document.queryCommandState(opt.cmd);
@@ -52,7 +53,7 @@ window.Rte = {
         this.items[name] = opt;
 		return opt.el;
 	},
-	setSelect(name, opt) {
+    setSelect(name, opt) {
         let el = document.createElement('div');
         el.className = '-item -select';
         el.innerHTML = '<button class=-state></button><div class=-options></div>';
@@ -61,9 +62,10 @@ window.Rte = {
 		this.setItem(name,opt);
 		return opts;
 	},
-
-        
 };
+
+
+
 
 const lang = document.documentElement.getAttribute('lang') || navigator.language.substring(0,2) || 'en';
 

@@ -37,7 +37,7 @@ class counter extends HTMLElement {
         let widthPx = this.offsetWidth;
         const fontSizePx = Number(getComputedStyle(this).getPropertyValue('font-size').slice(0,-2));
         const em = widthPx / fontSizePx;
-        this.style.setProperty('--finalWidth', em+'em');
+        this.style.setProperty('--js-final-width', em+'em');
 
         this._reset();
         this._observer.observe(this);

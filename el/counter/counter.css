@@ -1,7 +1,7 @@
 u2-counter {
     text-align:center;
     display:inline-block;
-    min-width:var(--finalWidth);
+    min-width:var(--js-final-width);
     font-variant: tabular-nums;
     font-feature-settings: "tnum";
     box-sizing:border-box;

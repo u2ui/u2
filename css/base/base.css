@@ -41,6 +41,9 @@ hr {
 video, audio, video, iframe {
 	width: 100%; /* max-width:-moz-available / -webkit-fill-available; incompatibility causes problems */
 }
+iframe {
+    display:block;
+}
 img, svg, canvas {
 	max-width: 100%;
 }

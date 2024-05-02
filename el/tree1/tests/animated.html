@@ -81,7 +81,7 @@
     <script type=module class=main>
     document.addEventListener('u2-tree1-expand', event => {
         const childrenEl = event.target.shadowRoot.querySelector('[part=children]');
-        childrenEl.style.setProperty('--r-scroll-height', childrenEl.scrollHeight + 'px');
+        childrenEl.style.setProperty('--js-scroll-height', childrenEl.scrollHeight + 'px');
     });
     </script>
 </u2-code>
@@ -94,7 +94,7 @@
             overflow:hidden;
         }
         99.9% {
-            max-height:calc(var(--r-scroll-height, 100vh) + 3rem);
+            max-height:calc(var(--js-scroll-height, 100vh) + 3rem);
             overflow:hidden;
         }
         100% {
@@ -108,7 +108,7 @@
             overflow:visible;
         }
         0.1% {
-            max-height:calc(var(--r-scroll-height, 100vh) + 3rem);
+            max-height:calc(var(--js-scroll-height, 100vh) + 3rem);
             overflow:hidden;
         }
         100% {

@@ -163,12 +163,66 @@ Node.prototype.removeNode = function() {
 };
 
 
-// qgExecCommand('enableInlineTableEditing', false, false); // bug: if i first click in the table the nativ handles appear
-// document.addEventListener('DOMContentLoaded',function(){
-// 	qgExecCommand('enableObjectResizing', false, false);
-// });
 
-// /* prevent select on contextmenu */ (done in fixes)
-// document.addEventListener('mousedown', e =>
-// 	e.button === 2 && e.target.isContentEditable && e.preventDefault()
-// );
+// HR: (todo: move to fixes.js?)
+
+document.addEventListener('click',function(e){
+    if (e.target.tagName === 'HR') {
+        $range().selectNode(e.target).select();
+    }
+});
+
+
+// firefox: place selection before hr if it is inside
+document.addEventListener('selectionchange',function(e){
+    const selection = getSelection();
+    if (selection.anchorNode.tagName === 'HR') {
+        $range().setStartBefore(selection.anchorNode).collapse().select(); // acts like chrome, selectNode(hr) will not work
+    }
+
+    // mark all hr's inside selection
+    document.querySelectorAll('hr.HrSelected').forEach(hr=>hr.classList.remove('HrSelected'));
+    selection.getRangeAt(0).commonAncestorContainer.querySelectorAll?.('hr').forEach(hr=>{
+        if (selection.containsNode(hr)) {
+            hr.classList.add('HrSelected');
+        }
+    });
+},true);
+
+const style = document.createElement('style');
+style.textContent = `
+hr.HrSelected {
+    outline: .3rem solid var(--u2-rte-selection-color, #49F9);
+}
+`;
+document.head.appendChild(style);
+
+// firefox: remove hr after selection on backspace
+document.addEventListener('keydown',function(e){
+    if (e.code !== 'Backspace') return;
+    const range = $range.fromSelection();
+    if (range.startContainer.nodeType !== 1) return;
+    const nodeAfter = range.startContainer.childNodes[range.startOffset];
+    if (nodeAfter && nodeAfter.tagName === 'HR') {
+        nodeAfter.removeNode();
+        e.preventDefault();
+    }
+});
+
+
+
+// PASTE HTML
+
+// // handle html-paste manually, because chrome ads computed styles
+// document.querySelector('[contenteditable]').addEventListener('beforeinput', function(e) {
+//     if (e.inputType === 'insertFromPaste') {
+//         e.preventDefault();
+//         let html = e.dataTransfer.getData('text/html');
+
+//         const start = html.indexOf('<!--StartFragment-->');
+//         const end = html.indexOf('<!--EndFragment-->');
+//         if (start > -1 && end > -1) html = html.slice(start + 20, end);
+
+//         $range.fromSelection().deleteContents().insertHtml(html).collapse().select();
+//     }
+// });

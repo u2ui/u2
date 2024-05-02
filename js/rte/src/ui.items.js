@@ -131,6 +131,7 @@ import('./ui/items/ai.js');
 		h4: {de:'Überschrift 4', en:'Heading 4', fr:'Titre 4'},
 		h5: {de:'Überschrift 5', en:'Heading 5', fr:'Titre 5'},
 		h6: {de:'Überschrift 6', en:'Heading 6', fr:'Titre 6'},
+        blockquote: {de:'Zitat', en:'Blockquote', fr:'Citation'},
 	};
 	let opts = Rte.ui.setSelect('Format',{
 		click(e) {

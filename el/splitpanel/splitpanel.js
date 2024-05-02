@@ -9,18 +9,26 @@ class splitpanel extends HTMLElement {
             #slots {
                 display: contents;
             }
-            #slots > :last-child {
+            #slots > :is(:first-child, :last-child) {
                 display: none;
             }
-            .divider {
+            [role=separator] {
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                position:relative;
                 --size: .5em;
-                min-height: var(--size);                           
+                min-height: var(--size);
                 min-width: var(--size);
                 flex: 0 0 auto;
                 background: var(--divider-color, #ccc);
                 cursor: col-resize;
+                z-index:1;
             }
-            :host([vertical]) .divider {
+            [role=separator]:hover {
+                z-index:2;
+            }
+            :host([vertical]) [role=separator] {
                 cursor: row-resize;
             }
             </style>
@@ -28,18 +36,8 @@ class splitpanel extends HTMLElement {
         `;
         this.slotsEl = this.shadowRoot.getElementById('slots');
 
-
-        // dragging:
-        // - when start dragging all children should have a flex-basis in percent
-        // - when dragging the divider, the previous and next child should be resized
-        // <u2-splitpanel>
-        //   <div style="flex-basis:20%">1</div>
-        //   <div style="flex-basis:20%">2</div>
-        //   <div style="flex-basis:60%">3</div>
-        // </u2-splitpanel>
-
         this.shadowRoot.addEventListener('pointerdown', (event) => {
-            if (!event.target.classList.contains('divider')) return;
+            if (!event.target.part.contains('divider')) return;
             this.isDragging = true;
             this.draggingDivider = event.target;
             this.draggingDivider.setPointerCapture(event.pointerId);
@@ -56,7 +54,6 @@ class splitpanel extends HTMLElement {
                     child.style.flexBasis = `${size / total * 100}%`;
                 });
             });
-
         });
 
 
@@ -67,12 +64,17 @@ class splitpanel extends HTMLElement {
             const previousSize = this.hasAttribute('vertical') ? this.previousPanel.clientHeight : this.previousPanel.clientWidth;
             const nextSize = this.hasAttribute('vertical') ? this.nextPanel.clientHeight : this.nextPanel.clientWidth;
             const totalSize = previousSize + nextSize;
+            const totalPercentage = parseFloat(this.previousPanel.style.flexBasis) + parseFloat(this.nextPanel.style.flexBasis);
         
             const newPreviousSize = position - (this.previousPanel.getBoundingClientRect()[this.hasAttribute('vertical') ? 'top' : 'left'] - rect[this.hasAttribute('vertical') ? 'top' : 'left']);
             const newNextSize = totalSize - newPreviousSize;
+
+            const prevPercent = newPreviousSize / totalSize * totalPercentage;
+            const nextPercent = newNextSize / totalSize * totalPercentage;
+
+            this.previousPanel.style.flexBasis = `${prevPercent.toFixed(2)}%`;
+            this.nextPanel.style.flexBasis = `${nextPercent.toFixed(2)}%`;
         
-            this.previousPanel.style.flexBasis = `${(newPreviousSize / totalSize * 100).toFixed(2)}%`;
-            this.nextPanel.style.flexBasis = `${(newNextSize / totalSize * 100).toFixed(2)}%`;
         });
         this.shadowRoot.addEventListener('pointerup', () => {
             this.isDragging = false;
@@ -80,22 +82,33 @@ class splitpanel extends HTMLElement {
         this.shadowRoot.addEventListener('lostpointercapture', () => {
             this.isDragging = false;
         });
+
+
+        this.observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.type === 'childList') {
+                    this.assignChildren();
+                }
+            });
+        });        
     }
     
     connectedCallback() {
         // create a slot for each child and direct that child to the slot
-        [...this.children].forEach((child, nr) => {
-            const slot = document.createElement('slot');
-            slot.name = nr;
-            this.slotsEl.appendChild(slot);
-            child.setAttribute('slot', nr);
-            const divider = document.createElement('div');
-            divider.classList.add('divider');
-            divider.role = 'separator';
-            divider.part = 'divider';
-            this.slotsEl.appendChild(divider);
+        this.assignChildren();
+        this.observer.observe(this, {childList: true});
+    }
+    disconnectedCallback() {
+        this.observer.disconnect();
+    }
+    assignChildren() {
+        let html = '<div role="separator" part="divider" class="divider-0"></div>';
+        [...this.children].forEach((child, index) => {
+            const nr = index + 1;
+            child.slot = nr;
+            html += `<slot name="${nr}"></slot><div role="separator" part="divider" class="divider-${nr}"></div>`;
         });
-
+        this.slotsEl.innerHTML = html;
     }
 }
 

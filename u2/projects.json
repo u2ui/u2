@@ -8,6 +8,14 @@
       "css": false,
       "js": true
     },
+    "draghandle": {
+      "name": "draghandle",
+      "description": "Define a drag handle-element for an element that uses the draggable attribute.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "focusgroup": {
       "name": "focusgroup",
       "description": "Focus movement by arrow keys",
@@ -246,7 +254,7 @@
     },
     "splitpanel": {
       "name": "splitpanel",
-      "description": "",
+      "description": "A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.",
       "beta": false,
       "deprecated": false,
       "css": true,
