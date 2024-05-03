@@ -1,0 +1,6 @@
+u2-number {
+    text-align:right; /* if block */
+    /* only as child of a table-cell? (would probably be confusing) */
+    font-variant: tabular-nums;
+    font-feature-settings: "tnum";
+}

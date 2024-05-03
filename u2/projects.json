@@ -212,6 +212,14 @@
       "css": true,
       "js": true
     },
+    "number": {
+      "name": "number",
+      "description": "Format a number using",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "parallax-bg": {
       "name": "parallax-bg",
       "description": "Parallax backgrounds",

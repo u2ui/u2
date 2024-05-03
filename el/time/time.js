@@ -40,7 +40,7 @@ const types = {
             else options[key] = val;
         }
         return {
-            show: new Intl.DateTimeFormat(el.__lang, options).format(date)
+            show: new Intl.DateTimeFormat(el.__lang, options).format(date);
         }
     },
 }

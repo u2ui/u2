@@ -9,7 +9,7 @@ import  "../rte.js";
 
 ```html
 <div contenteditable id="myEditor">
-    Start typing here...
+    Start <strong>typing</strong> here...
 </div>
 ```
 

@@ -1,0 +1,78 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "number.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "Format numbers",
+            "name": "u2-number",
+            "members": [
+              {
+                "kind": "method",
+                "name": "render",
+                "description": "Render the number element"
+              },
+              {
+                "kind": "method",
+                "name": "reset",
+                "description": "Reset the number element"
+              },
+              {
+                "kind": "method",
+                "name": "attributeChanged",
+                "description": "Handle attribute changes"
+              },
+              {
+                "kind": "method",
+                "name": "connected",
+                "description": "Handle element connection"
+              },
+              {
+                "kind": "method",
+                "name": "disconnected",
+                "description": "Handle element disconnection"
+              }
+            ],
+            "events": [],
+            "attributes": [
+              {
+                "name": "value",
+                "type": {
+                    "text": "string"
+                },
+                "description": "The date and number to display, in ISO 8601 format"
+              },
+              {
+                "name": "lang",
+                "type": {
+                    "text": "string"
+                },
+                "description": "The language to use for formatting the date and number"
+              }
+            ],
+            "cssProperties": [],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u2-number",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u2-number",
+            "declaration": {
+              "name": "u2-number",
+              "module": "number.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  
