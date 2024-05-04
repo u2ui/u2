@@ -14,6 +14,8 @@ customElements.define('u2-tooltip', class extends HTMLElement {
         }
         this.setAttribute('role', 'tooltip');
         this.setAttribute('popover','auto');
+        this.addEventListener('focusin', ()=>clearInterval(this.hideTimeout));
+//        this.addEventListener('focusout', ()=>clearInterval(this.hideTimeout));
     }
     _showFor(el){
         let event = new CustomEvent('u2-tooltip-show', {bubbles: true, cancelable: true, detail: {tooltip: this} });
