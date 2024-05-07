@@ -7,6 +7,7 @@ const tagToTab = {
     H4:1,
     H5:1,
     H6:1,
+    BUTTON:1,
 };
 
 customElements.define('u2-tabs', class extends HTMLElement {

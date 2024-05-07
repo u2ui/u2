@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <meta name=viewport content="width=device-width">
+        <title>U2 design system | Showcase</title>
+        <!-- <script src="./test-init.js" type=module async></script> -->
+
+        <style>
+        html {
+            --hsl-h:275.4;
+            --hsl-s:45%;
+            --hsl-l:60%;
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/';
+            background:#fafafa;
+            --width:80rem;
+        }
+        u2-code {
+            font-size: max(.8rem, 13px);
+        }
+        #nav h2 {
+            margin-top:1rem;
+            margin-bottom: .3rem;
+            padding-bottom: .3rem;
+            border-bottom: 1px solid var(--color-line);
+            font-weight:600;
+        }
+        #repos > div {
+            display:grid;
+            background:#fff;
+            border:1px solid #ccc;
+            overflow:auto;
+            font-size:13px;
+            aspect-ratio: 1 / 1;
+            box-shadow: 0 0 .5rem #0002;
+        }
+        #repos > div > .demo {
+            grid-area: 1 / 1 / 1 / 1;
+            display:grid;
+            align-items: center;
+            padding:1rem;
+            text-align:center;
+
+            & :is(u2-masonry, .u2-flex, .u2-grid) > * {
+                background-color:var(--color-light);
+            }
+            & .u2-table > * > * > * {
+                background-image: linear-gradient(to left, var(--color-light), var(--color-light));
+                background-repeat: no-repeat;                
+                background-origin: content-box;
+            }
+        }
+        #repos > div > u2-code {
+            grid-area: 1 / 1 / 1 / 1;
+            opacity:0;
+            visibility: hidden;
+            transition: .3s;
+            padding:1rem;
+            background:#fff;
+            font-size:13px;
+
+        }
+        #repos > div > header {
+            position:absolute;
+            display:flex;
+            backdrop-filter: blur(2px);
+            background:#0009;
+            color:var(--color-light);
+            padding:1rem;
+            top:0;
+            left:0;
+            right:0;
+            xbottom:0;
+            z-index:10;
+            transition: .3s;
+            transform: translateY(-100%);
+            div:hover > & {
+                transform: translateY(0);
+            }
+        }
+        /* #repos > div:hover > u2-code {
+            opacity: 1;
+            visibility: visible;
+        } */
+        
+        button, input {
+            margin-block:.2rem;
+        }
+        </style>
+
+<body>
+
+    <header style="text-align:center">
+        <img src="../../../u2/u2/tools/logo/u1.svg" width=259 height=114 style="width: 8rem" alt="u2-logo">
+    </header>
+
+    <main>
+
+        <section id=reposSec>
+            <script type=module>
+
+                //import {addShadowRoot} from "../auto.js?debug=1";
+                import {addShadowRoot} from "../auto.js";
+                import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@1.2.2/mod.min.js';
+
+                const repos = await fetch('../projects.json').then(res=>res.json());
+
+                const extToName = {
+                    'el':'Elements',
+                    'attr':'Attributes',
+                    'class':'Classes',
+                    'js':'JavaScript',
+                    //'css':'Stylesheets',
+                };
+
+                //let str = '';
+                let navStr = '';
+                for (const [ext, catName] of Object.entries(extToName)) {
+                    const entries = repos[ext];
+
+                    for (let [name, repo] of Object.entries(entries)) {
+
+                        const div = document.createElement('div');
+                        div.id = 'repo_'+catName+'-'+name;
+                        div.setAttribute('data-repo', name);
+                        div.setAttribute('data-type', ext);
+                        document.getElementById('repos').append(div);
+
+                        (async function(){
+
+                            //let url = `https://github.com/u2ui/u2/tree/main/el/alert`
+                            let url = `https://github.com/u2ui/u2/tree/main/${ext}/${name}`;
+
+
+                            const localUrl = '../../' + ext + '/' + name;
+
+                            let exampleCodeUrl = localUrl+`/tests/minimal.html`;
+
+                            let parts = await fetch(exampleCodeUrl).then(res=>res.text()).then(source=>{
+                                // parse the example code
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(source, 'text/html');
+                                //const html = source.match(/<section\>([\s\S]*)<\/section>/)?.[1]; // raw content
+                                const html = doc.querySelector('section.main').innerHTML; // raw content
+                                return {
+                                    //html:doc.querySelector('section')?.innerHTML,
+                                    html,
+                                    style:doc.querySelector('style.main')?.innerHTML,
+                                    script:doc.querySelector('script:not([src])')?.innerHTML,
+                                }
+                            });
+
+                            if (ext === 'el') {
+                                const tag = 'u2-'+repo.name.replace(/\.el$/,'');
+                                parts.html ??= `<${tag}>Content</${tag}>`;
+                                parts.style ??= `${tag} {}`;
+                            }
+                            if (ext === 'attr') {
+                                const attr = 'u2-'+repo.name.replace(/\.attr$/,'');
+                                parts.html ??= `<div ${attr}>hello</div>`;
+                                parts.style ??= `[${attr}] {}`;
+                            }
+
+                            /* */
+                            const str =
+                            `
+                            <header>
+                                <div style="flex:1 1 auto">
+                                    <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
+                                    <p>${repo.description}</p>
+                                    <a href="#${div.id+'_dialog'}" class="btn -play">Play with it</a>
+                                    <dialog class=-playground u2-navigable id=${div.id+'_dialog'} style="width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto"><u2-skeleton template="h1 p table(4x3)"></u2-skeleton></dialog>
+                                </div>
+                                <a href="${url}" target=github rel=noopener><u2-ico>github</u2-ico></a>
+                            </header>
+                            <div class=demo>
+                                <div>
+                                    ${parts.html}
+                                </div>
+                            </div>
+                            <u2-code trim editable oninput="this.closest('#repos > div').querySelector('.demo > div').innerHTML = this.value">
+                                <script type=html>
+                                    ${parts.html}
+                                <\/script>
+                            </u2-code>
+                            <!--u2-tabs class=-tabs>
+                                ${parts.style ?
+                                    `<h3>CSS</h3>
+                                    <u2-code trim editable>
+                                        <style>
+                                            ${parts.style}
+                                        </style>
+                                    </u2-code>` : ''
+                                }
+                                ${parts.script?
+                                    `<h3>Javascript</h3>
+                                    <u2-code trim class=script>
+                                        <script type=module>
+                                            ${parts.script}
+                                        <\/script>
+                                    </u2-code>`:''
+                                }
+                            </u2-tabs-->
+                            `;
+
+                            div.innerHTML = str;
+
+                        })();
+
+                    }
+                }
+
+
+                document.addEventListener('click', async e=>{
+                    if (!e.target.matches('.-play')) return;
+                    const dialog = e.target.nextElementSibling;
+                    const root = dialog.closest('[data-repo]');
+                    const repo = root.getAttribute('data-repo');
+                    const type = root.getAttribute('data-type');
+                    if (type === 'el') {
+                        await import('../tools/ce-inspector.js');
+
+                        dialog.innerHTML = 
+                            `<ce-inspector manifest="../../${type}/${repo}/manifest.json">
+                                ${root.querySelector('.demo u2-'+repo).outerHTML}
+                            </ce-inspector>`;
+                        return;
+                    } else {
+                        dialog.innerHTML = 'no playground available for '+type+'. Stay tuned!';
+                    }
+
+                });
+
+                
+
+            </script>
+
+
+            <div id=repos class="u2-grid u2-width" style="--u2-Items-width:15rem"></div>
+        </section>
+    </main>

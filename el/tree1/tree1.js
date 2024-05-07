@@ -117,7 +117,7 @@ export class tree extends HTMLElement {
         // own level
         const root = this.root();
         const myLevel = root === this ? 1 : parseInt(this.parentNode.getAttribute('aria-level')) + 1;
-        this.setAttribute('aria-level', myLevel);
+        this.setAttribute('aria-level', myLevel); // todo: internals?
         this.style.setProperty('--level', myLevel);
 
         // slot subnodes

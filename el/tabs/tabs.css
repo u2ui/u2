@@ -11,12 +11,6 @@ u2-tabs [role="tab"] {
     font-size:1rem;
     font-weight:bold;
     outline:0;
-    /* needed?:
-    border-width: 0 0 .2rem 0;
-    border-radius: 0;
-    background-color: transparent;
-    color: inherit;
-    */
 }
 u2-tabs [role="tab"][aria-selected="true"] {
     border-bottom-color: var(--color);

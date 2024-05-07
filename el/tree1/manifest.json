@@ -10,12 +10,7 @@
                     "kind": "class",
                     "description": "",
                     "name": "tree",
-                    "todo_members": [
-                        {
-                            "kind": "property",
-                            "name": "select"
-                        }
-                    ],
+                    "members": [],
                     "events": [
                         {
                             "name": "u2-tree1-expand",
@@ -37,6 +32,31 @@
                         }
                     ],
                     "attributes": [
+                    ],
+                    "cssProperties": [
+                        {
+                            "name": "--indent",
+                            "syntax": "<length>",
+                            "description": "The indentation of the tree items"
+                        }
+                    ],
+                    "cssParts": [
+                        {
+                            "name": "row",
+                            "description": "The Item of the tree"
+                        },{
+                            "name": "content",
+                            "description": "The content of the tree mainly the text. Its display:contents by default!"
+                        },{
+                            "name": "children",
+                            "description": "The children of the tree. Its display:contents by default!"
+                        }
+                    ],
+                    "slots": [
+                        {
+                            "name": "icon",
+                            "description": "The icon of the tree item"
+                        }
                     ],
                     "superclass": { "name": "HTMLElement" },
                     "tagName": "u2-tree",

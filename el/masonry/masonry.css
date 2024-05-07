@@ -6,10 +6,6 @@ u2-masonry {
     display: grid;
     column-gap: var(--u2-Col-gap);
     row-gap:    var(--u2-Row-gap);
-    /* grid-template-columns: repeat(auto-fill, minmax( var(--u2-Items-width), 1fr) ); /* min() not supported everywhere? */
-    grid-template-columns: repeat(auto-fill, minmax( min(var(--u2-Items-width), 100%) , 1fr) );
-    /* grid-auto-flow:dense; /* why */
-	grid-template-rows: masonry; /* native css only fallback (firefox, safari?) */
     position: relative !important; /* items are placed absolute */
 }
 
@@ -21,4 +17,11 @@ u2-masonry > * {
 
 u2-masonry.-Js > * {
 	position: absolute !important;
+}
+
+u2-masonry:not(:defined) {
+    /* grid-template-columns: repeat(auto-fill, minmax( var(--u2-Items-width), 1fr) ); /* min() not supported everywhere? */
+    grid-template-columns: repeat(auto-fill, minmax( min(var(--u2-Items-width), 100%) , 1fr) );
+    /* grid-auto-flow:dense; /* why */
+	grid-template-rows: masonry; /* native css only fallback (firefox, safari?) */
 }

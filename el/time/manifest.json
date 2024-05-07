@@ -41,80 +41,57 @@
             "attributes": [
               {
                 "name": "datetime",
-                "type": {
-                  "text": "string"
-                },
                 "description": "The date and time to display, in ISO 8601 format"
               },
               {
                 "name": "lang",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The language to use for formatting the date and time"
+                "description": "The language to use for formatting the date and time",
+                "u2Examples": ["de-CH","de","fr-CA","ja-JP","zh-Hans-CN"]
               },
               {
                 "name": "type",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The type of display to use, either 'date' or 'relative'"
+                "description": "The type of display to use, either 'date' or 'relative'",
+                "u2-type": ["date","relative"]
               },
               {
                 "name": "weekday",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The format to use for the weekday, either 'narrow', 'short', 'long', or 'none'"
+                "description": "The format to use for the weekday, either 'narrow', 'short', 'long', or 'none'",
+                "u2-type": ["narrow","short","long","none"]
               },
               {
                 "name": "year",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The format to use for the year, either 'numeric', '2-digit', or 'none'"
+                "description": "The format to use for the year, either 'numeric', '2-digit', or 'none'",
+                "u2-type": ["numeric","2-digit","none"]
               },
               {
                 "name": "month",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The format to use for the month, either 'numeric', '2-digit', 'narrow', 'short', 'long', or 'none'"
+                "description": "The format to use for the month, either 'numeric', '2-digit', 'narrow', 'short', 'long', or 'none'",
+                "u2-type": ["numeric","2-digit","narrow","short","long","none"]
               },
               {
                 "name": "day",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The format to use for the day, either 'numeric', '2-digit', or 'none'"
+                "description": "The format to use for the day, either 'numeric', '2-digit', or 'none'",
+                "u2-type": ["numeric","2-digit","none"]
               },
               {
                 "name": "hour",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The format to use for the hour, either 'numeric', '2-digit', or 'none'"
+                "description": "The format to use for the hour, either 'numeric', '2-digit', or 'none'",
+                "u2-type": ["numeric","2-digit","none"]
               },
               {
                 "name": "minute",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The format to use for the minute, either 'numeric', '2-digit', or 'none'"
+                "description": "The format to use for the minute, either 'numeric', '2-digit', or 'none'",
+                "u2-type": ["numeric","2-digit","none"]
               },
               {
                 "name": "second",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The format to use for the second, either 'numeric', '2-digit', or 'none'"
+                "description": "The format to use for the second, either 'numeric', '2-digit', or 'none'",
+                "u2-type": ["numeric","2-digit","none"]
               },
               {
                 "name": "mode",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The mode to use for the relative type, either 'narrow', 'short', or 'long'"
+                "description": "The mode to use for the relative type, either 'narrow', 'short', or 'long'",
+                "u2-type": ["narrow","short","long"]
               }
             ],
             "cssProperties": [],

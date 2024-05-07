@@ -10,6 +10,9 @@ class mesonry extends HTMLElement{
         this.render();
         this.rObserver.observe(this);
     }
+    disconnectedCallback(){
+        this.rObserver.unobserve(this);
+    }
     render(){
         const widthContainer = this.clientWidth;
         if (!widthContainer) return;

@@ -3,23 +3,20 @@
 <head>
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
-    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <!-- <script src="../../../u2/tests/test-init.js" type=module async></script> -->
 
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/aria.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
-    <script src="../number.js" type=module async></script>
-    <link href="../number.css" rel=stylesheet>
+    <script src="../skeleton.js" type=module async></script>
+    <link href="../skeleton.css" rel=stylesheet>
 
 <body>
 
 <section class="main">
-    Number: <u2-number value="8987.2345" digits="2">8'987.23</u2-number>
+    <u2-skeleton template="h1 p h2 img p p table(4x7) button button"></u2-skeleton>
 </section>
 
 <style class="main">
-u2-number {
-    font-size: 2em;
-}
 </style>

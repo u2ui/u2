@@ -107,6 +107,7 @@ class code extends HTMLElement {
         this.value = this.getSourceValue();
     }
     copy(){
+        console.warn('u2-code: copy() is deprecated, use navigator.clipboard.writeText(codeEl.value) instead');
         let code = this.shadowRoot.querySelector('#code').textContent;
         navigator.clipboard.writeText(code);
     }
@@ -190,13 +191,19 @@ class code extends HTMLElement {
     setSelectionRange(start, end){
         this.textarea.setSelectionRange(start, end);
     }
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'trim') this.trim = newValue!=null;
-    }
     focus(){
         this.textarea.focus();
     }
-    static observedAttributes = ['trim'];
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'trim') {
+            this.trim = newValue!=null;
+            if (this.sourceElement) this.value = this.getSourceValue();
+        }
+        if (name === 'editable') this.shadowRoot.getElementById('code').inert = newValue!=null;
+        if (name === 'element') this.setForeignElement(document.getElementById(newValue));
+    }
+    static observedAttributes = ['trim', 'editable', 'element'];
 
 }
 

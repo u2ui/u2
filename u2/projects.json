@@ -214,7 +214,7 @@
     },
     "number": {
       "name": "number",
-      "description": "Format a number using",
+      "description": "Displays formatted numbers",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -247,6 +247,14 @@
     "rte": {
       "name": "rte",
       "description": "\"Rich\" Rich Text Editor (alpha)",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "skeleton": {
+      "name": "skeleton",
+      "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.",
       "beta": false,
       "deprecated": false,
       "css": true,

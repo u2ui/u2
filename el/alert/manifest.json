@@ -17,19 +17,19 @@
                     "attributes": [
                         {
                             "name": "variant",
-                            "type": ["info","success","warning","danger"]
+                            "u2-type": ["info","success","warn","error"]
                         },
                         {
                             "name": "dismissable",
-                            "type": "boolean"
+                            "u2-type": "boolean"
                         },
                         {
                             "name": "icon",
-                            "type": "string"
+                            "u2Examples": ["home","star","favorite","share","link"]
                         },
                         {
                             "name": "open",
-                            "type": "boolean"
+                            "u2-type": "boolean"
                         }
                     ],
                     "slots": [

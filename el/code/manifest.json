@@ -12,26 +12,10 @@
             "name": "code",
             "members": [
               {
-                "kind": "method",
-                "name": "copy",
-                "description": "Copies the code to the clipboard."
-              },
-              {
                 "kind": "getter",
                 "name": "language",
                 "description": "Gets the language of the code block."
-              },
-              {
-                "kind": "setter",
-                "name": "hightlightValue",
-                "description": "Sets the highlighted value of the code block."
-              },
-              {
-                "kind": "setter",
-                "name": "sourceValue",
-                "description": "Sets the source value of the code block."
-              },
-              {
+              },{
                 "kind": "getter",
                 "name": "value",
                 "description": "Gets the value of the code block."
@@ -41,30 +25,21 @@
             "attributes": [
               {
                 "name": "trim",
-                "type": {
-                  "text": "boolean"
-                },
+                "u2-type": "boolean",
                 "description": "Trims empty first and last lines, and most importantly, indentation."
               },
               {
                 "name": "editable",
-                "type": {
-                  "text": "boolean"
-                },
+                "u2-type": "boolean",
                 "description": "Makes the code block editable."
               },
               {
                 "name": "language",
-                "type": {
-                  "text": "string"
-                },
-                "description": "Defines the code language (auto-detect if not set)."
+                "description": "Defines the code language (auto-detect if not set). See https://highlightjs.readthedocs.io/en/latest/supported-languages.html for a list of supported languages.",
+                "u2Examples": ["javascript", "html", "css", "json", "xml", "markdown", "php"]
               },
               {
                 "name": "element",
-                "type": {
-                  "text": "string"
-                },
                 "description": "ID of the element whose innerHTML should be used as code."
               }
             ],

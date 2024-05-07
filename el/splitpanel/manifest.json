@@ -1,0 +1,49 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "splitpanel.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "A container that splits its children horizontally or vertically and makes them resizable.",
+            "name": "u2splitpanel",
+            "members": [],
+            "events": [],
+            "attributes": [
+                {
+                    "name": "vertical",
+                    "u2-type": "boolean",
+                    "description": "If true, the children are split vertically."
+                }
+            ],
+            "cssProperties": [],
+            "cssParts": [
+                {
+                    "name": "divider",
+                    "description": "The divider between the children. The width (horizontal) or height (vertical) can be set using `--size`."
+                }
+            ],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u2-splitpanel",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u2-splitpanel",
+            "declaration": {
+              "name": "u2splitpanel",
+              "module": "splitpanel.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

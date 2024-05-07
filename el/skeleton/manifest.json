@@ -4,51 +4,48 @@
     "modules": [
         {
             "kind": "javascript-module",
-            "path": "tabs.js",
+            "path": "skeleton.js",
             "declarations": [
                 {
                     "kind": "class",
                     "description": "",
-                    "name": "tabs",
+                    "name": "skeleton",
                     "members": [
-                        {
-                            "kind": "property",
-                            "name": "select",
-                            "description": "Set or get the selected tab by index (0-n)"
-                        }
                     ],
                     "events": [
-                        {
-                            "name": "u2-activate"
-                        }
                     ],
                     "attributes": [
-                    ],
-                    "cssParts": [
                         {
-                            "name": "tablist",
-                            "description": "The tab list container"
-                        },{
-                            "name": "panels",
-                            "description": "The tab panels container"
+                            "name": "template",
+                            "description": "The template to render. eg: 'h2 p p table(3x4) button'",
+                            "u2Examples": ["h2 p p table(3x4) button", "p img p"]
                         }
-
+                    ],
+                    "slots": [
+                    ],
+                    "cssProperties": [
+                        {
+                            "name": "--u2-skeleton-color",
+                            "description": "The color of the skeleton",
+                            "u2Examples": ["#f0f0f0", "#fee", "#eef"]
+                        }
                     ],
                     "superclass": { "name": "HTMLElement" },
-                    "tagName": "u2-tabs",
+                    "tagName": "u2-skeleton",
                     "customElement": true
                 }
             ],
             "exports": [
                 {
                     "kind": "custom-element-definition",
-                    "name": "u2-tabs",
+                    "name": "u2-skeleton",
                     "declaration": {
-                        "name": "tabs",
-                        "module": "tabs.js"
+                        "name": "skeleton",
+                        "module": "skeleton.js"
                     }
                 }
             ]
         }
     ]
 }
+

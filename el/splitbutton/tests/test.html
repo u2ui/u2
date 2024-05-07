@@ -1,15 +1,23 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang=en>
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
+    <title>Test</title>
 
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
+    <script src="../../../u2/auto.js" type=module async></script>
 
     <link rel=stylesheet href="../splitbutton.css">
     <script src="../splitbutton.js" type=module async></script>
+
+    <style>
+    body {
+        --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+    }
+    </style>
 
 </head>
 
@@ -35,7 +43,10 @@
 
 <article>
     <u2-splitbutton>
-        <button>Add</button>
+        <button>
+            <u2-ico inline>home</u2-ico>
+            Add
+        </button>
         <menu>
             <li> <button>Domain</button>
             <li> <button>Subdomain</button>

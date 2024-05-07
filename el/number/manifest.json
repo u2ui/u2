@@ -8,53 +8,96 @@
         "declarations": [
           {
             "kind": "class",
-            "description": "Format numbers",
+            "description": "Displays formatted numbers",
             "name": "u2-number",
             "members": [
-              {
-                "kind": "method",
-                "name": "render",
-                "description": "Render the number element"
-              },
-              {
-                "kind": "method",
-                "name": "reset",
-                "description": "Reset the number element"
-              },
-              {
-                "kind": "method",
-                "name": "attributeChanged",
-                "description": "Handle attribute changes"
-              },
-              {
-                "kind": "method",
-                "name": "connected",
-                "description": "Handle element connection"
-              },
-              {
-                "kind": "method",
-                "name": "disconnected",
-                "description": "Handle element disconnection"
-              }
+                {
+                    "kind": "field",
+                    "description": "Set or get the value of the number",
+                    "name": "value"
+                }
             ],
             "events": [],
             "attributes": [
-              {
-                "name": "value",
-                "type": {
-                    "text": "string"
-                },
-                "description": "The date and number to display, in ISO 8601 format"
-              },
-              {
-                "name": "lang",
-                "type": {
-                    "text": "string"
-                },
-                "description": "The language to use for formatting the date and number"
-              }
+                {
+                    "name": "value",
+                    "description": "The number to format"
+                },{
+                    "name": "lang",
+                    "description": "The language to use for formatting the number",
+                    "u2Examples": ["en-US","fr-FR","de-DE","es-ES","it-IT","ja-JP","ko-KR","zh-CN","zh-TW"]
+                },{
+                    "name": "digits",
+                    "description": "The number of digits to display after the decimal point",
+                    "u2-type": "number"
+                },{
+                    "name": "unit",
+                    "description": "The unit of measure to use when displaying the number",
+                    "u2-type": ["acre","bit","byte","celsius","centimeter","day","degree","fahrenheit","fluid-ounce","foot","gallon","gigabit","gigabyte","gram","hectare","hour","inch","kilobit","kilobyte","kilogram","kilometer","liter","megabit","megabyte","meter","microsecond","mile","mile-scandinavian","milliliter","millimeter","millisecond","minute","month","nanosecond","ounce","percent","petabyte","pound","second","stone","terabit","terabyte","week","yard","year"]
+                },{
+                    "name": "currency",
+                    "description": "Display the number as a currency. Formated based on the currency locale."
+                },{
+                    "name": "percent",
+                    "description": "Display the number as a percentage.",
+                    "u2-type": "boolean"
+                }
             ],
             "cssProperties": [],
+            "cssParts": [
+                {
+                    "// name": "compact",
+                    "description": "The exponent in 'long' or 'short' form, depending on how compactDisplay (which defaults to short) is specified when notation is set to compact."
+                },{
+                    "name": "currency",
+                    "description": "The currency string, such as the symbols '$' and '€' or the name 'Dollar', 'Euro', depending on how currencyDisplay is specified."
+                },{
+                    "name": "decimal",
+                    "description": "The decimal separator string ('.')."
+                },{
+                    "// name": "exponentInteger",
+                    "description": "The exponent integer value, when notation is set to scientific or engineering."
+                },{
+                    "// name": "exponentMinusSign",
+                    "description": "The exponent minus sign string ('-')."
+                },{
+                    "// name": "exponentSeparator",
+                    "description": "The exponent separator, when notation is set to scientific or engineering."
+                },{
+                    "name": "fraction",
+                    "description": "The fraction number."
+                },{
+                    "name": "group",
+                    "description": "The group separator string (',')."
+                },{
+                    "// name": "infinity",
+                    "description": "The Infinity string ('∞')."
+                },{
+                    "name": "integer",
+                    "description": "The integer number."
+                },{
+                    "name": "literal",
+                    "description": "Any literal strings or whitespace in the formatted number."
+                },{
+                    "name": "minusSign",
+                    "description": "The minus sign string ('-')."
+                },{
+                    "name": "nan",
+                    "description": "The NaN string ('NaN')."
+                },{
+                    "name": "plusSign",
+                    "description": "The plus sign string ('+')."
+                },{
+                    "name": "percentSign",
+                    "description": "The percent sign string ('%')."
+                },{
+                    "name": "unit",
+                    "description": "The unit string, such as the 'l' or 'litres', depending on how unitDisplay is specified."
+                },{
+                    "// name": "unknown",
+                    "description": "The string for unknown type results."
+                }
+            ],
             "superclass": {
               "name": "HTMLElement"
             },

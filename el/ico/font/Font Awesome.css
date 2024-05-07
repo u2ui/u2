@@ -20,6 +20,3 @@ disadvantage: both fonts are loaded regardless of used in content
   src: url(https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome/webfonts/fa-brands-400.woff2) format('woff2');
 }
 
-html {
-  --u2-ico-font: 'Font Awesome', arial;
-}

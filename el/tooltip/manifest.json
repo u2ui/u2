@@ -10,21 +10,26 @@
                     "kind": "class",
                     "description": "",
                     "name": "tooltip",
-                    "toto_members": [
-                        {
-                            "kind": "property",
-                            "name": "select"
-                        }
+                    "members": [
                     ],
                     "events": [
                         {
-                            "name": "u2-tooltip-show",
+                            "name": "u2-show",
                             "type": {
                                 "text": "Event"
                             }
                         }
                     ],
                     "attributes": [
+                        {
+                            "name": "position",
+                            "description": "Position of the tooltip, will flip if there is not enough space",
+                            "u2-type": ["top", "bottom", "left", "right"]
+                        },{
+                            "name": "tabindex",
+                            "description": "Tabindex to make the tooltip focusable",
+                            "u2-type": "number"
+                        }
                     ],
                     "superclass": { "name": "HTMLElement" },
                     "tagName": "u2-tooltip",
