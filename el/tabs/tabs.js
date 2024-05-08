@@ -172,6 +172,14 @@ customElements.define('u2-tabs', class extends HTMLElement {
         return index;
     }
 
+    static observedAttributes = ['selected'];
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'selected') {
+            this.selected = parseInt(newValue);
+        }
+    }
+
 });
 
 // beta, does not work if initial u2-target is already fired

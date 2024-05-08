@@ -11,11 +11,10 @@ We named it with the prefix "1" to prevent compatibility-issues if we like to ch
     <h1>Card 1</h1>
     <div class=-body>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos porro pariatur ducimus aut?
-        Saepe vitae sequi doloribus perspiciatis quae? Fuga, exercitationem voluptatum facilis
-        necessitatibus qui incidunt? Magnam non perferendis iure.
+        Saepe vitae sequi doloribus perspiciatis quae?
     </div>
-    <div style="background:#eee">
-        <div class=u2-flex style="justify-content:flex-end">
+    <div style="background:#f8f8f8">
+        <div class=u2-flex style="justify-content:flex-end; row-gap:.5rem">
             <button>button 1</button>
             <button>button 2</button>
         </div>

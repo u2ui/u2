@@ -12,7 +12,7 @@ Make every element scrolling at different speed
 
 ```html
 <div u2-parallax style="--u2-parallax-speed:1.1;">faster</div>
-<div u2-parallax style="--u2-parallax-speed:1;">normal</div>
+<div u2-parallax style="--u2-parallax-speed:1;">parallax</div>
 <div u2-parallax style="--u2-parallax-speed:0.9;">slower</div>
 ```
 

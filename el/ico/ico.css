@@ -22,7 +22,7 @@ u2-ico {
     fill:currentColor; /* for svg, dont use `u2-ico > svg { fill:currentColor }` because it can have the attribute fill="none" */
 
     /* ok? */
-    display: inline-block; /* inline-flex has an other baseline? */
+    xdisplay: inline-block; /* inline-flex has an other baseline? */
     text-align:center;
     vertical-align:middle;
     --size: 1.5rem; /* 24px Preferred icon size, material-icons */
@@ -33,6 +33,7 @@ u2-ico {
     - Some Icons on some Fonts may get cuted!
     */
 }
+u2-ico:not([hidden]) { display: inline-block; }
 u2-ico[icon]:empty:before { /* todo if supported: :where([icon]::before) { */
     content:attr(icon);
 }
@@ -80,4 +81,8 @@ u2-ico[state]:before {
 u2-ico[state=fail]:before { /* js, but failed to load */
     display:block;
 }
-
+u2-ico[state="fail"]:is([state="fail"]) {
+    font-size: 0.8em;
+    overflow: visible;
+    width: auto;
+}

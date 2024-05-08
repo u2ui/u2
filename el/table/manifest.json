@@ -1,0 +1,43 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "table.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "table",
+                    "members": [
+                    ],
+                    "events": [
+                    ],
+                    "attributes": [
+                        {
+                            "name": "sortable",
+                            "description": "If set, the table is sortable, value can be a selector for an element that triggers the sort",
+                            "type": "string"
+                        }
+                    ],
+                    "cssParts": [
+                    ],
+                    "superclass": { "name": "HTMLElement" },
+                    "tagName": "u2-table",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-element-definition",
+                    "name": "u2-table",
+                    "declaration": {
+                        "name": "table",
+                        "module": "table.js"
+                    }
+                }
+            ]
+        }
+    ]
+}

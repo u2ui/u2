@@ -29,6 +29,24 @@
                             "name": "tabindex",
                             "description": "Tabindex to make the tooltip focusable",
                             "u2-type": "number"
+                        },{
+                            "name": "id",
+                            "description": "Other Elements can use this id to reference the Tooltip, if not set the Tooltip refers to its parent Element"
+                        },{
+                            "name": "open",
+                            "description": "Deprecated! It is just used to animate show and open. When animating popovers is supported, this will be removed.",
+                            "u2-type": "boolean",
+                            "deprecated": true
+                        },{
+                            "name": ":position-x",
+                            "description": "Read Only! Deprecated! Real position of the tooltip in x direction used for arrow-styling. When custom states or anchore positionin arive this will be removed.",
+                            "u2-type": ["after", "before", "center"],
+                            "deprecated": true
+                        },{
+                            "name": ":position-y",
+                            "description": "Read Only! Deprecated! Real position of the tooltip in y direction used for arrow-styling. When custom states or anchore positionin arive this will be removed.",
+                            "u2-type": ["after", "before", "center"],
+                            "deprecated": true
                         }
                     ],
                     "superclass": { "name": "HTMLElement" },

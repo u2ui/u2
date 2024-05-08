@@ -1,0 +1,45 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "textfit.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "textfit",
+                    "members": [
+                    ],
+                    "events": [
+                    ],
+                    "attributes": [
+                    ],
+                    "cssProperties": [
+                        {
+                            "name": "--js-font-size",
+                            "syntax": "<length>",
+                            "description": "Read only! The optimal font-size. This var can be used like this: font-size: clamp(14px, var(--js-font-size), 24px);"
+                        }
+                    ],
+                    "cssParts": [
+                    ],
+                    "superclass": { "name": "HTMLElement" },
+                    "tagName": "u2-textfit",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-element-definition",
+                    "name": "u2-textfit",
+                    "declaration": {
+                        "name": "textfit",
+                        "module": "textfit.js"
+                    }
+                }
+            ]
+        }
+    ]
+}

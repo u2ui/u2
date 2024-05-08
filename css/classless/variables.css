@@ -13,9 +13,11 @@ html {
     --shadow-y:.25rem;
     --shadow-blur:.7rem;
     --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) #0003;
+    color-scheme: light; /* todo: change when using light-dark */
 }
 
-html, [u2-skin] {
+/* all composite variables must be entered here, as they must be calculated for elements with [u2-skin]. */
+html, [u2-skin], [u2-skin=light] {
   --hs:var(--hsl-h), var(--hsl-s);
   --hsl:var(--hs), var(--hsl-l);
 
@@ -30,6 +32,13 @@ html, [u2-skin] {
   --color-line: var(--color-text);
 }
 
+
+[u2-skin=dark] {
+    --color-light: hsl(var(--hs), calc(var(--hsl-l) * .7 ) );
+    --color-dark:  hsl(var(--hs), calc(var(--hsl-l) + (100% - var(--hsl-l)) * .9 ) );
+    --color-bg:   hsl(var(--hs), calc(var(--hsl-l) * .4 ) );
+    --color-text: hsl(var(--hs), 99.5%);
+}
 
 /*
 @media (prefers-color-scheme: dark) {

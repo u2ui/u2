@@ -1,5 +1,13 @@
 {
   "attr": {
+    "behavior": {
+      "name": "behavior",
+      "description": "behavior before action",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "confirm": {
       "name": "confirm",
       "description": "Confirm before action",
@@ -353,14 +361,6 @@
     "classless": {
       "name": "classless",
       "description": "null",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
-    "flex": {
-      "name": "flex",
-      "description": "Most wanted flexbox case",
       "beta": false,
       "deprecated": false,
       "css": true,

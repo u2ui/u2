@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>tests</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../behavior.js" type=module async></script>
+    
+    <style>
+    body {
+        --u2-ico-dir: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/';
+    }
+    </style>
+
+
+<body>
+
+<section>
+
+    <h3>share</h3>
+    <button u2-behavior="share"></button>
+
+    <h3>custom text</h3>
+    <button u2-behavior="share">share this</button>
+
+    <h3>state elements</h3>
+    <button u2-behavior="share" data-url="https://example.com" data-title="Example" data-text="This is an example">
+        <span class="-text"></span>
+        <u2-ico class="-success" inline>check</u2-ico>
+        <u2-ico class="-error" inline>exclamation-triangle</u2-ico>
+    </button>
+
+    <h2>using class "-text" as text-content</h2>
+    <button u2-behavior="share" style="padding:.5rem">
+        <u2-ico>share</u2-ico>
+        <u2-tooltip class="-text"></u2-tooltip>
+    </button>
+
+
+    <h3>close</h3>
+    <button popovertarget="my-popover">Open Popover</button>
+    <div popover id="my-popover">
+        <button u2-behavior="close"></button>
+        Greetings, one and all!
+    </div>
+
+    <h3>print</h3>
+    <button u2-behavior="print"></button>
+
+    <h3>install</h3>
+    <button u2-behavior="webapp.install"></button>
+
+    <h3>once</h3>
+    <button u2-behavior="once" id="once-test">Once</button>
+    <br>
+    <button onclick="localStorage.removeItem('u2-behavior-once-once-test');">reset</button>
+
+    <h3>Fullscreen toggle</h3>
+    <button u2-behavior="fullscreen.toggle" style="padding:.5rem">
+        <u2-tooltip class="-text"></u2-tooltip>
+        <u2-ico class="-active">fullscreen-exit</u2-ico>
+        <u2-ico class="-inactive">fullscreen</u2-ico>
+    </button>
+
+
+    <h3>darkmode.toggle</h3>
+    <button u2-behavior="darkmode.toggle">
+        <span class="-text"></span>:
+        <span class="-active">on</span>
+        <span class="-inactive" hidden>off</span>
+    </button>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <div style="position:fixed; bottom:1rem; right:1rem;">
+        <h3>scroll</h3>
+        <button u2-behavior="scroll">⬆️</button>
+    </div>
+
+</section>

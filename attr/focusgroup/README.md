@@ -19,9 +19,9 @@ https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer
 
 ```html
 <div u2-focusgroup="wrap remember">
-    <button>press left</button>
-    <button>or right</button>
-    <button>to focus the next button</button>
+    <button>focusgroup</button>
+    <button>focus and</button>
+    <button>then use arrow-keys</button>
 </div>
 ```
 

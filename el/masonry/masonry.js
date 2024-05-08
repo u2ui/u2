@@ -1,6 +1,6 @@
 
 
-class mesonry extends HTMLElement{    
+class masonry extends HTMLElement{    
     constructor(){
         super();
         this.classList.add('-Js');
@@ -43,7 +43,7 @@ class mesonry extends HTMLElement{
     }    
 }
 
-customElements.define('u2-masonry', mesonry);
+customElements.define('u2-masonry', masonry);
 
 
 function sortByHeight(a, b){

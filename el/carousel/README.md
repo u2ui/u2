@@ -16,7 +16,7 @@ Simple carousel component
 
 ```html
 <u2-carousel autoplay controls>
-    <div>Item 1</div>
+    <div>Carousel<br>Demo<br>Item 1</div>
     <div>Item 2</div>
 </u2-carousel>
 ```

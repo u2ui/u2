@@ -26,7 +26,7 @@ class DevIframe extends HTMLElement {
                 xheight: 60rem;
                 border: 1px solid #ccc;
                 background:var(--color-bg, white);
-                --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.33/svg/{icon}/baseline.svg';
+                --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.33/svg/{icon_name}/baseline.svg';
             }
             #tools {
                 display: flex;

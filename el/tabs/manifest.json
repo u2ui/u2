@@ -23,6 +23,11 @@
                         }
                     ],
                     "attributes": [
+                        {
+                            "name": "selected",
+                            "description": "Set or get the selected tab by index (0-n)",
+                            "type": "number"
+                        }
                     ],
                     "cssParts": [
                         {

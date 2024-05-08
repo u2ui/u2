@@ -4,8 +4,7 @@ Display a skeleton of the element. This is useful for showing the user where the
 ## Usage
 
 ```html
-<u2-skeleton template="h1 h2 p img p p table(4x7) button button">
-</u2-skeleton>
+<u2-skeleton template="p table(2x3)"></u2-skeleton>
 ```
 
 ```css
@@ -22,6 +21,7 @@ Display a skeleton of the element. This is useful for showing the user where the
 ## Demos
 
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/skeleton/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/skeleton/tests/test.html)  
 
 ## About
 

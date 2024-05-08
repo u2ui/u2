@@ -16,7 +16,7 @@ Animated Number Counter
 ## Usage
 
 ```html
-<u2-counter from=-11.0 value=200.0>200.0</u2-counter>
+Counter: <u2-counter from=-11.0 value=200.0>200.0</u2-counter>
 ```
 
 ```css

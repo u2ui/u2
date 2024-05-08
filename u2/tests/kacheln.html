@@ -4,7 +4,7 @@
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>U2 design system | Showcase</title>
-        <!-- <script src="./test-init.js" type=module async></script> -->
+        <script src="./test-init.js" type=module async></script>
 
         <style>
         html {
@@ -17,6 +17,7 @@
         }
         u2-code {
             font-size: max(.8rem, 13px);
+            font-size: clamp(12px, .8rem, 1em);
         }
         #nav h2 {
             margin-top:1rem;
@@ -169,7 +170,7 @@
                                     <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
                                     <p>${repo.description}</p>
                                     <a href="#${div.id+'_dialog'}" class="btn -play">Play with it</a>
-                                    <dialog class=-playground u2-navigable id=${div.id+'_dialog'} style="width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto"><u2-skeleton template="h1 p table(4x3)"></u2-skeleton></dialog>
+                                    <dialog class=-playground u2-navigable id=${div.id+'_dialog'} style="background:#fafafa; width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto"><u2-skeleton template="h1 p table(4x3)"></u2-skeleton></dialog>
                                 </div>
                                 <a href="${url}" target=github rel=noopener><u2-ico>github</u2-ico></a>
                             </header>

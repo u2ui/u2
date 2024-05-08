@@ -89,8 +89,9 @@ button, .btn {
     border-color: transparent;
     padding-inline: 1em;
     transition: background-color .1s; /* better every property? does not get along with focus-animation */
-    /* for .btn */
-	text-decoration:none;
+	text-decoration:none; /* .btn */
+}
+.btn:not([hidden]) {
 	display:inline-block;
 }
 /* button:hover:not(:disabled), .btn:hover, button:focus { */

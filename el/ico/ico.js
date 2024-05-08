@@ -92,7 +92,7 @@ const uIco = class extends HTMLElement {
                 // });
 
             }).catch(err=>{
-                console.error(err);
+                console.error(err, this);
                 this.setAttribute('state','fail');
             });
         }
@@ -117,9 +117,6 @@ const uIco = class extends HTMLElement {
 //         console.log(content);
 //     }
 // },199)
-
-customElements.define('u2-ico', uIco);
-
 
 function dirTemplateToUrl(dir, name) {
     let [prefix, firstWord, between='', nextWord, suffix] = dir.split(/{(icon)([^n]*)?(name)?}/i);
@@ -156,9 +153,14 @@ async function loadSvgString(url) {
         }
     }
 
-    const res = await fetch(url, {cache: "force-cache"}); // "force-cache": why is the response not cached like direct in the browser?
-    if (!res.ok) throw new Error(`Failed to fetch icon ${url}: ${res.status} ${res.statusText}`);
-    const svg = await res.text();
+
+    // const res = await fetch(url, {cache: "force-cache"}); // "force-cache": why is the response not cached like direct in the browser?
+    // if (!res.ok) throw new Error(`Failed to fetch icon ${url}: ${res.status} ${res.statusText}`);
+    // const svg = await res.text();
+
+
+    const svg = await loadCached(url);
+    // temporary cache svg
     
     // external element
     if (hash) { // todo, cache the svgDoc?
@@ -176,4 +178,13 @@ async function loadSvgString(url) {
     return svg;
 }
 
+const cachedRequests = {};
 
+async function loadCached(url) {
+    if (cachedRequests[url]) return cachedRequests[url];
+    cachedRequests[url] = fetch(url, {cache: "force-cache"}).then(res => res.text()).catch(err => console.error(err));
+    return cachedRequests[url];
+}
+
+
+customElements.define('u2-ico', uIco);

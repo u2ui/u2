@@ -3,6 +3,11 @@ body {
     --color-green: oklch(70% 0.138 165);
     --color-yellow: oklch(70% 0.138 84);
     --color-blue: oklch(70% 0.138 223);
+
+    --color-red: hsl( 0, var(--hsl-s), var(--hsl-l));
+    --color-green: hsl( 130, var(--hsl-s), var(--hsl-l));
+    --color-yellow: hsl( 50, var(--hsl-s), var(--hsl-l));
+    --color-blue: hsl( 223, var(--hsl-s), var(--hsl-l));
 }
 
 

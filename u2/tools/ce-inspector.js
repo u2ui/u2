@@ -1,7 +1,7 @@
 import '../../el/code/code.js';
 import '../../el/tabs/tabs.js';
 import {EventsExplorer} from './eventsExplorer.js';
-import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
+//import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
 
 const baseCss = import.meta.resolve('../../css/classless/full.css');
 const codeCss = import.meta.resolve('../../el/code/code.css');
@@ -23,9 +23,14 @@ class CeInspector extends HTMLElement {
                 font-size:13px;
             }
             slot {
-                display:block;
                 padding: 1em;
                 box-shadow: 0 0 1em rgba(0,0,0,.1);
+                display: grid;
+                align-items: center;
+                text-align:center;
+                min-height: 10rem;
+                margin-bottom: 2rem;
+                position:relative;
             }
             </style>
             <slot></slot>
@@ -53,8 +58,6 @@ class CeInspector extends HTMLElement {
                 </div>
                 <h2>Events</h2>
                 <div id=events></div>
-                <!--h2>Data</h2>
-                <div id=data></div-->
             </u2-tabs>
             `;
         this.createUi();
@@ -167,7 +170,40 @@ class CeInspector extends HTMLElement {
         });
         cssPartsEl.closest('u2-tabs > *').previousElementSibling.hidden = !parts?.length;
 
-
+        // /* random settings */
+        // shadow.getElementById('random').addEventListener('click', () => {
+        //     attributes?.length && attributes.forEach(attr => {
+        //         const value = chooseRandom(attr);
+        //         if (value === undefined) return;
+        //         if (value===false) ce.removeAttribute(attr.name);
+        //         else ce.setAttribute(attr.name, value);
+        //     });
+        //     css?.length && css.forEach(prop => {
+        //         const value = chooseRandom(prop);
+        //         if (value === undefined) return;
+        //         ce.style.setProperty(prop.name, value);                
+        //     });
+        //     parts?.length && parts.forEach(part => {
+        //         if (!part.name) return;
+        //         const code = shadow.querySelector(`u2-code[name="${part.name}"]`);
+        //         if (!code) return;
+        //     });
+        // });
+        // function chooseRandom(data) {
+        //     if (Array.isArray(data.u2Examples)) {
+        //         return data.u2Examples[Math.floor(Math.random() * data.u2Examples.length)];
+        //     }
+        //     if (data['u2-type'] === 'boolean') {
+        //         return Math.random() > .5;
+        //     }
+        //     if (data['u2-type'] === 'number') {
+        //         return Math.random() * 100;
+        //     }
+        //     if (Array.isArray(data['u2-type'])) {
+        //         return data['u2-type'][Math.floor(Math.random() * data['u2-type'].length)];
+        //     }
+        // }
+        
     }
     async manifest() {
         let url = this.getAttribute('manifest');
