@@ -1,12 +1,18 @@
 import '../../el/code/code.js';
 import '../../el/tabs/tabs.js';
+import '../../attr/confirm/confirm.js';
 import {EventsExplorer} from './eventsExplorer.js';
-//import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
+import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
 
 const baseCss = import.meta.resolve('../../css/classless/full.css');
 const codeCss = import.meta.resolve('../../el/code/code.css');
 const tabsCss = import.meta.resolve('../../el/tabs/tabs.css');
 const tableCss = import.meta.resolve('../../class/table/table.css');
+
+
+import {attributes} from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@main/drivers/htmlElementAttributes.js';
+import {effect} from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@main/item.js';
+import {render, html, htmlFor} from 'https://unpkg.com/uhtml@4.4.7/keyed.js';
 
 class CeInspector extends HTMLElement {
     constructor() {
@@ -38,11 +44,11 @@ class CeInspector extends HTMLElement {
                 <h2>Contents (HTML)</h2>
                 <u2-code id=code trim editable></u2-code>
                 <h2>Attributes</h2>
-                <form>
+                <div>
                     <table class="u2-table -Flex -NoSideGaps -Fields">
                         <tbody id=attributes>
                     </table>
-                </form>
+                </div>
                 <h2>CSS Variables</h2>
                 <form>
                     <table class="u2-table -Flex -NoSideGaps -Fields">
@@ -82,37 +88,74 @@ class CeInspector extends HTMLElement {
             eExplorer.start();
         }
 
-        // /* data */
+        /* data */
         // const dataEl = shadow.getElementById('data');
         // dataEl.innerHTML = dump(ce, {depth:2, xcustomRender:domRender, inherited:false});
 
         /* attributes */
         const attributesEl = shadow.getElementById('attributes');
-        const attributes = manifest.modules[0].declarations[0].attributes;
-        attributes?.length && attributes.forEach(attr => {
-            const tr = document.createElement('tr');
-            attributesEl.appendChild(tr);
-            
-            const {input, datalist} = toInput(attr);
-            input.addEventListener('input', () => {
-                if (input.type === 'checkbox') {
-                    input.checked ? ce.setAttribute(attr.name, '') : ce.removeAttribute(attr.name);
+        const attrSchemes = manifest.modules[0].declarations[0].attributes;
+        const root = attributes(ce);
+
+        [...attrSchemes].forEach(attr => {
+            const {input,datalist} = toInput(attr);
+            input.oninput = ({target}) => {
+                if (target.type === 'checkbox' && !target.checked) {
+                    root.item(attr.name).remove();
                 } else {
-                    input.value === '' ? ce.removeAttribute(attr.name) : ce.setAttribute(attr.name, input.value);
+                    root.item(attr.name).set(target.value);
                 }
-            });
-            if (attr['u2-type'] === 'boolean') {
-                input.checked = ce.hasAttribute(attr.name);
-            } else {
-                input.value = ce.getAttribute(attr.name);
             }
-            tr.innerHTML = 
-                `<td style="flex-basis:15rem; flex-grow:4">
-                    ${attr.name}<br><small>${attr.description ?? ''}</small>
-                <td style="flex-basis:9rem">`;
-            tr.lastElementChild.appendChild(input);
-            if (datalist) tr.lastElementChild.appendChild(datalist);
+            attr.input = input;
+            attr.datalist = datalist;
         });
+        effect(() => {
+            render(attributesEl, html`
+                ${[...attrSchemes].map(attr => {
+                    const item = root.item(attr.name);
+                    attr.input.value = item.value ?? null;
+                    return html`
+                        <tr>
+                            <td style="flex-basis:15rem; flex-grow:4">
+                                ${item.key}
+                                <br><small>${attr?.description ?? ''}</small>
+                            <td style="flex-basis:9rem">
+                                ${attr.input} ${attr.datalist}
+                            ${/*<td style="flex:0 0 auto"><button style="all:unset" onclick="${()=>{item.remove()}}" u2-confirm><u2-ico>delete</u2-ico></button>*/null}
+                    `;
+                })}
+            `);
+        });
+
+
+        // const attributesEl = shadow.getElementById('attributes');
+        // const attributes = manifest.modules[0].declarations[0].attributes;
+        // attributes?.length && attributes.forEach(attr => {
+        //     const tr = document.createElement('tr');
+        //     attributesEl.appendChild(tr);
+            
+        //     const {input, datalist} = toInput(attr);
+        //     input.addEventListener('input', () => {
+        //         if (input.type === 'checkbox') {
+        //             input.checked ? ce.setAttribute(attr.name, '') : ce.removeAttribute(attr.name);
+        //         } else {
+        //             input.value === '' ? ce.removeAttribute(attr.name) : ce.setAttribute(attr.name, input.value);
+        //         }
+        //     });
+        //     if (attr['u2-type'] === 'boolean') {
+        //         input.checked = ce.hasAttribute(attr.name);
+        //     } else {
+        //         input.value = ce.getAttribute(attr.name);
+        //     }
+        //     tr.innerHTML = 
+        //         `<td style="flex-basis:15rem; flex-grow:4">
+        //             ${attr.name}<br><small>${attr.description ?? ''}</small>
+        //         <td style="flex-basis:9rem">`;
+        //     tr.lastElementChild.appendChild(input);
+        //     if (datalist) tr.lastElementChild.appendChild(datalist);
+        // });
+
+
         attributesEl.closest('u2-tabs > *').previousElementSibling.hidden = !attributes?.length;
 
         /* css */
