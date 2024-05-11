@@ -13,12 +13,15 @@ rendering tabs
 ```html
 <u2-tabs>
     <h4>Tab 1</h4>
-    <article>content 1</article>
-    <div slot="title" selected>Tab 2</div>
-    <div>
-        content 2, lorem ipsum dolor sit amet, consectetur adipisicing elit
+    <article>
+        Content 1, consectetur adipisicing elit, sed do eiusmod tempor 
+        incididunt ut labore et dolore magna aliqua.
+    </article>
+    <h4>Tab 2</h4>
+    <article>
+        Content 2, lorem ipsum dolor sit amet, consectetur adipisicing elit
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    </div>
+    </article>
 </u2-tabs>
 ```
 

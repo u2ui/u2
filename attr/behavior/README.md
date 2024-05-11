@@ -1,9 +1,6 @@
 # [u2-behavior] - attribute
 behavior before action
 
-## Features
-
-
 ## Usage
 
 ```html

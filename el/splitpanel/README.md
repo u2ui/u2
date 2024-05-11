@@ -4,7 +4,7 @@ A splitpanel is a container that can be split horizontally or vertically. It is 
 ## Usage
 
 ```html
-<u2-splitpanel style="height:10rem">
+<u2-splitpanel style="height:100%">
     <div>splitpanel</div>
     <u2-splitpanel vertical>
         <div>splitpanel</div>

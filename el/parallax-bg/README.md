@@ -10,30 +10,6 @@ Parallax backgrounds
 - css only fallback
 - light weight
 
-## Usage
-
-```html
-<div class=u2-parallax-bg-stage style="height:10rem">
-    <u2-parallax-bg>
-        <div style="background: linear-gradient(#000, #fff); display:flex; flex-direction: column; justify-content: space-between; flex:1">
-            <span style="color:#fff">Top</span>
-            <span style="color:#fff">parallax background</span>
-            <span>Bottom</span>
-        </div>
-    </u2-parallax-bg>
-</div>
-```
-
-```css
-u2-parallax-bg {
-    --parallax-bg-speed:.7
-}
-u2-parallax-bg div {
-    display:grid;
-    place-items: center;
-}
-```
-
 ## Install
 
 ```html

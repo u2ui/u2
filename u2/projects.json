@@ -66,8 +66,8 @@
     },
     "skin": {
       "name": "skin",
-      "description": "Change the skin of a widget (beta)",
-      "beta": true,
+      "description": "Change the skin of a widget",
+      "beta": false,
       "deprecated": false,
       "css": true,
       "js": false
