@@ -111,11 +111,11 @@ input, textarea { inline-size:13rem; }
 
 
 /* animatable popovers */
-dialog, [popover] {
+:is(dialog, [popover]) {
     &, &::backdrop {
         transition-behavior: allow-discrete;
         opacity: 0;
-        &:is(:popover-open, :modal) {
+        &:popover-open, &:modal, &[open] {
             &, &::backdrop {
                 opacity: 1;
                 @starting-style {
@@ -125,4 +125,3 @@ dialog, [popover] {
         }
     }
 }
-/* */

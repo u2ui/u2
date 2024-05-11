@@ -4,10 +4,8 @@
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>U2 design system | Showcase</title>
-        <script src="https://cdn.jsdelivr.net/gh/nuxodin/lazyfill@main/mod.min.js"></script>
+        <xscript src="https://cdn.jsdelivr.net/gh/nuxodin/lazyfill@main/mod.min.js"></script>
         <!-- <script src="./test-init.js" type=module async></script> -->
-
-
 
         <style>
         html {
@@ -30,6 +28,9 @@
             padding-bottom: .3rem;
             border-bottom: 1px solid var(--color-line);
             font-weight:600;
+        }
+        #repos {
+            --u2-Items-width:15rem;
         }
         #repos > div {
             display:grid;
@@ -57,10 +58,15 @@
                 height:100%;
                 display:table-cell;
                 vertical-align:middle;
-                xtext-align:center;
             }
 
-            & :is(u2-masonry, .u2-flex, .u2-grid, u2-carousel) > :not([slot]) {
+            [u2-intersect] {
+                --u2-intersect-margin:-10%;
+                --u2-intersect-threshold:1;
+                margin-block:2rem;
+                background-color:var(--color);
+            }
+            & :is(u2-masonry, .u2-flex, .u2-grid, u2-carousel) > :not([slot]), [u2-intersect~="0.5"] {
                 background-color:var(--color-light);
             }
             & .u2-table > * > * > * {
@@ -87,7 +93,6 @@
             top:0;
             left:0;
             right:0;
-            xbottom:0;
             z-index:10;
             transition: .3s;
             transform: translateY(-100%);
@@ -117,6 +122,7 @@
                 import "../auto.js";
 
                 const repos = await fetch('../projects.json').then(res=>res.json());
+                const reposEl = document.getElementById('repos');
 
                 const extToName = {
                     'el':'Element',
@@ -137,7 +143,7 @@
                         div.id = 'repo_'+catName+'-'+name;
                         div.setAttribute('data-repo', name);
                         div.setAttribute('data-type', ext);
-                        document.getElementById('repos').append(div);
+                        reposEl.append(div);
 
 
                         (async function(){
@@ -180,17 +186,17 @@
                                     <a href="#${div.id+'_dialog'}" class="btn -play" style="font-size:1rem; display:block; text-align:center">Play!</a>
                                     <dialog class=-playground u2-navigable u2-intersect id=${div.id+'_dialog'} style="background:var(--color-bg); width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto; font-size:1rem">
                                         <template>
-                                            <header>
-                                                <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
-                                                <p>${repo.description}</p>
+                                            <header class=u2-flex style="margin-bottom:2rem">
+                                                <div style="flex:1">
+                                                    <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
+                                                    <p>${repo.description}</p>
+                                                </div>
                                                 <a href="https://github.com/u2ui/u2/tree/main/${ext}/${repo.name}" target=github rel=noopener><u2-ico>github</u2-ico></a>
                                             </header>
                                             <ce-inspector manifest="../../${ext}/${repo.name}/manifest.json">${parts.html}</ce-inspector>
                                             <dev-iframe src="../../${ext}/${repo.name}/tests/minimal.html"></dev-iframe>
                                         </template>
                                         <u2-skeleton template="h1 p table(4x3)"></u2-skeleton>
-
-                                            
                                     </dialog>
                                 </div>
                             </header>
@@ -204,28 +210,10 @@
                                     ${parts.html}
                                 <\/script>
                             </u2-code>
-                            <!--u2-tabs class=-tabs>
-                                ${parts.style ?
-                                    `<h3>CSS</h3>
-                                    <u2-code trim editable>
-                                        <style>
-                                            ${parts.style}
-                                        </style>
-                                    </u2-code>` : ''
-                                }
-                                ${parts.script?
-                                    `<h3>Javascript</h3>
-                                    <u2-code trim class=script>
-                                        <script type=module>
-                                            ${parts.script}
-                                        <\/script>
-                                    </u2-code>`:''
-                                }
-                            </u2-tabs-->
                             `;
 
-                            requestAnimationFrame(()=>div.innerHTML = str);
-                            //div.innerHTML = str;
+                            //requestAnimationFrame(()=>div.innerHTML = str);
+                            div.innerHTML = str;
 
                         })();
 
@@ -247,7 +235,7 @@
             </script>
 
 
-            <div id=repos class="u2-grid u2-width" style="--u2-Items-width:15rem"></div>
+            <div id=repos class="u2-grid u2-width"></div>
         </section>
     </main>
     <footer class="u2-width">

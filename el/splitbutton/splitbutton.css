@@ -23,6 +23,7 @@ u2-splitbutton menu > li {
 }
 u2-splitbutton menu > li > button {
     width:100%;
+    margin:0;
 }
 u2-splitbutton :is(:hover, :focus) + menu,
 u2-splitbutton menu:is(:hover, :focus-within) {
