@@ -1,0 +1,95 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+    {
+        "kind": "javascript-module",
+        "path": "bytes.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "Displays formatted bytes",
+            "name": "u2-bytes",
+            "members": [
+                {
+                    "kind": "field",
+                    "description": "Set or get the value of the bytes",
+                    "name": "value"
+                }
+            ],
+            "events": [],
+            "attributes": [
+                {
+                    "name": "value",
+                    "description": "The bytes to format"
+                },{
+                    "name": "lang",
+                    "description": "The language to use for formatting the bytes",
+                    "u2Examples": ["en-US","fr-FR","de-DE","es-ES","it-IT","ja-JP","ko-KR","zh-CN","zh-TW"]
+                },{
+                    "name": "digits",
+                    "description": "The bytes of digits to display after the decimal point",
+                    "u2-type": "bytes"
+                }
+            ],
+            "cssProperties": [],
+            "cssParts": [
+                {
+                    "name": "compact",
+                    "description": "The exponent in 'long' or 'short' form, depending on how compactDisplay (which defaults to short) is specified when notation is set to compact."
+                },{
+                    "name": "decimal",
+                    "description": "The decimal separator string ('.')."
+                },{
+                    "name": "fraction",
+                    "description": "The fraction bytes."
+                },{
+                    "// name": "group",
+                    "description": "The group separator string (',')."
+                },{
+                    "// name": "infinity",
+                    "description": "The Infinity string ('∞')."
+                },{
+                    "name": "integer",
+                    "description": "The integer bytes."
+                },{
+                    "name": "literal",
+                    "description": "Any literal strings or whitespace in the formatted bytes."
+                },{
+                    "name": "minusSign",
+                    "description": "The minus sign string ('-')."
+                },{
+                    "// name": "nan",
+                    "description": "The NaN string ('NaN')."
+                },{
+                    "// name": "plusSign",
+                    "description": "The plus sign string ('+')."
+                },{
+                    "name": "unit",
+                    "description": "The unit string, such as the 'l' or 'litres', depending on how unitDisplay is specified."
+                },{
+                    "// name": "unknown",
+                    "description": "The string for unknown type results."
+                }
+            ],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u2-bytes",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u2-bytes",
+            "declaration": {
+              "name": "u2-bytes",
+              "module": "bytes.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

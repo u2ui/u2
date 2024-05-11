@@ -5,6 +5,8 @@
     <meta name=viewport content="width=device-width">
     <title>dialog.js minimal.html | U2 design-system</title>
     <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
 
     <script type=module>
         import * as module from '../dialog.js';
@@ -15,7 +17,7 @@
 
 
 <section class="main">
-    <button onclick="module.alert('Just a test').then(console.log)">run</button>
+    <button onclick="module.prompt('Just a test').then(console.log)">run</button>
 </section>
 
 <style class="main">

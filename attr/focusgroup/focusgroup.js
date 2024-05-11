@@ -1,6 +1,8 @@
 
 addEventListener('keydown', e => {
 	if (e.defaultPrevented) return;
+    if (e.altKey) return; // alt is reserved for browser back/forward
+    if (e.ctrlKey || e.metaKey || e.shiftKey) return; // we only want to handle arrow keys without modifiers, in the future we could add a setting for this (focus last element with arrow left + shift)
 
 	const isVertical = (e.code === 'ArrowUp' || e.code === 'ArrowDown');
 	const isHorizontal = (e.code === 'ArrowLeft' || e.code === 'ArrowRight');

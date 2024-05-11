@@ -148,17 +148,17 @@
     }
   },
   "el": {
-    "ai-texter": {
-      "name": "ai-texter",
-      "description": "",
+    "alert": {
+      "name": "alert",
+      "description": "Prominent hints, alerts, and facts",
       "beta": false,
       "deprecated": false,
       "css": true,
       "js": true
     },
-    "alert": {
-      "name": "alert",
-      "description": "Prominent hints, alerts, and facts",
+    "bytes": {
+      "name": "bytes",
+      "description": "Displays formatted bytess",
       "beta": false,
       "deprecated": false,
       "css": true,

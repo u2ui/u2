@@ -34,10 +34,12 @@ class counter extends HTMLElement {
     connectedCallback() {
         // measure final-width
         this.innerHTML = format(this, this._end);
-        let widthPx = this.offsetWidth;
+        const writingMode = getComputedStyle(this).getPropertyValue('writing-mode');
+        const vertical = writingMode.includes('vertical');
+        const inlineSizePx = vertical ? this.offsetHeight : this.offsetWidth;
         const fontSizePx = Number(getComputedStyle(this).getPropertyValue('font-size').slice(0,-2));
-        const em = widthPx / fontSizePx;
-        this.style.setProperty('--js-final-width', em+'em');
+        const em = inlineSizePx / fontSizePx;
+        this.style.setProperty('--js-final-inline-size', em+'em');
 
         this._reset();
         this._observer.observe(this);

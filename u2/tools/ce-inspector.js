@@ -96,8 +96,11 @@ class CeInspector extends HTMLElement {
         const attributesEl = shadow.getElementById('attributes');
         const attrSchemes = manifest.modules[0].declarations[0].attributes;
         const root = attributes(ce);
-
-        [...attrSchemes].forEach(attr => {
+        attrSchemes.push({
+            name: 'style',
+            description: 'Inline style',
+        });
+        attrSchemes.forEach(attr => {
             const {input,datalist} = toInput(attr);
             input.oninput = ({target}) => {
                 if (target.type === 'checkbox' && !target.checked) {
@@ -111,9 +114,15 @@ class CeInspector extends HTMLElement {
         });
         effect(() => {
             render(attributesEl, html`
-                ${[...attrSchemes].map(attr => {
+                ${attrSchemes.map(attr => {
                     const item = root.item(attr.name);
-                    attr.input.value = item.value ?? null;
+                    console.log(item.value)
+                    //attr.input.value = item.value ?? null;
+                    if (attr.input.type==='checkbox') {
+                        attr.input.checked = item.value !== null;
+                    } else {
+                        attr.input.value = item.value ?? '';
+                    }
                     return html`
                         <tr>
                             <td style="flex-basis:15rem; flex-grow:4">
@@ -126,7 +135,6 @@ class CeInspector extends HTMLElement {
                 })}
             `);
         });
-
 
         // const attributesEl = shadow.getElementById('attributes');
         // const attributes = manifest.modules[0].declarations[0].attributes;
@@ -154,7 +162,6 @@ class CeInspector extends HTMLElement {
         //     tr.lastElementChild.appendChild(input);
         //     if (datalist) tr.lastElementChild.appendChild(datalist);
         // });
-
 
         attributesEl.closest('u2-tabs > *').previousElementSibling.hidden = !attributes?.length;
 

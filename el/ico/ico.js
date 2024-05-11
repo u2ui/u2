@@ -60,7 +60,8 @@ const uIco = class extends HTMLElement {
             const dir = icoDir.slice(1, -1);
             const name = this.getAttribute('icon');
             const path = dirTemplateToUrl(dir, name);
-            this.setAttribute('state','loading');
+
+            requestAnimationFrame(()=>this.setAttribute('state','loading'));
 
             const pathStr = path.toString();
             if (this._lastLoading === pathStr) return; // prevent multiple requests
@@ -73,14 +74,17 @@ const uIco = class extends HTMLElement {
                 svg = svg.replace(/<!DOCTYPE.*?>/gs, ''); // remove doctype
                 svg = svg.replace(/<\?xml.*?\?>/gs, ''); // remove xml header
 
-                this.innerHTML = svg; // requestAnimationFrame??
-                this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
-                const svgEl = this.firstElementChild;
-                svgEl.removeAttribute('xmlns');
-                svgEl.removeAttribute('xmlns:xlink');
-                svgEl.removeAttribute('version');
-                svgEl.setAttribute('aria-hidden', 'true');
-                this.setAttribute('state','loaded');
+                requestAnimationFrame(()=>{
+                    this.innerHTML = svg; // requestAnimationFrame??
+                    this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
+                    const svgEl = this.firstElementChild;
+                    svgEl.removeAttribute('xmlns');
+                    svgEl.removeAttribute('xmlns:xlink');
+                    svgEl.removeAttribute('version');
+                    svgEl.setAttribute('aria-hidden', 'true');
+                    this.setAttribute('state','loaded');
+    
+                });
 
                 // // store to combine
                 // queueMicrotask(()=>{

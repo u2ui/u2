@@ -35,7 +35,7 @@
             ],
             "cssProperties": [
                 {
-                    "name": "--js-final-width",
+                    "name": "--js-final-inline-size",
                     "description": "Read only! The final width of the counter"
                 }
             ],

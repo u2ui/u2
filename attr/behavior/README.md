@@ -3,16 +3,11 @@ behavior before action
 
 ## Features
 
-- Interupts form submit and requestSubmit
-- Interupts click on button
-- Uses native Dialog-Element (unstyled)
-- Has a translated default behavior text
-- Lightweight
 
 ## Usage
 
 ```html
-<button u2-behavior="share"></button>
+<button u2-behavior=share>behavior=share</button>
 ```
 
 ## Install

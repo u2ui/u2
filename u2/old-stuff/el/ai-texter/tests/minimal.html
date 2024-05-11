@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <!-- <script src="../../u2/auto.js" type=module async></script> -->
+    <title>Test</title>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <link href="../../../el/code/code.css" rel=stylesheet>
+    <script src="../../../el/code/code.js" type=module async></script>
+    
+    
+
+    <!--script src="../../../el/tooltip/tooltip.js" type=module async></script>
+    <link href="../../../el/tooltip/tooltip.css" rel=stylesheet>
+    <script src="../../../el/ico/ico.js" type=module async></script>
+    <link href="../../../el/ico/ico.css" rel=stylesheet> -->
+
+    <style>
+        body {
+            place-content: initial;
+        }
+    </style>
+
+    <link href="../ai-texter.css" rel=stylesheet>
+    <script src="../ai-texter.js" type=module async></script>
+
+<body>
+
+<section class="main">
+
+    <label>
+        <textarea></textarea>
+        <u2-ai-texter api="https://api.groq.com/openai/v1/chat/completions" api-key="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"></u2-ai-texter>
+    </label>
+
+</section>
+
+<style class="main">
+    u2-ai-texter {
+        background: #f8f8f8;
+    }
+</style>

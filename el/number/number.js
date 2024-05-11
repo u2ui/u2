@@ -1,5 +1,5 @@
 
-class number extends HTMLElement {
+class U2Number extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
@@ -38,24 +38,11 @@ class number extends HTMLElement {
 
         const locales = localesFromElement(this);
         const formatter = new Intl.NumberFormat(locales, options);
-//        const html = formatter.format(value);
 
         let html = '';
         for (const part of formatter.formatToParts(value)) {
             html += `<span part="${part.type}">${part.value}</span>`;
         }
-
-
-        // // return value:
-        // [
-        //   { type: "integer", value: "3" },
-        //   { type: "group", value: "." },
-        //   { type: "integer", value: "500" },
-        //   { type: "decimal", value: "," },
-        //   { type: "fraction", value: "00" },
-        //   { type: "literal", value: " " },
-        //   { type: "currency", value: "€" },
-        // ];
 
         this.outEl.innerHTML = html;
     }
@@ -73,7 +60,7 @@ class number extends HTMLElement {
     }
 }
 
-customElements.define('u2-number', number);
+customElements.define('u2-number', U2Number);
 
 
 // todo: for tables i should check col and colgroup

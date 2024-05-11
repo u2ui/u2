@@ -3,16 +3,13 @@ class Time extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-        this.shadowRoot.innerHTML = `<time><span id=out></span><slot id=fallback></slot></time>`;
-        this._timeEl = this.shadowRoot.querySelector('time');
-        this._outEl = this.shadowRoot.getElementById('out');
-        this._fallbackEl = this.shadowRoot.getElementById('fallback');
+        this.outEl = this.shadowRoot;
     }
     connectedCallback() {
         this.reset();
     }
     disconnectedCallback() {
-        clearTimeout(this.__timer);
+        clearInterval(this.__timer);
     }
     static  observedAttributes = ['datetime', 'lang', 'type', 'weekday', 'year', 'month', 'day', 'hour', 'minute', 'second', 'mode'];
     attributeChangedCallback(name, old, value) {
@@ -24,28 +21,11 @@ class Time extends HTMLElement {
         let show = this.getAttribute('type') || this.innerHTML === '';
         if (!show) return;
 
-
-        
-        const string = this.getAttribute('datetime');
-
-        // const datetimeRegex = /^(\d{4})(?:-(\d{2})(?:-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?(Z|([-+]\d{2}:?\d{2}))?)?)?)?$/;
-        // const match = string.match(datetimeRegex);
-        // if (match) {
-        //     this._representation = 'datetime';
-        // } else if (string.match(/^\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?$/)) {
-        //     this._representation = 'time';
-        //     this._
-        // } else if (string.match(/^\d{4}-\d{2}$/)) {
-        //     this._representation = 'yearless-date';
-        // } else if (string.match(/^P/)) {
-        //     this._representation = 'duration'; // eg PT4H18M3S
-        // }
-
-
-        let date = string.match(/^-?\d{5,}$/) ? Number(string) : Date.parse(string);
-
+        let date = this.getAttribute('datetime');
+        date = date.match(/^-?[0-9.]+$/) ? Number(date) : Date.parse(date);
         date = new Date(date);
         this.__date = date;
+
         this.__lang = langFromElement(this) || 'default';
         this.render();
     }
@@ -54,21 +34,20 @@ class Time extends HTMLElement {
         let title = '';
 
         let date = this.__date;
+
         const valid = !isNaN(date);
         if (valid) {
-            const relativeData = types['relative'](this, date);
-            const absoluteData = types['date'](this, date);
-            content = this.__type === 'relative' ? relativeData.show : absoluteData.show;
-            title = this.__type === 'relative' ? absoluteData.show : relativeData.show;
-            clearTimeout(this.__timer);
-            if (relativeData.nextUpdateIn < 2 * 60 * 60 * 1000) {
-                this.__timer = setTimeout(() => this.render(), relativeData.nextUpdateIn + 100);
+            let fn = types[this.__type];
+            if (!fn) { console.warn('type ' + this.__type + ' is not supported'); return; }
+            let {show} = fn(this, date);
+            content = show;
+            if (this.__type === 'relative') {
+                title = types['date'](this, date).show;// provide a title-attribute if it is relative
+                clearInterval(this.__timer);
+                this.__timer = setTimeout(() => this.render(), 1000); // todo: evaluate exact next tic, challange!
             }
         }
-        this._timeEl.setAttribute('datetime', this.getAttribute('datetime'));
-        this._timeEl.setAttribute('title', title);
-        if (content !== this._outEl.innerHTML) this._outEl.innerHTML = content;
-        this._fallbackEl.hidden = valid;
+        this.outEl.innerHTML = `<time datetime="${this.getAttribute('datetime')}" title="${title}">${content}<slot hidden="${valid}"/></time>`;
     }
 }
 
@@ -83,13 +62,23 @@ const types = {
         });
         const now = Date.now();
         const elapsed = date - now;
-        const { unit, rounded, nextUpdateIn } = elapsedToUnit(elapsed);
+        const { unit, rounded } = elapsedToUnit(elapsed);
         return {
             show:rtf.format(rounded, unit),
-            nextUpdateIn
-        };
+        }
     },
     date(el, date) {
+        const defaults = {
+            weekday: { default: 'short', showAnyway: 1 },      // "narrow", "short", "long".
+            //era:                                             // "narrow", "short", "long".
+            year: { default: 'numeric', showAnyway: 1 },       // "numeric", "2-digit".
+            month: { default: 'short', showAnyway: 1 },        // "numeric", "2-digit", "narrow", "short", "long".
+            day: { default: 'numeric', showAnyway: 1 },        // "numeric", "2-digit".
+            hour: { default: 'numeric', showAnyway: 0 },       // "numeric", "2-digit".
+            minute: { default: 'numeric', showAnyway: 0 },     // "numeric", "2-digit".
+            second: { default: 'numeric', showAnyway: 0 },     // "numeric", "2-digit".
+            timeZoneName: { default: 'short', showAnyway: 0 }, // "short", "long".
+        };
         const options = {};
         for (let [key, opts] of Object.entries(defaults)) {
             const val = el.getAttribute(key);
@@ -133,28 +122,12 @@ function langFromElement(el) {
 function elapsedToUnit(elapsed, min = 'second') {
     for (let unit in units)
         if (Math.abs(elapsed) > units[unit] || unit === min) {
-            const rounded = Math.round(elapsed / units[unit]);
-            const nextUpdateIn = units[unit] - (elapsed % units[unit]);
             return {
                 unit,
-                rounded,
-                nextUpdateIn
+                rounded: Math.round(elapsed / units[unit]),
             };
         }
 }
-
-const defaults = {
-    weekday: { default: 'short', showAnyway: 1 },      // "narrow", "short", "long".
-    //era:                                             // "narrow", "short", "long".
-    year: { default: 'numeric', showAnyway: 1 },       // "numeric", "2-digit".
-    month: { default: 'short', showAnyway: 1 },        // "numeric", "2-digit", "narrow", "short", "long".
-    day: { default: 'numeric', showAnyway: 1 },        // "numeric", "2-digit".
-    hour: { default: 'numeric', showAnyway: 0 },       // "numeric", "2-digit".
-    minute: { default: 'numeric', showAnyway: 0 },     // "numeric", "2-digit".
-    second: { default: 'numeric', showAnyway: 0 },     // "numeric", "2-digit".
-    timeZoneName: { default: 'short', showAnyway: 0 }, // "short", "long".
-};
-
 const units = {
     year: 24 * 60 * 60 * 1000 * 365,
     month: 24 * 60 * 60 * 1000 * 365 / 12,

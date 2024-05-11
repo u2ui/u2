@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+
+    <script src="../bytes.js" type=module async></script>
+    <link href="../bytes.css" rel=stylesheet>
+
+<body>
+
+<section>
+
+    <figure style="padding:1rem; background:var(--color-light); font-size:1.5rem">
+
+        <table id="table"></table>
+        <script>
+            for (const lang of ['de', 'de-CH', 'fr', 'en', 'ru', 'jp']) {
+                table.insertAdjacentHTML('beforeend', 
+                    `<tr lang=${lang}>
+                        <td> ${lang}
+                        <td> <u2-bytes value="1" lang=${lang}></u2-bytes>
+                        <td> <u2-bytes value="89277" lang=${lang}></u2-bytes>
+                        <td> <u2-bytes value="-89277" lang=${lang}></u2-bytes>
+                        <td> <u2-bytes value="11277987" lang=${lang}></u2-bytes>
+                        <td> <u2-bytes value="4565277987987" lang=${lang}></u2-bytes>
+                    `);
+            }
+        </script>
+                    
+        Speicher: <u2-bytes id=testSet>42847597</u2-bytes>
+    </figure>
+
+    <script type=module>
+    attrForm.oninput = function({target}) {
+        for (let [key, value] of new FormData(attrForm)) {
+            if (key === 'inner') {
+                testSet.innerHTML = value;
+                continue;
+            }
+            if (value.trim() === '') {
+                testSet.removeAttribute(key);
+            } else {
+                testSet.setAttribute(key, value.trim());
+            }
+        }
+    }
+    </script>
+
+    <div class="u2-table -Fields -Flex">
+        <strong>
+            <span>
+                <span>Attribute</span>
+                <span>Value</span>
+            </span>
+        </strong>  
+        <form id=attrForm>
+            <label>
+                <span>value</span>
+                <input name=value>
+            </label>
+            <label>
+                <div>
+                    innerHTML* <br>
+                </div>
+                <input name=inner value="42847597">
+            </label>
+            <label>
+                <span>lang</span>
+                <select name=lang>
+                    <option value="">
+                    <option>de
+                    <option>en
+                    <option>es
+                    <option>it
+                    <option>fr
+                </select>
+            </label>
+            <label>
+                <span>digits</span>
+                <select name=digits>
+                    <option>
+                    <option>0
+                    <option>1
+                    <option>2
+                    <option>3
+                    <option>4
+                    <option>5
+                    <option>6
+                </select>
+            </label>
+        </form>
+    </div>  
+
+    <br><br>
+
+    <small>* innerHTML is evaluated as value if value-attribute is not present, else its simply a fallback for when no javascript is available</small>
+
+
+    <style>
+    label {
+        display:block;
+        gap:1rem;
+    }
+    u2-bytes {
+        font-size:2em;
+    }
+    </style>
+</section>
+

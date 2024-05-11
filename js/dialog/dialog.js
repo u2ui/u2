@@ -108,7 +108,7 @@ export function prompt(text, initial) {
     ];
     const dialog = new Dialog(options);
     const input = dialog.element.querySelector('input');
-    input.value = initial;
+    input.value = initial ?? '';
     setTimeout(()=>input.focus());
     dialog.value = null;
     return dialog.show();

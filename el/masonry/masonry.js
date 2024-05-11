@@ -28,7 +28,8 @@ class masonry extends HTMLElement{
         for (let i = 0; i < columns; i++){
             columnHeights[i] = [i, 0];
         }
-        requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => { // todo: prevent reflow: set all widths first
             for (const current of this.children){
                 if (current.offsetParent === null) continue;
                 current.style.width = columnWidth + 'px';

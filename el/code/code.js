@@ -130,11 +130,13 @@ class code extends HTMLElement {
         libPromise.then( ({default:hljs})=>{
             this.libLoaded = true;
             const language = this.language;
-            this.shadowRoot.querySelector('#code').innerHTML = (
-                language ?
-                  hljs.highlight(value, {language}) :
-                  hljs.highlightAuto(value)
-              ).value + '<br>';
+            requestAnimationFrame(()=>{
+                this.shadowRoot.querySelector('#code').innerHTML = (
+                    language ?
+                      hljs.highlight(value, {language}) :
+                      hljs.highlightAuto(value)
+                  ).value + '<br>';
+            });
         });
     }
     setSourceValue(value){

@@ -1,0 +1,43 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+    {
+        "kind": "javascript-module",
+        "path": "confirm.js",
+        "declarations": [
+          {
+            "// kind": "class",
+            "description": "Show confirm dialog before click triggers or form submission",
+            "name": "u2-confirm",
+            "members": [],
+            "events": [],
+            "attributes": [
+                {
+                    "name": "u2-confirm",
+                    "description": "If set to true, the confirm will be shown before click triggers or the associated form is submitted. Its value may be a string to be used as the message to show in the confirm dialog. The attribute works for buttons and form-elements.",
+                    "u2Examples": ["", "Are you sure you want to delete this item?"]
+                },{
+                    "name": "lang",
+                    "description": "The language to use for internationalization",
+                    "u2Examples": ["en-US","fr-FR","de-DE","es-ES","it-IT","ja-JP","ko-KR","zh-CN","zh-TW"]
+                }
+            ],
+            "cssProperties": [],
+            "attributeName": "u2-confirm"
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-attribute-definition",
+            "name": "u2-confirm",
+            "declaration": {
+              "name": "u2-confirm",
+              "module": "confirm.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

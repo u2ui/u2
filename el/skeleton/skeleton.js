@@ -2,14 +2,16 @@
 class skeleton extends HTMLElement {
     constructor() {
         super();
-        this.inert = true;
     }
     connectedCallback() {
         this.render();
+        this.inert = true;
     }
     render() {
         const template = this.getAttribute('template');
-        this.innerHTML = templateToHtml(template);
+        requestAnimationFrame(() => {
+            this.innerHTML = templateToHtml(template)
+        });
     }
     static get observedAttributes() {
         return ['template'];

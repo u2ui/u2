@@ -14,6 +14,7 @@ const root = document;
 //    root.releasePointerCapture(e.pointerId);
 // })
 root.addEventListener('pointerenter', e => {
+    if (!e.target.matches) return // document
     if (!e.target.matches('[u2-draghandle]')) return;
     const draggable = e.target.closest('[draggable]');
     if (!draggable) console.warn('u2-draghandle: no draggable parent found');
@@ -21,6 +22,7 @@ root.addEventListener('pointerenter', e => {
     draggable.setAttribute('draggable', true);
 },true);
 root.addEventListener('pointerleave', e => {
+    if (!e.target.matches) return // document
     if (!e.target.matches('[u2-draghandle]')) return;
     e.target.closest('[draggable]').setAttribute('draggable', 'false');
 },true);

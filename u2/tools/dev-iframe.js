@@ -19,11 +19,10 @@ class DevIframe extends HTMLElement {
             @import url("${icoCss}");
             @import url("${codeCss}");
             @import url("${tabsCss}");
-            /*@import url("${toolTipCss}"); todo when switch to popover as tooltips then stay */
+            @import url("${toolTipCss}"); /* todo when switch to popover as tooltips then stay */
             :host {
                 display: flex;
                 flex-direction: column;
-                xheight: 60rem;
                 border: 1px solid #ccc;
                 background:var(--color-bg, white);
                 --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.33/svg/{icon_name}/baseline.svg';
@@ -127,61 +126,88 @@ class DevIframe extends HTMLElement {
         const form = shadow.querySelector('#tools');
     
         form.addEventListener('change', e => {
-            const data = Object.fromEntries(new FormData(form));
+            if (template) this.loadDoc(template.innerHTML);
+            else this.loadUrl(frame.src);
+        });
+
+        const template = this.querySelector(':scope > template');
+        if (template) frame.srcdoc = template.innerHTML;
+    }
+    loadUrl(url) { this.load({url}); }
+    loadDoc(doc) { this.load({doc}); }
+    load({url,doc} = {}) {
+        const shadow = this.shadowRoot;
+        const form = shadow.querySelector('#tools');
+        const frame = shadow.querySelector('iframe');
+
+        const data = Object.fromEntries(new FormData(form));
     
-            let sandbox = 'allow-same-origin allow-modals allow-forms allow-popups';
-            if (data['js']) sandbox += ' allow-scripts';
-    
-            frame.contentDocument.isOld = true;
-            frame.sandbox = sandbox;
-            frame.onload = () => run();
-            frame.src = frame.src
-            const interval = setInterval(() => {
-                if (frame.contentDocument.isOld) return;
-                if (frame.contentDocument.readyState !== 'interactive') return;
-                clearInterval(interval);
-                run();
-            }, 10);
-            let run = ()=>{
-                clearInterval(interval);
-                run = ()=>{}
-                this.dispatchEvent(new CustomEvent('dev-iframe-document-ready', { detail: { frame, document: frame.contentDocument } }));
-                frame.contentDocument.documentElement.style.writingMode = data['writing-mode'];
-                frame.contentDocument.documentElement.dir = data['direction'];
-                frame.contentDocument.documentElement.style.colorScheme = data['color-scheme'];
+        let sandbox = 'allow-same-origin allow-modals allow-forms allow-popups';
+        if (data['js']) sandbox += ' allow-scripts';
+        frame.sandbox = sandbox;
+
+        setIframeSrc(frame, {
+            url,
+            doc,
+            callback: ({document}) => {
+                //this.dispatchEvent(new CustomEvent('dev-iframe-document-ready', { detail: { frame, document } }));
+                document.documentElement.style.writingMode = data['writing-mode'];
+                document.documentElement.dir = data['direction'];
+
+                document.documentElement.style.colorScheme = data['color-scheme'];
+                document.documentElement.setAttribute('data-scheme', data['color-scheme']);
+                document.documentElement.setAttribute('u2-skin', data['color-scheme']);                
+
                 if (!data['u2css']) {
-                    frame.contentDocument.querySelectorAll('link').forEach(link => {
-                        if (link.href.includes('css/base/')) link.remove();
-                        if (link.href.includes('css/classless/')) link.remove();
+                    document.querySelectorAll('link').forEach(link => {
+                        if (link.href.includes('/css/base/')) link.remove();
+                        if (link.href.includes('/css/classless/')) link.remove();
+                        if (link.href.includes('/css/classless/')) link.remove();
+                        if (link.href.includes('/attr/skin/skin.css')) link.remove();
                     });
                 }
 
-                const htmlEl = frame.contentDocument.querySelector('.main:not(script,style)');
-                const jsEl = frame.contentDocument.querySelector('script.main');
-                const cssEl = frame.contentDocument.querySelector('style.main');
+                const htmlEl = document.querySelector('.main:not(script,style)');
+                const jsEl = document.querySelector('script.main');
+                const cssEl = document.querySelector('style.main');
 
                 htmlEl && shadow.querySelector('#html').setForeignElement(htmlEl);
                 jsEl && shadow.querySelector('#js').setForeignElement(jsEl);
                 cssEl && shadow.querySelector('#css').setForeignElement(cssEl);
-                
-
             }
         });
+
     }
 
     static observedAttributes = ['src'];
 
-
-    // Reagiere auf Änderungen des 'src'-Attributs
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'src') {
             const iframe = this.shadowRoot.querySelector('iframe');
-            if (iframe) {
-                iframe.src = newValue;
-            }
+            if (iframe) this.loadUrl(newValue);
         }
     }
 }
 
-// Definiere das 'dev-iframe' Element
 customElements.define('dev-iframe', DevIframe);
+
+
+
+function setIframeSrc(frame, {url,doc,callback} = {}) {
+    frame.contentDocument.isOld = true;
+    frame.onload = () => run();
+    //frame.src = url;
+    if (url) frame.src = url;
+    if (doc) frame.srcdoc = doc;
+    const interval = setInterval(() => {
+        if (frame.contentDocument.isOld) return;
+        if (frame.contentDocument.readyState !== 'interactive') return;
+        clearInterval(interval);
+        run();
+    }, 10);
+    let run = ()=>{
+        clearInterval(interval);
+        run = ()=>{}
+        callback?.({document: frame.contentDocument});
+    };
+}
