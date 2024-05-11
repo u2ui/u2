@@ -183,7 +183,7 @@ register('darkmode.toggle',{
     init: (el) => {
         const value = localStorage.u2Skin;
         document.documentElement.setAttribute('u2-skin', value);
-        document.documentElement.setAttribute('data-scheme', value); // compatibility
+        document.documentElement.setAttribute('data-theme', value); // compatibility
         const state = value === 'dark';
         return state;
     },
@@ -191,7 +191,7 @@ register('darkmode.toggle',{
         const newVal = localStorage.u2Skin === 'dark' ? 'light' : 'dark';
         localStorage.u2Skin = newVal;
         document.documentElement.setAttribute('u2-skin', newVal);
-        document.documentElement.setAttribute('data-scheme', newVal);
+        document.documentElement.setAttribute('data-theme', newVal);
         return newVal === 'dark';
     },
     text: {

@@ -3,7 +3,10 @@ u2-code {
     display:block;
     overflow:auto;
     text-align:left;
+    background-color: #fff;
+    color: #000;
 }
+
 u2-code > :where(script, style) {
     display:block;
     white-space: pre;

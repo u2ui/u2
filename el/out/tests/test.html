@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>tests</title>
+
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+
+    <script src="../out.js" type=module async></script>
+    <link href="../out.css" rel=stylesheet>
+
+<body>
+
+<section>
+
+    <figure style="padding:1rem; background:out(--color-light); font-size:1.5rem">
+        <h2>localStorage.random</h2>
+        <u2-out item="localStorage.random"></u2-out>
+    </figure>
+
+    <figure style="padding:1rem; background:out(--color-light); font-size:1.5rem">
+        <h2>navigator.online</h2>
+        <u2-out item="navigator.online"></u2-out>
+    </figure>
+
+    <figure style="padding:1rem; background:out(--color-light); font-size:1.5rem">
+        <h2>navigator.geolocation.latitude</h2>
+        <u2-out item="navigator.geolocation.latitude"></u2-out>
+    </figure>
+

@@ -1,0 +1,38 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "out.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "Displays formatted outs",
+            "name": "u2-out",
+            "members": [],
+            "events": [],
+            "attributes": [],
+            "cssProperties": [],
+            "cssParts": [],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u2-out",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u2-out",
+            "declaration": {
+              "name": "u2-out",
+              "module": "out.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

@@ -24,12 +24,24 @@ button, ::file-selector-button, .btn {
 	text-decoration: none;
 }
 
-/* useful? */
-dialog, [popover] {
-    &, &::backdrop {
-        transition-behavior: allow-discrete;
-    }
+
+
+/* what could go wrong? *
+*, ::after, ::before,  ::backdrop {
+    transition-behavior: allow-discrete;
 }
+working example (https://jsfiddle.net/befn3wvc/64/)
+/* */
+
+
+
+
+
+
+
+
+
+
 
 /*
 body {

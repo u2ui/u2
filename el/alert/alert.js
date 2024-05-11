@@ -12,7 +12,7 @@ const style = `
     display:flex;
     flex-direction: row-reverse;
     flex-wrap:wrap;
-    gap: 1em;
+    gap: 0 1em;
 }
 #body {
     display:flex;
@@ -22,7 +22,7 @@ const style = `
     gap: 1em;
 }
 #close {
-    flex: 0 0 2rem;
+    flex: 0 0 auto;
     padding: 0;
     border: 0;
     background: none;

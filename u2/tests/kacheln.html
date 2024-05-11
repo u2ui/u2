@@ -4,7 +4,10 @@
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>U2 design system | Showcase</title>
+        <script src="https://cdn.jsdelivr.net/gh/nuxodin/lazyfill@main/mod.min.js"></script>
         <!-- <script src="./test-init.js" type=module async></script> -->
+
+
 
         <style>
         html {
@@ -12,10 +15,9 @@
             --hsl-s:45%;
             --hsl-l:60%;
             --u2-ico-dir:'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/';
-            background:#fafafa;
             --width:80rem;
             background: radial-gradient(circle at top left, rgba(246, 240, 249, 1), rgba(200, 190, 220, 0) 70%), linear-gradient(135deg, rgb(246, 240, 249) 0%, rgb(200, 190, 220) 50%, rgb(180, 160, 200) 100%);
-            background-color:#fafafa;
+            background-color:var(--color-bg);
             background-attachment: fixed;
         }
         u2-code {
@@ -32,6 +34,7 @@
         #repos > div {
             display:grid;
             background:#fff;
+            background:var(--color-bg);
             border:1px solid #ccc;
             overflow:auto;
             font-size:13px;
@@ -72,7 +75,7 @@
             visibility: hidden;
             transition: .3s;
             padding:1rem;
-            background:#fff;
+            background:var(--color-bg);
             font-size:13px;
         }
         #repos > div > header {
@@ -103,9 +106,8 @@
         <img src="../../../u2/u2/tools/logo/u1.svg" width=259 height=114 style="width: 8rem" alt="u2-logo">
         <h1 class="u2-flex u2-width" style="align-items: baseline;">
             <u2-textfit style="flex:1 1 20rem">U2-Design-System</u2-textfit>
-            <u2-textfit style="flex:1 1 10rem">progressive, accessible, simple, easy, opensource, toolingless</u2-textfit>
+            <u2-textfit style="flex:1 1 10rem; font-weight:100">progressive, accessible, simple, easy, opensource, toolingless</u2-textfit>
         </h1>
-        
     </header>
 
     <main>
@@ -176,7 +178,7 @@
                                 <div style="flex:1 1 auto;">
                                     <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
                                     <a href="#${div.id+'_dialog'}" class="btn -play" style="font-size:1rem; display:block; text-align:center">Play!</a>
-                                    <dialog class=-playground u2-navigable u2-intersect id=${div.id+'_dialog'} style="background:#fafafa; width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto; font-size:1rem">
+                                    <dialog class=-playground u2-navigable u2-intersect id=${div.id+'_dialog'} style="background:var(--color-bg); width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto; font-size:1rem">
                                         <template>
                                             <header>
                                                 <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
@@ -233,41 +235,14 @@
                 addEventListener('u2-intersect.enter', async e=>{
                     const dialog = e.target;
                     if (!dialog.matches('.-playground')) return;
+                    const template = dialog.querySelector('template');
+                    if (!template) return;
                     await Promise.all([
                         import('../tools/ce-inspector.js'),
                         import("../tools/dev-iframe.js")
                     ]);
-                    const template = dialog.querySelector('template');
-                    if (template) {
-                        dialog.innerHTML = dialog.querySelector('template').innerHTML;
-                    }
+                    dialog.innerHTML = dialog.querySelector('template').innerHTML;
                 });
-
-
-                // document.addEventListener('click', async e=>{
-                //     if (!e.target.matches('.-play')) return;
-                //     const dialog = e.target.nextElementSibling;
-                //     const root = dialog.closest('[data-repo]');
-                //     const repo = root.getAttribute('data-repo');
-                //     const type = root.getAttribute('data-type');
-                //     if (type === 'el' || type === 'attr') {
-                //         await import('../tools/ce-inspector.js');
-                //         await import("../tools/dev-iframe.js");
-                //         dialog.innerHTML = 
-                //             `
-                //             <ce-inspector manifest="../../${type}/${repo}/manifest.json">
-                //                 ${root.querySelector('.demo u2-'+repo+', .demo [u2-'+repo+'] ').outerHTML}
-                //             </ce-inspector>
-                //             <dev-iframe src="../../${type}/${repo}/tests/minimal.html"></dev-iframe>
-                //             `;
-                //         return;
-                //     } else {
-                //         dialog.innerHTML = 'no playground available for '+type+'. Stay tuned!';
-                //     }
-
-                // });
-
-                
 
             </script>
 
@@ -277,6 +252,5 @@
     </main>
     <footer class="u2-width">
         <u2-textfit style="flex:1 1 1rem">Did I mention 'simple' already?</u2-textfit>
-        <p style="text-align:center; margin-top:2rem;">github</p>
     </footer>
 

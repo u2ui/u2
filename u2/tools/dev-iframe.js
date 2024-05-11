@@ -155,7 +155,7 @@ class DevIframe extends HTMLElement {
                 document.documentElement.dir = data['direction'];
 
                 document.documentElement.style.colorScheme = data['color-scheme'];
-                document.documentElement.setAttribute('data-scheme', data['color-scheme']);
+                document.documentElement.setAttribute('data-theme', data['color-scheme']);
                 document.documentElement.setAttribute('u2-skin', data['color-scheme']);                
 
                 if (!data['u2css']) {
