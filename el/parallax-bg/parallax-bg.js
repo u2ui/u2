@@ -61,12 +61,6 @@ function addListeners(){
     rs.observe(document.body);
 }
 
-const style = document.createElement('style');
-style.innerHTML =
-    '.u2-parallax-bg-stage { position:relative; } '+
-    'parallax-bg { position:absolute; top:0; bottom:0; left:0; right:0; z-index:-1; will-change:transform; background-size:cover; } '+
-document.head.prepend(style);
-
 
 class ParallaxBg extends HTMLElement {
     constructor() {
@@ -77,16 +71,12 @@ class ParallaxBg extends HTMLElement {
         <style>
         :host {
             position:absolute;
-            overflow:hidden;
-            top:0; left:0; right:0; // todo if safari: inset
-            bottom:-.2px;
-            xz-index:-1;
-            xwill-change:transform;
-            xbackground-size:cover;
+            inset:.-.4px;
+            overflow:clip;
         }
         .mover {
             position:absolute;
-            top:0; bottom:0; left:0; right:0;
+            inset:0;
             z-index:-1;
             will-change:transform;
             background: inherit;
@@ -97,12 +87,10 @@ class ParallaxBg extends HTMLElement {
             align-items:stretch;
             justify-content:center;
             position:absolute;
-            top:0; bottom:0; left:0; right:0;
+            inset:0;
         }
         </style>
-        <div class=mover part=_mover>
-            <slot class=visible></slot>
-        </div>
+        <div class=mover><slot class=visible></slot></div>
         `;
         // .mover {will-change:transform} brings a lot, but the budget is easily exceeded... we should only do this if in the visible area.
 

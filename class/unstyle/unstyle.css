@@ -1,6 +1,12 @@
 .u2-unstyle {
-    all:unset;
+    background: unset;
+    color: unset;
+    margin: unset;
+    padding: unset;
+    display: inline;
+    border: unset;
+    border-radius:unset;
 }
-.u2-unstyle:where(:hover) {
-    all:unset;
+.u2-unstyle:is(:hover,:focus) {
+    background:unset;
 }

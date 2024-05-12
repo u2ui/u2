@@ -108,3 +108,20 @@ textarea { resize: vertical; }
 input, textarea { inline-size:13rem; }
 [type=radio], [type=checkbox], [type=file], [type=date], [type=time], [type=datetime-local], [type=color] { inline-size:revert; }  /* todo: incomplete? */
 [type=range] { vertical-align:middle }
+
+
+/* animatable popovers */
+:is(dialog, [popover]) {
+    &, &::backdrop {
+        transition-behavior: allow-discrete;
+        opacity: 0;
+        &:popover-open, &:modal, &[open] {
+            &, &::backdrop {
+                opacity: 1;
+                @starting-style {
+                    opacity: 0;
+                }
+            }
+        }
+    }
+}

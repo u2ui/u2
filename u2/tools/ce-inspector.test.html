@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../u2/tests/test-init.js" type=module></script>
+
+    <script src="../../u2/auto.js" type=module></script>
+
+    <link rel=stylesheet href="../../css/classless/full.css">
+    <link rel=stylesheet href="../../css/classless/simple.css"> 
+
+    <script src="./ce-inspector.js" type=module async></script>
+
+<body>
+
+<section>
+
+    <style>
+        body {
+            place-content: start stretch;
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+        }
+    </style>
+
+
+<ce-inspector manifest="../../el/ico/manifest.json">
+    <u2-ico icon="thumb_up"></u2-ico>
+</ce-inspector>
+
+<ce-inspector manifest="../../el/carousel/manifest.json">
+    <u2-carousel mode="fade">
+        <div>
+            Slide 1
+        </div>
+        <div>
+            Slide 2
+        </div>
+        <div>
+            Slide 3
+        </div>
+    </u2-carousel>
+</ce-inspector>
+
+<ce-inspector manifest="../../el/number/manifest.json">
+    <u2-number>1234.567</u2-number>
+</ce-inspector>
+
+
+<ce-inspector manifest="../../el/code/manifest.json">
+    <u2-code editable trim>
+        <style>
+            u2-number {
+                font-weight:bold;
+            }
+        </style>
+    </u2-code>
+</ce-inspector>
+
+<ce-inspector manifest="../../el/tooltip/manifest.json">
+    <u2-tooltip tabindex="-1">Tooltip test</u2-tooltip>
+</ce-inspector>
+
+
+</section>

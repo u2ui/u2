@@ -7,6 +7,7 @@ const tagToTab = {
     H4:1,
     H5:1,
     H6:1,
+    BUTTON:1,
 };
 
 customElements.define('u2-tabs', class extends HTMLElement {
@@ -169,6 +170,14 @@ customElements.define('u2-tabs', class extends HTMLElement {
             if (tab.hasAttribute('selected')) index = i;
         }
         return index;
+    }
+
+    static observedAttributes = ['selected'];
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'selected') {
+            this.selected = parseInt(newValue);
+        }
     }
 
 });

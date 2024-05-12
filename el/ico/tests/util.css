@@ -1,2 +1,2 @@
 html { font-size:calc(10px + 1vw); }
-u2-ico { border:1px solid #ccc; }
+body:hover u2-ico { outline:1px solid #ccc; }

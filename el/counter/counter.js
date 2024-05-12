@@ -34,10 +34,12 @@ class counter extends HTMLElement {
     connectedCallback() {
         // measure final-width
         this.innerHTML = format(this, this._end);
-        let widthPx = this.offsetWidth;
+        const writingMode = getComputedStyle(this).getPropertyValue('writing-mode');
+        const vertical = writingMode.includes('vertical');
+        const inlineSizePx = vertical ? this.offsetHeight : this.offsetWidth;
         const fontSizePx = Number(getComputedStyle(this).getPropertyValue('font-size').slice(0,-2));
-        const em = widthPx / fontSizePx;
-        this.style.setProperty('--js-final-width', em+'em');
+        const em = inlineSizePx / fontSizePx;
+        this.style.setProperty('--js-final-inline-size', em+'em');
 
         this._reset();
         this._observer.observe(this);
@@ -45,22 +47,7 @@ class counter extends HTMLElement {
     disconnectedCallback() {
         this._observer.disconnect(this)
     }
-    _animate(from, to) { // todo easing
-        const duration = 1000;
-        const frames = Math.ceil(duration / 16);
-        let step = (to - from) / frames;
-        this._stop();
-        this.animatedValue = from;
-        this._interval = setInterval(()=>{
-            this.animatedValue += step;
-            if (step>0 ? this.animatedValue>=to : this.animatedValue<=to) {
-                this.animatedValue = to;
-                this._stop();
-            }
-            this._draw()
-        },15)
-    }
-    _animate(from, to) { // todo easing
+    _animate(from, to) {
         const duration = 2000;
         let diff = to - from;
         this._stop();

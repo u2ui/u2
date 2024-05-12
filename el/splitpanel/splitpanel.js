@@ -21,7 +21,7 @@ class splitpanel extends HTMLElement {
                 min-height: var(--size);
                 min-width: var(--size);
                 flex: 0 0 auto;
-                background: var(--divider-color, #ccc);
+                background: #ccc;
                 cursor: col-resize;
                 z-index:1;
                 touch-action: none;

@@ -1,0 +1,51 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "skeleton.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "skeleton",
+                    "members": [
+                    ],
+                    "events": [
+                    ],
+                    "attributes": [
+                        {
+                            "name": "template",
+                            "description": "The template to render. eg: 'h2 p p table(3x4) button'",
+                            "u2Examples": ["h2 p p table(3x4) button", "p img p"]
+                        }
+                    ],
+                    "slots": [
+                    ],
+                    "cssProperties": [
+                        {
+                            "name": "--u2-skeleton-color",
+                            "description": "The color of the skeleton",
+                            "u2Examples": ["#f0f0f0", "#fee", "#eef"]
+                        }
+                    ],
+                    "superclass": { "name": "HTMLElement" },
+                    "tagName": "u2-skeleton",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-element-definition",
+                    "name": "u2-skeleton",
+                    "declaration": {
+                        "name": "skeleton",
+                        "module": "skeleton.js"
+                    }
+                }
+            ]
+        }
+    ]
+}
+

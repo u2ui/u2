@@ -27,10 +27,12 @@
                     "attributes": [
                         {
                             "name": "autoplay",
+                            "description": "If specified, the carousel automatically begins to slide.",
                             "u2-type": "boolean"
                         },
                         {
                             "name": "mode",
+                            "description": "The mode of the carousel. scroll: uses native scroll, fade: uses css opacity, slide: uses css-transform.",
                             "u2-type": ["slide","fade","scroll"]
                         }
                     ],

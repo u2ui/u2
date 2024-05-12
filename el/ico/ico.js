@@ -44,19 +44,6 @@ const uIco = class extends HTMLElement {
             }
         }
         this._handleIcon();
-
-        // at the moment, "loaded" indicates to css, that it uses --u2-ico-dir
-        // let font = getComputedStyle(this).getPropertyValue('font-family');
-        // if (font) {
-        //     font = '1rem '+font;
-        //     this.setAttribute('state','loading');
-        //     document.fonts.load(font).then(()=>{
-        //         this.setAttribute('state','loaded');
-        //     }).catch(err=>{
-        //         console.error(err);
-        //         this.setAttribute('state','fail');
-        //     });
-        // }
     }
 
     static observedAttributes = ['icon'];
@@ -64,27 +51,52 @@ const uIco = class extends HTMLElement {
         if (oldValue === newValue) return;
         if (name === 'icon') {
             setTimeout(() => this._handleIcon(),20); // wait for css to be applied
-            //requestAnimationFrame(() => this._handleIcon()); // wait for css to be applied
         }
     }
     _handleIcon() {
         // fetch svg if --ui-ico-directory is set
-        let dir = getComputedStyle(this).getPropertyValue('--u2-ico-dir').trim();
-        if (dir && this.hasAttribute('icon')) {
-            dir = dir.slice(1, -1);
+        let icoDir = getComputedStyle(this).getPropertyValue('--u2-ico-dir').trim();
+        if (icoDir && this.hasAttribute('icon')) {
+            const dir = icoDir.slice(1, -1);
             const name = this.getAttribute('icon');
             const path = dirTemplateToUrl(dir, name);
-            this.setAttribute('state','loading');
+
+            requestAnimationFrame(()=>this.setAttribute('state','loading'));
+
+            const pathStr = path.toString();
+            if (this._lastLoading === pathStr) return; // prevent multiple requests
+            this._lastLoading = pathStr;
+
             loadSvgString(path).then(svg=>{
                 // if (path.origin !== location.origin) {} todo: sanitize svg
-                this.innerHTML = svg; // requestAnimationFrame??
-                this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
-                const svgEl = this.firstElementChild;
-                svgEl.removeAttribute('xmlns');
-                svgEl.setAttribute('aria-hidden', 'true');
-                this.setAttribute('state','loaded');
+
+                svg = svg.replace(/<!--.*?-->/gs, ''); // remove comments
+                svg = svg.replace(/<!DOCTYPE.*?>/gs, ''); // remove doctype
+                svg = svg.replace(/<\?xml.*?\?>/gs, ''); // remove xml header
+
+                requestAnimationFrame(()=>{
+                    this.innerHTML = svg; // requestAnimationFrame??
+                    this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
+                    const svgEl = this.firstElementChild;
+                    svgEl.removeAttribute('xmlns');
+                    svgEl.removeAttribute('xmlns:xlink');
+                    svgEl.removeAttribute('version');
+                    svgEl.setAttribute('aria-hidden', 'true');
+                    this.setAttribute('state','loaded');
+    
+                });
+
+                // // store to combine
+                // queueMicrotask(()=>{
+                //     const store = localStorage.getItem('u2-ico-used');
+                //     const icons = store ? JSON.parse(store) : {};
+                //     icons[icoDir] ??= {};
+                //     icons[icoDir][name] = this.innerHTML.trim();
+                //     localStorage.setItem('u2-ico-used', JSON.stringify(icons));
+                // });
+
             }).catch(err=>{
-                console.error(err);
+                console.error(err, this);
                 this.setAttribute('state','fail');
             });
         }
@@ -93,16 +105,26 @@ const uIco = class extends HTMLElement {
 
 }
 
-customElements.define('u2-ico', uIco);
-
+// //combine svgs
+// setTimeout(function(){
+//     const store = localStorage.getItem('u2-ico-used');
+//     if (!store) return;
+//     const icons = JSON.parse(store);
+//     for (const [dir, names] of Object.entries(icons)) {
+//         console.log(`instead of loading from ${dir}, you can generate a local file with to following content and load it like /myFile.txt#{icon}:`);
+//         let content = '<svg><defs>\n\n';
+//         for (let [name, svg] of Object.entries(names)) {
+//             svg = svg.replace(/<svg /, `<svg id="${name}" `);
+//             content += `${svg}\n\n`;
+//         }
+//         content += '\n\n</defs></svg>';
+//         console.log(content);
+//     }
+// },199)
 
 function dirTemplateToUrl(dir, name) {
     let [prefix, firstWord, between='', nextWord, suffix] = dir.split(/{(icon)([^n]*)?(name)?}/i);
-    // old: if (!suffix) suffix = '.svg';
-    if (!suffix) {
-        suffix = prefix.includes('#') ? '' : '.svg';
-    }
-
+    if (!suffix) suffix = prefix.includes('#') ? '' : '.svg';
     if (!nextWord) between = '-'; // if just: {icon}
 
     // icon naming convertion
@@ -131,9 +153,8 @@ async function loadSvgString(url) {
         }
     }
 
-    const res = await fetch(url, {cache: "force-cache"}); // "force-cache": why is the response not cached like direct in the browser?
-    if (!res.ok) throw new Error("Not 2xx response");
-    const svg = await res.text();
+    const svg = await loadCached(url);
+    // temporary cache svg
     
     // external element
     if (hash) { // todo, cache the svgDoc?
@@ -151,4 +172,16 @@ async function loadSvgString(url) {
     return svg;
 }
 
+const cachedRequests = {};
 
+async function loadCached(url) {
+    if (cachedRequests[url]) return cachedRequests[url];
+    cachedRequests[url] = fetch(url, {cache: "force-cache"}).then(res => {
+        if (!res.ok) throw new Error(`Failed to fetch icon ${url}: ${res.status} ${res.statusText}`);
+        return res.text();
+    });
+    return cachedRequests[url];
+}
+
+
+customElements.define('u2-ico', uIco);

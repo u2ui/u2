@@ -14,29 +14,21 @@ Better tables
 ## Usage
 
 ```html
-<table class="u2-table -Flex -NoSideGaps -Sticky -Fields">
+<table class="u2-table x-Flex -NoSideGaps -Sticky x-Fields">
     <thead>
         <tr>
-            <th>Name
-            <th>Text Column
-            <th>Last Colunn
+            <th>Table
+            <th>Column
+            <th>Colunn
     <tbody>
         <tr>
-            <td>Cell 1 / 1
-            <td>Cell 1 / 2
-            <td>Cell 1 / 3
+            <td>Cell 1/1
+            <td>Cell 1/2
+            <td>Cell 1/3
         <tr>
-            <td>Cell 2 / 1
-            <td>Cell 2 / 2
-            <td>Cell 1 / 3 long content causing overflow-div to add scrollbars
-        <tr>
-            <td>Cell 3 / 1
-            <td>Cell 3 / 2
-            <td>Cell 1 / 3
-        <tr>
-            <td>Comment
-            <td><textarea aria-label=textarea></textarea>
-            <td><input aria-label=input>
+            <td>Cell 2/1
+            <td>Cell 2/2
+            <td>Cell 1/3
 </table>
 ```
 

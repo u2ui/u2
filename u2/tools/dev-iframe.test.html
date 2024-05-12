@@ -13,20 +13,63 @@
 <body>
 
 <section>
+    <h2>App</h2>
 
-        <label style="text-align:center; padding:.6em">
-            <input id=set oninput="dFrame.setAttribute('src', this.value)" placeholder="https://url..." style="display:block; margin:auto; width:77%;" autofocus>
-        </label>
-        <dev-iframe id="dFrame"></dev-iframe>
+    <label style="text-align:center; padding:.6em">
+        <input id=set oninput="dFrame.setAttribute('src', this.value)" placeholder="https://url..." style="display:block; margin:auto; width:77%;" autofocus>
+    </label>
+    <dev-iframe id="dFrame"></dev-iframe>
 
-        <script>
-            set.addEventListener('input', function() {
-                dFrame.setAttribute('src', this.value);
-                localStorage.setItem('dev-iframe-app-url', this.value);
-            });
-            dFrame.setAttribute('src', localStorage.getItem('dev-iframe-app-url') || 'http://localhost/u2ui/u2/el/tree1/tests/test.html');
-            set.value = dFrame.getAttribute('src');
-        </script>
+    <script>
+        set.addEventListener('input', function() {
+            dFrame.setAttribute('src', this.value);
+            localStorage.setItem('dev-iframe-app-url', this.value);
+        });
+        dFrame.setAttribute('src', localStorage.getItem('dev-iframe-app-url') || 'http://localhost/u2ui/u2/el/tree1/tests/test.html');
+        set.value = dFrame.getAttribute('src');
+    </script>
 
+
+</section>
+
+
+<section>
+
+    <h2>Template as document</h2>
+    <dev-iframe>
+        <template>
+            <link rel=stylesheet href="../../css/classless/full.css">
+            <script src="../auto.js" type=module async></script>
+            <style>
+                body {
+                    font-family: sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }
+                h1 {
+                    background: #333;
+                    color: white;
+                    padding: 1em;
+                    margin: 0;
+                }
+                main {
+                    padding: 1em;
+                }
+            </style>
+            <h1>My App</h1>
+            <main class="main">
+                <p>My app is great!</p>
+            </main>
+            <style class="main">
+                main {
+                    background: #f8f8f8;
+                }
+            </style>
+
+            <script class=main>
+                document.querySelector('main').insertAdjacentHTML('beforeend', '<p>My app is still great!</p>');
+            </script>
+        </template>
+    </dev-iframe>
 
 </section>

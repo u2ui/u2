@@ -1,5 +1,13 @@
 {
   "attr": {
+    "behavior": {
+      "name": "behavior",
+      "description": "behavior before action",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "confirm": {
       "name": "confirm",
       "description": "Confirm before action",
@@ -58,8 +66,8 @@
     },
     "skin": {
       "name": "skin",
-      "description": "Change the skin of a widget (beta)",
-      "beta": true,
+      "description": "Change the skin of a widget",
+      "beta": false,
       "deprecated": false,
       "css": true,
       "js": false
@@ -140,17 +148,17 @@
     }
   },
   "el": {
-    "ai-texter": {
-      "name": "ai-texter",
-      "description": "",
+    "alert": {
+      "name": "alert",
+      "description": "Prominent hints, alerts, and facts",
       "beta": false,
       "deprecated": false,
       "css": true,
       "js": true
     },
-    "alert": {
-      "name": "alert",
-      "description": "Prominent hints, alerts, and facts",
+    "bytes": {
+      "name": "bytes",
+      "description": "Displays formatted bytess",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -214,7 +222,7 @@
     },
     "number": {
       "name": "number",
-      "description": "Format a number using",
+      "description": "Displays formatted numbers",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -247,6 +255,14 @@
     "rte": {
       "name": "rte",
       "description": "\"Rich\" Rich Text Editor (alpha)",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "skeleton": {
+      "name": "skeleton",
+      "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -345,14 +361,6 @@
     "classless": {
       "name": "classless",
       "description": "null",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
-    "flex": {
-      "name": "flex",
-      "description": "Most wanted flexbox case",
       "beta": false,
       "deprecated": false,
       "css": true,

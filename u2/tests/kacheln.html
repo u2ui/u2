@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <meta name=viewport content="width=device-width">
+        <title>U2 design system | Showcase</title>
+        <xscript src="https://cdn.jsdelivr.net/gh/nuxodin/lazyfill@main/mod.min.js"></script>
+        <!-- <script src="./test-init.js" type=module async></script> -->
+
+        <style>
+        html {
+            --hsl-h:275.4;
+            --hsl-s:45%;
+            --hsl-l:60%;
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/';
+            --width:80rem;
+            background: radial-gradient(circle at top left, rgba(246, 240, 249, 1), rgba(200, 190, 220, 0) 70%), linear-gradient(135deg, rgb(246, 240, 249) 0%, rgb(200, 190, 220) 50%, rgb(180, 160, 200) 100%);
+            background-color:var(--color-bg);
+            background-attachment: fixed;
+        }
+        u2-code {
+            font-size: max(.8rem, 13px);
+            font-size: clamp(12px, .8rem, 1em);
+        }
+        #nav h2 {
+            margin-top:1rem;
+            margin-bottom: .3rem;
+            padding-bottom: .3rem;
+            border-bottom: 1px solid var(--color-line);
+            font-weight:600;
+        }
+        #repos {
+            --u2-Items-width:15rem;
+        }
+        #repos > div {
+            display:grid;
+            background:#fff;
+            background:var(--color-bg);
+            overflow:auto;
+            font-size:13px;
+            aspect-ratio: 1 / 1;
+            box-shadow: 0 0 .5rem #0002;
+
+            &[hidden] {
+                display:none;
+            }
+        }
+        #repos > div > .demo {
+            grid-area: 1 / 1 / 1 / 1;
+            display:grid;
+            align-items: center;
+            padding:1rem;
+            text-align:center;
+            height:100%;
+            display:table;
+            & > div {
+                height:100%;
+                display:table-cell;
+                vertical-align:middle;
+            }
+
+            [u2-intersect] {
+                --u2-intersect-margin:-10%;
+                --u2-intersect-threshold:1;
+                margin-block:2rem;
+                background-color:var(--color);
+            }
+            & :is(u2-masonry, .u2-flex, .u2-grid, u2-carousel) > :not([slot]), [u2-intersect~="0.5"] {
+                background-color:var(--color-light);
+            }
+            & .u2-table > * > * > * {
+                background-image: linear-gradient(to left, var(--color-light), var(--color-light));
+                background-repeat: no-repeat;                
+                background-origin: content-box;
+            }
+        }
+        #repos > div > u2-code {
+            grid-area: 1 / 1 / 1 / 1;
+            opacity:0;
+            visibility: hidden;
+            transition: .3s;
+            padding:1rem;
+            background:var(--color-bg);
+            font-size:13px;
+        }
+        #repos > div > header {
+            position:absolute;
+            display:flex;
+            background:#0009;
+            color:var(--color-light);
+            padding:1rem;
+            top:0;
+            left:0;
+            right:0;
+            z-index:10;
+            transition: .3s;
+            transform: translateY(-100%);
+            &:focus-within, div:hover > & {
+                transform: translateY(0);
+            }
+        }        
+        button, input {
+            margin-block:.2rem;
+        }
+        </style>
+
+<body>
+
+    <header style="text-align:center; margin-top:2rem;">
+        <img src="../../../u2/u2/tools/logo/u1.svg" width=259 height=114 style="width: 8rem" alt="u2-logo">
+        <h1 class="u2-flex u2-width" style="align-items: baseline;">
+            <u2-textfit style="flex:1 1 20rem">U2-Design-System</u2-textfit>
+            <u2-textfit style="flex:1 1 10rem; font-weight:100">progressive, accessible, simple, easy, opensource, toolingless</u2-textfit>
+        </h1>
+    </header>
+
+    <main>
+
+        <section id=reposSec>
+            <script type=module>
+                import "../auto.js?debug";
+
+                const repos = await fetch('../projects.json').then(res=>res.json());
+                const reposEl = document.getElementById('repos');
+
+                const extToName = {
+                    'el':'Element',
+                    'attr':'Attribute',
+                    'class':'CSS Class',
+                    'js':'JavaScript',
+                    //'css':'Stylesheets',
+                };
+
+                //let str = '';
+                let navStr = '';
+                for (const [ext, catName] of Object.entries(extToName)) {
+                    const entries = repos[ext];
+
+                    for (let [name, repo] of Object.entries(entries)) {
+                        const div = document.createElement('div');
+                        div.hidden = repo.beta;
+                        div.id = 'repo_'+catName+'-'+name;
+                        div.setAttribute('data-repo', name);
+                        div.setAttribute('data-type', ext);
+                        reposEl.append(div);
+
+
+                        (async function(){
+
+                            const localUrl = '../../' + ext + '/' + name;
+
+                            let exampleCodeUrl = localUrl+`/tests/minimal.html`;
+
+                            let parts = await fetch(exampleCodeUrl).then(res=>res.text()).then(source=>{
+                                // parse the example code
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(source, 'text/html');
+                                //const html = source.match(/<section\>([\s\S]*)<\/section>/)?.[1]; // raw content
+                                const html = doc.querySelector('section.main').innerHTML; // raw content
+                                return {
+                                    //html:doc.querySelector('section')?.innerHTML,
+                                    html,
+                                    style:doc.querySelector('style.main')?.innerHTML,
+                                    script:doc.querySelector('script:not([src])')?.innerHTML,
+                                }
+                            });
+
+                            if (ext === 'el') {
+                                const tag = 'u2-'+repo.name.replace(/\.el$/,'');
+                                parts.html ??= `<${tag}>Content</${tag}>`;
+                                parts.style ??= `${tag} {}`;
+                            }
+                            if (ext === 'attr') {
+                                const attr = 'u2-'+repo.name.replace(/\.attr$/,'');
+                                parts.html ??= `<div ${attr}>hello</div>`;
+                                parts.style ??= `[${attr}] {}`;
+                            }
+
+                            /* */
+                            const str =
+                            `
+                            <header>
+                                <div style="flex:1 1 auto;">
+                                    <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
+                                    <a href="#${div.id+'_dialog'}" class="btn -play" style="font-size:1rem; display:block; text-align:center">Play!</a>
+                                    <dialog class=-playground u2-navigable u2-intersect id=${div.id+'_dialog'} style="background:var(--color-bg); width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto; font-size:1rem">
+                                        <template>
+                                            <header class=u2-flex style="margin-bottom:2rem">
+                                                <div style="flex:1">
+                                                    <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
+                                                    <p>${repo.description}</p>
+                                                </div>
+                                                <a href="https://github.com/u2ui/u2/tree/main/${ext}/${repo.name}" target=github rel=noopener><u2-ico>github</u2-ico></a>
+                                            </header>
+                                            <ce-inspector manifest="../../${ext}/${repo.name}/manifest.json">${parts.html}</ce-inspector>
+                                            <dev-iframe src="../../${ext}/${repo.name}/tests/minimal.html"></dev-iframe>
+                                        </template>
+                                        <u2-skeleton template="h1 p table(4x3)"></u2-skeleton>
+                                    </dialog>
+                                </div>
+                            </header>
+                            <div class=demo>
+                                <div>
+                                    ${parts.html}
+                                </div>
+                            </div>
+                            <u2-code trim editable oninput="this.closest('#repos > div').querySelector('.demo > div').innerHTML = this.value">
+                                <script type=html>
+                                    ${parts.html}
+                                <\/script>
+                            </u2-code>
+                            `;
+
+                            //requestAnimationFrame(()=>div.innerHTML = str);
+                            div.innerHTML = str;
+
+                        })();
+
+                    }
+                }
+
+                addEventListener('u2-intersect.enter', async e=>{
+                    const dialog = e.target;
+                    if (!dialog.matches('.-playground')) return;
+                    const template = dialog.querySelector('template');
+                    if (!template) return;
+                    await Promise.all([
+                        import('../tools/ce-inspector.js'),
+                        import("../tools/dev-iframe.js")
+                    ]);
+                    dialog.innerHTML = dialog.querySelector('template').innerHTML;
+                });
+
+            </script>
+
+
+            <div id=repos class="u2-grid u2-width"></div>
+        </section>
+    </main>
+    <footer class="u2-width">
+        <u2-textfit style="flex:1 1 1rem">Did I mention 'simple' already?</u2-textfit>
+    </footer>
+

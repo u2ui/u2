@@ -4,7 +4,7 @@ Displays formatted numbers
 ## Usage
 
 ```html
-Speed: <u2-number value="8987.2345" digits="2" unit="kilometer-per-hour" lang="uk">8'987.23</u2-number>
+Number: <u2-number value="8987.2345" digits="2">8'987.23</u2-number>
 ```
 
 ```css

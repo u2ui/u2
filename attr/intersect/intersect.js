@@ -32,8 +32,8 @@ new SelectorObserver({
             el.setAttribute('u2-intersect', attrValue);
             el.classList[onTarget?'add':'remove']('u2-intersected');
 
-            //var event = new CustomEvent('u2-intersected-'+(onTarget?'in':'out'), /*{bubbles:true}*/ );
-            //el.dispatchEvent(event);
+            const event = new CustomEvent('u2-intersect.'+(onTarget?'enter':'leave'), {bubbles:true} );
+            el.dispatchEvent(event);
         }, {
             //root: document.scrollingElement,
             rootMargin: margin,

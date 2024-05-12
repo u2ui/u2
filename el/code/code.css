@@ -2,7 +2,11 @@ u2-code {
     font-family: Consolas, "Courier New", Courier, monospace;
     display:block;
     overflow:auto;
+    text-align:left;
+    background-color: #fff;
+    color: #000;
 }
+
 u2-code > :where(script, style) {
     display:block;
     white-space: pre;

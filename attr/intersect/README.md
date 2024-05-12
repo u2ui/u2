@@ -4,17 +4,9 @@ declarativ intersection-observer
 ## Usage
 
 ```html
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
-<div u2-intersect></div>
+<div u2-intersect>intersect</div>
+<div u2-intersect>item 2</div>
+<div u2-intersect>item 3</div>
 ```
 
 ```css

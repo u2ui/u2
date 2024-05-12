@@ -20,7 +20,7 @@ or for every textarea, using predefined prompts
 </u2-ai-texter>
 */
 
-import {Placer} from '../../js/Placer/Placer.js';
+import {Placer} from '../../../../js/Placer/Placer.js';
 
 class Texter extends HTMLElement {
     constructor() {
@@ -93,30 +93,6 @@ class Texter extends HTMLElement {
             stream: false,
             messages: [{
                     role: "system",
-                    // content: `You are a text editor. You will be given a prompt and a text to edit, which may be empty or incomplete. Edit the text to match the prompt, and only respond with the full edited version of the text - do not include any other information, context, or explanation. If you add on to the text, respond with the full version, not just the new portion. Do not include the prompt or otherwise preface your response. Do not enclose the response in quotes.`,
-                    // content: `You are a text editor. You will be given a prompt and a text to edit. 
-                    // Edit the text so that it corresponds to the prompt (instructions), and only respond with the full edited version of the text - do not include any other information, context, or explanation. 
-                    // If you add on to the text, respond with the full version, not just the new portion. 
-                    // Do not include the prompt or otherwise preface your response. Do not enclose the response in quotes.
-                    // Example:\n
-                    // Prompt: You're a stupid bloke.\n
-                    // Text: friendlier\n
-                    // Answer: We seem to have different perspectives.\n
-                    // `,
-                    // content: `You are a text editor. You will be given a Prompt and a Text to edit. 
-                    // Only respond with the full edited version of the Text - do not include any other information, context, or explanation. 
-                    // If not requested, do not change the language of the Text.
-
-                    // Example 1:\n
-                    // Prompt: You're a stupid bloke.\n
-                    // Text: friendlier\n
-                    // Answer: We seem to have different perspectives.\n
-
-                    // Example 2:\n
-                    // Prompt: Es war einmal ein\n
-                    // Text: schreib weiter\n
-                    // Answer: Es war einmal ein kleines Mädchen.\n
-                    // `,
                     content: `You are a text editor. Return only the full(!) edited text without any explanations!
 
                     Example 1:\n

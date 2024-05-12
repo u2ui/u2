@@ -4,7 +4,9 @@ Exactly fit text
 ## Usage
 
 ```html
-<u2-textfit>ABCD</u2-textfit>
+<u2-textfit>
+    <span contenteditable>Textfit</span>
+</u2-textfit>
 ```
 
 ```css

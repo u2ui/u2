@@ -10,13 +10,13 @@ Animated Number Counter
 - ...and decimal places to be displayed!
 - Optional attribute `from="-10"` defines start value. Without it, it will start at 0
 - You can set the property `element.value` to start counting.
-- Counter elements get a css variable `--js-final-width` which is set to their `min-width` by default.
+- Counter elements get a css variable `--js-final-inline-size` which is set to their `min-width` by default.
 - Use the inner HTML as fallback.
 
 ## Usage
 
 ```html
-<u2-counter from=-11.0 value=200.0>200.0</u2-counter>
+Counter: <u2-counter from=-11.0 value=200.0>200.0</u2-counter>
 ```
 
 ```css

@@ -4,7 +4,11 @@
 ## Usage
 
 ```html
-<u2-rte><b>Hello</b> <i>world</i></u2-rte>
+<u2-rte style="--u2-rte-toolbar:Bold Italic">
+    <strong>RTE</strong>
+    <br>
+    <i>(Rich Text Editor)</i>
+</u2-rte>
 ```
 
 ```css

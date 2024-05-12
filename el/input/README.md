@@ -1,5 +1,5 @@
 # &lt;u2-input&gt; - element
-Input elements (very alpha)
+Input elements (very beta)
 
 ## Usage
 

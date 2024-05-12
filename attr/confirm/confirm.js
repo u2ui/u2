@@ -2,6 +2,8 @@
 let resentConfirmed = false;
 
 // submit
+// todo: test if it works inside shadow dom
+
 document.addEventListener('submit', e=>{
     if (resentConfirmed) return; // dont check again
     const form = e.target;
@@ -16,7 +18,11 @@ document.addEventListener('submit', e=>{
 // click
 document.addEventListener('click', e=>{
     if (resentConfirmed) return;
-    const element = e.target.closest('button[u2-confirm]');
+
+    //const target = e.target;
+    const target = e.composedPath()[0];
+    
+    const element = target.closest('button[u2-confirm]');
     if (!element) return;
     if (element.form && element.type==='submit') return; // handled by submit event. What about "reset"?
     confirmEvent(e, element, ()=> element.click() );

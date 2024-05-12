@@ -15,7 +15,7 @@ u2-rating {
 ## Usage
 
 ```html
-Your rating: <u2-rating value="2" max="6" icon="favorite"></u2-rating>
+<u2-rating value="2" max="6" icon="favorite"></u2-rating>
 ```
 
 ```css

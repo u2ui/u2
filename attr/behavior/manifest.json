@@ -1,0 +1,43 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+    {
+        "kind": "javascript-module",
+        "path": "behavior.js",
+        "declarations": [
+          {
+            "// kind": "class",
+            "description": "Change behavior of Elements",
+            "name": "u2-behavior",
+            "members": [],
+            "events": [],
+            "attributes": [
+                {
+                    "name": "u2-behavior",
+                    "description": "Initial only! The behavior to apply to the element",
+                    "u2Examples": ["share","close","print","once","fullscreen","darkmode","scroll"]
+                },{
+                    "name": "lang",
+                    "description": "The language to use for internationalization",
+                    "u2Examples": ["en-US","fr-FR","de-DE","es-ES","it-IT","ja-JP","ko-KR","zh-CN","zh-TW"]
+                }
+            ],
+            "cssProperties": [],
+            "attributeName": "u2-behavior"
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-attribute-definition",
+            "name": "u2-behavior",
+            "declaration": {
+              "name": "u2-behavior",
+              "module": "behavior.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

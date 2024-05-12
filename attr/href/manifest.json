@@ -1,0 +1,43 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+    {
+        "kind": "javascript-module",
+        "path": "href.js",
+        "declarations": [
+          {
+            "summary": "Turn every element in a link",
+            "description": "This attribute allows you to turn any element into a link by simply adding the `u2-href` attribute to it.\n`Ctrl + click` will open the link in a new tab.\nClicks on interactive elements inside the pseudo-link element prevent the link from being opened.\nXSS attacks are prevented by disallowing the `javascript:` protocol.",
+            "name": "u2-href",
+            "members": [],
+            "events": [],
+            "attributes": [
+                {
+                    "name": "u2-href",
+                    "description": "The URL that the hyperlink points to.",
+                    "u2Examples": ["", "https://www.google.com", "./test.html", "#section1"]
+                },{
+                    "name": "u2-href-target",
+                    "description": "The target attribute specifies where to open the linked document.",
+                    "u2Examples": ["_blank", "myFrame"]
+                }
+            ],
+            "cssProperties": [],
+            "attributeName": "u2-href"
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-attribute-definition",
+            "name": "u2-href",
+            "declaration": {
+              "name": "u2-href",
+              "module": "href.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

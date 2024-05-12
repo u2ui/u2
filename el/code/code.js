@@ -63,7 +63,6 @@ class code extends HTMLElement {
         }
         </style>
 
-
         <div id=code></div>
         <textarea autocomplete=off autocorrect=off autocapitalize=off spellcheck=false autocorrect=off></textarea>
         <slot id=tools name=tools></slot>
@@ -106,10 +105,6 @@ class code extends HTMLElement {
 
         this.value = this.getSourceValue();
     }
-    copy(){
-        let code = this.shadowRoot.querySelector('#code').textContent;
-        navigator.clipboard.writeText(code);
-    }
     get language(){
         if (this.hasAttribute('language')) return this.getAttribute('language');
         const el = this.sourceElement;
@@ -129,11 +124,13 @@ class code extends HTMLElement {
         libPromise.then( ({default:hljs})=>{
             this.libLoaded = true;
             const language = this.language;
-            this.shadowRoot.querySelector('#code').innerHTML = (
-                language ?
-                  hljs.highlight(value, {language}) :
-                  hljs.highlightAuto(value)
-              ).value + '<br>';
+            requestAnimationFrame(()=>{
+                this.shadowRoot.querySelector('#code').innerHTML = (
+                    language ?
+                      hljs.highlight(value, {language}) :
+                      hljs.highlightAuto(value)
+                  ).value + '<br>';
+            });
         });
     }
     setSourceValue(value){
@@ -190,13 +187,19 @@ class code extends HTMLElement {
     setSelectionRange(start, end){
         this.textarea.setSelectionRange(start, end);
     }
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'trim') this.trim = newValue!=null;
-    }
     focus(){
         this.textarea.focus();
     }
-    static observedAttributes = ['trim'];
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'trim') {
+            this.trim = newValue!=null;
+            if (this.sourceElement) this.value = this.getSourceValue();
+        }
+        if (name === 'editable') this.shadowRoot.getElementById('code').inert = newValue!=null;
+        if (name === 'element') this.setForeignElement(document.getElementById(newValue));
+    }
+    static observedAttributes = ['trim', 'editable', 'element'];
 
 }
 
@@ -229,96 +232,58 @@ function htmlEncode(input) {
 /* helper */
 
 
-/* functions */
-function setInputValueKeepSelection(input, newValue) {
-    // if (document.activeElement !== input) { // not good for shadow dom
-    //     input.value = newValue;
-    //     return;
-    // }
-    if (!input.matches(':focus')) {
-        input.value = newValue;
-        return;
-    }
-    if (input.value === newValue) return;
-    const selectionStart = input.selectionStart;
-    const selectionEnd = input.selectionEnd;
-    const oldString = input.value;
-    const newPositionStart = positionAfterUpdate(oldString, selectionStart, newValue);
-    const newPositionEnd = positionAfterUpdate(oldString, selectionEnd, newValue);
-    input.value = newValue;
-    input.setSelectionRange(newPositionStart, newPositionEnd);
-}
+// /* functions */
+// function setInputValueKeepSelection(input, newValue) {
+//     // if (document.activeElement !== input) { // not good for shadow dom
+//     //     input.value = newValue;
+//     //     return;
+//     // }
+//     if (!input.matches(':focus')) {
+//         input.value = newValue;
+//         return;
+//     }
+//     if (input.value === newValue) return;
+//     const selectionStart = input.selectionStart;
+//     const selectionEnd = input.selectionEnd;
+//     const oldString = input.value;
+//     const newPositionStart = positionAfterUpdate(oldString, selectionStart, newValue);
+//     const newPositionEnd = positionAfterUpdate(oldString, selectionEnd, newValue);
+//     input.value = newValue;
+//     input.setSelectionRange(newPositionStart, newPositionEnd);
+// }
 
-function positionAfterUpdate(initialString, initialPosition, newString) {
-    let minDistance = Infinity;
-    let newPosition = -1;
-    for (let i = 0; i <= newString.length; i++) {
-        const a = initialString.substring(0, initialPosition) + newString.substring(i);
-        const b = newString.substring(0, i) + initialString.substring(initialPosition);
-        const distance = levenshteinDistance(a, b);
-        if (distance < minDistance) {
-            minDistance = distance;
-            newPosition = i;
-        }
-    }
-    return newPosition;
-}
-
-
-
-function levenshteinDistance(a, b) {
-    if (a.length > b.length) [a, b] = [b, a];
-    const previousRow = Array.from({length: a.length + 1}, (_, i) => i);
-    const currentRow = new Array(a.length + 1);
-    for (let i = 1; i <= b.length; i++) {
-        currentRow[0] = i;
-        for (let j = 1; j <= a.length; j++) {
-            const cost = a[j - 1] === b[i - 1] ? 0 : 1;
-            currentRow[j] = Math.min(
-                currentRow[j - 1] + 1,
-                previousRow[j] + 1,
-                previousRow[j - 1] + cost
-            );
-        }
-        [previousRow, currentRow] = [currentRow, previousRow];
-    }
-    return previousRow[a.length];
-}
-
-
-
-// function xxxlevenshteinDistance(a, b) {
-//     const matrix = [];
-//     // Initialize matrix of zeros
-//     for (let i = 0; i <= b.length; i++) matrix[i] = [i];
-//     for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-//     for (let i = 1; i <= b.length; i++) {
-//         for (let j = 1; j <= a.length; j++) {
-//             if (b.charAt(i - 1) === a.charAt(j - 1)) {
-//                 matrix[i][j] = matrix[i - 1][j - 1];
-//             } else {
-//                 matrix[i][j] = Math.min(
-//                     matrix[i - 1][j - 1] + 1, // substitution
-//                     Math.min(
-//                         matrix[i][j - 1] + 1, // insertion
-//                         matrix[i - 1][j] + 1 // deletion
-//                     )
-//                 );
-//             }
+// function positionAfterUpdate(initialString, initialPosition, newString) {
+//     let minDistance = Infinity;
+//     let newPosition = -1;
+//     for (let i = 0; i <= newString.length; i++) {
+//         const a = initialString.substring(0, initialPosition) + newString.substring(i);
+//         const b = newString.substring(0, i) + initialString.substring(initialPosition);
+//         const distance = levenshteinDistance(a, b);
+//         if (distance < minDistance) {
+//             minDistance = distance;
+//             newPosition = i;
 //         }
 //     }
-//     return matrix[b.length][a.length];
+//     return newPosition;
 // }
 
 
 
-
-
-
-
-
-
-
-
-
-
+// function levenshteinDistance(a, b) {
+//     if (a.length > b.length) [a, b] = [b, a];
+//     const previousRow = Array.from({length: a.length + 1}, (_, i) => i);
+//     const currentRow = new Array(a.length + 1);
+//     for (let i = 1; i <= b.length; i++) {
+//         currentRow[0] = i;
+//         for (let j = 1; j <= a.length; j++) {
+//             const cost = a[j - 1] === b[i - 1] ? 0 : 1;
+//             currentRow[j] = Math.min(
+//                 currentRow[j - 1] + 1,
+//                 previousRow[j] + 1,
+//                 previousRow[j - 1] + cost
+//             );
+//         }
+//         [previousRow, currentRow] = [currentRow, previousRow];
+//     }
+//     return previousRow[a.length];
+// }

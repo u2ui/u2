@@ -41,7 +41,8 @@ class splitbutton extends HTMLElement {
     connectedCallback() {
         setTimeout(async () => {
             const menu = this.querySelector('menu');
-            menu.slot = 'menu';
+            //menu.slot = 'menu';
+            menu.role = 'menu';
             menu.setAttribute('u2-focusgroup', 'remember');
             import('../../attr/focusgroup/focusgroup.js');
         }, 0);

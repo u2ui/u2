@@ -16,8 +16,6 @@ class u2Carousel extends HTMLElement {
 			:host .-arrow {
 				position:absolute;
 				padding:1rem;
-				xtop:0;
-				xbottom:0;
 				inset-block:0;
 				display:flex;
 				cursor:pointer;
@@ -133,6 +131,19 @@ class u2Carousel extends HTMLElement {
 		next.addEventListener('click',()=>this.next());
 		prev.addEventListener('click',()=>this.prev());
 
+        // this.addEventListener('beforematch', e=>{ // todo: findable
+        //     let el = e.target;
+        //     while (el && el.parentNode) {
+        //         if (el.parentNode === this) {
+        //             e.preventDefault();
+        //             this.slideTo(el);
+        //             return;
+        //         }
+        //         el = el.parentElement;
+        //     }
+        // })
+
+
 	}
 	static observedAttributes = ['play', 'autoplay', 'mode'/*, 'tabindex'*/]; // zzz "play"
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -164,6 +175,7 @@ class u2Carousel extends HTMLElement {
 		if (this.active !== target) { // just trigger if not active
 			for (let child of this._items()) {
 				child.setAttribute('aria-hidden', target !== child);
+                // target !== child ? child.setAttribute('hidden', 'until-found') : child.removeAttribute('hidden'); // todo: findable
 			}
 			this.active = target;
 

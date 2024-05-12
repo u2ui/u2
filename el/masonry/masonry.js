@@ -1,6 +1,6 @@
 
 
-class mesonry extends HTMLElement{    
+class masonry extends HTMLElement{    
     constructor(){
         super();
         this.classList.add('-Js');
@@ -9,6 +9,9 @@ class mesonry extends HTMLElement{
     connectedCallback(){
         this.render();
         this.rObserver.observe(this);
+    }
+    disconnectedCallback(){
+        this.rObserver.unobserve(this);
     }
     render(){
         const widthContainer = this.clientWidth;
@@ -25,7 +28,8 @@ class mesonry extends HTMLElement{
         for (let i = 0; i < columns; i++){
             columnHeights[i] = [i, 0];
         }
-        requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => { // todo: prevent reflow: set all widths first
             for (const current of this.children){
                 if (current.offsetParent === null) continue;
                 current.style.width = columnWidth + 'px';
@@ -40,7 +44,7 @@ class mesonry extends HTMLElement{
     }    
 }
 
-customElements.define('u2-masonry', mesonry);
+customElements.define('u2-masonry', masonry);
 
 
 function sortByHeight(a, b){

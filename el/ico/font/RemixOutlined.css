@@ -6,7 +6,3 @@
   font-weight: 400;
   src: url(https://cdn.jsdelivr.net/npm/remixicon-ligatures@2.5.0/fonts/RemixOutlined.woff2) format('woff2');
 }
-
-html {
-  --u2-ico-font: 'RemixOutlined';
-}

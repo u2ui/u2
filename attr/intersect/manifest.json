@@ -1,0 +1,57 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+    {
+        "kind": "javascript-module",
+        "path": "intersect.js",
+        "declarations": [
+          {
+            "summary": "Declarativ intersection-observer",
+            "description": "This attribute allows you to turn any element into a link by simply adding the `u2-intersect` attribute to it.\n`Ctrl + click` will open the link in a new tab.\nClicks on interactive elements inside the pseudo-link element prevent the link from being opened.\nXSS attacks are prevented by disallowing the `javascript:` protocol.",
+            "name": "u2-intersect",
+            "members": [],
+            "events": [
+                {
+                    "name": "u2-intersect.enter",
+                    "description": "Fired when the element intersects with the viewport."
+                },{
+                    "name": "u2-intersect.leave",
+                    "description": "Fired when the element leaves the viewport."
+                }
+            ],
+            "attributes": [
+                {
+                    "name": "u2-intersect",
+                    "description": "Enables the intersection observer on the element.",
+                    "u2Examples": ["", "https://www.google.com", "./test.html", "#section1"]
+                }
+            ],
+            "cssProperties": [
+                {
+                    "name": "--u2-intersect-margin",
+                    "description": "The margin around the element that will trigger the intersection observer.",
+                    "syntax": "<length>"
+                },{
+                    "name": "--u2-intersect-threshold",
+                    "description": "The threshold at which the intersection observer will trigger.",
+                    "syntax": "<number>"
+                }
+            ],
+            "attributeName": "u2-intersect"
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-attribute-definition",
+            "name": "u2-intersect",
+            "declaration": {
+              "name": "u2-intersect",
+              "module": "intersect.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

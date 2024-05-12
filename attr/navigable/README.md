@@ -4,9 +4,10 @@ Make elements navigatable
 ## Usage
 
 ```html
-<a href="#navigable">open dialog</a>
+Link to navigable dialog:<br>
+<a href="#navigable">open</a>
 <dialog u2-navigable id=navigable>
-    go back using esc
+    go back using esc or your browser's back button
 </dialog>
 ```
 

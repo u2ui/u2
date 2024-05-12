@@ -13,18 +13,31 @@
                     "members": [
                         {
                             "kind": "property",
-                            "name": "select"
+                            "name": "select",
+                            "description": "Set or get the selected tab by index (0-n)"
                         }
                     ],
                     "events": [
                         {
-                            "name": "u2-activate",
-                            "type": {
-                                "text": "Event"
-                            }
+                            "name": "u2-activate"
                         }
                     ],
                     "attributes": [
+                        {
+                            "name": "selected",
+                            "description": "Set or get the selected tab by index (0-n)",
+                            "type": "number"
+                        }
+                    ],
+                    "cssParts": [
+                        {
+                            "name": "tablist",
+                            "description": "The tab list container"
+                        },{
+                            "name": "panels",
+                            "description": "The tab panels container"
+                        }
+
                     ],
                     "superclass": { "name": "HTMLElement" },
                     "tagName": "u2-tabs",

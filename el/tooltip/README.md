@@ -13,7 +13,7 @@ Tooltips
 
 ```html
 <button>
-    hover or focus
+    Tooltip
     <u2-tooltip>now you see me</u2-tooltip>
 </button>
 ```

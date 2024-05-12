@@ -11,8 +11,8 @@ handy util-class to make a auto-column grid
 ## Usage
 
 ```html
-<div class=u2-grid>
-    <div>item1<br>heigter</div>
+<div class=u2-grid style="--u2-Items-width:3rem">
+    <div>Grid layout</div>
     <div>item2</div>
     <div>item3</div>
     <div>item4</div>

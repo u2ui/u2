@@ -13,7 +13,13 @@
             "members": [],
             "events": [],
             "attributes": [],
-            "cssProperties": [],
+            "cssProperties": [
+                {
+                    "name": "color",
+                    "syntax": "<color>",
+                    "description": "The color of the QR code."
+                }
+            ],
             "superclass": {
               "name": "HTMLElement"
             },

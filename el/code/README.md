@@ -4,13 +4,23 @@ Highlighted, editable code-blocks.
 ## Usage
 
 ```js
-console.log('Hello World');
+// Code-Element
+if (de) {
+    alert('Hallo, Welt!');
+} else {
+    alert('Hello, World!');
+}
 ```
 
 ```html
 <u2-code trim editable>
     <script>
-        console.log('Hello World');
+        // Code-Element
+        if (de) {
+            alert('Hallo, Welt!');
+        } else {
+            alert('Hello, World!');
+        }
     </script>
 </u2-code>
 ```

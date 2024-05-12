@@ -17,7 +17,15 @@ class textfit extends HTMLElement {
         let shadowRoot = this.attachShadow({ mode: 'open' });
         shadowRoot.innerHTML = `
         <style>
-        slot { display:block }
+        :host {
+            isolation:isolate;
+            contain: inline-size;
+            display:block;
+            max-width: 100%;
+        }
+        slot {
+            display:block;
+        }
         </style>
         <slot></slot>
         `;
@@ -56,11 +64,14 @@ class textfit extends HTMLElement {
         //const ascent = measure.actualBoundingBoxAscent;
         //const descent = measure.actualBoundingBoxDescent;
 
+//this.style.fontSize = '1px';
+        const space = this.clientWidth; // how wide is the content, with the smallest font-size possible
+//this.style.fontSize = '';
+
         this.slotEl.style.marginLeft = left/100 + 'em';
 
         const widthAt100px = right + left;
-        const space = this.clientWidth; // how wide is the content, with the smallest font-size possible
-        let fs = (space / widthAt100px) * 100
+        let fs = (space / widthAt100px) * 100;
 
         this.style.setProperty('--js-font-size', fs+'px');
     }

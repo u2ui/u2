@@ -3,23 +3,26 @@ const icoCssUrl = import.meta.resolve('../../el/ico/ico.css');
 
 const style = `
 @import url('${icoCssUrl}');
-:host:not([dismissible])::part(close) { display:none; } /* TODO: does not work in chrome */
+:host:not([dismissable])::part(close) { display:none; } /* TODO: does not work in chrome */
+:host(:not([dismissable]))::part(close) { display:none; } /* TODO: does not work in chrome */
 :host {
     --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
 }
 #container {
     display:flex;
-    gap: 1em;
+    flex-direction: row-reverse;
+    flex-wrap:wrap;
+    gap: 0 1em;
 }
 #body {
     display:flex;
     align-items: center;
-    flex: 1 1 auto;
+    flex: 1 1 20rem;
     flex-wrap: wrap;
     gap: 1em;
 }
 #close {
-    flex: 0 0 2rem;
+    flex: 0 0 auto;
     padding: 0;
     border: 0;
     background: none;
@@ -28,7 +31,7 @@ const style = `
     line-height: 1;
 }
 #content {
-    flex:1 1 12em;
+    flex:1 1 15em;
 }
 slot {
     display:block;
@@ -63,22 +66,36 @@ class alert extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>${style}</style>
             <div id=container>
+                <button id=close part=close aria-label=close>&times;</button>
                 <div id=body>
                     <slot name=icon part=icon></slot>
                     <slot id=content></slot>
                     <slot name=action u2-focusgroup></slot>
                 </div>
-                <button id=close part=close aria-label=close>&times;</button>
             </div>
         `;
     }
     connectedCallback() {
-        const variant = this.getAttribute('variant');
-        const icon = this.getAttribute('icon') || variantData[variant]?.icon || 'info';
-        this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
+        // const variant = this.getAttribute('variant');
+        // const icon = this.getAttribute('icon') || variantData[variant]?.icon || 'info';
+        // this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
+        // this.shadowRoot.getElementById('container').setAttribute('role', variantData[variant]?.role || 'status');
         this.shadowRoot.querySelector('#close').onclick = () => this.hide();
-        this.shadowRoot.getElementById('container').setAttribute('role', variantData[variant]?.role || 'status');
     }
+    static observedAttributes = ['icon', 'variant'];
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name==='variant') {
+            const variant = this.getAttribute('variant');
+            this.shadowRoot.getElementById('container').setAttribute('role', variantData[variant]?.role || 'status');
+        }
+        if (name==='variant' || name==='icon') {
+            const variant = this.getAttribute('variant');
+            const icon = this.getAttribute('icon') || variantData[variant]?.icon || 'info';
+            this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
+        }
+    }
+
     // show() { // todo
     //     this.setAttribute('open', '');
     //     this.setAttribute('aria-live', 'assertive');

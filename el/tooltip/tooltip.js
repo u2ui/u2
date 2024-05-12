@@ -51,7 +51,6 @@ customElements.define('u2-tooltip', class extends HTMLElement {
 });
 
 
-
 document.addEventListener('mouseenter',function(e){
     if (e.target.shadowRoot) {
         e.target.shadowRoot.addEventListener('mouseenter',checkOn,true);

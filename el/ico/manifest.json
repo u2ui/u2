@@ -13,35 +13,55 @@
             "members": [],
             "events": [],
             "attributes": [
-              {
-                "name": "icon",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The name of the icon to display."
-              },
-              {
-                "name": "state",
-                "type": {
-                  "text": "string"
-                },
-                "description": "The state of the icon (loading, loaded, fail)."
-              }
+                {
+                    "name": "icon",
+                    "description": "The name of the icon to display.",
+                    "u2Examples": ["home","star","check","close"]
+                },{
+                    "name": "state",
+                    "u2-type": ["loading", "loaded", "fail"],
+                    "description": "Read only, the state of the icon (loading, loaded, fail), this is set by javascript."
+                },{
+                    "name": "inline",
+                    "u2-type": "boolean",
+                    "description": "Size and baseline optimized for inline text."
+                }
             ],
             "cssProperties": [
                 {
-                  "name": "--u2-ico-dir",
-                  "type": {
-                    "text": "string"
-                  },
-                  "description": "The directory where the SVG icons are located."
-                },
-                {
-                  "name": "--u2-ico-font",
-                  "type": {
-                    "text": "string"
-                  },
-                  "description": "The font used for the icons."
+                    "name": "--u2-ico-dir",
+                    "syntax": "<string>",
+                    "description": "The directory where the SVG icons are located. If set, it overrides --u2-ico-font.",
+                    "u2Examples": [
+                        "'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg'",
+                        "'https://cdn.jsdelivr.net/npm/teenyicons@0.4.1/outline/'",
+                        "'https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/'",
+                        "'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/icons/'",
+                        "'https://cdn.jsdelivr.net/npm/octicons@8.5.0/build/svg/'",
+                        "'https://cdn.jsdelivr.net/npm/bytesize-icons@1.4.0/dist/icons/'",
+                        "'https://cdn.jsdelivr.net/npm/ionicons@5.5.1/dist/svg/'",
+                        "'https://cdn.jsdelivr.net/npm/tabler-icons@1.35.0/icons/'",
+                        "'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/svgs/regular/'"
+                    ]
+                },{
+                    "name": "--u2-ico-font",
+                    "syntax": "<string>",
+                    "description": "The font used for the icons. The icon-font has to be declared in the CSS.",
+                    "u2Examples": [
+                        "Material Icons",
+                        "Teeny Icons",
+                        "Feather Icons"
+                    ]
+                },{
+                    "name": "--size",
+                    "syntax": "<length>",
+                    "description": "The size of the icon.",
+                    "u2Examples": ["1em","3em","24px"]
+                },{
+                    "name": "color",
+                    "syntax": "<color>",
+                    "description": "The color of the icon.",
+                    "u2Examples": ["red","rgba(0,0,0,0.5)","lightblue"]
                 }
             ],            
             "superclass": {

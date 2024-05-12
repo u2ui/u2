@@ -10,8 +10,7 @@ Define a drag handle-element for an element that uses the draggable attribute.
     </u2-ico>
     <h2>This is a draggable article.</h2>
     <p>
-        You can make text selections within the article.<br>
-        But you can also drag the article by its drag handle.
+        It is draggable, but only by its drag handle.
     </p>
 </article>
 ```

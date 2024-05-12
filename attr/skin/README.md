@@ -1,5 +1,5 @@
 # [u2-skin] - attribute
-Change the skin of a widget (beta)
+Change the skin of a widget
 
 - Recalculates css color-variables
 - Sets the background and the text color
@@ -7,18 +7,12 @@ Change the skin of a widget (beta)
 ## Usage
 
 ```html
-<h3>Normal H3</h3>
 <div u2-skin="invert" style="padding:1rem">
     <h3>Inverted</h3>
     <button>button</button>
 </div>
 <br>
 <div u2-skin="theme" style="padding:1rem">
-    <h3>Theme-color as background</h3>
-    <button>button</button>
-</div>
-<br>
-<div u2-skin="pink" style="padding:1rem">
     <h3>Theme-color as background</h3>
     <button>button</button>
 </div>
