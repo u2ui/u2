@@ -1,14 +1,12 @@
 const myUrl = new URL(import.meta.url);
-const debug = myUrl.searchParams.get('debug');
-
-
+let debug = myUrl.searchParams.get('debug');
 const root = new URL(myUrl.origin + myUrl.pathname + '/../../'); //console.log('%cuncomment localhost!','color:red;font-size:1.2em');
 let rootUrl = root.toString();
 
+if (root.host === 'localhost') debug = true;
+
 let min = '.min';
-if (root.host === 'localhost') {
-    min = '';
-}
+if (debug) min = '';
 
 // get faster cdn updates? https://purge.jsdelivr.net/gh/nuxodin/cleanup.js@latest/
 

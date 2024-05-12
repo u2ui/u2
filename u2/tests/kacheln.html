@@ -119,7 +119,7 @@
 
         <section id=reposSec>
             <script type=module>
-                import "../auto.js";
+                import "../auto.js?debug";
 
                 const repos = await fetch('../projects.json').then(res=>res.json());
                 const reposEl = document.getElementById('repos');
