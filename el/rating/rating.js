@@ -5,14 +5,13 @@ const style = `
 :host {
     --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
     --color-inactive:#ccc;
-    --color-active:#ea1;
     display:inline-block;
 }
 #stars {
     display:flex;
     & > * { color:var(--color-inactive); transition:.2s; cursor:pointer; transform-origin:50% 50%; display:block; --size:1.2em; }
-    & > .active { color:var(--color-active); }
-    & > .preview { color:var(--color-active); }
+    & > .active { color:inherit; }
+    & > .preview { color:inherit; }
     & > :is(:hover,:focus) { transform:scale(1.2); outline:none; }
 }
 `;
@@ -34,23 +33,8 @@ class rating extends HTMLElement {
         this.starsEl = this.shadowRoot.getElementById('stars');
         this._internals = this.attachInternals();
         this._internals.role = 'slider';        
-    }
-    #stars() {
-        return [...this.starsEl.children];
-    }
-    connectedCallback() {
-        const max = this.getAttribute('max') ?? 5;
-        const icon = this.getAttribute('icon') ?? 'star';
 
-        //this.starsEl.setAttribute('aria-valuemax', max);
-        this.setAttribute('tabindex', '0');
-
-        for (let i = 0; i < max; i++) {
-            this.starsEl.innerHTML += `<u2-ico icon=${icon}></u2-ico>`;
-        }
-
-        this.starsEl.addEventListener('mouseenter', (event)=>{
-            const target = event.target;
+        this.starsEl.addEventListener('mouseenter', ({target})=>{
             if (!target.matches('#stars > *')) return;
             const stars = this.#stars();
             const value = stars.indexOf(target) + 1;
@@ -65,16 +49,33 @@ class rating extends HTMLElement {
                 star.classList.toggle('active', i < this.value);
             });
         });
-        this.shadowRoot.addEventListener('click', (event)=>{
-            const target = event.target.closest('#stars > *');
-            if (!target) return;
-            this.value = this.#stars().indexOf(target) + 1;
+        this.shadowRoot.addEventListener('click', ({target})=>{
+            const item = target.closest('#stars > *');
+            if (!item) return;
+            this.value = this.#stars().indexOf(item) + 1;
         });
+
+    }
+    #stars() {
+        return [...this.starsEl.children];
+    }
+    connectedCallback() {
+        this.render();
+        this.setAttribute('tabindex', '0');
+        this.value = this.getAttribute('value');
+    }
+    render(){
+        const max = parseFloat(this.getAttribute('max')) || 5;
+        const icon = this.getAttribute('icon') ?? 'star';
+
+        this.starsEl.innerHTML = '';
+        for (let i = 0; i < max; i++) {
+            this.starsEl.innerHTML += `<u2-ico icon=${icon}></u2-ico>`;
+        }
+
         this._internals.ariaLabel = translate('Rating');
         this._internals.ariaMin = 1;
-        this._internals.ariaMax = max;
-
-        this.value = this.getAttribute('value');
+        this._internals.ariaMax = max;        
     }
     get value() {
         return this.#value;
@@ -92,6 +93,15 @@ class rating extends HTMLElement {
             this._internals.setValidity({valueMissing: true}, translate('Please select a rating'));
         } else {
             this._internals.setValidity({});
+        }
+    }
+    static observedAttributes = ['value', 'icon', 'max','value'];
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'value') {
+            this.value = newValue;
+        } else {
+            this.render();
         }
     }
 }

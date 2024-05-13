@@ -2,10 +2,10 @@
 :where(u2-rating:not(:defined)) {
     display:inline-block;
     &::before {
-        color: var(--color-active);
         content: '★' attr(value, '?') '/' attr(max, '5');
     }
 }
 :where(u2-rating) {
+    color:#ea1;
     vertical-align: -.1em;
 }

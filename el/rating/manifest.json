@@ -1,0 +1,65 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "rating.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "A custom HTML element for displaying QR codes.",
+            "name": "u2rating",
+            "members": [],
+            "events": [],
+            "attributes": [
+                {
+                    "name": "icon",
+                    "description": "The icon of the QR code.",
+                    "u2Examples": ["favorite","thumb-up"]
+                }, {
+                    "name": "value",
+                    "description": "The value of the QR code.",
+                    "u2Examples": ["3","4"]
+                }, {
+                    "name": "max",
+                    "description": "The max of the QR code.",
+                    "u2Examples": ["3","4","5","6","7","8","9","10"]
+                }
+            ],
+            "cssProperties": [
+                {
+                    "name": "--color-inactive",
+                    "description": "The color of the inactive icon.",
+                    "default": "#ccc",
+                    "syntax": "<color>",
+                    "u2Examples": ["#ccc", "black", "white"]
+                },{
+                    "name": "color",
+                    "description": "The color of the active icon.",
+                    "default": "#f00",
+                    "syntax": "<color>",
+                    "u2Examples": ["yellow", "green", "blue"]
+                }
+            ],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u2-rating",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u2-rating",
+            "declaration": {
+              "name": "u2rating",
+              "module": "rating.js"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  
