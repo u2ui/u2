@@ -17,7 +17,7 @@ class splitpanel extends HTMLElement {
                 align-items:center;
                 justify-content:center;
                 position:relative;
-                --size: .5em;
+                --size: .3em;
                 min-height: var(--size);
                 min-width: var(--size);
                 flex: 0 0 auto;
