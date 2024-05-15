@@ -224,4 +224,38 @@ register('scroll', {
     // }
 });
 
+
+let wakeLock = null;
+register('wakeLock', {
+    init: (el) => {
+        el.disabled = "wakeLock" in navigator ? false : true;
+    },
+    async action(e, el){
+        if (wakeLock) {
+            await wakeLock.release();
+            wakeLock = null;
+            return;
+        }
+        try {
+            wakeLock = await navigator.wakeLock.request("screen");
+            wakeLock.addEventListener('release', () => {
+                setStates(el, {active:false, inactive: true});
+                wakeLock = null;
+            });
+            return true;
+        } catch (err) {
+            console.error(`${err.name}, ${err.message}`);
+        }
+    },
+    text: {
+        de: 'Bildschirm wach halten',
+        en: 'Keep screen awake',
+        fr: 'Garder l\'écran allumé',
+        it: 'Mantieni lo schermo acceso',
+        es: 'Mantener la pantalla encendida'
+    }
+});
+
+
+
 observer.observe('[u2-behavior]');

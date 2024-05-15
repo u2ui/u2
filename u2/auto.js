@@ -15,7 +15,7 @@ if (debug) { // top level await safari >= 15.1
     await Promise.all([
         import('https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/mod.min.js'),
         import('https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/htmlfills.min.js'),
-        import('https://cdn.jsdelivr.net/gh/nuxodin/cleanup.js/mod.min.js'),
+        //import('https://cdn.jsdelivr.net/gh/nuxodin/cleanup.js/mod.min.js'),
     ]);
 }
 

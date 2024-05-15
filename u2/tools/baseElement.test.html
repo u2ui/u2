@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../u2/tests/test-init.js" type=module></script>
+
+    <script src="../../u2/auto.js" type=module></script>
+
+    <link rel=stylesheet href="../../css/classless/full.css">
+    <link rel=stylesheet href="../../css/classless/simple.css"> 
+
+
+<body>
+
+<section>
+
+    <script type=module>
+    import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@x.x/mod.min.js';
+
+    import {BaseElement} from './baseElement.js';
+
+    class TestElement extends BaseElement {
+        static properties = {
+            number: {
+                attribute: true,
+                type: 'number',
+            },
+            boolean: {
+                attribute: true,
+                type: 'boolean',
+            },
+            string: {
+                attribute: true,
+                type: 'string',
+            },
+        }
+
+        constructor() {
+            super();
+            this.attachShadow({mode: 'open'});
+        }
+
+        connectedCallback() {
+            console.log('connected');
+                //this.shadowRoot.innerHTML = `<slot></slot>`;
+        }
+        render() {
+            this.renderCount = (this.renderCount ?? 0) + 1;
+            console.log('render', this.renderCount);
+            const attributes = new Map();
+
+            this.constructor.observedAttributes.forEach(name => {
+                attributes.set(name, null);
+            });
+
+            [...this.attributes].forEach(attr => {
+                attributes.set(attr.name, attr.value);
+            });
+
+
+            this.shadowRoot.innerHTML = `
+            <h3>Attributes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name
+                        <th>Value
+                        <th>Property
+                <tbody>
+                    ${[...attributes].map(([name, value]) => `
+                        <tr>
+                            <td>${name}
+                            <td>${value}
+                            <td>${this[name]}
+                        `).join('')
+                    }
+            </table>
+            <h3>Dump</h3>
+
+            <div>${this.number}</div>
+            <div>${this.renderCount}</div>
+            <slot></slot>`;
+        }
+    }
+    customElements.define('test-element', TestElement);
+    </script>
+
+
+
+
+</section>
+
+<div id="wrapper">
+<test-element id=testEl number="1234.567" boolean string="hello World">
+    Content
+</test-element>
+</div>
+
+outer:
+<u2-code trim editable element="wrapper"></u2-code>
+inner:
+<u2-code trim editable element="testEl"></u2-code>

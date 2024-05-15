@@ -3,8 +3,6 @@ class U2Number extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-        // this.shadowRoot.innerHTML = `<span id=out></span>`;
-        // this.outEl = this.shadowRoot.getElementById('out');
         this.outEl = this.shadowRoot;
         this.observer = new MutationObserver(mutations => this.render());
     }
@@ -62,14 +60,6 @@ class U2Number extends HTMLElement {
 
 customElements.define('u2-number', U2Number);
 
-
-// todo: for tables i should check col and colgroup
-// https://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#alignment-inheritance
-// let list = navigator.languages;
-// try {
-//     list = Intl.getCanonicalLocales(lang);
-// } catch (e) {}
-// Intl.NumberFormat(list).format();
 function localesFromElement(el) {
     let langEl = el.closest('[lang]')||document.documentElement;
     const locale = langEl.lang || navigator.language;
