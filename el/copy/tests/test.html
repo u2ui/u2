@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+
+    <script src="../copy.js" type=module async></script>
+    <link href="../copy.css" rel=stylesheet>
+
+    <style>
+        body {
+            --u2-ico-dir: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/';
+        }
+        [contenteditable] {
+            background-color: #fee;
+            padding: 1em;
+            margin: 1em 0;
+        }
+        u2-copy {
+            display: block;
+            margin: 1em 0;
+            padding: 1em;
+            background-color: var(--color-light);
+        }
+
+    </style>
+
+<body>
+
+<section>
+
+    <h2>Source</h2>
+
+    <h4>This is "source 1", a contenteditable element thats contents will be copied:</h4>
+    <ul>
+        <li>IDs will be renamed
+        <li>For attributes will be referenced
+    </ul>
+    <div id="source1" contenteditable>
+        Text <label for="input1">label</label>
+        <input id="input1" type="text" value="value">
+    </div>
+
+
+    <h4>Copy synced</h4>
+    <u2-copy for="source1" sync></u2-copy>
+
+    <h4>Copy not synced</h4>
+    <u2-copy for="source1"></u2-copy>
+
+    <h2>Source Element appears delayed</h2>
+
+    <h4>This is source 2:</h4>
+    <div contenteditable id="source2">Content 2</div>
+
+    <h4>This is will_be_source_3:</h4>
+    <div id="will_be_source3" contenteditable>Content 3</div>
+    
+    Select the source dynamically:<br>
+    <button onclick="copy2.setAttribute('for', 'source1')">Set source 1</button><br>
+    <button onclick="copy2.setAttribute('for', 'source2')">Set source 2</button><br>
+    <button onclick="copy2.setAttribute('for', 'source3'); setTimeout(()=> will_be_source3.id = 'source3', 1000)">Set source 3</button><br>
+
+
+
+    <u2-copy sync id="copy2"></u2-copy>
+

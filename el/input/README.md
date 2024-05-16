@@ -8,7 +8,7 @@ Input elements (very beta)
     <u2-input>
         <span slot=start>☎</span>
         <input type="tel">
-        <span slot=end>☎</span>
+        <span slot=end>×</span>
     </u2-input>
 </label>
 ```
@@ -28,6 +28,7 @@ u2-input:focus-within {
 
 ## Demos
 
+[formParticipation.html](http://gcdn.li/u2ui/u2@main/el/input/tests/formParticipation.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/input/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/input/tests/test.html)  
 

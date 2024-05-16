@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+
+<body>
+<script type=module>
+
+
+
+const registry = new FinalizationRegistry(value => {
+    console.log('collected');
+});
+(function() {
+    let promise = new Promise((resolve, reject) => { console.log("Promise created"); });
+    registry.register(promise);
+})();
+
+
+
+
+
+// function getElementByIdPromise(id) {
+//     let { promise, resolve, reject } = Promise.withResolvers();
+//     promise.resolve = resolve;
+//     promise.reject = reject;
+//     const weakRef = new WeakRef(promise);
+//     const check = () => {
+//         const deref = weakRef.deref();
+//         if (!deref) return;
+//         console.log('wait for element');
+//         const element = document.getElementById(id);
+//         element ? deref.resolve(element) : requestAnimationFrame(check);
+//     };
+//     check();
+//     return promise;
+// }
+
+function getElementByIdPromise(id) {
+    let { promise, resolve } = Promise.withResolvers();
+    const weakRef = new WeakRef(resolve);
+    const check = () => {
+        const resolve = weakRef.deref();
+        if (!resolve) return;
+        console.log('wait for element');
+        const element = document.getElementById(id);
+        element ? resolve(element) : requestAnimationFrame(check);
+    };
+    check();
+    return promise;
+}
+
+(function(){
+    // Beispiel für die Nutzung
+    let elPromise = getElementByIdPromise('meineElementId');
+
+    elPromise
+        .then(element => {
+            console.log('Element gefunden:', element);
+        })
+        .catch(error => {
+            if (error.message === 'Operation aborted due to garbage collection') {
+                console.log('Das Warten wurde aufgrund der Garbage Collection abgebrochen.');
+            } else {
+                console.error('Fehler:', error);
+            }
+        });
+
+    elPromise = null;
+
+})();
+
+
+
+
+</script>

@@ -4,10 +4,9 @@ Simple typewriter element
 ## Usage
 
 ```html
-<u2-typewriter autoplay loop>
-    <h2>Typewriter</h2>
-    <i>dolor</i> sit amet, <b>consectetur</b> adipiscing elit.
-</u2-typewriter>
+<h2>
+    <u2-typewriter autoplay loop>Typewriter</h2></u2-typewriter>
+</h2>
 ```
 
 ```css

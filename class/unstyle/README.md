@@ -6,13 +6,7 @@ Specificity: 0.1.0
 ## Usage
 
 ```html
-Button:
-<button class=u2-unstyle>button</button>
-<br>
-<label>
-    Input:
-    <input class=u2-unstyle value="usgin u2-unstyle">
-</label>
+<button class=u2-unstyle>Unstyled Button</button>
 ```
 
 ```css

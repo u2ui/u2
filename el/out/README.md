@@ -3,6 +3,15 @@ Output variables (beta)
 
 ## Usage
 
+```html
+out: <u2-out value="8987.2345" digits="2">8'987.23</u2-out>
+```
+
+```css
+u2-out {
+    font-size: 2em;
+}
+```
 
 ## Install
 
@@ -15,7 +24,6 @@ Output variables (beta)
 
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/out/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/out/tests/test.html)  
-
 
 ## About
 

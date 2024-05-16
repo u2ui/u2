@@ -4,11 +4,7 @@ Rendering badges
 ## Usage
 
 ```html
-Normal: <span class=u2-badge>Badge</span>
-Small: <small class=u2-badge>Badge</small>
-Super: <sup class=u2-badge>Badge</sup>
-Sub: <sub class=u2-badge>Badge</sub>
-Empty: <sup class=u2-badge style="background-color:red"></sup>
+<span class=u2-badge>Badge</span>
 ```
 
 ## Install

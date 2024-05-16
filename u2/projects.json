@@ -188,6 +188,14 @@
       "css": true,
       "js": true
     },
+    "copy": {
+      "name": "copy",
+      "description": "Displays formatted copys",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "counter": {
       "name": "counter",
       "description": "Animated Number Counter",
@@ -206,8 +214,8 @@
     },
     "input": {
       "name": "input",
-      "description": "Input elements (very alpha)",
-      "beta": false,
+      "description": "Input elements (very beta)",
+      "beta": true,
       "deprecated": false,
       "css": true,
       "js": true
@@ -224,6 +232,14 @@
       "name": "number",
       "description": "Displays formatted numbers",
       "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "out": {
+      "name": "out",
+      "description": "Output variables (beta)",
+      "beta": true,
       "deprecated": false,
       "css": true,
       "js": true
