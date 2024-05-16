@@ -80,6 +80,16 @@ class U2Copy extends HTMLElement {
             // replace all ids with unique ids and if references are made (label[for]) to the original id, replace them with the new id
             const fragment = document.createRange().createContextualFragment(content);
             const elements = fragment.querySelectorAll('[id]');
+
+            // todo:
+            // aria-Attribute (z.B. aria-labelledby, aria-describedby, aria-controls, aria-owns, aria-activedescendant, aria-flowto)
+            // svg: use xlink:href, clip-path, mask, fill, stroke, filter, marker, pattern, gradient
+            // headers attribute in table cells
+            // usemap attribute in img
+            // form attribute in input, button, select, textarea, label
+            // href-Attribute in a, area
+            // list-Attribute in input-elements
+
             const idMap = new Map();
             elements.forEach(element => {
                 const id = element.id;
