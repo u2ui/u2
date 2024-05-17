@@ -7,30 +7,19 @@ const style = `
 :host(:not([dismissable]))::part(close) { display:none; } /* TODO: does not work in chrome */
 :host {
     --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
-    
-    /* its a inline-size container */
-    
-    container-type: inline-size;
-
 }
 #container {
-    display:grid;
-    gap: .5em .9em;    
-    grid-template-columns: auto 1fr auto;
+    display:flex;
+    flex-direction: row-reverse;
+    flex-wrap:wrap;
+    gap: 0 1em;
 }
-
-
-slot {
-    display:block;
-}
-slot[name=icon] {
-    align-self: center;
-    font-size:1.7em;
-    color:var(--color);
-    &::slotted(*), & > u2-ico {
-        display:block;
-        font-size:inherit;
-    }
+#body {
+    display:flex;
+    align-items: center;
+    flex: 1 1 20rem;
+    flex-wrap: wrap;
+    gap: 1em;
 }
 #close {
     flex: 0 0 auto;
@@ -41,45 +30,28 @@ slot[name=icon] {
     cursor: pointer;
     line-height: 1;
 }
-#body {
-    display:flex;
-    flex-wrap:wrap;
-    align-items: center;
-    gap: .6em 1em;
-
-    & #content {
-        flex:1 1 15em;
-    }
-
-    & slot[name=action] {
-        flex: 0 1 auto;
-        display: flex;
-        justify-content: end;                    
-        flex-wrap: wrap;
-        gap: .5em;
-        margin-inline-start: auto;
-        &::slotted(button) {
-            margin:0 !important;
-        }
+#content {
+    flex:1 1 15em;
+}
+slot {
+    display:block;
+}
+slot[name=icon] {
+    font-size:1.7em;
+    color:var(--color);
+    &::slotted(*), & > u2-ico {
+        display:block;
+        font-size:inherit;
     }
 }
-
-@container (max-width: 27rem) {
-    slot[name=icon] {
-        align-self: start;
-    }
-    #body {
-        grid-column-start: -1;
-        grid-column-end: 1;
-    }
-    #close {
-        align-self: start;
-        grid-row-start: 1;
-        grid-column-start: 3;
-    }
+slot[name=action] {
+    display: flex;
+    justify-content: end;                    
+    flex-wrap: wrap;
+    gap: .5em;
+    flex: 0 1 auto;
+    margin-inline-start: auto;
 }
-
-
 /* slot[name=action]:empty-slot { display:none; } not possible */`;
 
 
@@ -94,14 +66,14 @@ class alert extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>${style}</style>
             <div id=container>
-                <slot name=icon part=icon></slot>
-                <div id=body>
-                    <slot id=content></slot>
-                    <slot name=action u2-focusgroup></slot>
-                </div>
                 <button id=close part=close aria-label=close>
                     <svg viewBox="0 0 15 15" style="display:block;width:.7em" aria-hidden="true"><path d="M1.5 1.5l12 12m-12 0l12-12" stroke="currentColor"></path></svg>
                 </button>
+                <div id=body>
+                    <slot name=icon part=icon></slot>
+                    <slot id=content></slot>
+                    <slot name=action u2-focusgroup></slot>
+                </div>
             </div>
         `;
     }

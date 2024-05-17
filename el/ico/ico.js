@@ -61,7 +61,9 @@ const uIco = class extends HTMLElement {
             const name = this.getAttribute('icon');
             const path = dirTemplateToUrl(dir, name);
 
-            requestAnimationFrame(()=>this.setAttribute('state','loading'));
+            requestAnimationFrame(()=>{
+                this.setAttribute('state','loading')
+            });
 
             const pathStr = path.toString();
             if (this._lastLoading === pathStr) return; // prevent multiple requests

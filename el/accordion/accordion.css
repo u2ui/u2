@@ -1,0 +1,7 @@
+/*
+there are no style-fallbacks for accordion, as without js, they should be headings and paragraphs
+*/
+
+u2-accordion:not(:defined) {
+    display:contents;
+}

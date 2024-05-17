@@ -148,6 +148,14 @@
     }
   },
   "el": {
+    "accordion": {
+      "name": "accordion",
+      "description": "rendering accordion",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "alert": {
       "name": "alert",
       "description": "Prominent hints, alerts, and facts",

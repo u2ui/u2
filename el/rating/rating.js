@@ -54,6 +54,14 @@ class rating extends HTMLElement {
             if (!item) return;
             this.value = this.#stars().indexOf(item) + 1;
         });
+        this.addEventListener('keydown', (e)=>{
+            const value = {
+                ArrowRight: () => Math.min(this.value + 1, this.#stars().length),
+                ArrowLeft: () => Math.max(this.value - 1, 1),
+            }[e.key]?.();
+            this.#stars().forEach(star => star.classList.remove('preview'));
+            if (value!=null) this.value = value;
+        });
 
     }
     #stars() {
@@ -86,7 +94,7 @@ class rating extends HTMLElement {
         });
         //this.starsEl.setAttribute('aria-valuenow', value);
         this._internals.ariaValueNow = value;
-        this.#value = value;
+        this.#value = parseFloat(value);
         this._internals.setFormValue(value);
 
         if (this.hasAttribute('required') && !value) {

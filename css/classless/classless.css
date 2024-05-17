@@ -47,12 +47,23 @@ mark {
 }
 
 /* focus/active style */
-:focus {
+/* :focus {
     outline: .4rem solid hsl(var(--hsl), .2);
     transition: .15s;
 }
 :focus:not(:focus-visible) { outline-width: 0; }
-:active:active { outline-width: .6rem; }
+:active:active {
+    outline-width: .6rem;
+}
+*/
+
+:focus-visible, :focus:active { /* how to prevent custom-elements to recive the outline they are focu and active if an inner element is focus and active */
+    outline: .4rem solid hsl(var(--hsl), .2);
+    transition: .15s;
+    &:active {
+        outline-width: .6rem;
+    }
+}
 
 
 /* FORM */

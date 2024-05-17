@@ -36,16 +36,17 @@
             display:grid;
             background:#fff;
             background:var(--color-bg);
-            overflow:auto;
             font-size:13px;
             aspect-ratio: 1 / 1;
             box-shadow: 0 0 .5rem #0002;
+            overflow:clip;
 
             &[hidden] {
                 display:none;
             }
         }
         #repos > div > .demo {
+            overflow:auto;
             grid-area: 1 / 1 / 1 / 1;
             display:grid;
             align-items: center;
@@ -85,18 +86,18 @@
         }
         #repos > div > header {
             position:absolute;
-            display:flex;
-            background:#0009;
+            background:#0006;
+            backdrop-filter: blur(.3rem);
             color:var(--color-light);
-            padding:1rem;
-            top:0;
+            bottom:0;
             left:0;
             right:0;
+            text-align:center;
             z-index:10;
             transition: .3s;
-            transform: translateY(-100%);
+            xtransform: translateY(20%);
             &:focus-within, div:hover > & {
-                transform: translateY(0);
+                xtransform: translateY(0);
             }
         }        
         button, input {
@@ -109,8 +110,8 @@
     <header style="text-align:center; margin-top:2rem;">
         <img src="../../../u2/u2/tools/logo/u1.svg" width=259 height=114 style="width: 8rem" alt="u2-logo">
         <h1 class="u2-flex u2-width" style="align-items: baseline;">
-            <u2-textfit style="flex:1 1 20rem">U2-Design-System</u2-textfit>
-            <u2-textfit style="flex:1 1 10rem; font-weight:100">progressive, accessible, simple, easy, opensource, toolingless</u2-textfit>
+            <u2-textfit style="flex:1 1 20rem">U2-Pattern-Library</u2-textfit>
+            <u2-textfit style="flex:1 1 12rem; font-weight:100">progressive, accessible, easy, opensource, toolingless</u2-textfit>
         </h1>
     </header>
 
@@ -181,8 +182,9 @@
                             `
                             <header>
                                 <div style="flex:1 1 auto;">
-                                    <h2 style="margin-bottom:0">u2-${repo.name} ${catName}</h2>
-                                    <a href="#${div.id+'_dialog'}" class="btn -play" style="font-size:1rem; display:block; text-align:center">Play!</a>
+                                    <a href="#${div.id+'_dialog'}" class="-play" style="font-weight:100; color:inherit; text-decoration:none; font-size:1rem; padding:.5rem; display:block;">
+                                        u2-${repo.name}
+                                    </a>
                                     <dialog class=-playground u2-navigable u2-intersect id=${div.id+'_dialog'} style="background:var(--color-bg); width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto; font-size:1rem">
                                         <template>
                                             <header class=u2-flex style="margin-bottom:2rem">

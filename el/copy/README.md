@@ -4,8 +4,9 @@ Displays formatted copys
 ## Usage
 
 ```html
-<h2 id="source">Source</h2>
-<u2-copy for="source" sync></u2-copy>
+original: <span id=source contenteditable>Hello <b>World</b></span>
+<br>
+copy: <u2-copy for=source sync></u2-copy>
 ```
 
 ## Install

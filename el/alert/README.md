@@ -35,7 +35,7 @@ u2-alert::part(icon) {
 ### Attributes
 
 - `variant`: Determines the type of the alert (success, warn, error, info).
-- `dismissible`: Allows the alert to be closed by the user.
+- `dismissable`: Allows the alert to be closed by the user.
 - `icon`: Adds an icon to the alert, if not set, the icon will be determined by the variant.
 - `open`: Determines if the alert is visible or not.
 

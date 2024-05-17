@@ -70,7 +70,29 @@ u2-ico path[stroke]:not([stroke=none]) { stroke: currentColor; }
 
 
 /* dir-variant */
-u2-ico[state]:not([state=loaded]) { /* js, but not yet loaded */
+u2-ico[state] {
+    &::before {
+        display:none;
+    }
+    &[state="loading"] {
+        xvisibility:hidden;
+        overflow: clip;
+        width:1em;
+    }
+    &[state="fail"] {
+        font-size: 0.8em;
+        width: auto;
+        ::before {
+            display:block;
+        }
+    }
+}
+u2-ico:empty:not([icon])::before {
+    content: '⚠️';
+}
+
+/*
+u2-ico[state]:not([state=loaded]) {
     overflow:clip;
     width: 1em;
     height: 1em;
@@ -78,7 +100,7 @@ u2-ico[state]:not([state=loaded]) { /* js, but not yet loaded */
 u2-ico[state]:before {
     display:none;
 }
-u2-ico[state=fail]:before { /* js, but failed to load */
+u2-ico[state=fail]:before {
     display:block;
 }
 u2-ico[state="fail"]:is([state="fail"]) {
@@ -86,3 +108,4 @@ u2-ico[state="fail"]:is([state="fail"]) {
     overflow: visible;
     width: auto;
 }
+*/

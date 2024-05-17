@@ -1,0 +1,57 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "accordion.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "accordion",
+                    "members": [
+                    ],
+                    "events": [
+                    ],
+                    "attributes": [
+                        {
+                            "name": "single",
+                            "description": "If true, only one panel can be open at a time and it will be opened by focus",
+                            "u2-type": "boolean"
+                        }
+                    ],
+                    "cssParts": [
+                        {
+                            "name": "trigger",
+                            "description": "The header of the panel"
+                        }, {
+                            "name": "title",
+                            "description": "The title inside the header of the panel"
+                        },{
+                            "name": "icon",
+                            "description": "The icon inside the header of the panel"
+                        },{
+                            "name": "content",
+                            "description": "The content of the panel"
+                        }
+
+                    ],
+                    "superclass": { "name": "HTMLElement" },
+                    "tagName": "u2-accordion",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-element-definition",
+                    "name": "u2-accordion",
+                    "declaration": {
+                        "name": "accordion",
+                        "module": "accordion.js"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+
+    <link href="../../../css/classless/full.css" rel=stylesheet>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    <link href="../../../attr/skin/skin.css" rel=stylesheet>
+
+    <link rel=stylesheet href="../accordion.css">
+    <script src="../accordion.js" type=module async></script>
+
+<body>
+
+    <section class=main>
+        <u2-accordion single>
+            <h4>Accordion</h4>
+            <article>
+                Content 1, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+            </article>
+            <h4>Component</h4>
+            <article>
+                Content 2, lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmod tempor incididunt.
+            </article>
+        </u2-accordion>
+    </section>
+
+    <style class=main>
+    u2-accordion {
+        &::part(trigger) {
+            background-color: #f0f0f0;
+        }
+        &::part(title) {
+            font-size: 1.2em;
+        }
+        &::part(icon) {
+            color: #f00;
+        }
+        &::part(content) {
+            background-color: #f8f8f8;
+        }
+    }
+    </style>
