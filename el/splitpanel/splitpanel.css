@@ -1,14 +1,13 @@
 u2-splitpanel {
     display:flex;
+    contain: strict; /* performance? */
 }
-
 u2-splitpanel > * {
     overflow: auto;
     flex:1 1 auto;
     resize: horizontal;
     position:relative;
 }
-
 u2-splitpanel[vertical] {
     flex-direction: column;
     & > * { resize: vertical; }
