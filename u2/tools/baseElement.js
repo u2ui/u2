@@ -9,11 +9,7 @@ export class BaseElement extends HTMLElement {
         }
     }
     connectedCallback() {
-        this.mutationObserver?.observe(this, {
-            childList: true,
-            subtree: false,
-            characterData: false,
-        });
+        this.mutationObserver?.observe(this, {childList:true});
         this.scheduleRender();
     }
     disconnectedCallback() {
