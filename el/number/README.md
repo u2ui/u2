@@ -20,11 +20,6 @@ u2-number {
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/number/number.min.js" type=module async></script>
 ```
 
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/number/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/number/tests/test.html)  
-
 ## Attributes
 
 Attribute        | Options                      | Default         | Description

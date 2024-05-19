@@ -14,11 +14,11 @@ Enhanced tables (sortable, responsive...)
 <u2-table break sortable>
     <table>
         <thead>
-            <tr><th> Salut  <th> Firstname         <th> Lastname    <th> Age
+            <tr><th> Firstname         <th> Lastname    <th> Age
         <tbody>
-            <tr><td> Herr   <td> Wolfgang Amadeus  <td> Mozart      <td> 46
-            <tr><td> Frau   <td> Hans              <td> Muster      <td> 1
-            <tr><td> Mister <td> Fridrich          <td> Langenegger <td> 5
+            <tr><td> Wolfgang Amadeus  <td> Mozart      <td> 46
+            <tr><td> Hans              <td> Muster      <td> 1
+            <tr><td> Fridrich          <td> Langenegger <td> 5
     </table>
 </u2-table>
 ```
@@ -38,11 +38,6 @@ u2-table[\:overflows][break] td::before {
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/table/table.min.css" rel=stylesheet>
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/table/table.min.js" type=module async></script>
 ```
-
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/table/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/table/tests/test.html)  
 
 ## Todo
 

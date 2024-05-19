@@ -34,7 +34,7 @@
     },
     "href": {
       "name": "href",
-      "description": "Every element can be a link",
+      "description": "Every element can be a link\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -42,7 +42,7 @@
     },
     "intersect": {
       "name": "intersect",
-      "description": "declarativ intersection-observer",
+      "description": "declarativ intersection-observer\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -50,7 +50,7 @@
     },
     "navigable": {
       "name": "navigable",
-      "description": "Make elements navigatable",
+      "description": "Make elements navigatable\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -58,7 +58,7 @@
     },
     "parallax": {
       "name": "parallax",
-      "description": "Make every element scrolling at different speed",
+      "description": "Make every element scrolling at different speed\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -66,7 +66,7 @@
     },
     "skin": {
       "name": "skin",
-      "description": "Change the skin of a widget",
+      "description": "Change the skin of a widget\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -84,7 +84,7 @@
     },
     "card1": {
       "name": "card1",
-      "description": "card-class (beta)",
+      "description": "card-class (beta)\r",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -100,7 +100,7 @@
     },
     "grid": {
       "name": "grid",
-      "description": "Most wanted grid case",
+      "description": "Most wanted grid case\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -108,7 +108,7 @@
     },
     "input": {
       "name": "input",
-      "description": "custom inputs (beta)",
+      "description": "custom inputs (beta)\r",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -116,7 +116,7 @@
     },
     "reset": {
       "name": "reset",
-      "description": "A class to reset Styles (beta)",
+      "description": "A class to reset Styles (beta)\r",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -124,7 +124,7 @@
     },
     "table": {
       "name": "table",
-      "description": "Better tables",
+      "description": "Better tables\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -132,7 +132,7 @@
     },
     "unstyle": {
       "name": "unstyle",
-      "description": "Unstyle elements eg. buttons",
+      "description": "Unstyle elements eg. buttons\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -164,6 +164,14 @@
       "css": true,
       "js": true
     },
+    "buttongroup": {
+      "name": "buttongroup",
+      "description": "buttongroup elements (very beta)",
+      "beta": true,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "bytes": {
       "name": "bytes",
       "description": "Displays formatted bytess",
@@ -182,7 +190,7 @@
     },
     "carousel-nav": {
       "name": "carousel-nav",
-      "description": "null",
+      "description": "null\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -190,7 +198,7 @@
     },
     "code": {
       "name": "code",
-      "description": "Highlighted, editable code-blocks.",
+      "description": "Highlighted, editable code-blocks.\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -198,7 +206,7 @@
     },
     "copy": {
       "name": "copy",
-      "description": "Displays formatted copys",
+      "description": "Displays formatted copys\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -206,7 +214,7 @@
     },
     "counter": {
       "name": "counter",
-      "description": "Animated Number Counter",
+      "description": "Animated Number Counter\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -214,7 +222,7 @@
     },
     "ico": {
       "name": "ico",
-      "description": "Universal icon-element",
+      "description": "Universal icon-element\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -222,7 +230,7 @@
     },
     "input": {
       "name": "input",
-      "description": "Input elements (very beta)",
+      "description": "Input elements (very beta)\r",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -230,7 +238,7 @@
     },
     "masonry": {
       "name": "masonry",
-      "description": "Masonry layout with CSS grid fallback",
+      "description": "Masonry layout with CSS grid fallback\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -238,7 +246,7 @@
     },
     "number": {
       "name": "number",
-      "description": "Displays formatted numbers",
+      "description": "Displays formatted numbers\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -246,7 +254,7 @@
     },
     "out": {
       "name": "out",
-      "description": "Output variables (beta)",
+      "description": "Output variables (beta)\r",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -254,7 +262,7 @@
     },
     "parallax-bg": {
       "name": "parallax-bg",
-      "description": "Parallax backgrounds",
+      "description": "Parallax backgrounds\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -262,7 +270,7 @@
     },
     "qrcode": {
       "name": "qrcode",
-      "description": "QR-Code element",
+      "description": "QR-Code element\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -270,7 +278,7 @@
     },
     "rating": {
       "name": "rating",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -278,7 +286,7 @@
     },
     "rte": {
       "name": "rte",
-      "description": "\"Rich\" Rich Text Editor (alpha)",
+      "description": "\"Rich\" Rich Text Editor (alpha)\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -286,7 +294,7 @@
     },
     "skeleton": {
       "name": "skeleton",
-      "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.",
+      "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -294,7 +302,7 @@
     },
     "splitbutton": {
       "name": "splitbutton",
-      "description": "Buttons with options",
+      "description": "Buttons with options\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -302,7 +310,7 @@
     },
     "splitpanel": {
       "name": "splitpanel",
-      "description": "A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.",
+      "description": "A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -310,7 +318,7 @@
     },
     "table": {
       "name": "table",
-      "description": "Enhanced tables (sortable, responsive...)",
+      "description": "Enhanced tables (sortable, responsive...)\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -318,7 +326,7 @@
     },
     "tabs": {
       "name": "tabs",
-      "description": "rendering tabs",
+      "description": "rendering tabs\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -326,7 +334,7 @@
     },
     "textfit": {
       "name": "textfit",
-      "description": "Exactly fit text",
+      "description": "Exactly fit text\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -334,7 +342,7 @@
     },
     "time": {
       "name": "time",
-      "description": "The better time-element, e.g. live changing relative dates",
+      "description": "The better time-element, e.g. live changing relative dates\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -342,7 +350,7 @@
     },
     "tooltip": {
       "name": "tooltip",
-      "description": "Tooltips",
+      "description": "Tooltips\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -350,7 +358,7 @@
     },
     "tree1": {
       "name": "tree1",
-      "description": "Treeview component",
+      "description": "Treeview component\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -358,7 +366,7 @@
     },
     "typewriter": {
       "name": "typewriter",
-      "description": "Simple typewriter element",
+      "description": "Simple typewriter element\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -426,7 +434,7 @@
     },
     "PointerObserver": {
       "name": "PointerObserver",
-      "description": "Observe mouse and touches",
+      "description": "Observe mouse and touches\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -434,7 +442,7 @@
     },
     "rte": {
       "name": "rte",
-      "description": "Easily Make Elements Editable with Intuitive Controls",
+      "description": "Easily Make Elements Editable with Intuitive Controls\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -442,7 +450,7 @@
     },
     "SelectorObserver": {
       "name": "SelectorObserver",
-      "description": "Monitor elements by CSS selector",
+      "description": "Monitor elements by CSS selector\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -450,7 +458,7 @@
     },
     "shortcut": {
       "name": "shortcut",
-      "description": "Easy keyboard shortcuts",
+      "description": "Easy keyboard shortcuts\r",
       "beta": false,
       "deprecated": false,
       "css": false,

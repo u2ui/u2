@@ -30,7 +30,7 @@ base = base.replace(/file:\/\/\//, '');
     // bug: hier wird bei jeder kategorie überschrieben
     // todo: sollte nur einmal am ende gemacht werden
     const str = JSON.stringify(repos, null, '  ');
-    const write = Deno.writeTextFile("./u2/u2/projects.json", str);
+    const write = Deno.writeTextFile(base+"u2/projects.json", str);
 
     write.then(() => console.log("File written!"));
 

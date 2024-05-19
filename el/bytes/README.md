@@ -1,6 +1,12 @@
 # &lt;u2-bytes&gt; - element
 Displays formatted bytess
 
+## Usage
+
+```html
+<u2-bytes>89887987</u2-bytes>
+```
+
 ## Install
 
 ```html

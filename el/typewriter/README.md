@@ -50,11 +50,6 @@ u2-typewriter .-Caret { ... } /* the caret (It moves and is in the active char e
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/typewriter/typewriter.min.js" type=module async></script>
 ```
 
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/typewriter/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/typewriter/tests/test.html)  
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

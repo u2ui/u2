@@ -32,11 +32,6 @@ Change the skin of a widget
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/skin/skin.min.js" type=module async></script>
 ```
 
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/test.html)  
-
 ## Description
 
 `[u2-skin=invert]` will invert the colors of the widget (switches among other things the background color and the text color).

@@ -16,11 +16,6 @@ copy: <u2-copy for=source sync></u2-copy>
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/copy/copy.min.js" type=module async></script>
 ```
 
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/copy/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/copy/tests/test.html)  
-
 ## Attributes
 
 Attribute        | Description                  

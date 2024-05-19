@@ -26,12 +26,6 @@ u2-input:focus-within {
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/input/input.min.js" type=module async></script>
 ```
 
-## Demos
-
-[formParticipation.html](http://gcdn.li/u2ui/u2@main/el/input/tests/formParticipation.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/input/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/input/tests/test.html)  
-
 ## Ussage
 
 ```html

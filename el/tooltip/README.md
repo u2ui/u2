@@ -32,11 +32,6 @@ u2-tooltip {
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/tooltip/tooltip.min.js" type=module async></script>
 ```
 
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/tooltip/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/tooltip/tests/test.html)  
-
 ## Todo
 
 - popover when supported by browsers.

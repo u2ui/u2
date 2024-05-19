@@ -12,6 +12,25 @@ Simple carousel component
 - 3 Modes (slide, scroll, fade)
 - light-weight
 
+## Usage
+
+```html
+<u2-carousel autoplay controls>
+    <div>Carousel<br>Demo<br>Item 1</div>
+    <div>Item 2</div>
+</u2-carousel>
+```
+
+```css
+u2-carousel {
+    background:var(--color-light);
+}
+u2-carousel > :not([slot]) {
+    padding:3rem;
+    text-align:center;
+}
+```
+
 ## Install
 
 ```html

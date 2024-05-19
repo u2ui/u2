@@ -37,11 +37,6 @@ custom inputs (beta)
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/input/input.min.css" rel=stylesheet>
 ```
 
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/class/input/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/class/input/tests/test.html)  
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
