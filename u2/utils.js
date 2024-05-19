@@ -13,9 +13,6 @@ export function importCss(url, options={}) {
     });
 }
 
-//let styleWrapper = document.createElement('div');
-//document.head.prepend(styleWrapper);
-
 function _importCss(url, options={}){
     // handle relative urls
     if (url.indexOf('./') === 0) {
@@ -29,9 +26,8 @@ function _importCss(url, options={}){
         const calledFile = e.stack.split('\n')[2].match(/[a-z]+:[^:]+/);
         const calledUrl = new URL(calledFile);
         calledUrl.search = '';
-        const url = new URL(url, calledUrl).toString();
+        const url = new URL(url, calledUrl).toString(); // todo, this should not be working as const url is only in this scope
     }
-
 
     const rootNode = options.for ?? document.documentElement;
 

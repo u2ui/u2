@@ -23,6 +23,7 @@
     import {BaseElement} from './baseElement.js';
 
     class TestElement extends BaseElement {
+
         static properties = {
             number: {
                 attribute: true,
@@ -40,6 +41,10 @@
                 attribute: true,
                 type: 'tokens',
             },
+            propAttr: {
+                attribute: 'prop-attr',
+                type: 'string',
+            },
         }
 
         constructor() {
@@ -48,33 +53,40 @@
         }
 
         connectedCallback() {
-            console.log('connected');
-                //this.shadowRoot.innerHTML = `<slot></slot>`;
+            this.shadowRoot.innerHTML = `
+            <style>
+            :host {
+                display: block;
+                border: 1px solid;
+                padding: 1em;
+            }
+            slot {
+                display: block;
+                border: 1px solid;
+                padding: 1em;
+            }
+            </style>
+            Slot:<slot></slot>
+            <div id=data></div>
+            `;
         }
         render() {
             this.renderCount = (this.renderCount ?? 0) + 1;
-            console.log('render', this.renderCount);
 
-            const attributes = new Map();
-            const attrisObj = {};
-            this.constructor.observedAttributes.forEach(name => {
-                attributes.set(name, null);
-                attrisObj[name] = {
-                    value: null,
-                    property: this[name],
-                };
-            });
-            [...this.attributes].forEach(attr => {
-                attributes.set(attr.name, attr.value);
-                attrisObj[attr.name] = {
-                    value: attr.value,
-                    property: this[attr.name],
+            const propsObj = {};
+            Object.entries(this.constructor.properties).forEach( ([name, config]) => {
+                propsObj[name] = {
+                    value: this[name],
+                    type: config.type,
+                    attribute: config.attribute,
+                    attributeValue: this.getAttribute(config.attribute),
                 };
             });
 
-            this.shadowRoot.innerHTML = `
-            <h3>Attributes</h3>
-            ${dump(attrisObj)}
+
+            this.shadowRoot.getElementById('data').innerHTML = `
+            <h3>Properties</h3>
+            ${dump(propsObj)}
             <h3>el.locales()</h3>
             ${dump(this.locales())}
 
@@ -82,7 +94,7 @@
             ${dump(this.innerHTML)}
             <h3>Metrics</h3>
             <div>${this.renderCount}</div>
-            <slot></slot>`;
+            `;
 
 
         }
@@ -95,7 +107,7 @@
 
 <div id="wrapper">
 
-<test-element id=testEl number="1234.567" boolean string="hello World" tokens="a b c">
+<test-element id=testEl number="1234.567" boolean string="hello World" tokens="a b c" prop-attr="test">
     Content
 </test-element>
 

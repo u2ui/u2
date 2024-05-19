@@ -1,3 +1,4 @@
+
 export class BaseElement extends HTMLElement {
 
     constructor() {
@@ -17,10 +18,14 @@ export class BaseElement extends HTMLElement {
     }
 
     static _initBase() {
+
+        /* properties */
         this.attributesMap ??= new Map();
         this.propertiesMap ??= new Map();
 
         for (const [key, options] of Object.entries(this.properties)) {
+            if (options.attribute === true) options.attribute = key;
+            options.property = key;
             this.propertiesMap.set(key, options);
             Object.defineProperty(this.prototype, key, {
                 get() {
@@ -30,17 +35,17 @@ export class BaseElement extends HTMLElement {
                     this['_' + key] = value;
                     if (options.attribute) {
                         const attrVal = propToAttr(value, options);
-                        attrVal === null ? this.removeAttribute(key) : this.setAttribute(key, attrVal);
+                        attrVal == null ? this.removeAttribute(options.attribute) : this.setAttribute(options.attribute, attrVal);
                     }
                     this.requestUpdate();
                 }
             });
-            if (options.attribute) this.attributesMap.set(key, options);
+            if (options.attribute) this.attributesMap.set(options.attribute, options);
         }
 
+        /* only once */
         this._initBase = null;
     }
-
 
     static get observedAttributes() {
         this._initBase?.();
@@ -50,9 +55,9 @@ export class BaseElement extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         const config = this.constructor.attributesMap.get(name);
-        //this[name] = attrToProp(newValue, config);
         const propValue = attrToProp(newValue, config);
-        if (this['_'+name] !== propValue) this[name] = propValue;
+        const propName = config.property;
+        if (this['_'+propName] !== propValue) this[propName] = propValue;
     }
 
     requestUpdate() {
