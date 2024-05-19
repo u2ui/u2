@@ -10,43 +10,6 @@ context menus, simple and highly customisable
 - [x] Add custom HTML to the menu
 - [x] Submenus, Icons
 
-## Usage
-
-```js
-import {contextMenu} from '../contextmenu.js';
-
-contextMenu.add([
-    {
-        label: 'Button',
-        action: e => alert(e.target.textContent),
-        icon: '<svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>',
-        selector: 'button'
-    },{
-        label: 'More',
-        icon: 'add_circle',
-        children: [
-            {
-                label: 'Submenu 1',
-                icon: 'delete',
-                action(e) { alert(this.label + ' by ' + e.originalEvent.type) },
-                shortcut: 'Ctrl+1',
-            },
-            {
-                label: 'Submenu 2',
-                icon: 'edit',
-                action(e) { alert(this.label + ' by ' + e.originalEvent.type) },
-                shortcut: 'Ctrl+2',
-            },
-        ]
-    },
-]);
-```
-
-```html
-<button>button 1</button>
-<button>button 2</button>
-```
-
 ## API
 
 ### contextMenu.add(items)
@@ -80,11 +43,6 @@ Adds a single menu item to the context menu. `item` is an object with the same p
 ```js
 import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/contextmenu/contextmenu.min.js"
 ```
-
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/js/contextmenu/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/js/contextmenu/tests/test.html)  
 
 ## About
 

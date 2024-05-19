@@ -9,25 +9,11 @@ Confirm before action
 - Has a translated default confirm text
 - Lightweight
 
-## Usage
-
-```html
-<form u2-confirm="Save name?" target=_blank>
-    <label><input name=name></label>
-    <button>confirm</button>
-</form>
-```
-
 ## Install
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/confirm/confirm.min.js" type=module async></script>
 ```
-
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/confirm/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/attr/confirm/tests/test.html)  
 
 ## About
 

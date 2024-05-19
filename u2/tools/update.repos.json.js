@@ -4,7 +4,8 @@ const repos = {};
 
 import * as fs from 'https://deno.land/std@0.100.0/fs/mod.ts';
 
-const base = import.meta.resolve('../../');
+let base = import.meta.resolve('../../');
+base = base.replace(/file:\/\/\//, '');
 //const base = './u2/';
 
 ['attr', 'class', 'el', 'css', 'js'].forEach(async category=>{

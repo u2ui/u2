@@ -8,28 +8,6 @@ Prominent hints, alerts, and facts
 - Support for icons within alerts.
 - Customizable actions through buttons in the alert.
 
-## Usage
-
-```html
-<u2-alert open variant="info" dismissable icon="home">
-    This is a dismissable success alert with an icon.
-    <button slot=action>OK</button>
-    <button slot=action>Cancel</button>
-</u2-alert>
-```
-
-```css
-u2-alert {
-    border-width: 0 0 0 3px;
-}
-u2-alert::part(close) {
-    opacity:0.3;
-}
-u2-alert::part(icon) {
-    font-size:2em;
-}
-```
-
 ## API
 
 ### Attributes
@@ -55,11 +33,6 @@ u2-alert::part(icon) {
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/alert/alert.min.css" rel=stylesheet>
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/alert/alert.min.js" type=module async></script>
 ```
-
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/alert/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/alert/tests/test.html)  
 
 ## About
 

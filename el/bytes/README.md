@@ -1,23 +1,12 @@
 # &lt;u2-bytes&gt; - element
 Displays formatted bytess
 
-## Usage
-
-```html
-<u2-bytes>89887987</u2-bytes>
-```
-
 ## Install
 
 ```html
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/bytes/bytes.min.css" rel=stylesheet>
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/bytes/bytes.min.js" type=module async></script>
 ```
-
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/bytes/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/bytes/tests/test.html)  
 
 ## Attributes
 

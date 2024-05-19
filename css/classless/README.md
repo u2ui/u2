@@ -1,15 +1,6 @@
 # classless.css
 null
 
-## Demos
-
-[aria.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/aria.html)  
-[list-bullet.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/list-bullet.html)  
-[more.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/more.html)  
-[oklch.experiments.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/oklch.experiments.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/test.html)  
-[variables.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/variables.html)  
-
 ## Resources
 
 https://github.com/picocss/pico  

@@ -1,22 +1,11 @@
 # [u2-behavior] - attribute
 behavior before action
 
-## Usage
-
-```html
-<button u2-behavior=share>behavior=share</button>
-```
-
 ## Install
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/behavior/behavior.min.js" type=module async></script>
 ```
-
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/behavior/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/attr/behavior/tests/test.html)  
 
 ## About
 

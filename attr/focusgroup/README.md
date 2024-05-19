@@ -15,32 +15,11 @@ See also:
 https://open-ui.org/components/focusgroup.explainer/  
 https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer.md
 
-## Usage
-
-```html
-<div u2-focusgroup="wrap remember">
-    <button>focusgroup</button>
-    <button>focus and</button>
-    <button>then use arrow-keys</button>
-</div>
-```
-
-```css
-[u2-focusgroup] [tabindex="0"] {
-    background: lightblue;
-}
-```
-
 ## Install
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/focusgroup/focusgroup.min.js" type=module async></script>
 ```
-
-## Demos
-
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/focusgroup/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/attr/focusgroup/tests/test.html)  
 
 ## About
 
