@@ -1,5 +1,5 @@
 # &lt;u2-buttongroup&gt; - element
-buttongroup elements (very beta)
+buttongroup element (beta)
 
 ## Usage
 
@@ -83,4 +83,3 @@ u2-buttongroup:focus-within {
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
-
