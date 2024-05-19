@@ -166,8 +166,8 @@
     },
     "buttongroup": {
       "name": "buttongroup",
-      "description": "buttongroup elements (very beta)",
-      "beta": true,
+      "description": "buttongroup element\r",
+      "beta": false,
       "deprecated": false,
       "css": true,
       "js": true

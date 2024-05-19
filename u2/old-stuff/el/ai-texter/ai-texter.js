@@ -1,12 +1,12 @@
 /* this is a input for ai prompts or a menu for pre-selected prompts, to help write in a textarea, or contenteditable */
-/* ussage:
+/* usage:
 <label>
-    <textarea></textarea>                       
+    <textarea></textarea>
     <u2-ai-texter endpoint="/api"></u2-ai-texter> <!-- this will create an input where the user can insert ist prompts -->
 </label>
 
 // for a specific textarea, save prompts using localStorage
-<textarea id=test></textarea>                       
+<textarea id=test></textarea>
 <u2-ai-texter endpoint="/api" for="#test" safe></u2-ai-texter> <!-- this will create an combobox where saved prompts can be selected, they are saved using the id as identifier -->
 
 <u2-ai-texter endpoint="/api" for="#test" safe="my-global-prompts"></u2-ai-texter> <!-- this will create an combobox where saved prompts can be selected, they are saved using the save-attribute-value as identifier -->
@@ -34,7 +34,7 @@ class Texter extends HTMLElement {
             <style>
                 :host {
                     border: 1px solid currentColor;
-                    position: absolute;     
+                    position: absolute;
                     padding:0;
                     border-radius: .5em;
                 }
@@ -84,7 +84,7 @@ class Texter extends HTMLElement {
 
     async request(prompt) {
         const target = this.currentTarget;
-        
+
         const text = target.value != null ? target.value : target.innerHTML;
 
         const body = {
@@ -122,7 +122,7 @@ class Texter extends HTMLElement {
             },
             body: JSON.stringify(body),
         }).then(response => response.json());
-        
+
         console.log(result);
 
         const value = result.choices[0].message.content;

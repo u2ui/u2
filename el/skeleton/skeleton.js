@@ -61,7 +61,7 @@ function templateToHtml(template) {
 
 
 
-// ussage:
+// usage:
 // <u2-skeleton>
 // h2
 // img p

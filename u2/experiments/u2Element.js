@@ -6,7 +6,7 @@
 // document.adoptedStyleSheets = [sheet];
 // shadowRoot.adoptedStyleSheets = [sheet];
 // polyfill:
-// ussage:
+// usage:
 // sheet = await importStyleSheet('./styles.css');
 
 // todo:
@@ -26,7 +26,7 @@ export class U2Element extends HTMLElement {
     constructor() {
         super();
         this._attributes = new Map();
-        
+
         // events
         for (const key of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
             if (key.startsWith('on')) {
@@ -48,7 +48,7 @@ export class U2Element extends HTMLElement {
                 styleSheet.replaceSync(this.constructor.css);
                 this.constructor._generatedStyleSheet = styleSheet;
             }
-    
+
 
             // outerCss
             if (this.constructor.outerCss) {
@@ -59,7 +59,7 @@ export class U2Element extends HTMLElement {
 
             this.constructor._firstDone = true;
         }
-        
+
         if (this.constructor.shadow) {
             this.attachShadow({mode: 'open'});
             this.shadowRoot.innerHTML = this.constructor.shadow;
@@ -82,7 +82,7 @@ export class U2Element extends HTMLElement {
             const signal = new Signal.State(this.getAttribute(name));
             this._attributes.set(name, signal);
         }
-        return this._attributes.get(name);        
+        return this._attributes.get(name);
     }
     attributeChangedCallback(name, oldValue, newValue) {
         this.attr(name).set(newValue);
@@ -93,7 +93,7 @@ const camelToKebab = (str) => str.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
 const kebabToCamel = (str) => str.replace(/-[a-z]/g, m => m[1].toUpperCase());
 
 
-/* ussage:
+/* usage:
 
 class myEl extends u2Element {
     static properties = {

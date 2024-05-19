@@ -1,7 +1,7 @@
 /**
  * @description create a big test-dom structure
  * @returns HTMLElement, the created root
- * @ussage
+ * @usage
  * var root = createBigDom({ depth=40, num=5000, maxChildren=100,
  *   createElement:()=>{
  *     var el = document.createElement('article');
