@@ -4,7 +4,8 @@ const repos = {};
 
 import * as fs from 'https://deno.land/std@0.100.0/fs/mod.ts';
 
-const base = './u2/';
+const base = import.meta.resolve('../../');
+//const base = './u2/';
 
 ['attr', 'class', 'el', 'css', 'js'].forEach(async category=>{
     repos[category] = {};
