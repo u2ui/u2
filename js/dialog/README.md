@@ -8,6 +8,20 @@ alert, prompt, confirm but async
 - Unstyled, style it yourself!
 - Lightweight
 
+## Usage
+
+```html
+<button onclick="module.prompt('Just a test').then(console.log)">run</button>
+```
+
+```css
+dialog:where(.\:modal, :modal) {
+    box-shadow: 0 0 1rem #0008;
+    border: 0;
+    border-radius: .3rem;
+}
+```
+
 ## Install
 
 ```js

@@ -1,6 +1,22 @@
 # &lt;u2-buttongroup&gt; - element
 buttongroup elements (very beta)
 
+## Usage
+
+```html
+<u2-buttongroup>
+    <button type=button>Button</button>
+    <button type=button>Group</button>
+    <button type=button>Component</button>
+</u2-buttongroup>
+```
+
+```css
+u2-buttongroup:focus-within {
+    border-color: green;
+}
+```
+
 ## Install
 
 ```html

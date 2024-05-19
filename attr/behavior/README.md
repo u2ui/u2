@@ -1,6 +1,12 @@
 # [u2-behavior] - attribute
 behavior before action
 
+## Usage
+
+```html
+<button u2-behavior=share>behavior=share</button>
+```
+
 ## Install
 
 ```html

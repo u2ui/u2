@@ -6,6 +6,29 @@ Most wanted flexbox case
 - Wrap by default
 - Gaps by default (1rem)
 
+## Usage
+
+```html
+<div class=u2-flex>
+    <div>Flexbox layout</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+    <div>Item 4</div>
+    <div>Item 5</div>
+</div>
+```
+
+```css
+.u2-flex {
+    --u2-Gap:1rem;
+    --u2-Row-gap:2rem;
+}
+.u2-flex > * {
+    border:1px solid;
+    padding:2rem;
+}
+```
+
 ## Install
 
 ```html

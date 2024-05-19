@@ -1,6 +1,12 @@
 # .u2-badge - class
 Rendering badges
 
+## Usage
+
+```html
+<span class=u2-badge>Badge</span>
+```
+
 ## Install
 
 ```html

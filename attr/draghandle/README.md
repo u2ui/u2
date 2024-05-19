@@ -1,6 +1,29 @@
 # [u2-draghandle] - attribute
 Define a drag handle-element for an element that uses the draggable attribute.
 
+## Usage
+
+```html
+<article draggable="false">
+    <u2-ico u2-draghandle>
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2s.9-2 2-2s2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2s-2 .9-2 2s.9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2z"></path></svg>
+    </u2-ico>
+    <h2>This is a draggable article.</h2>
+    <p>
+        It is draggable, but only by its drag handle.
+    </p>
+</article>
+```
+
+```css
+[draggable="false"] {
+    border: .5rem solid #eee;
+}
+[draggable="true"] {
+    border: .5rem solid var(--color, #4caf50);
+}
+```
+
 ## Install
 
 ```html

@@ -9,6 +9,15 @@ Confirm before action
 - Has a translated default confirm text
 - Lightweight
 
+## Usage
+
+```html
+<form u2-confirm="Save name?" target=_blank>
+    <label><input name=name></label>
+    <button>confirm</button>
+</form>
+```
+
 ## Install
 
 ```html

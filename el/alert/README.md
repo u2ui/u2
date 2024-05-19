@@ -8,6 +8,27 @@ Prominent hints, alerts, and facts
 - Support for icons within alerts.
 - Customizable actions through buttons in the alert.
 
+## Usage
+
+```html
+<u2-alert open variant="" dismissable icon="bug_report">
+    This is a dismissable alert with an custom icon.
+    <button slot=action>OK</button>
+</u2-alert>
+```
+
+```css
+u2-alert {
+    border-width: 0 0 0 3px;
+}
+u2-alert::part(close) {
+    opacity:0.3;
+}
+u2-alert::part(icon) {
+    font-size:2em;
+}
+```
+
 ## API
 
 ### Attributes
