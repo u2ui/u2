@@ -73,9 +73,7 @@ export class BaseElement extends HTMLElement {
         });
     }
 
-    // todo? for tables i should check col and colgroup
-    // https://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#alignment-inheritance
-    locales() {
+    locales() { // todo? for tables i should check col and colgroup https://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#alignment-inheritance
         let langEl = this.closest('[lang]')||document.documentElement;
         return Intl.getCanonicalLocales([langEl.lang, ...navigator.languages,'en']);
     }
