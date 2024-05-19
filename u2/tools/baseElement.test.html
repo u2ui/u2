@@ -9,7 +9,7 @@
     <script src="../../u2/auto.js" type=module></script>
 
     <link rel=stylesheet href="../../css/classless/full.css">
-    <link rel=stylesheet href="../../css/classless/simple.css"> 
+    <link rel=stylesheet href="../../css/classless/simple.css">
 
 
 <body>
@@ -35,6 +35,10 @@
                 attribute: true,
                 type: 'string',
             },
+            tokens: {
+                attribute: true,
+                type: 'tokens',
+            },
         }
 
         constructor() {
@@ -59,9 +63,19 @@
                 attributes.set(attr.name, attr.value);
             });
 
+            const attrisObj = [...attributes].map(([name, value]) => {
+                return {
+                    name: name,
+                    value,
+                    property: this[name],
+                };
+            });
+
+
 
             this.shadowRoot.innerHTML = `
             <h3>Attributes</h3>
+            ${dump(attrisObj)}
             <table>
                 <thead>
                     <tr>
@@ -93,7 +107,7 @@
 </section>
 
 <div id="wrapper">
-<test-element id=testEl number="1234.567" boolean string="hello World">
+<test-element id=testEl number="1234.567" boolean string="hello World" tokens="a b c">
     Content
 </test-element>
 </div>
