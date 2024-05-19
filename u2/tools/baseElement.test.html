@@ -18,6 +18,7 @@
 
     <script type=module>
     import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@x.x/mod.min.js';
+    import './ce-inspector.js';
 
     import {BaseElement} from './baseElement.js';
 
@@ -53,65 +54,49 @@
         render() {
             this.renderCount = (this.renderCount ?? 0) + 1;
             console.log('render', this.renderCount);
-            const attributes = new Map();
 
+            const attributes = new Map();
             this.constructor.observedAttributes.forEach(name => {
                 attributes.set(name, null);
             });
-
             [...this.attributes].forEach(attr => {
                 attributes.set(attr.name, attr.value);
             });
-
-            const attrisObj = [...attributes].map(([name, value]) => {
-                return {
-                    name: name,
+            const attrisObj = {};
+            [...attributes].map(([name, value]) => {
+                attrisObj[name] = {
                     value,
                     property: this[name],
                 };
             });
 
-
-
             this.shadowRoot.innerHTML = `
             <h3>Attributes</h3>
             ${dump(attrisObj)}
-            <h3>locales</h3>
+            <h3>el.locales()</h3>
             ${dump(this.locales())}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name
-                        <th>Value
-                        <th>Property
-                <tbody>
-                    ${[...attributes].map(([name, value]) => `
-                        <tr>
-                            <td>${name}
-                            <td>${value}
-                            <td>${this[name]}
-                        `).join('')
-                    }
-            </table>
-            <h3>Dump</h3>
 
-            <div>${this.number}</div>
+            <h3>el.innerHTML</h3>
+            ${dump(this.innerHTML)}
+            <h3>Metrics</h3>
             <div>${this.renderCount}</div>
             <slot></slot>`;
+
+
         }
     }
     customElements.define('test-element', TestElement);
     </script>
 
 
-
-
 </section>
 
 <div id="wrapper">
+
 <test-element id=testEl number="1234.567" boolean string="hello World" tokens="a b c">
     Content
 </test-element>
+
 </div>
 
 outer:
