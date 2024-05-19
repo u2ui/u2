@@ -1,11 +1,10 @@
 u2-buttongroup {
     display:inline-flex;
     white-space: nowrap;
-    overflow: auto;
-    max-width:100%;
-}
-u2-buttongroup > * {
-    flex: 1;
+    &:not(:defined) {
+        flex-wrap:wrap;
+    }
+    row-gap: .2em;
 }
 u2-buttongroup > *:not(:last-child) {
     border-right:0;

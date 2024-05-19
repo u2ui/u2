@@ -3,7 +3,6 @@
 const repos = {};
 
 import * as fs from 'https://deno.land/std@0.100.0/fs/mod.ts';
-console.log(fs)
 
 const base = './u2/';
 

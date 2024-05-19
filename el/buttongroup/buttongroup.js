@@ -10,10 +10,23 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
         shadowRoot.innerHTML = `
         <style>
         </style>
-        <div class=buttongroup>
-        </div>
+        <slot>
+            <u2-splitbutton>
+                <button>
+                    <u2-ico>⋮</u2-ico>
+                </button>
+            </u2-splitbutton>
+        </slot>
+
         `;
         this._internals = this.attachInternals();
+    }
+
+    _build() {
+        for (let el of this.children) {
+
+        }
+
     }
 
     connectedCallback() {
