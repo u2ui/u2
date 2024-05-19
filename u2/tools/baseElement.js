@@ -33,7 +33,7 @@ export class BaseElement extends HTMLElement {
                 },
                 set(value) {
                     this['_' + key] = value;
-                    if (options.attribute) {
+                    if (options.attribute && options.reflect) {
                         const attrVal = propToAttr(value, options);
                         attrVal == null ? this.removeAttribute(options.attribute) : this.setAttribute(options.attribute, attrVal);
                     }
