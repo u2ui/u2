@@ -108,7 +108,7 @@ async function UsagePart(category, entry){
 
     let code = null
     try {
-        code = await Deno.readTextFile('./u2/'+category+'/'+name+'/tests/minimal.html');
+        code = await Deno.readTextFile(base+''+category+'/'+name+'/tests/minimal.html');
     } catch(e) {
         console.log(e)
     }
