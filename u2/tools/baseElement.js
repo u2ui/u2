@@ -81,10 +81,12 @@ export class BaseElement extends HTMLElement {
 function attrToProp(value, {type}) {
     if (type === 'boolean') return value != null;
     if (type === 'number') return parseFloat(value);
+    if (type === 'tokens') return new Set(value.split(' '));
     return value;
 }
 function propToAttr(value, {type}) {
     if (type === 'boolean') return value ? '' : null;
     if (type === 'number') return value.toString();
+    if (type === 'tokens') return [...value].join(' ');
     return String(value);
 }
