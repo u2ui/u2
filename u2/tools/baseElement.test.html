@@ -56,17 +56,19 @@
             console.log('render', this.renderCount);
 
             const attributes = new Map();
+            const attrisObj = {};
             this.constructor.observedAttributes.forEach(name => {
                 attributes.set(name, null);
+                attrisObj[name] = {
+                    value: null,
+                    property: this[name],
+                };
             });
             [...this.attributes].forEach(attr => {
                 attributes.set(attr.name, attr.value);
-            });
-            const attrisObj = {};
-            [...attributes].map(([name, value]) => {
-                attrisObj[name] = {
-                    value,
-                    property: this[name],
+                attrisObj[attr.name] = {
+                    value: attr.value,
+                    property: this[attr.name],
                 };
             });
 
