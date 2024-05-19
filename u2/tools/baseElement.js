@@ -78,23 +78,13 @@ export class BaseElement extends HTMLElement {
 
 
 
-function attrToProp(value, config) {
-    switch (config.type) {
-        case 'boolean':
-            return value != null;
-        case 'number':
-            return parseFloat(value);
-        default:
-            return value;
-    }
+function attrToProp(value, {type}) {
+    if (type === 'boolean') return value != null;
+    if (type === 'number') return parseFloat(value);
+    return value;
 }
-function propToAttr(value, config) {
-    switch (config.type) {
-        case 'boolean':
-            return value ? '' : null;
-        case 'number':
-            return Number(value).toString();
-        default:
-            return String(value);
-    }
+function propToAttr(value, {type}) {
+    if (type === 'boolean') return value ? '' : null;
+    if (type === 'number') return value.toString();
+    return String(value);
 }
