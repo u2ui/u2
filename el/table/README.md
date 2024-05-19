@@ -39,6 +39,11 @@ u2-table[\:overflows][break] td::before {
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/table/table.min.js" type=module async></script>
 ```
 
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/table/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/table/tests/test.html)  
+
 ## Todo
 
 Make strategies for responsive tables like the following:

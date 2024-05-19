@@ -50,6 +50,11 @@ placer.followElement(element); // place moverEl relative to element and follow i
 import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/Placer/Placer.min.js"
 ```
 
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/Placer/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/js/Placer/tests/test.html)  
+
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

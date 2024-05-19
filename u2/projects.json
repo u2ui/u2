@@ -34,7 +34,7 @@
     },
     "href": {
       "name": "href",
-      "description": "Every element can be a link\r",
+      "description": "Every element can be a link",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -42,7 +42,7 @@
     },
     "intersect": {
       "name": "intersect",
-      "description": "declarativ intersection-observer\r",
+      "description": "declarativ intersection-observer",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -50,7 +50,7 @@
     },
     "navigable": {
       "name": "navigable",
-      "description": "Make elements navigatable\r",
+      "description": "Make elements navigatable",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -58,7 +58,7 @@
     },
     "parallax": {
       "name": "parallax",
-      "description": "Make every element scrolling at different speed\r",
+      "description": "Make every element scrolling at different speed",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -108,7 +108,7 @@
     },
     "input": {
       "name": "input",
-      "description": "custom inputs (beta)\r",
+      "description": "custom inputs (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -124,7 +124,7 @@
     },
     "table": {
       "name": "table",
-      "description": "Better tables\r",
+      "description": "Better tables",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -190,7 +190,7 @@
     },
     "carousel-nav": {
       "name": "carousel-nav",
-      "description": "null\r",
+      "description": "null",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -198,7 +198,7 @@
     },
     "code": {
       "name": "code",
-      "description": "Highlighted, editable code-blocks.\r",
+      "description": "Highlighted, editable code-blocks.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -206,7 +206,7 @@
     },
     "copy": {
       "name": "copy",
-      "description": "Displays formatted copys\r",
+      "description": "Displays formatted copys",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -214,7 +214,7 @@
     },
     "counter": {
       "name": "counter",
-      "description": "Animated Number Counter\r",
+      "description": "Animated Number Counter",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -222,7 +222,7 @@
     },
     "ico": {
       "name": "ico",
-      "description": "Universal icon-element\r",
+      "description": "Universal icon-element",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -230,7 +230,7 @@
     },
     "input": {
       "name": "input",
-      "description": "Input elements (very beta)\r",
+      "description": "Input elements (very beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -246,7 +246,7 @@
     },
     "number": {
       "name": "number",
-      "description": "Displays formatted numbers\r",
+      "description": "Displays formatted numbers",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -254,7 +254,7 @@
     },
     "out": {
       "name": "out",
-      "description": "Output variables (beta)\r",
+      "description": "Output variables (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -262,7 +262,7 @@
     },
     "parallax-bg": {
       "name": "parallax-bg",
-      "description": "Parallax backgrounds\r",
+      "description": "Parallax backgrounds",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -270,7 +270,7 @@
     },
     "qrcode": {
       "name": "qrcode",
-      "description": "QR-Code element\r",
+      "description": "QR-Code element",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -286,7 +286,7 @@
     },
     "rte": {
       "name": "rte",
-      "description": "\"Rich\" Rich Text Editor (alpha)\r",
+      "description": "\"Rich\" Rich Text Editor (alpha)",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -294,7 +294,7 @@
     },
     "skeleton": {
       "name": "skeleton",
-      "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.\r",
+      "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -302,7 +302,7 @@
     },
     "splitbutton": {
       "name": "splitbutton",
-      "description": "Buttons with options\r",
+      "description": "Buttons with options",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -310,7 +310,7 @@
     },
     "splitpanel": {
       "name": "splitpanel",
-      "description": "A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.\r",
+      "description": "A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -318,7 +318,7 @@
     },
     "table": {
       "name": "table",
-      "description": "Enhanced tables (sortable, responsive...)\r",
+      "description": "Enhanced tables (sortable, responsive...)",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -326,7 +326,7 @@
     },
     "tabs": {
       "name": "tabs",
-      "description": "rendering tabs\r",
+      "description": "rendering tabs",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -334,7 +334,7 @@
     },
     "textfit": {
       "name": "textfit",
-      "description": "Exactly fit text\r",
+      "description": "Exactly fit text",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -342,7 +342,7 @@
     },
     "time": {
       "name": "time",
-      "description": "The better time-element, e.g. live changing relative dates\r",
+      "description": "The better time-element, e.g. live changing relative dates",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -350,7 +350,7 @@
     },
     "tooltip": {
       "name": "tooltip",
-      "description": "Tooltips\r",
+      "description": "Tooltips",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -358,7 +358,7 @@
     },
     "tree1": {
       "name": "tree1",
-      "description": "Treeview component\r",
+      "description": "Treeview component",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -366,7 +366,7 @@
     },
     "typewriter": {
       "name": "typewriter",
-      "description": "Simple typewriter element\r",
+      "description": "Simple typewriter element",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -434,7 +434,7 @@
     },
     "PointerObserver": {
       "name": "PointerObserver",
-      "description": "Observe mouse and touches\r",
+      "description": "Observe mouse and touches",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -442,7 +442,7 @@
     },
     "rte": {
       "name": "rte",
-      "description": "Easily Make Elements Editable with Intuitive Controls\r",
+      "description": "Easily Make Elements Editable with Intuitive Controls",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -450,7 +450,7 @@
     },
     "SelectorObserver": {
       "name": "SelectorObserver",
-      "description": "Monitor elements by CSS selector\r",
+      "description": "Monitor elements by CSS selector",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -458,7 +458,7 @@
     },
     "shortcut": {
       "name": "shortcut",
-      "description": "Easy keyboard shortcuts\r",
+      "description": "Easy keyboard shortcuts",
       "beta": false,
       "deprecated": false,
       "css": false,

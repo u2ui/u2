@@ -49,6 +49,15 @@ u2-ico {
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/ico/ico.min.js" type=module async></script>
 ```
 
+## Demos
+
+[combinations.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/combinations.html)  
+[emojis.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/emojis.html)  
+[fonts.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/fonts.html)  
+[ico-directory.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/ico-directory.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/test.html)  
+
 ## Variant "icon-directory"
 
 Use the css-property `--u2-ico-dir:https://x.y/icons-directory/` to define where the icons are located.  

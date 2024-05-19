@@ -28,6 +28,11 @@ dialog:where(.\:modal, :modal) {
 import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/dialog/dialog.min.js"
 ```
 
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/dialog/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/js/dialog/tests/test.html)  
+
 ## Pro-Tip
 
 To get sure your lib works even if the script does not load, you can fallback to the native confirm/alert/prompt function.

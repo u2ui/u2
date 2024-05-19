@@ -1,6 +1,10 @@
 # classes.css
 deprecated
 
+## Demos
+
+[test.html](http://gcdn.li/u2ui/u2@main/css/classes/tests/test.html)  
+
 ## Inspiration
 
 https://smolcss.dev/

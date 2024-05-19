@@ -7,6 +7,10 @@ CSS normalization for crossbrowser compatibility
 - maintained & up to date
 - ***No opinionated styles.*** (use https://github.com/u2ui/base.css for it).
 
+## Demos
+
+[test.html](http://gcdn.li/u2ui/u2@main/css/norm/tests/test.html)  
+
 ## Resources / Alternatives
 
 https://github.com/csstools/normalize.css/blob/main/normalize.css  

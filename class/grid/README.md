@@ -40,6 +40,11 @@ handy util-class to make a auto-column grid
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/grid/grid.min.css" rel=stylesheet>
 ```
 
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/grid/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/class/grid/tests/test.html)  
+
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

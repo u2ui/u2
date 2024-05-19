@@ -1,6 +1,11 @@
 # base.css
 ⏚ Usefull css defaults
 
+## Demos
+
+[nomotion.html](http://gcdn.li/u2ui/u2@main/css/base/tests/nomotion.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/css/base/tests/test.html)  
+
 ## Description
 
 - lightweight

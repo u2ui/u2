@@ -182,7 +182,7 @@ function installPart(category, entry) {
 async function demoPart(category, entry){
     try {
         let tests = [];
-        for await (const test of Deno.readDir(`./u2/${category}/${entry.name}/tests/`)) tests.push(test);
+        for await (const test of Deno.readDir(base+`${category}/${entry.name}/tests/`)) tests.push(test);
 
         tests = tests.filter(test=>test.isFile && test.name.endsWith('.html'));
         return tests.map(test=>{

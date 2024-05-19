@@ -38,6 +38,13 @@ u2-carousel > :not([slot]) {
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/carousel/carousel.min.js" type=module async></script>
 ```
 
+## Demos
+
+[experiments.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/experiments.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/minimal.html)  
+[nested.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/nested.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/test.html)  
+
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

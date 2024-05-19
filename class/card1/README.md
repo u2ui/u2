@@ -33,6 +33,11 @@ We named it with the prefix "1" to prevent compatibility-issues if we like to ch
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/card1/card1.min.css" rel=stylesheet>
 ```
 
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/test.html)  
+
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>

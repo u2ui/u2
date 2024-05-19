@@ -35,6 +35,11 @@ Most wanted flexbox case
 <link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/flex/flex.min.css" rel=stylesheet>
 ```
 
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/flex/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/class/flex/tests/test.html)  
+
 ## Note
 
 Uses margin and negative margin needed because of safari.  

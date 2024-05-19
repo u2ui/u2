@@ -30,6 +30,12 @@ Make every element scrolling at different speed
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/parallax/parallax.min.js" type=module async></script>
 ```
 
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/parallax/tests/minimal.html)  
+[performance.html](http://gcdn.li/u2ui/u2@main/attr/parallax/tests/performance.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/attr/parallax/tests/test.html)  
+
 ## Also interesting
 
 Parallax scrolling Backgrounds

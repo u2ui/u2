@@ -30,6 +30,10 @@ Define a drag handle-element for an element that uses the draggable attribute.
 <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/draghandle/draghandle.min.js" type=module async></script>
 ```
 
+## Demos
+
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/draghandle/tests/minimal.html)  
+
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
