@@ -1,50 +1,25 @@
 class splitbutton extends HTMLElement {
     constructor() {
         super();
-        // const shadow = this.attachShadow({mode: 'open'});
-        // shadow.innerHTML = `
-        //     <span class=flex>
-        //         <slot></slot>
-        //         <span class=menu>
-        //             <slot name="icon"><span style="font-size:.5em">▼</span></slot>
-        //             <slot name="menu"></slot>
-        //         </span>
-        //     </span>
-
-        //     <style>
-        //         .flex {
-        //             display: inline-flex;
-        //         }
-        //         .menu {
-        //             display: grid;
-        //             place-items: center;
-        //             background-color: var(--color);
-        //             padding: .1em .7em;
-        //             cursor:pointer;
-        //             margin-left:1px;
-        //             border-radius: var(--radius);
-        //             border-top-left-radius: 0;
-        //             border-bottom-left-radius: 0;
-        //             color: var(--color-bg);
-        //         }
-        //         .menu:focus-within {
-        //             outline: none;
-        //             background-color:red;
-        //         }
-        //         ::slotted(button) {
-        //             border-top-right-radius: 0 !important;
-        //             border-bottom-right-radius: 0 !important;
-        //         }
-        //     </style>
-        // `;
     }
     connectedCallback() {
         setTimeout(async () => {
+            import('../../attr/focusgroup/focusgroup.js');
+
             const menu = this.querySelector('menu');
             //menu.slot = 'menu';
             menu.role = 'menu';
             menu.setAttribute('u2-focusgroup', 'remember');
-            import('../../attr/focusgroup/focusgroup.js');
+            //menu.setAttribute('popover', 'manual');
+            // set id if hat not
+            if (!menu.id) {
+                menu.id = 'menu' + Math.random().toString().slice(2);
+            }
+
+            const button = this.querySelector('button');
+            button.setAttribute('popovertarget', menu.id);
+
+
         }, 0);
     }
 }

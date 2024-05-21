@@ -5,33 +5,52 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
     constructor(...args) {
         super(...args);
 
-        let shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
+        
+        this.resizeObserver = new ResizeObserver(() => {
+            this._build();
+            console.log('resize');
+        });
 
-        shadowRoot.innerHTML = `
-        <style>
-        </style>
-        <slot>
-            <u2-splitbutton>
-                <button>
-                    <u2-ico>⋮</u2-ico>
-                </button>
-            </u2-splitbutton>
-        </slot>
-
+        this.splitButton = document.createElement('u2-splitbutton');
+        this.splitButton.innerHTML = `
+        <button style="padding-inline:.4em">
+            <u2-ico inline>more_vert</u2-ico>
+        </button>
+        <menu></menu>
         `;
-        this._internals = this.attachInternals();
+
+
     }
 
     _build() {
-        for (let el of this.children) {
-
+        let hasmMore = false;
+        const containerWidth = this.clientWidth;
+        const items = [...this.children].map(btn => {return {btn, width: btn.clientWidth}}); // todo: clientWidth when flex:0 0 auto
+        let fullWidth = items.reduce((acc, item) => acc + item.width, 0);
+        while ( fullWidth > containerWidth) {
+            const item = items.pop();
+            if (item.btn.tagName === 'U2-SPLITBUTTON') continue;
+            const li = document.createElement('li');
+            li.appendChild(item.btn);
+            this.splitButton.querySelector('menu').prepend(li);
+            fullWidth -= item.width;
+            hasmMore = true;
         }
-
+        if (hasmMore) {
+            this.appendChild(this.splitButton);
+        }
     }
 
     connectedCallback() {
-        this.realbuttongroup = this.querySelector('buttongroup,textarea,select');
-        if (this.realbuttongroup) this._syncRealToFake();
+        setTimeout(() => {
+            requestAnimationFrame(() => {
+                this._build();
+            });
+        },500);
+        this.resizeObserver.observe(this);
+    }
+    disconnectedCallback() {
+        this.resizeObserver.unobserve(this);
     }
 
 });

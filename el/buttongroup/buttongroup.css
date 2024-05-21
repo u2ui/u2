@@ -1,15 +1,22 @@
 u2-buttongroup {
     display:inline-flex;
     white-space: nowrap;
+    max-width:100%;
+    max-width: -webkit-fill-available;
+    max-width: -moz-available;
+    max-width: stretch;
+    
+    xdisplay:flex;
+
+    row-gap: .2em;
+    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
     &:not(:defined) {
         flex-wrap:wrap;
     }
-    row-gap: .2em;
 }
-u2-buttongroup > *:not(:last-child) {
-    border-right:0;
-}
+
 u2-buttongroup > :not(:last-child) {
+    border-right:0;
     border-end-end-radius: 0;
     border-start-end-radius: 0;
 }

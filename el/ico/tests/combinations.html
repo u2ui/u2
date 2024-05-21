@@ -15,6 +15,9 @@
     body {
         --u2-ico-font: 'Material Icons';
     }
+    u2-ico[inline] {
+        vertical-align: -16%;
+    }
 </style>
 
 <body>
@@ -26,10 +29,28 @@
     <div id=buttonDemo>
         <button>
             <u2-ico inline>home</u2-ico>
-            Home
+            Start Icon
         </button>
 
-        <button>Home</button>
+        <button>
+            <u2-ico inline icon=home style="--u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg'"></u2-ico>
+            Start Icon
+        </button>
+            
+
+
+        <button>Normal</button>
+
+
+        Icon only:
+        <button style="padding-inline:.4em">
+            <u2-ico inline>home</u2-ico>
+        </button>
+        u2-unstyle
+        <button class="u2-unstyle">
+            <u2-ico inline>home</u2-ico>
+        </button>
+
     </div>
     <u2-code element=buttonDemo trim editable> </u2-code>
 </div>
@@ -41,5 +62,25 @@
         <sup class=u2-badge style="margin-left:-.7em; background-color: red;"></sup>
     </div>
     <u2-code element=badgeDemo trim editable> </u2-code>
+
+</section>
+
+<section>
+    <h2>.u1-tooltip</h2>
+
+    <div id="Tooltip">
+        <u2-ico>
+            home
+            <u2-tooltip style="font-family:system-ui, -apple-system, sans-serif">
+                Tooltip
+            </u2-tooltip>
+        </u2-ico>
+    </div>
+
+    <div>
+        <u2-code element=Tooltip trim editable> </u2-code>
+    </div>
+    
+
 </section>
 

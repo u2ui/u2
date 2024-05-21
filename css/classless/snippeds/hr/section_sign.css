@@ -1,9 +1,9 @@
 hr {
     border: 0;
     border-bottom: 3px double;
-    /* overflow: visible; */
     text-align: center;
     position:relative;
+    overflow: visible;
 }
 
 hr::after {
