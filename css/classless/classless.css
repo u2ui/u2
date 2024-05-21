@@ -106,7 +106,7 @@ button, .btn {
 	display:inline-block;
 }
 /* button:hover:not(:disabled), .btn:hover, button:focus { */
-:is(button, .btn):not(:disabled):where(:hover, :focus) {
+:is(button, .btn):not(:disabled):where(:hover, :focus, [aria-pressed="true"]) {
     background-color: var(--color-dark);
 }
 button:disabled {

@@ -1,6 +1,53 @@
 // See https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel
 
+const types = {
+    'stepper': {
+        fallback: '<input type=number>',
+        input: `
+            <slot name=start></slot>
+            <button part=button class="down">
+                <u2-ico icon=minus inline>-</u2-ico>
+            </button>
+            <slot></slot>
+            <button part=button class="up">
+                <u2-ico icon=plus inline>+</u2-ico>
+            </button>
+            <slot name=end></slot>`,
+        css: `
+            ::slotted(input) {
+                text-align:center;
+                appearance:textfield; 
+            }
+            :host {
+                inline-size: 6em;
+            }
+            `,
+        init({shadow}) {
+            shadow.querySelector('.up').addEventListener('click', ()=> this.realInput.stepUp() );
+            shadow.querySelector('.down').addEventListener('click', ()=> this.realInput.stepDown() );
+        }
+    },
+    'checkbox': {
+        fallback: '<select><option value="">off</option><option value=on>on</select>',
+        input: `
+            <slot name=start></slot>
+            <input type=checkbox id=checkbox>
+            <slot name=end></slot>`,
+        css: `#input { border:0; }`,
+        init({shadow}) {
+            setTimeout(()=> {
+                const real = this.realInput;
+                const checkbox = shadow.querySelector('#checkbox');
+                checkbox.addEventListener('change', e => {
+                    real.value = checkbox.checked ? real.lastElementChild.value : real.firstElementChild.value;
+                });
+                checkbox.checked = real.value === real.lastElementChild.value;
+            });
+        }
+    },
+}
 
+const icoCss = import.meta.resolve('../ico/ico.css');
 customElements.define('u2-input', class extends HTMLElement {
     constructor(...args) {
         super(...args);
@@ -9,18 +56,21 @@ customElements.define('u2-input', class extends HTMLElement {
 
         shadowRoot.innerHTML = `
         <style>
+        @import url('${icoCss}');
+
         :host {
-            border-radius: var(--radius);
             display:inline-block;
             inline-size:13em;
+            border-radius: var(--radius);
         }
-        .input {
+        #input {
             display: flex;
             align-items: center;
+            overflow:clip;
             border: 1px solid;
             border-radius: inherit;
-            overflow:clip;
         }
+
         [name=start]::slotted(*) { margin-inline-start: .4rem; }
         [name=end]::slotted(*) { margin-inline-end: .4rem; }
 
@@ -29,20 +79,42 @@ customElements.define('u2-input', class extends HTMLElement {
             border: 0 !important;
             outline: 0 !important;
             flex:1 1 auto;
+            inline-size:auto;
+        }
+        ::slotted(input) {
             inline-size:100% !important;
         }
+        [part=button], button {
+            background:var(--color-light, #eee);
+            align-self:stretch;
+            min-width:2em;
+            &:active, &:focus, &:hover {
+                background: #e9e9e9;
+                outline:0;
+                opacity:1;
+            }
+            /* only if hover */
+            transition:.2s;
+            opacity:0;
+            :host(:hover) & {
+                opacity:1;
+            }
+        }
+
         button {
             border: 0;
             background-color: transparent;
         }
-        .baselineKeeper { /* dirty trick, first char defines the baseline, otherwise the sibling elements would no longer be at the same baseline */
+        #input::before { /* dirty trick, first char defines the baseline, otherwise the sibling elements would no longer be at the same baseline */
+            content:'p';
             width:0;
             overflow:hidden;
-            xdisplay:inline-block;
+            display:inline-block;
         }
         </style>
-        <div class=input>
-            <span class=baselineKeeper>&nbsp;</span>
+        <style id=typeCss>
+        </style>
+        <div id=input>
             <slot name=start></slot>
             <slot></slot>
             <slot name=end></slot>
@@ -66,11 +138,7 @@ customElements.define('u2-input', class extends HTMLElement {
         this._internals.setFormValue(this.realInput.value);
         this.realInput.addEventListener('input', e => {
             this._internals.setFormValue(this.realInput.value, this.realInput.value);
-        //  this.dispatchEvent(new CustomEvent('input', { bubbles: true, cancelable: true }));
         });
-        // this.realInput.addEventListener('change', e => {
-        //     this.dispatchEvent(new CustomEvent('change', { bubbles: true, cancelable: true }));
-        // });
     }
     formStateRestoreCallback(state, reason){
         this.realInput.value = state;
@@ -79,20 +147,22 @@ customElements.define('u2-input', class extends HTMLElement {
     static observedAttributes = ['type', 'value'];
     static formAssociated = true;
 
+
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'type') {
-            if (newValue === 'textarea') {
-                this.realInput?.remove();
-                this.realInput = document.createElement('textarea');
-                this.appendChild(this.realInput);
+            if (!this.realInput) {
+                console.log(this, 'no realInput yet');
+                this.innerHTML = types[newValue]?.fallback ?? types['text'].fallback;
+                this.realInput = this.querySelector('input,textarea,select');
+                this._syncRealToFake();
             }
-            if (newValue === 'checkbox') {
-                this.realInput?.remove();
-                this.realInput = document.createElement('input');
-                this.realInput.type = 'checkbox';
-                this.appendChild(this.realInput);
-            }
+
+            types[newValue] ??= types['text'];
+            this.shadowRoot.getElementById('input').innerHTML = types[newValue].input;
+            this.shadowRoot.getElementById('typeCss').textContent = types[newValue].css ?? '';
+            types[newValue].init?.call(this, {shadow: this.shadowRoot});
+
         }
         if (name === 'value') {
             this.realInput.value = newValue;
@@ -101,9 +171,6 @@ customElements.define('u2-input', class extends HTMLElement {
 
     /* checkbox */
     get value(){
-        if (this.type === 'checkbox') {
-            return this.checked ? this.getAttribute('on')??'on' : this.getAttribute('off') ?? '';
-        }
         return this.realInput.value;
     }
 });
@@ -111,93 +178,3 @@ customElements.define('u2-input', class extends HTMLElement {
 
 
 
-
-
-
-
-
-
-
-
-
-
-/* old code
-
-document.head.prepend(c1.dom.fragment(
-    '<style>\
-    .b1-up-down-input {\
-        display:inline-flex;\
-        width:6em;\
-    }\
-    .b1-up-down-input input {\
-        width:2em;\
-        flex:1 .5 auto;\
-        text-align:center;\
-        border-left-width:0;\
-        border-right-width:0;\
-    }\
-    .b1-up-down-input button {\
-    	width:1.6em;\
-        flex:0 1 auto;\
-        padding:0;\
-        position:relative;\
-    }\
-    .b1-up-down-input button > span {\
-        color:transparent;\
-    }\
-    .b1-up-down-input button > svg {\
-        fill:currentColor;\
-        width:.8em;\
-        height:.8em;\
-        vertical-align:baseline;\
-        position:absolute;\
-        top:0; left:0; right:0; bottom:0;\
-        margin:auto;\
-    }\
-    .b1-up-down-input button.-up {\
-    	xborder-left-width:0;\
-    	border-top-left-radius: 0;\
-    	border-bottom-left-radius: 0;\
-    }\
-    .b1-up-down-input button.-down {\
-    	xborder-right-width:0;\
-    	border-top-right-radius: 0;\
-    	border-bottom-right-radius: 0;\
-    	order: -1;\
-    }\
-    .b1-up-down-input input[type="number"] {\
-        appearance:textfield;\
-    }\
-    .b1-up-down-input input::-webkit-outer-spin-button,\
-    .b1-up-down-input input::-webkit-inner-spin-button {\
-        -webkit-appearance: none;\
-    }\
-    </style>'
-));
-
-
-new SelectorObserver({
-    on: el => {
-        var input = el.c1Find('input');
-        var up   = c1.dom.fragment('<button type=button aria-hidden=true tabindex=-1><span>+</span><svg viewBox="0 0 24 24"><path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg>').firstChild; // "+"-char: ally, baseline works | span: currentColor works
-        var down = c1.dom.fragment('<button type=button aria-hidden=true tabindex=-1><span>-</span><svg viewBox="0 0 24 24"><path d="M19,13H5V11H19V13Z" /></svg>').firstChild;
-        up.classList.add('-up');
-        down.classList.add('-down');
-        function onclick(e){
-            //e.preventDefault(); // zzz not needed!
-            var oldVal = input.value
-            this.classList.contains('-up') ? input.stepUp() : input.stepDown();
-            if (input.value !== oldVal) {
-                input.dispatchEvent( new CustomEvent('input',{bubbles:true,cancelable:true}) );
-                input.dispatchEvent( new CustomEvent('change',{bubbles:true,cancelable:true}) );
-            }
-        }
-        up.addEventListener('click',onclick);
-        down.addEventListener('click',onclick);
-        input.after(up);
-        // also after! because label triggers the first form-element (changed order in css)
-        input.after(down);
-    },
-}).observe('.b1-up-down-input');
-
-*/

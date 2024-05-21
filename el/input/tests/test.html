@@ -26,6 +26,42 @@
 
 <section>
 
+    <h3>test</h3>
+    <input name=normal type=text value="Normal">
+
+    <u2-input>
+        <input name=u2 value="u2" type="number" placeholder="same height">
+    </u2-input>
+    
+    <br><br>
+
+    <u2-input>
+        <input name=u2 value="u2" type="number" placeholder="same width">
+    </u2-input>
+
+    <u2-input type="stepper">
+        <input type="number" name=stepper value="stepper" step="0.5" min="0" max="10">
+    </u2-input>
+
+    <u2-input type=checkbox>
+        <select><option value="">off<option value=on>on</select>
+    </u2-input>
+
+    <u2-input type=checkbox>
+        <select><option value="">off<option value=on selected>on</select>
+    </u2-input>
+
+    <u2-input>
+        <input type="tel" name=tel value="" placeholder="3212321">
+        <select slot="start">
+            <option>076
+            <option>077
+            <option>078
+        </select>
+    </u2-input>
+
+    <br><br><br><br>
+
     <form method=get id=form>
         <table style="xwidth:auto" class="u2-table -Fields">
             <tr>
@@ -45,7 +81,13 @@
                 <td> <u2-input name=textarea type=textarea>inhalt</u2-input>
                 <th> u2-input textarea
             <tr>
-                <td> <u2-input name=checkbox type=checkbox on=on off=off>on</u2-input>
+                <td> 
+                    <u2-input type=checkbox>
+                        <select name="checkbox">
+                            <option value="off">off
+                            <option value=on>on
+                        </select>
+                    </u2-input>
                 <th> u2-input checkbox
             <tr>
                 <td>
@@ -151,7 +193,7 @@
         <u2-ico slot=start inline icon=person></u2-ico>
         <u2-tooltip>Username</u2-tooltip>
         <input type="text">
-        <button slot=end style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+        <button slot=end style="padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
             <u2-ico icon=save inline></u2-ico>
         </button>
     </u2-input>
@@ -159,11 +201,11 @@
     <br>
 
     <u2-input style="font-size:40px; inline-size:auto;">
-        <button slot=start style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+        <button slot=start style="padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
             <u2-ico icon=minus inline></u2-ico>
         </button>
         <input type=number style="text-align:center; appearance: textfield; flex:0 0 3em; width:3em">
-        <button slot=end style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
+        <button slot=end style="padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
             <u2-ico icon=plus inline></u2-ico>
         </button>
     </u2-input>

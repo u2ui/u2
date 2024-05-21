@@ -10,15 +10,7 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
             this._build();
             console.log('resize');
         });
-
-        this.splitButton = document.createElement('u2-splitbutton');
-        this.splitButton.innerHTML = `
-        <button style="padding-inline:.4em">
-            <u2-ico inline>more_vert</u2-ico>
-        </button>
-        <menu></menu>
-        `;
-
+        //import ('../splitbutton/splitbutton.js'); // needs the css too
 
     }
 
@@ -32,21 +24,29 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
             if (item.btn.tagName === 'U2-SPLITBUTTON') continue;
             const li = document.createElement('li');
             li.appendChild(item.btn);
-            this.splitButton.querySelector('menu').prepend(li);
+            this.menuButton.querySelector('menu').prepend(li);
             fullWidth -= item.width;
             hasmMore = true;
         }
         if (hasmMore) {
-            this.appendChild(this.splitButton);
+            this.appendChild(this.menuButton);
         }
     }
 
     connectedCallback() {
-        setTimeout(() => {
-            requestAnimationFrame(() => {
-                this._build();
-            });
-        },500);
+        requestAnimationFrame(() => {
+            this.menuButton = this.querySelector(':scope > u2-splitbutton');
+            if (!this.menuButton) {
+                this.menuButton = document.createElement('u2-splitbutton');
+                this.menuButton.innerHTML = `
+                <button style="padding-inline:.3em">
+                    <u2-ico inline icon=more_vert>⋮</u2-ico>
+                </button>
+                <menu></menu>
+                `;    
+            }
+            this._build()
+        });
         this.resizeObserver.observe(this);
     }
     disconnectedCallback() {
