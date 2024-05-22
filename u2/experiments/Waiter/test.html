@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+    <!-- <script src="../../../u2/tests/test-init.js" type=module async></script> -->
+    <script src="../../auto.js" type=module async></script>
+    <link href="../../../css/classless/full.css" rel=stylesheet>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+    <style>
+        body {
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+        }
+        label {
+            display:block;
+            margin-block:1rem;
+        }
+    </style>
+
+
+<body>
+
+<section style="background:var(--color-light, #eee)">
+
+    <button id="start">Start</button>
+    <button id="pause">Pause</button>
+    <button id="resume">Resume</button>
+    <button id="stopEl">Stop</button>
+    
+    <div>
+        Status: <span id="statusEl">-</span>
+        <br>
+        Progress: <progress id="progressEl" max="100" value="0"></progress>
+    </div>
+
+    <script type="module">
+        const waiter = new Waiter(() => {
+            statusEl.textContent += ' Fertig';
+        }, 10000);
+
+        waiter.onProgress = ({ left, passed, progress }) => {
+            console.log({ left, passed, progress });
+            progressEl.value = progress * 100;
+        };
+
+        start.onclick = () => {
+            waiter.start();
+            console.log(status)
+            statusEl.textContent = 'Gestartet';
+        };
+        pause.onclick = () => {
+            waiter.pause();
+            statusEl.textContent = 'Pausiert';
+        };
+        resume.onclick = () => {
+            waiter.resume();
+            statusEl.textContent = 'Fortgesetzt';
+        };
+        stopEl.onclick = () => {
+            statusEl.textContent = 'Gestoppt';
+            waiter.stop();
+        };
+    </script>
+
+</section>
+
+
+
+<script>
+class Waiter {
+    constructor(callback, duration) {
+        this.callback = callback;
+        this.duration = duration;
+        this.startTime = null;
+        this.timerId = null;
+        this.emitInterval = null;
+        this.onProgress = null;
+        this.pauseTime = null;
+        this.remaining = duration;
+    }
+    start() {
+        this._clear();
+        this._startTimer();
+        return new Promise((resolve) => {
+            this.resolve = resolve;
+        });
+    }
+    pause() {
+        if (this.pauseTime) return;
+        this.pauseTime = Date.now();
+        clearTimeout(this.timerId);
+        clearInterval(this.emitInterval);
+        this.remaining -= this.pauseTime - this.startTime;
+    }
+    resume() {
+        if (!this.pauseTime) return;
+        this.pauseTime = null;
+        this._startTimer();
+    }
+    stop() {
+        this.resolve?.();
+        this.callback?.();
+        this._clear();
+    }
+    progress(){
+        const left = this.remaining - (Date.now() - this.startTime);
+        const passed = this.duration - left;
+        const progress = Math.min(passed / this.duration, 1);
+        return { left, passed, progress };
+    }
+    _startTimer() {
+        this.startTime = Date.now();
+        this.timerId = setTimeout(() => this.stop(), this.remaining);
+        if (this.onProgress) this._emitProgress();
+    }
+    _emitProgress() {
+        const interval = 20;
+        this.emitInterval = setInterval(() => {
+            this.onProgress(this.progress());
+        }, interval);
+    }
+    _clear() {
+        clearTimeout(this.timerId);
+        clearInterval(this.emitInterval);
+        this.remaining = this.duration;
+        this.pauseTime = null;
+        this.startTime = null;
+    }
+}
+</script>

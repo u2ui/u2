@@ -44,20 +44,22 @@ u2-alert[open] {
     will-change: transform, opacity, margin;
     animation: alert-animation 0.2s ease-in;
 }
+*/
 
 
-
-/* #u2-notification-stack {
+#u2NotificationStack {
     display:flex;
     flex-direction: column;
     justify-content: start;
     align-items: stretch;
-    gap:.8rem;
+    font-size:max(.9rem, 12px);
+
 
     position: fixed;
     bottom: 0;
     right: 0;
-    max-width: 20rem;
+    gap:.8em;
+    max-width: 28rem;
     width: 100%;
     
     overflow:auto;
@@ -67,5 +69,6 @@ u2-alert[open] {
     pointer-events:none;
     & > * {
         pointer-events: initial;
+        margin:0;
     }
-} */
+}

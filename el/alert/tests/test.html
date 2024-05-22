@@ -53,6 +53,22 @@
         <button slot=action>Cancel</button>
     </u2-alert>
 
+    <h2>Toast</h2>
+    Show an existing alert as a toast:
+    <button onclick="toastDemo.toast()">Show as Toast</button>
+    <u2-alert dismissable variant=error id="toastDemo">
+        This is a Toast error alert
+        <button slot=action>OK</button>
+    </u2-alert>
+
+    <button onclick="u2Toast.info('This is an info toast')">Show info toast</button>
+    <button onclick="u2Toast.success('This is a success toast')">Show success toast</button>
+    <script type=module>
+        import * as toast from '../alert.js';
+        window.u2Toast = toast;
+    </script>
+
+
     <u2-code trim editable>
         <style>
             u2-alert {
