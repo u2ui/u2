@@ -27,26 +27,6 @@ u2-alert[variant=error] { --color: var(--color-red); }
 u2-alert[variant=info] { --color: var(--color-blue); }
 
 
-/* animation *
-@keyframes alert-animation {
-    from {
-        transform: scale(0.8);
-        opacity: 0.2;
-        margin-bottom:-4rem;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-u2-alert[open] {
-    will-change: transform, opacity, margin;
-    animation: alert-animation 0.2s ease-in;
-}
-*/
-
-
 #u2NotificationStack {
     display:flex;
     flex-direction: column;
@@ -72,3 +52,22 @@ u2-alert[open] {
         margin:0;
     }
 }
+
+/* animation *
+@keyframes alert-animation {
+    from {
+        transform: scale(0.8);
+        opacity: 0.2;
+        margin-bottom:-4rem;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+u2-alert[open] {
+    will-change: transform, opacity, margin;
+    animation: alert-animation 0.2s ease-in;
+}
+/**/

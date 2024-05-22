@@ -126,6 +126,7 @@ class alert extends HTMLElement {
 
     /* as toast */
     toast() {
+        const duration = this.getAttribute('duration') || 15000;
         this.setAttribute('open', '');
         this.setAttribute('aria-live', 'assertive');
         getToolsContainer().appendChild(this);
@@ -135,7 +136,7 @@ class alert extends HTMLElement {
             this.setAttribute('role', 'alertdialog');
         } else {
             clearTimeout(this.hideTimeout);
-            this.hideTimeout = setTimeout(() => this.hide(), 5000);
+            this.hideTimeout = setTimeout(() => this.hide(), duration);
         }
         return new Promise((resolve) => {
             this.resolve = resolve;
