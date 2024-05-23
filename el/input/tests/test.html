@@ -52,13 +52,47 @@
     </u2-input>
 
     <u2-input>
-        <input type="tel" name=tel value="" placeholder="3212321">
         <select slot="start">
             <option>076
             <option>077
             <option>078
         </select>
+        <input type="tel" name=tel value="" placeholder="3212321">
     </u2-input>
+
+    <h2>File</h2>
+    
+    <input>
+    <u2-input type="file"><input type="file" name=file placeholder="auto"></u2-input>
+    <br><br>
+    Normal: <input type="file" name=normalFile multiple>
+
+    <h2>Cycle</h2>
+
+    <u2-input type="cycle">
+        <label>
+            <u2-ico icon=star>★</u2-ico>
+            <input type=radio name=xyz value="3">
+        </label>
+        <label>
+            <u2-ico icon=check>✔</u2-ico>
+            <input type=radio name=xyz value="1" checked>
+        </label>
+        <label>
+            <u2-ico icon=close>✖</u2-ico>
+            <input type=radio name=xyz value="2">
+        </label>
+    </u2-input>
+    <style>
+        u2-input[type=cycle] label {
+            transition:.4s;
+            rotate:0;
+            &:has(:checked) {
+                rotate:360deg;
+            }
+        }
+    </style>
+
 
     <br><br><br><br>
 
@@ -130,7 +164,11 @@
                 <th> Date with inner
             <tr>
                 <td>
-                <th> 
+                    <u2-input type="file">
+                        <input type="file">
+                    </u2-input>
+                <th> File with inner
+            
         </table>
         <button name=submitBtn value="1">Submit 1</button>
         <button name=submitBtn value="2">Submit 2</button>

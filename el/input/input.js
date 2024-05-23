@@ -1,6 +1,10 @@
 // See https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel
 
 const types = {
+    'text': {
+        fallback: '<input type=text>',
+        input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
+    },
     'stepper': {
         fallback: '<input type=number>',
         input: `
@@ -16,7 +20,7 @@ const types = {
         css: `
             ::slotted(input) {
                 text-align:center;
-                appearance:textfield; 
+                appearance:textfield;
             }
             :host {
                 inline-size: 6em;
@@ -43,6 +47,171 @@ const types = {
                 });
                 checkbox.checked = real.value === real.lastElementChild.value;
             });
+        }
+    },
+    'cycle': {
+        fallback: '<select><option value=0>off</option><option value=1>on</select>',
+        input: `<slot style="display:grid;"> </slot>`,
+        init({shadow}) {
+            setTimeout(()=> {
+                const real = this.realInput;
+                const selected = shadow.querySelector('#selected');
+                real.addEventListener('change', e => {
+                    // find the selected option
+                    update();
+                });
+                update();
+                function update(){
+                    const option = real.querySelector('option:checked');
+                    console.log(option.innerHTML)
+                    selected.innerHTML = option.innerHTML;
+                }
+
+
+                this.addEventListener('click', e => {
+                    real.selectedIndex = (real.selectedIndex + 1) % real.length;
+                    real.dispatchEvent(new Event('change'));
+
+                });
+            });
+        }
+    },
+    'file': {
+        fallback: '<input type=file multiple>',
+        input: `
+            <div id=droparea>
+                <button id=browse>
+                    Durchsuchen...
+                    <small id=num></small>
+                </button>
+                <textarea tabindex=-1></textarea>
+                <div id=preview>
+                    <table id=previewTable>
+                    </table>
+                </div>
+            </div>
+            `,
+        css: `
+            :host {
+                vertical-align: top;
+            }
+            #droparea {
+                flex:1 1 auto;
+                position:relative;
+                padding:.2em;
+                display:grid;
+                place-items:center;
+                textarea {
+                    z-index:-1;
+                    position:absolute;
+                    inset:0;
+                xbackground:#ffa9;
+                    background:transparent;
+                    resize:none;
+                    border:0;
+                    margin:0;
+                    color : transparent;
+                }
+            }
+            #browse {
+                font:inherit;
+                #num {
+                    background:var(--color-light,#eee);
+
+                    display:inline-flex;
+                    border-radius:1em;
+                    line-height:1.1;                
+                    min-width:  1.6em;
+                    min-height: 1.6em;
+                    padding-inline: .6em;
+                    padding-block: .2em .25em;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                    box-sizing: border-box;
+                    font-size: 0.8em;
+
+                    &:empty {
+                        display:none;
+                    }
+                }
+            }
+            #preview {
+                white-space:nowrap;
+                overflow:auto;
+                font-size:12px;
+                xmax-width: 100%;
+                width:100%;
+                max-height: 10rem;
+            }
+            #previewTable {
+                flex-wrap:wrap;
+                gap:.2em;
+                flex-wrap:wrap;
+                width:100%;
+                max-height:10em;
+            }
+            #preview img {
+                display:block;
+                max-width:30px;
+                max-height:30px;
+                object-fit:contain;
+            }
+            `,
+        init({shadow}) {
+            import ('../bytes/bytes.js');
+            const real = this.realInput;
+            real.addEventListener('change', e => showPreview());
+            shadow.getElementById('browse').addEventListener('click', e => {
+                real.click();
+            });
+            this.addEventListener('dragover', e => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            });
+            this.addEventListener('drop', e => {
+                e.preventDefault();
+                addFiles(e.dataTransfer.files);
+            });
+            this.addEventListener('paste', e => {
+                addFiles(e.clipboardData.files);
+            });
+            // function setFiles(files){
+            //     real.files = e.clipboardData.files;
+            //     showPreview();
+            // }
+            function addFiles(files) {
+                let list = new DataTransfer();
+                for (let file of files) list.items.add(file);
+                for (let item of real.files) list.items.add(item);
+                real.files = list.files;
+                showPreview();
+            }
+            function showPreview() {
+                const preview = shadow.querySelector('#previewTable');
+                preview.innerHTML = '';
+                for (let file of real.files) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class=img style="vertical-align:center; text-align:center"></td>
+                        <td><div style="overflow:hidden;text-overflow:ellipsis;">${file.name}</div></td>
+                        <u2-bytes style="display:table-cell; vertical-align:middle">${file.size}</u2-bytes>
+                    `;
+                    // check if its an image
+                    if (file.type.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(file);
+                        img.alt = file.name;
+                        img.onload = e => URL.revokeObjectURL(img.src);
+                        tr.querySelector('.img').appendChild(img);
+                    }
+                    preview.appendChild(tr);
+
+
+                    //preview.appendChild(img);
+                }
+                shadow.getElementById('num').textContent = real.files.length;
+            }
         }
     },
 }
@@ -84,7 +253,7 @@ customElements.define('u2-input', class extends HTMLElement {
         ::slotted(input) {
             inline-size:100% !important;
         }
-        [part=button], button {
+        [part=button], xbutton {
             background:var(--color-light, #eee);
             align-self:stretch;
             min-width:2em;
@@ -151,8 +320,11 @@ customElements.define('u2-input', class extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'type') {
+
+            this.realInput = this.querySelector('input,textarea,select');
+            if (this.realInput) this._syncRealToFake();
+
             if (!this.realInput) {
-                console.log(this, 'no realInput yet');
                 this.innerHTML = types[newValue]?.fallback ?? types['text'].fallback;
                 this.realInput = this.querySelector('input,textarea,select');
                 this._syncRealToFake();
@@ -161,7 +333,9 @@ customElements.define('u2-input', class extends HTMLElement {
             types[newValue] ??= types['text'];
             this.shadowRoot.getElementById('input').innerHTML = types[newValue].input;
             this.shadowRoot.getElementById('typeCss').textContent = types[newValue].css ?? '';
-            types[newValue].init?.call(this, {shadow: this.shadowRoot});
+            setTimeout(()=> {
+                types[newValue].init?.call(this, {shadow: this.shadowRoot});
+            });
 
         }
         if (name === 'value') {

@@ -17,11 +17,12 @@ class Bytes extends HTMLElement {
         let value = this.value;
         if (value === null) return this.outEl.innerHTML = '-';
 
-        const digits = this.getAttribute('digits') || 1;
+        const digits = this.getAttribute('digits') || 3;
         const locales = localesFromElement(this);
         const formatter = new Intl.NumberFormat(locales, {
             minimumFractionDigits: 0,
-            maximumFractionDigits: digits,
+            maximumFractionDigits: 1,
+            maximumSignificantDigits: digits,
         });
 
         const {number, compact, unit, space} = convertBytes(value, {useBinaryUnits: false, locale: locales[0]});

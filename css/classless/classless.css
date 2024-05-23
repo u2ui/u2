@@ -85,7 +85,7 @@ input, textarea, select, button, .btn {
 
 
 /* file-input */
-[type=file] {
+input[type=file] {
     padding-top: 0;
     padding-bottom: 0;
     padding-left: 0;

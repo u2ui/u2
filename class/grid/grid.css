@@ -23,8 +23,18 @@
     container-name: u2-item;
     container-type: inline-size;
 }
-/* if using display:flex ?
-.u2-grid > * {
-    flex-basis:var(--u2-Items-width);
+
+
+table.u2-grid {
+    display:grid;
+    > * {
+        display:contents; /* tbody */
+        > * { /* tr */
+            display:block;
+            > * { /* td */
+                display:block;
+                padding:0;
+            }
+        }
+    }
 }
-*/

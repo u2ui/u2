@@ -75,7 +75,7 @@ nav ul { padding-inline-start:1.5em; }
 nav > ul { padding-inline-start:0; }
 
 /* clickable */
-select, summary, label, button:not(:disabled), [type=checkbox], [type=radio], [type=file], ::file-selector-button, .btn {
+select, summary, label, button:not(:disabled), input:where([type=checkbox], [type=radio], [type=file]), ::file-selector-button, .btn {
 	cursor:pointer;
 }
 
@@ -106,8 +106,8 @@ textarea { resize: vertical; }
 /* textarea:not(:hover) { resize:none; } some browsers may stop resizing if mouse resize is none */
 
 input, textarea { inline-size:13rem; }
-[type=radio], [type=checkbox], [type=file], [type=date], [type=time], [type=datetime-local], [type=color] { inline-size:revert; }  /* todo: incomplete? */
-[type=range] { vertical-align:middle }
+input:where([type=radio], [type=checkbox], [type=file], [type=date], [type=time], [type=datetime-local], [type=color]) { inline-size:revert; }  /* todo: incomplete? */
+input:where([type=range]) { vertical-align:middle }
 
 
 /* animatable popovers */

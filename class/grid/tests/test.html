@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <script src="../../../u2/tests/test-init.js" type=module async></script>
+        <script src="../../../u2/auto.js" type=module async></script>
         <title></title>
 
         <link rel=stylesheet href="../../../css/classless/full.css">
@@ -13,7 +14,7 @@
 <body>
 
 <section>
-    <h1>grid class</h1>
+    <h1>.grid class</h1>
     <div style="resize:both; overflow: auto; border:1px solid red">
         <div class=u2-grid>
             <div>item1<br>heigter</div>
@@ -25,21 +26,53 @@
             <div>item7</div>
         </div>
     </div>
+
+    <u2-code editable trim>
+        <style style="display:block">
+        .u2-grid > * {
+            border:1px solid black;
+            padding:.5em;
+        }
+        @container u2-items (max-width: 250px) {
+            .u2-grid::before {
+                display: block;
+                content: "smaller than 250px";
+                background: red;
+                color: white;
+                padding: .5em;
+            }
+        }
+        </style>
+    </u2-code>
+    
 </section>
 
-<style contenteditable style="display:block">.u2-grid > * {
-    border:1px solid black;
-    padding:.5em;
-}
+<section>
+    <h1>table.u2-grid</h1>
+    <div style="resize:both; overflow: auto; border:1px solid red">
+        <table class=u2-grid>
+            <tr>
+                <td>cell 1.1
+                <td>cell 1.2
+                <td>cell 1.3
+            <tr>
+                <td>cell 2.1
+                <td>cell 2.2
+                <td>cell 2.3
+            <tr>
+                <td>cell 3.1
+                <td>cell 3.2
+                <td>cell 3.3
+        </table>
+    </div>
 
-@container u2-items (max-width: 250px) {
-    .u2-grid::before {
-        display: block;
-        content: "smaller than 250px";
-        background: red;
-        color: white;
-        padding: .5em;
-    }
-}
+    <u2-code editable trim>
+        <style style="display:block">
+        .u2-grid tr {
+            border:1px solid black;
+        }
+        </style>
+    </u2-code>
+    
+</section>
 
-</style>
