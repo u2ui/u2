@@ -50,31 +50,8 @@ const types = {
         }
     },
     'cycle': {
-        fallback: '<select><option value=0>off</option><option value=1>on</select>',
+        fallback: '',
         input: `<slot style="display:grid;"> </slot>`,
-        init({shadow}) {
-            setTimeout(()=> {
-                const real = this.realInput;
-                const selected = shadow.querySelector('#selected');
-                real.addEventListener('change', e => {
-                    // find the selected option
-                    update();
-                });
-                update();
-                function update(){
-                    const option = real.querySelector('option:checked');
-                    console.log(option.innerHTML)
-                    selected.innerHTML = option.innerHTML;
-                }
-
-
-                this.addEventListener('click', e => {
-                    real.selectedIndex = (real.selectedIndex + 1) % real.length;
-                    real.dispatchEvent(new Event('change'));
-
-                });
-            });
-        }
     },
     'file': {
         fallback: '<input type=file multiple>',

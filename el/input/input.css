@@ -2,6 +2,7 @@
 u2-input[type="cycle"] {
     display:inline-grid;
     width:auto;
+    line-height:1;
 
     > label {
         all:unset;
@@ -18,7 +19,7 @@ u2-input[type="cycle"] {
         &:has(:checked) {
             z-index:0;
             opacity:1;
-            &  + label {
+            & + label {
                 z-index:2;
             }
         }
