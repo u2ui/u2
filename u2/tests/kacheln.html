@@ -76,8 +76,11 @@
             }
             & .u2-table > * > * > * {
                 background-image: linear-gradient(to left, var(--color-light), var(--color-light));
-                background-repeat: no-repeat;                
+                background-repeat: no-repeat;
                 background-origin: content-box;
+            }
+            & u2-table {
+                text-align:left;
             }
         }
         #repos > div > u2-code {
@@ -104,7 +107,7 @@
             &:focus-within, div:hover > & {
                 xtransform: translateY(0);
             }
-        }        
+        }
         button, input {
             margin-block:.2rem;
         }
@@ -143,8 +146,8 @@
                     const entries = repos[ext];
 
                     for (let [name, repo] of Object.entries(entries)) {
+                        if (repo.beta) continue;
                         const div = document.createElement('div');
-                        div.hidden = repo.beta;
                         div.id = 'repo_'+catName+'-'+name;
                         div.setAttribute('data-repo', name);
                         div.setAttribute('data-type', ext);
@@ -247,4 +250,3 @@
     <footer class="u2-width">
         <u2-textfit style="flex:1 1 1rem">Did I mention 'simple' already?</u2-textfit>
     </footer>
-
