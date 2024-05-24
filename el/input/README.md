@@ -1,5 +1,5 @@
 # &lt;u2-input&gt; - element
-Input elements (very beta)
+Input element, lot of types and options.
 
 ## Usage
 

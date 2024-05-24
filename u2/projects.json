@@ -230,8 +230,8 @@
     },
     "input": {
       "name": "input",
-      "description": "Input elements (very beta)",
-      "beta": true,
+      "description": "Input element, lot of types and options.",
+      "beta": false,
       "deprecated": false,
       "css": true,
       "js": true
