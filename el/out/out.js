@@ -1,6 +1,5 @@
 const itemJsRoot = '../../../../nuxodin/item.js/';
-import { AsyncItem } from '../../../../nuxodin/item.js/tools/AsyncItem.js';
-import { effect } from '../../../../nuxodin/item.js/item.js';
+//import { effect } from '../../../../nuxodin/item.js/item.js';
 
 
 class Out extends HTMLElement {
@@ -12,6 +11,7 @@ class Out extends HTMLElement {
     connectedCallback() {}
     async render() {
         const value = await this._item.get();
+        const {effect} = await import(itemJsRoot+'item.js');
         effect(async ()=>{
             this._item.get(); // just to register the signal
             this.outEl.innerHTML = value;
