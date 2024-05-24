@@ -39,9 +39,13 @@
         <input name=u2 value="u2" type="number" placeholder="same width">
     </u2-input>
 
+    <h3>stepper</h3>
+
     <u2-input type="stepper">
-        <input type="number" name=stepper value="stepper" step="0.5" min="0" max="10">
+        <input type="number" name=stepper value="2" step="0.5" min="0" max="10">
     </u2-input>
+
+    <h3>checkbox</h3>
 
     <u2-input type=checkbox>
         <select><option value="">off<option value=on>on</select>
@@ -51,25 +55,33 @@
         <select><option value="">off<option value=on selected>on</select>
     </u2-input>
 
+    <h3>start/end slot</h3>
     <u2-input>
+        <span slot=start>☎</span>
         <select slot="start">
             <option>076
             <option>077
             <option>078
         </select>
         <input type="tel" name=tel value="" placeholder="3212321">
+        <span slot=end>✖</span>
+    </u2-input>
+
+    <u2-input>
+        <input type="tel" name=tel value="" placeholder="3212321">
+        <button slot="end" style="border-radius:0; white-space:nowrap">send</button>
     </u2-input>
 
     <h2>File</h2>
     
-    <input>
-    <u2-input type="file"><input type="file" name=file placeholder="auto"></u2-input>
+    <u2-input type="file"><input type="file" name=file multiple></u2-input>
+    <input placeholder="Std Input, same height?">
     <br><br>
-    Normal: <input type="file" name=normalFile multiple>
+    Std File-Input: <input type="file" name=normalFile multiple>
 
     <h2>Cycle</h2>
 
-    <u2-input type="cycle">
+    <u2-input type="cycle" id="cycle-icon">
         <label>
             <u2-ico icon=star>★</u2-ico>
             <input type=radio name=xyz value="3">
@@ -83,8 +95,23 @@
             <input type=radio name=xyz value="2">
         </label>
     </u2-input>
+    <u2-input type="cycle">
+        <label>
+            very good
+            <input type=radio name=text-cycle value="1">
+        </label>
+        <label>
+            good
+            <input type=radio name=text-cycle value="2" checked>
+        </label>
+        <label>
+            not so good
+            <input type=radio name=text-cycle value="3">
+        </label>
+    </u2-input>
+    <input placeholder="Std Input, same height?">
     <style>
-        u2-input[type=cycle] label {
+        #cycle-icon label {
             transition:.4s;
             rotate:0;
             &:has(:checked) {
@@ -165,7 +192,7 @@
             <tr>
                 <td>
                     <u2-input type="file">
-                        <input type="file">
+                        <input name=file type="file">
                     </u2-input>
                 <th> File with inner
             
@@ -179,9 +206,10 @@
 
     <section id="eventsOut"></section>
 
-    <script type="module">
+    <script type=module>
         function updateData(e) {
             const data = new FormData(form, e?.submitter);
+            console.log(Object.fromEntries(data))
             dataOut.innerHTML = dump(Object.fromEntries(data));
         }
         import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
@@ -203,28 +231,28 @@
     </script>
 
 
-    <h3>u2-input with combinations</h3>
-    <br>
+    <h3>baseline correct?</h3>
     before
-    <u2-input>
+    <u2-input style="width:8rem">
         <u2-ico slot=start icon=person inline></u2-ico>
         <u2-tooltip>Username</u2-tooltip>
-        <input type="text">
+        <input style="padding-bottom:3rem" value="bottom">
         <button slot=end style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
             <u2-ico icon=save inline></u2-ico>
         </button>
     </u2-input>
-    baseline correct?
-    <u2-input>
+    between
+    <u2-input style="width:8rem">
         <button slot=start style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
             <u2-ico icon=minus inline></u2-ico>
         </button>
-        <input type=number style="text-align:center; appearance: textfield;">
+        <input style="padding-top:2rem;" value="top">
         <button slot=end style="border-radius:0; padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
             <u2-ico icon=plus inline></u2-ico>
         </button>
     </u2-input>
     after
+    <input value="Standard Input" style="padding-bottom:2rem; width:8rem">
     
     <h3>font-size</h3>
     <u2-input style="font-size:10px">
@@ -247,6 +275,73 @@
             <u2-ico icon=plus inline></u2-ico>
         </button>
     </u2-input>
+
+    <h2>Style</h2>
+
+    <div style="border:1px solid">
+        <u2-input class="styled">
+            <input type="text" name="text" placeholder="U2-Input with Style">
+        </u2-input>
+        <input class="styled" type="text" placeholder="Normal Input, same height?">
+        <br>
+        <input class="styled" type="text" placeholder="Normal Input, same width?">
+    </div>
+
+    <u2-code editable trim>
+        <style>
+            .styled {
+
+                color: red;
+                font-size:22px;
+                margin:20px;
+                border-radius:99em;
+                background: hsl(120 90% 90%);
+                outline:10px solid #f0f8;
+                box-shadow: 0 0 2em rgba(0,0,0,1);
+                width:10em;
+                line-height: 2.8;
+
+                align-self: center;
+                text-align: justify;
+                justify-content: space-between;
+                align-items: flex-end;
+                flex-direction: column;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                letter-spacing: 2px;
+                text-shadow: 1px 1px 1em pink;
+                grid-template-columns: repeat(3, 1fr);
+                grid-gap: 20px;
+                animation: fadeIn 2s linear;
+                content: 'Hello';
+                object-fit: cover;
+                list-style: square inside;
+                white-space: nowrap;
+                word-break: break-all;
+                direction: rtl;
+                backdrop-filter: blur(5px);
+                column-gap: 15px;
+                counter-increment: section;
+                page-break-before: always;
+                resize: both;
+                scroll-snap-type: x mandatory;
+                tab-size: 4;
+                touch-action: manipulation;
+                unicode-bidi: bidi-override;
+                will-change: transform;
+                text-align-last: center;
+                text-justify: inter-word;
+
+                /* bad */
+                border-width:10px;
+                border-color:blue;
+                border-style:dashed;
+                padding:20px;
+                height:6em;
+            }
+        </style>
+    </u2-code>
+
     
 </section>
 

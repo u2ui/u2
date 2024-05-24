@@ -1,0 +1,40 @@
+u2-maintitlebar {
+    display:flex;
+    position: fixed;
+    left: env(titlebar-area-x, 0);
+    top: env(titlebar-area-y, 0);
+    height: env(titlebar-area-height, 50px);
+    width: env(titlebar-area-width, 100%);
+    max-width:100%;
+    background-color: var(--color, canvas);
+    color: var(--color-bg);
+    z-index: 1000;
+    font-size:min(14px, 1rem);
+
+    &[hidden] {
+        display:none;
+    }
+
+    input {
+        padding-block:0;
+    }
+
+    & > * {
+        align-content: center;
+        padding-inline:.6em;
+        line-height:1;
+        &.-title {
+            -webkit-app-region: drag;
+            app-region: drag;
+            flex:1 1 auto;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    }
+    
+}
+
+html:has(u2-maintitlebar) {
+    padding-top: env(titlebar-area-height, 2em);
+}

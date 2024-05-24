@@ -1,0 +1,16 @@
+{
+    "name": "U2-Pattern-Library Demo",
+    "short_name": "U2-Pattern-Library",
+    "start_url": "./kacheln.html",
+    "display": "minimal-ui",
+    "display_override": ["window-controls-overlay"],
+    "background_color": "#ffffff",
+    "theme_color": "rgb(161, 107, 199)",
+    "icons": [
+        {
+            "src": "../tools/logo/u1.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml"
+        }
+    ]
+}

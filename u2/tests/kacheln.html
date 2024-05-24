@@ -4,6 +4,7 @@
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>U2 design system | Showcase</title>
+        <link rel=manifest href="./kacheln.manifest.json">
         <xscript src="https://cdn.jsdelivr.net/gh/nuxodin/lazyfill@main/mod.min.js"></script>
         <!-- <script src="./test-init.js" type=module async></script> -->
 
@@ -34,6 +35,7 @@
         }
         #repos > div {
             display:grid;
+            position:relative;
             background:#fff;
             background:var(--color-bg);
             font-size:13px;
@@ -66,8 +68,11 @@
                 margin-block:2rem;
                 background-color:var(--color);
             }
-            & :is(u2-masonry, .u2-flex, .u2-grid, u2-carousel) > :not([slot]), [u2-intersect~="0.5"] {
+            & :is(u2-masonry, .u2-flex, .u2-grid, u2-carousel) > :not([slot]), [u2-intersect~="0.5"], .u2-width {
                 background-color:var(--color-light);
+            }
+            & .u2-width {
+                --width:13em;
             }
             & .u2-table > * > * > * {
                 background-image: linear-gradient(to left, var(--color-light), var(--color-light));
@@ -119,7 +124,7 @@
 
         <section id=reposSec>
             <script type=module>
-                import "../auto.js?debug";
+                import "../auto.js";
 
                 const repos = await fetch('../projects.json').then(res=>res.json());
                 const reposEl = document.getElementById('repos');

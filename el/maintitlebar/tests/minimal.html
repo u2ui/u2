@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+    <!-- <script src="../../../u2/tests/test-init.js" type=module async></script> -->
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/full.css" rel=stylesheet>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    
+    <link rel=stylesheet href="../maintitlebar.css">
+    <script src="../maintitlebar.js" type=module async></script>
+
+<body>
+
+<section class="main">
+    <u2-maintitlebar>
+        <div class=-title>&lt;u2-maintitlebar&gt; Demo</div>
+        <label>Search <input type=search></label>
+        <button u2-behavior=share style="border:0;background:none;border-radius:0">
+            ➤
+            <u2-tooltip>Share</u2-tooltip>
+        </button>
+    </u2-maintitlebar>
+    This element replaces the Native Browser Toolbar if installed as Desktop-PWA.
+
+</section>
+
+<style class="main">
+u2-maintitlebar[hidden] { /* hidden is set by the element itself if not installed as Desktop-PWA */
+    display:flex; /* show it anyway */
+}
+</style>

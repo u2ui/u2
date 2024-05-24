@@ -61,7 +61,7 @@ const types = {
                     Durchsuchen...
                     <small id=num></small>
                 </button>
-                <textarea tabindex=-1></textarea>
+                <!--textarea tabindex=-1></textarea-->
                 <div id=preview>
                     <table id=previewTable>
                     </table>
@@ -78,23 +78,24 @@ const types = {
                 padding:.2em;
                 display:grid;
                 place-items:center;
-                textarea {
+                /*textarea {
                     z-index:-1;
                     position:absolute;
                     inset:0;
-                xbackground:#ffa9;
                     background:transparent;
                     resize:none;
                     border:0;
                     margin:0;
                     color : transparent;
-                }
+                    &:focus {
+                        background:rgba(0,0,0,.1);
+                    }
+                }*/
             }
             #browse {
                 font:inherit;
                 #num {
                     background:var(--color-light,#eee);
-
                     display:inline-flex;
                     border-radius:1em;
                     line-height:1.1;                
@@ -107,6 +108,7 @@ const types = {
                     text-align: center;
                     box-sizing: border-box;
                     font-size: 0.8em;
+                    vertical-align: text-bottom;
 
                     &:empty {
                         display:none;
@@ -117,9 +119,8 @@ const types = {
                 white-space:nowrap;
                 overflow:auto;
                 font-size:12px;
-                xmax-width: 100%;
                 width:100%;
-                max-height: 10rem;
+                max-height: 10em;
             }
             #previewTable {
                 flex-wrap:wrap;
@@ -130,9 +131,16 @@ const types = {
             }
             #preview img {
                 display:block;
+                margin:auto;
                 max-width:30px;
                 max-height:30px;
                 object-fit:contain;
+                object-position:center;
+                transition:.2s;
+                &:hover {
+                    z-index:1;
+                    scale:2;
+                }
             }
             `,
         init({shadow}) {
@@ -161,7 +169,7 @@ const types = {
                 let list = new DataTransfer();
                 for (let file of files) list.items.add(file);
                 for (let item of real.files) list.items.add(item);
-                real.files = list.files;
+                real.files = list.files; // todo: trigger input/change events
                 showPreview();
             }
             function showPreview() {
@@ -170,12 +178,18 @@ const types = {
                 for (let file of real.files) {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class=img style="vertical-align:center; text-align:center"></td>
+                        <td width=9 class=img></td>
                         <td><div style="overflow:hidden;text-overflow:ellipsis;">${file.name}</div></td>
-                        <u2-bytes style="display:table-cell; vertical-align:middle">${file.size}</u2-bytes>
+                        <td width=9><u2-bytes>${file.size}</u2-bytes>
+                        <td width=9><button class=remove style="all:unset; padding-inline-start:.4em; cursor:pointer">✖</button>
                     `;
-                    // check if its an image
-                    if (file.type.startsWith('image/')) {
+                    tr.querySelector('.remove').addEventListener('click', () => { // remove
+                        let list = new DataTransfer();
+                        for (let item of real.files) if (item !== file) list.items.add(item);
+                        real.files = list.files; // todo: trigger input/change events
+                        showPreview();
+                    });
+                    if (file.type.startsWith('image/')) { // preview
                         const img = document.createElement('img');
                         img.src = URL.createObjectURL(file);
                         img.alt = file.name;
@@ -183,9 +197,6 @@ const types = {
                         tr.querySelector('.img').appendChild(img);
                     }
                     preview.appendChild(tr);
-
-
-                    //preview.appendChild(img);
                 }
                 shadow.getElementById('num').textContent = real.files.length;
             }
@@ -211,14 +222,14 @@ customElements.define('u2-input', class extends HTMLElement {
         }
         #input {
             display: flex;
-            align-items: center;
+            align-items: baseline;
             overflow:clip;
             border: 1px solid;
             border-radius: inherit;
         }
 
-        [name=start]::slotted(*) { margin-inline-start: .4rem; }
-        [name=end]::slotted(*) { margin-inline-end: .4rem; }
+        [name=start]::slotted(*) { margin-inline-start: .5em; }
+        [name=end]::slotted(*) { margin-inline-end: .5em; }
 
         ::slotted(input), ::slotted(textarea), ::slotted(select) {
             margin: 0;
@@ -251,11 +262,12 @@ customElements.define('u2-input', class extends HTMLElement {
             border: 0;
             background-color: transparent;
         }
-        #input::before { /* dirty trick, first char defines the baseline, otherwise the sibling elements would no longer be at the same baseline */
+        #input::before, #input::after { /* dirty trick, first char defines the baseline, otherwise the sibling elements would no longer be at the same baseline */
             content:'p';
             width:0;
             overflow:hidden;
             display:inline-block;
+            align-self:baseline;
         }
         </style>
         <style id=typeCss>
@@ -271,15 +283,24 @@ customElements.define('u2-input', class extends HTMLElement {
 
     connectedCallback() {
         this.realInput = this.querySelector('input,textarea,select');
-        if (this.realInput) this._syncRealToFake();
+        if (this.realInput) {
+            this._syncRealToFake();
+        }
+    }
+    get type(){
+        if (this.hasAttribute('type')) return this.getAttribute('type'); // todo? test if exists?
+        if (this.realInput) {
+            if (this.realInput.tagName === 'TEXTAREA') return 'textarea';
+            if (this.realInput.tagName === 'SELECT') return 'select';
+            return this.realInput.type;
+        }
+        return 'text';
     }
 
     _syncRealToFake() {
-        if (this.realInput.tagName === 'TEXTAREA') {
-            this.setAttribute('type','textarea');
-        }
-        this.setAttribute('value', this.realInput.value);
-        this.realInput.hasAttribute('name') && this.setAttribute('name', this.realInput.name);
+        //if (this.realInput.tagName === 'TEXTAREA') this.setAttribute('type','textarea');
+        //this.setAttribute('value', this.realInput.value);
+        //this.realInput.hasAttribute('name') && this.setAttribute('name', this.realInput.name);
 
         this._internals.setFormValue(this.realInput.value);
         this.realInput.addEventListener('input', e => {
@@ -297,15 +318,13 @@ customElements.define('u2-input', class extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'type') {
-
             this.realInput = this.querySelector('input,textarea,select');
-            if (this.realInput) this._syncRealToFake();
 
             if (!this.realInput) {
                 this.innerHTML = types[newValue]?.fallback ?? types['text'].fallback;
                 this.realInput = this.querySelector('input,textarea,select');
-                this._syncRealToFake();
             }
+            if (this.realInput) this._syncRealToFake();
 
             types[newValue] ??= types['text'];
             this.shadowRoot.getElementById('input').innerHTML = types[newValue].input;

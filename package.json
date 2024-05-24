@@ -1,0 +1,15 @@
+{
+  "name": "u2ui",
+  "version": "1.0.1",
+  "description": "HTML Advanced: More Capabilities, Same Feel, Same Simplicity",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["web-components","pattern-library","component-library","ui-toolkit","design-system"],
+  "author": "Tobias Buschor",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/u2ui/u2"
+  }
+}

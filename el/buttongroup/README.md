@@ -7,7 +7,7 @@ buttongroup element
 <u2-buttongroup>
     <button type=button>Button</button>
     <button type=button>Group</button>
-    <button type=button>Component</button>
+    <button type=button>Demo</button>
 </u2-buttongroup>
 ```
 

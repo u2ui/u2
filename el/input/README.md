@@ -32,8 +32,8 @@ u2-input:focus-within {
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/input/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/input/tests/test.html)  
 
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
+

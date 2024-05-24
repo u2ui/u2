@@ -10,18 +10,10 @@
     grid-template-columns: repeat(auto-fill, minmax( min(var(--u2-Items-width), 100%) , 1fr) );
     grid-auto-flow:dense; /* why */
 
-    container-name: u2-items;
-    container-type: inline-size;
-
     /* if using display:flex ?
     flex-wrap:wrap;
     justify-content:center;
     */
-}
-
-.u2-grid > * {
-    container-name: u2-item;
-    container-type: inline-size;
 }
 
 

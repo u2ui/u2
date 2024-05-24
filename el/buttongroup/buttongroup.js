@@ -8,7 +8,6 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
         
         this.resizeObserver = new ResizeObserver(() => {
             this._build();
-            console.log('resize');
         });
         //import ('../splitbutton/splitbutton.js'); // needs the css too
 

@@ -66,7 +66,7 @@
     },
     "skin": {
       "name": "skin",
-      "description": "Change the skin of a widget\r",
+      "description": "Change the skin of a widget",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -84,7 +84,7 @@
     },
     "card1": {
       "name": "card1",
-      "description": "card-class (beta)\r",
+      "description": "card-class (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -100,7 +100,7 @@
     },
     "grid": {
       "name": "grid",
-      "description": "Most wanted grid case\r",
+      "description": "Most wanted grid case",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -116,7 +116,7 @@
     },
     "reset": {
       "name": "reset",
-      "description": "A class to reset Styles (beta)\r",
+      "description": "A class to reset Styles (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -132,7 +132,7 @@
     },
     "unstyle": {
       "name": "unstyle",
-      "description": "Unstyle elements eg. buttons\r",
+      "description": "Unstyle elements eg. buttons",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -166,7 +166,7 @@
     },
     "buttongroup": {
       "name": "buttongroup",
-      "description": "buttongroup element\r",
+      "description": "buttongroup element",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -236,9 +236,17 @@
       "css": true,
       "js": true
     },
+    "maintitlebar": {
+      "name": "maintitlebar",
+      "description": "This element replaces the Native Browser Toolbar if installed as Desktop-PWA.",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "masonry": {
       "name": "masonry",
-      "description": "Masonry layout with CSS grid fallback\r",
+      "description": "Masonry layout with CSS grid fallback",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -278,7 +286,7 @@
     },
     "rating": {
       "name": "rating",
-      "description": "\r",
+      "description": "",
       "beta": false,
       "deprecated": false,
       "css": true,
