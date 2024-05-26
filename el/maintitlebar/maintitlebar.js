@@ -8,9 +8,9 @@ customElements.define('u2-maintitlebar', class extends HTMLElement {
     }
     connectedCallback() {
         this._check();
-        navigator.windowControlsOverlay.addEventListener('geometrychange', this._check);
+        navigator.windowControlsOverlay?.addEventListener('geometrychange', this._check);
     }
     disconnectedCallback() {
-        navigator.windowControlsOverlay.removeEventListener('geometrychange', this._check);
+        navigator.windowControlsOverlay?.removeEventListener('geometrychange', this._check);
     }
 });
