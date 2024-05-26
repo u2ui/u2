@@ -28,19 +28,23 @@ u2-alert[variant=info] { --color: var(--color-blue); }
 
 
 #u2NotificationStack {
+    margin:0;
+    background:transparent;
+    border:0;
+    overflow:auto;
+
     display:flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: safe end;
     align-items: stretch;
     font-size:max(.9rem, 12px);
 
-
     position: fixed;
-    bottom: 0;
-    right: 0;
+    inset: 0 0 0 auto;
     gap:.8em;
     max-width: 28rem;
     width: 100%;
+    height:auto;
     
     overflow:auto;
 

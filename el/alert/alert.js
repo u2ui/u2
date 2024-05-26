@@ -129,9 +129,9 @@ class alert extends HTMLElement {
         const duration = this.getAttribute('duration') || 15000;
         this.setAttribute('open', '');
         this.setAttribute('aria-live', 'assertive');
-        getToolsContainer().appendChild(this);
+        stack.add(this);
 
-        const hasActions = this.querySelector('[slot=action]')?.assignedElements().length > 0;
+        const hasActions = this.querySelector('slot[name=action]')?.assignedElements().length > 0;
         if (hasActions) {
             this.setAttribute('role', 'alertdialog');
         } else {
@@ -170,18 +170,37 @@ alert = function(message, variant, options={}) {
     el.textContent = message;
     options.icon && el.setAttribute('icon', options.icon);
     el.setAttribute('variant', variant??'info');
-    return el.toast();
+    return el.toast().then(() => {
+        setTimeout(() => el.remove(), 1000);
+    });
 }
 export const info = (message, options) => alert(message, 'info', options);
 export const success = (message, options) => alert(message, 'success', options);
 export const warn = (message, options) => alert(message, 'warn', options);
 export const error = (message, options) => alert(message, 'error', options);
 
-function getToolsContainer() {
-    const el = document.getElementById('u2NotificationStack');
-    if (el) return el;
-    const div = document.createElement('div');
-    div.id = 'u2NotificationStack';
-    document.body.appendChild(div);
-    return div;
+
+const stack = {
+    container(){
+        const el = document.getElementById('u2NotificationStack');
+        if (el) return el;
+        const div = document.createElement('div');
+        div.id = 'u2NotificationStack';
+        div.popover = 'manual';
+        document.body.append(div);
+        // this.mutationObserver = new MutationObserver(() => {
+        //     if (div.children.length === 0) div.hidePopover();
+        // });
+        return div;
+    },
+    add(el){
+        const container = this.container();
+        container.showPopover();
+        container.prepend(el);
+        // this.mutationObserver.observe(container, {childList: true});
+    },
+    // remove(el){
+    //     const container = this.container();
+    //     container.removeChild(el);
+    // }
 }
