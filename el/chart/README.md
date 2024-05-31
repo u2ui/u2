@@ -5,16 +5,15 @@ Displays formatted charts
 
 ```html
 <u2-chart type="pie">
-    <table>
-        <tr>
-            <th>Hans
-            <td>100
-        <tr>
-            <th>Grete
-            <td>200
-        <tr>
-            <th>Paul
-            <td>400
+    <dl>
+        <dt>Apples</dt>
+        <dd>10 pieces</dd>
+
+        <dt>Bananas</dt>
+        <dd>12 pieces</dd>
+
+        <dt>Oranges</dt>
+        <dd>8 pieces</dd>
     </table>
 </u2-chart>
 ```
