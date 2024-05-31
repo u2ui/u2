@@ -25,13 +25,6 @@ class U2Chart extends HTMLElement {
         const dl = this.querySelector(':scope > dl');
         if (dl) return extractDLData(dl);
     }
-    // _getDefaultColors() {
-    //     const style = getComputedStyle(this);
-    //     const hue = style.getPropertyValue('--hsl-h') || 200;
-    //     const saturation = style.getPropertyValue('--hsl-s') || 50;
-    //     const lightness = style.getPropertyValue('--hsl-l') || 50;
-    //     return { hue, saturation, lightness };
-    // }
     async _build() {
         this.ctx = this.canvas.getContext('2d');
         const {rows, cols, data} = this._extractdata();
@@ -53,12 +46,21 @@ class U2Chart extends HTMLElement {
         const {Chart, registerables} = await import ('https://cdn.skypack.dev/chart.js');
         Chart.register(...registerables);
 
+        const {hue, saturation, lightness} = getHSLofElement(this);
+
+        function colorNr(i) {
+            return `hsl(${hue + i*30}, ${saturation}, ${lightness})`;
+        }
+
         new Chart(this.ctx, {
             type,
             data: {
                 labels: rows,
                 datasets: cols.map((col, i) => ({
-                    label: col, data: data.map(row => row[i]),
+                    label: col+' ',
+                    data:data.map(row => row[i]),
+                    backgroundColor: type==='pie' || type==='doughnut' ? data.map((_, j) => colorNr(j)) : colorNr(i),
+                    borderColor:     type==='pie' || type==='doughnut' ? '#fff' : colorNr(i),
                 }))
             },
             options
@@ -120,6 +122,15 @@ function extractDLData(dl) {
 
 
     return {cols, rows, data};
+}
+
+
+function getHSLofElement(el) {
+    const style = getComputedStyle(el);
+    const hue = parseFloat(style.getPropertyValue('--hsl-h') || 200);
+    const saturation = style.getPropertyValue('--hsl-s') || '50%';
+    const lightness = style.getPropertyValue('--hsl-l') || '50%';
+    return { hue, saturation, lightness };
 }
 
 
