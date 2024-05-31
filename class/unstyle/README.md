@@ -6,7 +6,9 @@ Specificity: 0.1.0
 ## Usage
 
 ```html
-<button class=u2-unstyle>Unstyled Button</button>
+<button class=u2-unstyle>
+    Unstyled Button
+</button>
 ```
 
 ```css

@@ -1,0 +1,7 @@
+u2-chart {
+    display: block;
+    position:relative;
+}
+u2-chart:not(:defined) {
+    overflow:auto;
+}

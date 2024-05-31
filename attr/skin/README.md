@@ -11,7 +11,6 @@ Change the skin of a widget
     <h3>Inverted</h3>
     <button>button</button>
 </div>
-<br>
 <div u2-skin="theme" style="padding:1rem">
     <h3>Theme-color as background</h3>
     <button>button</button>

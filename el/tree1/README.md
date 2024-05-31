@@ -11,17 +11,15 @@ Treeview component
 ## Usage
 
 ```html
-<div style="height:100%">
-    <u2-tree1 aria-expanded=true>root
-        <u2-tree1>Folder 1
-            <u2-tree1>File 1.1</u2-tree1>
-        </u2-tree1>
-        <u2-tree1 aria-expanded="true">Folder 3
-            <u2-tree1>File 3.1</u2-tree1>
-            <u2-tree1>File 3.2</u2-tree1>
-        </u2-tree1>
+<u2-tree1 aria-expanded=true>root
+    <u2-tree1>Folder 1
+        <u2-tree1>File 1.1</u2-tree1>
     </u2-tree1>
-</div>
+    <u2-tree1 aria-expanded="true">Folder 3
+        <u2-tree1>File 3.1</u2-tree1>
+        <u2-tree1>File 3.2</u2-tree1>
+    </u2-tree1>
+</u2-tree1>
 ```
 
 ```css

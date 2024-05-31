@@ -13,7 +13,7 @@ Confirm before action
 
 ```html
 <form u2-confirm="Save name?" target=_blank>
-    <label><input name=name></label>
+    <input name=name>
     <button>confirm</button>
 </form>
 ```

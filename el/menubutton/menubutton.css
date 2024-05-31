@@ -1,7 +1,7 @@
 /* functional styles */
 u2-menubutton {
     position:relative;
-    display:inline-block;
+    xdisplay:inline-block;
 }
 u2-menubutton menu {
     position:absolute;
@@ -15,7 +15,10 @@ u2-menubutton menu {
     padding-inline:0;
     opacity:0;
     visibility: hidden;
-    transition: all .2s .1s;
+    transition: opacity .2s .1s;
+
+    /* for popover */
+    overflow:visible;
 }
 u2-menubutton menu > li {
     list-style:none;
@@ -29,7 +32,7 @@ u2-menubutton menu > li > button {
     text-align:left;
 }
 u2-menubutton :is(:xxxhover, :focus) + menu,
-u2-menubutton menu:is(:hover, :focus-within) {
+u2-menubutton menu:is(:hover, :focus-within, :popover-open) {
     opacity:1;
     visibility: visible;
 }

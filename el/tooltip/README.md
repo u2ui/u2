@@ -14,7 +14,9 @@ Tooltips
 ```html
 <button>
     Tooltip
-    <u2-tooltip>now you see me</u2-tooltip>
+    <u2-tooltip>
+        now you see me
+    </u2-tooltip>
 </button>
 ```
 

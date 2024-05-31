@@ -1,26 +1,21 @@
 # [u2-disableif] - attribute
 Disable elements based on a condition
 
-
 ## Usage
 
 ```html
 <form>
     <label>
-        AGBs ok for you? <input type=checkbox name="agb">
+        <input type=checkbox name="isClient"> Already Client?
     </label>
-    <br>
-    <button u2-disableif="!agb">
-        Submit<br>
-        <small>u2-disableif="!agb"</small>
-    </button>
+    <input u2-disableif="!isClient" placeholder="Client number" >
 </form>
 ```
 
 ```css
 [u2-disableif][disabled] {
-    opacity: .2;
-    background: #ccc;
+    opacity: .3;
+    xbackground: #ccc;
 }
 ```
 

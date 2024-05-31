@@ -4,7 +4,9 @@ behavior before action
 ## Usage
 
 ```html
-<button u2-behavior=share>behavior=share</button>
+<button u2-behavior=share>
+    behavior=share
+</button>
 ```
 
 ## Install

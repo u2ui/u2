@@ -57,12 +57,38 @@
     </u2-menubutton>
 </article>
 
+<article>
+    <h2>JS needed:</h3>
 
-<style style="display: block" contenteditable>u2-menubutton menu {
-    box-shadow: 0 0 1rem #0008;
-    border:none;
-}
-u2-menubutton menu button {
-    text-align:left;
-}
-</style>
+    <h3>No button</h3>
+    <u2-menubutton>
+        <menu>
+            <li> <button>Do this</button>
+            <li> <button>Do that other thing</button>
+        </menu>
+    </u2-menubutton>
+
+    <h3>Inside overflow:hidden</h3>
+    <div style="overflow:hidden; padding:2rem; border:1px solid black">
+        <u2-menubutton>
+            <button>▾</button>
+            <menu>
+                <li> <button>Do this</button>
+                <li> <button>Do that other thing</button>
+            </menu>
+        </u2-menubutton>
+    </div>
+
+</article>
+
+<u2-code trim editable>
+    <style style="display: block" contenteditable>
+    u2-menubutton menu {
+        box-shadow: 0 0 1rem #0008;
+        border:none;
+    }
+    u2-menubutton menu button {
+        text-align:left;
+    }
+    </style>
+</u2-code>

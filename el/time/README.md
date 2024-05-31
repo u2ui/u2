@@ -9,7 +9,9 @@ The better time-element, e.g. live changing relative dates
 ## Usage
 
 ```html
-<u2-time datetime="2013-04-01T18:02" type=relative lang=de>1. April 2013 18:02</u2-time>.
+<u2-time datetime="2013-04-01T18:02" type=relative lang=de>
+    1. April 2013 18:02
+</u2-time>.
 ```
 
 ```css

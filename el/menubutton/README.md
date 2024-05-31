@@ -5,10 +5,10 @@ Buttons with options
 
 ```html
 <u2-menubutton>
-    <button>Add Item</button>
+    <button>more...</button>
     <menu>
-        <li><button>Special Item</button>
-        <li><button>Super Item</button>
+        <li><button>Do this</button>
+        <li><button>Do that other thing</button>
     </menu>
 </u2-menubutton>
 ```

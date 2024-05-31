@@ -18,7 +18,7 @@
     },
     "disableif": {
       "name": "disableif",
-      "description": "",
+      "description": "Disable elements based on a condition",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -198,10 +198,18 @@
     },
     "carousel-nav": {
       "name": "carousel-nav",
-      "description": "null",
-      "beta": false,
+      "description": "Carousel navigation element for u2-carousel. (beta)",
+      "beta": true,
       "deprecated": false,
       "css": false,
+      "js": true
+    },
+    "chart": {
+      "name": "chart",
+      "description": "Displays formatted charts",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
       "js": true
     },
     "code": {
@@ -260,6 +268,14 @@
       "css": true,
       "js": true
     },
+    "menubutton": {
+      "name": "menubutton",
+      "description": "Buttons with options",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "number": {
       "name": "number",
       "description": "Displays formatted numbers",
@@ -311,14 +327,6 @@
     "skeleton": {
       "name": "skeleton",
       "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "menubutton": {
-      "name": "menubutton",
-      "description": "Buttons with options",
       "beta": false,
       "deprecated": false,
       "css": true,

@@ -1,3 +1,5 @@
+@layer normalize {
+
 :where(html) {
 	/* Chrome rounds computed line-height:
 	16px (font-size) * 1.15 (line-height) = 18.4px (line-height);
@@ -95,4 +97,6 @@
     :where([popover]) {
         display: none;
     }
+}
+
 }
