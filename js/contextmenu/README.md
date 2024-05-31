@@ -13,38 +13,13 @@ context menus, simple and highly customisable
 ## Usage
 
 ```js
-import {contextMenu} from '../contextmenu.js';
-
-contextMenu.add([
-    {
-        label: 'Button',
-        action: e => alert(e.target.textContent),
-        icon: '<svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>',
-        selector: 'button'
-    },{
-        label: 'More',
-        icon: 'add_circle',
-        children: [
-            {
-                label: 'Submenu 1',
-                icon: 'delete',
-                action(e) { alert(this.label + ' by ' + e.originalEvent.type) },
-                shortcut: 'Ctrl+1',
-            },
-            {
-                label: 'Submenu 2',
-                icon: 'edit',
-                action(e) { alert(this.label + ' by ' + e.originalEvent.type) },
-                shortcut: 'Ctrl+2',
-            },
-        ]
-    },
-]);
+import * as contextmenue from '../contextmenu.js';
+window.contextmenue = contextmenue;
 ```
 
 ```html
-<button>button 1</button>
-<button>button 2</button>
+<button>context 1</button>
+<button>context 2</button>
 ```
 
 ## API

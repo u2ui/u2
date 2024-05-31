@@ -72,6 +72,15 @@
         <button slot="end" style="border-radius:0; white-space:nowrap">send</button>
     </u2-input>
 
+    <!-- <h3>Country</h3>
+    <u2-input type="country">
+        <select name=country>
+            <option value="CH">Switzerland
+            <option value="DE">Germany
+            <option value="FR">France
+        </select>
+    </u2-input> -->
+
     <h2>File</h2>
     
     <u2-input type="file"><input type="file" name=file multiple></u2-input>
@@ -150,6 +159,15 @@
                         </select>
                     </u2-input>
                 <th> u2-input checkbox
+
+            <tr>
+                <td> 
+                    <u2-input type=stepper>
+                        <input type="number" name=stepper value="2" step="0.5" min="0" max="10">
+                    </u2-input>
+                <th> u2-input stepper
+
+            
             <tr>
                 <td>
                     <u2-input name=select type=select></u2-input>
@@ -173,6 +191,21 @@
                         </select>
                     </u2-input>
                 <th> Select with inner
+
+            <tr>
+                <td>
+                    <u2-input name="tel-full">
+                        <span slot=start>☎</span>
+                        <select slot="start" name="tel-prefix">
+                            <option>076
+                            <option>077
+                            <option>078
+                        </select>
+                        <input type="tel" name=tel value="" placeholder="3212321">
+                        <span slot=end>✖</span>
+                    </u2-input>
+                <th> Two inputs
+
 
             <tr>
                 <td>

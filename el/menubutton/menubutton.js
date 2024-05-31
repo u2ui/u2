@@ -1,4 +1,4 @@
-class splitbutton extends HTMLElement {
+class menubutton extends HTMLElement {
     constructor() {
         super();
     }
@@ -23,4 +23,4 @@ class splitbutton extends HTMLElement {
         }, 0);
     }
 }
-customElements.define('u2-splitbutton', splitbutton);
+customElements.define('u2-menubutton', menubutton);

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>dialog.js minimal.html | U2 design-system</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script type=module>
+        import * as loading from '../loading.js';
+        window.loading = loading;
+    </script>
+
+<body>
+
+
+<section class="main">
+    <button id="btn1">load</button>
+    <script>
+    btn1.onclick = () => setTimeout(loading.mark(btn1),300000);
+    </script>
+
+
+    <h2>Stops automatically on mutation</h2>
+    <button onclick="loading.mark(article1); setTimeout(()=>article1.innerHTML = `<h3>New Version</h3><p>${Math.random()}</p>`, 2000)">
+        load article
+    </button>
+    <article style="border:1px solid; padding:1em" id="article1">
+        <h2>Demo Article</h2>
+    </article>
+
+
+    <button onclick="loading.mark(img1); img1.src = 'https://picsum.photos/300/200?'+Math.random()">
+        load image
+    </button>
+    <img id="img1" width="300" height="200" style="border:1px solid">
+
+</section>
+

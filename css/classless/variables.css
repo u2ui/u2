@@ -17,7 +17,7 @@ html {
 }
 
 /* all composite variables must be entered here, as they must be calculated for elements with [u2-skin]. */
-html, [u2-skin], [u2-skin=light] {
+:where(html, [u2-skin], [u2-skin=light]) {
   --hs:var(--hsl-h), var(--hsl-s);
   --hsl:var(--hs), var(--hsl-l);
 

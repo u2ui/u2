@@ -8,23 +8,56 @@ body {
 body > * {
     min-width:0; /* gap makes min-width = content-width, in some cases it will overflow */
 }
+
 section,
 body > footer,
 body > header {
     padding-block: 2rem;
 }
-body > footer {
+
+
+:is(body > header, [role="banner"]) {
+    border-block-end: .1em solid var(--color);
+
+    & nav {
+        white-space: nowrap;
+        > ul {
+            display: flex;
+            gap: 1em;
+        }
+        li { position: relative; }
+        a { display:block; }
+        ul ul a {
+            padding-inline: 1rem;
+            padding-block: .5rem;
+        }
+        li > ul {
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+            transition: .2s;
+            padding:0;
+            background-color: var(--color-light);
+        }
+        ul ul ul {
+            left: 100%;
+            top: 0;
+        }
+        li:is(:hover,:focus-within) > ul {
+            opacity: 1;
+            visibility: visible;
+        }    
+    }
+}
+
+:is(body > footer, [role="contentinfo"]) {
     border-block-start: .1em solid var(--color);
     text-align:center;
 }
 
-body > header {
-    border-block-end: .1em solid var(--color);
-}
-
 
 table {
-    font-size: max(.8rem, 14px);
+    font-size: max(.85rem, 14px);
 }
 tr:not(:last-child) {
     border-style:solid; /* new: not on td/th any problems? */
@@ -42,7 +75,7 @@ blockquote {
     border-inline-start: .3rem solid var(--color);
 
     background-color: var(--color-light);
-    font-size: .8em;
+    font-size: .85em;
 }
 
 pre {
@@ -72,12 +105,6 @@ figure {
     box-shadow: var(--shadow);
     border-radius: var(--radius);
     overflow:auto;
-    /*
-    font-size: 1.2rem;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    */
 }
 figure > img {
     border-radius: var(--radius);
@@ -93,11 +120,3 @@ figcaption {
 p, dd, li {
     max-inline-size: 80ch;
 }
-
-
-/* button:has(*) {
-    display:flex;
-    gap:.5em;
-    align-items:center;
-    text-align:left;
-} */

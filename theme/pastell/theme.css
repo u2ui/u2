@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+/* this is a very pastel theme */
+
+html {
+    --hsl-h: 210; /* Blauer Farbton */
+    --hsl-s: 100%; /* Sättigung */
+    --hsl-l: 85%; /* Helligkeit */
+
+    /* misc */
+    --width: 42rem;
+    --line-width: 1px;
+    --radius: 8px;
+
+    --shadow-x: 0;
+    --shadow-y: .25rem;
+    --shadow-blur: .8rem;
+    --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) #0003;
+
+    --color-text: hsl(210, var(--hsl-s), 30%);
+    --color-bg: hsl(210, 100%, 98%);
+    --color-line: hsl(210, var(--hsl-s), 60%);
+}
+
+body {
+    font-size: min(1em, 17px);
+}
+
+:focus-visible {
+    outline: .12rem solid var(--color-text);
+    outline-offset: .18rem;
+    &:active { outline-width: .3rem; }
+}
+
+h1 {
+    font-size: 3.5em;
+}
+h1, h2 {
+    font-family: 'Quicksand', sans-serif;
+}
+
+input, textarea, select, button, .btn {
+    padding-inline: .8em;
+    padding-block: .6em;
+    border-color: var(--color-line);
+    &:focus {
+        border-color: var(--color-text);
+    }
+}
+
+button, .btn {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border-color: var(--color-line);
+    padding-inline: 1.3em;
+    transition: .2s;
+    &:hover, &:focus {
+        background-color: var(--color-line);
+        color: var(--color-bg);
+    }
+}
+
+dialog {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: var(--line-width) solid var(--color-line);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+u2-alert {
+    background-color: color-mix(in srgb, var(--color), var(--color-bg) 96%);
+    border-width: 0 0 0 .13em;
+    border-width: 0;
+    font-size: max(.85rem, 14px);
+    &::part(icon) {
+        align-self: start;
+    }
+}
+
+u2-accordion {
+    &::part(trigger) {
+        background-color: var(--color-text);
+        color: var(--color-bg);
+        padding: .7em;
+        border-radius: var(--radius);
+    }
+    &::part(trigger):hover {
+        background-color: color-mix(in srgb, var(--color-text), white 10%);
+    }
+    &::part(trigger):focus, &::part(trigger):active {
+        outline: .12rem solid var(--color-text);
+        outline-offset: .18rem;
+    }
+    &::part(content) {
+        background-color: var(--color-bg);
+        padding: .7em;
+    }
+}

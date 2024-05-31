@@ -9,7 +9,7 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
         this.resizeObserver = new ResizeObserver(() => {
             this._build();
         });
-        //import ('../splitbutton/splitbutton.js'); // needs the css too
+        //import ('../menubutton/menubutton.js'); // needs the css too
 
     }
 
@@ -20,7 +20,7 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
         let fullWidth = items.reduce((acc, item) => acc + item.width, 0);
         while ( fullWidth > containerWidth) {
             const item = items.pop();
-            if (item.btn.tagName === 'U2-SPLITBUTTON') continue;
+            if (item.btn.tagName === 'U2-MENUBUTTON') continue;
             const li = document.createElement('li');
             li.appendChild(item.btn);
             this.menuButton.querySelector('menu').prepend(li);
@@ -34,9 +34,9 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
 
     connectedCallback() {
         requestAnimationFrame(() => {
-            this.menuButton = this.querySelector(':scope > u2-splitbutton');
+            this.menuButton = this.querySelector(':scope > u2-menubutton');
             if (!this.menuButton) {
-                this.menuButton = document.createElement('u2-splitbutton');
+                this.menuButton = document.createElement('u2-menubutton');
                 this.menuButton.innerHTML = `
                 <button style="padding-inline:.3em">
                     <u2-ico inline icon=more_vert>⋮</u2-ico>

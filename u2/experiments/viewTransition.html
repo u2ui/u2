@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>View Transition Demo</title>
+        <script src="../tests/test-init.js" type=module async></script>
+        <script src="../auto.js" type=module async></script>
+
+
+<body>
+
+
+
+
+<my-el id="el1">My Element</my-el>
+<my-el>My Element 2</my-el>
+
+<style>
+#test {
+    view-transition-name: first;
+}
+</style>
+
+<button id="btn"><span class="title">Title</span></button>
+
+<span id="test">Test</span>
+
+<div popover="auto" id="dialg" style="position:static; margin:0">
+    <h1><span class="title">Title</span></h1>
+    <button>Close</button>
+    <div class="content">
+        <h1>Content</h1>
+        <p>Content</p>
+    </div>
+</div>
+
+
+
+<script type=module>
+    btn.onclick = () => {
+        document.startViewTransition(() => {
+            dialg.showPopover();
+            dialg.append(test)
+        });
+    }
+</script>

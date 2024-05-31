@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,400;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,400&display=swap');
+
+/* this is an elegant theme */
+
+html {
+    --hsl-h: 210; /* Eleganter Blauton */
+    --hsl-s: 20%; /* Sättigung */
+    --hsl-l: 40%; /* Helligkeit */
+
+    /* misc */
+    --width: 42rem;
+    --line-width: 1px;
+    --radius: 0.3rem;
+
+    --shadow-x: 0;
+    --shadow-y: .25rem;
+    --shadow-blur: .8rem;
+    --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) #0003;
+
+    --color-text: hsl(var(--hsl-h), var(--hsl-s), 25%);
+    --color-bg: hsl(var(--hsl-h), var(--hsl-s), 98%);
+    --color-line: hsl(var(--hsl-h), var(--hsl-s), 50%);
+}
+
+body {
+    font-size: min(1em, 17px);
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+:focus-visible {
+    outline: .12rem solid var(--color-text);
+    outline-offset: .18rem;
+    &:active { outline-width: .3rem; }
+}
+
+h1 {
+    font-size: 3.5em;
+}
+h1, h2 {
+    font-family: 'Playfair Display', serif;
+}
+
+input, textarea, select, button, .btn {
+    padding-inline: .8em;
+    padding-block: .6em;
+    border-color: var(--color-line);
+    border-radius: var(--radius);
+    &:focus {
+        border-color: var(--color-text);
+    }
+}
+
+button, .btn {
+    background-color: transparent;
+    color: var(--color-text);
+    border-color: var(--color-text);
+    padding-inline: 1.3em;
+    text-transform: uppercase;
+    transition: .2s;
+    &:hover, &:focus {
+        background-color: var(--color-text);
+        color: var(--color-bg);
+    }
+}
+
+dialog {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: var(--line-width) solid var(--color-line);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+}
+
+u2-alert {
+    background-color: color-mix(in srgb, var(--color-text), var(--color-bg) 90%);
+    border-width: 0 0 0 var(--line-width);
+    font-size: max(.85rem, 14px);
+    padding: 1rem;
+    border-radius: var(--radius);
+}

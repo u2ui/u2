@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <meta name="viewport" content="width=device-width">
+
+
+    <script src="../../../js/init.js" type=module crossorigin></script>
+
+    <link href="../../full.css" rel=stylesheet>
+    <link href="../../simple.css" rel=stylesheet>
+
+<body id=body>
+
+<section>
+
+    <div class=links>
+        <link rel="stylesheet" href="none">
+        <link rel="stylesheet" href="./square.css">
+    </div>
+
+    <fieldset id=selectEl>
+        <legend>Choose Stylesheet</legend>
+    </fieldset>
+
+    <script>
+    let links = document.querySelectorAll('.links > link')
+    links.forEach(link=>{
+        var label = document.createElement('label');
+        label.innerHTML += '<input type=radio name=x> ' + link.getAttribute('href') + '<br>';
+        label._link = link;
+        selectEl.append(label)
+    });
+    selectEl.addEventListener('change', e=>{
+        links.forEach(link=>link.rel='x');
+        e.target.closest('label')._link.rel = 'stylesheet';
+    })
+    </script>
+
+Baseline
+
+<button>
+ I
+</button>
+
+<button>
+ ABCDE
+</button>
+
+Baseline
+
+</section>

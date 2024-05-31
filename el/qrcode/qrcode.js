@@ -1,3 +1,4 @@
+// alternative qr-code writer: https://zxing-js.github.io/library/examples/qr-svg-writer/
 
 customElements.define('u2-qrcode', class extends HTMLElement {
 

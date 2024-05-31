@@ -1,4 +1,9 @@
 u2-input {
+    display:inline-block;
+    xinline-size:13em;
+}
+
+u2-input {
     & > button:is([slot=start],[slot=end]) {
         &:is(button) {
             padding-block:inline;
@@ -57,3 +62,19 @@ u2-input[type="cycle"] {
     }
 }
 
+u2-input[type="stepper"] {
+    inline-size: 6em;
+}
+
+
+u2-input[type="file"] {
+    html.u2DraggingFile & {
+        outline: .4rem solid var(--color-light, #0cf);
+        background-color:#ff6;
+        outline-offset: .2rem;
+    }
+    &.u2DragOver.u2DragOver {
+        outline: .4rem solid var(--color, #0cf);
+        outline-offset: .2rem;
+    }
+}

@@ -16,6 +16,14 @@
       "css": false,
       "js": true
     },
+    "disableif": {
+      "name": "disableif",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "draghandle": {
       "name": "draghandle",
       "description": "Define a drag handle-element for an element that uses the draggable attribute.",
@@ -308,8 +316,8 @@
       "css": true,
       "js": true
     },
-    "splitbutton": {
-      "name": "splitbutton",
+    "menubutton": {
+      "name": "menubutton",
       "description": "Buttons with options",
       "beta": false,
       "deprecated": false,
@@ -351,6 +359,14 @@
     "time": {
       "name": "time",
       "description": "The better time-element, e.g. live changing relative dates",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "toc": {
+      "name": "toc",
+      "description": "Automatically generate a table of contents",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -432,6 +448,14 @@
       "css": false,
       "js": true
     },
+    "loading": {
+      "name": "loading",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "Placer": {
       "name": "Placer",
       "description": "Absolute place elements relative to others",
@@ -471,6 +495,104 @@
       "deprecated": false,
       "css": false,
       "js": true
+    }
+  },
+  "theme": {
+    "brutalist": {
+      "name": "brutalist",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "elegance": {
+      "name": "elegance",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "luxury": {
+      "name": "luxury",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "minimal": {
+      "name": "minimal",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "minimalism": {
+      "name": "minimalism",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "natur": {
+      "name": "natur",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "pastell": {
+      "name": "pastell",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "pop": {
+      "name": "pop",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "retro": {
+      "name": "retro",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "soft": {
+      "name": "soft",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "tech": {
+      "name": "tech",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "test": {
+      "name": "test",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
     }
   }
 }

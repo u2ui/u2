@@ -3,19 +3,28 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
+    <title>test</title>
     <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
 <body>
 
 <section class="main">
-    <button>button 1</button>
-    <button>button 2</button>
+    <button>context 1</button>
+    <button>context 2</button>
 </section>
+
+<script type=module>
+import * as contextmenue from '../contextmenu.js';
+window.contextmenue = contextmenue;
+</script>
 
 <script type=module class="main">
 
-import {contextMenu} from '../contextmenu.js';
+const ctxMenu = await import('../contextmenu.js');
 
-contextMenu.add([
+ctxMenu.add([
     {
         label: 'Button',
         action: e => alert(e.target.textContent),

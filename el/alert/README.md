@@ -13,7 +13,7 @@ Prominent hints, alerts, and facts
 ```html
 <u2-alert open variant="" dismissable icon="bug_report">
     This is a dismissable alert with an custom icon.
-    <button slot=action>OK</button>
+    <button slot=action>Ok</button>
 </u2-alert>
 ```
 

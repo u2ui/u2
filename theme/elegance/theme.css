@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&family=Merriweather:wght@400;700&display=swap');
+
+/* Modern and Elegant Theme */
+
+html {
+    --hsl-h: 210; /* Blauer Farbton */
+    --hsl-s: 50%; /* Sättigung */
+    --hsl-l: 45%; /* Helligkeit */
+
+    /* misc */
+    --width: 42rem;
+    --line-width: 1px;
+    --radius: 5px;
+
+    --shadow-x: 0;
+    --shadow-y: .25rem;
+    --shadow-blur: .8rem;
+    --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) rgba(0, 0, 0, 0.1);
+
+    --color-text: hsl(210, var(--hsl-s), 20%);
+    --color-bg: hsl(210, var(--hsl-s), 95%);
+    --color-line: hsl(210, var(--hsl-s), 70%);
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    font-size: min(1em, 17px);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+:focus-visible {
+    outline: .12rem solid var(--color-text);
+    outline-offset: .18rem;
+    &:active { outline-width: .3rem; }
+}
+
+h1, h2, h3 {
+    font-family: 'Merriweather', serif;
+}
+
+h1 {
+    font-size: 3em;
+    color: hsl(210, var(--hsl-s), 30%);
+}
+
+h2 {
+    font-size: 2.5em;
+    color: hsl(210, var(--hsl-s), 25%);
+}
+
+h3 {
+    font-size: 2em;
+    color: hsl(210, var(--hsl-s), 20%);
+}
+
+input, textarea, select, button, .btn {
+    font-family: 'Raleway', sans-serif;
+    padding-inline: .8em;
+    padding-block: .6em;
+    border: var(--line-width) solid var(--color-line);
+    border-radius: var(--radius);
+    transition: border-color .2s;
+    &:focus {
+        border-color: var(--color-text);
+    }
+}
+
+button, .btn {
+    background-color: transparent;
+    color: var(--color-text);
+    border-color: var(--color-text);
+    padding-inline: 1.3em;
+    text-transform: uppercase;
+    transition: background-color .2s, color .2s;
+    &:hover, &:focus {
+        background-color: var(--color-text);
+        color: var(--color-bg);
+    }
+}
+
+dialog {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: var(--line-width) solid var(--color-line);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+}
+
+u2-alert {
+    background-color: color-mix(in srgb, var(--color-text), var(--color-bg) 90%);
+    border-left: .3em solid var(--color-text);
+    font-size: max(.85rem, 14px);
+    padding: .7em;
+    border-radius: var(--radius);
+    &::part(icon) {
+        align-self: start;
+    }
+}
+
+u2-accordion {
+    &::part(trigger) {
+        background-color: var(--color-text);
+        color: var(--color-bg);
+        padding: .7em;
+        border-radius: var(--radius);
+    }
+    &::part(trigger):hover {
+        background-color: color-mix(in srgb, var(--color-text), white 10%);
+    }
+    &::part(trigger):focus, &::part(trigger):active {
+        outline: .12rem solid var(--color-text);
+        outline-offset: .18rem;
+    }
+    &::part(content) {
+        background-color: var(--color-bg);
+        padding: .7em;
+    }
+}

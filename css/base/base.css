@@ -79,7 +79,7 @@ select, summary, label, button:not(:disabled), input:where([type=checkbox], [typ
 	cursor:pointer;
 }
 
-[inert] { opacity:.4; }
+[inert], :disabled { opacity:.4; }
 
 /* form */
 input, textarea, select, button, ::file-selector-button, .btn {
@@ -110,18 +110,18 @@ input:where([type=radio], [type=checkbox], [type=file], [type=date], [type=time]
 input:where([type=range]) { vertical-align:middle }
 
 
-/* animatable popovers */
-:is(dialog, [popover]) {
+/* animatable dialog and popover */
+dialog, [popover] {
     &, &::backdrop {
         transition-behavior: allow-discrete;
         opacity: 0;
-        &:popover-open, &:modal, &[open] {
-            &, &::backdrop {
-                opacity: 1;
-                @starting-style {
-                    opacity: 0;
-                }
-            }
-        }
+    }
+}
+dialog:is(:modal,[open]), :popover-open {
+    &, &::backdrop { opacity: 1; } /* @starting-style { opacity: 0; } why does this not work? */
+}
+@starting-style {
+    dialog:is(:modal,[open]), :popover-open {
+        &, &::backdrop { opacity: 0; }
     }
 }

@@ -268,9 +268,9 @@
           <input type="file" id="input-file-multiple" multiple> File (multiple)
         </label>
         <label>
-          <button type="button">Button</button> <input style="width:5rem"> <select><option>1</select>
-          inline
-        </label>
+            <button type="button">Button</button> <input style="width:5rem"> <select><option>1</select>
+            inline
+        </label>  
         <br>
         <button type="button" disabled>I'm a disabled Button</button>
         <a class="btn" href="#x">Fake Button</a>
@@ -304,28 +304,37 @@
         <img width=100 height=100 style="background:#eee" alt="">
   </table>
 
-  Dialog:
-  <br>
-  <button onclick="favDialog.toggleAttribute('open')">toggle open</button>
-  <button onclick="favDialog.showModal()">showModal()</button>
-  <dialog id="favDialog" style="transition-duration:.5s">
-    <form method="dialog">
-        Should be smooth faded in and out (has transition-duration:.5s)
-        <label>Favorite animal:
-            <select>
-                <option></option>
-                <option>Brine shrimp</option>
-                <option>Red panda</option>
-                <option>Spider monkey</option>
-            </select>
-        </label>
-        <menu>
-            <li><button value="cancel">Cancel</button>
-            <li><button id="confirmBtn" value="default">Confirm</button>
-            <li><button type=button onclick="this.closest('dialog').append('test '.repeat(10000))">Add lot of contents</button>
-        </menu>
-    </form>
-  </dialog>
+    Dialog:
+    <br>
+    <button onclick="favDialog.toggleAttribute('open')">toggle open</button>
+    <button onclick="favDialog.showModal()">showModal()</button>
+    <style>
+    #favDialog {
+        transition-duration:1s
+    }
+    #favDialog::backdrop {
+        transition-duration:1s;
+        background:rgba(0,0,0,.8);
+    }
+    </style>
+    <dialog id="favDialog">
+        <form method="dialog">
+            Should be smooth faded in and out, it has transition-duration:1s (chromium for now)
+            <label>Favorite animal:
+                <select>
+                    <option></option>
+                    <option>Brine shrimp</option>
+                    <option>Red panda</option>
+                    <option>Spider monkey</option>
+                </select>
+            </label>
+            <menu>
+                <li><button value="cancel">Cancel</button>
+                <li><button id="confirmBtn" value="default">Confirm</button>
+                <li><button type=button onclick="this.closest('dialog').append('test '.repeat(10000))">Add lot of contents</button>
+            </menu>
+        </form>
+    </dialog>
 
 </section>
 

@@ -11,7 +11,7 @@ alert, prompt, confirm but async
 ## Usage
 
 ```html
-<button onclick="module.prompt('Just a test').then(console.log)">run</button>
+<button onclick="dialog.prompt('Just a test').then((res)=>this.innerHTML = 'value: '+res)">run</button>
 ```
 
 ```css

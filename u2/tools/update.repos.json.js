@@ -8,7 +8,7 @@ let base = import.meta.resolve('../../');
 base = base.replace(/file:\/\/\//, '');
 //const base = './u2/';
 
-['attr', 'class', 'el', 'css', 'js'].forEach(async category=>{
+['attr', 'class', 'el', 'css', 'js', 'theme'].forEach(async category=>{
     repos[category] = {};
     for await (const entry of Deno.readDir(base+category)) {
         if (!entry.isDirectory) continue;

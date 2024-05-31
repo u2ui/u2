@@ -4,13 +4,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <script src="../../../u2/tests/test-init.js" type=module async></script>
+        <script src="../../../u2/auto.js" type=module async></script>
+        
         <title>u2-card1 Test</title>
 
         <link rel=stylesheet href="../../../css/classless/full.css">
         <link rel=stylesheet href="../../../css/classless/simple.css">
-
-        <link rel=stylesheet href="../../../flex.class/flex.min.css">
-        <link rel=stylesheet href="../../../invert.class/invert.min.css">
 
         <link rel=stylesheet href="../card1.css">
 <body>
@@ -37,7 +36,7 @@
             <div class=-body>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos porro pariatur ducimus aut? Saepe vitae sequi doloribus perspiciatis quae? Fuga, exercitationem voluptatum facilis necessitatibus qui incidunt? Magnam non perferendis iure.
             </div>
-            <div style="background:#eee">
+            <div style="background:#0001">
                 <div class=u2-flex style="--u2-Gap:.5rem">
                     <button style="flex-grow:1">button 1</button>
                     <button style="flex-grow:1">button 2</button>
@@ -45,13 +44,13 @@
             </div>
         </li>
         <li class=u2-card1 style="flex: 1 0 14rem; position:relative">
-            <span style="position:absolute; left:0; right:0; background:var(--color); border-radius:99em; width:3rem; height:3rem; margin:auto; margin-top:-1.5rem; color:#eee; font-size:2rem; padding:0; font-weight:900; display:grid; place-items: center;">!</span>
+            <span style="position:absolute; left:0; right:0; background:var(--color); border-radius:99em; width:3rem; height:3rem; margin:auto; margin-top:-1.5rem; color:var(--color-bg); font-size:2rem; padding:0; font-weight:900; display:grid; place-items: center;">!</span>
             <h2>Card 2</h2>
             <img src="https://picsum.photos/800/600?random=1" alt="x" loading=lazy width=800 height=600>
             <div class=-body>
                 Despite less content, the footer is still at the bottom.
             </div>
-            <div style="background:#eee">
+            <div style="background:#0001">
                 <button>button 1</button>
             </div>
         </li>
@@ -64,7 +63,7 @@
             <img src="https://picsum.photos/800/600?random=1" alt="x" loading=lazy width=800 height=600>
         </li>
         <li style="flex: 1 0 14rem;">
-            <a class="u2-card1 u2-invert" href="#">
+            <a class="u2-card1" u2-skin="invert" href="#">
                 <h2>Card as Link and inverted</h2>
                 <div class=-body>
                     Ipsum dolor sit amet consectetur adipisicing elit. Magnam non perferendis iure. Aliquam consequ des consequ des consequ des consequ.

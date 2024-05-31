@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400..700&display=swap');
+
+/* Schatten Theme */
+
+html {
+    --hsl-h: 240; /* Blauer Farbton */
+    --hsl-s: 30%; /* Sättigung */
+    --hsl-l: 50%; /* Helligkeit */
+
+    /* misc */
+    --width: 42rem;
+    --line-width: 1px;
+    --radius: 8px;
+
+    --shadow-x: 0.2rem;
+    --shadow-y: 0.5rem;
+    --shadow-blur: 1rem;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) var(--shadow-color);
+
+    --color-text: hsl(240, var(--hsl-s), 25%);
+    --color-bg: hsl(240, var(--hsl-s), 95%);
+}
+
+body {
+    font-size: min(1em, 17px);
+    box-shadow: var(--shadow);
+}
+
+:focus-visible {
+    outline: .12rem solid var(--color-text);
+    outline-offset: .18rem;
+    &:active { outline-width: .3rem; }
+}
+
+h1 {
+    font-size: 3.5em;
+    text-shadow: var(--shadow);
+}
+h1, h2 {
+    font-family: 'Lora', serif;
+}
+
+input, textarea, select, button, .btn {
+    padding-inline: .8em;
+    padding-block: .6em;
+    border-color: var(--color-text);
+    box-shadow: var(--shadow);
+    &:focus {
+        border-color: var(--color-text);
+        box-shadow: 0 0 0.5rem var(--color-text);
+    }
+}
+
+button, .btn {
+    background-color: transparent;
+    color: var(--color-text);
+    border-color: var(--color-text);
+    padding-inline: 1.3em;
+    text-transform: uppercase;
+    transition: .2s;
+    box-shadow: var(--shadow);
+    &:hover, &:focus {
+        background-color: var(--color-text);
+        color: var(--color-bg);
+        box-shadow: 0 0 0.5rem var(--color-text);
+    }
+}
+
+dialog {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: var(--line-width) solid var(--color-text);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+u2-alert {
+    background-color: color-mix(in srgb, var(--color-text), var(--color-bg) 96%);
+    border-width: 0 0 0 .13em;
+    font-size: max(.85rem, 14px);
+    box-shadow: var(--shadow);
+    &::part(icon) {
+        align-self: start;
+    }
+}
+
+u2-accordion {
+    &::part(trigger) {
+        background-color: var(--color-text);
+        color: var(--color-bg);
+        padding: .7em;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+    &::part(trigger):hover {
+        background-color: color-mix(in srgb, var(--color-text), white 10%);
+    }
+    &::part(trigger):focus, &::part(trigger):active {
+        outline: .12rem solid var(--color-text);
+        outline-offset: .18rem;
+        box-shadow: 0 0 0.5rem var(--color-text);
+    }
+    &::part(content) {
+        background-color: var(--color-bg);
+        padding: .7em;
+        box-shadow: var(--shadow);
+    }
+}

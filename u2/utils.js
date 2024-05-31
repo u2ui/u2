@@ -1,10 +1,10 @@
 ///////////////////////////
 // cssImport
 
-var cssImported = [];
+const cssImported = [];
 export function importCss(url, options={}) {
     return new Promise((resolve, reject) => {
-        var link = _importCss(url, options);
+        const link = _importCss(url, options);
         if (link==null) resolve({available:true}); // already loaded
         else {
             link.onload  = e=>resolve({available:false}); // todo, remove eventlisteners?
@@ -35,6 +35,7 @@ function _importCss(url, options={}){
     cssImported[url] = true;
 
     for (let el of rootNode.querySelectorAll('link[rel=stylesheet]')) { // check if manually added
+        cssImported[el.href] = true; // cache
         if (el.href === url) return;
     }
     const link = rootNode.ownerDocument.createElement('link');

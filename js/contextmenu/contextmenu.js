@@ -251,6 +251,8 @@ const css = `
 `;
 
 export const contextMenu = new Menu();
+export const add = contextMenu.add.bind(contextMenu);
+
 const rootEl = contextMenu.el;
 
 rootEl.id = 'u2ContextMenu';

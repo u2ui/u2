@@ -10,8 +10,8 @@
 
     <script src="../../../u2/auto.js" type=module async></script>
 
-    <link rel=stylesheet href="../splitbutton.css">
-    <script src="../splitbutton.js" type=module async></script>
+    <link rel=stylesheet href="../menubutton.css">
+    <script src="../menubutton.js" type=module async></script>
 
     <style>
     body {
@@ -24,24 +24,24 @@
 <body>
 
 <header>
-    <h1>u2-splitbutton test</h1>
+    <h1>u2-menubutton test</h1>
 </header>
 
 <section>
-    <u2-splitbutton>
+    <u2-menubutton>
         <button>Add Item ▾</button>
         <menu>
             <li><button>Special Item</button>
             <li><button>Super Item</button>
         </menu>
-    </u2-splitbutton>
+    </u2-menubutton>
     <button>
         normal button for reference
     </button>
 </section>
 
 <article>
-    <u2-splitbutton>
+    <u2-menubutton>
         <button>
             <u2-ico inline>home</u2-ico>
             Add
@@ -54,15 +54,15 @@
             <li> <button>Remove</button>
             <li> <button>Remove All</button>
         </menu>
-    </u2-splitbutton>
+    </u2-menubutton>
 </article>
 
 
-<style style="display: block" contenteditable>u2-splitbutton menu {
+<style style="display: block" contenteditable>u2-menubutton menu {
     box-shadow: 0 0 1rem #0008;
     border:none;
 }
-u2-splitbutton menu button {
+u2-menubutton menu button {
     text-align:left;
 }
 </style>

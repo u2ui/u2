@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../disableif.js" type=module></script>
+
+<body>
+
+<section class=main>
+
+    <form>
+        <label>
+            <input type=checkbox name="isClient"> Already Client?
+        </label>
+        <input u2-disableif="!isClient" placeholder="Client number" >
+    </form>
+
+</section>
+
+<style class=main>
+[u2-disableif][disabled] {
+    opacity: .3;
+    xbackground: #ccc;
+}
+</style>
+

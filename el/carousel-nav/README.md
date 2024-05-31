@@ -1,5 +1,6 @@
 # &lt;u2-carousel-nav&gt; - element
-null
+Carousel navigation element for u2-carousel. (beta)
+
 
 ## Usage
 

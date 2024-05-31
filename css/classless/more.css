@@ -50,21 +50,26 @@ select:not([size], [multiple]) {
 /***************************/
 
 input:is([type=radio], [type=checkbox]) {
+    padding:0 !important;
 	-webkit-appearance: none;
 	appearance: none;
 	transform:rotate(.002deg); /* improve rendering in ff, chrome */
 }
 
 input:is([type=radio], [type=checkbox]) {
+    /*
 	width: 1.1em;
 	height: 1.1em;
+	vertical-align: -.14em;
+    new: */
+	width: 1.3em;
+	height: 1.3em;
+    vertical-align: text-bottom;}
 	background-color: #fff;
 	border: solid 1px;
 	position: relative;
 	border-radius: .15em;
 	padding: 0;
-	vertical-align: -.14em;
-}
 
 input:is([type=radio],[type=checkbox]):checked {
 	border-color: var(--color, blue);
@@ -73,10 +78,7 @@ input:is([type=radio],[type=checkbox]):checked {
 input:is([type=radio], [type=checkbox])::before {
 	content: "";
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+    inset: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -92,6 +94,9 @@ input:is([type=radio],[type=checkbox]):checked::before {
 }
 
 /* checkbox */
+input[type=checkbox] {
+	border-radius:0;
+}
 input[type=checkbox]:checked::before {
 	content: "✔";
 }
@@ -129,10 +134,7 @@ input:is([type=radio],[type=checkbox]):indeterminate::before {
 input:where([type=radio], [type=checkbox]):not(:disabled)::after {
 	content: '';
 	position: absolute;
-	top: -60%;
-	left: -60%;
-	right: -60%;
-	bottom: -60%;
+    inset: -60%;
 	border-radius: 50%;
 	transition: background-color .3s;
 }

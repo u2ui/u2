@@ -9,15 +9,15 @@
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
     <script type=module>
-        import * as module from '../dialog.js';
-        window.module = module;
+        import * as dialog from '../dialog.js';
+        window.dialog = dialog;
     </script>
 
 <body>
 
 
 <section class="main">
-    <button onclick="module.prompt('Just a test').then(console.log)">run</button>
+    <button onclick="dialog.prompt('Just a test').then((res)=>this.innerHTML = 'value: '+res)">run</button>
 </section>
 
 <style class="main">

@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400..900&display=swap');
+
+/* this is a very pop pink theme */
+
+html {
+    --hsl-h: 330; /* Pinker Farbton */
+    --hsl-s: 100%; /* Sättigung */
+    --hsl-l: 70%; /* Helligkeit */
+
+    /* misc */
+    --width: 42rem;
+    --line-width: 1px;
+    --radius: 12px;
+
+    --shadow-x: 0;
+    --shadow-y: .5rem;
+    --shadow-blur: 1rem;
+    --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) #0004;
+
+    --color-text: hsl(330, var(--hsl-s), 40%);
+    --color-bg: hsl(330, 100%, 95%);
+    --color-line: hsl(330, var(--hsl-s), 50%);
+}
+
+body {
+    font-size: min(1em, 17px);
+    font-family: 'Poppins', sans-serif;
+}
+
+:focus-visible {
+    outline: .15rem solid var(--color-line);
+    outline-offset: .2rem;
+    &:active { outline-width: .3rem; }
+}
+
+h1 {
+    font-size: 4em;
+    color: var(--color-text);
+}
+h1, h2 {
+    font-family: 'Poppins', sans-serif;
+}
+
+input, textarea, select, button, .btn {
+    padding-inline: 1em;
+    padding-block: .8em;
+    border-color: var(--color-line);
+    border-radius: var(--radius);
+    &:focus {
+        border-color: var(--color-text);
+    }
+}
+
+button, .btn {
+    background-color: var(--color-text);
+    color: var(--color-bg);
+    border: none;
+    padding-inline: 1.5em;
+    transition: .2s;
+    &:hover, &:focus {
+        background-color: var(--color-line);
+        color: var(--color-bg);
+    }
+}
+
+dialog {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: var(--line-width) solid var(--color-line);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+u2-alert {
+    background-color: color-mix(in srgb, var(--color), transparent 90%);
+    border-left: .3em solid var(--color);
+    font-size: max(.85rem, 14px);
+    &::part(icon) {
+        align-self: start;
+    }
+}
+
+u2-accordion {
+    &::part(trigger) {
+        background-color: var(--color-text);
+        color: var(--color-bg);
+        padding: .7em;
+        border-radius: var(--radius);
+    }
+    &::part(trigger):hover {
+        background-color: hsl(330, 100%, 60%);
+    }
+    &::part(trigger):focus, &::part(trigger):active {
+        outline: .15rem solid var(--color-line);
+        outline-offset: .2rem;
+    }
+    &::part(content) {
+        background-color: var(--color-bg);
+        padding: .7em;
+    }
+}

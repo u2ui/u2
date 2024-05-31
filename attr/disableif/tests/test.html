@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../disableif.js" type=module></script>
+
+<body>
+
+<section class=main>
+
+    <form>
+    
+        <fieldset>
+            <legend>Stellenangebot</legend>
+            <label>
+                Anstellungsart:
+                <select name="type">
+                    <option value="">Bitte wählen</option>
+                    <option value="freelancer">Freelancer</option>
+                    <option value="teilzeit">Teilzeit</option>
+                    <option value="vollzeit">Vollzeit</option>
+                </select>
+            </label>
+        </fieldset>
+        <br>
+        <fieldset u2-disableif="type!=freelancer">
+            <legend>Freelancer</legend>
+            <label>
+                Stundensatz:
+                <input type=text name="freelancerRate">
+            </label>
+            <br>
+            <label>
+                Projektbeschreibung:
+                <input type=text name="freelancerDescription">
+            </label>
+        </fieldset>
+        <br>
+        <fieldset u2-disableif="type!=teilzeit">
+            <legend>Teilzeit</legend>
+            <label>
+                Teilzeitstunden pro Woche:
+                <input type=text name="partTimeHours">
+            </label>
+            <br>
+            <label>
+                Abteilung:
+                <input type=text name="partTimeDepartment">
+            </label>
+        </fieldset>
+        <br>
+        <fieldset u2-disableif="type!=vollzeit">
+            <legend>Vollzeit</legend>
+            <label>
+                Vollzeitposition:
+                <input type=text name="fullTimePosition">
+            </label>
+            <br>
+            <label>
+                Abteilung:
+                <input type=text name="fullTimeDepartment">
+            </label>
+            <br>
+            <label>
+                Gehalt:
+                <input type=text name="fullTimeSalary">
+            </label>
+        </fieldset>
+        <br>
+        <button type="submit">Absenden</button>
+    </form>
+
+</section>
+
+<style class=main>
+    fieldset[disabled] {
+        opacity: .2;
+    }
+</style>
+

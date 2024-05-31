@@ -1,9 +1,7 @@
-// See https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel
 
 const icoCssUrl = import.meta.resolve('../../el/ico/ico.css');
 
-
-customElements.define('u2-accordion', class extends HTMLElement {
+class Accordion extends HTMLElement {
 
     constructor() {
         super();
@@ -17,9 +15,6 @@ customElements.define('u2-accordion', class extends HTMLElement {
         :host {
             display:block;
             --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
-        }
-        :host(:active) {
-            xoutline:none !important;
         }
         #accordion {
             display:flex;
@@ -47,10 +42,6 @@ customElements.define('u2-accordion', class extends HTMLElement {
                 }
             }
         }
-        .trigger:is(:focus,:active) {
-            xoutline:2px solid blue;
-            outline:--u2-focus-outline;
-        }
         .title::slotted(*) {
             margin:0 !important;
             flex:1 1 auto;
@@ -59,19 +50,16 @@ customElements.define('u2-accordion', class extends HTMLElement {
         .content {
             display:block;
             padding:1em;
-            background-color: #9999990a;
-
             overflow:auto;
             transition:.3s;
             transition-behavior: allow-discrete;
         }
         .content[hidden="until-found"] {
             content-visibility:visible;
-            xopacity:0;
             overflow:hidden;
             block-size:0;
             max-block-size:0;
-            padding-block:0;
+            padding-block:0 !important;
         }
         </style>
         <div id=accordion role=presentation></div>
@@ -97,19 +85,15 @@ customElements.define('u2-accordion', class extends HTMLElement {
     }
 
     _build() {
-
         const container = this.shadowRoot.querySelector('#accordion');
         const icon = this.getAttribute('icon') || 'expand-more';
 
         let hLevel = 6;
-        // get highest heading level
-        for (let node of this.children) {
+        for (let node of this.children) { // get highest heading level
             if (!node.tagName.match(/^H[1-6]$/)) continue;
             let level = parseInt(node.tagName[1]);
             if (level < hLevel) hLevel = level;
         }
-
-
 
         let index = -1;
         let activeContent = null;
@@ -122,7 +106,7 @@ customElements.define('u2-accordion', class extends HTMLElement {
                 if (!panel) {
                     panel = document.createElement('div');
                     panel.innerHTML = `
-                        <span class=trigger id=title${index}   role=button part=trigger tabindex=0  aria-controls=content${index} aria-expanded=false>
+                        <span class=trigger id=title${index} role=button part=trigger tabindex=0  aria-controls=content${index} aria-expanded=false>
                             <slot class=title part=title></slot>
                             <slot class=icon part=icon>
                                 <u2-ico icon=${icon}>▾</u2-ico>
@@ -140,34 +124,9 @@ customElements.define('u2-accordion', class extends HTMLElement {
                 if (activeContent) collectedContents.push(node);
             }
         }
+        while (container.children.length > index + 1) container.lastChild.remove(); // remove excess panels
         activeContent && activeContent.assign(...collectedContents);
     }
-
-    // get selected() {
-    //     return this._selected;
-    // }
-
-    // set selected(index) {
-    //     this._selected = index;
-    //     this._selectTab(index);
-    //     this.setAttribute('selected', index);
-    // }
-    // _selectTab(idx = null) { // todo? merge into `set selected()`?
-    //     [...this.items].forEach((panel, i) => {
-    //         let select = i === idx;
-    //         let trigger = panel.querySelector('.trigger');
-    //         //trigger.setAttribute('tabindex', select ? 0 : -1);
-    //         trigger.setAttribute('aria-expanded', select);
-    //         let content = panel.querySelector('.content');
-    //         content.setAttribute('tabindex', select ? 0 : -1);
-    //         if (select) {
-    //             content.removeAttribute('hidden');
-    //         } else {
-    //             content.setAttribute('hidden', 'until-found');
-    //         }
-    //     });
-    // }
-
 
     _getTargetTriggerFromEvent(event) {
         const path = event.composedPath();
@@ -212,10 +171,6 @@ customElements.define('u2-accordion', class extends HTMLElement {
         if (!trigger) return;
         const panel = trigger.parentElement;
         const index = [...panel.parentElement.children].indexOf(panel);
-        // beta, should not be here but in "_selectTab"?
-        // let event = new CustomEvent('u2-activate', { bubbles: true, cancelable: true });
-        // target.dispatchEvent(event);
-        // if (event.defaultPrevented) return;
         this._toggleItem(index);
         trigger.focus();
     }
@@ -239,20 +194,6 @@ customElements.define('u2-accordion', class extends HTMLElement {
             actions[e.code](idx);
         }
     }
+}
 
-    // static observedAttributes = ['selected'];
-    // attributeChangedCallback(name, oldValue, newValue) {
-    //     if (oldValue === newValue) return;
-    //     if (name === 'selected') this.selected = parseInt(newValue);
-    // }
-
-});
-
-
-// // beta, does not work if initial u2-target is already fired
-// // problem: sometimes, on initial load, the event is fired before the listener is added
-// document.addEventListener('u2-target', e => {
-//     let accordion = document.querySelectorAll('u2-accordion > :target');
-//     for (let tab of accordion) tab.click();
-// });
-
+customElements.define('u2-accordion', Accordion);

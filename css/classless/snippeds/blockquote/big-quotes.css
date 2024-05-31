@@ -1,0 +1,36 @@
+blockquote {
+    font-size: 1.4rem;
+    font-style: italic;
+    margin: 2rem;
+    padding: 2rem;
+    border:0;
+    background-color: var(--color-area, #f8f8f8);
+    position: relative;
+    text-align:center;
+    text-wrap: balance;
+    max-width: 20em;
+    margin-inline:auto;
+}
+
+blockquote::before, blockquote::after {
+    content: open-quote;
+    font-size: 4em;
+    font-weight: 900;
+    line-height: .8;
+    font-style: normal;
+    opacity:.2;
+    position: absolute;
+    inset:-.3em auto auto -.3em;
+}
+
+blockquote::after {
+    content: close-quote;
+    inset:auto -.3em -.3em auto;
+}
+
+blockquote footer {
+    font-weight: 700;
+    text-align:right;
+    font-size:1rem;
+    font-style:normal;
+}

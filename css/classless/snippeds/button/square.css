@@ -1,0 +1,22 @@
+#body button {
+    display: inline-block;
+    padding: 0.4em;
+    text-align: center;
+    line-height: 1;
+    
+    border-radius: 999px;
+    background-color: var(--color);
+    font-size: 2rem;
+    border:.1em solid black;
+}
+button::before {
+    content: '';
+    display: block;
+    width: 1lh;
+    opacity: 0.3;
+    line-height:inherit;
+
+    height: 1px;
+    background: black;
+    margin-top: -1px;
+}
