@@ -6,6 +6,7 @@
 <body>
 <script type=module>
 
+import { promiseElementById } from '../../tools/promiseElementById.js';
 
 
 const registry = new FinalizationRegistry(value => {
@@ -20,39 +21,10 @@ const registry = new FinalizationRegistry(value => {
 
 
 
-// function getElementByIdPromise(id) {
-//     let { promise, resolve, reject } = Promise.withResolvers();
-//     promise.resolve = resolve;
-//     promise.reject = reject;
-//     const weakRef = new WeakRef(promise);
-//     const check = () => {
-//         const deref = weakRef.deref();
-//         if (!deref) return;
-//         console.log('wait for element');
-//         const element = document.getElementById(id);
-//         element ? deref.resolve(element) : requestAnimationFrame(check);
-//     };
-//     check();
-//     return promise;
-// }
-
-function getElementByIdPromise(id) {
-    let { promise, resolve } = Promise.withResolvers();
-    const weakRef = new WeakRef(resolve);
-    const check = () => {
-        const resolve = weakRef.deref();
-        if (!resolve) return;
-        console.log('wait for element');
-        const element = document.getElementById(id);
-        element ? resolve(element) : requestAnimationFrame(check);
-    };
-    check();
-    return promise;
-}
 
 (function(){
     // Beispiel für die Nutzung
-    let elPromise = getElementByIdPromise('meineElementId');
+    let elPromise = promiseElementById('meineElementId');
 
     elPromise
         .then(element => {

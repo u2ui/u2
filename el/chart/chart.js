@@ -1,3 +1,4 @@
+// Dependencies: u2/tools/promiseElementById.js
 
 class U2Chart extends HTMLElement {
     constructor() {
@@ -13,21 +14,54 @@ class U2Chart extends HTMLElement {
             :host([type="pie"]) canvas:not([height]) { aspect-ratio: 1; }
             </style>
             <canvas></canvas>`;
+        this.canvas = this.shadowRoot.querySelector('canvas');
+        this.chart = null; // Initialisiere die Chart-Instanz
     }
     connectedCallback() {
-        this.canvas = this.shadowRoot.querySelector('canvas');
-        this._build();
-        //requestAnimationFrame(() => this._build());
+        this._requestBuild();
     }
-    _extractdata() {
-        const table = this.querySelector(':scope > table');
-        if (table) return extractTableData(table);
-        const dl = this.querySelector(':scope > dl');
-        if (dl) return extractDLData(dl);
+
+    static get observedAttributes() { return ['for', 'type', 'flip-axis']; }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'for') {
+            this._forPromise = import('../../u2/tools/promiseElementById.js').then(({promiseElementById}) => {
+                return promiseElementById(this.getAttribute('for'));
+            });
+        }
+        this._requestBuild(); // every change in attributes should trigger a rebuild
+    }
+
+    async _extractdata() {
+        let target = null;
+        if (this.hasAttribute('for')) {
+            target = await this._forPromise
+        } else {
+            target = this.querySelector(':scope > table, :scope > dl');
+        }
+        if (target) {
+            if (target.tagName === 'TABLE') return extractTableData(target);
+            if (target.tagName === 'DL') return extractDLData(target);
+        }
+    }
+    _requestBuild() {
+        if (this._buildRequested) return;
+        this._buildRequested = true;
+        requestAnimationFrame(() => {
+            this._buildRequested = false;
+            this._build();
+        });
     }
     async _build() {
-        this.ctx = this.canvas.getContext('2d');
-        const {rows, cols, data} = this._extractdata();
+        if (this.canvas) this.canvas.remove();
+            
+        this.canvas = document.createElement('canvas');
+        this.shadowRoot.appendChild(this.canvas);
+        //this.chart.destroy();
+        //this.chart = null;
+
+        const ctx = this.canvas.getContext('2d');
+        let {rows, cols, data} = await this._extractdata();
         if (!data) { console.error('No data found'); return; }
 
         const type = this.getAttribute('type') || 'line';
@@ -51,13 +85,17 @@ class U2Chart extends HTMLElement {
         function colorNr(i) {
             return `hsl(${hue + i*30}, ${saturation}, ${lightness})`;
         }
+        if (this.hasAttribute('flip-axis')) {
+            [rows, cols] = [cols, rows];
+            data = data[0].map((_, i) => data.map(row => row[i]));
+        }
 
-        new Chart(this.ctx, {
+        new Chart(ctx, {
             type,
             data: {
                 labels: rows,
                 datasets: cols.map((col, i) => ({
-                    label: col+' ',
+                    label: col,
                     data:data.map(row => row[i]),
                     backgroundColor: type==='pie' || type==='doughnut' ? data.map((_, j) => colorNr(j)) : colorNr(i),
                     borderColor:     type==='pie' || type==='doughnut' ? '#fff' : colorNr(i),

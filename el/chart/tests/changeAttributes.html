@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../chart.js" type=module async></script>
+    <link href="../chart.css" rel=stylesheet>
+
+<body>
+
+
+
+<section class="main">
+
+    <select name="setFor" onchange="chart.setAttribute('for', this.value)">
+        <option value="tableEl">Table
+        <option value="dlEl">Definition List
+    </select>
+
+    <select name="setType" onchange="chart.setAttribute('type', this.value)">
+        <option value="line">Line
+        <option value="pie">Pie
+        <option value="bar">Bar
+        <option value="doughnut">Doughnut
+        <option value="radar">Radar
+        <option value="polarArea">Polar Area
+        <option value="bubble">Bubble
+        <option value="scatter">Scatter
+    </select>
+
+    Flip Axis: <input type="checkbox" onchange="this.checked ? chart.setAttribute('flip-axis', '') : chart.removeAttribute('flip-axis')">
+
+    <u2-chart type="line" for="tableEl" id="chart" style="max-width:500px; margin:3rem auto"></u2-chart>
+
+    <h3>Table as data source</h3>
+    <table id="tableEl">
+        <thead>
+            <tr>
+                <th>Population
+                <th>Swizerland
+                <th>Germany
+                <th>France
+
+        <tbody>
+            <tr>
+                <th>2000
+                <td>7.3
+                <td>82.4
+                <td>59.5
+            <tr>
+                <th>2010
+                <td>8.0
+                <td>81.8
+                <td>63.0
+            <tr>
+                <th>2020
+                <td>8.6
+                <td>83.2
+                <td>67.0
+            <tr>
+                <th>2030
+                <td>9.0
+                <td>84.0
+                <td>70.0
+    </table>
+
+    <h3>Definition List as data source</h3>
+    <dl id="dlEl">
+        <dt>Apples</dt>
+        <dd>10 pieces</dd>
+
+        <dt>Bananas</dt>
+        <dd>12 pieces</dd>
+
+        <dt>Oranges</dt>
+        <dd>8 pieces</dd>
+    </dl>
+
+
+</section>
