@@ -16,8 +16,8 @@ class U2Chart extends HTMLElement {
     }
     connectedCallback() {
         this.canvas = this.shadowRoot.querySelector('canvas');
-        //setTimeout(() => this._build());
-        requestAnimationFrame(() => this._build());
+        this._build();
+        //requestAnimationFrame(() => this._build());
     }
     _extractdata() {
         const table = this.querySelector(':scope > table');
@@ -25,6 +25,13 @@ class U2Chart extends HTMLElement {
         const dl = this.querySelector(':scope > dl');
         if (dl) return extractDLData(dl);
     }
+    // _getDefaultColors() {
+    //     const style = getComputedStyle(this);
+    //     const hue = style.getPropertyValue('--hsl-h') || 200;
+    //     const saturation = style.getPropertyValue('--hsl-s') || 50;
+    //     const lightness = style.getPropertyValue('--hsl-l') || 50;
+    //     return { hue, saturation, lightness };
+    // }
     async _build() {
         this.ctx = this.canvas.getContext('2d');
         const {rows, cols, data} = this._extractdata();
@@ -45,11 +52,14 @@ class U2Chart extends HTMLElement {
 
         const {Chart, registerables} = await import ('https://cdn.skypack.dev/chart.js');
         Chart.register(...registerables);
+
         new Chart(this.ctx, {
             type,
             data: {
                 labels: rows,
-                datasets: cols.map((col, i) => ({ label: col, data: data.map(row => row[i]) }))
+                datasets: cols.map((col, i) => ({
+                    label: col, data: data.map(row => row[i]),
+                }))
             },
             options
         });
@@ -58,7 +68,6 @@ class U2Chart extends HTMLElement {
         if (this.chart) this.chart.destroy();
     }
 }
-
 
 
 
