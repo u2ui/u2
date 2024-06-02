@@ -1,25 +1,4 @@
-// function getElementByIdPromise(id) {
-//     return new Promise((resolve) => {
-//         const check = () => {
-//             const element = document.getElementById(id);
-//             element ? resolve(element) : requestAnimationFrame(check);
-//         };
-//         check();
-//     });
-// }
-
-function getElementByIdPromise(id) {
-    let { promise, resolve } = Promise.withResolvers();
-    const weakRef = new WeakRef(resolve);
-    const check = () => {
-        const resolve = weakRef.deref();
-        if (!resolve) return;
-        const element = document.getElementById(id);
-        element ? resolve(element) : requestAnimationFrame(check);
-    };
-    check();
-    return promise;
-}
+import { promiseElementById } from "../../u2/tools/promiseElementById.js";
 
 
 class U2Copy extends HTMLElement {
@@ -28,18 +7,17 @@ class U2Copy extends HTMLElement {
         this.mutationObserver = new MutationObserver(() => {
             this.updateContent();
         });
-        //this.attachShadow({ mode: 'open' });
     }
 
     static get observedAttributes() {
-        return ['for', 'isolate', 'sync'];
+        return ['for', 'sync'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'for') {
             this._targetElement = null;
-            this._targetElementPromise = getElementByIdPromise(newValue);
+            this._targetElementPromise = promiseElementById(newValue);
             this.innerHTML = '';
             this._targetElementPromise.then(target => {
                 this._targetElement = target;
@@ -77,6 +55,7 @@ class U2Copy extends HTMLElement {
         this.innerHTML = '';
         if (this._targetElement) {
             let content = this._targetElement.innerHTML;
+
             // replace all ids with unique ids and if references are made (label[for]) to the original id, replace them with the new id
             const fragment = document.createRange().createContextualFragment(content);
             const elements = fragment.querySelectorAll('[id]');
@@ -106,11 +85,6 @@ class U2Copy extends HTMLElement {
             });
 
             this.appendChild(fragment);
-            // if (this.hasAttribute('isolate')) {
-            //     this.shadowRoot.innerHTML = content;
-            // } else {
-            //    this.innerHTML = content;
-            // }
         }
     }
 }
