@@ -65,7 +65,12 @@ const types = {
             <slot name=start></slot>
             <input type=checkbox id=checkbox>
             <slot name=end></slot>`,
-        css: `#input { border:0; }`,
+        css: `
+            :host {
+                inline-size:auto;
+            }
+            #input { xborder:0; width:auto; }
+        `,
         init({shadow}) {
             setTimeout(()=> {
                 const real = this.realInput;

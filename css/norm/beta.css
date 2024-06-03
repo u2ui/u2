@@ -1,3 +1,5 @@
+@layer normalize {
+
 /* performance? ~7% faster? is it worth it?
 svg:not(:root), input, textarea, select, symbol, image, marker, pattern, foreignObject {
     overflow:clip;
@@ -12,7 +14,7 @@ needed? font-size: 1em; /* Correct the odd `em` font sizing in all browsers.
 pre, code, kbd, samp {
     font-family: "Courier New", monospace;
 }
-:where([contenteditable]) {
+[contenteditable] {
 	text-wrap: stable; /* how exactly does it work? */
 }
 
