@@ -118,7 +118,10 @@ dialog, [popover] {
     }
 }
 dialog:is(:modal,[open]), :popover-open {
-    &, &::backdrop { opacity: 1; } /* @starting-style { opacity: 0; } why does this not work? */
+    &, &::backdrop {
+        opacity: 1;
+        /*  @starting-style { opacity: 0; } why does this not work? */
+    }
 }
 @starting-style {
     dialog:is(:modal,[open]), :popover-open {
