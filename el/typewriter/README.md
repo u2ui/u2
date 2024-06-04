@@ -4,9 +4,9 @@ Simple typewriter element
 ## Usage
 
 ```html
-<h2>
-    <u2-typewriter autoplay loop>Typewriter</h2></u2-typewriter>
-</h2>
+<h4>
+    <u2-typewriter autoplay loop>Typewriter</u2-typewriter>
+</h4>
 ```
 
 ```css

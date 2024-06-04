@@ -8,11 +8,11 @@ Change the skin of a widget
 
 ```html
 <div u2-skin="invert" style="padding:1rem">
-    <h3>Inverted</h3>
+    <h4>Inverted</h4>
     <button>button</button>
 </div>
 <div u2-skin="theme" style="padding:1rem">
-    <h3>Theme-color as background</h3>
+    <h4>Theme-color as background</h4>
     <button>button</button>
 </div>
 ```

@@ -14,7 +14,7 @@ Displays formatted charts
 
         <dt>Oranges</dt>
         <dd>8 pieces</dd>
-    </table>
+    </dl>
 </u2-chart>
 ```
 
@@ -27,6 +27,7 @@ Displays formatted charts
 
 ## Demos
 
+[changeAttributes.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/changeAttributes.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/test.html)  
 

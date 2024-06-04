@@ -79,7 +79,7 @@
                 background-repeat: no-repeat;
                 background-origin: content-box;
             }
-            & u2-table {
+            & :is(u2-table, u2-toc, u2-alert) {
                 text-align:left;
             }
         }
@@ -162,6 +162,19 @@
                 for (const [ext, catName] of Object.entries(extToName)) {
                     const entries = repos[ext];
 
+                    const div = document.createElement('div');
+                    const catNamePlural = catName.at(-1) === 's' ? catName+'es' : catName+'s';
+                    div.innerHTML = `<h2>${catNamePlural}</h2>`;
+                    div.style.gridColumn = '1 / -1';
+                    div.style.padding = '.5rem';
+                    div.style.marginTop = '4rem';
+                    div.style.aspectRatio = 'auto';
+                    div.style.boxShadow = 'none';
+                    div.style.borderBottom = '1px solid var(--color-line)';
+                    div.style.background = 'transparent';
+                    div.style.textAlign = 'center';
+                    reposEl.append(div);
+
                     for (let [name, repo] of Object.entries(entries)) {
                         if (repo.beta) continue;
                         const div = document.createElement('div');
@@ -208,7 +221,7 @@
                             <header>
                                 <div style="flex:1 1 auto;">
                                     <a href="#${div.id+'_dialog'}" class="-play" style="font-weight:100; color:inherit; text-decoration:none; font-size:1rem; padding:.5rem; display:block;">
-                                        u2-${repo.name}
+                                        <h3>u2-${repo.name}</h3>
                                     </a>
                                     <dialog class=-playground u2-navigable u2-intersect id=${div.id+'_dialog'} style="background:var(--color-bg); width:var(--width); max-width:100%; height:100vh; max-height:none; border:0; inset:0; margin:0 auto; font-size:1rem">
                                         <template>
@@ -222,7 +235,7 @@
                                             <ce-inspector manifest="../../${ext}/${repo.name}/manifest.json">${parts.html}</ce-inspector>
                                             <dev-iframe src="../../${ext}/${repo.name}/tests/minimal.html"></dev-iframe>
                                         </template>
-                                        <u2-skeleton template="h1 p table(4x3)"></u2-skeleton>
+                                        <u2-skeleton template="h4 p table(4x3)"></u2-skeleton>
                                     </dialog>
                                 </div>
                             </header>
