@@ -6,15 +6,19 @@ const types = {
         fallback: '<input type=text>',
         input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
     },
+    'textarea': {
+        fallback: '<textarea></textarea>',
+        input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
+    },
     'stepper': {
         fallback: '<input type=number>',
         input: `
             <slot name=start></slot>
-            <button part=button class="down">
+            <button class="down">
                 <u2-ico icon=minus inline>-</u2-ico>
             </button>
             <slot></slot>
-            <button part=button class="up">
+            <button class="up">
                 <u2-ico icon=plus inline>+</u2-ico>
             </button>
             <slot name=end></slot>`,
@@ -37,6 +41,57 @@ const types = {
                 triggerInput();
             });
         }
+    },
+    password: {
+        fallback: '<input type=password>',
+        input: `
+            <slot name=start></slot>
+            <slot></slot>
+            <slot name=end>
+            </slot>
+            <button part="visibility" tabindex=-1>
+                <u2-ico inline icon=visibility_off></u2-ico>
+            </button>
+            <style>
+            @import url('${import.meta.resolve('../rating/rating.css')}');
+            </style>
+            `, // <u2-rating value="0" max="4" style="font-size:10px" xicon=""></u2-rating>
+        //css: `@import ${import.meta.resolve('../rating/rating.css')}`,
+        init({shadow}) {
+            import ('../rating/rating.js');
+            const real = this.realInput;
+            const visibilityBtn = shadow.querySelector('button[part~=visibility]');
+            // const rating = shadow.querySelector('u2-rating');
+            // real.addEventListener('input', e => {
+            //     // todo: valicate for when realInput has pattern
+            //     // todo: use a online-service to check if password leaked
+            //     const password = real.value;
+            //     let strength = 0;
+            //     if (password.length >= 7) strength++;
+            //     if (/[A-Z]/.test(password)) strength++;
+            //     if (/[0-9]/.test(password)) strength++;
+            //     if (/[^A-Za-z0-9]/.test(password)) strength++;
+            //     rating.value = strength;
+            // });
+            visibilityBtn.addEventListener('click', toggleVisibility);
+
+            function toggleVisibility() {
+                clearTimeout(toggleVisibility.timer);
+                const visible = real.type === 'text';
+                const type = visible ? 'password' : 'text';
+                const icon = visible ? 'visibility' : 'visibility_off';
+                const ariaLabel = visible ? 'hide password' : 'show password';
+                visibilityBtn.setAttribute('aria-label', ariaLabel);
+                visibilityBtn.querySelector('u2-ico').setAttribute('icon', icon);
+                real.type = type;
+                if (!visible) {
+                    toggleVisibility.timer = setTimeout(() => { // todo: better activity detection
+                        toggleVisibility();
+                    }, 20000);
+                }
+            }
+        }
+
     },
     // 'country' : {
     //     fallback: '<input type=text autocomplete=country placeholder="DE" regex="^[A-Z]{2}$">',
@@ -92,16 +147,15 @@ const types = {
             <div id=droparea>
                 <button id=browse>
                     Durchsuchen...
-                    <small id=num></small>
+                    <small id=num class=u2-badge></small>
                 </button>
-                <!--textarea tabindex=-1></textarea-->
                 <div id=preview>
-                    <table id=previewTable>
-                    </table>
+                    <table id=previewTable></table>
                 </div>
             </div>
             `,
         css: `
+            @import url('${import.meta.resolve('../../class/badge/badge.css')}');
             :host {
                 vertical-align: top;
             }
@@ -111,38 +165,14 @@ const types = {
                 padding:.2em;
                 display:grid;
                 place-items:center;
-                /*textarea {
-                    z-index:-1;
-                    position:absolute;
-                    inset:0;
-                    background:transparent;
-                    resize:none;
-                    border:0;
-                    margin:0;
-                    color : transparent;
-                    &:focus {
-                        background:rgba(0,0,0,.1);
-                    }
-                }*/
             }
             #browse {
                 font:inherit;
                 #num {
                     background:var(--color-light,#eee);
-                    display:inline-flex;
-                    border-radius:1em;
-                    line-height:1.1;                
-                    min-width:  1.6em;
-                    min-height: 1.6em;
-                    padding-inline: .6em;
-                    padding-block: .2em .25em;
-                    justify-content: center;
-                    align-items: center;
-                    text-align: center;
-                    box-sizing: border-box;
-                    font-size: 0.8em;
-                    vertical-align: text-bottom;
-
+                    color:inherit;
+                    font-size:.7em;
+                    vertical-align: 16%;
                     &:empty {
                         display:none;
                     }
@@ -240,7 +270,6 @@ const types = {
     },
 }
 
-const icoCss = import.meta.resolve('../ico/ico.css');
 customElements.define('u2-input', class extends HTMLElement {
     constructor(...args) {
         super(...args);
@@ -249,7 +278,7 @@ customElements.define('u2-input', class extends HTMLElement {
 
         shadowRoot.innerHTML = `
         <style>
-        @import url('${icoCss}');
+        @import url('${import.meta.resolve('../ico/ico.css')}');
 
         :host {
             display:inline-block;
@@ -278,7 +307,7 @@ customElements.define('u2-input', class extends HTMLElement {
         ::slotted(input) {
             inline-size:100% !important;
         }
-        [part=button], xbutton {
+        #input > button {
             background:var(--color-light, #eee);
             align-self:stretch;
             min-width:2em;
@@ -383,10 +412,7 @@ customElements.define('u2-input', class extends HTMLElement {
 /* todo: could be a global tool */
 document.addEventListener('dragenter', e => {
     if (e.relatedTarget != null) return;
-    let hasFile = false;
-    for (let item of e.dataTransfer.items) {
-        if (item.kind === 'file') hasFile = true;
-    }
+    const hasFile = [...e.dataTransfer.items].some(item => item.kind === 'file');
     if (hasFile) {
         document.documentElement.classList.add('u2DraggingFile');
     }

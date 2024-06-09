@@ -377,7 +377,7 @@
       "description": "Automatically generate a table of contents",
       "beta": false,
       "deprecated": false,
-      "css": false,
+      "css": true,
       "js": true
     },
     "tooltip": {

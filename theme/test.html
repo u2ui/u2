@@ -12,44 +12,123 @@
 
 <body>
 
-<header>
+<header class=u2-width>
     <h1>U2-Themes Demo</h1>
     <u2-toc></u2-toc>
 </header>
 
 <main>
-    <section>
-        <h2>Classless, pure CSS styling</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus. Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec congue lacinia dui, a porttitor lectus condimentum laoreet. Nunc eu ullamcorper orci. Quisque eget odio ac lectus vestibulum faucibus eget in metus.</p>
-        <p>Paragraphs look like this. Font size along with line height and maximum width are optimized for reading. <em>Italic</em>, <strong>bold</strong>, and <code>monospace</code>. Itemized lists look like:</p>
-        <ul>
-            <li>this one
-            <li>that one
-            <li>the other one
-        </ul>
+    <section class="u2-width">
+        <h2>Classless</h2>
+        <p>In this section you can see the classless part of the U2-Themes. Its just the HTML styled with the U2-Themes.</p>
+        <h3>Inline-Elements</h3>
+        <p>
+            Here you can view the typography and text level semantic elements.
+            The <a href="#">a element</a> example.
+            The <abbr>abbr element</abbr> and <abbr title="Title text">abbr element with title</abbr> examples.
+            The <b>b element</b> example.
+            The <cite>cite element</cite> example.
+            The <code>code element</code> example.
+            The <del>del element</del> example.
+            The <dfn>dfn element</dfn> and <dfn title="Title text">dfn element with title</dfn> examples.
+            The <em>em element</em> example.
+            The <i>i element</i> example.
+            The <ins>ins element</ins> example.
+            The <kbd>kbd element</kbd> example.
+            The <mark>mark element</mark> example.
+            The <q>q element <q>inside</q> a q element</q> example.
+        </p>
+        <p>
+            A second paragraph to see the distance between the elements.
+            The <s>s element</s> example.
+            The <samp>samp element</samp> example.
+            The <small>small element</small> example.
+            The <span>span element</span> example.
+            The <strong>strong element</strong> example.
+            The <sub>sub element</sub> example.
+            The <sup>sup element</sup> example.
+            The <u>u element</u> example.
+            The <var>var element</var> example.
+            Now that we have seen the different elements, a second paragraph follows to see the distance between them.
+        </p>
 
-        <h3>An h3 header</h3>
-        <p>And following is a block quote:</p>
+        <h3>Form Elements</h3>
+        <form>
+            <fieldset class="u2-flex" style="align-items:baseline">
+                <legend>Fieldset Title</legend>
+                <label>
+                    Label
+                    <input placeholder="Text Input" type="text">
+                </label>
+                <label>
+                    Checkbox
+                    <input type="checkbox">
+                </label>
+                <label>
+                    Radio
+                    <input type="radio">
+                </label>
+                <label>
+                    Select
+                    <select>
+                        <option>Option One</option>
+                        <option>Option Two</option>
+                        <option>Option Three</option>
+                    </select>
+                </label>
+                <label>
+                    Textarea
+                    <textarea placeholder="Enter your message here"></textarea>
+                </label>
+                <label>
+                    Range Input
+                    <input type="range" min="0" max="100">
+                </label>                
+                <button>Button</button>
+                <button disabled>Disabled</button>
+            </fieldset>
+        </form>
+
+
+        <h3>Block-Elements</h3>
+
+        <details>
+            <summary>Details and Summary</summary>
+            <p>Here is some more information.</p>
+        </details>
+        
+        <article>
+            <h4>Article Title</h4>
+            <p>Article content goes here.</p>
+        </article>
+
         <blockquote>
             When you have eliminated the impossible, whatever remains, however improbable, must be the truth.
             <footer>Sherlock Holmes</footer>
         </blockquote>
 
-        <h3>An h3 header</h3>
-        <pre><code>define foobar() {
+        <dl>
+            <dt>Definition List
+            <dd>Definition List content goes here.
+            <dt>Item 2
+            <dd>Definition List content goes here.
+        </dl>
+
+        <figure>
+            <figcaption>Figure Title</figcaption>
+            <p>Figure content goes here.</p>
+        </figure>
+
+        <pre><code>pre and code foobar() {
             print &quot;Welcome to flavor country!&quot;;
         }</code></pre>
-        <div class="sourceCode">
-        <pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> time
-        <span class="co"># Quick, count to ten!</span>
-        <span class="cf">for</span> i <span class="op">in</span> <span class="bu">range</span>(<span class="dv">10</span>):
-            <span class="co"># (but not *too* quick)</span>
-            time.sleep(<span class="fl">0.5</span>)
-            <span class="bu">print</span> i</code></pre>
-        </div>
+
+        <progress value="70" max="100">70%</progress>
+        <meter value="2" min="0" max="10">2 out of 10</meter>
+        
 
         <p>A nested list:</p>
-        <ol style="list-style-type: decimal">
+        <ol>
             <li>
                 <p>First, get these ingredients:</p>
                 <ul>
@@ -71,215 +150,119 @@
             <p>Do not bump wooden spoon or it will fall.</p>
         </ol>
 
-        <hr>
-
-        <p>Here's a link to <a href="http://foo.bar">a website</a>, to a <a href="local-doc.html">local doc</a>, and to a <a href="#an-h2-header">section heading in the current doc</a>. Here's a footnote <a href="#fn1" id="fnref1"><sup>1</sup></a>.</p>
-        <p>Tables can look like this:</p>
-
         <table>
-            <caption>
-            Shoes, their sizes, and what they're made of
-            </caption>
+            <caption>Table: Data on shoe sizes, materials, and colors</caption>
             <thead>
-            <tr>
-                <th align="left">size
-                <th align="left">material
-                <th align="left">color
+                <tr>
+                    <th>Size
+                    <th>Material
+                    <th>Color
             <tbody>
-            <tr>
-                <td align="left">9
-                <td align="left">leather
-                <td align="left">brown
-            <tr>
-                <td align="left">10
-                <td align="left">hemp canvas
-                <td align="left">natural
-            <tr>
-                <td align="left">11
-                <td align="left">glass
-                <td align="left">transparent
-        </table>
-        <p>Multi-line tables:</p>
-        <table style="width:46%;">
-            <colgroup>
-                <col width="13%">
-                <col width="31%">
-            </colgroup>
-            <thead>
-            <tr>
-                <th align="left">keyword
-                <th align="left">text
-            </thead>
-            <tbody>
-            <tr>
-                <td align="left">red
-                <td align="left">Sunsets, apples, and other red or reddish things.
-            <tr>
-                <td align="left">green
-                <td align="left">Leaves, grass, frogs and other things it's not easy being.
+                <tr>
+                    <td>9
+                    <td>leather
+                    <td>brown
+                <tr>
+                    <td>10
+                    <td>hemp canvas
+                    <td>natural
+                <tr>
+                    <td>11
+                    <td>glass
+                    <td>transparent
         </table>
 
-        <hr>
-        <p>Images are responsive by default:</p>
-        <img alt="example image" src="https://via.placeholder.com/150" width="150" height="150">
-
-        <hr>
-
-        <h2>Form Elements</h1>
-        <form>
-            <h3>Input fields</h3>
-
-            <label>Text Input <input id="input__text" placeholder="Text Input" type="text"></label>
-            <label>Password <input id="input__password" placeholder="Type your Password" type="password"></label>
-            <label>Web Address <input id="input__webaddress" placeholder="http://yoursite.com" type="url"></label>
-            <label>Email Address <input id="input__emailaddress" placeholder="name@email.com" type="email"></label>
-            <label>Phone Number <input id="input__phone" placeholder="(999) 999-9999" type="tel"></label>
-            <label>Search <input id="input__search" placeholder="Enter Search Term" type="search"></label>
-            <label>Number Input <input id="input__text2" placeholder="Enter a Number" type="number"></label>
-            <label>Error <input id="input__text3" placeholder="Text Input" type="text"></label>
-            <label>Valid <input id="input__text4" placeholder="Text Input" type="text"></label>
-
-            <div id="forms__select">
-            <h3>Select menus</h3>
-            <p>
-                <label for="select">Select</label>
-                <select id="select">
-                    <optgroup label="Option Group">
-                        <option>Option One
-                        <option>Option Two
-                        <option>Option Three
-                    </optgroup>
-                </select></p>
-                </div>
-                <div id="forms__checkbox">
-                <h3>Checkboxes</h3>
-                <ul style="list-style:none;">
-                    <li><label for="checkbox1"><input checked="checked" id="checkbox1" name="checkbox" type="checkbox"> Choice A</label>
-                    <li><label for="checkbox2"><input id="checkbox2" name="checkbox" type="checkbox"> Choice B</label>
-                    <li><label for="checkbox3"><input id="checkbox3" name="checkbox" type="checkbox"> Choice C</label>
-                </ul>
-                </div>
-                <p><a href="#top">[Top]</a></p>
-                <div id="forms__textareas">
-                <h3>Textareas</h3>
-                <p><label for="textarea">Textarea</label>
-                    <textarea cols="48" id="textarea" placeholder="Enter your message here" rows="8"></textarea></p>
-                </div>
-                <p><a href="#top">[Top]</a></p>
-                <div id="forms__html5">
-                <div id="forms__action">
-                    <h3>Action buttons</h3>
-                    <p>
-                        <button type="submit">Button</button>
-                        <button disabled type="button">Disabled</button>
-                    </p>
-                </div>
-                <p><a href="#top">[Top]</a></p>
-                </div>
-            </form>
-
-        </section>
-
-        <section style="padding-block:2rem; margin-block:2rem" class="u2-width" u2-skin="invert">
-            <h2>U2 Elements</h2>
-            <p>The U2 Pattern Library is a collection of reusable components and patterns for modern web development. It is designed to be a starting point for building web applications and even other Design Systems.</p>
-
-
-        </section>
-
-        <section class="u2-width">
-    
-            <h3>Tabs</h3>
-
-            <u2-tabs>
-                <h4>First Tab</h4>
-                <p>Content of the first tab</p>
-                <h4>Second Tab</h4>
-                <p>Content of the second tab</p>
-            </u2-tabs>
-
-            <u2-alert open variant="error" dismissable>
-                <h4>Alert title goes here.</h4>
-                <p>Alert text goes here.</p>
-            </u2-alert>
-
-            <u2-alert open variant="success" dismissable>
-                <p>Alert text goes here.</p>
-            </u2-alert>
-
-            <u2-input type=checkbox>
-                <select>
-                    <option>on</option>
-                    <option>off</option>
-                </select>
-            </u2-input>
-
-            <u2-input type=stepper>
-                <input type="number">
-            </u2-input>
-
-            <br><br>
-
-            <h3>Accordion</h3>
-            <u2-accordion>
-                <h4>Accordion</h4>
-                <h5>Here you can put any content you want.</h5>
-                <p>After the hightest Headinglevel, you can put any content you want, it will be the content of the accordion.</p>
-
-                <h4>Component</h4>
-                <h5>More content</h5>
-                <p>After the hightest Headinglevel, you can put any content you want, it will be the content of the accordion.</p>
-                
-                <h4>Another Part</h4>
-                <h5>More content</h5>
-                <p>After the hightest Headinglevel, you can put any content you want, it will be the content of the accordion.</p>
-
-                <h4>
-                    <u2-button>Button</u2-button>
-                </h4>
-                <h5>More content</h5>
-                <p>After the hightest Headinglevel, you can put any content you want, it will be the content of the accordion.</p>
-            </u2-accordion>
-
-
-            <br><br>
-
-            <u2-buttongroup>
-                <button>Button</button>
-                <button>Group</button>
-                <button>Button 3</button>
-                <button>Button 4</button>
-                <button>Button 5</button>
-            </u2-buttongroup>
-
-            <br><br>
-
-            <button onclick="dialog1.showModal()">Open Dialog</button>
-            <dialog id="dialog1">
+        <button onclick="dialog1.showModal()">Open Dialog</button>
+        <dialog id="dialog1">
+            <form method=dialog>
                 <h2>Dialog title goes here.</h2>
                 <p>Dialog text goes here.</p>
                 <button>Close</button>
-            </dialog>
+            </form>
+        </dialog>
 
-            <hr>
+    </section>
 
-            <blockquote u2-skin="invert">
-                <h4>This is a blockquote with a inverted skin.</h4>
-                <p>Blockquote text goes here. Because he sacrifices his health in order to make money. Then he sacrifices money to recuperate his health. And then he is so anxious about the future that he does not enjoy the present; the result being that he does not live in the present or the future; he lives as if he is never going to die, and then dies having never really lived. -James J Lachard</p>
-            </blockquote>
+    <section style="padding-block:2rem; margin-block:2rem" class="u2-width" u2-skin="invert">
+        <h2>U2 Elements</h2>
+        <p>The U2 Pattern Library is a collection of reusable components and patterns for modern web development. It is designed to be a starting point for building web applications and even other Design Systems.</p>
+    </section>
 
-            <div>
-                <hr>
-                <ol>
-                    <li id="fn1"><p>Footnote text goes here.<a href="#fnref1">↩</a></p>
-                </ol>
-            </div>
-        </section>
+    <section class="u2-width">
+
+        <h3>Tabs</h3>
+
+        <u2-tabs>
+            <h4>First Tab</h4>
+            <p>Content of the first tab</p>
+            <h4>Second Tab</h4>
+            <p>Content of the second tab</p>
+        </u2-tabs>
+
+        <u2-alert open variant="error" dismissable>
+            <h4>Alert title goes here.</h4>
+            <p>Alert text goes here.</p>
+        </u2-alert>
+
+        <u2-alert open variant="success" dismissable>
+            <p>Alert text goes here.</p>
+        </u2-alert>
+
+        <u2-input type=checkbox>
+            <select>
+                <option>on</option>
+                <option>off</option>
+            </select>
+        </u2-input>
+
+        <u2-input type=stepper>
+            <input type="number">
+        </u2-input>
+
+        <br><br>
+
+        <h3>Accordion</h3>
+        <u2-accordion>
+            <h4>Accordion</h4>
+            <h5>Here you can put any content you want.</h5>
+            <p>After the hightest Headinglevel, you can put any content you want, it will be the content of the accordion.</p>
+
+            <h4>Component</h4>
+            <h5>More content</h5>
+            <p>After the hightest Headinglevel, you can put any content you want, it will be the content of the accordion.</p>
+            
+            <h4>Another Part</h4>
+            <h5>More content</h5>
+            <p>After the hightest Headinglevel, you can put any content you want, it will be the content of the accordion.</p>
+        </u2-accordion>
 
 
-    </main>
-    <footer>
-        <p>Footer text goes here.</p>
-    </footer>
-</body>
+        <br><br>
+
+        <u2-buttongroup>
+            <button>Button</button>
+            <button>Group</button>
+            <button>Button 3</button>
+            <button>Button 4</button>
+            <button>Button 5</button>
+        </u2-buttongroup>
+
+        <br><br>
+
+        <hr>
+
+        <div u2-skin="invert" style="padding:2rem">
+            <h3>Inverts dark and light colors</h3>
+            <p>Here you can see the invert skin in action.</p>
+            <button>Button</button>
+        </div>
+
+    </section>
+
+
+</main>
+<footer>
+    <p>Footer text goes here.</p>
+</footer>
+
 

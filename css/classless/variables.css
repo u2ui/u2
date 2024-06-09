@@ -4,7 +4,7 @@ html {
     --hsl-l: 38.4%;
 
     /* misc */
-    --width:42rem; /* rename? --main-width, --content-width */
+    --width:50rem; /* rename? --main-width, --content-width */
     --line-width: 1px;
     /* --gap:1rem; deprecated? */
     --radius: .3rem;

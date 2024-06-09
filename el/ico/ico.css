@@ -22,7 +22,6 @@ u2-ico {
     fill:currentColor; /* for svg, dont use `u2-ico > svg { fill:currentColor }` because it can have the attribute fill="none" */
 
     /* ok? */
-    xdisplay: inline-block; /* inline-flex has an other baseline? */
     text-align:center;
     vertical-align:middle;
     --size: 1.5rem; /* 24px Preferred icon size, material-icons */
@@ -75,7 +74,6 @@ u2-ico[state] {
         display:none;
     }
     &[state="loading"] {
-        xvisibility:hidden;
         overflow: clip;
         width:1em;
     }

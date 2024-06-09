@@ -8,7 +8,7 @@ html {
     --hsl-l: 50%; /* Helligkeit */
 
     /* misc */
-    --width: 42rem;
+    --width: 50rem; /* the main-width */
     --line-width: 1px;
     --radius: 0;
 

@@ -18,9 +18,9 @@ ul > li::marker {
 	font-size: 1em;
 }
 
-/****************/
+/*****************/
 /* custom select */
-/****************/
+/*****************/
 
 select:not([size], [multiple]) {
 	-webkit-appearance: none;
@@ -54,23 +54,16 @@ input:is([type=radio], [type=checkbox]) {
 	-webkit-appearance: none;
 	appearance: none;
 	transform:rotate(.002deg); /* improve rendering in ff, chrome */
-}
 
-input:is([type=radio], [type=checkbox]) {
-    /*
-	width: 1.1em;
-	height: 1.1em;
-	vertical-align: -.14em;
-    new: */
-	width: 1.3em;
+    width: 1.3em;
 	height: 1.3em;
-    vertical-align: text-bottom;}
+    vertical-align: text-bottom;
 	background-color: #fff;
 	border: solid 1px;
 	position: relative;
 	border-radius: .15em;
 	padding: 0;
-
+}
 input:is([type=radio],[type=checkbox]):checked {
 	border-color: var(--color, blue);
 }
@@ -212,7 +205,6 @@ input[type=range] {
 }
 
 /* todo where(webkit, moz) (forgiving) */
-
 input[type=range]::-webkit-slider-runnable-track {
 	box-sizing: border-box;
 	height: .5em;
@@ -221,7 +213,6 @@ input[type=range]::-webkit-slider-runnable-track {
 	border-radius: 1em;
 	cursor: pointer;
 }
-
 input[type=range]::-moz-range-track {
 	box-sizing: border-box;
 	height: .5em;
@@ -233,30 +224,31 @@ input[type=range]::-moz-range-track {
 
 input[type=range]::-webkit-slider-thumb {
 	box-sizing: border-box;
-	width: 1em;
-	height: 1em;
+	width: 1.3em;
+	height: 1.3em;
 	background: var(--color);
 	border-radius: 100%;
 	cursor: pointer;
-	margin-top: -.3em;
+	margin-top: -.47em;
 	-webkit-appearance: none;
 }
 
 input[type=range]::-moz-range-thumb {
 	box-sizing: border-box;
-	width: 1em;
-	height: 1em;
+	width: 1.3em;
+	height: 1.3em;
 	background: var(--color);
 	border-radius: 100%;
 	cursor: pointer;
+    border-color:transparent;
 }
 
 input[type=range]:hover::-webkit-slider-thumb {
-	box-shadow: 0 0 0 .5em #0001
+	box-shadow: 0 0 0 .5em #0001;
 }
 
 input[type=range]:hover::-moz-range-thumb {
-	box-shadow: 0 0 0 .5em #0001
+	box-shadow: 0 0 0 .5em #0001;
 }
 
 /* autofill (chrome) */

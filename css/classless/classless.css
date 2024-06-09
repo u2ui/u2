@@ -68,6 +68,13 @@ mark {
 
 /* FORM */
 
+fieldset {
+    border: var(--line-width) solid currentColor;
+    border-radius: var(--radius);
+    padding: 1em;
+    margin: 1em 0;
+}
+
 /* all inputs, buttons */
 /* is:(input, textarea, select, button, .btn, ::file-selector-button, ::-webkit-file-upload-button) { forgiving :is-selector usable after safari 13.7 */
 input, textarea, select, button, .btn {

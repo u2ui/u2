@@ -36,6 +36,10 @@
         u2-code {
             font-size:12px;
         }
+        section > div {
+            margin-block: 1rem;
+
+        }
     </style>
 
 </head>
@@ -84,5 +88,34 @@ force br inside p
         </div>
         <u2-code trim editable element=rte-4></u2-code>
     </div>
+
+
+    <div class=u2-flex>
+        <table id=rte-5 class=rte contenteditable spellcheck=false>
+            <tr>
+                <td>Table as rte (ok?)
+                <td>cell 2
+                <td>cell 3
+            <tr>
+                <td>cell 4
+                <td>cell 5
+                <td>cell 6
+        </table>
+        <u2-code trim editable element=rte-5></u2-code>
+    </div>
+
+
+    <div class=u2-flex>
+        <table>
+            <tr id=rte-6 class=rte contenteditable spellcheck=false>
+                <td>TR as rte (ok?)
+                <td>cell 2
+                <td>cell 3
+            </tr>
+        <table>
+        <u2-code trim editable element=rte-6></u2-code>
+    </div>
+
+
 
 </section>

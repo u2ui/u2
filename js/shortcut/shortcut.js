@@ -1,3 +1,4 @@
+// todo: the order of modifiers should not matter
 
 const keyAliases = Object.entries({
     'arrowup': ['↑', 'up'],
@@ -7,7 +8,7 @@ const keyAliases = Object.entries({
     'control': ['ctrl'],
     'shift': ['shift', '⇧'],
     'alt': ['alt', '⌥'],
-    'meta': ['cmd', '⌘'], // Cmd für macOS
+    'meta': ['cmd', '⌘'],
     'escape': ['esc'],
     'enter': ['return'],
     'delete': ['del'],
@@ -25,7 +26,6 @@ function normalizeKey(key) {
     return keyAliases[key] || key;
 }
 
-
 export function listen(combination, callback, options = {}) {
     const target = options.target || document;
     const keys = combination.split('+').map(k => normalizeKey(k));
@@ -38,10 +38,7 @@ export function listen(combination, callback, options = {}) {
 
         if (expectedKey === key) {
             ++activeIndex;
-            if (activeIndex === keys.length - 1) {
-                // callback bind to target and pass event as argument
-                callback.call(target, event);
-            }
+            if (activeIndex === keys.length - 1) callback.call(target, event);
         } else {
             activeIndex = -1;
         }
@@ -50,40 +47,7 @@ export function listen(combination, callback, options = {}) {
     target.addEventListener('keyup', function (event) {
         const key = normalizeKey(event.key);
         const expectedKey = keys[activeIndex];
-        if (expectedKey === key) { // wenn der letzte losgelassen wird, position einen schritt zurück
-            activeIndex--;
-        } else { // wenn sonst einer losgelassen wird, reset
-            activeIndex = -1;
-        }
+        if (expectedKey === key) activeIndex--; // when the last one is released, position one step back
+        else activeIndex = -1; // if any other one is released, reset
     });
 }
-
-
-
-/*
-maybe later: the order should probably not matter
-function listen(combination, callback, options = {}) {
-    const requiredKeys = new Set(combination.toLowerCase().split('+').map(k => normalizeKey(k)));
-    let activeKeys = new Set();
-
-    document.addEventListener('keydown', function(event) {
-        activeKeys.add(normalizeKey(event.key.toLowerCase()));
-        if (isCombinationPressed(requiredKeys, activeKeys)) {
-            callback();
-        }
-    });
-
-    document.addEventListener('keyup', function(event) {
-        activeKeys.delete(normalizeKey(event.key.toLowerCase()));
-    });
-}
-
-function isCombinationPressed(requiredKeys, activeKeys) {
-    for (let key of requiredKeys) {
-        if (!activeKeys.has(key)) {
-            return false;
-        }
-    }
-    return true;
-}
-*/

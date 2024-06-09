@@ -1,7 +1,6 @@
 /* functional styles */
 u2-menubutton {
     position:relative;
-    xdisplay:inline-block;
 }
 u2-menubutton menu {
     position:absolute;
