@@ -13,12 +13,10 @@
 <body>
 
 <section>
-    <h2>App</h2>
-
     <label style="text-align:center; padding:.6em">
         <input id=set oninput="dFrame.setAttribute('src', this.value)" placeholder="https://url..." style="display:block; margin:auto; width:77%;" autofocus>
     </label>
-    <dev-iframe id="dFrame"></dev-iframe>
+    <dev-iframe id="dFrame" style="height:clamp(20rem, 60rem, 90vh)"></dev-iframe>
 
     <script>
         set.addEventListener('input', function() {
