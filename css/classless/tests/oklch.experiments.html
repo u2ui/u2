@@ -22,7 +22,7 @@ html {
     --ok-h: 120;
 
     --color: oklch(var(--ok-l) var(--ok-c) var(--ok-h));
-    --color-light:  color-mix(in srgb, var(--color), white 90%);
+    --color-light:  color-mix(in srgb, var(--color), white 94%);
     --color-dark:   color-mix(in srgb, var(--color), black 40%);
 
     /* named */
@@ -42,11 +42,26 @@ html {
 
     --line-width: 1px;
 }
-
-
-
-
 </style>
+
+<style>
+    .container {
+        min-height:0;
+        max-width:none;
+        display:flex;
+        flex-wrap:wrap;
+        gap:1rem;
+    }
+    section {
+        padding:1rem;
+        background:var(--color-area);
+        border-radius:4px;
+    }
+    section > :first-child {
+        margin-top:0;
+    }
+    </style>
+    
 
 <div class=container>
 

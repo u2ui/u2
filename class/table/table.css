@@ -109,8 +109,8 @@ https://jsfiddle.net/x90cz65o/103/
 
 /*
 .u2-table.-Sticky > tbody > * > th {
-    max-width:30%;
-    width:30%;
+    max-inline-size:30%;
+    inline-size:30%;
     white-space: normal;
 }
 */

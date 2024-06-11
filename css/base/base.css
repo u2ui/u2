@@ -39,7 +39,7 @@ hr {
 	border-top-width:0 !important;
 }
 video, audio, video, iframe {
-	width: 100%; /* max-width:-moz-available / -webkit-fill-available; incompatibility causes problems */
+	width: 100%; /* max-width:-moz-available / -webkit-fill-available; incompatibility causes problems. todo: inline-size? */ 
 }
 iframe {
     display:block;
