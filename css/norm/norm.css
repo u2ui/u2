@@ -31,7 +31,6 @@ small {
 }
 table {
 	border-color: currentColor; /* Correct table border color in Chrome and Safari. */
-	/* text-indent: 0; will enable it if someone has a need for it */
 }
 textarea, button, input, select { /* textarea: Firefox, all:Safari */
 	margin: 0;

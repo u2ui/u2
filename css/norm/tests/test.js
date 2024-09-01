@@ -47,7 +47,7 @@ let html = `
     width:100%;
     display:table;
     border-collapse: collapse;
-    text-indent: 0;
+    /* text-indent: 0; */
 }
 .Table > * {
     display:table-row;
