@@ -1,0 +1,38 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "disableif.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "Disables an element if a condition is met",
+                    "name": "u2-disableif",
+                    "members": [],
+                    "events": [],
+                    "attributes": [
+                        {
+                            "name": "u2-disableif",
+                            "description": "Condition to disable the element",
+                            "u2Examples": ["true", "false"]
+                        }
+                    ],
+                    "cssProperties": [],
+                    "attributeName": "u2-disableif"
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "custom-attribute-definition",
+                    "name": "u2-disableif",
+                    "declaration": {
+                        "name": "u2-disableif",
+                        "module": "disableif.js"
+                    }
+                }
+            ]
+        }
+    ]
+}
