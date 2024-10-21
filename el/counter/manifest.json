@@ -1,59 +1,52 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-    {
+    "modules": [{
         "kind": "javascript-module",
         "path": "counter.js",
-        "declarations": [
-        {
+        "declarations": [{
             "kind": "class",
             "description": "Animated Number Counter",
-            "name": "counter",
+            "name": "u2-counter",
             "members": [],
             "events": [],
-            "attributes": [
-                {
-                    "name": "value",
-                    "description": "The value to count to, if not set, the innerHTML will be used as the value",
-                    "u2-type": "number",
-                    "u2Examples": ["10", "100", "-999", "71934"]
-                },{
-                    "name": "from",
-                    "description": "The value to start counting from, if not set, 0 will be used",
-                    "u2-type": "number",
-                    "u2Examples": ["0", "100", "-999", "71934"]
-                },{
-                    "name": "once",
-                    "description": "If set, the counter will only count once, else it will count every time it is in view",
-                    "u2-type": "boolean"
-                },{
-                    "name": "no-grouping",
-                    "description": "If set, the counter will not use grouping separators",
-                    "u2-type": "boolean"
-                }
-            ],
-            "cssProperties": [
-                {
-                    "name": "--js-final-inline-size",
-                    "description": "Read only! The final width of the counter"
-                }
-            ],
-            "superclass": {"name": "HTMLElement"},
+            "attributes": [{
+                "name": "value",
+                "description": "The value to count to, if not set, the innerHTML will be used as the value",
+                "u2-type": "number",
+                "u2Examples": ["10", "100", "-999", "71934"]
+            },{
+                "name": "from",
+                "description": "The value to start counting from, if not set, 0 will be used",
+                "u2-type": "number",
+                "u2Examples": ["0", "100", "-999", "71934"]
+            },{
+                "name": "once",
+                "description": "If set, the counter will only count once, else it will count every time it is in view",
+                "u2-type": "boolean"
+            },{
+                "name": "no-grouping",
+                "description": "If set, the counter will not use grouping separators",
+                "u2-type": "boolean"
+            }],
+            "cssProperties": [{
+                "name": "--js-final-inline-size",
+                "description": "Read only! The final width of the counter",
+                "syntax": "<length>"
+            }],
+            "superclass": {
+                "name": "HTMLElement"
+            },
             "tagName": "u2-counter",
             "customElement": true
-        }
-        ],
-        "exports": [
-            {
-                "kind": "custom-element-definition",
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-counter",
+            "declaration": {
                 "name": "u2-counter",
-                "declaration": {
-                    "name": "counter",
-                    "module": "counter.js"
-                }
+                "module": "counter.js"
             }
-        ]
-      }
-    ]
-  }
+        }]
+    }]
+}

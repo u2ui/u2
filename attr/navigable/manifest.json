@@ -1,42 +1,34 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-    {
+    "modules": [{
         "kind": "javascript-module",
         "path": "navigable.js",
-        "declarations": [
-          {
-            "summary": "Make elements navigatable",
-            "description": "Links to Elements that can have a active-state (dialog, details, popover, etc.) can be activated by simply linking to its id. This is done by adding the custom attribute u2-navigable to the element.",
+        "declarations": [{
+            "kind": "class",
+            "description": "Make elements navigatable",
             "name": "u2-navigable",
             "members": [],
             "events": [],
-            "attributes": [
-                {
-                    "name": "u2-navigable",
-                    "description": "By adding the custom attribute u2-navigable to an element, the element becomes navigatable. Opens by hash-link even on loading the page, changes the url by closing the element.",
-                    "type": "boolean"
-                },{
-                    "name": "id",
-                    "description": "An id is required to navigate to the element."
-                }
-            ],
+            "attributes": [{
+                "name": "u2-navigable",
+                "description": "By adding the custom attribute u2-navigable to an element, the element becomes navigatable. Opens by hash-link even on loading the page, changes the url by closing the element.",
+                "u2Examples": ["true", "false"]
+            },{
+                "name": "id",
+                "description": "An id is required to navigate to the element.",
+                "u2Examples": ["element-id"]
+            }],
             "cssProperties": [],
             "attributeName": "u2-navigable"
-          }
-        ],
-        "exports": [
-          {
+        }],
+        "exports": [{
             "kind": "custom-attribute-definition",
             "name": "u2-navigable",
             "declaration": {
-              "name": "u2-navigable",
-              "module": "navigable.js"
+                "name": "u2-navigable",
+                "module": "navigable.js"
             }
-          }
-        ]
-      }
-    ]
-  }
-  
+        }]
+    }]
+}

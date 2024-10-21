@@ -1,38 +1,30 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-    {
+    "modules": [{
         "kind": "javascript-module",
         "path": "focusgroup.js",
-        "declarations": [
-          {
+        "declarations": [{
+            "kind": "class",
             "description": "Focus movement by arrow keys",
             "name": "u2-focusgroup",
             "members": [],
             "events": [],
-            "attributes": [
-                {
-                    "name": "u2-focusgroup",
-                    "description": "It allows you to focus elements with arrow keys inside a container.",
-                    "u2Examples": ["", "wrap", "wrap vertical remember", "remember"]
-                }
-            ],
+            "attributes": [{
+                "name": "u2-focusgroup",
+                "description": "It allows you to focus elements with arrow keys inside a container.",
+                "u2Examples": ["", "wrap", "wrap vertical remember", "remember"]
+            }],
             "cssProperties": [],
             "attributeName": "u2-focusgroup"
-          }
-        ],
-        "exports": [
-          {
+        }],
+        "exports": [{
             "kind": "custom-attribute-definition",
             "name": "u2-focusgroup",
             "declaration": {
-              "name": "u2-focusgroup",
-              "module": "focusgroup.js"
+                "name": "u2-focusgroup",
+                "module": "focusgroup.js"
             }
-          }
-        ]
-      }
-    ]
-  }
-  
+        }]
+    }]
+}

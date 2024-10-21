@@ -1,77 +1,61 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-        {
-            "kind": "javascript-module",
-            "path": "alert.js",
-            "declarations": [
-                {
-                    "kind": "class",
-                    "description": "",
-                    "name": "alert",
-                    "members": [
-                    ],
-                    "events": [
-                    ],
-                    "attributes": [
-                        {
-                            "name": "variant",
-                            "u2-type": ["info","success","warn","error"]
-                        },
-                        {
-                            "name": "dismissable",
-                            "u2-type": "boolean"
-                        },
-                        {
-                            "name": "icon",
-                            "u2Examples": ["home","star","favorite","share","link"]
-                        },
-                        {
-                            "name": "open",
-                            "u2-type": "boolean"
-                        }
-                    ],
-                    "slots": [
-                        {
-                            "name": "action",
-                            "description": "Slot to add action buttons"
-                        }
-                    ],
-                    "CSSProperties": [
-                        {
-                            "name": "--color",
-                            "description": "The color of the alert, if not set, it will be determined by the variant.",
-                            "syntax": "<color>"
-                        }
-                    ],
-                    "CSSParts": [
-                        {
-                            "name": "icon",
-                            "description": "The icon part of the alert"
-                        },
-                        {
-                            "name": "close",
-                            "description": "The close (dismiss) button part of the alert"
-                        }
-                    ],
-                    "superclass": {
-                        "name": "HTMLElement"
-                    },
-                    "tagName": "u2-alert",
-                    "customElement": true
-                }
-            ],
-            "exports": [
-                {
-                    "kind": "custom-element-definition",
-                    "name": "u2-alert",
-                    "declaration": {
-                        "name": "MyElement",
-                        "module": "my-project/my-element.js"
-                    }
-                }
-            ]
-        }
-    ]
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "alert.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Prominent hints, alerts, and facts",
+            "name": "u2-alert",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "variant",
+                "description": "Determines the type of the alert (success, warn, error, info).",
+                "u2-type": ["info","success","warn","error"]
+            },{
+                "name": "dismissable",
+                "description": "Allows the alert to be closed by the user.",
+                "u2-type": "boolean"
+            },{
+                "name": "icon",
+                "description": "Adds an icon to the alert, if not set, the icon will be determined by the variant.",
+                "u2Examples": ["home","star","favorite","share","link"]
+            },{
+                "name": "open",
+                "description": "Determines if the alert is visible or not.",
+                "u2-type": "boolean"
+            }],
+            "slots": [{
+                "name": "action",
+                "description": "Slot to add action buttons"
+            }],
+            "cssProperties": [{
+                "name": "--color",
+                "description": "The color of the alert, if not set, it will be determined by the variant.",
+                "syntax": "<color>"
+            }],
+            "cssParts": [{
+                "name": "icon",
+                "description": "The icon part of the alert"
+            },{
+                "name": "close",
+                "description": "The close (dismiss) button part of the alert"
+            }],
+            "superclass": {
+                "name": "HTMLElement"
+            },
+            "tagName": "u2-alert",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-alert",
+            "declaration": {
+                "name": "u2-alert",
+                "module": "alert.js"
+            }
+        }]
+    }]
 }

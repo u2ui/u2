@@ -1,38 +1,30 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-        {
-            "kind": "javascript-module",
-            "path": "draghandle.js",
-            "declarations": [
-                {
-                    "kind": "class",
-                    "description": "Provides a handle to drag elements",
-                    "name": "u2-draghandle",
-                    "members": [],
-                    "events": [],
-                    "attributes": [
-                        {
-                            "name": "u2-draghandle",
-                            "description": "Enables the drag handle on the element",
-                            "u2Examples": ["", "true", "false"]
-                        }
-                    ],
-                    "cssProperties": [],
-                    "attributeName": "u2-draghandle"
-                }
-            ],
-            "exports": [
-                {
-                    "kind": "custom-attribute-definition",
-                    "name": "u2-draghandle",
-                    "declaration": {
-                        "name": "u2-draghandle",
-                        "module": "draghandle.js"
-                    }
-                }
-            ]
-        }
-    ]
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "draghandle.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Provides a handle to drag elements",
+            "name": "u2-draghandle",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "u2-draghandle",
+                "description": "Enables the drag handle on the element",
+                "u2Examples": ["", "true", "false"]
+            }],
+            "cssProperties": [],
+            "attributeName": "u2-draghandle"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-draghandle",
+            "declaration": {
+                "name": "u2-draghandle",
+                "module": "draghandle.js"
+            }
+        }]
+    }]
 }

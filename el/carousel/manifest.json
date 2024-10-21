@@ -1,58 +1,48 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-        {
-            "kind": "javascript-module",
-            "path": "carousel.js",
-            "declarations": [
-                {
-                    "kind": "class",
-                    "description": "",
-                    "name": "carousel",
-                    "members": [
-                        {
-                            "kind": "method",
-                            "name": "slideTo"
-                        }
-                    ],
-                    "events": [
-                        {
-                            "name": "u2-carousel.slide",
-                            "type": {
-                                "text": "Event"
-                            }
-                        }
-                    ],
-                    "attributes": [
-                        {
-                            "name": "autoplay",
-                            "description": "If specified, the carousel automatically begins to slide.",
-                            "u2-type": "boolean"
-                        },
-                        {
-                            "name": "mode",
-                            "description": "The mode of the carousel. scroll: uses native scroll, fade: uses css opacity, slide: uses css-transform.",
-                            "u2-type": ["slide","fade","scroll"]
-                        }
-                    ],
-                    "superclass": {
-                        "name": "HTMLElement"
-                    },
-                    "tagName": "u2-carousel",
-                    "customElement": true
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "carousel.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Simple carousel component",
+            "name": "carousel",
+            "members": [{
+                "kind": "method",
+                "name": "slideTo"
+            }],
+            "events": [{
+                "name": "u2-carousel.slide",
+                "description": "Fired when the carousel slides to a new item.",
+                "type": {
+                    "text": "Event"
                 }
-            ],
-            "exports": [
-                {
-                    "kind": "custom-element-definition",
-                    "name": "u2-carousel",
-                    "declaration": {
-                        "name": "MyElement",
-                        "module": "my-project/my-element.js"
-                    }
-                }
-            ]
-        }
-    ]
+            }],
+            "attributes": [{
+                "name": "autoplay",
+                "description": "If specified, the carousel automatically begins to slide.",
+                "u2-type": "boolean"
+            },{
+                "name": "mode",
+                "description": "The mode of the carousel. scroll: uses native scroll, fade: uses css opacity, slide: uses css-transform.",
+                "u2-type": ["slide","fade","scroll"]
+            }],
+            "cssProperties": [],
+            "cssParts": [],
+            "superclass": {
+                "name": "HTMLElement"
+            },
+            "tagName": "u2-carousel",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-carousel",
+            "declaration": {
+                "name": "carousel",
+                "module": "carousel.js"
+            }
+        }]
+    }]
 }
