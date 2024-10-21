@@ -27,7 +27,7 @@ b, strong {
 	font-weight: bolder; /* Add the correct font weight in Chrome and Safari. */
 }
 small {
-	font-size: 80%; /* Add the correct font size in all browsers. */
+	font-size: 80%; /* Add the correct font size in all browsers. Standard is "smaller" but it is not clearly specified what smaller means */
 }
 table {
 	border-color: currentColor; /* Correct table border color in Chrome and Safari. */
