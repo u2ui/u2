@@ -12,7 +12,7 @@ u2 is a design system that is intended to fulfill the following goals:
 - Minimalistic
 - Based on standards
 - Tooling is optional
-- Minimal styled, style it as you like
+- Minimally styled, style it as you like
 - Works without JS if possible
 
 ## Demos

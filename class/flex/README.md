@@ -51,7 +51,7 @@ Add a wrapper element if you like to add margin to the container
   <ul class=u2-flex>
     <li> first
     <li> second  
-  </u2>
+  </ul>
 <div>
 ```
 

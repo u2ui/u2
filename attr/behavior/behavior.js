@@ -63,7 +63,7 @@ export function register(name, fn) {
 
 
 
-/* default behavoirs */
+/* default behaviors */
 
 
 register('close',{

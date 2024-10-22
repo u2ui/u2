@@ -3,8 +3,8 @@ Confirm before action
 
 ## Features
 
-- Interupts form submit and requestSubmit
-- Interupts click on button
+- Interrupts form submit and requestSubmit
+- Interrupts click on button
 - Uses native Dialog-Element (unstyled)
 - Has a translated default confirm text
 - Lightweight

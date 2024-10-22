@@ -3,7 +3,7 @@ Better tables
 
 ## Features
 
-- adds at the table definded paddings `--u2-Col-gap` `--u2-Col-gap` `--u2-Row-gap`
+- adds at the table defined paddings `--u2-Col-gap` `--u2-Col-gap` `--u2-Row-gap`
 - makes non-table elements table-like
 - Use modifier classes: 
     - Flex: To make table rows flex and break rows on smaller screens
@@ -19,7 +19,7 @@ Better tables
         <tr>
             <th>Table
             <th>Column
-            <th>Colunn
+            <th>Column
     <tbody>
         <tr>
             <td>Cell 1/1

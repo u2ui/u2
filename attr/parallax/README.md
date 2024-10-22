@@ -5,7 +5,7 @@ Make every element scrolling at different speed
 
 - fast!
 - easy API
-- works for dynamic added elements
+- works for dynamically added elements
 - lightweight < 4k minified
 
 ## Usage

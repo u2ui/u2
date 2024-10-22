@@ -58,7 +58,7 @@
     },
     "navigable": {
       "name": "navigable",
-      "description": "Make elements navigatable",
+      "description": "Make elements navigable",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -140,7 +140,7 @@
     },
     "unstyle": {
       "name": "unstyle",
-      "description": "Unstyle elements eg. buttons",
+      "description": "Unstyle elements e.g. buttons",
       "beta": false,
       "deprecated": false,
       "css": true,

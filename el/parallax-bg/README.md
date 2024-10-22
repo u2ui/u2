@@ -5,7 +5,7 @@ Parallax backgrounds
 
 - fast!
 - easy, declarative API
-- works for dynamic added elements
+- works for dynamically added elements
 - reduced background-container to the reachable area!
 - css only fallback
 - light weight

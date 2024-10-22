@@ -6,7 +6,7 @@
         "path": "navigable.js",
         "declarations": [{
             "kind": "class",
-            "description": "Make elements navigatable",
+            "description": "Make elements navigable",
             "name": "u2-navigable",
             "members": [],
             "events": [],

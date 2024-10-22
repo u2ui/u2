@@ -1,5 +1,5 @@
 # .u2-unstyle - class
-Unstyle elements eg. buttons
+Unstyle elements e.g. buttons
 
 Specificity: 0.1.0
 
