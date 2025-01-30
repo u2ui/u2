@@ -39,7 +39,6 @@ class Dialog {
         const element = this.element;
         d.body.appendChild(element);
         element.showModal();
-        element.classList.add(':modal'); // fallback for browsers that don't support :modal
         if (this.options.audio) {
             const url = this.options.audio === true ? import.meta.url + '/../notification.mp3' : this.options.audio;
             const audio = new Audio();
