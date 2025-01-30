@@ -89,14 +89,14 @@
 dialog { transition: opacity 1s ease; opacity:0; }
 dialog[open] { opacity:1 }
 
-dialog:is(.\:modal, :modal) {
+dialog:modal {
     width: 18rem;
     box-shadow: 0 0 1rem #0008;
     border: 0;
     border-radius: .3rem;
     opacity:1;
 }
-/* dialog:where(.\:modal, :modal)[hidden] { opacity:0; transition-duration:1s; } close animation, still commented out in code */
+/* dialog:modal[hidden] { opacity:0; transition-duration:1s; } close animation, still commented out in code */
     </style>
 </u2-code>
 
