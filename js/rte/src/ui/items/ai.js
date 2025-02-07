@@ -116,7 +116,7 @@ Rte.ui.setItem('ai', {
 
 
 const endpoint = 'https://api.groq.com/openai/v1/chat/completions'
-const apiKey = "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";
+const apiKey = "xxx";
 //const model = "llama3-8b-8192";
 const model = "llama3-70b-8192";
 
