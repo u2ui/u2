@@ -16,6 +16,11 @@ class Bytes extends HTMLElement {
     render() {
         let value = this.value;
         if (value === null) return this.outEl.innerHTML = '-';
+        if (isNaN(value)) {
+            console.warn('Invalid number', value, this);
+            this.outEl.innerHTML = 'NaN';
+            return;
+        }
 
         const digits = this.getAttribute('digits') || 3;
         const locales = localesFromElement(this);
@@ -25,7 +30,8 @@ class Bytes extends HTMLElement {
             maximumSignificantDigits: digits,
         });
 
-        const {number, compact, unit, space} = convertBytes(value, {useBinaryUnits: false, locale: locales[0]});
+        const {number, compact, unit, space} = convertBytes(value, {binary: false, locale: locales[0]});
+        console.log(number, compact, unit, space);
         let html = formatter.formatToParts(number).map(part => `<span part="${part.type}">${part.value}</span>`).join('');
         if (space !== '') html += `<span part="literal">${space}</span>`;
         html += `<span part="compact">${compact}</span>`;
@@ -43,7 +49,7 @@ class Bytes extends HTMLElement {
         this.setAttribute('value', val);
     }
     get value() {
-        let value = this.getAttribute('value') ?? this.innerHTML;
+        let value = this.getAttribute('value') ?? this.textContent;
         value = value.trim();
         if (value==='') return null;
         return parseFloat(value);
@@ -72,7 +78,9 @@ function convertBytes(bytes, options) {
         compact = binary ? ["", "Ки", "Ми", "Ги", "Ти", "Пи", "Эи", "Зи", "Йи"] : ["", "к", "М", "Г", "Т", "П", "Э", "З", "Й"];
     }
 
-    const i = Math.floor(Math.log(Math.abs(bytes)) / Math.log(base));
+    let i = bytes === 0 ? 0 : Math.floor(Math.log(Math.abs(bytes)) / Math.log(base));
+
+    if (i < 0) i = 0;
 
     let unit = 'B';
     if (i === 0) {
