@@ -1,4 +1,4 @@
-// deno run -A --unstable ./u2/tools\update.repos.json.js
+// deno run -A --unstable ./u2/tools/update.repos.json.js
 
 const repos = {};
 
