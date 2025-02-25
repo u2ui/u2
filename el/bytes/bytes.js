@@ -31,7 +31,6 @@ class Bytes extends HTMLElement {
         });
 
         const {number, compact, unit, space} = convertBytes(value, {binary: false, locale: locales[0]});
-        console.log(number, compact, unit, space);
         let html = formatter.formatToParts(number).map(part => `<span part="${part.type}">${part.value}</span>`).join('');
         if (space !== '') html += `<span part="literal">${space}</span>`;
         html += `<span part="compact">${compact}</span>`;
