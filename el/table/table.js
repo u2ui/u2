@@ -95,7 +95,8 @@ function sortableClick(e){
 
     const tds = columns.item(index).cellsByGroup(tbody);
     tds
-        .map( td => { return { td, val: td.getAttribute('data-sortby') ?? td.innerText.trim() }; } )
+        //.map( td => { return { td, val: td.getAttribute('data-sortby') ?? td.innerText.trim() }; } )
+        .map( td => { return { td, val: td.getAttribute('data-sortby') ?? td.textContent.trim() }; } )
         .sort((a, b) => {
             if (!ascending) [a, b] = [b, a];
             const [v1, v2] = [a.val, b.val];
