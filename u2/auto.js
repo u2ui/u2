@@ -41,7 +41,7 @@ function impCss(url, options={}){
     needed.css[url] = prio
 }
 
-window.u2 = Object.create(null);
+window.u2 ??= Object.create(null);
 window.u2.needed = needed;
 
 ////////////////////////////////////////////////////////////////

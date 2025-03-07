@@ -12,3 +12,10 @@ export async function repos(){
     }
     return cachedRepos;
 }
+
+
+window.u2 ??= Object.create(null);
+window.u2.js = function(jsResp){
+    const file = import.meta.resolve('../js/'+jsResp+'/'+jsResp+'.js');
+    return import(file);
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Demo Page | U2-Design-System</title>
+        <script src="../u2.js" type=module async></script>
+        <script type=module src="../u2.js"></script>
+            
+<body>
+
+<script type=module>
+u2.js('dialog').then((dialog) => {
+    dialog.confirm('u2.js(module) works!');
+});
+
+const dialog = await u2.js('dialog');
+dialog.confirm('await u2.js(module) works!');
+
+</script>
