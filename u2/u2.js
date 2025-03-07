@@ -1,4 +1,12 @@
 
+
+window.u2 ??= Object.create(null);
+window.u2.js = function(jsRepo){
+    const file = import.meta.resolve('../js/'+jsRepo+'/'+jsRepo+'.js');
+    return import(file);
+}
+
+
 let cachedRepos = null;
 export async function repos(){
     if (!cachedRepos) {
@@ -14,8 +22,3 @@ export async function repos(){
 }
 
 
-window.u2 ??= Object.create(null);
-window.u2.js = function(jsResp){
-    const file = import.meta.resolve('../js/'+jsResp+'/'+jsResp+'.js');
-    return import(file);
-}
