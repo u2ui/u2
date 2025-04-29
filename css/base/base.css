@@ -22,6 +22,7 @@ html {
 body {
 	margin:auto;
 	min-block-size: 100%;
+    display: flow-root; /* so that margin of children does not affect body */
 	font-size:max(1rem, 16px); /* 16px => safari ios dont zoom in */
 }
 h1, h2, h3, h4, h5, h6 {
