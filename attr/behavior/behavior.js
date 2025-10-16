@@ -6,6 +6,11 @@ const observer = new SelectorObserver({
         const name = el.getAttribute('u2-behavior');
         const behavior = registry.get(name);
 
+        if (!behavior) {
+            console.warn('Behavior not found:', name, el);
+            return;
+        }
+
         const active = behavior.init?.(el);
         setStates(el, {active: active, inactive: !active, success: false, error: false});
 
