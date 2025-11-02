@@ -1,0 +1,25 @@
+
+u2-calendar {
+    overflow:auto;
+    max-height:90vh;
+}
+
+
+/* u2-calendaritem not defined */
+u2-calendar:not(:defined) {
+    display:block;
+}
+u2-calendaritem:not(:defined) {
+    display:block;
+    padding:.2em .9em;
+    margin:.2em 0;
+    color: #fff;
+    
+    &::after {
+        content: attr(start) " - " attr(end);
+        display:block;
+        font-size: .8em;
+    }
+}
+
+    

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>u2-calendar — tests</title>
+    
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js?1" type=module async></script>
+
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <link rel=stylesheet href="../cookiebanner.css">
+    <script src="../cookiebanner.js" type=module async></script>
+
+    <script src="../../code/code.js" type=module async></script>
+    <link rel=stylesheet href="../../code/code.css">
+
+</head>
+<body>
+
+<section>
+
+  <div id="banner">
+    <u2-cookiebanner 
+      policy-link="https://example.com/cookie-policy"
+      class="u2-width"
+      u2-skin="invert">
+    </u2-cookiebanner>
+  </div>
+
+  <h2>Cookie Banner Test</h2>
+  <p>
+    This is a test of the <code>u2-cookiebanner</code> component.
+    Click "Accept" to set the consent cookie and hide the banner. Reload the page to see that the banner does not reappear.
+  </p>
+
+  <br>
+  <button id="necessaryOnly">
+    categories="necessary"
+    <small>(website uses only necessary cookies)</small>
+  </button>
+  <br>
+  <button id="customMessage" style="text-align: left;">
+    message="Custom Message"<br>
+    categories="necessary analytics"
+    lang=de<br>
+    no policy-link
+  </button>
+  <script>
+    necessaryOnly.addEventListener('click', () => {
+      document.cookie = 'u2-cookies-accepted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      banner.innerHTML = `<u2-cookiebanner categories="necessary" policy-link="https://example.com/cookie-policy"></u2-cookiebanner>`
+    });
+    customMessage.addEventListener('click', () => {
+      document.cookie = 'u2-cookies-accepted=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      banner.innerHTML = `<u2-cookiebanner categories="necessary analytics" lang="de" message="Achtung Cookies!"></u2-cookiebanner>`
+    });
+  </script>
+
+  <h2>Cookie Value:</h2>
+  <u2-code trim id="cookieValueEl"></u2-code>
+  <script>
+    setInterval(() => {
+      const cookieValue = document.cookie.split('; ').find(c => c.startsWith('u2-cookiebanner='))?.split('=')[1];
+      const cookieValueObj = cookieValue ? JSON.parse(cookieValue) : null;
+      cookieValueEl.value = JSON.stringify(cookieValueObj, null, 2);
+    }, 500);
+  </script>
+  <button onclick="u2Cookiebanner.show()">Show <small>(force)</small></button>
+  <button onclick="document.cookie = 'u2-cookiebanner=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';">Delete Cookie</button>
+  <button onclick="location.reload();">Reload Page</button>
+
+  <u2-code editable trim>
+      <style>
+      u2-cookiebanner {
+        border-radius: .5em;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 1em #0004;
+        inset: 0;
+        button { width: 100%; }
+        &::backdrop {
+          background:#0004;
+        }
+      }
+      </style>
+  </u2-code>
+
+  <div style="height:100vh;"></div>
+
+
+</section>
+
+</body>
+</html>

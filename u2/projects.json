@@ -74,7 +74,7 @@
     },
     "skin": {
       "name": "skin",
-      "description": "Change the skin of a widget",
+      "description": "Change the skin of a widget\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -92,7 +92,7 @@
     },
     "card1": {
       "name": "card1",
-      "description": "card-class (beta)",
+      "description": "card-class (beta)\r",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -108,7 +108,7 @@
     },
     "grid": {
       "name": "grid",
-      "description": "Most wanted grid case",
+      "description": "Most wanted grid case\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -124,7 +124,7 @@
     },
     "reset": {
       "name": "reset",
-      "description": "A class to reset Styles (beta)",
+      "description": "A class to reset Styles (beta)\r",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -140,7 +140,7 @@
     },
     "unstyle": {
       "name": "unstyle",
-      "description": "Unstyle elements e.g. buttons",
+      "description": "Unstyle elements e.g. buttons\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -188,6 +188,14 @@
       "css": true,
       "js": true
     },
+    "calendar": {
+      "name": "calendar",
+      "description": "Simple calendar / month view component",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "carousel": {
       "name": "carousel",
       "description": "Simple carousel component",
@@ -215,6 +223,14 @@
     "code": {
       "name": "code",
       "description": "Highlighted, editable code-blocks.",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "cookiebanner": {
+      "name": "cookiebanner",
+      "description": "Cookie banner for consent management.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -262,7 +278,7 @@
     },
     "masonry": {
       "name": "masonry",
-      "description": "Masonry layout with CSS grid fallback",
+      "description": "Masonry layout with CSS grid fallback\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -310,7 +326,7 @@
     },
     "rating": {
       "name": "rating",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -508,7 +524,7 @@
   "theme": {
     "brutalist": {
       "name": "brutalist",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -516,7 +532,7 @@
     },
     "elegance": {
       "name": "elegance",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -524,7 +540,7 @@
     },
     "luxury": {
       "name": "luxury",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -532,7 +548,7 @@
     },
     "minimal": {
       "name": "minimal",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -540,7 +556,7 @@
     },
     "minimalism": {
       "name": "minimalism",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -548,7 +564,7 @@
     },
     "natur": {
       "name": "natur",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -556,7 +572,7 @@
     },
     "pastell": {
       "name": "pastell",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -564,7 +580,7 @@
     },
     "pop": {
       "name": "pop",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -572,7 +588,7 @@
     },
     "retro": {
       "name": "retro",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -580,7 +596,7 @@
     },
     "soft": {
       "name": "soft",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -588,7 +604,7 @@
     },
     "tech": {
       "name": "tech",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -596,7 +612,7 @@
     },
     "test": {
       "name": "test",
-      "description": "",
+      "description": "\r",
       "beta": false,
       "deprecated": false,
       "css": false,

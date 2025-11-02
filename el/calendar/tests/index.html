@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>u2-calendar — tests</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <link rel=stylesheet href="../calendar.css">
+    <script src="../calendar.js" type=module async></script>
+    <script src="../ext/keyNavigation.js" type=module async></script>
+
+    <script src="../../code/code.js" type=module async></script>
+    <link rel=stylesheet href="../../code/code.css">
+
+</head>
+<body>
+
+<section>
+    <h2>Navigation</h2>
+    <p>
+      <button onclick="calendar.prev()">Previous Month</button>
+      <button onclick="document.querySelector('#calendar').setAttribute('date', '2025-10-01')">Today</button>
+      <button onclick="calendar.next()">Next Month</button>
+      Locale:
+      <select id="localeSelect" onchange="document.querySelector('#calendar').setAttribute('locale', this.value)">
+        <option value="de-DE" selected>de-DE</option>
+        <option value="en-US">en-US</option>
+        <option value="fr-FR">fr-FR</option>
+        <option value="es-ES">es-ES</option>
+        <option value="ja-JP">ja-JP</option>
+      </select>
+    </p>
+
+    <u2-calendar view="month" id="calendar" date="2025-10-01" locale="de-DE">
+      <u2-calendaritem start="2025-10-12">Ganztägiges Ereignis</u2-calendaritem>
+      <u2-calendaritem start="2025-10-22" end="2025-10-29">Langzeit-Projekt</u2-calendaritem>
+      <u2-calendaritem start="2025-10-29T09:00" end="2025-10-29T10:30">Tägliches Standup</u2-calendaritem>
+      <u2-calendaritem start="2025-10-29T11:00" end="2025-10-29T12:00" style="background-color:#2196f3">Team Meeting</u2-calendaritem>
+      <u2-calendaritem start="2025-10-29T14:00" end="2025-10-29T15:30" id="today" style="background-color:#f44336">Wichtige Präsentation</u2-calendaritem>
+      <u2-calendaritem start="2025-10-29T16:00" end="2025-10-29T17:00" style="background-color:#ff9800">1:1 Meeting</u2-calendaritem>
+      <u2-calendaritem start="2025-10-30T10:00" end="2025-10-30T11:30" style="background-color:#9c27b0">Design Review</u2-calendaritem>
+      <u2-calendaritem start="2025-10-30T13:00" end="2025-10-30T14:00" style="background-color:#009688">Lunch &amp; Learn</u2-calendaritem>
+      <u2-calendaritem start="2025-11-01T09:00" end="2025-11-01T17:00" style="background-color:#607d8b">Workshop</u2-calendaritem>
+    </u2-calendar>
+
+    <u2-code editable trim>
+        <style>
+        u2-calendar {
+            font-size: 14px;
+            border-radius: 0.9em;
+            box-shadow: 0 0 1rem #0004;            
+        }
+        u2-calendaritem {
+            background: #88f;
+            border-radius: 0.7em;
+            background-image:linear-gradient(to bottom right, rgba(255,255,255,0.3), rgba(0,0,0,0.1) );
+        }
+        </style>
+    </u2-code>
+
+    <h2>Events API Test</h2>
+    <p>
+      <button onclick="testChangeEventTime()">Test: Change Event Time</button>
+      <button onclick="addEventWithoutEnd()">Test: Add Event without End</button>
+    </p>
+
+    <script>
+    // Demo: Interaktivität und API Tests
+    setTimeout(() => {
+      // Event Listener für Kalender-Items
+      today.addEventListener('click', function(e) {
+        console.log('Item clicked:', this.textContent.trim());
+      });
+
+      window.testChangeEventTime = () => {
+        const item = document.querySelector('#today');
+        console.log('Original start:', item.start);
+        console.log('Original end:', item.end);
+        
+        // Verschiebe um 1 Stunde nach vorne
+        const newStart = new Date(item.start);
+        newStart.setHours(newStart.getHours() + 1);
+        item.setAttribute('start', newStart.toISOString());
+        
+        const newEnd = new Date(item.end);
+        newEnd.setHours(newEnd.getHours() + 1);
+        item.setAttribute('end', newEnd.toISOString());
+        
+        console.log('New start:', item.start);
+        console.log('New end:', item.end);
+      };
+
+      window.addEventWithoutEnd = () => {
+        const item = document.createElement('u2-calendaritem');
+        item.setAttribute('start', '2025-10-29T13:00');
+        item.style.backgroundColor = '#673ab7';
+        item.textContent = 'Spontanes Meeting (30min)';
+        calendar.appendChild(item);
+        
+        console.log('New event start:', item.start);
+        console.log('Auto-calculated end:', item.end);
+      };
+
+    }, 200);
+    </script>
+
+</section>
+
+</body>
+</html>

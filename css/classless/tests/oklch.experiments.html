@@ -16,7 +16,43 @@
 <body>
 
 <style>
+
 html {
+    /* Grundfarbe - hier ändern! */
+    /* todo: https://x.com/jh3yy/status/1984192489155428848 */
+
+    --color: #000001;
+    --color: #fff;
+
+    /* Base - Helligkeit anpassen */
+    --color-light: color-mix(in oklch, var(--color), #fff 70%);
+    --color-dark:  color-mix(in oklch, var(--color), #000 50%);
+    
+    /* Semantic - automatisch aus Grundfarbe */
+    --color-bg: color-mix(in oklch, var(--color), #fff 90%);
+    --color-text:  color-mix(in oklch, var(--color), #000 90%);
+
+    --color-area: var(--color-light);
+    --color-line: var(--color-text);
+
+    /* Farbpalette - Hue-Rotation */
+    --palette-base: oklch(from var(--color) max(l, 0.5) max(c, 0.15) h);
+
+    --red: oklch(from var(--palette-base) l c 25);
+    --orange: oklch(from var(--palette-base) l c 60);
+    --yellow: oklch(from var(--palette-base) l c 95);
+    --lime: oklch(from var(--palette-base) l c 125);
+    --green: oklch(from var(--palette-base) l c 155);
+    --cyan: oklch(from var(--palette-base) l c 195);
+    --blue: oklch(from var(--palette-base) l c 240);
+    --purple: oklch(from var(--palette-base) l c 285);
+    --pink: oklch(from var(--palette-base) l c 340);
+
+    --line-width: 1px;
+}
+
+/* 
+zzzhtml {
     --ok-l: .8;
     --ok-c: .3;
     --ok-h: 120;
@@ -25,7 +61,7 @@ html {
     --color-light:  color-mix(in srgb, var(--color), white 94%);
     --color-dark:   color-mix(in srgb, var(--color), black 40%);
 
-    /* named */
+    /* named * /
     --color-bg:   color-mix(in srgb, var(--color), white 99.5%);
     --color-text: color-mix(in srgb, var(--color), black 90%);
     --color-area: var(--color-light);
@@ -42,6 +78,10 @@ html {
 
     --line-width: 1px;
 }
+*/
+
+
+
 </style>
 
 <style>

@@ -130,6 +130,6 @@ dialog:is(:modal,[open]), :popover-open {
     }
 }
 
-[popover] { /* ok? una: https://x.com/Una/status/1917662266427859202 */
+:where([popover]) { /* ok? una: https://x.com/Una/status/1917662266427859202 */
     inset: auto; 
 }

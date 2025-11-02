@@ -1,0 +1,46 @@
+# <u2-calendar> - element  (BETA)
+Simple calendar / month view component
+
+> Status: BETA — experimental. API and markup may change.
+
+## Features
+
+- month view
+- lightweight layout and styling
+- supports `u2-calendaritem` children with `start` and `end` attributes
+- events rendered as colored bars spanning multiple days
+- performat and responsive using css grid
+
+## Usage
+
+```html
+<u2-calendar date="2025-10-01" style="font-size:10px">
+    <u2-calendaritem start="2025-10-09">Demo</u2-calendaritem>
+</u2-calendar>
+  
+```
+
+## Install
+
+```html
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/calendar/calendar.min.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/calendar/calendar.min.js" type=module async></script>
+```
+
+## Demos
+
+[drag.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/drag.html)  
+[index.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/index.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/minimal.html)  
+
+## Todo
+
+- expose public API for navigating months (prev/next)
+- accessibility improvements
+- add more examples and docs
+
+## About
+
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
+- Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
+

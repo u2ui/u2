@@ -59,25 +59,13 @@ input[type="search"] {
 :-moz-ui-invalid { /* Remove the additional :invalid styles in Firefox. */
 	box-shadow: none;
 }
-summary { /* Add the correct display in safari 14 */
+summary { /* Add the correct display in safari 14, todo: obsolete? */
 	display: list-item;
 }
 search {
 	display:block; /* sf < 17 */
 }
-[inert] { /* ch < 102 sf < 15.5 ff < 112 */
-	pointer-events: none;
-	cursor: default;
-	-webkit-user-select: none;
-	user-select: none;
-}
-/* [inert], [inert] *) { too slow
-	/* user-modify: read-only !important; no effect? * /
-	-webkit-user-select: none;
-	user-select: none;
-} */
-
-[popover] {
+[popover] { /* sf < 18.3 */
     position: fixed;
     width: fit-content;
     height: fit-content;
