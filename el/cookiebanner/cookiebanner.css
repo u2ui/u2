@@ -24,6 +24,12 @@ u2-cookiebanner {
         flex-wrap: wrap;
         justify-content: end;
         gap: .5em;
+        container-type: inline-size;
+
+        @container (max-width: 16rem) {
+            button { flex-basis: 100%; }
+        }
+
     }
 }
 
