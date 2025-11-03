@@ -16,5 +16,15 @@
     <u2-cookiebanner message="We have no cookies, just a test"></u2-cookiebanner>
     <button onclick="u2Cookiebanner.show()">Change Consent</button>
   </section>
+  <style class=main>
+    u2-cookiebanner {
+      box-shadow:0 0 1rem #0006;
+      inset:0;
+      max-width:13rem;
+      &::backdrop {
+        background-color: #0006;
+      }
+    }
+  </style>
 </body>
 </html>

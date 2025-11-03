@@ -1,0 +1,88 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+      {
+        "kind": "javascript-module",
+        "path": "calendar.js",
+        "declarations": [
+          {
+            "kind": "class",
+            "description": "A customizable calendar component",
+            "name": "u2-calendar",
+            "members": [],
+            "events": [],
+            "attributes": [
+                {
+                    "name": "date",
+                    "description": "The currently displayed date in ISO format (YYYY-MM-DD)",
+                    "type": "string"
+                },
+                {
+                    "name": "locale",
+                    "description": "The locale to use for date formatting (defaults to browser locale)",
+                    "type": "string",
+                    "u2Examples": ["de-CH", "en-US", "fr-FR"]
+                },
+                {
+                    "name": "view",
+                    "description": "The current view mode of the calendar",
+                    "type": "string"
+                }
+            ],
+            "cssProperties": [],
+            "cssParts": [],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u2-calendar",
+            "customElement": true
+          },
+          {
+            "kind": "class",
+            "description": "Represents an item/event in the calendar",
+            "name": "u2-calendaritem",
+            "members": [],
+            "events": [],
+            "attributes": [
+                {
+                    "name": "start",
+                    "description": "Start date/time of the calendar item",
+                    "type": "string"
+                },
+                {
+                    "name": "end",
+                    "description": "End date/time of the calendar item",
+                    "type": "string"
+                }
+            ],
+            "cssProperties": [],
+            "cssParts": [],
+            "superclass": {
+              "name": "HTMLElement"
+            },
+            "tagName": "u2-calendaritem",
+            "customElement": true
+          }
+        ],
+        "exports": [
+          {
+            "kind": "custom-element-definition",
+            "name": "u2-calendar",
+            "declaration": {
+              "name": "u2-calendar",
+              "module": "calendar.js"
+            }
+          },
+          {
+            "kind": "custom-element-definition",
+            "name": "u2-calendaritem",
+            "declaration": {
+              "name": "u2-calendaritem",
+              "module": "calendar.js"
+            }
+          }
+        ]
+      }
+    ]
+  }

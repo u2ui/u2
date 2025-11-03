@@ -19,7 +19,7 @@ u2-cookiebanner {
         opacity: .7;
     }
     & .-buttons {
-        margin-top: 1em;
+        margin-block-start: 1em;
         display: flex;
         flex-wrap: wrap;
         justify-content: end;

@@ -20,6 +20,17 @@ Cookie banner for consent management.
 <button onclick="u2Cookiebanner.show()">Change Consent</button>
 ```
 
+```css
+u2-cookiebanner {
+  box-shadow:0 0 1rem #0006;
+  inset:0;
+  max-width:13rem;
+  &::backdrop {
+    background-color: #0006;
+  }
+}
+```
+
 ## API
 
 Attributes (all optional):

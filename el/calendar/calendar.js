@@ -313,36 +313,14 @@ class U2CalendarItem extends HTMLElement {
     const text = this.textContent.trim();
     const startString = timeFormatter.format(this.start);
     const endString = timeFormatter.format(this.end);
-    this.title = `${startString} - ${endString}\n${text}`;
-
-
-    // const maxTracks = 3;
-    // let extraCount = 0;
-    // this.shadowRoot.innerHTML = layoutInfo.weeks.map(week => {
-    //   if ((week.track || 0) >= maxTracks) {
-    //     extraCount++;
-    //     return ''; // verstecke diese Bar
-    //   }
-    //   return `<div class=bar style="
-    //           grid-column: ${week.gridColumn};
-    //           grid-row: ${week.gridRow}; 
-    //           margin-block-start: ${(week.track || 0) * 2.0 + 2.3}em;
-    //         ">${startString} ${text}</div>`;
-    // }).join('');
-    // if (extraCount > 0) {
-    //   // füge ein "+n mehr" Element unter die letzte sichtbare Bar
-    //   this.shadowRoot.innerHTML += `<div class=bar style="
-    //         grid-column: 1 / -1;
-    //         grid-row: ${maxTracks + 1};
-    //         font-size:0.7em; color:#444;">+${extraCount} mehr</div>`;
-    // }
-
 
     this.shadowRoot.innerHTML = `${layoutInfo.weeks.map(week => `
-        <div class=bar style="
-          grid-column: ${week.gridColumn};
-          grid-row: ${week.gridRow}; 
-          margin-block-start: ${(week.track || 0) * 2.0 + 2.3}em;
+        <div class=bar 
+          title="${startString} - ${endString}\n${text}"
+          style="
+            grid-column: ${week.gridColumn};
+            grid-row: ${week.gridRow}; 
+            margin-block-start: ${(week.track || 0) * 2.0 + 2.3}em;
         ">${startString} ${text}</div>
       `).join('')}`;
   }

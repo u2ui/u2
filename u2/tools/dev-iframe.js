@@ -110,7 +110,7 @@ class DevIframe extends HTMLElement {
                 </button>
             </form>
             <div id=wrap>
-               <iframe src=""></iframe>
+               <iframe src="" loading=lazy></iframe>
             </div>
             <u2-tabs>
                 <h2>HTML</h2>
