@@ -3,16 +3,15 @@ Cookie banner for consent management.
 
 ## Features
 
-- Google Consent Mode v2 integration
+- Lightweight!
+- Easy to use!
 - Known cookie cleanup
 - Responsive design
-- Translations
+- 23 Languages (request for more)
 - Customizable messages
 - Customizable policy link
-- Customizable buttons
-- Customizable backdrop
-- Customizable skin
-- Customizable language
+- Google Consent Mode v2 integration
+- Minimal Styled, easy to customize (no Shadow DOM)
 
 ## Usage
 
@@ -29,25 +28,6 @@ Attributes (all optional):
 - `categories`: Space separated list of categories to be displayed. Default: `necessary functional analytics marketing`
 - `lang`: Language of the banner. `lang` can be set on a parent element too.
 
-CSS:
-- `u2-cookiebanner` - the main element
-- `u2-cookiebanner .-main` - the main content
-- `u2-cookiebanner .-settings` - the settings content
-- `u2-cookiebanner .-categories` - the categories list
-- `u2-cookiebanner .-buttons` - the buttons container
-- `u2-cookiebanner::backdrop` - the backdrop
-
-Events:
-- `u2-cookiebanner-consent` - emitted initially and when consent is changed
-example:
-```js
-document.addEventListener('u2-cookiebanner-consent', ({detail: {consent, isUpdate}}) => {
-    if (consent.analytics) {
-        loadAnalytics();
-    }
-});
-```
-
 Methods:
 - `show()` - show the banner, even if cookie is already set
 
@@ -60,8 +40,12 @@ Methods:
 
 ## Demos
 
-[index.html](http://gcdn.li/u2ui/u2@main/el/cookiebanner/tests/index.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/cookiebanner/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/cookiebanner/tests/test.html)  
+
+## Extensions
+
+- [googleConsentMode.js](./extensions/googleConsentMode.js) - Google Consent Mode v2 integration
 
 ## About
 

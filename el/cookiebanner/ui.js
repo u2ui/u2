@@ -1,17 +1,24 @@
 const allCategories = ['necessary', 'functional', 'analytics', 'marketing'];
 
 export function init(el) {
+
+    if (el.__initialized) return; // once
+    el.__initialized = true;
     
     const policyLink = el.getAttribute('policy-link');
-    const message = el.getAttribute('message') || getText(el, 'message');
-    const categories = el.getAttribute('categories')?.split(' ').map(c => c.trim()).filter(c => c) || allCategories;
+    const message    = el.getAttribute('message') || getText(el, 'message');
+
+    // better a set of categories?
+    const categories = el.getAttribute('categories')?.split(' ').map(c => c.trim()).filter(c => allCategories.includes(c)) ?? allCategories;
+    // ensure necessary is always included
+    if (!categories.includes('necessary')) categories.push('necessary');
 
     el.innerHTML = `
         <div class=-main>
             <div>
-                <span class=-message>${message}</span>
+                <span class=-message>${escapeHtml(message)}</span>
                 ${policyLink
-                    ? `<a href="${policyLink}" target="_blank">${getText(el, 'policy')}</a>`
+                    ? `<a href="${escapeHtml(policyLink)}" target="_blank">${getText(el, 'policy')}</a>`
                     : ''}
             </div>
             <div class=-buttons>
@@ -60,7 +67,6 @@ export function init(el) {
         const consent = {};
         el.querySelectorAll('.-categories input').forEach(c => consent[c.name] = c.checked);
         el.setConsent(consent);
-        el.hidePopover();
     }
     function acceptAll() {
         el.querySelectorAll('.-categories input').forEach(c => c.checked = true);
@@ -76,10 +82,12 @@ export function init(el) {
     if (categories.length === 1 && categories[0] === 'necessary') {
         el.querySelector('[name="settings"]').style.display = 'none';
         el.querySelector('[name="decline"]').style.display = 'none';
-        el.querySelector('.-message').textContent = el.getAttribute('message-necessary-only') || getText(el, 'message-necessary-only');
+        el.querySelector('.-message').textContent = el.getAttribute('message') || getText(el, 'message-necessary-only');
     }
 
 }
+
+const escapeHtml = str => str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]);
 
 function getText(el, key) {
     const lang = langOf(el);

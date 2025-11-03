@@ -44,7 +44,7 @@ export const cookies = {
         "description": "Google DoubleClick cookie for advertising and retargeting."
     },
     "test_cookie": {
-        "category": "functional",
+        "category": "marketing",
         "description": "Google DoubleClick test cookie to check if cookies are enabled."
     },
     "_hjIncludedInSample": {
@@ -67,25 +67,9 @@ export const cookies = {
         "category": "analytics",
         "description": "Hotjar cookie for pageview sampling."
     },
-    "__cf_bm": {
-        "category": "necessary",
-        "description": "Cloudflare bot management cookie to distinguish humans from bots."
-    },
-    "cf_clearance": {
-        "category": "necessary",
-        "description": "Cloudflare cookie to prove visitor passed security challenge."
-    },
     "ASP.NET_SessionId": {
         "category": "functional",
         "description": "ASP.NET session cookie for session state."
-    },
-    "csrftoken": {
-        "category": "necessary",
-        "description": "Security cookie to protect against CSRF attacks."
-    },
-    "_csrf": {
-        "category": "necessary",
-        "description": "CSRF token cookie for form security."
     },
     "OptanonConsent": {
         "category": "functional",
@@ -154,14 +138,6 @@ export const cookies = {
     "wordpress_logged_in_*": {
         "category": "functional",
         "description": "WordPress logged-in user identification cookie."
-    },
-    "__stripe_mid": {
-        "category": "necessary",
-        "description": "Stripe fraud prevention cookie."
-    },
-    "__stripe_sid": {
-        "category": "necessary",
-        "description": "Stripe session identifier for payment processing."
     },
     "_pk_id": {
         "category": "analytics",
@@ -260,25 +236,9 @@ export const localStorage = {
         "category": "functional",
         "description": "Crisp chat session and message data."
     },
-    "cookieConsent": {
-        "category": "necessary",
-        "description": "User cookie consent preferences."
-    },
-    "gdpr_consent": {
-        "category": "necessary",
-        "description": "GDPR consent tracking data."
-    },
     "OneTrustWPCCPAGoogleOptOut": {
         "category": "functional",
         "description": "OneTrust CCPA Google opt-out setting."
-    },
-    "auth0.ssodata": {
-        "category": "necessary",
-        "description": "Auth0 single sign-on session data."
-    },
-    "auth0.is.authenticated": {
-        "category": "necessary",
-        "description": "Auth0 authentication state."
     },
     "cart": {
         "category": "functional",
