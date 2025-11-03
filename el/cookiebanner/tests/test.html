@@ -74,6 +74,15 @@
   <button onclick="document.cookie = 'u2-cookiebanner=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';">Delete Cookie</button>
   <button onclick="location.reload();">Reload Page</button>
 
+  <script type="text/plain" data-category="marketing">
+  marketingIndicator.style.background = 'green';
+  marketingIndicator.innerHTML = 'Marketing script loaded';
+	</script>
+  <div id="marketingIndicator" style="background: red; color: #fff; padding: .5em;">
+    Marketing script not loaded
+  </div>
+
+
   <u2-code editable trim>
       <style>
       u2-cookiebanner {

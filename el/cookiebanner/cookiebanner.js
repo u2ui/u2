@@ -23,7 +23,7 @@ class U2CookieBanner extends HTMLElement {
       this.consent = data;
       if (!window.u2CookiebannerInitialConsent) {
         window.u2CookiebannerInitialConsent = data;
-        this.emitConsent();
+        queueMicrotask(()=>this.emitConsent());
       }
     }
   }
@@ -80,7 +80,7 @@ const alternativeCategories = {
   'C0004': 'marketing',
 };
 
-addEventListener('u2-cookiebanner-consent', ({ detail: { consent } }) => {
+window.addEventListener('u2-cookiebanner-consent', ({ detail: { consent } }) => {
   setTimeout(() => { // needed for type=module?
     document.querySelectorAll('script[type="text/plain"]').forEach(script => {
       let value = script.dataset.cookieconsent || script.dataset.uc || script.dataset.category;
@@ -117,7 +117,6 @@ addEventListener('u2-cookiebanner-consent', async ({detail: {consent, isUpdate}}
         window.location.hostname
       ];
       const paths = ['/', ''];
-      
       domains.forEach(domain => {
         paths.forEach(path => {
           document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${domain ? `; domain=${domain}` : ''}`;
