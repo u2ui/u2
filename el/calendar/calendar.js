@@ -79,7 +79,6 @@ class U2Calendar extends HTMLElement {
         }
         .header-day {
           text-align: center;
-          font-weight: 500;
           background: #fff;
         }
         .grid {
@@ -143,21 +142,24 @@ class U2Calendar extends HTMLElement {
     for (let row = 0; row < 6; row++) {
       for (let col = 0; col < 7; col++) {
         const date = new Date(viewStart);
-        date.setDate(viewStart.getDate() + row * 7 + col);
+        date.setDate(viewStart.getDate() + row * 7 + col + 1);
         const isOtherMonth = date.getMonth() !== month;
         if (isOtherMonth && col === 0 && row === 5) break; // stop, if other month and last row, optional?
         const isToday = date.toDateString() === today.toDateString();
-        const cell = this.createDayCell(date.getDate(), cellIndex++, isOtherMonth, isToday);
+        const cell = this.createDayCell(date, cellIndex++, isOtherMonth, isToday);
         grid.appendChild(cell);
       }
     }
   }
 
-  createDayCell(day, index, isOtherMonth, isToday = false) {
+  createDayCell(date, index, isOtherMonth, isToday = false) {
+    const day = date.getDate();
     const cell = document.createElement('div');
+    cell.setAttribute('part', 'cell');
     cell.tabIndex = '0';
     cell.dataset.col = (index % 7) + 1;
     cell.dataset.row = Math.floor(index / 7) + 1;
+    cell.dataset.date = date.toISOString().split('T')[0];
     
     cell.className = `day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}`;
     cell.innerHTML = `<div class="day-number">${day}</div>`;
@@ -317,6 +319,7 @@ class U2CalendarItem extends HTMLElement {
     this.shadowRoot.innerHTML = `${layoutInfo.weeks.map(week => `
         <div class=bar 
           title="${startString} - ${endString}\n${text}"
+          tabindex="0"
           style="
             grid-column: ${week.gridColumn};
             grid-row: ${week.gridRow}; 

@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "README.md",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "cookiebanner.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A cookie consent banner that helps manage user consent for cookies and tracking",
+          "name": "u2-cookiebanner",
+          "members": [
+            {
+              "kind": "field",
+              "description": "The current consent object containing user's cookie preferences",
+              "name": "consent"
+            },
+            {
+              "kind": "field",
+              "description": "Internal flag to track initialization",
+              "name": "__initialized"
+            }
+          ],
+          "events": [
+            {
+              "name": "u2-cookiebanner-consent",
+              "description": "Fired when user provides or updates their cookie consent",
+              "detail": {
+                "isUpdate": "boolean - Indicates if this is an update to existing consent",
+                "consent": "object - The current consent object with user preferences"
+              }
+            }
+          ],
+          "methods": [
+            {
+              "name": "show",
+              "description": "Displays the cookie banner to the user"
+            },
+            {
+              "name": "setConsent",
+              "description": "Sets the user's cookie consent preferences",
+              "parameters": [
+                {
+                  "name": "consent",
+                  "type": "object",
+                  "description": "Object containing the user's consent preferences"
+                }
+              ]
+            },
+            {
+              "name": "emitConsent",
+              "description": "Emits the consent event with current preferences",
+              "parameters": [
+                {
+                  "name": "isUpdate",
+                  "type": "boolean",
+                  "description": "Whether this is an update to existing consent"
+                }
+              ]
+            }
+          ],
+          "attributes": [{
+              "name": "policy-link",
+              "description": "URL to the privacy policy page"
+            },{
+              "name": "message",
+              "description": "Custom message to display in the banner"
+            },{
+              "name": "categories",
+              "description": "Space-separated list of cookie categories to manage (default: 'necessary functional analytics marketing'). Must be a subset of: necessary, functional, analytics, marketing"
+            },{
+              "name": "lang",
+              "description": "Language code (e.g., 'en', 'de') for localization. If not set, falls back to the nearest parent's lang attribute or browser's language."
+            }],
+          "cssProperties": [],
+          "cssParts": [],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "u2-cookiebanner",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "u2-cookiebanner",
+          "declaration": {
+            "name": "u2-cookiebanner"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "extensions/googleConsentMode.js",
+      "description": "Google Consent Mode integration for the cookie banner"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "knownItems.js",
+      "description": "Known cookies and tracking items that can be managed by the cookie banner"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "ui.js",
+      "description": "User interface components for the cookie banner"
+    }
+  ]
+}

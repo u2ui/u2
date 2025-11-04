@@ -1,7 +1,6 @@
 
 document.addEventListener('keydown', e=>{
     if (e.target.tagName !== 'U2-CALENDAR') return;
-    console.log(e)
 
     const path = e.composedPath();
     const actualTarget = path[0]; // Element, das das Event wirklich ausgelöst hat
