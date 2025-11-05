@@ -1,9 +1,7 @@
 u2-input {
     display:inline-block;
-    padding:0 !important;
-}
-:is(u2-input, #no) { /* just for strong selection */
-    padding:0;
+    border: 1px solid;
+    border-radius: var(--radius);
 }
 
 u2-input {
@@ -65,7 +63,7 @@ u2-input[type="cycle"] {
     }
 }
 
-u2-input[type="stepper"] {
+u2-input:where([type="stepper"]) {
     inline-size: 6em;
 }
 

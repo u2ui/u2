@@ -10,6 +10,10 @@ const types = {
         fallback: '<textarea></textarea>',
         input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
     },
+    'select': {
+        fallback: '<select><option>Ja<option>Nein</select>',
+        input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
+    },
     'stepper': {
         fallback: '<input type=number>',
         input: `
@@ -25,7 +29,7 @@ const types = {
         css: `
             ::slotted(input) {
                 text-align:center;
-                appearance:textfield;
+                appearance:textfield; /* todo: chrome */
             }
             `,
         init({shadow}) {
@@ -52,27 +56,10 @@ const types = {
             <button part="visibility" tabindex=-1>
                 <u2-ico inline icon=visibility_off></u2-ico>
             </button>
-            <style>
-            @import url('${import.meta.resolve('../rating/rating.css')}');
-            </style>
-            `, // <u2-rating value="0" max="4" style="font-size:10px" xicon=""></u2-rating>
-        //css: `@import ${import.meta.resolve('../rating/rating.css')}`,
+            `,
         init({shadow}) {
-            import ('../rating/rating.js');
             const real = this.realInput;
             const visibilityBtn = shadow.querySelector('button[part~=visibility]');
-            // const rating = shadow.querySelector('u2-rating');
-            // real.addEventListener('input', e => {
-            //     // todo: valicate for when realInput has pattern
-            //     // todo: use a online-service to check if password leaked
-            //     const password = real.value;
-            //     let strength = 0;
-            //     if (password.length >= 7) strength++;
-            //     if (/[A-Z]/.test(password)) strength++;
-            //     if (/[0-9]/.test(password)) strength++;
-            //     if (/[^A-Za-z0-9]/.test(password)) strength++;
-            //     rating.value = strength;
-            // });
             visibilityBtn.addEventListener('click', toggleVisibility);
 
             function toggleVisibility() {
@@ -115,7 +102,7 @@ const types = {
     //     }
     // },
     'checkbox': {
-        fallback: '<select><option value="">off</option><option value=on>on</select>',
+        fallback: '<select><option value="">off</option><option>on</select>',
         input: `
             <slot name=start></slot>
             <input type=checkbox id=checkbox>
@@ -123,8 +110,18 @@ const types = {
         css: `
             :host {
                 inline-size:auto;
+                height:1.6em;
+                aspect-ratio:1;
+                border:0;
+                border-radius:0;
+                overflow:visible;
             }
-            #input { xborder:0; width:auto; }
+            #input { border:0; border-radius:0; position:relative; }
+            #checkbox {
+                position:absolute;
+                inset:0;
+                margin:0;                
+            }
         `,
         init({shadow}) {
             setTimeout(()=> {
@@ -139,7 +136,8 @@ const types = {
     },
     'cycle': {
         fallback: '',
-        input: `<slot style="display:grid;"> </slot>`,
+        input: `
+        <slot style="display:grid;"></slot>`,
     },
     'file': {
         fallback: '<input type=file multiple>',
@@ -270,8 +268,6 @@ const types = {
     },
 }
 
-import('../ico/ico.js');
-
 customElements.define('u2-input', class extends HTMLElement {
     constructor(...args) {
         super(...args);
@@ -285,14 +281,13 @@ customElements.define('u2-input', class extends HTMLElement {
         :host {
             display:inline-block;
             inline-size:13em;
-            border-radius: var(--radius);
+            padding:0 !important;
+            overflow:clip;
         }
         #input {
             display: flex;
             align-items: baseline;
-            overflow:clip;
-            border: 1px solid;
-            border-radius: inherit;
+            block-size:100%;
         }
 
         [name=start]::slotted(*) { margin-inline-start: .5em; }
@@ -305,14 +300,16 @@ customElements.define('u2-input', class extends HTMLElement {
             box-shadow:none !important;
             flex:1 1 auto;
             inline-size:auto;
+            block-size:100% !important;
         }
         ::slotted(input) {
             inline-size:100% !important;
-        }
+        }        
+
         #input > button {
             background:var(--color-light, #eee);
             align-self:stretch;
-            min-width:2em;
+            min-inline-size:2em;
             &:active, &:focus, &:hover {
                 background: #e9e9e9;
                 outline:0;
@@ -330,7 +327,7 @@ customElements.define('u2-input', class extends HTMLElement {
             border: 0;
             background-color: transparent;
         }
-        #input::before, #input::after { /* dirty trick, first char defines the baseline, otherwise the sibling elements would no longer be at the same baseline */
+        #zzzinput::before, #zzzinput::after { /* dirty baseline hack, needed? */
             content:'p';
             width:0;
             overflow:hidden;
@@ -381,10 +378,11 @@ customElements.define('u2-input', class extends HTMLElement {
         if (oldValue === newValue) return;
         if (name === 'type') {
             this.realInput = this.querySelector('input,textarea,select');
-
-            if (!this.realInput) {
+console.log(this.realInput);
+            if (!this.realInput || this.realInput.u2GeneratedInnerHTML) {
                 this.innerHTML = types[newValue]?.fallback ?? types['text'].fallback;
                 this.realInput = this.querySelector('input,textarea,select');
+                this.realInput.u2GeneratedInnerHTML = true;
             }
             if (this.realInput) this._updateOwnFormValue();
 
