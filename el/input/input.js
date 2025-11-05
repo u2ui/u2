@@ -270,6 +270,8 @@ const types = {
     },
 }
 
+import('../ico/ico.js');
+
 customElements.define('u2-input', class extends HTMLElement {
     constructor(...args) {
         super(...args);

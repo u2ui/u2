@@ -5,6 +5,7 @@
     <meta name=viewport content="width=device-width">
     <title>u2-calendar — tests</title>
     <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
 
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
@@ -18,16 +19,18 @@
     <link rel=stylesheet href="../../code/code.css">
 
 </head>
-<body>
+<body style="place-content: start stretch;"></body>
 
 <section>
+
+
     <h2>Navigation</h2>
     <p>
       <button onclick="calendar.prev()">Previous Month</button>
-      <button onclick="calendar.setAttribute('date', '2025-10-01')">Today</button>
+      <button onclick="calendar.setAttribute('date', '2025-10-01')">Oktober 2025</button>
       <button onclick="calendar.next()">Next Month</button>
       Locale:
-      <select id="localeSelect" onchange="calendar.setAttribute('locale', this.value)">
+      <select id="localeSelect" onchange="calendar.setAttribute('lang', this.value)">
         <option value="de-DE" selected>de-DE</option>
         <option value="en-US">en-US</option>
         <option value="fr-FR">fr-FR</option>
@@ -36,13 +39,13 @@
       </select>
     </p>
 
-    <u2-calendar view="month" id="calendar" date="2025-10-01" locale="de-DE">
+    <u2-calendar view="month" id="calendar" date="2025-10-01" lang="de-DE">
       <u2-calendaritem start="2025-10-12">Ganztägiges Ereignis</u2-calendaritem>
       <u2-calendaritem start="2025-10-22" end="2025-10-29">Langzeit-Projekt</u2-calendaritem>
       <u2-calendaritem start="2025-10-29T09:00" end="2025-10-29T10:30">Tägliches Standup</u2-calendaritem>
       <u2-calendaritem start="2025-10-11T09:00" end="2025-10-14T10:30" draggable="true">Draggable Item</u2-calendaritem>
       <u2-calendaritem start="2025-10-29T11:00" end="2025-10-29T12:00" style="background-color:#2196f3">Team Meeting</u2-calendaritem>
-      <u2-calendaritem start="2025-10-29T14:00" end="2025-10-29T15:30" id="today" style="background-color:#f44336">Wichtige Präsentation</u2-calendaritem>
+      <u2-calendaritem start="2025-10-29T14:00" end="2025-10-29T15:30" style="background-color:#f44336" id="clickIt" onclick="alert('clicked!')">Click on me</u2-calendaritem>
       <u2-calendaritem start="2025-10-29T16:00" end="2025-10-29T17:00" style="background-color:#ff9800">1:1 Meeting</u2-calendaritem>
       <u2-calendaritem start="2025-10-30T10:00" end="2025-10-30T11:30" style="background-color:#9c27b0">Design Review</u2-calendaritem>
       <u2-calendaritem start="2025-10-30T13:00" end="2025-10-30T14:00" style="background-color:#009688">Lunch &amp; Learn</u2-calendaritem>
@@ -74,26 +77,15 @@
     // Demo: Interaktivität und API Tests
     setTimeout(() => {
       // Event Listener für Kalender-Items
-      today.addEventListener('click', function(e) {
-        console.log('Item clicked:', this.textContent.trim());
-      });
 
       window.testChangeEventTime = () => {
-        const item = document.querySelector('#today');
-        console.log('Original start:', item.start);
-        console.log('Original end:', item.end);
-        
-        // Verschiebe um 1 Stunde nach vorne
+        const item = clickIt;
         const newStart = new Date(item.start);
-        newStart.setHours(newStart.getHours() + 1);
-        item.setAttribute('start', newStart.toISOString());
-        
         const newEnd = new Date(item.end);
+        newStart.setHours(newStart.getHours() + 1);
         newEnd.setHours(newEnd.getHours() + 1);
+        item.setAttribute('start', newStart.toISOString());
         item.setAttribute('end', newEnd.toISOString());
-        
-        console.log('New start:', item.start);
-        console.log('New end:', item.end);
       };
 
       window.addEventWithoutEnd = () => {
@@ -102,9 +94,6 @@
         item.style.backgroundColor = '#673ab7';
         item.textContent = 'Spontanes Meeting (30min)';
         calendar.appendChild(item);
-        
-        console.log('New event start:', item.start);
-        console.log('Auto-calculated end:', item.end);
       };
 
     }, 200);

@@ -1,7 +1,6 @@
-const icoCssUrl = import.meta.resolve('../ico/ico.css');
 
 class U2Calendar extends HTMLElement {
-  static observedAttributes = ['view', 'date', 'lang'];
+  static observedAttributes = ['view', 'date', 'locale'];
 
   constructor() {
     super();
@@ -9,18 +8,65 @@ class U2Calendar extends HTMLElement {
     this._currentDate = new Date();
     this._locale = null;
     this._weekStart = 0; // 0 = Sunday .. 6 = Saturday
-    import('../ico/ico.js');
+  }
+
+  _setLocale(localeStr) {
+    const loc = new Intl.Locale(localeStr || navigator.language);
+    const info = typeof loc.getWeekInfo === 'function' ? loc.getWeekInfo() : { firstDay: 1 }; // firefox:no
+    this._locale = loc;
+    this._weekStart = info.firstDay % 7;
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;    
+    if (name === 'date') this._currentDate = new Date(newValue);
+    if (name === 'locale') this._setLocale(newValue);
+    this.render();
+    this.updateLayout();
+  }
+
+  connectedCallback() {
+    if (!this.hasAttribute('date')) this._currentDate = new Date();
+    if (!this.hasAttribute('locale')) this._setLocale();
+
+    this.render();
+    new MutationObserver(() => this.updateLayout()).observe(this, { childList: true });
+  }
+
+  set date(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    this.setAttribute('date', d.toISOString().split('T')[0]);
+  }
+  walkByMonth(offset) {
+    const year = this._currentDate.getUTCFullYear();
+    const month = this._currentDate.getUTCMonth();
+    this.date = new Date(year, month + offset, 1);    
+  }
+  next() { this.walkByMonth(1); }
+  prev() { this.walkByMonth(-1); }
+
+  render() {
+    if (this._renderQueued) return;
+    this._renderQueued = true;
+    requestAnimationFrame(() => {
+      this._render();
+      this._renderQueued = false;
+    });
+  }
+
+  _render() {
+    const today = new Date();
+    const year = this._currentDate.getFullYear();
+    const month = this._currentDate.getMonth();
 
     this.shadowRoot.innerHTML = `
       <style>
-        @import url('${icoCssUrl}');
         :host {
           display: flex;
           flex-direction: column;
           background: #0001;
           position:relative;
           z-index: 0;
-          --u2-ico-dir: 'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
         }
         .header {
           display: grid;
@@ -29,7 +75,7 @@ class U2Calendar extends HTMLElement {
           text-transform: uppercase;
           position: sticky;
           top: 0;
-          z-index: 3;
+          z-index: 2;
         }
         .header-day {
           text-align: center;
@@ -48,136 +94,80 @@ class U2Calendar extends HTMLElement {
           display: flex;
           flex-direction: column;
           min-block-size: 5em;
-          &:focus { z-index:1; }
-          &[aria-current="date"] { background-color: var(--color-light, #e3f2fd); }
-        }
-        .navigation {
-          display: flex;
-          justify-content: space-between;
-          gap: .5em;
-          padding: 1em;
-          & h2 { margin: 0; flex:1; font-weight:normal; }
-          & button { padding:0; margin:0; border:0; background:transparent; font:inherit; }
+          position: relative;
+          
+          &:focus {
+            z-index:1;
+          }
         }
         .other-month { color: #0002; }
+        .today { background-color: var(--color-light, #e3f2fd); }
       </style>
-      <div class=navigation>
-        <h2></h2>
-        <button onclick="this.getRootNode().host.date = new Date()" style="padding-inline:.5rem">
-          Today
-        </button>
-        <button onclick="this.getRootNode().host.prev()">
-          <u2-ico icon="chevron-left">&lt;</u2-ico>
-        </button>
-        <button onclick="this.getRootNode().host.next()">
-          <u2-ico icon="chevron-right">&gt;</u2-ico>
-        </button>
-      </div>
-      <div class=header></div>
-      <div class=grid role=grid><slot></slot></div>
-    `;    
-  }
-
-  _setLocale(localeStr) {
-    const loc = new Intl.Locale(localeStr || navigator.language);
-    this._locale = loc;
-    this._weekStart = loc.getWeekInfo?.().firstDay ?? 1;
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue) return;    
-    if (name === 'date') this._currentDate = new Date(newValue);
-    if (name === 'lang') this._setLocale(newValue);
-    this.render();
-    this.updateLayout();
-  }
-
-  connectedCallback() {
-    if (!this.hasAttribute('lang')) this._setLocale();
-    this.render();
-    new MutationObserver(() => this.updateLayout()).observe(this, { childList: true });
-  }
-
-  set date(date) {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    this.setAttribute('date', d.toISOString().split('T')[0]);
-  }
-
-  walkByMonth(offset) {
-    const d = new Date(this._currentDate);
-    //d.setMonth(d.getMonth() + offset, 1);
-    d.setUTCMonth(d.getUTCMonth() + offset, 1); // besser?
-    this.date = d;
-  }
-
-  next() { this.walkByMonth(1); }
-  prev() { this.walkByMonth(-1); }
-
-  render() {
-    if (this._renderQueued) return;
-    this._renderQueued = true;
-    requestAnimationFrame(() => {
-      this._render();
-      this._renderQueued = false;
-    });
-  }
-
-  _render() {
-    const today = new Date();
-    const year = this._currentDate.getFullYear();
-    const month = this._currentDate.getMonth();
-    const dateString = Intl.DateTimeFormat(this._locale?.baseName || navigator.language, { year: 'numeric', month: 'long' }).format(this._currentDate);
-
-    this.shadowRoot.querySelector('.navigation h2').innerHTML = dateString;
-    this.shadowRoot.querySelector('.header').innerHTML = `
-      ${(() => {
-          const localeTag = (this._locale && this._locale.baseName) || this.getAttribute('lang') || navigator.language;
+      <div class="header">
+        ${(() => {
+          const localeTag = (this._locale && this._locale.baseName) || this.getAttribute('locale') || navigator.language;
           const dtf = getTimeFormatter(localeTag, { weekday: 'short' });
           const out = [];
           for (let i = 0; i < 7; i++) {
             const idx = (this._weekStart + i) % 7;
+            // 1970-01-04 is a Sunday — create a reference date for each weekday
             const ref = new Date(Date.UTC(1970, 0, 4 + idx));
             const label = dtf.format(ref);
             out.push(`<div class="header-day">${label}</div>`);
           }
           return out.join('');
         })()}
+      </div>
+      <div class="grid"><slot></slot></div>
     `;
-    this.shadowRoot.querySelector('.grid').innerHTML = `<slot></slot>`;
 
     this.renderMonth(year, month, today);
+    
     this.updateLayout();
   }
 
   renderMonth(year, month, today) {
     const grid = this.shadowRoot.querySelector('.grid');
-    const firstOfMonth = new Date(Date.UTC(year, month, 1));
+    // Clear any existing cells
+    grid.innerHTML = '<slot></slot>';
+
+    // Determine the first visible date (may be in previous month)
+    const firstOfMonth = new Date(year, month, 1);
+    //const startOffset = (firstOfMonth.getDay() - this._weekStart + 7) % 7;
     const startOffset = (firstOfMonth.getUTCDay() - this._weekStart + 7) % 7;
-    
-    for (let i = 0; i < 42; i++) { // 6 Wochen x 7 Tage
-      const date = new Date(Date.UTC(year, month, 1 - startOffset + i));
-      const isOtherMonth = date.getUTCMonth() !== month;
-      if (isOtherMonth && i === 35) break; // stop, if other month and last row
-      const isToday = date.toDateString() === today.toDateString();      
-      grid.appendChild(this.createDayCell(date, i, isOtherMonth, isToday));
+    const viewStart = new Date(year, month, 1 - startOffset);
+
+    let cellIndex = 0;
+
+    // Render a fixed 6x7 grid
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < 7; col++) {
+        const date = new Date(viewStart.getTime() + (row * 7 + col) * 24 * 60 * 60 * 1000);
+        //const isOtherMonth = date.getMonth() !== month;
+        const isOtherMonth = date.getUTCMonth() !== month;
+        if (isOtherMonth && col === 0 && row === 5) break; // stop, if other month and last row, optional?
+        const isToday = date.toDateString() === today.toDateString();
+        const cell = this.createDayCell(date, cellIndex++, isOtherMonth, isToday);
+        grid.appendChild(cell);
+      }
     }
   }
 
   createDayCell(date, index, isOtherMonth, isToday = false) {
+    //const day = date.getDate();
     const day = date.getUTCDate();
+
     const cell = document.createElement('div');
     cell.setAttribute('part', 'cell');
     cell.tabIndex = '0';
+    cell.dataset.col = (index % 7) + 1;
+    cell.dataset.row = Math.floor(index / 7) + 1;
     cell.dataset.date = date.toISOString().split('T')[0];
-    cell.role = 'gridcell';
-    cell.ariaColIndex = (index % 7) + 1;
-    cell.ariaRowIndex = Math.floor(index / 7) + 1;
     
-    cell.className = `day ${isOtherMonth ? 'other-month' : ''}`;
-    isToday && cell.setAttribute('aria-current', 'date');
+    cell.className = `day ${isOtherMonth ? 'other-month' : ''} ${isToday ? 'today' : ''}`;
     cell.innerHTML = `<div class="day-number">${day}</div>`;
-    cell.style.gridColumn = cell.ariaColIndex;
-    cell.style.gridRow = cell.ariaRowIndex;
+    cell.style.gridColumn = (index % 7) + 1;
+    cell.style.gridRow = Math.floor(index / 7) + 1;
     return cell;
   }
 
@@ -213,7 +203,11 @@ class U2Calendar extends HTMLElement {
     const tracks = new Map(); // row -> array of endCol per track index
     for (let i = 0; i < segments.length; i++) {
       const week = segments[i];
-      const rowTracks = tracks.get(week.row) ?? tracks.set(week.row, []).get(week.row);
+      let rowTracks = tracks.get(week.row);
+      if (!rowTracks) {
+        rowTracks = [];
+        tracks.set(week.row, rowTracks);
+      }
 
       let track = 0;
       // find first track index that is free (no overlap)
@@ -228,7 +222,11 @@ class U2Calendar extends HTMLElement {
 
     // Layout auf Items anwenden (guard against missing/early items)
     itemWeeks.forEach(({ item, weeks }) => {
-      item.updateLayout?.({ weeks });
+      try {
+        item.updateLayout({ weeks });
+      } catch (err) {
+        console.warn('u2-calendar: updateLayout failed for item', item, err);
+      } 
     });
   }
 
@@ -242,7 +240,8 @@ class U2Calendar extends HTMLElement {
     const viewStart = new Date(Date.UTC(year, month, 1 - startOffset));
     const daysInMonth = monthEnd.getUTCDate();
     const totalDays = Math.ceil((daysInMonth + startOffset) / 7) * 7;
-    const viewEnd = new Date(Date.UTC(year, month, 1 - startOffset + totalDays - 1));
+    const viewEnd = new Date(viewStart);
+    viewEnd.setUTCDate(viewStart.getUTCDate() + totalDays - 1);
     
     // Parse input dates and normalize to start of day
     const eventStart = new Date(start);
@@ -257,9 +256,15 @@ class U2Calendar extends HTMLElement {
     // Calculate the actual start and end dates we need to process
     const current = new Date(Math.max(viewStart.getTime(), eventStart.getTime()));
     const finalEnd = new Date(Math.min(viewEnd.getTime(), eventEnd.getTime()));
-        
+    
+    // Safety counter to prevent infinite loops
+    let safetyCounter = 0;
+    const MAX_ITERATIONS = 50;
+    
     // Process each week
-    while (current <= finalEnd) {      
+    while (current <= finalEnd && safetyCounter < MAX_ITERATIONS) {
+      safetyCounter++;
+      
       // Calculate days since view start
       const daysSinceStart = Math.floor((current - viewStart) / (1000 * 60 * 60 * 24));
       const row = Math.floor(daysSinceStart / 7);
@@ -284,6 +289,15 @@ class U2Calendar extends HTMLElement {
       
       // If we've reached the end of the event, break
       if (current > finalEnd) break;
+    }
+    
+    if (safetyCounter >= MAX_ITERATIONS) {
+      console.warn('splitIntoWeeks: Exceeded maximum iterations', { 
+        start: start.toString(), 
+        end: end.toString(),
+        viewStart: viewStart.toString(),
+        viewEnd: viewEnd.toString()
+      });
     }
     
     return weeks;
@@ -330,7 +344,8 @@ class U2CalendarItem extends HTMLElement {
   }
 
   get end() {
-    return this._end && this._end > this._start ? this._end : this._start;
+    if (this._end && this._end > this.start) return this._end;
+    else return this._start;
   }
 
   updateLayout(layoutInfo) {

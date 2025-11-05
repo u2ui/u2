@@ -56,8 +56,9 @@ document.addEventListener('drop', (e) => {
     const endTime = new Date(draggedItem.getAttribute('end'));
     const duration = endTime - startTime;
 
-    const newStart = new Date(startTime);
-    newStart.setFullYear(year, month - 1, day);
+    const newStart = new Date(startTime); // smarter?
+    newStart.setFullYear(year, month - 1, day); 
+
     const newEnd = new Date(newStart.getTime() + duration);
 
     draggedItem.setAttribute('start', newStart.toISOString());

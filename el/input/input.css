@@ -1,5 +1,9 @@
 u2-input {
     display:inline-block;
+    padding:0 !important;
+}
+:is(u2-input, #no) { /* just for strong selection */
+    padding:0;
 }
 
 u2-input {

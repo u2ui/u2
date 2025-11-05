@@ -1,41 +1,92 @@
-
+// cell navigations
+const calendarKeyDownFns = {
+    'ArrowLeft': (row, col, grid)=>{
+        return grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col - 1}"]`);
+    },
+    'ArrowRight': (row, col, grid)=>{
+        return grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col + 1}"]`);
+    },
+    'ArrowUp': (row, col, grid)=>{
+        return grid.querySelector(`[aria-rowindex="${row - 1}"][aria-colindex="${col}"]`);
+    },
+    'ArrowDown': (row, col, grid)=>{
+        return grid.querySelector(`[aria-rowindex="${row + 1}"][aria-colindex="${col}"]`);
+    },
+    'PageUp': (row, col, grid)=>{
+        calendar.prev();
+        setTimeout(()=>{
+            const nextTarget = grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
+            nextTarget.focus();
+        }, 10);
+    },
+    'PageDown': (row, col, grid)=>{
+        calendar.next();
+        setTimeout(()=>{
+            const nextTarget = grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
+            if (nextTarget) nextTarget.focus();
+            else grid.querySelector(':scope > :last-child').focus();
+        }, 10);
+    },
+    'Home': (row, col, grid)=>{
+        return grid.querySelector(`[aria-rowindex="1"][aria-colindex="1"]`);
+    },
+    'End': (row, col, grid)=>{
+        return grid.querySelector(':scope > :last-child');
+    },
+}
 document.addEventListener('keydown', e=>{
     if (e.target.tagName !== 'U2-CALENDAR') return;
 
     const path = e.composedPath();
-    const actualTarget = path[0]; // Element, das das Event wirklich ausgelöst hat
+    const actualTarget = path[0];
 
-    // cell 
     if (actualTarget.matches('.grid > *')) {
+        const row = parseInt(actualTarget.ariaRowIndex, 10);
+        const col = parseInt(actualTarget.ariaColIndex, 10);
+        const grid = actualTarget.closest('.grid');
 
-        const row = parseInt(actualTarget.dataset.row, 10);
-        const col = parseInt(actualTarget.dataset.col, 10);
-        const parent = actualTarget.closest('.grid');
-
-        let nextTarget;
-
-        switch (e.key) {
-            case 'ArrowRight':
-                nextTarget = actualTarget.nextElementSibling;
-                break;
-
-            case 'ArrowLeft':
-                nextTarget = actualTarget.previousElementSibling;
-                break;
-
-            case 'ArrowDown':
-                nextTarget = parent.querySelector(`[data-row="${row + 1}"][data-col="${col}"]`);
-                break;
-
-            case 'ArrowUp':
-                nextTarget = parent.querySelector(`[data-row="${row - 1}"][data-col="${col}"]`);
-                break;
-        }
+        let nextTarget = calendarKeyDownFns[e.key]?.(row, col, grid);
 
         if (nextTarget) {
             nextTarget.focus();
-            e.preventDefault(); // Verhindert Scrollen etc.
+            e.preventDefault();
         }
 
     }
+})
+
+// move event by one day left or right
+// beta: event will be fullday-events
+document.addEventListener('keydown', e=>{
+    const item = e.target.closest('u2-calendaritem');
+    if (!item) return;
+    if (!item.draggable) return;
+
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        const offset = e.key === 'ArrowLeft' ? -1 : 1;
+        
+        const startDate = item.start;
+        const endDate = item.end;
+        
+        const newStartDate = new Date(startDate);
+        newStartDate.setDate(startDate.getDate() + offset);
+        
+        const newEndDate = new Date(endDate);
+        newEndDate.setDate(endDate.getDate() + offset);
+        
+        const formatDate = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+        
+        item.setAttribute('start', formatDate(newStartDate));
+        if (item.end) item.setAttribute('end', formatDate(newEndDate));
+        
+        e.preventDefault();
+        setTimeout(() => item.shadowRoot.querySelector('*')?.focus());
+    }
+
 })

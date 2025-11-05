@@ -19,7 +19,7 @@
                     "type": "string"
                 },
                 {
-                    "name": "locale",
+                    "name": "lang",
                     "description": "The locale to use for date formatting (defaults to browser locale)",
                     "type": "string",
                     "u2Examples": ["de-CH", "en-US", "fr-FR"]

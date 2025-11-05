@@ -15,13 +15,14 @@ u2-tooltip {
 
     /* customisable */
     pointer-events: none;
-    padding: .5em .7em;
+    padding: .4em .7em;
     max-width:14rem;
     background: Canvas;
     color: CanvasText;
 
     /* style */
     font-size:max(12px, .7rem);
+    --line-height: 1.4em;
     border-radius:.8em;
     background: var(--color-text, CanvasText);
     color: var(--color-bg, Canvas);
