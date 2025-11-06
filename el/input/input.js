@@ -33,9 +33,7 @@ const types = {
             }
             `,
         init({shadow}) {
-            const triggerInput = ()=>{
-                this.dispatchEvent(new Event('input', {bubbles: true}));
-            };
+            const triggerInput = ()=> this.dispatchEvent(new Event('input', {bubbles: true}));
             shadow.querySelector('.up').addEventListener('click', ()=> {
                 this.realInput.stepUp();
                 triggerInput();
@@ -208,9 +206,7 @@ const types = {
             import ('../bytes/bytes.js');
             const real = this.realInput;
             real.addEventListener('change', e => showPreview());
-            shadow.getElementById('browse').addEventListener('click', e => {
-                real.click();
-            });
+            shadow.getElementById('browse').addEventListener('click', e => real.click());
             this.addEventListener('dragover', e => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'copy';
@@ -222,9 +218,7 @@ const types = {
                 addFiles(e.dataTransfer.files);
                 this.classList.remove('u2DragOver');
             });
-            this.addEventListener('paste', e => {
-                addFiles(e.clipboardData.files);
-            });
+            this.addEventListener('paste', e => addFiles(e.clipboardData.files));
             // function setFiles(files){
             //     real.files = e.clipboardData.files;
             //     showPreview();
@@ -283,6 +277,7 @@ customElements.define('u2-input', class extends HTMLElement {
             inline-size:13em;
             padding:0 !important;
             overflow:clip;
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
         }
         #input {
             display: flex;
@@ -310,14 +305,13 @@ customElements.define('u2-input', class extends HTMLElement {
             background:var(--color-light, #eee);
             align-self:stretch;
             min-inline-size:2em;
+            transition:.2s;
+            opacity:0;
             &:active, &:focus, &:hover {
                 background: #e9e9e9;
                 outline:0;
                 opacity:1;
             }
-            /* only if hover */
-            transition:.2s;
-            opacity:0;
             :host(:hover) & {
                 opacity:1;
             }
@@ -335,8 +329,7 @@ customElements.define('u2-input', class extends HTMLElement {
             align-self:baseline;
         }
         </style>
-        <style id=typeCss>
-        </style>
+        <style id=typeCss></style>
         <div id=input>
             <slot name=start></slot>
             <slot></slot>
