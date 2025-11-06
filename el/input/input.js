@@ -33,7 +33,7 @@ const types = {
             }
             `,
         init({shadow}) {
-            const triggerInput = ()=> this.dispatchEvent(new Event('input', {bubbles: true}));
+            const triggerInput = ()=> this.realInput.dispatchEvent(new Event('input', {bubbles: true}));
             shadow.querySelector('.up').addEventListener('click', ()=> {
                 this.realInput.stepUp();
                 triggerInput();
