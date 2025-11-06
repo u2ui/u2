@@ -4,7 +4,7 @@ class menubutton extends HTMLElement {
         super();
     }
     connectedCallback() {
-        setTimeout(async () => {
+        setTimeout(() => {
             import('../../attr/focusgroup/focusgroup.js');
 
             const menu = this.querySelector('menu');

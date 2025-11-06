@@ -59,21 +59,43 @@
     </u2-input>
 
     <h3>start/end slot</h3>
-    <u2-input>
+
+    
+    <u2-input type="text">
         <span slot=start>☎</span>
+        <span slot=end>✖</span>
+    </u2-input>
+    No real Input
+    <br>
+
+
+    <u2-input>
         <select slot="start">
             <option>076
             <option>077
             <option>078
         </select>
         <input type="tel" name=tel value="" placeholder="3212321">
-        <span slot=end>✖</span>
     </u2-input>
+    secondary input in end slot (value will be combined)
+    <br>
 
-    <u2-input>
-        <input type="tel" name=tel value="" placeholder="3212321">
-        <button slot="end" style="border-radius:0; white-space:nowrap">send</button>
+    
+    <u2-input type="text">
+        <input type=text name=xyz value="3">
+        <u2-menubutton slot="end">
+            <button style="margin:0; padding:0; background:none; color:inherit">
+                <u2-ico inline>edit</u2-ico>
+            </button>
+            <menu>
+                <li> <button onclick="this.closest('u2-input').value=this.closest('u2-input').value.toUpperCase()">Uppercase</button>
+                <li> <button onclick="this.closest('u2-input').value=this.closest('u2-input').value.toLowerCase()">Lowercase</button>
+                <li> <hr>
+                <li> <button onclick="this.closest('u2-input').value=''">Clean</button>
+            </menu>
+        </u2-menubutton>
     </u2-input>
+    menubutton example
 
     <h3>Password</h3>
     <u2-input type="password">

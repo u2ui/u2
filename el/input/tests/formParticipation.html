@@ -52,9 +52,6 @@
                     </noscript>
                 <th>inside noscript
             <tr>
-                <td> <div id="shadowDomTest"></div>
-                <th> shadowDom only
-            <tr>
                 <td><div name="contentEditable" contenteditable>Editable Content</div>
                 <th>contenteditable itself
             <tr>
@@ -66,16 +63,18 @@
             <tr>
                 <td> <output name="output">60</output>
                 <th> output
-
+            <tr>
+                <td> <div id="shadowDomTest"></div>
+                <th> shadowDom only
             <tr>
                 <td> <div id="slotted"><input name="slotted"></div>
                 <th> slotted
             <tr>
-                <td> <div id="shadowNoContent"><input name="in shadow dom without content"></div>
-                <th> shadow dom without content
+                <td> <div id="shadowNoContent"><input name="in shadow dom without slot"></div>
+                <th> shadow dom without slot
             <tr>
                 <td> <div id="shadowSlot"></div>
-                <th> shadow dom with slot
+                <th> shadow dom with default slot
             <tr>
                 <td> <button name=button0 value="1">Button first</button>
                 <th> first button when submitted by enter inside an input
@@ -90,10 +89,10 @@
     </form>
 
     <script type=module>
-    shadowDomTest.attachShadow({mode:'open'}).innerHTML = `<input name="in shadowDom">`;
-    shadowNoContent.attachShadow({mode:'open'}).innerHTML = ``;
-    slotted.attachShadow({mode:'open'}).innerHTML = `<slot></slot>`;
-    shadowSlot.attachShadow({mode:'open'}).innerHTML = `<slot><input name="in slot of shadowDom"></slot>`;
+    shadowDomTest.attachShadow({mode:'open'}).innerHTML = `<input name="in shadowDom" value="in shadowDom">`;
+    shadowNoContent.attachShadow({mode:'open'}).innerHTML = `no slot`;
+    slotted.attachShadow({mode:'open'}).innerHTML = `slotted:<slot></slot>`;
+    shadowSlot.attachShadow({mode:'open'}).innerHTML = `slotted:<slot> no,default:<input name="in slot of shadowDom"></slot>`;
 
 
     form.onsubmit = function(event) {
@@ -108,6 +107,7 @@
         for (let [name, value] of fdata) {
             form.elements[name].closest('tr').style.backgroundColor = 'lightgreen';
         }
+        console.log(fdata)
     }
 
     </script>

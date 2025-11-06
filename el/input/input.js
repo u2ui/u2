@@ -326,7 +326,7 @@ customElements.define('u2-input', class extends HTMLElement {
     }
 
     formStateRestoreCallback(state, reason){
-        this.realInput.value = state;
+        if (this.realInput) this.realInput.value = state;
     }
 
     static formAssociated = true;
@@ -336,6 +336,12 @@ customElements.define('u2-input', class extends HTMLElement {
         if (oldValue === newValue) return;
         if (name === 'type') {
             this.realInput = this.querySelector('input,textarea,select');
+            
+            const mainSlot = this.shadowRoot.querySelector('slot:not([name])');
+            this.realInput = mainSlot.assignedElements().find(el => 
+                el.matches('input, textarea, select')
+            );            
+
             if (!this.realInput || this.realInput.u2GeneratedInnerHTML) {
                 this.innerHTML = types[newValue]?.fallback ?? types['text'].fallback;
                 this.realInput = this.querySelector('input,textarea,select');
