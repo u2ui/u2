@@ -43,7 +43,6 @@
 
     <h3>stepper</h3>
 
-
     <u2-input type="stepper">
         <input type="number" name=stepper value="2" step="0.5" min="0" max="10">
     </u2-input>
@@ -195,9 +194,7 @@
                     <u2-input type=stepper>
                         <input type="number" name=stepper value="2" step="0.5" min="0" max="10">
                     </u2-input>
-                <th> u2-input stepper
-
-            
+                <th> u2-input stepper            
             <tr>
                 <td>
                     <u2-input name=select type=select></u2-input>
@@ -255,7 +252,12 @@
                         <input name=file type="file">
                     </u2-input>
                 <th> File with inner
-            
+
+            <tr>
+                <td>
+                    <u2-input type="text" name="save-this-u2-input-value" u2-store></u2-input>
+                <th>
+                    store the value using u2-store            
         </table>
         <button name=submitBtn value="1">Submit 1</button>
         <button name=submitBtn value="2">Submit 2</button>
@@ -278,7 +280,6 @@
             updateData(e);
         });
         updateData();
-
 
         import {EventsExplorer} from '../../../u2/tools/eventsExplorer.js';
         const eventsExpl = new EventsExplorer(

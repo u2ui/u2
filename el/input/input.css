@@ -17,13 +17,13 @@ u2-input {
     input {
         color:inherit;
         background:inherit;
-        direction: inherit;
-        unicode-bidi: inherit;
+        direction:inherit;
+        unicode-bidi:inherit;
         font:inherit;
         text-align:inherit;
-        line-height: var(--line-height);
-        letter-spacing: inherit;
-        column-count: unset;
+        line-height:var(--line-height);
+        letter-spacing:inherit;
+        column-count:unset;
     }
 }
 

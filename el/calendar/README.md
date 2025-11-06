@@ -13,11 +13,30 @@ Simple calendar / month view component
 
 ## Usage
 
+```js
+u2Calendaritem2.addEventListener('click',()=>{
+  alert('Demo 2 clicked')
+})
+```
+
 ```html
-<u2-calendar date="2025-10-01" style="font-size:10px">
+<u2-calendar date="2025-10-01">
     <u2-calendaritem start="2025-10-09">Demo</u2-calendaritem>
+    <u2-calendaritem start="2025-10-19" end="2025-10-23" id="u2Calendaritem2">Demo 2</u2-calendaritem>
 </u2-calendar>
   
+```
+
+```css
+u2-calendar {
+  font-size:10px;
+}
+u2-calendaritem {
+  background-color:var(--color, orange);
+  &:hover {
+    background-color:var(--color-dark, red);
+  }
+}
 ```
 
 ## Install
@@ -29,7 +48,6 @@ Simple calendar / month view component
 
 ## Demos
 
-[drag.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/drag.html)  
 [index.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/index.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/minimal.html)  
 

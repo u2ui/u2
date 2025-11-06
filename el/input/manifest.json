@@ -1,0 +1,53 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "input.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Enhanced input element with additional functionality",
+            "name": "input",
+            "members": [{
+                "kind": "getter",
+                "name": "value",
+                "description": "Gets the current value of the input"
+            }],
+            "events": [],
+            "attributes": [{
+                "name": "type",
+                "description": "The type of input control to display",
+                "u2-type": "string",
+                "u2Examples": ["text", "password", "email", "number"]
+            }, {
+                "name": "value",
+                "description": "The current value of the input",
+                "u2-type": "string"
+            }],
+            "slots": [{
+                "name": "start",
+                "description": "Content to display before the input"
+            }, {
+                "name": "end",
+                "description": "Content to display after the input"
+            }, {
+                "name": "",
+                "description": "Default slot for real-input or fallback-input when JavaScript is disabled"
+            }],
+            "cssProperties": [],
+            "superclass": {
+                "name": "HTMLElement"
+            },
+            "tagName": "u2-input",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-input",
+            "declaration": {
+                "name": "u2-input",
+                "module": "input.js"
+            }
+        }]
+    }]
+}

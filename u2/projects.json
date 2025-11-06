@@ -79,6 +79,14 @@
       "deprecated": false,
       "css": true,
       "js": false
+    },
+    "store": {
+      "name": "store",
+      "description": "Persistent form and input state using localStorage",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
     }
   },
   "class": {

@@ -18,6 +18,13 @@ Displays formatted charts
 </u2-chart>
 ```
 
+```css
+u2-chart {
+    max-width:20rem;
+    margin:auto;
+}
+```
+
 ## Install
 
 ```html

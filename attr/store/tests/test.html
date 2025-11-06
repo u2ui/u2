@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>u2-store - Tests</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../store.js" type=module async></script>
+
+    <style>
+        .test-section {
+            margin: 2em 0;
+            padding: 1em;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+        }
+        .test-case {
+            margin: 1em 0;
+            padding: 1em;
+            background: #f8f8f8;
+            border-left: 4px solid #ccc;
+        }
+        .test-case.passed {
+            border-left-color: #4CAF50;
+        }
+        .test-case.failed {
+            border-left-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+
+<section class=main>
+    <h1>u2-store Tests</h1>
+
+    <div class="test-section">
+        <h3>1. Form Field Priority Test</h3>
+        <div class="test-case" id="test-priority">
+            <h4>Test: Form field should override direct field</h4>
+            
+            <form id="priorityForm" u2-store>
+                <label>
+                    Test Field <code>name="priorityTest"</code>(in stored form):
+                    <input type="text" name="priorityTest" id="formField" u2-store>
+                </label>
+            </form>
+            <button onclick="clearFormStorage()">Clear Form Storage</button>
+            <button onclick="clearInputStorage()">Clear Input Storage</button>
+            <button onclick="location.href = location.href">Reload Page</button>
+
+            
+            <div style="margin-top: 1em;">
+                <label>
+                    Same Field <code>name="priorityTest"</code> (global):
+                    <input type="text" name="priorityTest" id="directField" u2-store>
+                </label>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Form-based Storage</h3>
+        <form id="form1" u2-store>
+            <label>
+                Username:
+                <input type="text" name="username">
+            </label>
+            <br>
+            <label>
+                Email:
+                <input type="email" name="email">
+            </label>
+            <br>
+            <label>
+                Remember me:
+                <input type="checkbox" name="remember" value="true">
+            </label>
+        </form>
+        <p>This form's data is stored under the form's ID.</p>
+        <button onclick="clearFormStorage()">Clear Form Storage</button>
+        <button onclick="location.href = location.href">Reload Page</button>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Global Input Storage</h3>
+        <label>
+            Global Setting:
+            <input type="text" name="global_setting" u2-store>
+        </label>
+        <p>This input's value is stored globally.</p>
+        <button onclick="clearInputStorage()">Clear Global Storage</button>
+        <button onclick="location.href = location.href">Reload Page</button>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Clear All Storage</h3>
+        <button onclick="clearAllStorage()">Clear All u2-store Data</button>
+    </div>
+
+</section>
+
+<script>
+
+function clearAllStorage() {
+    clearFormStorage();
+    clearInputStorage();
+}
+function clearFormStorage() {
+    [localStorage,sessionStorage].forEach(storage=>{
+        for (let i = 0; i < storage.length; i++) {
+            const key = storage.key(i);
+            if (key.startsWith('u2-store-form-')) {
+                storage.removeItem(key);
+            }
+        }
+    });
+}
+function clearInputStorage() {
+    [localStorage,sessionStorage].forEach(storage=>{
+        storage.removeItem('u2-store-input');
+    });
+}
+
+</script>
+
+</body>
+</html>
