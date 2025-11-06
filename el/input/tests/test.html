@@ -8,10 +8,11 @@
     <script src="../../../u2/auto.js" type=module async></script>
     <link href="../../../css/classless/full.css" rel=stylesheet>
     <link href="../../../css/classless/simple.css" rel=stylesheet>
-    
+    <link href="../../ico/ico.css" rel=stylesheet>
+
     <style>
         body {
-            x--u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
         }
         label {
             display:block;
@@ -39,7 +40,9 @@
         <input name=u2 value="u2" type="number" placeholder="same width">
     </u2-input>
 
+
     <h3>stepper</h3>
+
 
     <u2-input type="stepper">
         <input type="number" name=stepper value="2" step="0.5" min="0" max="10">

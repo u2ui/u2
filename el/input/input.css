@@ -65,6 +65,9 @@ u2-input[type="cycle"] {
 
 u2-input:where([type="stepper"]) {
     inline-size: 6em;
+    & input::-webkit-inner-spin-button {
+        display: none;
+    }
 }
 
 

@@ -10,10 +10,6 @@ const types = {
         fallback: '<textarea></textarea>',
         input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
     },
-    'select': {
-        fallback: '<select><option>Ja<option>Nein</select>',
-        input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
-    },
     'stepper': {
         fallback: '<input type=number>',
         input: `
@@ -25,7 +21,7 @@ const types = {
         css: `
             ::slotted(input) {
                 text-align:center;
-                appearance:textfield; /* todo: chrome */
+                appearance:textfield;
             }
             `,
         init({shadow}) {
@@ -72,7 +68,6 @@ const types = {
                 }
             }
         }
-
     },
     'checkbox': {
         fallback: '<select><option value="">off</option><option>on</select>',
@@ -194,10 +189,6 @@ const types = {
                 this.classList.remove('u2DragOver');
             });
             this.addEventListener('paste', e => addFiles(e.clipboardData.files));
-            // function setFiles(files){
-            //     real.files = e.clipboardData.files;
-            //     showPreview();
-            // }
             function addFiles(files) {
                 let list = new DataTransfer();
                 for (let file of files) list.items.add(file);
