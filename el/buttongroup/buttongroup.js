@@ -4,13 +4,8 @@
 customElements.define('u2-buttongroup', class extends HTMLElement {
     constructor(...args) {
         super(...args);
-
-        
-        this.resizeObserver = new ResizeObserver(() => {
-            this._build();
-        });
+        this.resizeObserver = new ResizeObserver(() => this._build());
         //import ('../menubutton/menubutton.js'); // needs the css too
-
     }
 
     _build() {
@@ -18,7 +13,8 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
         const containerWidth = this.clientWidth;
         const items = [...this.children].map(btn => {return {btn, width: btn.clientWidth}}); // todo: clientWidth when flex:0 0 auto
         let fullWidth = items.reduce((acc, item) => acc + item.width, 0);
-        while ( fullWidth > containerWidth) {
+
+        while (fullWidth > containerWidth) {
             const item = items.pop();
             if (item.btn.tagName === 'U2-MENUBUTTON') continue;
             const li = document.createElement('li');
