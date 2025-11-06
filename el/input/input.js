@@ -265,6 +265,7 @@ const types = {
 customElements.define('u2-input', class extends HTMLElement {
     constructor(...args) {
         super(...args);
+        import('../ico/ico.js');
 
         let shadowRoot = this.attachShadow({ mode: 'open', delegatesFocus: true });
 
@@ -371,7 +372,6 @@ customElements.define('u2-input', class extends HTMLElement {
         if (oldValue === newValue) return;
         if (name === 'type') {
             this.realInput = this.querySelector('input,textarea,select');
-console.log(this.realInput);
             if (!this.realInput || this.realInput.u2GeneratedInnerHTML) {
                 this.innerHTML = types[newValue]?.fallback ?? types['text'].fallback;
                 this.realInput = this.querySelector('input,textarea,select');
