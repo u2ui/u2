@@ -103,6 +103,7 @@ class rating extends HTMLElement {
             this._internals.setValidity({});
         }
     }
+    get form() { return this._internals.form; }
     static observedAttributes = ['value', 'icon', 'max','value'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;

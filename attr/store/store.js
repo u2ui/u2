@@ -46,7 +46,6 @@ const elObserver = new SelectorObserver({
                 }
             }
         } else { // global-store
-            console.log('global-store', el)
             const data = JSON.parse(store.getItem('u2-store-input') || '{}');
             if (el.hasAttribute('value')) return;
             if (data[el.name] == null) return;

@@ -82,7 +82,7 @@
     },
     "store": {
       "name": "store",
-      "description": "Persistent form and input state using localStorage",
+      "description": "Persistent form and input state using localStorage/sessionStorage",
       "beta": false,
       "deprecated": false,
       "css": false,

@@ -5,6 +5,10 @@
     <meta name=viewport content="width=device-width">
     <title>u2-store - Tests</title>
     <script src="../../../u2/tests/test-init.js" type=module async></script>
+    
+    <script src="../../../el/input/input.js" type=module async></script>
+    <link rel="stylesheet" href="../../../el/input/input.css">
+
 
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
@@ -93,7 +97,11 @@
         <h3>3. Global Input Storage</h3>
         <label>
             Global Setting:
-            <input type="text" name="global_setting" u2-store>
+            <input type=text name="global_setting" u2-store>
+        </label>
+        <label>
+            Custom Element:
+            <u2-input type=text name="custom-element" u2-store></u2-input>
         </label>
         <p>This input's value is stored globally.</p>
         <button onclick="clearInputStorage()">Clear Global Storage</button>

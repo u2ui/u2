@@ -29,6 +29,7 @@ u2-input:focus-within {
 [compare.html](http://gcdn.li/u2ui/u2@main/el/input/tests/compare.html)  
 [formParticipation.html](http://gcdn.li/u2ui/u2@main/el/input/tests/formParticipation.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/input/tests/minimal.html)  
+[style.html](http://gcdn.li/u2ui/u2@main/el/input/tests/style.html)  
 [test copy.html](http://gcdn.li/u2ui/u2@main/el/input/tests/test copy.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/input/tests/test.html)  
 

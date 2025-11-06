@@ -302,7 +302,11 @@ customElements.define('u2-input', class extends HTMLElement {
         `;
         this._internals = this.attachInternals();
 
-        this.addEventListener('input', e => this._updateOwnFormValue());
+        this.addEventListener('input', e => {
+            if (e.target === this) return;
+            this._updateOwnFormValue()
+            this.hasAttribute('name') && this.dispatchEvent(new Event('input', {bubbles: true}));
+        });
     }
     _updateOwnFormValue(){
         const inputs = [...this.querySelectorAll('input,textarea,select,button')];
@@ -368,12 +372,9 @@ customElements.define('u2-input', class extends HTMLElement {
     }
 
     /* checkbox */
-    get value(){
-        return this.realInput.value;
-    }
-    set value(value){
-        this.realInput.value = value;
-    }
+    set value(value) { this.realInput.value = value; }
+    get form() { return this._internals.form; }
+    get value() { return this.realInput.value; }
 });
 
 
