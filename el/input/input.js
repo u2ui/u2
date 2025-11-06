@@ -20,7 +20,6 @@ const types = {
             <slot name=end></slot>`,
         css: `
             ::slotted(input) {
-                text-align:center;
                 appearance:textfield;
             }
             `,
@@ -335,19 +334,25 @@ customElements.define('u2-input', class extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'type') {
-            this.realInput = this.querySelector('input,textarea,select');
             
+            // if innerHTML was generated, remove it
             const mainSlot = this.shadowRoot.querySelector('slot:not([name])');
-            this.realInput = mainSlot.assignedElements().find(el => 
-                el.matches('input, textarea, select')
-            );            
+            if (this.u2GeneratedInnerHTML) mainSlot.assignedNodes().forEach(node => node.remove());
+            
+            if (!mainSlot.assignedElements().length) {
+                this.innerHTML += types[newValue]?.fallback ?? types['text'].fallback;
+                this.u2GeneratedInnerHTML = true;
+            }
+            this.realInput = this.querySelector('input,textarea,select');
 
+            /*
             if (!this.realInput || this.realInput.u2GeneratedInnerHTML) {
                 this.innerHTML = types[newValue]?.fallback ?? types['text'].fallback;
                 this.realInput = this.querySelector('input,textarea,select');
                 this.realInput.u2GeneratedInnerHTML = true;
             }
-            if (this.realInput) this._updateOwnFormValue();
+            */
+            this._updateOwnFormValue();
 
             types[newValue] ??= types['text'];
             this.shadowRoot.getElementById('input').innerHTML = types[newValue].input;

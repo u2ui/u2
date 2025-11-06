@@ -20,6 +20,7 @@ u2-input {
         direction: inherit;
         unicode-bidi: inherit;
         font:inherit;
+        text-align:inherit;
         line-height: var(--line-height);
         letter-spacing: inherit;
         column-count: unset;
@@ -42,16 +43,12 @@ u2-input[type="cycle"] {
         user-select: none;
         padding:.47em;
 
-        &:first-child {
-            z-index:1;
-        }
+        &:first-child { z-index:1; }
 
         &:has(:checked) {
             z-index:0;
             opacity:1;
-            & + label {
-                z-index:2;
-            }
+            & + label { z-index:2; }
         }
 
         & [type="radio"] {
@@ -65,9 +62,8 @@ u2-input[type="cycle"] {
 
 u2-input:where([type="stepper"]) {
     inline-size: 6em;
-    & input::-webkit-inner-spin-button {
-        display: none;
-    }
+    & input { text-align:center; }
+    & input::-webkit-inner-spin-button { display: none; }
 }
 
 

@@ -31,13 +31,13 @@
     <input name=normal type=text value="Normal">
 
     <u2-input>
-        <input name=u2 value="u2" type="number" placeholder="same height">
+        <input name=u2 value="2" type="number" placeholder="same height">
     </u2-input>
     
     <br><br>
 
     <u2-input>
-        <input name=u2 value="u2" type="number" placeholder="same width">
+        <input name=u2 value="2" type="number" placeholder="same width">
     </u2-input>
 
 
@@ -64,6 +64,9 @@
     <u2-input type="text">
         <span slot=start>☎</span>
         <span slot=end>✖</span>
+    </u2-input>
+    <u2-input type="number" style="text-align:right">
+        <span slot=end><span style="white-space:nowrap">kg</span></span>
     </u2-input>
     No real Input
     <br>
@@ -266,7 +269,6 @@
     <script type=module>
         function updateData(e) {
             const data = new FormData(form, e?.submitter);
-            console.log(Object.fromEntries(data))
             dataOut.innerHTML = dump(Object.fromEntries(data));
         }
         import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
@@ -315,7 +317,7 @@
     <u2-input style="font-size:10px">
         <u2-ico slot=start inline icon=person></u2-ico>
         <u2-tooltip>Username</u2-tooltip>
-        <input type="text">
+        <input type="text" value="Tobias">
         <button slot=end style="padding:0 .4em; align-self:stretch; display:flex; align-items:center; justify-content:center;">
             <u2-ico icon=save inline></u2-ico>
         </button>
