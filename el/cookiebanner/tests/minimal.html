@@ -26,5 +26,19 @@
       }
     }
   </style>
+  <script class=main>
+    (window.u2ConsentHandlers ??= []).push(function(consent){
+        consent.marketing ? setUp() : cleanUp();
+    })
+  </script>
+
+  <script>
+    function setUp() {
+      console.log('Marketing consent granted');
+    }
+    function cleanUp() {
+      console.log('Marketing consent denied');
+    }
+  </script>
 </body>
 </html>

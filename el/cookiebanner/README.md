@@ -8,12 +8,17 @@ Cookie banner for consent management.
 - Known cookie cleanup
 - Responsive design
 - 23 Languages (request for more)
-- Customizable messages
-- Customizable policy link
+- Customizable
 - Google Consent Mode v2 integration
 - Minimal Styled, easy to customize (no Shadow DOM)
 
 ## Usage
+
+```js
+(window.u2ConsentHandlers ??= []).push(function(consent){
+    consent.marketing ? setUp() : cleanUp();
+})
+```
 
 ```html
 <u2-cookiebanner message="We have no cookies, just a test"></u2-cookiebanner>

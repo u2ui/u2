@@ -31,8 +31,4 @@ function updateConsent(consent) {
 }
 
 
-const consent = window.u2CookiebannerInitialConsent;
-if (consent) updateConsent(consent);
-addEventListener('u2-cookiebanner-consent', ({detail: {consent}}) => {
-    updateConsent(consent);
-});
+(window.u2ConsentHandlers ??= []).push(updateConsent);

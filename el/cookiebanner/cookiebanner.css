@@ -6,14 +6,13 @@ u2-cookiebanner {
     padding: 1.5em;
     font-size: max(14px, .8em);
     transition-duration:1s;
+    transition-property: opacity, display, overlay;
     text-align: left;
 
     & label {
         display:block;
         margin-block: .5em;
-        & input {
-            margin-inline-end: .5em;
-        }
+        & input { margin-inline-end: .5em; }
     }
     & button:not(.-main) {
         opacity: .7;
@@ -40,5 +39,4 @@ u2-cookiebanner:not(:defined) {
 u2-cookiebanner::backdrop {
     transition-duration:1s;
     background: #0001;
-    opacity:0;
 }

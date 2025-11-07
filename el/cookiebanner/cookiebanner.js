@@ -1,13 +1,11 @@
 // Cookie Banner
 // consent gilt momentan für gesamten Domain
 
-window.u2CookiebannerInitialConsent = null;
+let initialEmitted = false;
 
 class U2CookieBanner extends HTMLElement {
   constructor() {
     super();
-    this.popover = "manual";
-    this.id = "u2Cookiebanner";
     this.consent = {};
   }
 
@@ -17,12 +15,14 @@ class U2CookieBanner extends HTMLElement {
   }
 
   connectedCallback() {
+    this.popover = "manual";
+    this.id = "u2Cookiebanner";
     const data = getCookie();
     if (!data) this.show();
     else {
       this.consent = data;
-      if (!window.u2CookiebannerInitialConsent) {
-        window.u2CookiebannerInitialConsent = data;
+      if (!initialEmitted) {
+        initialEmitted = true;
         queueMicrotask(()=>this.emitConsent());
       }
     }
@@ -135,3 +135,27 @@ addEventListener('u2-cookiebanner-consent', async ({detail: {consent, isUpdate}}
         if (!consent[category]) window.sessionStorage.removeItem(key);
     });
 });
+
+
+// The best API, to add consent dependent code without guarantee of module loaded?
+// deprecated the event?
+window.u2ConsentHandlers ??= [] // better: u2ConsentHandlers
+let lastConsent = null;
+const originalPush = window.u2ConsentHandlers.push;
+addEventListener('u2-cookiebanner-consent', ({detail: {consent, isUpdate}}) => {
+    lastConsent = consent;
+    for (const func of window.u2ConsentHandlers) {
+        try { func(consent); } catch(e) { console.error(e); }
+    }
+    if (!isUpdate) { // initial on page load
+        window.u2ConsentHandlers.push = function(func){
+            try { func(lastConsent); } catch(e) { console.error(e); }
+            return originalPush.call(this, func);
+        }
+    }
+});
+
+// Usage:
+// (window.u2ConsentHandlers ??= []).push(function(consent){
+//     //
+// })

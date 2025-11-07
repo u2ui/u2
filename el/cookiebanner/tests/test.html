@@ -8,7 +8,6 @@
     <script src="../../../u2/tests/test-init.js" type=module async></script>
     <script src="../../../u2/auto.js?1" type=module async></script>
 
-
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
@@ -16,20 +15,12 @@
     <script src="../cookiebanner.js" type=module async></script>
     <script src="../extensions/googleConsentMode.js" type=module async></script>
 
-    <script src="../../code/code.js" type=module async></script>
-    <link rel=stylesheet href="../../code/code.css">
-
-</head>
 <body>
 
 <section>
 
   <div id="banner">
-    <u2-cookiebanner 
-      policy-link="https://example.com/cookie-policy"
-      class="u2-width"
-      u2-skin="invert">
-    </u2-cookiebanner>
+    <u2-cookiebanner policy-link="https://example.com/cookie-policy"></u2-cookiebanner>
   </div>
 
   <h2>Cookie Banner Test</h2>
@@ -68,20 +59,40 @@
       const cookieValue = document.cookie.split('; ').find(c => c.startsWith('u2-cookiebanner='))?.split('=')[1];
       const cookieValueObj = cookieValue ? JSON.parse(cookieValue) : null;
       cookieValueEl.value = JSON.stringify(cookieValueObj, null, 2);
-    }, 500);
+    }, 1000);
   </script>
   <button onclick="u2Cookiebanner.show()">Show <small>(force)</small></button>
   <button onclick="document.cookie = 'u2-cookiebanner=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';">Delete Cookie</button>
   <button onclick="location.reload();">Reload Page</button>
 
-  <script type="text/plain" data-category="marketing">
-  marketingIndicator.style.background = 'green';
-  marketingIndicator.innerHTML = 'Marketing script loaded';
-	</script>
   <div id="marketingIndicator" style="background: red; color: #fff; padding: .5em;">
-    Marketing script not loaded
+    <div class="-text">Marketing script not loaded</div>
+    <small>script type="text/plain" data-category="marketing"</small>
+    <script type="text/plain" data-category="marketing">
+      marketingIndicator.style.background = 'green';
+      marketingIndicator.querySelector('.-text').innerHTML = 'Marketing script loaded';
+    </script>
   </div>
 
+  <div id="uwCookieConsent" style="background: red; color: #fff; padding: .5em;">
+    <div class="-text">Marketing code not executed</div>
+    <small>window.u2CookieConsent((consent)=>{...})</small>
+    <script>
+    console.log('initial consent',window.u2CookiebannerInitialConsent);
+
+    (window.u2ConsentHandlers ??= []).push(function(consent){
+      if (consent.marketing) {
+        uwCookieConsent.style.background = 'green';
+        uwCookieConsent.querySelector('.-text').innerHTML = 'Marketing code executed';
+      } else {
+        uwCookieConsent.style.background = 'red';
+        uwCookieConsent.querySelector('.-text').innerHTML = 'Marketing code rejected';
+      }
+    })
+    </script>
+  </div>
+
+  
 
   <u2-code editable trim>
       <style>
