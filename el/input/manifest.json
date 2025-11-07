@@ -13,7 +13,10 @@
                 "name": "value",
                 "description": "Gets the current value of the input"
             }],
-            "events": [],
+            "events": [{
+                "name": "update",
+                "description": "Fired when the value changes (only if the name attribute is present)"
+            }],
             "attributes": [{
                 "name": "type",
                 "description": "The type of input control to display",

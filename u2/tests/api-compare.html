@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <title>Todo: Title</title>
+        <meta name=viewport content="width=device-width, viewport-fit=cover">
+        <meta name=theme-color content="#ff0">
+        <meta name=apple-mobile-web-app-capable content="yes">
+        <meta name=apple-mobile-web-app-status-bar-style content="black-translucent">
+
+        <script src="https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/mod.js" type=module crossorigin></script>
+        <script src="https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/htmlfills.js" type=module crossorigin></script>
+
+        <script src="../auto.min.js?debug=1" type=module crossorigin></script>
+
+
+
+
+    <title>U2 Elements API Comparison</title>
+    <style>
+        body {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-size:.6rem;
+            white-space: nowrap;
+        }
+        th, td {
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            cursor: pointer;
+        }
+        tbody th { left:0 }
+        th.asc::after {
+            content: ' ↑';
+            font-size: 0.8em;
+        }
+        th.desc::after {
+            content: ' ↓';
+            font-size: 0.8em;
+        }
+        tr:hover { background-color: #f5f5f5; }
+        .yes {
+            color: #27ae60;
+            text-align: center;
+        }
+        .no {
+            color: #e74c3c;
+            text-align: center;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        .filter-controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .property-name {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .table-container {
+            margin-bottom: 40px;
+            overflow: auto;
+            max-height: 90vh;
+        }
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+    </style>
+
+<body>
+    <h1>U2 Elements API Comparison</h1>
+    
+    <div class="filter-controls">
+        <div>
+            <label for="search">Search properties: </label>
+            <input type="text" id="search" class="search" placeholder="Filter properties...">
+        </div>
+    </div>
+
+    <div id="loading" class="loading">Loading element data...</div>
+    
+    <div id="tables"><!-- Tables will be generated here --></div>
+
+    <script type="module">
+        // Configuration
+        const ELEMENTS_BASE_PATH = '../../el';
+        
+        // State
+        let elementsData = [];
+        let allAttributes = new Set();
+        let allCssProperties = new Set();
+        let allCssParts = new Set();
+        let allSlots = new Set();
+        let allEvents = new Set();
+        let propertyCounts = {
+            attributes: {},
+            cssProperties: {},
+            cssParts: {},
+            slots: {},
+            events: {}
+        };
+        
+        // Helper function to get property count for tooltip
+        function getPropertyCount(prop, type) {
+            const map = {
+                'Attributes': 'attributes',
+                'CSS Properties': 'cssProperties',
+                'CSS Parts': 'cssParts',
+                'Slots': 'slots',
+                'Events': 'events'
+            };
+            return propertyCounts[map[type]]?.[prop] || 0;
+        }
+        
+        // DOM Elements
+        const loadingEl = document.getElementById('loading');
+        const tablesEl = document.getElementById('tables');
+        const searchInput = document.getElementById('search');
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listeners
+            searchInput.addEventListener('input', debounce(renderTables, 300));
+            
+            // Load data
+            loadElementManifests();
+        });
+        
+        // Helper function to count property usage across all elements
+        function countPropertyUsage(elements, propertyType) {
+            const counts = {};
+            
+            elements.forEach(element => {
+                const module = element.modules?.[0];
+                if (!module) return;
+                
+                const declaration = module.declarations?.[0];
+                if (!declaration) return;
+                
+                const properties = declaration[propertyType];
+                if (!properties) return;
+                
+                properties.forEach(prop => {
+                    const propName = prop.name || prop;
+                    counts[propName] = (counts[propName] || 0) + 1;
+                });
+            });
+            
+            return counts;
+        }
+        
+        // Debounce function to limit how often a function is called
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Fetch all element manifests
+        async function loadElementManifests() {
+            try {
+                // Get list of all elements from projects.json
+                const projectsResponse = await fetch('../projects.json');
+                const projects = await projectsResponse.json();
+                
+                // Filter for elements (el) and get their paths
+                const elementNames = Object.keys(projects.el || {});
+                
+                // Load each element's manifest
+                const elementPromises = elementNames.map(async (elementName) => {
+                    try {
+                        const manifestPath = `${ELEMENTS_BASE_PATH}/${elementName}/manifest.json`;
+                        const response = await fetch(manifestPath);
+                        if (!response.ok) {
+                            console.warn(`Could not load manifest for ${elementName}: ${response.statusText}`);
+                            return null;
+                        }
+                        const manifest = await response.json();
+                        return { name: elementName, ...manifest };
+                    } catch (error) {
+                        console.warn(`Error loading manifest for ${elementName}:`, error);
+                        return null;
+                    }
+                });
+                
+                // Wait for all manifests to load
+                const elements = await Promise.all(elementPromises);
+                elementsData = elements.filter(Boolean);
+                
+                // Extract all unique attributes, CSS properties, etc.
+                elementsData.forEach(element => {
+                    const module = element.modules?.[0];
+                    if (!module) return;
+                    
+                    const declaration = module.declarations?.[0];
+                    if (!declaration) return;
+                    
+                    if (declaration.attributes) {
+                        declaration.attributes.forEach(attr => attr.name && allAttributes.add(attr.name));
+                    }
+                    
+                    if (declaration.cssProperties) {
+                        declaration.cssProperties.forEach(prop => prop.name && allCssProperties.add(prop.name));
+                    }
+                    
+                    if (declaration.cssParts) {
+                        declaration.cssParts.forEach(part => part.name && allCssParts.add(part.name));
+                    }
+                    
+                    if (declaration.slots) {
+                        declaration.slots.forEach(slot => slot.name && allSlots.add(slot.name));
+                    }
+                    
+                    if (declaration.events) {
+                        declaration.events.forEach(event => event.name && allEvents.add(event.name));
+                    }
+                });
+                
+                // Count usage of each property
+                propertyCounts.attributes = countPropertyUsage(elementsData, 'attributes');
+                propertyCounts.cssProperties = countPropertyUsage(elementsData, 'cssProperties');
+                propertyCounts.cssParts = countPropertyUsage(elementsData, 'cssParts');
+                propertyCounts.slots = countPropertyUsage(elementsData, 'slots');
+                propertyCounts.events = countPropertyUsage(elementsData, 'events');
+                
+                // Sort properties by usage count (descending) and then by name
+                const sortByUsage = (a, b, counts) => {
+                    const countDiff = (counts[b] || 0) - (counts[a] || 0);
+                    return countDiff !== 0 ? countDiff : a.localeCompare(b);
+                };
+                
+                allAttributes = Array.from(allAttributes).sort((a, b) => sortByUsage(a, b, propertyCounts.attributes));
+                allCssProperties = Array.from(allCssProperties).sort((a, b) => sortByUsage(a, b, propertyCounts.cssProperties));
+                allCssParts = Array.from(allCssParts).sort((a, b) => sortByUsage(a, b, propertyCounts.cssParts));
+                allSlots = Array.from(allSlots).sort((a, b) => sortByUsage(a, b, propertyCounts.slots));
+                allEvents = Array.from(allEvents).sort((a, b) => sortByUsage(a, b, propertyCounts.events));
+                
+                // Generate tables
+                renderTables();
+                
+            } catch (error) {
+                console.error('Error loading element data:', error);
+                loadingEl.textContent = 'Error loading element data. Check console for details.';
+            } finally {
+                loadingEl.style.display = 'none';
+            }
+        }
+        
+        // Render all comparison tables
+        function renderTables() {
+            tablesEl.innerHTML = '';
+            
+            if (allAttributes.length > 0) {
+                renderTable('Attributes', 'attributes', allAttributes, (element, attr) => {
+                    const module = element.modules?.[0];
+                    if (!module) return false;
+                    const declaration = module.declarations?.[0];
+                    return declaration.attributes?.some(a => a.name === attr) || false;
+                });
+            }
+            
+            if (allCssProperties.length > 0) {
+                renderTable('CSS Properties', 'css-properties', allCssProperties, (element, prop) => {
+                    const module = element.modules?.[0];
+                    if (!module) return false;
+                    const declaration = module.declarations?.[0];
+                    return declaration.cssProperties?.some(p => p.name === prop) || false;
+                });
+            }
+            
+            if (allCssParts.length > 0) {
+                renderTable('CSS Parts', 'css-parts', allCssParts, (element, part) => {
+                    const module = element.modules?.[0];
+                    if (!module) return false;
+                    const declaration = module.declarations?.[0];
+                    return declaration.cssParts?.some(p => p.name === part) || false;
+                });
+            }
+            
+            if (allSlots.length > 0) {
+                renderTable('Slots', 'slots', allSlots, (element, slot) => {
+                    const module = element.modules?.[0];
+                    if (!module) return false;
+                    const declaration = module.declarations?.[0];
+                    return declaration.slots?.some(s => s.name === slot) || false;
+                });
+            }
+            
+            if (allEvents.length > 0) {
+                renderTable('Events', 'events', allEvents, (element, eventName) => {
+                    const module = element.modules?.[0];
+                    if (!module) return false;
+                    const declaration = module.declarations?.[0];
+                    return declaration.events?.some(e => (e.name || e) === eventName) || false;
+                });
+            }
+            
+            // Add event listeners to all tables for sorting
+            document.querySelectorAll('th[data-sort]').forEach(th => {
+                th.addEventListener('click', () => {
+                    const table = th.closest('table');
+                    const tbody = table.querySelector('tbody');
+                    const rows = Array.from(tbody.rows);
+                    const colIndex = th.cellIndex;
+                    const isNumeric = th.getAttribute('data-sort') === 'number';
+                    const isAsc = !th.classList.contains('asc');
+                    
+                    // Remove sort indicators from all headers in this table
+                    table.querySelectorAll('th').forEach(h => {
+                        h.classList.remove('asc', 'desc');
+                    });
+                    
+                    // Set sort indicator on current header
+                    th.classList.add(isAsc ? 'asc' : 'desc');
+                    
+                    // Sort rows
+                    rows.sort((a, b) => {
+                        let aVal = a.cells[colIndex].textContent.trim();
+                        let bVal = b.cells[colIndex].textContent.trim();
+                        
+                        if (colIndex === 0) {
+                            // Sort by element name
+                            return isAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                        } else {
+                            // Sort by yes/no for properties
+                            const aHas = a.cells[colIndex].classList.contains('yes');
+                            const bHas = b.cells[colIndex].classList.contains('yes');
+                            
+                            if (aHas === bHas) {
+                                return a.cells[0].textContent.localeCompare(b.cells[0].textContent);
+                            }
+                            return isAsc ? (aHas ? -1 : 1) : (bHas ? -1 : 1);
+                        }
+                    });
+                    
+                    // Re-append rows in new order
+                    rows.forEach(row => tbody.appendChild(row));
+                });
+            });
+        }
+        
+        // Render a single comparison table
+        function renderTable(title, id, properties, hasProperty) {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            // Filter properties based on search term
+            let displayProperties = searchTerm
+                ? properties.filter(prop => prop.toLowerCase().includes(searchTerm))
+                : [...properties];
+            
+            // Filter elements based on search term (only show elements that have matching properties)
+            let filteredElements = searchTerm
+                ? elementsData.filter(element => 
+                    displayProperties.some(prop => hasProperty(element, prop))
+                )
+                : [...elementsData];
+            
+            // Skip if no properties to display
+            if (displayProperties.length === 0) return;
+            
+            // Create table container
+            const tableContainer = document.createElement('div');
+            tableContainer.className = 'table-container';
+            tableContainer.id = id;
+            
+            // Add title
+            const titleEl = document.createElement('h2');
+            titleEl.textContent = `${title} (${displayProperties.length})`;
+            tableContainer.appendChild(titleEl);
+            
+            // Create table
+            const tableEl = document.createElement('table');
+            
+            // Create header row
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            // Add element name header
+            const elementHeader = document.createElement('th');
+            elementHeader.textContent = 'Element';
+            elementHeader.setAttribute('data-sort', 'text');
+            headerRow.appendChild(elementHeader);
+            
+            // Add property headers
+            displayProperties.forEach(prop => {
+                const th = document.createElement('th');
+                const count = getPropertyCount(prop, title);
+                th.textContent = prop;
+                th.setAttribute('data-sort', 'number');
+                th.title = `${prop} (used by ${count} ${count === 1 ? 'element' : 'elements'})`;
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            tableEl.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            
+            // Add rows for each element
+            filteredElements.forEach(element => {
+                const row = document.createElement('tr');
+                
+                // Add element name cell
+                const nameCell = document.createElement('th');
+                nameCell.className = 'element-name';
+                nameCell.textContent = element.name;
+                row.appendChild(nameCell);
+                
+                // Add property cells
+                displayProperties.forEach(prop => {
+                    const cell = document.createElement('td');
+                    const hasProp = hasProperty(element, prop);
+                    cell.className = hasProp ? 'yes' : 'no';
+                    cell.textContent = hasProp ? '✓' : '✗';
+                    
+                    // Add tooltip with more info if available
+                    if (hasProp) {
+                        const module = element.modules?.[0];
+                        if (module) {
+                            const declaration = module.declarations?.[0];
+                            let propInfo = null;
+                            
+                            if (title === 'Attributes' && declaration.attributes) {
+                                propInfo = declaration.attributes.find(a => a.name === prop);
+                            } else if (title === 'CSS Properties' && declaration.cssProperties) {
+                                propInfo = declaration.cssProperties.find(p => p.name === prop);
+                            } else if (title === 'CSS Parts' && declaration.cssParts) {
+                                propInfo = declaration.cssParts.find(p => p.name === prop);
+                            } else if (title === 'Slots' && declaration.slots) {
+                                propInfo = declaration.slots.find(s => s.name === prop);
+                            }
+                            
+                            if (propInfo?.description) {
+                                cell.title = propInfo.description;
+                            }
+                        }
+                    }
+                    
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
+            });
+            
+            tableEl.appendChild(tbody);
+            tableContainer.appendChild(tableEl);
+            tablesEl.appendChild(tableContainer);
+        }
+    </script>
