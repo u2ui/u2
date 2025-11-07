@@ -24,8 +24,6 @@ class Time extends HTMLElement {
         let show = this.getAttribute('type') || this.innerHTML === '';
         if (!show) return;
 
-
-        
         const string = this.getAttribute('datetime');
 
         // const datetimeRegex = /^(\d{4})(?:-(\d{2})(?:-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?(Z|([-+]\d{2}:?\d{2}))?)?)?)?$/;
@@ -46,7 +44,7 @@ class Time extends HTMLElement {
 
         date = new Date(date);
         this.__date = date;
-        this.__lang = langFromElement(this) || 'default';
+        this.__lang = localeFromElement(this) || 'default';
         this.render();
     }
     render() {
@@ -75,15 +73,15 @@ class Time extends HTMLElement {
 
 const types = {
     relative(el, date) {
-        const mode = el.getAttribute('mode') || 'long';
+        const mode = ensureOption(el.getAttribute('mode'), 'long', 'narrow', 'short');
         const rtf = new Intl.RelativeTimeFormat(el.__lang, {
             //localeMatcher: , // 'best fit', 'lookup'
             numeric: 'auto', // always, auto
-            style: mode // long, narrow, short
+            style: mode // long, narrow, short // lang:de no effect
         });
         const now = Date.now();
         const elapsed = date - now;
-        const { unit, rounded, nextUpdateIn } = elapsedToUnit(elapsed);
+        const {unit, rounded, nextUpdateIn} = elapsedToUnit(elapsed);
         return {
             show:rtf.format(rounded, unit),
             nextUpdateIn
@@ -93,13 +91,22 @@ const types = {
         const options = {};
         for (let [key, opts] of Object.entries(defaults)) {
             const val = el.getAttribute(key);
+            const fallback = opts.allowed[0];
             if (val === null) {
-                if (opts.showAnyway) options[key] = opts.default;
+                if (opts.showAnyway) options[key] = fallback;
                 continue;
             }
-            else if (val === '' || val === 'true') options[key] = opts.default;
+            else if (val === '' || val === 'true') options[key] = fallback;
             else if (val === 'none') options[key] = undefined;
-            else options[key] = val;
+            else {
+                if (opts.allowed.includes(val)) {
+                    options[key] = val;
+                } else {
+                    console.warn(`value ${val} for attribute ${key} not allowed`);
+                    options[key] = fallback;
+                }
+                options[key] = opts.allowed.includes(val) ? val : fallback;
+            }
         }
         if (options.second && !options.minute) options.minute = options.second;
         if (options.minute && !options.hour) options.hour = options.minute;
@@ -117,17 +124,14 @@ const types = {
     },
 }
 
-function langFromElement(el) {
-    let langEl = el.closest('[lang]')||document.documentElement;
-    // todo: for tables i should check col and colgroup
-    // https://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#alignment-inheritance
-
-    // let list = navigator.languages;
-    // try {
-    //     list = Intl.getCanonicalLocales(lang);
-    // } catch (e) {}
-    // Intl.NumberFormat(list).format();
-    return langEl.lang || navigator.language;
+// todo? for tables i should check col and colgroup
+// https://www.w3.org/TR/1999/REC-html401-19991224/struct/tables.html#alignment-inheritance
+function localeFromElement(el) {
+    let lang = el.closest('[lang]')?.lang || navigator.language;
+    try {
+        lang = Intl.getCanonicalLocales(lang)[0];
+    } catch { lang = 'en'; }
+    return lang;
 }
 
 function elapsedToUnit(elapsed, min = 'second') {
@@ -144,15 +148,16 @@ function elapsedToUnit(elapsed, min = 'second') {
 }
 
 const defaults = {
-    weekday: { default: 'short', showAnyway: 1 },      // "narrow", "short", "long".
+    // allowed first is default
+    weekday: { showAnyway: 1, allowed:["short", "narrow", "long"] },
     //era:                                             // "narrow", "short", "long".
-    year: { default: 'numeric', showAnyway: 1 },       // "numeric", "2-digit".
-    month: { default: 'short', showAnyway: 1 },        // "numeric", "2-digit", "narrow", "short", "long".
-    day: { default: 'numeric', showAnyway: 1 },        // "numeric", "2-digit".
-    hour: { default: 'numeric', showAnyway: 0 },       // "numeric", "2-digit".
-    minute: { default: 'numeric', showAnyway: 0 },     // "numeric", "2-digit".
-    second: { default: 'numeric', showAnyway: 0 },     // "numeric", "2-digit".
-    timeZoneName: { default: 'short', showAnyway: 0 }, // "short", "long".
+    year:   { showAnyway: 1, allowed:["numeric", "2-digit"] },
+    month:  { showAnyway: 1, allowed:["short", "numeric", "2-digit", "narrow", "long"] },
+    day:    { showAnyway: 1, allowed:["numeric", "2-digit"] },
+    hour:   { showAnyway: 0, allowed:["numeric", "2-digit"] },
+    minute: { showAnyway: 0, allowed:["numeric", "2-digit"] },
+    second: { showAnyway: 0, allowed:["numeric", "2-digit"] },
+    timeZoneName: { showAnyway: 0, allowed:["short", "long"] },
 };
 
 const units = {
@@ -164,5 +169,11 @@ const units = {
     second: 1000
 }
 
+const ensureOption = (val, ...options) => {
+    if (val==null) return options[0];
+    if (options.includes(val)) return val;
+    console.warn(`value "${val}" not allowed used ${options[0]}`);
+    return options[0];
+}
 
 customElements.define('u2-time', Time);

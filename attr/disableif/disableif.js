@@ -47,13 +47,10 @@ function checkCondition(el) {
 new SelectorObserver({
     on: (el) => {
         checkCondition(el);
-        const field = el.getAttribute('u2-disableif').match(/(\w+)/)[1];
-        el.form.elements[field].addEventListener('input', () => checkCondition(el));
+        setTimeout(()=>checkCondition(el)); // wait for custom-element-inputs
+        const form = el.form;
+        el.form.addEventListener('input', () => checkCondition(el));
     },
     off: (el) => {
-        const field = el.getAttribute('u2-disableif').match(/(\w+)/)[1];
-        el.form.elements[field].removeEventListener('input', () => checkCondition(el));
     }
 }).observe('[u2-disableif]');
-
-

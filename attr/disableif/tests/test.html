@@ -10,6 +10,9 @@
 
     <script src="../disableif.js" type=module></script>
 
+    <link rel=stylesheet href="../../../el/input/input.css">
+    <script src="../../../el/input/input.js" type=module></script>
+
 <body>
 
 <section class=main>
@@ -27,8 +30,29 @@
                     <option value="vollzeit">Vollzeit</option>
                 </select>
             </label>
+            <br>
+            <label>
+                Gehaltsvorstellung: 
+                <u2-input type="stepper" name="gehalt" style="width:7rem" value="3000">
+                    <input type="number"step="500" min="3000" max="6000">
+                </u2-input>
+            </label>
+            <br>
+            <fieldset u2-disableif="gehalt<4000" id="begr">
+                <label>
+                    Begründung:
+                    <u2-input type="textarea" name="Begründung">
+                        <textarea></textarea>
+                    </u2-input>
+                </label>
+            </fieldset>
+            <style>
+                #begr {
+                    display:contents;
+                    &[disabled] { display:none;}
+                }
+            </style>
         </fieldset>
-        <br>
         <fieldset u2-disableif="type!=freelancer">
             <legend>Freelancer</legend>
             <label>
@@ -41,7 +65,6 @@
                 <input type=text name="freelancerDescription">
             </label>
         </fieldset>
-        <br>
         <fieldset u2-disableif="type!=teilzeit">
             <legend>Teilzeit</legend>
             <label>
@@ -54,7 +77,6 @@
                 <input type=text name="partTimeDepartment">
             </label>
         </fieldset>
-        <br>
         <fieldset u2-disableif="type!=vollzeit">
             <legend>Vollzeit</legend>
             <label>

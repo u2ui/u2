@@ -3,7 +3,7 @@ body {
     padding:1rem;
 
     display: grid; /* center content. Margins will not collapse :/ */
-    place-content: center stretch;
+    place-content: start stretch;
 }
 body > * {
     min-width:0; /* gap makes min-width = content-width, in some cases it will overflow */

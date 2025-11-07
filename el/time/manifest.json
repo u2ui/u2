@@ -20,21 +20,6 @@
                 "kind": "method",
                 "name": "reset",
                 "description": "Reset the time element"
-              },
-              {
-                "kind": "method",
-                "name": "attributeChanged",
-                "description": "Handle attribute changes"
-              },
-              {
-                "kind": "method",
-                "name": "connected",
-                "description": "Handle element connection"
-              },
-              {
-                "kind": "method",
-                "name": "disconnected",
-                "description": "Handle element disconnection"
               }
             ],
             "events": [],
