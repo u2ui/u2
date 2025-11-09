@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+    <!-- <script src="../../../u2/tests/test-init.js" type=module async></script> -->
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/full.css" rel=stylesheet>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    <link href="../../ico/ico.css" rel=stylesheet>
+
+    <style>
+        body {
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+        }
+        label {
+            display:block;
+            margin-block:1rem;
+        }
+    </style>
+    
+    <link href="../input.css" rel=stylesheet>
+    <script src="../input.js" type=module async></script>
+
+<body>
+
+<section>
+
+    <form method=get id=form>
+        <table class="u2-table -Fields">
+            <tr>
+                <th> text
+                <td> 
+                    <u2-input name=u2-text type=text value="content">
+                        <input name=u2-text-manual type=text value="content">
+                    </u2-input>
+                <td>
+                    <u2-input name=u2-text-auto type=text value="content"></u2-input>
+                
+            <tr>
+                <th> textarea
+                <td> 
+                    <u2-input name=textarea type=textarea value="content">
+                        <textarea name=textarea-manual value="content"></textarea>
+                    </u2-input>
+                <td>
+                    <u2-input name=textarea-auto type=textarea value="content"></u2-input>
+            <tr>
+                <th> stepper
+                <td> 
+                    <u2-input type=stepper name=stepper>
+                        <input type=number name=stepper-manual value="2" step="0.5" min="0" max="10">
+                    </u2-input>
+                <td>
+                    <u2-input type=stepper name=stepper-auto value="2" step="0.5" min="0" max="10"></u2-input>
+            <tr>
+                <th> checkbox
+                <td> 
+                    <u2-input type=checkbox name=checkbox>
+                        <select name=checkbox-manual>
+                            <option>bar
+                            <option>foo
+                        </select>
+                    </u2-input>
+                <td>
+                    <u2-input type=checkbox name=checkbox-auto on="on!" off="off!" checked></u2-input>
+            <tr>
+                <th> select
+                <td>
+                    <u2-input type="select" name="select">
+                        <select>
+                            <option value="1">One
+                            <option value="2" selected>Two
+                            <option value="3">Three
+                        </select>
+                    </u2-input>
+                <td>
+                    <u2-input type="select" name="select-auto" list="select-list"></u2-input>
+                    <datalist id="select-list">
+                        <option value="1">One
+                        <option value="2" selected>Two
+                        <option value="3">Three
+                    </datalist>
+            <tr>
+                <th> date
+                <td> 
+                    <u2-input type="date" name="date">
+                        <input type="date" name="date">
+                    </u2-input>
+                <td>
+                    <u2-input type="date" name="date-auto"></u2-input>
+            <tr>
+                <th> range
+                <td> 
+                    <u2-input type="range" name="range">
+                        <input type="range" name="range">
+                    </u2-input>
+                <td>
+                    <u2-input type="range" name="range-auto"></u2-input>
+            <tr>
+                <th> file
+                <td> <u2-input type="file" name="file">
+                        <input name=file type="file">
+                    </u2-input>
+                <td>
+                    <u2-input type="file" name="file-auto"></u2-input>
+        </table>
+        <button name=submitBtn value="1">Submit 1</button>
+        <button name=submitBtn value="2">Submit 2</button>
+    </form>
+
+
+    <section id="dataOut"></section>
+
+    <section id="eventsOut"></section>
+
+    <script type=module>
+        function updateData(e) {
+            const data = new FormData(form, e?.submitter);
+            dataOut.innerHTML = dump(Object.fromEntries(data));
+        }
+        import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@main/mod.min.js';
+        form.addEventListener('input', updateData);
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            updateData(e);
+        });
+        updateData();
+
+        import {EventsExplorer} from '../../../u2/tools/eventsExplorer.js';
+        const eventsExpl = new EventsExplorer(
+            eventsOut,
+            form,
+            ['input', 'change', 'focus', 'blur', 'focusin', 'focusout', 'select', 'submit']
+        );
+        eventsExpl.start();
+    </script>
+    
+</section>

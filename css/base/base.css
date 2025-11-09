@@ -5,12 +5,13 @@
 	background-repeat: no-repeat;
 }
 html {
+	interpolate-size: allow-keywords;
 	block-size: 100%; /* 100dvh? */
 	word-break:break-word;
 	overflow-wrap:break-word;
-	-webkit-hyphens: auto;
+	-webkit-hyphens: auto; /* safari < 17 */
 	hyphens: auto;
-	hyphenate-limit-chars:auto 3; /* only chrome */
+	hyphenate-limit-chars:auto 3; /* chrome, firefox */
 	tab-size: 4;
 	--line-height: calc(1em + .5rem);
 	-webkit-tap-highlight-color: transparent;

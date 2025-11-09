@@ -88,7 +88,6 @@ class Texter extends HTMLElement {
         const text = target.value != null ? target.value : target.innerHTML;
 
         const body = {
-            //model: "llama3-8b-8192",
             model: "llama3-70b-8192",
             stream: false,
             messages: [{

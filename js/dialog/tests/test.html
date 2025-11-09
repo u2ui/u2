@@ -29,27 +29,27 @@
 
     <button onclick="dialog.alert('Just a test').then(console.log)">alert</button>
     <button onclick="console.log(alert('Just a test'))">native</button>
-    <br><br>
+    <br>
     <button onclick="dialog.confirm('Really?').then(console.log)">confirm</button>
     <button onclick="console.log(confirm('Really?'))">native</button>
-    <br><br>
+    <br>
     <button onclick="dialog.prompt('value:','100').then(console.log)">prompt</button>
     <button onclick="console.log(prompt('value:','100'))">native</button>
 
     <h2>Tests</h2>
 
     <button onclick="dialog.alert('Html content: <b>bold</b>')">Html content not parsed </button>
-    <br><br>
+    <br>
     <button onclick="dialog.alert({body:'Html content: <b>bold</b>'})">Html parsed </button>
-    <br><br>
+    <br>
     <button onclick="dialog.prompt({body:'Annuler?', lang:'fr'}, '👍')">option "lang" </button>
-    <br><br>
+    <br>
     <button onclick="dialog.alert({body:'click on the backdrop',init:el=>el.classList.add('backdropClose')}).then(console.log)">backdropClose class</button>
-    <br><br>
+    <br>
     <button onclick="dialog.alert({audio:true, body:'Please inform the developer if the standard sound needs to be improved'})">default notification sound</button>
     
     <button onclick="dialog.alert({audio:'./notification.mp3', body:'sound'})">custom notification sound</button>
-    <br><br>
+    <br>
 
     <button id=formTestHtml>form(html) beta</button>
     <script>

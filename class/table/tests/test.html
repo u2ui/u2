@@ -3,8 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
+        <title>Test</title>
+
         <script src="../../../u2/tests/test-init.js" type=module async></script>
-        <title>u2-ico Test</title>
+        <script src="../../../u2/auto.js" type=module async></script>
 
         <link rel=stylesheet href="../../../css/classless/full.css">
         <link rel=stylesheet href="../../../css/classless/simple.css">
@@ -13,53 +15,43 @@
 <body>
 
     <section>
-        <h2>.u2-table class</h1>
-            <style contenteditable>
-.u2-table { border: 2px solid orange; }
-.u2-table > * > * { border-bottom: 2px solid black; } /* tr */
-    </style>
+        <h1>.u2-table class</h1>
+        <u2-code editable trim>
+            <style>
+                .u2-table { border: 2px solid orange; }
+                .u2-table > * > * { border-bottom: 2px solid black; } /* tr */
+                .u2-table > * > * > * { outline:1px solid #0001; } /* td */
+            </style>
+        </u2-code>
     </section>
-
-
+    
     <section id=demo>
         <h2>Full demo</h2>
         <form>
             <h3>Set Classes:</h3>
             <label>
-                -Flex
-                <input type=checkbox name="-Flex">
+                <input type=checkbox name="-Flex"> -Flex
             </label>
             <label>
-                -Fields
-                <input type=checkbox name="-Fields">
+                <input type=checkbox name="-Fields"> -Fields
             </label>
             <label>
-                -NoSideGaps
-                <input type=checkbox name="-NoSideGaps">
+                <input type=checkbox name="-NoSideGaps"> -NoSideGaps
             </label>
             <label>
-                -Sticky
-                <input type=checkbox name="-Sticky">
+                <input type=checkbox name="-Sticky"> -Sticky
             </label>
             <h3>Set css-variables</h3>
             <label>
-                --u2-Gap
-                <input name="--u2-Gap">
-            </label><br>
+                <input name="--u2-Gap"> --u2-Gap
+            </label>
             <label>
-                --u2-Row-Gap
-                <input name="--u2-Row-gap">
-            </label><br>
+                <input name="--u2-Row-gap"> --u2-Row-gap
+            </label>
             <label>
-                --u2-Col-Gap
-                <input name="--u2-Col-gap">
-            </label><br>
+                <input name="--u2-Col-gap"> --u2-Col-gap
+            </label>
         </form>
-        <style>
-        :where(#demo .u2-table > * > * > *) {
-            outline:1px solid #0001;
-        }
-        </style>
         <script type=module>
         let form = demo.querySelector('form')
         let tables = Array.from(demo.querySelectorAll('.u2-table'));
@@ -78,8 +70,8 @@
         write();
         </script>
         <div style="overflow:auto; padding:1rem; resize:both;">
-            <h4>css Table</h4>
-            <div class="u2-table">
+            <h4>css Table (--col-1-width: 9em)</h4>
+            <div class="u2-table" style="--col-1-width:9em; ">
                 <div>
                     <label>
                         <span>Name</span>

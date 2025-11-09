@@ -12,8 +12,8 @@ button[onclick] {
     --line-height:1.3em;
     padding-inline: .75em;
     padding-block: .5em;
-    margin-inline: 0;
-    margin-block: .5em;
+    xmargin-inline: 0;
+    xmargin-block: .5em;
 }
 button[onclick]::after {
     content: attr(onclick);
@@ -100,7 +100,7 @@ shadow.getElementById('prompt').onchange = async e => {
 }
 
 const endpoint = 'https://api.groq.com/openai/v1/chat/completions'
-const apiKey = "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";
+const apiKey = "xxx";
 const model = "llama3-70b-8192";
 async function request(prompt, text) {
     const css = styleEl.parentNode ? styleEl.innerHTML : await fetch(link.href).then(r => r.text());

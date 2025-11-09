@@ -39,7 +39,7 @@ function checkCondition(el) {
                 conditionMet = numericTargetValue < numericConditionValue;
                 break;
         }
-        el.disabled = conditionMet
+        el.disabled = conditionMet;
     }
 }
 
@@ -47,7 +47,10 @@ function checkCondition(el) {
 new SelectorObserver({
     on: (el) => {
         checkCondition(el);
-        setTimeout(()=>checkCondition(el)); // wait for custom-element-inputs
+        // wait for custom-element-inputs
+        // queueMicrotask(()=>checkCondition(el));
+        requestAnimationFrame(()=>checkCondition(el));
+        //setTimeout(()=>checkCondition(el));
         const form = el.form;
         el.form.addEventListener('input', () => checkCondition(el));
     },

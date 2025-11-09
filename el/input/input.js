@@ -10,6 +10,35 @@ const types = {
         fallback: '<textarea></textarea>',
         input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
     },
+    'select': {
+        fallback: '<select></select>',
+        input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
+        init({shadow}) {
+            const listId = this.getAttribute('list');
+            if (listId) {
+                const list = document.getElementById(listId);
+                if (list) {
+                    const options = list.querySelectorAll('option');
+                    options.forEach(option => {
+                        const opt = document.createElement('option');
+                        opt.value = option.value;
+                        opt.textContent = option.textContent;
+                        this.realInput.appendChild(opt);
+                    });
+                }
+            }
+        }
+    },
+    'range': {
+        fallback: '<input type=range>',
+        input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
+        css: `
+            :host {
+                border:0 !important;
+                overflow:visible;
+            }
+            `,
+    },
     'stepper': {
         fallback: '<input type=number>',
         input: `
@@ -94,12 +123,26 @@ const types = {
             setTimeout(()=> {
                 const real = this.realInput;
                 const checkbox = shadow.querySelector('#checkbox');
+                if (this.fallbackActive) {
+                    const on = this.getAttribute('on') ?? 'on';
+                    const off = this.getAttribute('off') ?? '';
+                    const checked = this.getAttribute('checked') ?? false;
+                    real.lastElementChild.setAttribute('value', off);
+                    real.firstElementChild.setAttribute('value', on);
+                    real.value = checked ? on : off;
+                }
                 checkbox.addEventListener('change', e => {
                     real.value = checkbox.checked ? real.lastElementChild.value : real.firstElementChild.value;
+                    this._updateOwnFormValue();
                 });
                 checkbox.checked = real.value === real.lastElementChild.value;
+                this._updateOwnFormValue();
             });
         }
+    },
+    'date': {
+        fallback: '<input type=date>',
+        input: '<slot></slot>',
     },
     'cycle': {
         fallback: '',
@@ -255,7 +298,7 @@ customElements.define('u2-input', class extends HTMLElement {
         [name=end]::slotted(*) { margin-inline-end: .5em; }
 
         ::slotted(input), ::slotted(textarea), ::slotted(select) {
-            margin: 0;
+            margin: 0 !important;
             border: 0 !important;
             outline: 0 !important;
             box-shadow:none !important;
@@ -341,21 +384,14 @@ customElements.define('u2-input', class extends HTMLElement {
             
             // if innerHTML was generated, remove it
             const mainSlot = this.shadowRoot.querySelector('slot:not([name])');
-            if (this.u2GeneratedInnerHTML) mainSlot.assignedNodes().forEach(node => node.remove());
+            if (this.fallbackActive) mainSlot.assignedNodes().forEach(node => node.remove());
             
             if (!mainSlot.assignedElements().length) {
                 this.innerHTML += types[newValue]?.fallback ?? types['text'].fallback;
-                this.u2GeneratedInnerHTML = true;
+                this.fallbackActive = true;
             }
             this.realInput = this.querySelector('input,textarea,select');
 
-            /*
-            if (!this.realInput || this.realInput.u2GeneratedInnerHTML) {
-                this.innerHTML = types[newValue]?.fallback ?? types['text'].fallback;
-                this.realInput = this.querySelector('input,textarea,select');
-                this.realInput.u2GeneratedInnerHTML = true;
-            }
-            */
             this._updateOwnFormValue();
 
             types[newValue] ??= types['text'];

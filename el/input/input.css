@@ -2,6 +2,7 @@ u2-input {
     display:inline-block;
     border: 1px solid;
     border-radius: var(--radius);
+    padding:0 !important;
 }
 
 u2-input {
@@ -14,7 +15,7 @@ u2-input {
             align-self: stretch;
         }
     }
-    input {
+    input, select, textarea {
         color:inherit;
         background:inherit;
         direction:inherit;
@@ -24,9 +25,18 @@ u2-input {
         line-height:var(--line-height);
         letter-spacing:inherit;
         column-count:unset;
+
+        margin: 0 !important;
+        border: 0 !important;
+        outline: 0 !important;
+        box-shadow:none !important;
+        flex:1 1 auto;
+        inline-size:auto;
+        block-size:100% !important;        
     }
 }
 
+/* Type-specific styles */
 
 u2-input[type="cycle"] {
     display:inline-grid;

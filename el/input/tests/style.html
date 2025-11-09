@@ -5,19 +5,9 @@
     <meta name=viewport content="width=device-width">
     <title>test</title>
     <script src="../../../u2/tests/test-init.js" type=module async></script>
-    <!--script src="../../../u2/auto.js" type=module async></script-->
+    <script src="../../../u2/auto.js" type=module async></script>
     <link href="../../../css/classless/full.css" rel=stylesheet>
     <link href="../../../css/classless/simple.css" rel=stylesheet>
-
-    <!--style>
-        body {
-            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
-        }
-        label {
-            display:block;
-            margin-block:1rem;
-        }
-    </style-->
     
     <link href="../input.css" rel=stylesheet>
     <script src="../input.js" type=module async></script>
@@ -34,13 +24,82 @@
         <input name=u2 value="2" type="number" placeholder="same height">
     </u2-input>
     
-    <br><br>
+    <br>
 
     <u2-input>
         <input name=u2 value="2" type="number" placeholder="same width">
     </u2-input>
 
+</section>
 
+<section id="combined">
+
+    <h3>Style on input and u2-input</h3>
+    <p>
+        Most styles are inherited to the real inner input. But padding is impossible to inherit.
+        Always style <code>u2-input</code> and <code>input</code> together.
+    </p>
+    <u2-code trim editable>
+        <style>
+        #combined {
+            u2-input, input {
+                margin:5px;
+                border:4px solid red;
+                box-shadow: 0 0 1em rgba(0,0,0,1) inset;
+                outline:4px solid blue;
+                padding:2rem; /* padding as u2-input is 0 !important, but the inner native input has it */
+                width:14rem;
+            }
+        }
+        </style>
+    </u2-code>
+
+    <label>
+        <input>
+        Nativ input has all styles
+    </label>
+
+    <label>
+        <u2-input type="text" class="combined">
+            <input class="combined">
+        </u2-input>
+        U2-input has all styles
+    </label>
+
+</section>
+
+<section class="focustest">
+    <h3>Focus / Active</h3>
+    <p>
+        :active is applied to the u2-input, but focus not by default.
+        Use <code>&:focus-within</code> to style focus.
+    </p>
+    <label>
+        <input type="text">
+        Native has focus styles
+    </label>
+    <label>
+        <u2-input type="text">
+            <input>
+        </u2-input>
+        u2-input has it through :focus-within
+    </label>
+    <u2-code trim editable>
+        <style>
+.focustest {
+    input, u2-input {
+        &:focus-visible, &:focus-within {
+            outline:.5rem solid #0cf !important;
+        }
+        &:active {
+            outline:.5rem solid pink !important;
+        }
+    }
+}
+        </style>
+    </u2-code>
+
+    
 
 
     <h3>Baseline</h3>
@@ -89,7 +148,9 @@
     <h2>Style</h2>
 
     <div style="border:1px solid">
-        <u2-input class=styled type=text value="123456789101112"></u2-input>
+        <u2-input class=styled type=text value="123456789101112">
+            <input value="123456789101112">
+        </u2-input>
         <input class=styled type=text placeholder="Native" value="123456789101112">
         <br>
         <input class=styled type=text placeholder="Native" value="123456789101112">

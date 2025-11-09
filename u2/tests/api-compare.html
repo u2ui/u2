@@ -23,7 +23,7 @@
         table {
             width: 100%;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            font-size:.6rem;
+            font-size:13px;
             white-space: nowrap;
         }
         th, td {
@@ -37,7 +37,11 @@
             z-index: 10;
             cursor: pointer;
         }
-        tbody th { left:0 }
+        thead th {
+            writing-mode: sideways-lr;
+            letter-spacing: .05em;
+        }
+        tbody th { left:0; }
         th.asc::after {
             content: ' ↑';
             font-size: 0.8em;

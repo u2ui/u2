@@ -8,6 +8,7 @@ https://jsfiddle.net/x90cz65o/103/
 */
 
 .u2-table {
+    /* --u2-Items-width: 11rem; */
     display:table;
     border-collapse:collapse;
     width:100%;
@@ -31,6 +32,10 @@ https://jsfiddle.net/x90cz65o/103/
     display:table-cell;
     padding-inline: calc(var(--u2-Col-gap) / 2);
     padding-block: calc(var(--u2-Row-gap) / 2);
+    /*
+    width: var(--u2-Items-width, auto);
+    flex-basis: var(--u2-Items-width, auto);
+    */
 }
 
 
@@ -49,9 +54,7 @@ https://jsfiddle.net/x90cz65o/103/
     padding-inline: 0;
 }
 .u2-table.-Flex > * > * > * { /* td */
-    flex-grow: 1;
-    flex-shrink:0;
-    flex-basis:10em;
+    flex: 1 1 11em;
     min-width:0;
     padding-block: 0;
     padding-inline: calc(var(--u2-Col-gap) / 2);
@@ -66,19 +69,16 @@ https://jsfiddle.net/x90cz65o/103/
 /* .-Fields */
 .u2-table.-Fields input:not([type=radio], [type=checkbox], [type=date], [type=color]),
 .u2-table.-Fields textarea {
-    width:100%;
-    width:-moz-available;
-    width:-webkit-fill-available;
+    width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    margin: 0;
 }
 .u2-table.-Fields > * > * > :first-child {
     inline-size: var(--col-1-width, 9em);
-    flex-basis:var(--col-1-width, 9em);
+    flex-basis: var(--col-1-width, 9em);
+    flex-grow:0.1;
 }
-/* would be good for textarea align *
-.u2-table.-Flex.-Fields > * > * > * {
-    display:flex;
-}
-*/
 
 .u2-table.-NoSideGaps > * > * > :first-child { padding-inline-start:0; }
 .u2-table.-NoSideGaps > * > * > :last-child { padding-inline-end:0; }

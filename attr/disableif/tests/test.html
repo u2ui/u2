@@ -30,20 +30,16 @@
                     <option value="vollzeit">Vollzeit</option>
                 </select>
             </label>
-            <br>
             <label>
                 Gehaltsvorstellung: 
                 <u2-input type="stepper" name="gehalt" style="width:7rem" value="3000">
                     <input type="number"step="500" min="3000" max="6000">
                 </u2-input>
             </label>
-            <br>
-            <fieldset u2-disableif="gehalt<4000" id="begr">
+            <fieldset u2-disableif="gehalt<4000" id="begr" disabled>
                 <label>
                     Begründung:
-                    <u2-input type="textarea" name="Begründung">
-                        <textarea></textarea>
-                    </u2-input>
+                    <u2-input type="textarea" name="Begründung" required></u2-input>
                 </label>
             </fieldset>
             <style>
@@ -59,7 +55,6 @@
                 Stundensatz:
                 <input type=text name="freelancerRate">
             </label>
-            <br>
             <label>
                 Projektbeschreibung:
                 <input type=text name="freelancerDescription">
@@ -71,7 +66,6 @@
                 Teilzeitstunden pro Woche:
                 <input type=text name="partTimeHours">
             </label>
-            <br>
             <label>
                 Abteilung:
                 <input type=text name="partTimeDepartment">
@@ -83,18 +77,15 @@
                 Vollzeitposition:
                 <input type=text name="fullTimePosition">
             </label>
-            <br>
             <label>
                 Abteilung:
                 <input type=text name="fullTimeDepartment">
             </label>
-            <br>
             <label>
                 Gehalt:
                 <input type=text name="fullTimeSalary">
             </label>
         </fieldset>
-        <br>
         <button type="submit">Absenden</button>
     </form>
 

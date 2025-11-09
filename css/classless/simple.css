@@ -66,6 +66,13 @@ tr:not(:last-child) {
     border-inline-width: 0;
 }
 
+label {
+    display:block;
+}
+
+:is(input, textarea, select, button, .btn, u2-input):not([type="checkbox"], [type="radio"]) {
+    margin-block:.3rem;
+}
 
 blockquote {
     margin: 0;
