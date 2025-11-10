@@ -26,9 +26,9 @@
 
     <h2>Navigation</h2>
     <p>
-      <button onclick="calendar.prev()">Previous Month</button>
       <button onclick="calendar.setAttribute('date', '2025-10-01')">Oktober 2025</button>
-      <button onclick="calendar.next()">Next Month</button>
+      <button onclick="calendar.prev()">Previous</button>
+      <button onclick="calendar.next()">Next</button>
       Locale:
       <select id="localeSelect" onchange="calendar.setAttribute('lang', this.value)">
         <option value="de-DE" selected>de-DE</option>
