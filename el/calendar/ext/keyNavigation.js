@@ -53,7 +53,26 @@ document.addEventListener('keydown', e=>{
         }
 
     }
-})
+});
+
+
+// Handle scroll navigation for month change
+document.addEventListener('wheel', e => {
+    if (e.target.tagName !== 'U2-CALENDAR') return;
+
+    const path = e.composedPath();
+    const target = path[0];
+
+    if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+    
+    const grid = target.closest('.grid');
+    if (grid) {
+        e.preventDefault();
+        if (e.deltaY > 0) calendar.next();
+        else calendar.prev();
+    }
+}, { passive: false });
+
 
 // move event by one day left or right
 // beta: event will be fullday-events
@@ -88,5 +107,4 @@ document.addEventListener('keydown', e=>{
         e.preventDefault();
         setTimeout(() => item.shadowRoot.querySelector('*')?.focus());
     }
-
 })
