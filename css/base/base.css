@@ -1,17 +1,17 @@
 *, ::before, ::after {
 	box-sizing: border-box;
 	scroll-behavior: smooth;
-	line-height:var(--line-height); /* also for: letter-spacing? */
+	line-height:var(--line-height);/* also for: letter-spacing? */
 	background-repeat: no-repeat;
 }
 html {
 	interpolate-size: allow-keywords;
-	block-size: 100%; /* 100dvh? */
+	block-size: 100%;/* 100dvh? */
 	word-break:break-word;
 	overflow-wrap:break-word;
-	-webkit-hyphens: auto; /* safari < 17 */
+	-webkit-hyphens: auto;/* safari < 17 */
 	hyphens: auto;
-	hyphenate-limit-chars:auto 3; /* chrome, firefox */
+	hyphenate-limit-chars:auto 3;/* chrome, firefox */
 	tab-size: 4;
 	--line-height: calc(1em + .5rem);
 	-webkit-tap-highlight-color: transparent;
@@ -23,8 +23,8 @@ html {
 body {
 	margin:auto;
 	min-block-size: 100%;
-    display: flow-root; /* so that margin of children does not affect body */
-	font-size:max(1rem, 16px); /* 16px => safari ios dont zoom in */
+    display: flow-root;/* so that margin of children does not affect body */
+	font-size:max(1rem, 16px);/* 16px => safari ios dont zoom in */
 }
 h1, h2, h3, h4, h5, h6 {
 	margin-block:1em;
@@ -41,7 +41,7 @@ hr {
 	border-top-width:0 !important;
 }
 video, audio, video, iframe {
-	width: 100%; /* max-width:-moz-available / -webkit-fill-available; incompatibility causes problems. todo: inline-size? */ 
+	width: 100%;/* max-width:-moz-available / -webkit-fill-available; incompatibility causes problems. todo: inline-size? */ 
 }
 iframe {
     display:block;
@@ -63,15 +63,15 @@ script, style {
 /* table */
 table {
 	border-collapse: collapse;
-	border-spacing: 0; /* if not collapsed, border-spacing defaults to 0 */
+	border-spacing: 0;/* if not collapsed, border-spacing defaults to 0 */
 	font-variant-numeric: tabular-nums;
 }
 th {
 	text-align: inherit;
-	text-align: -webkit-match-parent; /* inherit not working in safari */
+	text-align: -webkit-match-parent;/* inherit not working in safari */
 }
 /* nav */
-nav a { text-decoration:none; } /* display:block? color:inherit? */
+nav a { text-decoration:none; }/* display:block? color:inherit? */
 nav li { list-style: none; }
 nav ul { padding-inline-start:1.5em; }
 nav > ul { padding-inline-start:0; }
@@ -93,7 +93,7 @@ input, textarea, select, button, ::file-selector-button, .btn {
 	in chrome:1.22, in ff:1.17 (best fit line-height:1.19?)
 	"normal" does not work in chrome unless not -webkit-appearance: none;
 	*/
-	line-height:var(--line-height); /* needed as font:inherit does inherit line-height */
+	line-height:var(--line-height);/* needed as font:inherit does inherit line-height */
 	--line-height:normal;
 }
 button, ::file-selector-button, .btn {
@@ -121,8 +121,7 @@ dialog, [popover] {
 }
 dialog:is(:modal,[open]), :popover-open {
     &, &::backdrop {
-        opacity: 1;
-        /*  @starting-style { opacity: 0; } why does this not work? */
+        opacity: 1;/*  @starting-style { opacity: 0; } why does this not work? */
     }
 }
 @starting-style {
@@ -131,6 +130,6 @@ dialog:is(:modal,[open]), :popover-open {
     }
 }
 
-:where([popover]) { /* ok? una: https://x.com/Una/status/1917662266427859202 */
-    inset: auto; 
+:where([popover]) {/* ok? una: https://x.com/Una/status/1917662266427859202 */
+    inset: auto;
 }

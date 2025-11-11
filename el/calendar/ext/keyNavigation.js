@@ -75,36 +75,27 @@ document.addEventListener('wheel', e => {
 
 
 // move event by one day left or right
-// beta: event will be fullday-events
-document.addEventListener('keydown', e=>{
+document.addEventListener('keydown', e => {
     const item = e.target.closest('u2-calendaritem');
     if (!item) return;
     if (!item.draggable) return;
 
-
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         const offset = e.key === 'ArrowLeft' ? -1 : 1;
         
-        const startDate = item.start;
-        const endDate = item.end;
+        const startTime = new Date(item.getAttribute('start'));
+        const endTime = new Date(item.getAttribute('end'));
+        const duration = endTime - startTime;
         
-        const newStartDate = new Date(startDate);
-        newStartDate.setDate(startDate.getDate() + offset);
+        const newStart = new Date(startTime);
+        newStart.setDate(startTime.getDate() + offset);
         
-        const newEndDate = new Date(endDate);
-        newEndDate.setDate(endDate.getDate() + offset);
-        
-        const formatDate = (date) => {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        };
-        
-        item.setAttribute('start', formatDate(newStartDate));
-        if (item.end) item.setAttribute('end', formatDate(newEndDate));
+        const newEnd = new Date(newStart.getTime() + duration);
+
+        item.setAttribute('start', newStart.toISOString());
+        if (item.end) item.setAttribute('end', newEnd.toISOString());
         
         e.preventDefault();
-        setTimeout(() => item.shadowRoot.querySelector('*')?.focus());
+        setTimeout(() => item.shadowRoot.querySelector('*')?.focus(), 16);
     }
-})
+});
