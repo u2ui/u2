@@ -1,13 +1,7 @@
 let css = `
-:host {
-    display:block;
-}
-:host([role=tree]) {
-    --indent:1rem;
-}
-:host(:not([aria-expanded=true])) [part=children] {
-    display:none;
-}
+:host { display:block; }
+:host([role=tree]) { --indent:1rem; }
+:host(:not([aria-expanded=true])) [part=children] { display:none; }
 :host([aria-expanded=true]) .arrow::after { content:'▾' }
 :host(:not([aria-expanded])) .arrow { opacity:0; }
 :host([aria-expanded=true][aria-busy=true]) .arrow::after {
@@ -17,7 +11,6 @@ let css = `
     line-height:1;
     font-size:.8em;
 }
-
 [part=row] {
     display:flex;
     align-items:baseline;
@@ -25,16 +18,13 @@ let css = `
     padding-inline-start:calc( var(--indent) * (var(--level) - 1) );
     gap:.3em;
 }
-
 .arrow {
     font-weight:normal !important;
     min-width:1.1em;
     text-align:center;
 }
-.arrow::after { content:'▸'; }
-.arrow::after { display:inline-block;  }
+.arrow::after { content:'▸'; display:inline-block; }
 @keyframes spinner { to { transform:rotate(360deg) } }
-
 [name=icon] {
     display:flex;
     align-items: center;
@@ -44,22 +34,23 @@ let css = `
     align-self:stretch;
 }
 `;
+const styleSheet = new CSSStyleSheet();
+styleSheet.replaceSync(css);
 
 
 export class tree extends HTMLElement {
-    //#internals;
+
     constructor() {
         super();
         const shadow = this.attachShadow({mode: 'open', delegatesFocus: true});
-        //this.#internals = this.attachInternals();
+        shadow.adoptedStyleSheets = [styleSheet];
         shadow.innerHTML = `
-        <style>${css}</style>
         <div part=row tabindex=-1>
             <span class=arrow></span>
             <slot name=icon>📁</slot>
             <slot part=content></slot>
         </div>
-        <slot part=children name=children role=group part=group></slot>`
+        <slot part=children name=children role=group></slot>`
 
         this.row = shadow.querySelector('[part=row]');
 
@@ -73,7 +64,7 @@ export class tree extends HTMLElement {
         this.addEventListener('keydown',e=>{
             if (e.target !== this) return;
             let fn = {
-                ArrowUp:    ()=> this.prevFocusable()?.setFocus(),
+                ArrowUp:    ()=> this.prevFocusable()?.setFocus?.(),
                 ArrowDown:  ()=> this.nextFocusable()?.setFocus(),
                 ArrowRight: ()=> !this.isExpanded() ? this.toggleExpand(true) : this.nextFocusable()?.setFocus(),
                 ArrowLeft:  ()=> this.isExpanded() ? this.toggleExpand(false) : this.parentNode.setFocus?.(),
@@ -104,14 +95,15 @@ export class tree extends HTMLElement {
             if (e.detail >= 2) e.preventDefault();
         });
 
-        this.childrenObserver = new MutationObserver(mutations=>{
-            this._markup();
-        }).observe(this, {childList: true});
-
+        this.childrenObserver = new MutationObserver(mutations => this._markup())
 
     }
     connectedCallback() {
+        this.childrenObserver.observe(this, {childList: true});
         this._markup();
+    }
+    disconnectedCallback() {
+        this.childrenObserver.disconnect();
     }
     _markup(){
         // own level
@@ -125,20 +117,14 @@ export class tree extends HTMLElement {
             child.tagName === this.tagName && child.setAttribute('slot', 'children');
         }
         this.setAttribute('role', root === this ? 'tree' : 'treeitem');
-        //this.#internals.role = root === this ? 'tree' : 'treeitem';
 
         // make it selectable if its the root and no other is selected
-        if (root === this && !root._activeElement) {
-            this.row.setAttribute('tabindex', '0');
-        }
+        if (root === this && !root._activeElement) this.row.tabIndex = 0;
 
         // if has children, its expandable
         if (!this.hasAttribute('aria-expanded')) {
-            if (this.items().length) {
-                this.setAttribute('aria-expanded', 'false');
-            } else {
-                this.removeAttribute('aria-expanded');
-            }
+            if (this.items().length) this.setAttribute('aria-expanded', 'false');
+            else this.removeAttribute('aria-expanded');
         }
     }
     items(){
@@ -148,11 +134,8 @@ export class tree extends HTMLElement {
         let item = this;
         while (item) {
             let next = null;
-            if (item.isExpanded()) {
-                next = item.items().at(0);
-            }
+            if (item.isExpanded()) next = item.items().at(0);
             if (!next) next = item.nextElementSibling; // todo: only next treeitem
-
             if (!next) {
                 while (item.parentNode) {
                     item = item.parentNode;
@@ -191,21 +174,13 @@ export class tree extends HTMLElement {
     }
     toggleExpand(doit) {
         if (!this.isExpandable()) return;
-        if (doit == null) doit = !this.isExpanded();
+        doit ??= !this.isExpanded();
 
         const event = new CustomEvent(doit?'u2-tree1-expand':'u2-tree1-collapse', {bubbles: true});
         if (this.getAttribute('aria-live') && this.getAttribute('aria-busy') !== 'true') {
 
-            event.load = fn=>{
-                
-                let promise;
-                if (typeof fn.then === 'function') {
-                    console.warn('event.load(promise) is deprecated, use event.load(fn)');
-                    promise = fn;
-                } else {
-                    promise = fn(this);
-                }
-
+            event.load = callback=>{
+                const promise = callback(this);
                 this.setAttribute('aria-busy','true');
                 promise.then(data => {
                     this.removeAttribute('aria-live');
@@ -221,9 +196,6 @@ export class tree extends HTMLElement {
         }
         this.dispatchEvent(event);
         this.setAttribute('aria-expanded', doit?'true':'false');
-    }
-    root(){
-        return this.isRoot() ? this : this.parentNode.root();
     }
 
     select(){
@@ -243,22 +215,23 @@ export class tree extends HTMLElement {
     }
     set activeElement(el){
         const old = this.root()._activeElement;
-        if (old) old.row.setAttribute('tabindex', '-1');
-        el.row.setAttribute('tabindex', '0');
+        if (old) old.row.tabIndex = -1;
+        el.row.tabIndex = 0;
         el.row.focus();
         this.root()._activeElement = el;
     }
     setFocus() {
         this.activeElement = this;
     }
-    isRoot(){
-        return this.parentNode.tagName !== this.tagName;
+    root(){
+        return this.isRoot() ? this : this.parentNode.root();
     }
-
+    isRoot(){
+        return this.parentNode?.tagName !== this.tagName;
+    }
     path(){
         if (this.isRoot()) return [this];
         return this.parentNode.path().concat(this);
-        // return this.isRoot() ? [this] : [...this.parentNode.path(), this];  // as we dont cache, we dont have to make a copy
     }
 }
 

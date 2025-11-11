@@ -15,7 +15,6 @@ u2-tree1[draggable]::part(row) {
     cursor:grab;
 }
 
-
 u2-tree1:not(:defined) {
     padding-block-start:.2em;
     display:list-item;

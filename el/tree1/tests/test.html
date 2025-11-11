@@ -141,7 +141,9 @@
     const loadItems = async (item) => {
         await delay(600);
         item.innerHTML += '<u2-tree1><span slot=icon>🖼</span>Dynamic File 1</u2-tree1>';
+        await delay(300);
         item.innerHTML += '<u2-tree1><span slot=icon>📄</span>Document</u2-tree1>';
+        await delay(300);
         item.innerHTML += '<u2-tree1 aria-expanded=false aria-live=off>Folder</u2-tree1>';
     }
     </script>
