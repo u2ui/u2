@@ -8,8 +8,8 @@
         <script src="../auto.js" type=module async></script>
 
         <script type="module">
-            import {contextmenu} from '../../js/contextmenu/contextmenu.js';
-            contextmenu.add([{
+            import {contextMenu} from '../../js/contextmenu/contextmenu.js';
+            contextMenu.add([{
                 label:'About u2-ui',
                 shortcut:'ctrl+F1',
                 action(e) { alert('todo') },
@@ -114,6 +114,11 @@
             <h2>Usage</h2>
             <p>For fast prototyping just insert this:</p>
             <u2-code trim style="font-size:max(13px, .7rem); padding:.5rem">
+                <button slot=tools onclick="navigator.clipboard.writeText(this.parentNode.value); this.querySelector('.-done').showFor(this)" style="bottom:0; top:auto">
+                    <u2-ico xicon=copy style="font-size:1.2rem">📋</u2-ico>
+                    <span><u2-tooltip class=-done>Copied</u2-tooltip></span>
+                    <u2-tooltip>Copy</u2-tooltip>
+                </button>
                 <script type=text/html>
                     <script src="../../../u2/auto.min.js" type=module crossorigin async><\/script>
                 </script>

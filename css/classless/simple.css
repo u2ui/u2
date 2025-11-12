@@ -70,7 +70,7 @@ label {
     display:block;
 }
 
-:is(input, textarea, select, button, .btn, u2-input):not([type="checkbox"], [type="radio"]) {
+:where(input, u2-input):not([type="checkbox"], [type="radio"]), textarea, select, button, .btn {
     margin-block:.3rem;
 }
 

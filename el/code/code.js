@@ -49,7 +49,7 @@ class code extends HTMLElement {
             top:0;
             pointer-events:all;
             margin:0 !important;
-            padding:.3rem !important;
+            padding:.2rem !important;
             text-align:center !important;
             background-color:transparent !important;
             color:inherit !important;

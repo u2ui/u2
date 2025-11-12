@@ -3,6 +3,8 @@
     flex-direction: column;
     box-shadow: var(--shadow);
     border-radius: var(--radius);
+    color: var(--color-text, inherit);
+    text-decoration:none;
 }
 .u2-card1.u2-card1 > :not(img) {
     margin: 0;
@@ -20,6 +22,7 @@
 /* todo if needed
 :where(a.u2-card1) {
     color:inherit;
+    color: var(--color-text, inherit);
     text-decoration:none;
     transition: box-shadow .1s;
 }

@@ -12,6 +12,13 @@
         <link rel=stylesheet href="../../../css/classless/simple.css">
 
         <link rel=stylesheet href="../card1.css">
+
+        <style>
+            html {
+                --width: 80rem;
+            }
+        </style>
+
 <body>
 
 
@@ -19,9 +26,8 @@
 .u2-flex > li {
     list-style:none;
 }
-:where(a.u2-card1) {
-    color:inherit;
-    text-decoration: none;
+.u2-card1 button {
+    margin:0;
 }
 </style>
 
@@ -32,14 +38,14 @@
     <ul class=u2-flex style="padding:0; --u2-Gap:2rem">
         <li class=u2-card1 style="flex: 1 0 14rem;">
             <img src="https://picsum.photos/800/600?random=1" alt="x" loading=lazy width=800 height=600>
-            <h2>Card 1</h2>
             <div class=-body>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos porro pariatur ducimus aut? Saepe vitae sequi doloribus perspiciatis quae? Fuga, exercitationem voluptatum facilis necessitatibus qui incidunt? Magnam non perferendis iure.
+                <h2>Card 1</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos porro pariatur ducimus aut? Saepe vitae sequi doloribus perspiciatis quae?</p>
             </div>
             <div style="background:#0001">
                 <div class=u2-flex style="--u2-Gap:.5rem">
-                    <button style="flex-grow:1">button 1</button>
-                    <button style="flex-grow:1">button 2</button>
+                    <button style="flex-grow:1;">button 1</button>
+                    <button style="flex-grow:1;">button 2</button>
                 </div>
             </div>
         </li>
@@ -62,13 +68,20 @@
             <div>Footer</div>
             <img src="https://picsum.photos/800/600?random=1" alt="x" loading=lazy width=800 height=600>
         </li>
+        <li class=u2-card1 u2-skin=invert style="flex: 1 0 14rem;">
+            <h2>Card 4</h2>
+            <div class=-body>
+                This card has an inverted skin.
+            </div>
+            <div>Footer</div>
+            <img src="https://picsum.photos/800/600?random=1" alt="x" loading=lazy width=800 height=600>
+        </li>
         <li style="flex: 1 0 14rem;">
-            <a class="u2-card1" u2-skin="invert" href="#">
-                <h2>Card as Link and inverted</h2>
+            <a class="u2-card1" href="#">
+                <h2>Card 5</h2>
                 <div class=-body>
-                    Ipsum dolor sit amet consectetur adipisicing elit. Magnam non perferendis iure. Aliquam consequ des consequ des consequ des consequ.
+                    You can also use it as a link.
                 </div>
-                <div>Footer</div>
                 <img src="https://picsum.photos/800/600?random=1" alt="x" loading=lazy width=800 height=600>
             </a>
         </li>
