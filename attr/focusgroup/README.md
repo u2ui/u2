@@ -1,5 +1,5 @@
 # [u2-focusgroup] - attribute
-Focus movement by arrow keys
+Enables arrow-key navigation between focusable elements in a container.
 
 ## Features
 

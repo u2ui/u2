@@ -50,17 +50,29 @@ class Accordion extends HTMLElement {
         .content {
             display:block;
             padding:1em;
-            overflow:auto;
+            block-size:auto;
+            overflow:clip;
             transition:.3s;
+            transition-property:block-size, padding;
             transition-behavior: allow-discrete;
         }
         .content[hidden="until-found"] {
             content-visibility:visible;
-            overflow:hidden;
             block-size:0;
-            max-block-size:0;
             padding-block:0 !important;
         }
+
+        @supports not (interpolate-size: allow-keywords) {
+            .content {
+                transition-property:max-block-size, padding;
+                max-block-size:100vh;
+            }
+            .content[hidden="until-found"] {
+                max-block-size:0;
+            }
+        }
+
+
         </style>
         <div id=accordion role=presentation></div>
         `;

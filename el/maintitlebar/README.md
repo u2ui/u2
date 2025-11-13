@@ -1,5 +1,5 @@
 # &lt;u2-maintitlebar&gt; - element
-This element replaces the Native Browser Toolbar if installed as Desktop-PWA.
+Replaces the native browser toolbar in Desktop PWAs.
 
 ## Usage
 

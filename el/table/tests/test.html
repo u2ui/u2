@@ -3,8 +3,10 @@
 <head>
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
-    <script src="../../../u2/tests/test-init.js" type=module async></script>
     <title>tests</title>
+
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
 
     <link href="../../../css/classless/full.css" rel=stylesheet>
     <link href="../../../css/classless/simple.css" rel=stylesheet>
@@ -85,22 +87,23 @@
         <button onclick="test2body.insertAdjacentHTML('beforeend',test2body.innerHTML)">double items</button>
     </section>
 
-
-    <style contenteditable>
-        thead > tr > ::after {
-            content: "▲";
-            opacity:0;
-        }
-        thead > tr > [aria-sort=ascending]::after {
-            opacity:1;
-            content: "▲";
-        }
-        thead > tr > [aria-sort=descending]::after {
-            opacity:1;
-            content: "▼";
-        }
-    </style>
-
+    <u2-code editable trim>
+        <style contenteditable>
+            thead > tr > ::after {
+                content: "▲";
+                opacity:0;
+            }
+            thead > tr > [aria-sort=ascending]::after {
+                opacity:1;
+                content: "▲";
+            }
+            thead > tr > [aria-sort=descending]::after {
+                opacity:1;
+                content: "▼";
+            }
+        </style>
+    </u2-code>
+    
     <script type=module>
     // console.log(test.columns)
     // console.log(test.columns.item(2))

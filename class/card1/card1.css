@@ -6,12 +6,12 @@
     color: var(--color-text, inherit);
     text-decoration:none;
 }
-.u2-card1.u2-card1 > :not(img) {
+.u2-card1 > :not(img, hr) {
     margin: 0;
     padding: 1rem;
 }
 .u2-card1 > :first-child { border-top-left-radius: inherit; border-top-right-radius: inherit; }
-.u2-card1 > :last-child { border-bottom-right-radius: inherit; border-bottom-left-radius: inherit; }
+.u2-card1 > :last-child  { border-bottom-right-radius: inherit; border-bottom-left-radius: inherit; margin-top:auto; }
 
 .u2-card1 > .-body {
     flex:1 0 auto;

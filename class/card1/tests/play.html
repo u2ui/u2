@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../../../u2/tests/test-init.js" type=module async></script>
+        <script src="../../../u2/auto.js" type=module async></script>
+        
+        <title>u2-card1 Test</title>
+
+        <link rel=stylesheet href="../../../css/classless/full.css">
+        <link rel=stylesheet href="../../../css/classless/simple.css">
+
+        <link rel=stylesheet href="../card1.css">
+
+<body>
+
+
+<section>
+
+    <div style="resize: both; overflow: auto; padding:2rem">
+        <div class=u2-card1 id="card">
+            <img src="https://picsum.photos/800/600?random=1" alt="x" loading=lazy width=800 height=600>
+            <div class=-out>
+                <u2-ico>?</u2-ico>
+            </div>
+            <h2 class=-title>
+                Card 1
+                <button class="u2-unstyle">
+                    <u2-ico>&#x2716;</u2-ico>
+                </button>
+            </h2>
+            <div class=-body>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos porro pariatur ducimus aut? Saepe vitae sequi doloribus perspiciatis quae?</p>
+            </div>
+            <hr>
+            <div class=-body>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos porro pariatur ducimus aut? Saepe vitae sequi doloribus perspiciatis quae?</p>
+            </div>
+            <div class="u2-flex -btns">
+                <button>button 1</button>
+                <button>button 2</button>
+            </div>
+        </div>
+    </div>
+
+    <u2-code element="card" trim editable></u2-code>
+    
+    <u2-code trim editable>
+        <style>
+            .u2-card1 {
+                border-radius: 1rem;
+                position:relative;
+                background-image: linear-gradient(to bottom, rgba(0,0,0,.6), rgba(0,0,0,.1));
+                color:#fff;
+                container: card / inline-size;
+
+                & button {
+                    margin:0;
+                }
+                & > img {
+                    position:absolute;
+                    inset:0;
+                    z-index:-1;
+                    height:100%;
+                    width:100%;
+                    object-fit:cover;
+                    border-radius: inherit;
+                }
+                & > .-title {
+                    display:flex;
+                    justify-content: space-between;
+                    align-items: start;
+                    & button {
+                        display:flex;
+                    }
+                }
+                & > .-btns {
+                    --u2-Gap:.5rem;
+                    justify-content: end;
+                }
+                & > .-out {
+                    position:absolute;
+                    z-index:1;
+                    display:flex;
+                    height:3rem;
+                    width:3rem;
+                    inset: -1.7rem 0 auto 0;
+                    margin:auto;
+                    aspect-ratio: 1;
+                    background:var(--color);
+                    border-radius: 9999rem;
+                    padding:0;
+                    display:grid;
+                    place-items: center;
+                    box-shadow: var(--shadow);
+                    font-weight:900;
+                }
+                & > hr {
+                    color:inherit;
+                    margin:0;
+                }
+
+            }
+            @container card (width < 25em) {
+                .-btns button {
+                    flex-grow: 1;
+                }
+            }
+
+        </style>
+    </u2-code>
+
+</section>

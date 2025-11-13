@@ -1,5 +1,5 @@
 # &lt;u2-tabs&gt; - element
-rendering tabs
+Turns HTML structures with headings into an interactive, tabbed interface, using the content between headings as each tab’s content.
 
 ## Features
 

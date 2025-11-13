@@ -11,7 +11,7 @@ html {
 	overflow-wrap:break-word;
 	-webkit-hyphens: auto;/* safari < 17 */
 	hyphens: auto;
-	hyphenate-limit-chars:auto 3;/* chrome, firefox */
+	hyphenate-limit-chars:auto 4 4;/* chrome, firefox */
 	tab-size: 4;
 	--line-height: calc(1em + .5rem);
 	-webkit-tap-highlight-color: transparent;

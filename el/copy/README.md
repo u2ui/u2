@@ -1,5 +1,5 @@
 # &lt;u2-copy&gt; - element
-Displays formatted copys
+Mirrors an element’s content. `<u2-copy for="id" sync></u2-copy>`
 
 ## Usage
 

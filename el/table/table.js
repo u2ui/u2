@@ -12,7 +12,6 @@ class Table extends HTMLElement {
             </style>
             <slot></slot>
         `;
-        this.table = this.querySelector(':scope>table');
     }
     connectedCallback() {
         this.resizeObs = new ResizeObserver(entries => this._checkResize());
@@ -23,10 +22,13 @@ class Table extends HTMLElement {
         this.mutObs.observe(this, {childList: true, subtree: true});
         this._checkMutations();
     }
+    get table() {
+        return this.querySelector(':scope>table');
+    }
 
     static observedAttributes = ['sortable'];
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'sortable') makeSortable(this.table, newValue !== null);
+        if (name === 'sortable' && this.table) makeSortable(this.table, newValue !== null);
     }
 
     _checkResize() {
@@ -50,7 +52,7 @@ class Table extends HTMLElement {
         }
     }
     _checkMutations() {
-        const tr = this.table.querySelector(':scope > thead > tr');
+        const tr = this.querySelector(':scope > table > thead > tr');
         if (tr) {
             for (const th of tr.children) {
                 const title = th.innerText;
@@ -66,7 +68,7 @@ class Table extends HTMLElement {
     }
 
     get columns() {
-        return getTableColumns(this.table);
+        return this.table && getTableColumns(this.table);
     }
 
 }

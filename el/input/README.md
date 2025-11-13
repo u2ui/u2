@@ -32,6 +32,7 @@ u2-input:focus-within {
 [style.html](http://gcdn.li/u2ui/u2@main/el/input/tests/style.html)  
 [test copy.html](http://gcdn.li/u2ui/u2@main/el/input/tests/test copy.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/input/tests/test.html)  
+[types.html](http://gcdn.li/u2ui/u2@main/el/input/tests/types.html)  
 
 ## About
 

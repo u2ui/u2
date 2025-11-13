@@ -1,5 +1,5 @@
 # &lt;u2-table&gt; - element
-Enhanced tables (sortable, responsive...)
+Wrap Tables to make them enhanced tables (sortable, responsive...)
 
 ## Features
 

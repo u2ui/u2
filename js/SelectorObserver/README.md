@@ -1,5 +1,5 @@
 # SelectorObserver.js
-Monitor elements by CSS selector
+Watches elements matching a selector
 
 ## Usage
 

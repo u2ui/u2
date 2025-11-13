@@ -1,5 +1,5 @@
 # <u2-calendar> - element  (BETA)
-Simple calendar / month view component
+Calendar / month view component, use `<u2-calendaritem>` as children
 
 > Status: BETA — experimental. API and markup may change.
 

@@ -1,5 +1,5 @@
 # [u2-store] - attribute
-Persistent form and input state using localStorage/sessionStorage
+Persists form and input values using localStorage/sessionStorage.
 
 ## Features
 

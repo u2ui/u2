@@ -1,5 +1,5 @@
 # &lt;u2-alert&gt; - element
-Prominent hints, alerts, and facts
+Prominent hints, alerts and facts. `<u2-alert open variant=info>...</u2-alert>`
 
 ## Features
 

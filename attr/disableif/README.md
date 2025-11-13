@@ -1,5 +1,5 @@
 # [u2-disableif] - attribute
-Disable elements based on a condition
+Disable form-elements (like inputs, buttons, fieldsets) based on a condition
 
 ## Usage
 

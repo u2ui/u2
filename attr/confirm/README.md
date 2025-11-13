@@ -1,5 +1,5 @@
 # [u2-confirm] - attribute
-Confirm before action
+Shows a confirmation dialog on clicks or before form submits and only proceeds if confirmed.
 
 ## Features
 

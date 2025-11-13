@@ -10,7 +10,7 @@
     },
     "confirm": {
       "name": "confirm",
-      "description": "Confirm before action",
+      "description": "Shows a confirmation dialog on clicks or before form submits and only proceeds if confirmed.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -18,7 +18,7 @@
     },
     "disableif": {
       "name": "disableif",
-      "description": "Disable elements based on a condition",
+      "description": "Disable form-elements (like inputs, buttons, fieldsets) based on a condition",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -26,7 +26,7 @@
     },
     "draghandle": {
       "name": "draghandle",
-      "description": "Define a drag handle-element for an element that uses the draggable attribute.",
+      "description": "Defines a handle element to drag a draggable item.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -34,7 +34,7 @@
     },
     "focusgroup": {
       "name": "focusgroup",
-      "description": "Focus movement by arrow keys",
+      "description": "Enables arrow-key navigation between focusable elements in a container.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -42,7 +42,7 @@
     },
     "href": {
       "name": "href",
-      "description": "Every element can be a link",
+      "description": "Makes any element act as a link. `u2-href=\"url\"`",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -58,7 +58,7 @@
     },
     "navigable": {
       "name": "navigable",
-      "description": "Make elements navigable",
+      "description": "Enables dialogs, details, etc. to open via links with back history support.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -66,7 +66,7 @@
     },
     "parallax": {
       "name": "parallax",
-      "description": "Make every element scrolling at different speed",
+      "description": "Makes elements scroll at different speeds for a parallax effect.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -82,7 +82,7 @@
     },
     "store": {
       "name": "store",
-      "description": "Persistent form and input state using localStorage/sessionStorage",
+      "description": "Persists form and input values using localStorage/sessionStorage.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -100,7 +100,7 @@
     },
     "card1": {
       "name": "card1",
-      "description": "card-class (beta)\r",
+      "description": "card-class (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -166,7 +166,7 @@
   "el": {
     "accordion": {
       "name": "accordion",
-      "description": "rendering accordion",
+      "description": "Turns HTML structures with headings into an accordion, using the content between headings as each panel’s content.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -174,7 +174,7 @@
     },
     "alert": {
       "name": "alert",
-      "description": "Prominent hints, alerts, and facts",
+      "description": "Prominent hints, alerts and facts. `<u2-alert open variant=info>...</u2-alert>`",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -190,7 +190,7 @@
     },
     "bytes": {
       "name": "bytes",
-      "description": "Displays formatted bytess",
+      "description": "Displays formatted bytes",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -198,7 +198,7 @@
     },
     "calendar": {
       "name": "calendar",
-      "description": "Simple calendar / month view component",
+      "description": "Calendar / month view component, use `<u2-calendaritem>` as children",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -222,7 +222,7 @@
     },
     "chart": {
       "name": "chart",
-      "description": "Displays formatted charts",
+      "description": "Renders a chart from html like `<table>` or `<dl>` elements. `<u2-chart type=\"pie\"><table>...`",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -246,7 +246,7 @@
     },
     "copy": {
       "name": "copy",
-      "description": "Displays formatted copys",
+      "description": "Mirrors an element’s content. `<u2-copy for=\"id\" sync></u2-copy>`",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -278,7 +278,7 @@
     },
     "maintitlebar": {
       "name": "maintitlebar",
-      "description": "This element replaces the Native Browser Toolbar if installed as Desktop-PWA.",
+      "description": "Replaces the native browser toolbar in Desktop PWAs.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -366,7 +366,7 @@
     },
     "table": {
       "name": "table",
-      "description": "Enhanced tables (sortable, responsive...)",
+      "description": "Wrap Tables to make them enhanced tables (sortable, responsive...)",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -374,7 +374,7 @@
     },
     "tabs": {
       "name": "tabs",
-      "description": "rendering tabs",
+      "description": "Turns HTML structures with headings into an interactive, tabbed interface, using the content between headings as each tab’s content.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -414,7 +414,7 @@
     },
     "tree1": {
       "name": "tree1",
-      "description": "Treeview component",
+      "description": "Treeview component `<u2-tree1>Folder <u2-tree1>File</u2-tree1> </u2-tree1>`",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -490,7 +490,7 @@
     },
     "Placer": {
       "name": "Placer",
-      "description": "Absolute place elements relative to others",
+      "description": "Positions elements relative to a target, auto-adjusting on move or resize.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -514,7 +514,7 @@
     },
     "SelectorObserver": {
       "name": "SelectorObserver",
-      "description": "Monitor elements by CSS selector",
+      "description": "Watches elements matching a selector",
       "beta": false,
       "deprecated": false,
       "css": false,

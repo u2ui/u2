@@ -1,5 +1,5 @@
 # Placer.js
-Absolute place elements relative to others
+Positions elements relative to a target, auto-adjusting on move or resize.
 
 ## Usage
 

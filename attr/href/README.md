@@ -1,5 +1,5 @@
 # [u2-href] - attribute
-Every element can be a link
+Makes any element act as a link. `u2-href="url"`
 
 ## Usage
 

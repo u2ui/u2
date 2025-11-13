@@ -1,5 +1,5 @@
 # &lt;u2-tree1&gt; - element
-Treeview component
+Treeview component `<u2-tree1>Folder <u2-tree1>File</u2-tree1> </u2-tree1>`
 
 ## Features
 

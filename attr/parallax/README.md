@@ -1,5 +1,5 @@
 # [u2-parallax] - attribute
-Make every element scrolling at different speed
+Makes elements scroll at different speeds for a parallax effect.
 
 ## Features
 

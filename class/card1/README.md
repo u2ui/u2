@@ -1,6 +1,12 @@
 # .u2-card1 - class
 card-class (beta)
 
+- By default it has a box-shadow and a border-radius
+- Children have paddings but not images
+- Last child is sticky to the bottom
+- If child has class "-body" it will grow to fill the space
+- First and last child inherit the border-radius
+
 We named it with the prefix "1" to prevent compatibility-issues if we like to change behavior
 
 ## Usage
@@ -36,6 +42,7 @@ We named it with the prefix "1" to prevent compatibility-issues if we like to ch
 ## Demos
 
 [minimal.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/minimal.html)  
+[play.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/play.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/test.html)  
 
 ## About

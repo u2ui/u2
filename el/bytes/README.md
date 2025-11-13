@@ -1,5 +1,5 @@
 # &lt;u2-bytes&gt; - element
-Displays formatted bytess
+Displays formatted bytes
 
 ## Usage
 

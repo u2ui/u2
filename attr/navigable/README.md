@@ -1,5 +1,5 @@
 # [u2-navigable] - attribute
-Make elements navigable
+Enables dialogs, details, etc. to open via links with back history support.
 
 ## Usage
 

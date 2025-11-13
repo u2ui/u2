@@ -131,48 +131,74 @@
         <section id=reposSec>
             <h2>Repos</h2>
             <script type=module>
-                const repos = await fetch('../projects.json').then(res=>res.json());
-                const entries = repos.sort((r1,r2)=>{
-                    const ext1 = r1.name.replace(/^.*\.([^.]+)/,'$1');
-                    const ext2 = r2.name.replace(/^.*\.([^.]+)/,'$1');
-                    if (ext1 === 'el') return -1;
-                    if (ext2 === 'el') return 1;
-                    if(ext1 < ext2) return -1;
-                    if(ext1 > ext2) return 1;
-                    return 0;
-                });
-                let str = ''
-                for (let repo of entries) {
-                    let url = `https://github.com/u2ui/${repo.name}`;
-                    let release = repo.release_latest;
-
-                    let repoDate    = new Date(repo.pushed_at);
-                    let releaseDate = new Date(release.published_at);
-
-                    const masterNotPushed = repoDate > releaseDate
-                    str +=
-                    `<tr u2-href="${url}" style="--line-height:1.3">
-                        <td ${repo.description?`xaria-label="${repo.description}"`:''}>
-                            <a href="${url}"><b>${repo.name}</b></a>
-                            <br><small>${repo.description??''}</small>
-                        <td ${masterNotPushed?'style="color:#800"':''}>
-                            ${release.tag_name}
-                            <br><small><u2-time datetime="${repoDate.toISOString()}"></small>
-                        <td> <u2-counter>${repo.stargazers_count}</u2-counter> ⭐
-                        <td> ${repo.open_issues} 🐞
-                    `
+                const reposData = await fetch('../projects.json').then(res=>res.json());
+                
+                // Define category names
+                const categoryNames = {
+                    'el': 'Elemente',
+                    'attr': 'Attribute',
+                    'css': 'CSS',
+                    'js': 'JavaScript',
+                    'other': 'Andere'
+                };
+                
+                // Organize repos by category
+                const categories = {};
+                for (const [category, items] of Object.entries(reposData)) {
+                    categories[category] = [];
+                    for (const [key, repo] of Object.entries(items)) {
+                        if (repo.name && !repo.deprecated) {
+                            categories[category].push(repo);
+                        }
+                    }
+                    // Sort items in each category by name
+                    categories[category].sort((a, b) => a.name.localeCompare(b.name));
+                }
+                
+                let str = '';
+                
+                // Display categories in the desired order
+                const displayOrder = ['el', 'attr', 'css', 'js'];
+                
+                for (const category of displayOrder) {
+                    if (!categories[category] || categories[category].length === 0) continue;
+                    
+                    // Add category header
+                    str += `
+                    <tr>
+                        <th colspan="2" style="text-align:left; padding-top:2rem">
+                            <h3>${categoryNames[category] || category}</h3>
+                        </th>
+                    `;
+                    
+                    // Add items for this category
+                    for (const repo of categories[category]) {
+                        // Construct the correct GitHub URL based on the category and repo name
+                        let url = `https://github.com/u2ui/u2/tree/main/${category}/${repo.name}`;
+                        
+                        // Escape HTML in description
+                        const escapedDescription = repo.description 
+                            ? repo.description.replace(/[&<>]/g, 
+                                tag => ({
+                                    '&': '&amp;',
+                                    '<': '&lt;',
+                                    '>': '&gt;'
+                                }[tag] || tag))
+                            : '';
+                            
+                        str +=
+                        `<tr u2-href="${url}" style="--line-height:1.3">
+                            <td style="padding-left:2rem">
+                                <a href="${url}">${repo.name}</a>
+                            <td>${escapedDescription}
+                        `;
+                    }
                 }
                 document.getElementById('repos').innerHTML = str;
 
             </script>
             <figure style="max-height:60vh; overflow:auto; padding:0">
                 <table class="u2-table -Sticky">
-                    <thead>
-                        <tr>
-                            <th> Repo
-                            <th> Version
-                            <th> Stars
-                            <th> Issues
                     <tbody id=repos>
                 </table>
             </figure>

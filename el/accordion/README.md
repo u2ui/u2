@@ -1,5 +1,5 @@
 # &lt;u2-accordion&gt; - element
-rendering accordion
+Turns HTML structures with headings into an accordion, using the content between headings as each panel’s content.
 
 ## Features
 

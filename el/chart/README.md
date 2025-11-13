@@ -1,5 +1,5 @@
 # &lt;u2-chart&gt; - element
-Displays formatted charts
+Renders a chart from html like `<table>` or `<dl>` elements. `<u2-chart type="pie"><table>...`
 
 ## Usage
 

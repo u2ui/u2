@@ -1,5 +1,5 @@
 # [u2-draghandle] - attribute
-Define a drag handle-element for an element that uses the draggable attribute.
+Defines a handle element to drag a draggable item.
 
 ## Usage
 
