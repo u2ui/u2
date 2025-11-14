@@ -182,7 +182,7 @@
     },
     "breadcrumb": {
       "name": "breadcrumb",
-      "description": "breadcrumb element",
+      "description": "Breadcrumb from a list of links",
       "beta": false,
       "deprecated": false,
       "css": true,
