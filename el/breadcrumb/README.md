@@ -1,5 +1,5 @@
 # &lt;u2-breadcrumb&gt; - element
-Breadcrumb element from a list of links
+Breadcrumb from a list of links
 
 ## Usage
 
