@@ -1,0 +1,44 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "breadcrumb.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "A custom HTML element for displaying breadcrumb navigation.",
+            "name": "U2Breadcrumb",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "auto",
+                "type": "boolean",
+                "description": "Automatically generate breadcrumb items based on the current URL path."
+            }],
+            "cssProperties": [{
+                "name": "--u2-breadcrumb-separator",
+                "syntax": "<string>",
+                "default": "'/'",
+                "description": "The separator character between breadcrumb items."
+            },{
+                "name": "--u2-breadcrumb-separator-margin-inline",
+                "syntax": "<length>",
+                "default": "0.4rem",
+                "description": "The horizontal margin around the separator."
+            }],
+            "superclass": {
+                "name": "HTMLElement"
+            },
+            "tagName": "u2-breadcrumb",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-breadcrumb",
+            "declaration": {
+                "name": "U2Breadcrumb",
+                "module": "breadcrumb.js"
+            }
+        }]
+    }]
+}

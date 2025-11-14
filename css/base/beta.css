@@ -1,8 +1,10 @@
+@layer normalize {
+
 :where(*, ::before, ::after) {
 	background-size: contain; /* or cover? */
 	background-position: 50% 50%;
 	border-style:solid; /* default to solid but 0px */
-	border-width:0;
+	border-width:0; /* removes default borders at fieldset, dialog, ... */
 }
 [type=number] { text-align: end; }
 legend {
@@ -12,19 +14,14 @@ legend {
 tbody, thead, tfoot {
 	vertical-align: inherit;
 }
-
 select, summary, label, button:not(:disabled), [type=checkbox], [type=radio], [type=file], .btn, ::file-selector-button {
 	touch-action: manipulation;
 }
 button, ::file-selector-button, .btn {
 	user-select: none;
 }
-.btn {
-	inline-size: fit-content;
-	text-decoration: none;
+
 }
-
-
 
 /* what could go wrong? *
 *, ::after, ::before,  ::backdrop {

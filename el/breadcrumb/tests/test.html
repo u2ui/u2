@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/full.css" rel=stylesheet>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+    <style>
+        body {
+            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+        }
+        label {
+            display:block;
+            margin-block:1rem;
+        }
+    </style>
+
+    <link href="../breadcrumb.css" rel=stylesheet>
+    <script src="../breadcrumb.js" type=module async></script>
+
+<body>
+
+<section>
+
+    <h2>Basic</h2>
+    <u2-breadcrumb id="basicTest">
+        <a href="/">Home</a>
+        <a href="../">Breadcrumb</a>
+        <a href="./">Tests</a>
+        <a href="./test.html">This Page</a>
+    </u2-breadcrumb>
+    <h3>Generated JSON-LD:</h3>
+    <u2-code trim id="basicLDCode" language="json" style="font-size:11px; display:block; height:10rem">
+    </u2-code>
+    <script>
+        setTimeout(()=>{
+            const basicTest = document.getElementById('basicTest');
+            console.log(basicTest.querySelector('script').innerText)
+            basicLDCode.value = basicTest.querySelector('script').innerText;
+        },1000)
+    </script>
+
+    <h2>Different Content</h2>
+    <u2-breadcrumb>
+        <a href="#home"><u2-ico>home</u2-ico></a>
+        <button class=u2-unstyle>Button</button>
+        <select class=u2-unstyle>
+            <option>Page 1</option>
+            <option selected>Page 2</option>
+            <option>Page 3</option>
+        </select>
+        <select class=u2-unstyle>
+            <option>Subpage 1</option>
+            <option>Subpage 2</option>
+            <option>Subpage 3</option>
+        </select>
+    </u2-breadcrumb>
+
+    <h2>Add and Remove Item</h2>
+    <u2-breadcrumb id="addRemove">
+        <a href="#home">Home</a>
+        <a href="#page">Page</a>
+        <a href="#subpage">Subpage</a>
+    </u2-breadcrumb>
+    <button onclick="addRemove.insertAdjacentHTML('beforeend', '<a href=#subsubpage>Subsubpage</a>')">Add</button>
+    <button onclick="addRemove.removeChild(addRemove.lastElementChild)">Remove</button>
+
+    <h2>Reconnect</h2>
+    <div id="reconnectWrap">
+        <u2-breadcrumb id="reconnect">
+            <a href="/">Home</a>
+            <a href="/test">Page</a>
+            <a href="/test.html" aria-current="page">Current Manuel</a>
+        </u2-breadcrumb>
+    </div>
+    <button onclick="const x = reconnect; x.remove(); setTimeout(() => reconnectWrap.append(x), 300)">Reconnect</button>
+
+
+    <h2>Auto (beta)</h2>
+    <u2-breadcrumb auto></u2-breadcrumb>
+
+    <h2>Styled</h2>
+    <u2-breadcrumb id="separatorTest">
+        <a href="/">Home</a>
+        <a href="/test">Page</a>
+        <a href="./test.html" aria-current="page">Current</a>
+    </u2-breadcrumb>
+    <u2-code trim editable style="font-size:11px">
+        <style>
+            #separatorTest {
+                /* this works css only */
+                --u2-breadcrumb-separator:'*';
+                --u2-breadcrumb-separator-margin-inline:.6rem;
+                & > a {
+                    text-decoration:none;
+                    color:inherit;
+                }
+                & > a[aria-current] {
+                    font-style: italic;
+                }
+                /* this needs js */
+                &::part(separator) {                    
+                    color:pink;
+                    font-size:2rem;
+                    line-height:0;
+                    margin-top:.33em;
+                }
+            }
+        </style>
+    </u2-code>
+
+</section>

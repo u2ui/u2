@@ -1,0 +1,22 @@
+u2-breadcrumb {
+    display:flex;
+    flex-wrap:wrap;
+    align-items: center;
+    --u2-breadcrumb-separator: '/';
+    --u2-breadcrumb-separator-margin-inline: .6rem;
+}
+
+u2-breadcrumb:not(:defined) {
+    & > * {
+        padding-inline-end: var(--u2-breadcrumb-separator-margin-inline);
+        &::after {
+            content:var(--u2-breadcrumb-separator);
+            margin-inline-start:var(--u2-breadcrumb-separator-margin-inline);
+            display:inline-block;
+        }
+    }
+    & > :last-child {
+        &::after { display:none; }
+    }
+}
+

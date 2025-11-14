@@ -180,6 +180,14 @@
       "css": true,
       "js": true
     },
+    "breadcrumb": {
+      "name": "breadcrumb",
+      "description": "breadcrumb element",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "buttongroup": {
       "name": "buttongroup",
       "description": "buttongroup element",

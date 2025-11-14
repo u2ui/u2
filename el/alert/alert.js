@@ -15,7 +15,6 @@ const style = `
     grid-template-columns: auto 1fr auto;
 }
 
-
 slot {
     display:block;
 }

@@ -6,7 +6,7 @@
     color: var(--color-text, inherit);
     text-decoration:none;
 }
-.u2-card1 > :not(img, hr) {
+.u2-card1 > :not(img, video, hr) {
     margin: 0;
     padding: 1rem;
 }

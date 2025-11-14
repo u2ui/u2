@@ -1,3 +1,5 @@
+@layer normalize {
+
 *, ::before, ::after {
 	box-sizing: border-box;
 	scroll-behavior: smooth;
@@ -41,7 +43,7 @@ hr {
 	border-top-width:0 !important;
 }
 video, audio, video, iframe {
-	width: 100%;/* max-width:-moz-available / -webkit-fill-available; incompatibility causes problems. todo: inline-size? */ 
+	width: 100%;/* max-width:-moz-available / -webkit-fill-available; incompatibility causes problems. todo: inline-size? */
 }
 iframe {
     display:block;
@@ -99,6 +101,13 @@ input, textarea, select, button, ::file-selector-button, .btn {
 button, ::file-selector-button, .btn {
 	padding-inline:.7em;
 }
+.btn {
+	inline-size: fit-content;
+	text-decoration: none;
+	color:inherit;
+}
+
+
 select { background-color:Field; }
 textarea {
 	vertical-align: baseline;
@@ -132,4 +141,6 @@ dialog:is(:modal,[open]), :popover-open {
 
 :where([popover]) {/* ok? una: https://x.com/Una/status/1917662266427859202 */
     inset: auto;
+}
+
 }
