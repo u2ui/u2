@@ -9,6 +9,7 @@
     padding-left:calc(1rem + env(safe-area-inset-left)); /* todo: test, better: max(1rem, env(safe-area-inset-left)) */
     padding-right:calc(1rem + env(safe-area-inset-right));
 
+    min-width:0;/* needed if used as flexbox-item */
 
     /* if used as flexbox-col-item */
     width: 100%;
