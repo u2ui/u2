@@ -5,18 +5,18 @@ u2-carousel-nav {
 	display:flex;
 	justify-content:center;
 	margin:.5rem;
+	gap:.5rem;
 }
 u2-carousel-nav > * {
 	width:1.2rem;
 	height:1.2rem;
-	margin:.2rem;
-	border-radius:100%;
+	border-radius:99rem;
 	background-color:#0003;
 	cursor:pointer;
 
 	display:flex;
 	font-size:.5rem;
-	padding-bottom:.035rem;
+	padding-block-end:.035rem;
 	color:transparent;
 	justify-content:center;
 	align-items:center;
