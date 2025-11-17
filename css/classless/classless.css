@@ -30,7 +30,7 @@ hr {
 
 /* no margin betweet headings */
 :is(h1, h2, h3, h4, h5, h6) + :is(h1, h2, h3, h4, h5, h6) { margin-top: 0; }
-:is(h1, h2, h3, h4, h5, h6):has(+ :is(h1, h2, h3, h4, h5, h6)) { margin-bottom: 0; }
+:is(h1, h2, h3, h4, h5, h6):has(+ :is(h1, h2, h3, h4, h5, h6)) { margin-bottom: .4em; }
 
 
 table {
