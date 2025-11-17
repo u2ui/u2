@@ -33,14 +33,33 @@ u2-alert::part(icon) {
 
 ### Attributes
 
-- `variant`: Determines the type of the alert (success, warn, error, info).
-- `dismissable`: Allows the alert to be closed by the user.
-- `icon`: Adds an icon to the alert, if not set, the icon will be determined by the variant.
-- `open`: Determines if the alert is visible or not.
+- `variant`  
+  Determines the alert type (`success`, `warn`, `error`, `info`); sets default icon and ARIA role.
+
+- `dismissable`  
+  Shows a close button. Without this attribute the close button is hidden.
+
+- `icon`  
+  Overrides the default icon from the variant. (use **Material Icon** names)
+
+- `open`  
+  Controls visibility.
+
+- `duration`  
+  Auto-close delay in toast mode (only when no `action` elements are present).
+
 
 ### Slots
 
-- `action`: Buttons that will be placed at the bottom of the alert.
+- *(default)*  
+  Main alert text.  
+
+- `action`  
+  Buttons or interactive elements.  
+  If present → **no auto-close**, ARIA role becomes `alertdialog`.  
+
+- `icon`  
+  Provides a custom slotted icon.  
 
 ### CSS
 

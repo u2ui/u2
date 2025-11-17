@@ -7,7 +7,7 @@ u2-buttongroup {
     max-inline-size: stretch;
     
     row-gap: .2em;
-    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+    --u2-ico-dir:var(--u2-ico-dir-material);
     &:not(:defined) {
         flex-wrap:wrap;
     }

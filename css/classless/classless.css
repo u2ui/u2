@@ -28,6 +28,10 @@ hr {
 :is(h1,h2,h3,h4,h5,h6,p,ul,ol):first-child { margin-top:0; }
 :is(h1,h2,h3,h4,h5,h6,p,ul,ol):last-child { margin-bottom:0; }
 
+/* no margin betweet headings */
+:is(h1, h2, h3, h4, h5, h6) + :is(h1, h2, h3, h4, h5, h6) { margin-top: 0; }
+:is(h1, h2, h3, h4, h5, h6):has(+ :is(h1, h2, h3, h4, h5, h6)) { margin-bottom: 0; }
+
 
 table {
     inline-size: 100%; /* take container margins into account: width:-moz-available; width:-webkit-fill-available; (not working in firefox) */

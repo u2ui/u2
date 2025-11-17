@@ -14,7 +14,7 @@ class Accordion extends HTMLElement {
         @import url('${icoCssUrl}');
         :host {
             display:block;
-            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
+            --u2-ico-dir:var(--u2-ico-dir-material);
         }
         #accordion {
             display:flex;

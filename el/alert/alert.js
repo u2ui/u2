@@ -5,7 +5,7 @@ const style = `
 @import url('${icoCssUrl}');
 :host(:not([dismissable]))::part(close) { display:none; } /* TODO: does not work in chrome */
 :host {
-    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+    --u2-ico-dir:var(--u2-ico-dir-material);
     container-type: inline-size;
 }
 
@@ -145,7 +145,7 @@ class alert extends HTMLElement {
 const variantData = {
     info: {
         icon: 'info',
-        role: 'status',
+        role: 'status'
     },
     success: {
         icon: 'check',

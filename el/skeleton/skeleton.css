@@ -1,40 +1,42 @@
 :is(u2-skeleton, #strong) {
     display:block;
     opacity:1 !important;
-    --u2-skeleton-color: #f0f0f0;
-    color: var(--u2-skeleton-color);
 
+    /*
+    --u2-skeleton-color: #f0f0f0;
     --darker: color-mix(in srgb, var(--u2-skeleton-color), black 5%);
     --lighter: color-mix(in srgb, var(--u2-skeleton-color), white 20%);
     --bg: repeating-linear-gradient(45deg, var(--darker), var(--lighter), var(--darker) 50%) 0% 0% / 100px 100px repeat fixed;
-    --animation: skeleton-bg 17s linear infinite;
+    */
 
+    --darker: #e6e6e6;
+    --lighter: #f7f7f7;
+    x--bg: repeating-linear-gradient(45deg, var(--darker), var(--lighter), var(--darker) 50%) 0% 0% / 100px 100px repeat fixed;
+    --bg: repeating-linear-gradient(45deg, var(--darker), var(--lighter), var(--darker) 50%) 0% 0% / 100px 100px repeat;
+
+    --animation: skeleton-bg 1s linear infinite;
 
     & span, :is(p,td,th,button,h1,h2,h3,h4,h5,h6):empty::before {
         content: "text text";
         display:inline;
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
-
         background: var(--bg);
         animation: var(--animation);
-
         color: transparent;
     }
     & :is(h1,h2,h3,h4,h5,h6):empty::before {
         content: "Lorem ipsum dolor sit amet";
     }
-    & p:empty::before {
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in turpis auctor, lacinia nunc nec, ultricies nunc.";
-    }
-    & :is(th, td):empty::before {
-        content: "Some text";
-    }
-    & button:empty::before {
-        content: "Button";
-        background: var(--bg);
-        animation: var(--animation);
-    }
+
+    & p:empty::before { content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in turpis auctor, lacinia nunc nec, ultricies nunc."; }
+    & p:nth-of-type(2n):empty::before { content: "Cras facilisis velit at dui dapibus, quis fermentum urna scelerisque. Sed euismod, sapien eget luctus gravida, lectus justo tincidunt erat."; }
+    & p:nth-of-type(3n):empty::before { content: "Integer dictum, purus in varius pharetra, ipsum nisi posuere enim, vitae cursus nisi justo vitae justo."; }
+
+    & :is(td):empty::before { content: "Lorem ipsum"; }
+    & :is(td):nth-of-type(2n):empty::before { content: "Cars facilisis"; }
+    & :is(td):nth-of-type(3n):empty::before { content: "Integer dictum"; }
+
     & img {
         border:0;
         width: 20em;
@@ -46,16 +48,22 @@
         background: var(--bg);
         animation: var(--animation);
         border: 0;
+        margin-left: .5rem;
+    }
+    & button:empty::before {
+        content: "Button";
     }
 
 }
 
+/*
+@keyframes skeleton-bg {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 0%; }
+}
+    */
 
 @keyframes skeleton-bg {
-    0% {
-      background-position: 0% 0%;
-    }
-    100% {
-      background-position: 100% 0%;
-    }
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100px 0%; }
 }

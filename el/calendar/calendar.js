@@ -20,7 +20,7 @@ class U2Calendar extends HTMLElement {
           background: #0001;
           position:relative;
           z-index: 0;
-          --u2-ico-dir: 'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
+          --u2-ico-dir: var(--u2-ico-dir-material);
         }
         .header {
           display: grid;

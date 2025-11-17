@@ -26,7 +26,7 @@ const css = `
 
 
 #u2RteToolbar {
-    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
+    --u2-ico-dir: var(--u2-ico-dir-material);
 	position:absolute;
 	z-index:1999;
 	box-shadow: 0 0 10px rgba(0,0,0,.4);

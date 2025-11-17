@@ -33,9 +33,10 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
             this.menuButton = this.querySelector(':scope > u2-menubutton');
             if (!this.menuButton) {
                 this.menuButton = document.createElement('u2-menubutton');
+                this.menuButton.style['--u2-ico-dir'] = 'var(--u2-ico-dir-material)';
                 this.menuButton.innerHTML = `
                 <button style="padding-inline:.3em">
-                    <u2-ico inline icon=more_vert>⋮</u2-ico>
+                    <u2-ico inline icon=more-vert>⋮</u2-ico>
                 </button>
                 <menu></menu>
                 `;    

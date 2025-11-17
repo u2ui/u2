@@ -90,7 +90,7 @@ See it in action:
 
 | Icon set   | Directory |
 | --------   | --------- |
-| Material                  | `https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg` |
+| Material                  | `https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.33/svg/{icon_name}/baseline.svg` |
 | Teenyicons                | `https://cdn.jsdelivr.net/npm/teenyicons@0.4.1/outline/` |
 | Feather                   | `https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/icons/` |
 | Bootstrap                 | `https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/icons/` |

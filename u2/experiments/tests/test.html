@@ -61,7 +61,7 @@
         background: white;
         box-shadow: 0 0 .3em #0004;
         border-top:.2em solid var(--color);
-        --u2-ico-dir: 'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon_name}/baseline.svg';
+        --u2-ico-dir: var(--u2-ico-dir-material);
     }
     u2-alert:not([open], :focus-within, :hover) {
         display:none;
@@ -93,7 +93,7 @@
 <script type="module">
 // IMPLEMENTATION:
 
-import '../../focusgroup.attr/focusgroup.js';
+import '../../../attr/focusgroup/focusgroup.js';
 import '../../../el/ico/ico.js';
 // import style-sheet:
 const style = document.createElement('link');
@@ -118,7 +118,7 @@ class alert extends HTMLElement {
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = `
             <style>
-                @import url('../../../../el/ico/ico.css');
+                @import url('../../../el/ico/ico.css');
                 :host {
                     display:flex;
                     flex-wrap:wrap;

@@ -3,7 +3,7 @@ const icoCssUrl = import.meta.resolve('../../el/ico/ico.css');
 const style = `
 @import url('${icoCssUrl}');
 :host {
-    --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
+    --u2-ico-dir: var(--u2-ico-dir-material);
     --color-inactive:#ccc;
     display:inline-block;
 }

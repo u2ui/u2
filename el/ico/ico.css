@@ -1,13 +1,32 @@
 html {
     --u2-ico-font:'Segoe UI Symbol', 'Noto Emoji', sans-serif; /* noto on linux? */
-    /* --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.33/svg/{icon_name}/baseline.svg'; */
+    --u2-ico-dir-material: 'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.33/svg/{icon_name}/baseline.svg';
+    --u2-ico-dir-material-host: var(--u2-ico-dir-material);
 }
-
+:host { /* If used in a shadow host, inherit Material or define a new one. */
+    --u2-ico-dir-material: var(--u2-ico-dir-material-host, 'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.33/svg/{icon_name}/baseline.svg');
+}
 u2-ico {
-    font-weight: normal;
-    font-style: normal;
+    --size: 1.5rem; /* 24px Preferred icon size, material-icons */
+    font-size: var(--size);
     line-height: 1;
     --line-height: 1;
+
+    /* ok? */
+    text-align:center;
+    vertical-align:middle;
+    /* overflow:hidden
+    + prevents layout-shift on font load.
+    - But baseline gets to the box instead of the text.
+    - Some Icons on some Fonts may get cuted!
+    */
+
+    /* svg */
+    fill:currentColor; /* for svg, dont use `u2-ico > svg { fill:currentColor }` because it can have the attribute fill="none" */
+
+    /* icon-fonts */
+    font-weight: normal;
+    font-style: normal;
     text-transform: none;
     letter-spacing: normal;
     overflow-wrap: normal;
@@ -19,18 +38,9 @@ u2-ico {
     font-feature-settings: 'liga'; /* IE only? */
     font-family: var(--u2-ico-font) !important;
 
-    fill:currentColor; /* for svg, dont use `u2-ico > svg { fill:currentColor }` because it can have the attribute fill="none" */
+    /* utf-8 */
+    font-variant-emoji: text;       /* chrome-131, ff-141 */
 
-    /* ok? */
-    text-align:center;
-    vertical-align:middle;
-    --size: 1.5rem; /* 24px Preferred icon size, material-icons */
-    font-size: var(--size);
-    /* overflow:hidden
-    + prevents layout-shift on font load.
-    - But baseline gets to the box instead of the text.
-    - Some Icons on some Fonts may get cuted!
-    */
 }
 u2-ico:not([hidden]) { display: inline-block; }
 u2-ico[icon]:empty:before { /* todo if supported: :where([icon]::before) { */
@@ -55,7 +65,7 @@ u2-ico[inline] {
     /* margin:auto;  todo: dont stretch if its a flex-item? */
 }
 
-/* direct svg and js-loaded */
+/* SVG */
 u2-ico > svg {
     vertical-align:bottom;
     height:1em;
@@ -64,11 +74,15 @@ u2-ico > svg {
     overflow:visible;
     margin:auto;
 }
+u2-ico [fill]:not([fill=none]) { fill:currentColor; }
+u2-ico [stroke]:not([stroke=none]) { stroke: currentColor; }
+/* zzz, was:
 u2-ico path[fill]:not([fill=none]) { fill:currentColor; }
 u2-ico path[stroke]:not([stroke=none]) { stroke: currentColor; }
+*/
 
 
-/* dir-variant */
+/* SVG load (dir-variant) */
 u2-ico[state] {
     &::before {
         display:none;

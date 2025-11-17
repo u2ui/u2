@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Icon Sprites Test</title>
+
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script type=module src="../debug.js"></script>
+
+    <link rel="stylesheet" href="../ico.css">
+    <script type=module src="../ico.js"></script>
+    
+    <style>
+
+        html {
+            --u2-ico-dir: var(--u2-ico-dir-material);
+            --width:70rem;
+            font-size:16px;
+        }
+        .icons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            text-align: center;
+            background:#f8f8f8;
+        }
+        .icon u2-ico {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .icon-name {
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .controls {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .sources {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .source-usage-row {
+            background-color: #f9f9f9;
+        }
+    </style>
+
+<body>
+<section>
+
+    <h1>Icon Sprites Test</h1>
+    <p>This page demonstrates the icon sprites functionality. Icons are loaded individually and can be combined into a single SVG sprite.</p>
+
+    <h2>In document SVG</h2>
+    <div class="icons" id="iconContainerLocal" style="--u2-ico-dir:'#svg-{icon}'">
+        <div class="icon">
+            <div id="shadow-host-local" style="width:100%; height:100%; min-height:2.5rem"></div>
+            <span class="icon-name">home<br><small>(shadow-dom)</small></span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="favorite"></u2-ico>
+            <span class="icon-name">favorite</span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="search"></u2-ico>
+            <span class="icon-name">search</span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="settings"></u2-ico>
+            <span class="icon-name">settings</span>
+        </div>
+    </div>
+    <script>
+        document.getElementById('shadow-host-local')
+            .attachShadow({ mode: 'open' })
+            .innerHTML = `
+                <link rel="stylesheet" href="../ico.css">
+                <u2-ico icon="home" style="--size:2rem"></u2-ico>
+            `;
+    </script>    
+    <svg style="display:none">
+        <svg id="svg-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z"></path></svg>
+        <svg id="svg-favorite" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+        <svg id="svg-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5A6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14z"></path></svg>
+        <svg id="svg-settings" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94c0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6s3.6 1.62 3.6 3.6s-1.62 3.6-3.6 3.6z"></path></svg>
+    </svg>
+
+    <h2>Material Icons (defined at html)</h2>
+    <div class="icons" id="iconContainer">
+        <div class="icon" id="shadowIconTest">
+            <div id="shadow-host" style="width:100%; height:100%; min-height:2.5rem"></div>
+            <span class="icon-name">start<br><small>(shadow-dom)</small></span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="home"></u2-ico>
+            <span class="icon-name">home</span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="favorite"></u2-ico>
+            <span class="icon-name">favorite</span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="search"></u2-ico>
+            <span class="icon-name">search</span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="settings"></u2-ico>
+            <span class="icon-name">settings</span>
+        </div>
+    </div>
+    <button id="loadMore">Load More Icons...</button>
+    <script>
+        document.getElementById('shadow-host')
+            .attachShadow({ mode: 'open' })
+            .innerHTML = `
+                <link rel="stylesheet" href="../ico.css">
+                <u2-ico icon="star" style="--size:2rem"></u2-ico>
+            `;
+    </script>    
+
+
+    <h2>Bootstrap Icons</h2>
+    <div class="icons" id="bootstrapContainer" style="--u2-ico-dir:'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/';">
+        <div class="icon">
+            <u2-ico icon="cart"></u2-ico>
+            <span class="icon-name">cart</span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="search"></u2-ico>
+            <span class="icon-name">search</span>
+        </div>
+        <div class="icon">
+            <u2-ico icon="scissors"></u2-ico>
+            <span class="icon-name">scissors</span>
+        </div>
+    </div>
+
+
+    <h2>Icons not included</h2>
+    <div class="icons">
+        <div class="icon">
+            <u2-ico>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z"></path></svg>
+            </u2-ico>
+            <span class="icon-name">Direct SVG</span>
+        </div>
+        <div class="icon" style="--u2-ico-dir:;">
+            <u2-ico>☎</u2-ico>
+            <span class="icon-name">Used utf-8</span>
+        </div>
+    </div>
+
+
+    <h1>Icon Sources found:</h1>
+    <div class="sources" id="sourcesContainer">
+        <div id="sourcesList">Loading icon sources...</div>
+    </div>
+
+    <div id="combinedSvgContainer">
+        <p>Select an icon source above to generate its sprite.</p>
+    </div>
+
+    <script>
+        // Add more icons when clicking the button
+        document.getElementById('loadMore').addEventListener('click', e => {
+            e.target.hidden = true;
+            const container = document.getElementById('iconContainer');
+            const moreIcons = [
+                'star', 'person', 'email', 'phone', 'menu',
+                'close', 'check', 'add', 'remove', 'arrow_back',
+                'arrow_forward', 'refresh', 'done', 'delete', 'edit'
+            ];
+            moreIcons.forEach(iconName => {
+                if (!document.querySelector(`u2-ico[icon="${iconName}"]`)) {
+                    const iconDiv = document.createElement('div');
+                    iconDiv.className = 'icon';
+                    iconDiv.innerHTML = `
+                        <u2-ico icon="${iconName}"></u2-ico>
+                        <span class="icon-name">${iconName}</span>
+                    `;
+                    container.appendChild(iconDiv);
+                }
+            });
+        });
+
+
+        // Simple HTML escape function
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // Update sources list when icons are loaded
+        function updateSourcesList() {
+            if (!window.u2IcoDebug) return;
+            
+            const sourcesList = document.getElementById('sourcesList');
+            const sources = window.u2IcoDebug.getAllIconSources();
+            
+            if (sources.length === 0) {
+                sourcesList.innerHTML = '<p>No icon sources found. Add some icons first.</p>';
+                return;
+            }
+            
+            sourcesList.innerHTML = `
+                <table class="u2-table xsources-table">
+                    <thead>
+                        <tr>
+                            <th>Source <small>(--u2-ico-dir)</small>
+                            <th>Already a Sprite
+                            <th>Prefix
+                            <th>Icons
+                    <tbody>
+                        ${sources.map(dir => {
+                            const icons = window.u2IcoDebug.getIconRegistry().get(dir);
+                            const sprite = dir.includes('#');
+                            const iconCount = icons ? icons.size : 0;
+                            return `
+                                <tr class="source-item">
+                                    <td style="font-size:.8rem">${escapeHtml(dir)}
+                                    <td style="text-align: center">${sprite ? 'yes' : 'no'}
+                                    <td><input class="source-prefix" value="" placeholder="e.g., svg-" style="width: 6rem">
+                                    <td>${iconCount} icons
+                                    <td><button class="show-source" data-dir="${escapeHtml(dir)}">Show Sprite</button>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            // Add event listeners for showing source
+            document.querySelectorAll('.show-source').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const dir = btn.dataset.dir;
+                    const prefix = btn.closest('tr').querySelector('.source-prefix').value || '';
+                    const combinedSvg = window.u2IcoDebug.generateCombinedSvg(dir, prefix);
+                    const container = document.getElementById('combinedSvgContainer');
+                    
+                    if (combinedSvg) {
+                        container.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                <h3 style="margin:0">Sprite for: ${escapeHtml(dir)}</h3>
+                                <button class="copy-source" data-dir="${escapeHtml(dir)}">Copy to Clipboard</button>
+                            </div>
+                            <pre>${escapeHtml(combinedSvg)}</pre>
+                            <h2>Usage:</h2>
+                            <p>
+                                Make a file <code>sprite.svg</code> and add it to your project. Then use <br>
+                                <code>--u2-ico-dir: '/path/to/sprite.svg#${escapeHtml(prefix)}{icon}'</code>
+                            </p>
+                            <p>
+                                Or insert the SVG directly into your HTML and use <br>
+                                <code>--u2-ico-dir: '#${escapeHtml(prefix)}{icon}'</code>
+                            </p>
+                        `;
+                    } else {
+                        container.innerHTML = `<p>No icons found for source: ${escapeHtml(dir)}</p>`;
+                    }
+                    container.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+        }
+        // Add event listener for copy button
+        document.addEventListener('click', () => {
+            if (!event.target.classList.contains('copy-source')) return;
+            const content = combinedSvgContainer.querySelector('pre').textContent;
+            navigator.clipboard.writeText(content)
+                .then(()=>alert('SVG sprite copied to clipboard!'))
+                .catch(err => console.error('Failed to copy:', err))
+        });
+        
+        // Initialize sources list
+        document.addEventListener('u2-ico-loaded', updateSourcesList);
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => setTimeout(updateSourcesList, 500) );
+        } else {
+            setTimeout(updateSourcesList, 500);
+        }
+    </script>
+</section>

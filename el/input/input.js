@@ -286,12 +286,12 @@ customElements.define('u2-input', class extends HTMLElement {
             inline-size:13em;
             padding:0 !important;
             overflow:clip;
-            --u2-ico-dir:'https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/baseline.svg';
         }
         #input {
             display: flex;
             align-items: baseline;
             block-size:100%;
+            --u2-ico-dir: var(--u2-ico-dir-material);
         }
 
         [name=start]::slotted(*) { margin-inline-start: .5em; }

@@ -80,22 +80,16 @@ const uIco = class extends HTMLElement {
                     this.innerHTML = svg; // requestAnimationFrame??
                     this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
                     const svgEl = this.firstElementChild;
-                    svgEl.removeAttribute('xmlns');
-                    svgEl.removeAttribute('xmlns:xlink');
-                    svgEl.removeAttribute('version');
+                    if (!svgEl.hasAttribute('viewBox')) { // SF Symbol
+                        const width = parseFloat(svgEl.getAttribute('width')) ?? 24;
+                        const height = parseFloat(svgEl.getAttribute('height')) ?? 24;
+                        svgEl.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+                    }
+                    ['xmlns','xmlns:xlink','version','class','width','height'].forEach(attr=>svgEl.removeAttribute(attr)); // remove width, height ok?
                     svgEl.setAttribute('aria-hidden', 'true');
                     this.setAttribute('state','loaded');
-    
+                    this.dispatchEvent(new CustomEvent('u2-ico-loaded', {bubbles: true, composed: true}));
                 });
-
-                // // store to combine
-                // queueMicrotask(()=>{
-                //     const store = localStorage.getItem('u2-ico-used');
-                //     const icons = store ? JSON.parse(store) : {};
-                //     icons[icoDir] ??= {};
-                //     icons[icoDir][name] = this.innerHTML.trim();
-                //     localStorage.setItem('u2-ico-used', JSON.stringify(icons));
-                // });
 
             }).catch(err=>{
                 console.error(err, this);
@@ -103,26 +97,8 @@ const uIco = class extends HTMLElement {
             });
         }
     }
-        
 
 }
-
-// //combine svgs
-// setTimeout(function(){
-//     const store = localStorage.getItem('u2-ico-used');
-//     if (!store) return;
-//     const icons = JSON.parse(store);
-//     for (const [dir, names] of Object.entries(icons)) {
-//         console.log(`instead of loading from ${dir}, you can generate a local file with to following content and load it like /myFile.txt#{icon}:`);
-//         let content = '<svg><defs>\n\n';
-//         for (let [name, svg] of Object.entries(names)) {
-//             svg = svg.replace(/<svg /, `<svg id="${name}" `);
-//             content += `${svg}\n\n`;
-//         }
-//         content += '\n\n</defs></svg>';
-//         console.log(content);
-//     }
-// },199)
 
 function dirTemplateToUrl(dir, name) {
     let [prefix, firstWord, between='', nextWord, suffix] = dir.split(/{(icon)([^n]*)?(name)?}/i);
