@@ -34,7 +34,7 @@ hr {
 
 
 table {
-    inline-size: 100%; /* take container margins into account: width:-moz-available; width:-webkit-fill-available; (not working in firefox) */
+    inline-size: 100%;/* -moz-available; not working in firefox https://jsfiddle.net/1hkp6dfg/21/ */
     word-break: normal;
 }
 td, th {
