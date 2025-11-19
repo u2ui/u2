@@ -48,7 +48,7 @@ class Accordion extends HTMLElement {
             font-size:1em;
         }
         .content {
-            display:block;
+            display:flow-root;
             padding:1em;
             block-size:auto;
             overflow:clip;
