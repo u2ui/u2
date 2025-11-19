@@ -108,7 +108,7 @@ class alert extends HTMLElement {
         if (oldValue === newValue) return;
         if (name==='variant') {
             const variant = this.getAttribute('variant');
-            this.shadowRoot.getElementById('container').setAttribute('role', variantData[variant]?.role || 'status');
+            this.shadowRoot.getElementById('container').role = variantData[variant]?.role || 'status'; // better to set role to host?
         }
         if (name==='variant' || name==='icon') {
             const variant = this.getAttribute('variant');
@@ -126,12 +126,12 @@ class alert extends HTMLElement {
     toast() {
         const duration = this.getAttribute('duration') || 15000;
         this.setAttribute('open', '');
-        this.setAttribute('aria-live', 'assertive');
+        this.ariaLive = 'assertive';
         stack.add(this);
 
-        const hasActions = this.querySelector('slot[name=action]')?.assignedElements().length > 0;
+        const hasActions = this.shadowRoot.querySelector('slot[name=action]')?.assignedElements().length > 0;
         if (hasActions) {
-            this.setAttribute('role', 'alertdialog');
+            this.role = 'alertdialog';
         } else {
             clearTimeout(this.hideTimeout);
             this.hideTimeout = setTimeout(() => this.hide(), duration);

@@ -12,8 +12,8 @@ customElements.define('u2-tooltip', class extends HTMLElement {
             this.id = 'u2-tooltip-' + idCounter++;
             this.parentNode.setAttribute('aria-labelledby', this.id);
         }
-        this.setAttribute('role', 'tooltip');
-        this.setAttribute('popover','auto');
+        this.role = 'tooltip';
+        this.popover = 'auto';
     }
     _showFor(el){
         let event = new CustomEvent('u2-tooltip-show', {bubbles: true, cancelable: true, detail: {tooltip: this} });

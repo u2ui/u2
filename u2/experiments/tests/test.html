@@ -145,7 +145,7 @@ class alert extends HTMLElement {
         `;
     }
     connectedCallback() {
-        this.setAttribute('role', 'alert');
+        this.role = 'alert';
     }
     
     show() {

@@ -102,10 +102,10 @@ customElements.define('u2-tabs', class extends HTMLElement {
             this.tabs = tabsSlot.assignedNodes({flatten: true});
             this.panels = panelsSlot.assignedNodes({flatten: true}).filter(el => el.nodeType === Node.ELEMENT_NODE);
             for (let panel of this.panels.values()) {
-                panel.setAttribute('role', 'tabpanel');
+                panel.role = 'tabpanel';
             }
             for (let tab of this.tabs.values()) {
-                tab.setAttribute('role', 'tab');
+                tab.role = 'tab';
             }
             this.selected = this.selected;
         }

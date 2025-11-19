@@ -116,7 +116,7 @@ export class tree extends HTMLElement {
         for (const child of this.children) {
             child.tagName === this.tagName && child.setAttribute('slot', 'children');
         }
-        this.setAttribute('role', root === this ? 'tree' : 'treeitem');
+        this.role = root === this ? 'tree' : 'treeitem';
 
         // make it selectable if its the root and no other is selected
         if (root === this && !root._activeElement) this.row.tabIndex = 0;
