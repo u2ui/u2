@@ -17,7 +17,7 @@ class Accordion extends HTMLElement {
             gap:.5em;
             --u2-ico-dir:var(--u2-ico-dir-material);
         }
-        #items {
+        #accordion {
             display:flex;
             flex-direction:column;
             gap:inherit;
@@ -30,17 +30,17 @@ class Accordion extends HTMLElement {
             padding-block:.5em;
             background-color:#ddd;
             background-color:var(--color-light);
-        }
-        .icon {
-            margin-inline-start:auto;
-            display:flex;
-            transition:0.2s;
-            --size:1em;
-            & > u2-ico {
-                --size:inherit;
-            }
-            [aria-expanded="true"] > & {
-                transform:rotate(180deg);
+            & .icon {
+                margin-inline-start:auto;
+                display:flex;
+                transition:0.2s;
+                --size:1em;
+                & > u2-ico {
+                    --size:inherit;
+                }
+                [aria-expanded="true"] > & {
+                    transform:rotate(180deg);
+                }
             }
         }
         .title::slotted(*) {
@@ -48,26 +48,39 @@ class Accordion extends HTMLElement {
             flex:1 1 auto;
             font-size:1em;
         }
-        .wrapper {
-            display:grid;
-            grid-template-rows: 1fr;
-            transition: grid-template-rows .3s ease-in-out;
-            min-block-size:0;
-        }
-        .wrapper[hidden="until-found"] {
-            content-visibility:visible;
-            grid-template-rows: 0fr;
-        }
         .content {
-            padding:1em;
             display:flow-root;
+            padding:1em;
+            overflow:clip;
+            transition:.3s;
+            transition-property:block-size, padding;
+            transition-behavior: allow-discrete;
         }
+        .content[hidden="until-found"] {
+            content-visibility:visible;
+            block-size:0;
+            padding-block:0 !important;
+        }
+
+        @supports not (interpolate-size: allow-keywords) {
+            .content {
+                transition-property:max-block-size, padding;
+                max-block-size:100vh;
+            }
+            .content[hidden="until-found"] {
+                max-block-size:0;
+            }
+        }
+
+
         </style>
-        <div id=items role=presentation></div>
+        <div id=accordion role=presentation></div>
         `;
-        this.items = this.shadowRoot.querySelector('#items').children;
+        this.items = this.shadowRoot.querySelector('#accordion').children; /* do we need this element? */
+
         this._onClick = this._onClick.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
+
         this.mutationObserver = new MutationObserver(() => this._build());
     }
 
@@ -84,7 +97,7 @@ class Accordion extends HTMLElement {
     }
 
     _build() {
-        const container = this.shadowRoot.querySelector('#items');
+        const container = this.shadowRoot.querySelector('#accordion');
         const icon = this.getAttribute('icon') || 'expand-more';
 
         let hLevel = 6;
@@ -101,35 +114,29 @@ class Accordion extends HTMLElement {
             if (node.tagName === 'H'+hLevel) {
                 activeContent && activeContent.assign(...collectedContents);
                 index++;
-                let item = container.childNodes[index];
-                if (!item) {
-                    item = document.createElement('div');
-                    item.part = 'item';
-                    item.innerHTML = `
-                        <span class=trigger id=title${index} role=button part=trigger tabindex=0 aria-controls=content${index} aria-expanded=false>
+                let panel = container.childNodes[index];
+                if (!panel) {
+                    panel = document.createElement('div');
+                    panel.innerHTML = `
+                        <span class=trigger id=title${index} role=button part=trigger tabindex=0  aria-controls=content${index} aria-expanded=false>
                             <slot class=title part=title></slot>
                             <slot class=icon part=icon>
                                 <u2-ico icon=${icon}>▾</u2-ico>
                             </slot>
                         </span>
-                        <div class=wrapper part=wrapper id=content${index} role=region hidden=until-found aria-hidden=true aria-labelledby=title${index}>
-                            <div style="overflow:hidden">
-                                <slot class=content part=content></slot>
-                            </div>
-                        </div>
+                        <slot class=content id=content${index} role=region part=content hidden=until-found aria-hidden=true aria-labelledby=title${index}></slot>
                     `;
-                    // chrome needs this extra <div style="overflow:hidden">
-                    container.appendChild(item);
+                    container.appendChild(panel);
                 }
-                const title = item.querySelector('.title');
+                const title = panel.querySelector('.title');
                 title.assign(node);
-                activeContent = item.querySelector('.content');
+                activeContent = panel.querySelector('.content');
                 collectedContents = [];
             } else {
                 if (activeContent) collectedContents.push(node);
             }
         }
-        while (container.children.length > index + 1) container.lastChild.remove(); // remove excess items
+        while (container.children.length > index + 1) container.lastChild.remove(); // remove excess panels
         activeContent && activeContent.assign(...collectedContents);
     }
 
@@ -143,19 +150,19 @@ class Accordion extends HTMLElement {
     }
 
     _focusItem(index) {
-        const item = this.items[index];
-        if (!item) return;
-        item.querySelector('.trigger').focus();
-        this.hasAttribute('single') && this._toggleItem(index, true);
+        this.items[index]?.querySelector('.trigger').focus();
+        if (this.getAttribute('single') !== null) {
+            this._toggleItem(index, true);
+        }
     }
     _toggleItem(index, expand){
-        const item = this.items[index];
-        const trigger = item.querySelector('.trigger');
-        const wrapper = item.querySelector('.wrapper');
+        const panel = this.items[index];
+        const trigger = panel.querySelector('.trigger');
+        const content = panel.querySelector('.content');
         expand ??= trigger.ariaExpanded !== 'true';
         trigger.ariaExpanded = expand;
-        wrapper.ariaHidden = !expand;
-        wrapper.hidden = expand ? false : 'until-found';
+        content.ariaHidden = !expand;
+        content.hidden = expand ? false : 'until-found';
         if (expand) {
             trigger.scrollIntoView({
                 behavior: 'smooth',
@@ -172,8 +179,8 @@ class Accordion extends HTMLElement {
         if (e.ctrlKey || e.altKey || e.metaKey) return;
         const trigger = this._getTargetTriggerFromEvent(e);
         if (!trigger) return;
-        const item = trigger.parentElement;
-        const index = [...item.parentElement.children].indexOf(item);
+        const panel = trigger.parentElement;
+        const index = [...panel.parentElement.children].indexOf(panel);
         this._toggleItem(index);
         if (e.target.form !== undefined || e.target.isContentEditable) return;
         trigger.focus();
@@ -183,8 +190,8 @@ class Accordion extends HTMLElement {
         if (e.target.form !== undefined || e.target.isContentEditable) return;
         const trigger = this._getTargetTriggerFromEvent(e);
         if (!trigger) return;
-        const item = trigger.parentElement;
-        const idx = [...item.parentElement.children].indexOf(item);
+        const panel = trigger.parentElement;
+        const idx = [...panel.parentElement.children].indexOf(panel);
 
         const actions = {
             ArrowUp: (idx) => this._focusItem(idx - 1),

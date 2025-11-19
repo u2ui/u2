@@ -125,7 +125,11 @@
             box-shadow:var(--shadow);
             background:#fff;    
         }
-        #styled u2-accordion::part(title) {
+        #styled u2-accordion::part(item) {
+            border-radius: .5rem;
+            box-shadow: 0 0 .5rem #0007;
+        }
+        #styled u2-accordion::part(trigger) {
             background:var(--color);
             border-radius: .3rem;
             color: white;
