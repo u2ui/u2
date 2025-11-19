@@ -14,12 +14,13 @@ class Accordion extends HTMLElement {
         @import url('${icoCssUrl}');
         :host {
             display:block;
+            gap:.5em;
             --u2-ico-dir:var(--u2-ico-dir-material);
         }
         #accordion {
             display:flex;
             flex-direction:column;
-            gap:0.5em;
+            gap:inherit;
         }
         .trigger {
             display:flex;
@@ -76,7 +77,7 @@ class Accordion extends HTMLElement {
         </style>
         <div id=accordion role=presentation></div>
         `;
-        this.items = this.shadowRoot.querySelector('#accordion').children;
+        this.items = this.shadowRoot.querySelector('#accordion').children; /* do we need this element? */
 
         this._onClick = this._onClick.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
