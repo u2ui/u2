@@ -57,10 +57,8 @@ class Table extends HTMLElement {
             for (const th of tr.children) {
                 const title = th.innerText;
                 const index = this.columns.indexOf(th);
-
-                // set aria-labels
                 for (const td of this.columns.item(index).cells) {
-                    td.setAttribute('aria-label', title);
+                    td.ariaLabel = title;
                 }
             }
         }
@@ -93,7 +91,7 @@ function sortableClick(e){
 
     const ascending = th.getAttribute('aria-sort') !== 'ascending';
     for (const el of th.parentNode.children) el.removeAttribute('aria-sort');
-    th.setAttribute('aria-sort', ascending ? 'ascending' : 'descending');
+    th.ariaSort = ascending ? 'ascending' : 'descending';
 
     const tds = columns.item(index).cellsByGroup(tbody);
     tds

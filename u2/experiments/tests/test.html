@@ -150,7 +150,7 @@ class alert extends HTMLElement {
     
     show() {
         this.setAttribute('open', '');
-        this.setAttribute('aria-live', 'assertive');
+        this.ariaLive = 'assertive';
         getToolsContainer().appendChild(this);
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => this.hide(), 5000);

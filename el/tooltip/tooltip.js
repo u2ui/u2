@@ -10,7 +10,7 @@ customElements.define('u2-tooltip', class extends HTMLElement {
     connectedCallback() {
         if (!this.id) { // if no id is set, set one an make it the tooltip for its parent
             this.id = 'u2-tooltip-' + idCounter++;
-            this.parentNode.setAttribute('aria-labelledby', this.id);
+            this.parentNode.ariaLabelledBy = this.id;
         }
         this.role = 'tooltip';
         this.popover = 'auto';

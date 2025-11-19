@@ -81,14 +81,10 @@ customElements.define('u2-tabs', class extends HTMLElement {
     _selectTab(idx = null) { // todo? merge into `set selected()`?
         for (let i = 0, tab; tab = this.tabs[i]; ++i) {
             let select = i === idx;
-            tab.setAttribute('tabindex', select ? 0 : -1);
-            tab.setAttribute('aria-selected', select);
-            this.panels[i].setAttribute('tabindex', select ? 0 : -1); // chrome needs tabindex=-1 for scrollable areas
-            if (select) {
-                this.panels[i].removeAttribute('hidden');
-            } else {
-                this.panels[i].setAttribute('hidden', 'until-found');
-            }
+            tab.tabIndex = select ? 0 : -1;
+            tab.ariaSelected = select;
+            this.panels[i].tabIndex = select ? 0 : -1; // chrome needs tabindex=-1 for scrollable areas
+            this.panels[i].hidden = select ? false : 'until-found';
         }
     }
 

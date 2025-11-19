@@ -109,7 +109,7 @@ export class tree extends HTMLElement {
         // own level
         const root = this.root();
         const myLevel = root === this ? 1 : parseInt(this.parentNode.getAttribute('aria-level')) + 1;
-        this.setAttribute('aria-level', myLevel); // todo: internals?
+        this.ariaLevel = myLevel; // todo: internals?
         this.style.setProperty('--level', myLevel);
 
         // slot subnodes
@@ -181,10 +181,10 @@ export class tree extends HTMLElement {
 
             event.load = callback=>{
                 const promise = callback(this);
-                this.setAttribute('aria-busy','true');
+                this.ariaBusy = true;
                 promise.then(data => {
-                    this.removeAttribute('aria-live');
-                    this.removeAttribute('aria-busy');
+                    this.ariaLive = false;
+                    this.ariaBusy = false;
                     setTimeout(()=>{ // make unexpandable if no children
                         !this.items().length && this.removeAttribute('aria-expanded');
                     },100);
@@ -195,13 +195,13 @@ export class tree extends HTMLElement {
 
         }
         this.dispatchEvent(event);
-        this.setAttribute('aria-expanded', doit?'true':'false');
+        this.ariaExpanded = doit?'true':'false';
     }
 
     select(){
         let old = this.root()._selected;
-        if (old) old.setAttribute('aria-selected', 'false');
-        this.setAttribute('aria-selected', 'true');
+        if (old) old.ariaSelected = false;
+        this.ariaSelected = true;
         this.root()._selected = this;
     }
     _select(){ // like selected but also fires event

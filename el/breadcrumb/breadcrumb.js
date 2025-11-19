@@ -26,7 +26,8 @@ class U2Breadcrumb extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open', slotAssignment: 'manual' });
         const nav = document.createElement('nav');
-        nav.setAttribute('aria-label', this.getAttribute('aria-label') || 'Breadcrumb');
+        //nav.ariaLabel = this.getAttribute('aria-label') || 'Breadcrumb';
+        nav.ariaLabel ??= 'Breadcrumb';
         this.ol = document.createElement('ol');
         nav.appendChild(this.ol);
         this.shadowRoot.adoptedStyleSheets = [styleSheet];
@@ -70,13 +71,13 @@ class U2Breadcrumb extends HTMLElement {
             const separator = document.createElement('span');
             separator.part = 'separator';
             //const locationUrl = location.href;
-            //if (link.href === locationUrl) link.setAttribute('aria-current', 'location');
+            //if (link.href === locationUrl) link.ariaCurrent = 'location';
             slot.assign(link);
             li.append(slot, separator);
             this.ol.append(li);
             const pageUrl = location.href.split('#')[0];
             if (link.href === pageUrl) {
-                link.setAttribute('aria-current', 'page');
+                link.ariaCurrent = 'page';
                 link.dataset.href = link.getAttribute('href');
                 link.removeAttribute('href'); // ok?
             }

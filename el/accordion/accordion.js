@@ -160,11 +160,11 @@ class Accordion extends HTMLElement {
         const panel = this.items[index];
         const trigger = panel.querySelector('.trigger');
         const content = panel.querySelector('.content');
-        expand ??= trigger.getAttribute('aria-expanded') !== 'true';
-        trigger.setAttribute('aria-expanded', expand);
-        content.setAttribute('aria-hidden', !expand);
+        expand ??= trigger.ariaExpanded !== 'true';
+        trigger.ariaExpanded = expand;
+        trigger.ariaHidden = !expand;
         if (expand) {
-            content.removeAttribute('hidden');
+            content.hidden = false;
             trigger.scrollIntoView({
                 behavior: 'smooth',
                 block: 'nearest',
@@ -174,7 +174,7 @@ class Accordion extends HTMLElement {
                 [...this.items].forEach((item, i) => { i !== index && this._toggleItem(i, false); });
             }
         } else {
-            content.setAttribute('hidden', 'until-found');
+            content.hidden = 'until-found';
         }
     }
 

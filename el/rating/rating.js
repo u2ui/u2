@@ -92,7 +92,6 @@ class rating extends HTMLElement {
         this.#stars().forEach((star, i)=>{
             star.classList.toggle('active', i < value);
         });
-        //this.starsEl.setAttribute('aria-valuenow', value);
         this._internals.ariaValueNow = value;
         this.#value = parseFloat(value);
         this._internals.setFormValue(value);

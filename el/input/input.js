@@ -86,7 +86,7 @@ const types = {
                 const type = visible ? 'password' : 'text';
                 const icon = visible ? 'visibility' : 'visibility_off';
                 const ariaLabel = visible ? 'hide password' : 'show password';
-                visibilityBtn.setAttribute('aria-label', ariaLabel);
+                visibilityBtn.ariaLabel = ariaLabel;
                 visibilityBtn.querySelector('u2-ico').setAttribute('icon', icon);
                 real.type = type;
                 if (!visible) {

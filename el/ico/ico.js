@@ -40,7 +40,7 @@ const uIco = class extends HTMLElement {
             const inner = this.textContent.trim();
             if (inner) {
                 this.setAttribute('icon', inner);
-                this.setAttribute('aria-label', inner);
+                this.ariaLabel = inner;
             }
         }
         this._handleIcon();
@@ -86,7 +86,7 @@ const uIco = class extends HTMLElement {
                         svgEl.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
                     }
                     ['xmlns','xmlns:xlink','version','class','width','height'].forEach(attr=>svgEl.removeAttribute(attr)); // remove width, height ok?
-                    svgEl.setAttribute('aria-hidden', 'true');
+                    svgEl.ariaHidden = true;
                     this.setAttribute('state','loaded');
                     this.dispatchEvent(new CustomEvent('u2-ico-loaded', {bubbles: true, composed: true}));
                 });

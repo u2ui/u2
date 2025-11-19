@@ -174,7 +174,7 @@ class u2Carousel extends HTMLElement {
 
 		if (this.active !== target) { // just trigger if not active
 			for (let child of this._items()) {
-				child.setAttribute('aria-hidden', target !== child);
+				child.ariaHidden = target !== child;
                 // target !== child ? child.setAttribute('hidden', 'until-found') : child.removeAttribute('hidden'); // todo: findable
 			}
 			this.active = target;

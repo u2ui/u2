@@ -42,13 +42,13 @@ function _markElement(el, {delay = 0} = {}) {
         if (root.adoptedStyleSheets.indexOf(sheet) === -1) root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
 
         el.u2Loading_oldCssText = el.style.cssText;
-        el.setAttribute('aria-busy', 'true');
-        el.setAttribute('inert', '');
+        el.ariaBusy = 'true';
+        el.inert = true;
 
         clearTimeout(el.u2ShowLoadingTO);
         el.u2ShowLoadingTO = setTimeout(()=>{
             el.classList.add('u2Loading');
-            //if (el.hasAttribute('aria-life')) el.setAttribute('aria-busy','true');
+            //if (el.hasAttribute('aria-life')) el.ariaBusy = 'true';
             if (!el.offsetHeight) el.style.minHeight = '36px';
             if (!el.offsetWidth)  el.style.minWidth = '36px';
             let svg = getComputedStyle(el).getPropertyValue('--loading-svg');

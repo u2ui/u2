@@ -22,7 +22,7 @@ customElements.define('u2-qrcode', class extends HTMLElement {
     async _redraw() {
         const container = this.shadowRoot.getElementById('container');
         const text = this.textContent; // todo: trim() ? can it be harmful?
-        container.setAttribute('aria-label', 'QR-Code: '+text);
+        container.ariaLabel = 'QR-Code: '+text;
         const {default:{QrCode}} = await import('https://cdn.jsdelivr.net/npm/nayuki-qr-code-generator@1.8.0/index.min.js');
         const qr0 = QrCode.encodeText(text, QrCode.Ecc.MEDIUM);
         container.innerHTML = toSvgString(qr0, 4);
