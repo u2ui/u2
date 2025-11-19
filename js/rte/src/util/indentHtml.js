@@ -2,41 +2,47 @@
 import {HTMLParser} from './htmlparser.js';
 
 export function indent(str) {
-	let res = '';
-	let ind = '';
+	let result = '';
+	let indent = '';
 	let pre = false;
 	str = str.replace(/\n|\t/g, ' ').replace(/<([\/a-zA-Z0-9]+)/g, function(a) { return a.toLowerCase(); });
 	HTMLParser(str,{
 		start(tag, attrs, unary) {
 			pre = tag==='pre' ? true : pre;
-			!pre && (res += ind);
-			res += makeStartTag(tag,attrs,unary);
-			!pre && (res+='\n');
-			!unary && (ind += '\t');
+			!pre && (result += indent);
+			result += makeStartTag(tag,attrs,unary);
+			!pre && (result+='\n');
+			!unary && (indent += '\t');
 		},
 		end(tag) {
 			pre = tag==='pre' ? false : pre;
-			!pre && (ind=ind.substring(1));
-			res += ind+'</' + tag.toLowerCase() + '>';
-			!pre && (res+='\n');
+			!pre && (indent=indent.substring(1));
+			result += indent+'</' + tag.toLowerCase() + '>';
+			!pre && (result+='\n');
 		},
 		chars(text) {
-			!pre && (res += ind);
+			if (!pre && !text.trim()) return; // Wenn Text nur aus Leerzeichen besteht, ignorieren wir ihn komplett.
+			// if (!pre && !text.trim()) {
+			// 	result = result.endsWith('\n') ? result.slice(0, -1) + ' \n' : result + ' ';
+			// 	return;
+			// }
+
+			!pre && (result += indent);
 			if (!text.match(/^\s/)) text = '\uFEFF'+text; // mark if no whitespace
 			if (!text.match(/\s$/)) text = text+'\uFEFF';
-			res += text;
-			!pre && (res+='\n');
+			result += text;
+			!pre && (result+='\n');
 		},
 		comment(text) {
-			res += "<!--" + text + "-->";
+			result += "<!--" + text + "-->";
 		}
 	});
-	return res;
+	return result;
 };
 
 function makeStartTag(tag, attrs, unary) {
     let str = '<' + tag;
-    for (var i = 0, att; att = attrs[i++];) {
+    for (const att of attrs) {
         str += ' ' + att.name + '="' + att.escaped + '"';
     }
     str += (unary?'/':'')+'>';

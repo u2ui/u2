@@ -51,7 +51,6 @@ class Accordion extends HTMLElement {
         .content {
             display:flow-root;
             padding:1em;
-            block-size:auto;
             overflow:clip;
             transition:.3s;
             transition-property:block-size, padding;
@@ -162,19 +161,17 @@ class Accordion extends HTMLElement {
         const content = panel.querySelector('.content');
         expand ??= trigger.ariaExpanded !== 'true';
         trigger.ariaExpanded = expand;
-        trigger.ariaHidden = !expand;
+        content.ariaHidden = !expand;
+        content.hidden = expand ? false : 'until-found';
         if (expand) {
-            content.hidden = false;
             trigger.scrollIntoView({
                 behavior: 'smooth',
                 block: 'nearest',
                 inline: 'center'
             });
-            if (this.getAttribute('single') !== null) {
+            if (this.hasAttribute('single')) {
                 [...this.items].forEach((item, i) => { i !== index && this._toggleItem(i, false); });
             }
-        } else {
-            content.hidden = 'until-found';
         }
     }
 
