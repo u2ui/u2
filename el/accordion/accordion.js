@@ -34,9 +34,9 @@ class Accordion extends HTMLElement {
                 margin-inline-start:auto;
                 display:flex;
                 transition:0.2s;
-
+                --size:1em;
                 & > u2-ico {
-                    --size:1em;
+                    --size:inherit;
                 }
                 [aria-expanded="true"] > & {
                     transform:rotate(180deg);
