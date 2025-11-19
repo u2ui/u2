@@ -185,10 +185,12 @@ class Accordion extends HTMLElement {
         const panel = trigger.parentElement;
         const index = [...panel.parentElement.children].indexOf(panel);
         this._toggleItem(index);
+        if (e.target.form != null || e.target.isContentEditable) return;
         trigger.focus();
     }
     _onKeyDown(e) {
         if (e.ctrlKey || e.altKey || e.metaKey) return;
+        if (e.target.form != null || e.target.isContentEditable) return;
         const trigger = this._getTargetTriggerFromEvent(e);
         if (!trigger) return;
         const panel = trigger.parentElement;
