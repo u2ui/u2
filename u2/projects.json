@@ -270,7 +270,7 @@
     },
     "ico": {
       "name": "ico",
-      "description": "Universal icon-element",
+      "description": "Universal icon-element\r",
       "beta": false,
       "deprecated": false,
       "css": true,

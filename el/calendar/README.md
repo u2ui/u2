@@ -48,8 +48,8 @@ u2-calendaritem {
 
 ## Demos
 
-[index.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/index.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/calendar/tests/test.html)  
 
 ## Todo
 

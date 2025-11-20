@@ -5,13 +5,12 @@ let rootUrl = root.toString();
 
 if (root.host === 'localhost') debug = true;
 
-let min = '.min';
-if (debug) min = '';
+//let min = '.min';
 
 // get faster cdn updates? https://purge.jsdelivr.net/gh/nuxodin/cleanup.js@latest/
 
 if (debug) { // top level await safari >= 15.1
-    min = '';
+    //min = '';
     await Promise.all([
         import('https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/mod.min.js'),
         import('https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/htmlfills.min.js'),
@@ -50,15 +49,15 @@ window.u2.needed = needed;
 //
 ////////////////////////////////////////////////////////////////
 
-impCss(rootUrl+'css/norm/norm'+min+'.css');
-impCss(rootUrl+'css/base/base'+min+'.css');
+impCss(rootUrl+'css/norm/norm.css');
+impCss(rootUrl+'css/base/base.css');
 setTimeout(()=>{
     impCss(rootUrl+'css/base/print.css', {media:'print'});
     impCss(rootUrl+'css/base/nomotion.css', {media:'prefers-reduced-motion'});
 })
-impCss(rootUrl+'css/classless/variables'+min+'.css');
-impCss(rootUrl+'css/classless/classless'+min+'.css');
-impCss(rootUrl+'css/classless/more'+min+'.css');
+impCss(rootUrl+'css/classless/variables.css');
+impCss(rootUrl+'css/classless/classless.css');
+impCss(rootUrl+'css/classless/more.css');
 
 
 ////////////////////////////////////////////////////////////////
@@ -96,8 +95,8 @@ function loadProject(category, name){
     if (!meta) { console.warn('u2: project not found:', category+'/'+name); return; }
     const hasJs = meta.js ?? (category==='el' || category==='attr');
     const hasCss = meta.css ?? (category==='el' || category==='class');
-    hasCss &&  impCss(rootUrl + id + '/' + name + min + '.css');
-    hasJs && impJs(rootUrl + id + '/' + name + min + '.js');
+    hasCss &&  impCss(rootUrl + id + '/' + name + '.css');
+    hasJs && impJs(rootUrl + id + '/' + name + '.js');
 }
 
 function newNodeRoot(node){

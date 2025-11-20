@@ -69,6 +69,7 @@ class Accordion extends HTMLElement {
         this._onClick = this._onClick.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
         this.mutationObserver = new MutationObserver(() => this._build());
+
     }
 
     connectedCallback() {
@@ -76,6 +77,15 @@ class Accordion extends HTMLElement {
         this.shadowRoot.addEventListener('click', this._onClick);
         this.shadowRoot.addEventListener('keydown', this._onKeyDown);
         this.mutationObserver.observe(this, { childList: true });
+        // this.shadowRoot.addEventListener("beforematch", e => { // not working in firefox properly
+        //     let item = e.target.closest('[part=item]');
+        //     console.dir(e)
+        //     if (!item) return;
+        //     e.preventDefault();
+        //     this._toggleItem([...item.parentElement.children].indexOf(item));
+        // });
+
+
     }
     disconnectedCallback() {
         this.shadowRoot.removeEventListener('click', this._onClick);
@@ -123,6 +133,9 @@ class Accordion extends HTMLElement {
                 }
                 const title = item.querySelector('.title');
                 title.assign(node);
+                item.querySelector('.trigger').addEventListener("mousedown", e => {
+                    if (e.detail === 2) e.preventDefault(); // Doppelklick
+                });
                 activeContent = item.querySelector('.content');
                 collectedContents = [];
             } else {
