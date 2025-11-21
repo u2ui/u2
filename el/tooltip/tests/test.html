@@ -1,22 +1,16 @@
 <!DOCTYPE HTML>
 <html lang=en>
 <head>
-    <meta charset="utf-8">
+    <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
     <title>tests</title>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
     <script src="../../../u2/tests/test-init.js" type=module async></script>
     <script src="../../../u2/auto.js" type=module async></script>
 
-    <link href="../../../css/classless/simple.css" rel=stylesheet>
 
-    <script src="../tooltip.js" type=module async></script>
     <link href="../tooltip.css" rel=stylesheet >
-
-    <style>
-        button {
-            margin:.2rem;
-        }
-    </style>
+    <script src="../tooltip.js" type=module async></script>
 
 <body>
 
@@ -74,6 +68,18 @@
         position=bottom
         <u2-tooltip position="bottom">Tooltip</u2-tooltip>
     </button>
+
+    <h2>position auto (beta)</h2>
+    <div style="margin-inline:auto; display:block">
+        <button>
+            position=auto
+            <u2-tooltip position="auto">Tooltip</u2-tooltip>
+        </button>
+        <button>
+            position=auto
+            <u2-tooltip position="auto">Tooltip</u2-tooltip>
+        </button>
+    </div>
 
 
     <button style="position:absolute; bottom:2rem; left:2rem">

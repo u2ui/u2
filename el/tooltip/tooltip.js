@@ -38,8 +38,16 @@ customElements.define('u2-tooltip', class extends HTMLElement {
         clearTimeout(this.hideTimeout);
         setTimeout(()=>this.setAttribute('open',''),0); // to make sure the css transition is triggered
         this.showPopover();
+
+
+        // beta
+        if (this.getAttribute('position') === 'auto') {
+            const xy = isSpaceOccupied(el, 'right')? {y:'after',x:'center'} : {y:'center',x:'after'};
+            this.placer.setOptions(xy);
+        }
+
         this.placer.toElement(el);
-        this.setAttribute(':position-x', this.placer.positionX);
+        this.setAttribute(':position-x', this.placer.positionX); // just for css arrow-placement
         this.setAttribute(':position-y', this.placer.positionY);
     }
     hide(){
@@ -92,4 +100,44 @@ function getTooltipForElement(el) {
     const tooltip = document.getElementById(id);
     if (!tooltip || tooltip.tagName !== 'U2-TOOLTIP') return;
     return tooltip;
+}
+
+
+
+// position "auto"
+function isSpaceOccupied(referenceElement, position) {
+    const importantSelector = 'button, p, h1, h2, h3, h4, h5, h6, input, textarea, a, strong, em, li, dt, dd, td, th, label';
+    const offset = 30; 
+    const refRect = referenceElement.getBoundingClientRect();
+    let testX, testY;
+    switch (position) {
+        case 'right':
+            testX = refRect.right + offset;
+            testY = refRect.top + refRect.height / 2;
+            break;
+        case 'left':
+            testX = refRect.left - offset;
+            testY = refRect.top + refRect.height / 2;
+            break;
+        case 'bottom':
+            testX = refRect.left + refRect.width / 2;
+            testY = refRect.bottom + offset;
+            break;
+        case 'top':
+            testX = refRect.left + refRect.width / 2;
+            testY = refRect.top - offset;
+            break;
+        default:
+            console.error(`Ungültige Position: ${position}`);
+            return true; // Im Zweifel: Keine Platzierung erlauben
+    }
+    if (testX < 0 || testX > window.innerWidth || testY < 0 || testY > window.innerHeight) {
+        return true; 
+    }
+    const elementsAtPoint = document.elementsFromPoint(testX, testY);
+    for (const element of elementsAtPoint) {
+        if (element === referenceElement || referenceElement.contains(element)) continue;
+        if (element.matches(importantSelector)) return true;
+    }
+    return false;
 }
