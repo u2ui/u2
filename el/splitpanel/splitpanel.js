@@ -26,6 +26,12 @@ class splitpanel extends HTMLElement {
                 z-index:1;
                 touch-action: none;
             }
+            [role=separator]::after {
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                margin:-20rem;
+            }
             [role=separator]:hover {
                 z-index:2;
             }
@@ -77,13 +83,8 @@ class splitpanel extends HTMLElement {
             this.nextPanel.style.flexBasis = `${nextPercent.toFixed(2)}%`;
         
         });
-        this.shadowRoot.addEventListener('pointerup', () => {
-            this.isDragging = false;
-        });
-        this.shadowRoot.addEventListener('lostpointercapture', () => {
-            this.isDragging = false;
-        });
-
+        //this.shadowRoot.addEventListener('pointerup', () => this.isDragging = false ); not needed?
+        this.shadowRoot.addEventListener('lostpointercapture', () => this.isDragging = false );
 
         this.observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
