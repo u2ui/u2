@@ -5,15 +5,23 @@ let idCounter = 0;
 customElements.define('u2-tooltip', class extends HTMLElement {
     constructor() {
         super();
-        this.placer = new Placer(this, { x:'center', y:'after', margin:20 });
+        this.placer = new Placer(this, { x:'center', y:'after', margin:15 });
     }
     connectedCallback() {
-        if (!this.id) { // if no id is set, set one an make it the tooltip for its parent
-            this.id = 'u2-tooltip-' + idCounter++;
-            this.parentNode.ariaLabelledBy = this.id;
-        }
         this.role = 'tooltip';
         this.popover = 'auto';
+        if (!this.id) { // if no id is set, set one an make it the tooltip for its parent
+            this.id = 'u2-tooltip-' + idCounter++;
+            this.parentNode.setAttribute('aria-labelledby', this.id);
+            //this.parentNode.ariaLabelledByElements = [this]; // new variant, todo if supported everywhere
+            this.connectedByChildhood = this.parentNode;
+        }
+    }
+    disconnectedCallback() {
+        if (this.connectedByChildhood) {
+            this.removeAttribute('id');
+            this.connectedByChildhood.removeAttribute('aria-labelledby');
+        }
     }
     _showFor(el){
         let event = new CustomEvent('u2-tooltip-show', {bubbles: true, cancelable: true, detail: {tooltip: this} });
@@ -70,10 +78,15 @@ function checkOn(e){
     getTooltipForElement(e.target)?._showFor(e.target);
 }
 function checkOff(e){
+    getTooltipForElement(e.relatedTarget)?._showFor(e.relatedTarget);
     getTooltipForElement(e.target)?.hide();
 }
 function getTooltipForElement(el) {
-    if (!el.getAttribute) return; // if document
+    if (!el?.getAttribute) return; // if document
+    let tt = null;
+    tt = el.ariaLabelledByElements?.find(tt => tt.tagName === 'U2-TOOLTIP') || el.ariaDescribedByElements?.find(tt => tt.tagName === 'U2-TOOLTIP');
+    if (tt) return tt;
+    // zzz fallback remove if supported everywhere
     const id = el.getAttribute('aria-labelledby') || el.getAttribute('aria-describedby');
     if (!id) return;
     const tooltip = document.getElementById(id);

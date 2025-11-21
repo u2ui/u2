@@ -32,12 +32,14 @@
     <u2-rating icon="favorite"></u2-rating>
 
     <h2>Combinations, tooltip, text-content</h2>
-    <u2-rating value="2" max="6" icon="favorite">
+    <u2-rating value="2" max="6" icon="favorite" style="font-size:.8rem; gap:0; color:red">
         <u2-tooltip>Rate this product</u2-tooltip>
+        <u2-textfit>Rate this product</u2-textfit>
     </u2-rating>
 
     <h2>Form</h2>
     <form id=demoForm>
+<u2-tooltip>Form</u2-tooltip>
         <label for=ratingX>Rate:</label>
         <u2-rating id=ratingX name=rating max=6 icon=favorite required></u2-rating>
         <input name=text required>
@@ -59,10 +61,6 @@
                 console.log('click', e.target);
         });
     </script>
-
-
-
-    
     
 </section>
 
@@ -70,8 +68,9 @@
     <style>
         u2-rating {
             font-size:2rem;
+            gap:.2em;
+            color: var(--color);
             --color-inactive: #ccc;
-            --color-active: var(--color);
         }
     </style>
 </u2-code>

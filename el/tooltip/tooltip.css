@@ -11,22 +11,21 @@ u2-tooltip {
 
     /* hide transition */
     transition-duration:400ms;
-    transition-delay: 10ms;
+    /* transition-delay: 10ms; */
 
     /* customisable */
     pointer-events: none;
-    padding: .4em .7em;
-    max-width:14rem;
-    background: Canvas;
-    color: CanvasText;
+    padding: .5em 1em;
+    max-width:16rem;
 
     /* style */
     font-size:max(12px, .7rem);
     --line-height: 1.4em;
-    border-radius:.8em;
+    border-radius:.5em;
     background: var(--color-text, CanvasText);
     color: var(--color-bg, Canvas);
     border:1px solid var(--color-text, CanvasText);
+    box-shadow: var(--shadow);
 
 
     /* popover */
@@ -63,36 +62,39 @@ u2-tooltip:not(:defined):not([id]) {
 /* */
 
 
-/* arrow:
-u2-tooltip::after {
-    --size:1em;
-    content: "";
-    position:absolute;
-    transform:rotate(45deg);
-    width:var(--size);
-    height:var(--size);
-    background-color: inherit;
-    margin:auto;
-    z-index:-1;
+/* arrow: */
+u2-tooltip {
+    &::before {
+        --size:.7em;
+        --halfMinus:calc(var(--size) * -.5);
+        content: "";
+        position:absolute;
+        transform:rotate(45deg);
+        width:var(--size);
+        height:var(--size);
+        background-color: inherit;
+        margin:auto;
+        z-index:-1;
+        border:inherit;
+    }
+    &[\:position-x="after"]::before { left:var(--halfMinus); }
+    &[\:position-x="before"]::before { right:var(--halfMinus); }
+    &[\:position-x="center"]::before { right:0; left:0; }
+    &[\:position-y="after"]::before { top:var(--halfMinus); }
+    &[\:position-y="before"]::before { bottom:var(--halfMinus); }
+    &[\:position-y="center"]::before { top:0; bottom:0; }
+    &::after {
+        content:'';
+        background:inherit;
+        position:absolute;
+        inset:0;
+        z-index:-1;
+        border-radius:inherit;
+    }
+    &:not(:defined)::before {
+        left: 0;
+        right: 0;
+        top: var(--halfMinus);
+    }
 }
-u2-tooltip[\:position-x="after"]::after {
-    left:calc( var(--size) * -.5);
-}
-u2-tooltip[\:position-x="before"]::after {
-    right:calc( var(--size) * -.5);
-}
-u2-tooltip[\:position-x="center"]::after {
-    right:0;
-    left:0;
-}
-u2-tooltip[\:position-y="after"]::after {
-    top:calc( var(--size) * -.5);
-}
-u2-tooltip[\:position-y="before"]::after {
-    bottom:calc( var(--size) * -.5);
-}
-u2-tooltip[\:position-y="center"]::after {
-    top:0;
-    bottom:0;
-}
-*/
+/* */

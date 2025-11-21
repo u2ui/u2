@@ -1,5 +1,5 @@
 # &lt;u2-tooltip&gt; - element
-Tooltips
+Bind to target as child or via aria-labelledby
 
 ## Features
 
@@ -37,6 +37,7 @@ u2-tooltip {
 ## Demos
 
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/tooltip/tests/minimal.html)  
+[position-anchor.experiments.html](http://gcdn.li/u2ui/u2@main/el/tooltip/tests/position-anchor.experiments.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/tooltip/tests/test.html)  
 
 ## Todo

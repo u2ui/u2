@@ -6,10 +6,19 @@ const style = `
     --u2-ico-dir: var(--u2-ico-dir-material);
     --color-inactive:#ccc;
     display:inline-block;
+    gap:.2em;
 }
 #stars {
     display:flex;
-    & > * { color:var(--color-inactive); transition:.2s; cursor:pointer; transform-origin:50% 50%; display:block; --size:1.2em; }
+    gap:inherit;
+    & > * {
+        color:var(--color-inactive);
+        transition:.2s;
+        cursor:pointer;
+        transform-origin:50% 50%;
+        display:block;
+        --size:1.2em;
+    }
     & > .active { color:inherit; }
     & > .preview { color:inherit; }
     & > :is(:hover,:focus) { transform:scale(1.2); outline:none; }

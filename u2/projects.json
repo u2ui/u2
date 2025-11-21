@@ -270,7 +270,7 @@
     },
     "ico": {
       "name": "ico",
-      "description": "Universal icon-element\r",
+      "description": "Universal icon-element",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -414,7 +414,7 @@
     },
     "tooltip": {
       "name": "tooltip",
-      "description": "Tooltips",
+      "description": "Bind to target as child or via aria-labelledby",
       "beta": false,
       "deprecated": false,
       "css": true,

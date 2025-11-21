@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta charset="UTF-8">
+<title>position-anchor Dynamic Demo</title>
+<style>
+/* Allgemein */
+.anchor {
+  padding:10px;
+  background:#007bff;
+  color:white;
+  position:relative; /* Wichtig für Dragging */
+}
+
+/* Tooltips */
+.tooltip {
+  position:absolute; /* Wichtig für position-anchor */
+  background:#333;
+  color:white;
+  padding:6px 10px;
+  border-radius:4px;
+  white-space:nowrap;
+}
+
+article {
+    margin:1em;
+    box-shadow: 0 0 0 1px #ccc;
+    padding:1em;
+    margin-bottom:4rem;
+}
+
+/* Container */
+.fixed { position:fixed; xtop:20px; xright:20px; border:1px dashed #333; padding:1em; }
+.xpopover { position:absolute; xtop:300px; xleft:50px; border:1px dashed #333; padding:1em; background:#fff; }
+</style>
+</head>
+<body>
+
+<section style="max-width:60rem; margin:2em auto">
+    <article>
+        <h2>Normal Anchor</h2>
+        <button class="anchor" id="normal">Normal</button>
+        <div class="tooltip" id="tooltip-normal">Tooltip normal</div>
+    </article>
+
+    <article>
+        <h2>Fixed Anchor</h2>
+        <div class="fixed">
+            <button class="anchor" id="fixed">Fixed</button>
+        </div>
+        <div class="tooltip" id="tooltip-fixed">Tooltip fixed</div>
+    </article>
+
+    <article>
+        <h2>Dialog Anchor</h2>
+        <button onclick="const d = this.nextElementSibling; d.open = false; d.showModal();">showModal()</button>
+        <dialog id="my-dialog" style="width:5rem; height:5rem; " open>
+            <div class="dialog-content">
+                <button class="anchor" id="dialog-anchor">Dialog</button>
+            </div>
+        </dialog>
+        <div class="tooltip" id="tooltip-dialog">Tooltip dialog (outside)</div>
+    </article>
+
+    <article>
+        <h2>Popover Anchor</h2>
+        <button onclick="this.nextElementSibling.showPopover()">Popover</button>
+        <div popover style="width:5rem; height:5rem">
+            <button class="anchor" id="popover-anchor">Popover</button>
+        </div>
+        <div class="tooltip" id="tooltip-popover">Tooltip popover (outside)</div>
+    </article>
+
+    <article>
+        <h2>Tooltip as popover</h2>
+        <div class="tooltip" id="tooltipAsPopover" popover="manual">Tooltip popover (outside)</div>
+        <button onclick="this.nextElementSibling.showPopover()">show popover</button>
+        <div popover="manual" style="width:5rem; height:5rem">
+            <button onclick="tooltipAsPopover.showPopover()">show tooltip</button>
+            <button class="anchor" id="popover-anchor">Popover</button>
+        </div>
+    </article>
+
+</section>
+<script>
+// Dynamische Zuordnung anchor-name <-> position-anchor
+function linkTooltip(anchor, tooltip) {
+  const name = `--${anchor.id}`;
+  anchor.style.anchorName = name;
+  tooltip.style.positionAnchor = name;
+  tooltip.style.top = 'anchor(top)';
+  tooltip.style.left = 'anchor(right)';
+}
+
+// Drag-Funktion mit top/left
+function makeDraggable(anchor) {
+  let startX, startY, initTop, initLeft;
+  anchor.onpointerdown = e => {
+    anchor.setPointerCapture(e.pointerId);
+    startX = e.clientX;
+    startY = e.clientY;
+    // Sicherstellen, dass die anfänglichen top/left-Werte numerisch sind, 
+    // falls sie noch nicht gesetzt sind.
+    initTop = parseInt(getComputedStyle(anchor).top, 10) || 0;
+    initLeft = parseInt(getComputedStyle(anchor).left, 10) || 0;
+
+    const move = ev => {
+      anchor.style.top = initTop + (ev.clientY - startY) + 'px';
+      anchor.style.left = initLeft + (ev.clientX - startX) + 'px';
+    };
+    const up = () => {
+      anchor.releasePointerCapture(e.pointerId);
+      anchor.removeEventListener('pointermove', move);
+      anchor.removeEventListener('pointerup', up);
+    };
+    anchor.addEventListener('pointermove', move);
+    anchor.addEventListener('pointerup', up);
+  };
+}
+
+// 📌 NEUE DYNAMISCHE ZUWEISUNG: Alle Anker suchen und über ID zuordnen
+const allAnchors = document.querySelectorAll('.anchor');
+
+allAnchors.forEach(anchor => {
+    // Holen des Anker-ID-Teils zur Suche des Tooltips (z.B. 'normal' aus 'normal' oder 'dialog' aus 'dialog-anchor')
+    const idPart = anchor.id.split('-')[0]; 
+    const tooltipId = 'tooltip-' + idPart;
+    const tooltip = document.getElementById(tooltipId);
+    
+    // Führe die Zuweisung nur aus, wenn der Anker und der passende Tooltip gefunden wurden
+    if (anchor && tooltip) {
+        makeDraggable(anchor); 
+        linkTooltip(anchor, tooltip);
+    }
+});
+
+</script>
+
+</body>
+</html>

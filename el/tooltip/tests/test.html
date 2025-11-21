@@ -5,16 +5,12 @@
     <meta name=viewport content="width=device-width">
     <title>tests</title>
     <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
 
-    <link rel=stylesheet href="../../../css/classless/full.css">
-    <link rel=stylesheet href="../../../css/classless/aria.css">
-    <link rel=stylesheet href="../../../css/classless/simple.css">
-
-    <script src="../../../el/code/code.js" type=module async></script>
-    <link rel=stylesheet href="../../../el/code/code.css">
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
 
     <script src="../tooltip.js" type=module async></script>
-    <link rel=stylesheet href="../tooltip.css">
+    <link href="../tooltip.css" rel=stylesheet >
 
     <style>
         button {
@@ -109,8 +105,34 @@
         });
     </script>
 
+    <h2>Move tooltip to another element and styled</h2>
+    <button onclick="const tt = document.querySelector('.moveDom'); const t = tt.parentNode==target1?target2:target1; t.appendChild(tt);">change target</button>
+    <div class="u2-flex targets">
+        <div id=target1><u2-tooltip class="moveDom" style="background:orange; color:black; box-shadow:0 0 1rem #0008; font-size:1.2rem;">Changing target</u2-tooltip></div>
+        <div id=target2></div>
+    </div>
+    <style>
+        .targets > * {
+            &::after {
+                padding:2rem;
+                content: "is target!";
+                display:block;
+                background: var(--color);
+                color:#fff;
+            }
+            &:empty::after {
+                padding:2rem;
+                content: "not target";
+                background: var(--color-light);
+                color:#000;
+            }
+        }
+    </style>
+    
+
 
     <u2-code editable trim>
+        <u2-tooltip slot="tools">Change CSS Live</u2-tooltip>
         <style>
         u2-tooltip {
             font-size:max(12px, .7rem);
@@ -123,38 +145,8 @@
             color:var(--color-light);
         }
 
-
-        /* arrow */
-        u2-tooltip::after {
-            --size:1em;
-            content: "";
-            position:absolute;
-            transform:rotate(45deg);
-            width:var(--size);
-            height:var(--size);
-            background-color: inherit;
-            margin:auto;
-            z-index:-1;
-        }
-        u2-tooltip[\:position-x="after"]::after {
-            left:calc( var(--size) * -.5);
-        }
-        u2-tooltip[\:position-x="before"]::after {
-            right:calc( var(--size) * -.5);
-        }
-        u2-tooltip[\:position-x="center"]::after {
-            right:0;
-            left:0;
-        }
-        u2-tooltip[\:position-y="after"]::after {
-            top:calc( var(--size) * -.5);
-        }
-        u2-tooltip[\:position-y="before"]::after {
-            bottom:calc( var(--size) * -.5);
-        }
-        u2-tooltip[\:position-y="center"]::after {
-            top:0;
-            bottom:0;
+        u2-tooltip::before { /* arrow */
+            --size:.5em;
         }
         </style>
     </u2-code>
