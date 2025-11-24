@@ -6,23 +6,27 @@ u2-buttongroup {
     max-inline-size: -moz-available;
     max-inline-size: stretch;
     
-    row-gap: .2em;
+    --space:var(--line-width);
+    gap: var(--space, 1px) !important;
+
     --u2-ico-dir:var(--u2-ico-dir-material);
     &:not(:defined) {
         flex-wrap:wrap;
     }
 }
 
-u2-buttongroup > :not(:last-child) {
-    border-right:0;
-    border-end-end-radius: 0;
-    border-start-end-radius: 0;
-}
-u2-buttongroup > :not(:first-child) {
-    border-start-start-radius: 0;
-    border-end-start-radius: 0;
-    &:is(u2-menubutton) > button {
+:is(u2-buttongroup, .S.S.S) {
+    & > :not(:last-child) {
+        border-right-width: var(--space) 0;
+        border-end-end-radius: 0;
+        border-start-end-radius: 0;
+    }
+    & > :not(:first-child) {
         border-start-start-radius: 0;
         border-end-start-radius: 0;
+        &:is(u2-menubutton) > button {
+            border-start-start-radius: 0;
+            border-end-start-radius: 0;
+        }
     }
 }
