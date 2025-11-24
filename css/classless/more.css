@@ -8,22 +8,22 @@ https://www.tjvantoll.com/2013/04/15/list-of-pseudo-elements-to-style-form-contr
 /* custom list  */
 /****************/
 
-/* li::marker { content: "• "; } /* ::marker is bad, its shown even if list-style:none*/
+/* li::marker { content: "• "; } /* ::marker is bad, its shown even if list-style:none */
 
-ul {
-	list-style-type: '•  '; 	/* ·•●⏺‣▶⏵✔⊚○◌🞅🞇🞉🖝 */
-	padding-inline-start: 1em;
+@layer normalize {
+	ul {
+		list-style-type: '•  '; 	/* ·•●⏺‣▶⏵✔⊚○◌🞅🞇🞉🖝 */
+		padding-inline-start: 1em;
+	}
+	ul > li::marker {
+		font-size: 1em;
+	}
 }
-ul > li::marker {
-	font-size: 1em;
-}
-
 /*****************/
 /* custom select */
 /*****************/
 
 select:not([size], [multiple]) {
-	-webkit-appearance: none;
 	appearance: none;
 	/* *
 	background-image:url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2021.3%2012.1%22%20fill%3D%22%23333333%22%3E%3Cpath%20d%3D%22M10.7%2012.1L0%201.5%201.4.1l9.3%209.2L19.9%200l1.4%201.4z%22%2F%3E%3C%2Fsvg%3E");
@@ -51,7 +51,6 @@ select:not([size], [multiple]) {
 
 input:is([type=radio], [type=checkbox]) {
     padding:0 !important;
-	-webkit-appearance: none;
 	appearance: none;
 	transform:rotate(.002deg); /* improve rendering in ff, chrome */
 
@@ -65,7 +64,7 @@ input:is([type=radio], [type=checkbox]) {
 	border-radius: .15em;
 	padding: 0;
 }
-input:is([type=radio],[type=checkbox]):checked {
+input:is([type=radio], [type=checkbox]):checked {
 	border-color: var(--color, blue);
 }
 
@@ -106,14 +105,12 @@ input[type=radio]::before {
 
 /* disabled */
 input:is([type=radio],[type=checkbox]):disabled {
-		opacity: .5;
+	opacity: .5;
 }
 
 /* indeterminate */
 input:is([type=radio],[type=checkbox]):indeterminate::before {
 	color: currentColor;
-	/* font-size: .8em;
-	content: "─"; */
 	font-size: 1em;
 	content: "﹣";
 	opacity:.6;
@@ -170,21 +167,16 @@ input[type=color]::-webkit-color-swatch-wrapper {
 /***************************/
 
 html {
-	--scrollbar-thin:;
 	/* space (: ;) => true, nospace (:;) = false  */
 	--scrollbar-color-track: var(--color-area, #f4f4f4);
 	--scrollbar-color-thumb: var(--color, #ccc);
-}
-
-* {
-	scrollbar-width: var(--scrollbar-thin) thin;
 	scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
 }
 
-::-webkit-scrollbar {
-	width: var(--scrollbar-thin) 8px;
-	height: var(--scrollbar-thin) 8px;
+* {
+	scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
 }
+
 ::-webkit-scrollbar-track {
 	background: var(--scrollbar-color-track);
 }
@@ -192,7 +184,43 @@ html {
 	background-color: var(--scrollbar-color-thumb);
 }
 
-select, textarea { --scrollbar-thin: ; }
+select, textarea { scrollbar-width: thin; }
+
+/***************************/
+/* range inputs            */
+/***************************/
+label.btn {
+    position:relative;
+}
+label.btn > :is([type=radio],[type=checkbox]) {
+	position:absolute;
+	inset:0;
+	width:auto !important;
+	height:auto !important;
+    appearance: none;
+    border:0 !important;
+	background:none !important;
+	border-radius:inherit;
+	pointer-events:none;
+	&::after, &::before {
+		content:none;
+	}
+}
+label.btn:has(>:is([type=radio],[type=checkbox])) {
+	&::before {
+		content:' ';
+		display:inline-block;
+		min-width:1rem;
+	}
+	&:has(:checked) {
+		background-color: var(--color-dark);
+		&::before {
+			content:'✔';
+		}
+	}
+}
+label.btn:has(>:is([type=radio],[type=checkbox]):checked) {
+}
 
 /***************************/
 /* range inputs            */
@@ -201,12 +229,11 @@ select, textarea { --scrollbar-thin: ; }
 input[type=range] {
 	background-color: transparent;
 	border: 0;
-	-webkit-appearance: none;
     appearance: none;
 	padding: 0;
 }
 
-/* todo where(webkit, moz) (forgiving) */
+/* where(webkit, moz) not working for pseudo :( */
 input[type=range]::-webkit-slider-runnable-track {
 	box-sizing: border-box;
 	block-size: .5em;
@@ -223,6 +250,7 @@ input[type=range]::-moz-range-track {
 	border-radius: 1em;
 	cursor: pointer;
 }
+
 
 input[type=range]::-webkit-slider-thumb {
 	box-sizing: border-box;
