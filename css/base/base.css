@@ -102,6 +102,7 @@ button, ::file-selector-button, .btn {
 	padding-inline:.7em;
 }
 .btn {
+	display:inline-block;
 	inline-size: fit-content;
 	text-decoration: none;
 	color:inherit;

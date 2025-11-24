@@ -10,6 +10,9 @@
     margin: 0;
     padding: 1rem;
 }
+.u2-card1 > hr {
+    margin-block:0;
+}
 .u2-card1 > :first-child { border-top-left-radius: inherit; border-top-right-radius: inherit; }
 .u2-card1 > :last-child  { border-bottom-right-radius: inherit; border-bottom-left-radius: inherit; margin-top:auto; }
 
@@ -18,12 +21,20 @@
 }
 
 
+/*
+table.u2-card1 {
+    --p: 1rem;
+    & > * tr > :first-child { padding-left: var(--p); }
+    & > * tr > :last-child { padding-right: var(--p); }
+    & > :first-child > tr:first-child > * { padding-top: var(--p); }
+    & > :last-child > tr:last-child > * { padding-bottom: var(--p); }
+    & > * > * > * { border: 1px solid #0001; }
+}
+*/
+
 
 /* todo if needed
 :where(a.u2-card1) {
-    color:inherit;
-    color: var(--color-text, inherit);
-    text-decoration:none;
     transition: box-shadow .1s;
 }
 :where(a.u2-card1:hover) {

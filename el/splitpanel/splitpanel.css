@@ -12,6 +12,9 @@ u2-splitpanel[vertical] {
     flex-direction: column;
     & > * { resize: vertical; }
 }
+u2-splitpanel > :not(u2-splitpanel) {
+    padding:1rem;
+}
 u2-splitpanel:defined > * {
     resize: none !important;
 }

@@ -4,8 +4,8 @@ class menubutton extends HTMLElement {
         super();
     }
     connectedCallback() {
+        import('../../attr/focusgroup/focusgroup.js');
         setTimeout(() => {
-            import('../../attr/focusgroup/focusgroup.js');
 
             const menu = this.querySelector('menu');
 
@@ -23,27 +23,23 @@ class menubutton extends HTMLElement {
 
             //button.setAttribute('popovertarget', menu.id);
 
+            if (!button._initialized) {
+                button.type = 'button';
+                button.addEventListener('click', () => this.open());
+                button.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown') {
+                        this.open();
+                        //this.querySelector(':scope > menu button').focus();
+                        nextFocusable(this.querySelector(':scope > menu')).focus();
+                        e.preventDefault();
+                    }
+                });
+            }
+            button._initialized = true;
 
-            button.addEventListener('click', () => {
-                if (menu.matches(':popover-open')) {
-                    menu.hidePopover();
-                } else {
-                    this.open();
-                }
-            });
-            button.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowDown') {
-                    this.open();
-                    this.querySelector(':scope > menu button').focus();
-                    e.preventDefault();
-                }
-            });
-
-            this.addEventListener('focusout', (e) => {
-                if (!this.contains(e.relatedTarget)) {
-                    menu.hidePopover();
-                }
-            });
+            //this.addEventListener('focusout', (e) => { // popover makes this
+            //    !this.contains(e.relatedTarget) && menu.hidePopover();
+            //});
 
             this.menu = menu;
             this.button = button;
@@ -51,14 +47,30 @@ class menubutton extends HTMLElement {
         }, 0);
     }
     open() {
+        //let button = this.querySelector(':scope > button');
+        this.menu.style.minWidth = this.button.offsetWidth+'px';
         this.menu.showPopover();
         this._place();
     }
     _place() {
         import('../../js/Placer/Placer.js').then(({Placer}) => {
-            const placer = new Placer(this.menu, { x:'append', y:'after', margin:3 });
+            const placer = new Placer(this.menu, { x:'append', y:'after', margin:0 });
             placer.toElement(this.button);
         });
     }
 }
 customElements.define('u2-menubutton', menubutton);
+
+
+function nextFocusable(root) {
+  return root.querySelector(`
+    :where(
+      button,
+      [href],
+      input,
+      select,
+      textarea,
+      [tabindex]:not([tabindex="-1"])
+    ):not([disabled]):not([hidden])
+  `);
+}

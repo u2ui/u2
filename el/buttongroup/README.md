@@ -1,5 +1,5 @@
 # &lt;u2-buttongroup&gt; - element
-buttongroup element
+A container for grouping buttons together; buttons that don’t have space will be moved into a dropdown menu.
 
 ## Usage
 

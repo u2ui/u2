@@ -1,0 +1,35 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "buttongroup.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "A container for grouping buttons together; buttons that don’t have space will be moved into a dropdown menu.",
+            "name": "U2ButtonGroup",
+            "members": [],
+            "events": [],
+            "attributes": [],
+            "cssProperties": [{
+                "name": "--space",
+                "syntax": "<length>",
+                "default": "0.25rem",
+                "description": "Controls the spacing between buttons in the group. \"--space:;\" will remove the space and the right border except for the last button"
+            }],
+            "superclass": {
+                "name": "HTMLElement"
+            },
+            "tagName": "u2-buttongroup",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-buttongroup",
+            "declaration": {
+                "name": "U2ButtonGroup",
+                "module": "buttongroup.js"
+            }
+        }]
+    }]
+}

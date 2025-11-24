@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>U2 design-system | Tests</title>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+    <script type=module async src="../scrollspy.js"></script>
+
+<body>
+
+<section>
+    <div u2-scrollspy>
+        <nav>
+            <a href="#article1">article 1</a> 
+            <a href="#article2">article 2</a> 
+            <a href="./test.html#article3">article 3</a> 
+            <a href="#article4">Non existent</a> 
+            <a href="#foot1">Foot 1</a> 
+            <a href="#foot2">Foot 2</a> 
+            <a href="#foot3">Foot 3</a> 
+        </nav>
+    </div>
+
+    <div class="scroll-container">
+        <article id="no-link" style="background-color:#eee">Content 0 (no link!)</article>
+        <article id="article1" style="background-color:#efe">Content 1</article>
+        <article id="article2" style="background-color:#ffc">Content 2</article>
+        <article id="article3" style="background-color:#eef">Content 3</article>
+    </div>
+</section>
+
+<u2-code trim editable>
+    <style>
+        [u2-scrollspy] {
+            position:fixed; 
+            inset: 1rem 1rem auto auto;
+            nav {
+                display:grid;
+            }
+        }
+        .scroll-container { 
+            height: 300px; 
+            overflow: auto; 
+            border: 1px solid #ccc;
+        }
+        article {
+            padding:3rem;
+            height: 400px; 
+        }
+        .active {
+            color: red; 
+        }
+    </style>
+</u2-code>
+<section>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <div class="scroll-container">
+        <article id="foot1" style="background-color:#fef">Foot 1</article>
+        <article id="foot2" style="background-color:#efe">Foot 2</article>
+        <article id="foot3" style="background-color:#ffc">Foot 3</article>
+    </div>
+</section>

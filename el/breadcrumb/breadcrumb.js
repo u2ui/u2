@@ -41,7 +41,6 @@ class U2Breadcrumb extends HTMLElement {
             const currentUrl = new URL(location.href);
             const pathParts = currentUrl.pathname.split('/').filter(part => part.trim() !== '');
             let currentPath = currentUrl.origin; // Startet mit der Basis-URL (z.B. https://example.com)
-            
             const homeLink = document.createElement('a'); // Start-Element "Home" (/)
             homeLink.textContent = 'Home';
             homeLink.href = currentUrl.origin + '/';
@@ -72,10 +71,12 @@ class U2Breadcrumb extends HTMLElement {
             separator.part = 'separator';
             //const locationUrl = location.href;
             //if (link.href === locationUrl) link.ariaCurrent = 'location';
-            slot.assign(link);
+            requestAnimationFrame(()=>{ // chrome...
+                slot.assign(link);
+            })
             li.append(slot, separator);
             this.ol.append(li);
-            const pageUrl = location.href.split('#')[0];
+            const pageUrl = location.href.split('#')[0].split('?')[0];
             if (link.href === pageUrl) {
                 link.ariaCurrent = 'page';
                 link.dataset.href = link.getAttribute('href');

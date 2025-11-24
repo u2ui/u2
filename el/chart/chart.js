@@ -21,7 +21,7 @@ class U2Chart extends HTMLElement {
         this._requestBuild();
     }
 
-    static get observedAttributes() { return ['for', 'type', 'flip-axis']; }
+    static get observedAttributes() { return ['for', 'type', 'flip-axis', 'axis-labels', 'grid']; }
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'for') {
@@ -54,7 +54,9 @@ class U2Chart extends HTMLElement {
     }
     async _build() {
         if (this.canvas) this.canvas.remove();
-            
+
+
+        
         this.canvas = document.createElement('canvas');
         this.shadowRoot.appendChild(this.canvas);
         //this.chart.destroy();
@@ -69,7 +71,8 @@ class U2Chart extends HTMLElement {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: { beginAtZero: true }
+                y: { ticks: {}, grid: {}, border:{}, beginAtZero: true },
+                x: { ticks: {}, grid: {}, border:{} }
             }
         };
 
@@ -88,6 +91,23 @@ class U2Chart extends HTMLElement {
         if (this.hasAttribute('flip-axis')) {
             [rows, cols] = [cols, rows];
             data = data[0].map((_, i) => data.map(row => row[i]));
+        }
+
+        const attr_axisLabels = this.getAttribute('axis-labels')
+        if (attr_axisLabels != null) {
+            if (attr_axisLabels === 'false') {
+                options.scales.x.ticks.display = false;
+                options.scales.y.ticks.display = false;
+            }
+        }
+        const attr_grid = this.getAttribute('grid')
+        if (attr_grid != null) {
+            if (attr_grid === 'false') {
+                options.scales.x.grid.display = false;
+                options.scales.y.grid.display = false;
+                options.scales.x.border.display = false;
+                options.scales.y.border.display = false;
+            }
         }
 
         new Chart(ctx, {

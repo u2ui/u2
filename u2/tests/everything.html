@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Demo Page | U2-Design-System</title>
+    <script src="./test-init.js" type=module async></script>
+    <script src="../auto.js" type=module async></script>
+    <style>
+        html {
+            --u2-ico-dir: var(--u2-ico-dir-material);
+            --width:60rem;
+        }
+        .u2-grid, .u2-flex, u2-masonry {
+            --u2-Items-width: 17rem;
+        }
+        [u2-scrollspy] a.active {
+            font-weight:bold;
+        }
+    </style>
+<body>
+
+<script src="../tools/variable-styler.js" type=module></script>
+<element-variable-styler></element-variable-styler>
+
+<div class="u2-width">
+
+    <h1>U2 Elements Demo</h1>
+
+
+    <u2-toc u2-scrollspy style="position:fixed; inset:0 auto auto 0"></u2-toc>
+    
+    <h2>Breadcrumb</h2>
+    <u2-breadcrumb auto></u2-breadcrumb>
+
+    <h2>Splitpanel</h2>
+    
+    <u2-splitpanel vertical style="min-height:20rem">
+        <u2-splitpanel>
+            <u2-tree1>Tree 1
+                <u2-tree1>Item 1</u2-tree1>
+                <u2-tree1>Item 2</u2-tree1>
+                <u2-tree1>Item 3</u2-tree1>
+            </u2-tree1>
+            <u2-code element="accordion" editable trim style="margin:0"></u2-code>
+        </u2-splitpanel>
+        <u2-splitpanel>
+            <form u2-confirm="really?" u2-store id="demoForm">
+                <u2-input type="text">
+                    <input type="text" name="firstname">
+                </u2-input>
+                <u2-input type="password"></u2-input>
+                <u2-input type="text"></u2-input>
+                <u2-input type="stepper">
+                    <input type="number" name="age">
+                </u2-input>
+                <u2-rating value="4"></u2-rating>
+                <button>Submit</button>
+            </form>
+            <u2-textfit>Textfit</u2-textfit>
+            <u2-typewriter text="Hallo U2 Elements!" speed="50">Hallo Welt</u2-typewriter>
+        </u2-splitpanel>
+    </u2-splitpanel>
+
+    <u2-tabs>
+        <h3>Accordion demo</h3>
+        <u2-accordion id="accordion">
+            <h4>Accordion 1</h4>
+            <p>Accordion Inhalt 1</p>
+            <h4>Accordion 2</h4>
+            <p>Accordion Inhalt 2</p>
+            <h4>Accordion 3</h4>
+            <p>Accordion Inhalt 3</p>
+        </u2-accordion>
+        <h3>Tab 2</h3>
+        <p>Inhalt des zweiten Tabs</p>
+        <h3>Tab 3</h3>
+        <p>Inhalt des dritten Tabs</p>
+    </u2-tabs>
+    
+
+    <h2>Flex</h2>
+    <div class="u2-grid">
+        <div class="u2-card1">
+            <h3>Card1 Class</h3>
+            <hr>
+            <p class=-body>Card 1</p>
+            <hr>
+            <u2-buttongroup>
+                <button>Button 1</button>
+                <button>Button 2</button>
+            </u2-buttongroup>
+        </div>
+        <u2-qrcode data="https://u2.dev"></u2-qrcode>
+    </div>
+
+    <h2>Grid</h2>
+    <div class="u2-grid">
+        <u2-ico icon="home"></u2-ico>
+        <u2-counter from="0" to="100" duration="2000"></u2-counter>
+        <u2-number value="1234.56"></u2-number>
+        <u2-bytes value="2048"></u2-bytes>
+    </div>
+
+    <h2>Masonry</h2>
+    <u2-masonry>
+
+        <u2-carousel class="u2-card1" autoplay>
+            <div>Slide 1</div>
+            <u2-counter>333.11</u2-counter>
+            <div>Slide 3</div>
+        </u2-carousel>
+
+        <u2-carousel-nav></u2-carousel-nav>
+
+        <table class="u2-table u2-card1" id="table">
+            <thead>
+                <tr>
+                    <th>Year
+                    <th>Apples
+                    <th>Oranges
+                    <th>Bananas
+            <tbody>
+                <tr>
+                    <th>2021
+                    <td>100
+                    <td>200
+                    <td>300
+                <tr>
+                    <th>2022
+                    <td>150
+                    <td>250
+                    <td>350
+                <tr>
+                    <th>2023
+                    <td>200
+                    <td>300
+                    <td>400
+                <tr>
+                    <th>2024
+                    <td>250
+                    <td>350
+                    <td>450
+                <tr>
+                    <th>2025
+                    <td>300
+                    <td>400
+                    <td>500
+        </table>
+        <div class="u2-card1" style="xheight:20rem;">
+            <u2-chart for="table" type=line axis-labels=false grid=false></u2-chart>
+        </div>
+        <u2-alert open variant="info" icon="home" dismissible>Dies ist eine Info-Nachricht</u2-alert>
+        <u2-alert open variant="warning">Dies ist eine Warnung</u2-alert>
+        <u2-alert open variant="success">Dies ist eine Erfolg-Nachricht</u2-alert>
+        <u2-alert open variant="danger">Dies ist eine Fehler-Nachricht</u2-alert>
+    </u2-masonry>
+
+    <!-- Input & Buttons -->
+    <u2-menubutton>
+        <button>Menubutton</button>
+        <menu>
+            <li><button>Option 1</button></li>
+            <li><button>Option 2</button></li>
+        </menu>
+    </u2-menubutton>
+
+    <u2-time datetime="2024-01-15T10:30:00Z"></u2-time>
+
+    <u2-tooltip>Dies ist ein Tooltip</u2-tooltip>
+
+    <section>
+        <h2>Enhanced Table</h2>
+        <u2-table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Wert</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Item 1</td>
+                        <td><small class="u2-badge">aktiv</small></td>
+                        <td>€100</td>
+                    </tr>
+                    <tr>
+                        <td>Item 2</td>
+                        <td><small class="u2-badge">inaktiv</small></td>
+                        <td>€50</td>
+                    </tr>
+                </tbody>
+            </table>
+        </u2-table>
+    </section>
+
+
+    <u2-skeleton width="100%" height="100px"></u2-skeleton>
+
+
+
+    <h2>Calendar</h2>
+    <u2-calendar date="2024-01-15" class="u2-card1">
+        <u2-tooltip>Calendar</u2-tooltip>
+        <u2-calendaritem start="2024-01-15" draggable>Event 1</u2-calendaritem>
+        <u2-calendaritem start="2024-01-20">Event 2</u2-calendaritem>
+    </u2-calendar>
+
+</div>

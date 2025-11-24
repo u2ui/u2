@@ -34,7 +34,7 @@ class Toc extends HTMLElement {
         let currentLi = null;
 
         for (let heading of headings) {
-            if (!heading.id) heading.id = heading.textContent.trim().replace(/\s+/g, '-').toLowerCase();
+            if (!heading.id) heading.id = 'u2-toc-' + heading.textContent.trim().replace(/\s+/g, '-').toLowerCase();
 
             const level = parseInt(heading.tagName[1]);
 

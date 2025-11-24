@@ -72,6 +72,14 @@
       "css": false,
       "js": true
     },
+    "scrollspy": {
+      "name": "scrollspy",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "skin": {
       "name": "skin",
       "description": "Change the skin of a widget\r",
@@ -118,14 +126,6 @@
       "name": "grid",
       "description": "Most wanted grid case\r",
       "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
-    "input": {
-      "name": "input",
-      "description": "custom inputs (beta)",
-      "beta": true,
       "deprecated": false,
       "css": true,
       "js": false
@@ -190,7 +190,7 @@
     },
     "buttongroup": {
       "name": "buttongroup",
-      "description": "buttongroup element",
+      "description": "A container for grouping buttons together; buttons that don’t have space will be moved into a dropdown menu.",
       "beta": false,
       "deprecated": false,
       "css": true,

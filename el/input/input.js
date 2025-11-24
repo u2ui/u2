@@ -2,15 +2,15 @@
 
 
 const types = {
-    'text': {
+    text: {
         fallback: '<input type=text>',
         input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
     },
-    'textarea': {
+    textarea: {
         fallback: '<textarea></textarea>',
         input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
     },
-    'select': {
+    select: {
         fallback: '<select></select>',
         input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
         init({shadow}) {
@@ -29,7 +29,7 @@ const types = {
             }
         }
     },
-    'range': {
+    range: {
         fallback: '<input type=range>',
         input: `<slot name=start></slot><slot></slot><slot name=end></slot>`,
         css: `
@@ -39,7 +39,7 @@ const types = {
             }
             `,
     },
-    'stepper': {
+    stepper: {
         fallback: '<input type=number>',
         input: `
             <slot name=start></slot>
@@ -97,7 +97,7 @@ const types = {
             }
         }
     },
-    'checkbox': {
+    checkbox: {
         fallback: '<select><option value="">off</option><option>on</select>',
         input: `
             <slot name=start></slot>
@@ -140,16 +140,16 @@ const types = {
             });
         }
     },
-    'date': {
+    date: {
         fallback: '<input type=date>',
         input: '<slot></slot>',
     },
-    'cycle': {
+    cycle: {
         fallback: '',
         input: `
         <slot style="display:grid;"></slot>`,
     },
-    'file': {
+    file: {
         fallback: '<input type=file multiple>',
         input: `
             <div id=droparea>

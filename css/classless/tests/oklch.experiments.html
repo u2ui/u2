@@ -15,6 +15,10 @@
 
 <body>
 
+<script src="../../../u2/tools/variable-styler.js" type=module></script>
+<element-variable-styler></element-variable-styler>
+
+
 <style>
 
 html {
@@ -22,7 +26,7 @@ html {
     /* todo: https://x.com/jh3yy/status/1984192489155428848 */
 
     --color: #000001;
-    --color: #fff;
+    x--color: #fff;
 
     /* Base - Helligkeit anpassen */
     --color-light: color-mix(in oklch, var(--color), #fff 70%);
@@ -330,6 +334,7 @@ shadowDeepCss = function(shadow){
 
 let shadow = shadowed.attachShadow({mode: 'open'});
 shadowDeepCss(shadow);
-shadow.innerHTML += '<br><br><hr><h1>Same inside shadow-dom (Experiment)</h1>'+document.body.innerHTML;
+//shadow.innerHTML += '<br><br><hr><h1>Same inside shadow-dom (Experiment)</h1>'+document.body.innerHTML;
+shadow.innerHTML += '<br><br><hr><h1>Same inside shadow-dom (Experiment)</h1>'+document.querySelector('.container').innerHTML
 
 </script>

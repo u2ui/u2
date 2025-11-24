@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>counter element test | U2-design-system</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <script src="../scrollspy.js" type=module async></script>
+
+<body>
+
+    <section class="main">
+        <nav u2-scrollspy style="position:absolute; top:0; display:grid">
+            <a href="#article1">article 1</a> 
+            <a href="#article2">article 2</a> 
+            <a href="#article3">article 3</a> 
+        </nav>
+        <section style="overflow:auto">
+            <article id="article1">Article 1<u2-skeleton template="p p p p p"></u2-skeleton></article>
+            <article id="article2">Article 2<u2-skeleton template="p p p p p"></u2-skeleton></article>
+            <article id="article3">Article 3<u2-skeleton template="p p p p p"></u2-skeleton></article>
+        </section>
+    </section>
+
+
+    <style class=main>
+        a.active {
+            color:var(--color, pink);
+        }
+        section {
+            height:5rem;
+            border:1px solid;
+        }
+        section {
+            min-height:5rem;
+            border:1px solid;
+        }
+    </style>

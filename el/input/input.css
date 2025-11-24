@@ -1,8 +1,11 @@
-u2-input {
-    display:inline-block;
-    border: 1px solid;
-    border-radius: var(--radius);
-    padding:0 !important;
+@layer normalize {
+    u2-input {
+        display:inline-block;
+        border-width:1px;
+        border-style:solid;
+        border-radius: var(--radius);
+        padding:0 !important;
+    }
 }
 
 u2-input {
@@ -71,7 +74,7 @@ u2-input[type="cycle"] {
 }
 
 u2-input:where([type="stepper"]) {
-    inline-size: 6em;
+    inline-size: 7em;
     & input { text-align:center; }
     & input::-webkit-inner-spin-button { display: none; }
 }

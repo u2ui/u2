@@ -15,18 +15,21 @@ u2-menubutton menu {
     opacity:0;
     visibility: hidden;
     transition: opacity .2s .1s;
+    box-shadow: var(--shadow);
 
     /* for popover */
     overflow:visible;
 }
-u2-menubutton menu > li {
+u2-menubutton menu > * {
+    display:block;
     list-style:none;
     margin:0;
     padding:0;
 }
-u2-menubutton menu > li > button {
+u2-menubutton menu > li > :is(button, .btn) {
     width:100%;
     margin:0;
+    border:0;
     border-radius:0;
     text-align:left;
 }

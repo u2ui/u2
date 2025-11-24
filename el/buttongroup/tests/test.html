@@ -13,71 +13,130 @@
         html {
             --u2-ico-dir:var(--u2-ico-dir-material);
         }
-        label {
-            display:block;
-            margin-block:1rem;
-        }
     </style>
 
     <link href="../buttongroup.css" rel=stylesheet>
     <script src="../buttongroup.js" type=module async></script>
 
+    <link href="../../menubutton/menubutton.css" rel=stylesheet>
+    <script src="../../menubutton/menubutton.js" type=module async></script>
+
 <body>
 
-<section style="background:var(--color-light, #eee)">
+<section style="background:var(--color-light, #eee); resize:both; overflow:auto">
 
-    <u2-buttongroup>
-        <button type=button>Button</button>
-        <button type=button>Group</button>
-        <button type=button>Component</button>
-    </u2-buttongroup>
-
-    <h3>Too mutch</h3>
-    <u2-buttongroup style="justify-content: center; display:flex;">
-        <button type=button>Button 1</button>
-        <button type=button>Button 2</button>
-        <button type=button>Button 3</button>
-        <button type=button>Button 4</button>
-        <button type=button>Button 5</button>
-        <button type=button>Button 6</button>
-        <button type=button>Button 7</button>
-        <button type=button>Button 8</button>
-        <button type=button>Button 9</button>
-        <button type=button>Button 10</button>
-        <button type=button>Button 11</button>
-        <button type=button>Button 12</button>
-    </u2-buttongroup>
-
-    <h3>Expamles</h3>
-    <label>Stepper
+    <div>
         <u2-buttongroup>
-            <button type=button style="padding-inline:.2em">
-                <u2-ico inline>add</u2-ico>
-            </button>
-            <input type=number value=0 style="width:3em; text-align:center; border-left:0; appearance: textfield; border:0;">
-            <button type=button style="padding-inline:.2em">
-                <u2-ico inline>remove</u2-ico>
-            </button>
+            <button type=button>Button</button>
+            <button type=button>Group</button>
+            <button type=button>Component</button>
         </u2-buttongroup>
-    </label>
+        <button>Reference Button</button>
 
-    <u2-buttongroup>
-        <button type=button>update</button>
-        <u2-menubutton>
-            <button type=button style="padding-inline:.2em">
-                <u2-ico inline>more_vert</u2-ico>
+        <h3>Too mutch</h3>
+        <u2-buttongroup role=toolbar style="justify-content: center; display:flex;">
+            <button type=button>Button 1</button>
+            <button type=button>Button 2</button>
+            <button type=button>Button 3</button>
+            <button type=button>Button 4</button>
+            <button type=button>Button 5</button>
+            <button type=button>Button 6</button>
+            <button type=button>Button 7</button>
+            <button type=button>Button 8</button>
+            <button type=button>Button 9</button>
+            <button type=button>Button 10</button>
+            <button type=button>Button 11</button>
+            <button type=button>Button 12</button>
+        </u2-buttongroup>
+
+        <h3>Using .btn class</h3>
+        <u2-buttongroup>
+            <label class=btn>
+                <input type=radio name=x value="radio1">
+                Radio 1
+            </label>
+            <label class=btn>
+                <input type=radio name=x value="radio2">
+                Radio 2
+            </label>
+            <label class=btn>
+                <input type=radio name=x value="radio3">
+                Radio 3
+            </label>
+        </u2-buttongroup>
+
+        <h3>Expamles</h3>
+        <label>Stepper
+            <u2-buttongroup>
+                <button type=button style="padding-inline:.2em">
+                    <u2-ico inline>add</u2-ico>
+                </button>
+                <input type=number value=0 style="width:3em; text-align:center; border-left:0; appearance: textfield; border:0;">
+                <button type=button style="padding-inline:.2em">
+                    <u2-ico inline>remove</u2-ico>
+                </button>
+            </u2-buttongroup>
+        </label>
+
+        <u2-buttongroup>
+            <button type=button>update</button>
+            <u2-menubutton>
+                <button type=button style="padding-inline:.2em">
+                    <u2-ico inline>more-vert</u2-ico>
+                </button>
+                <menu>
+                    <li><button>update all</button>
+                    <li><button>update selected</button>
+                </menu>
+            </u2-menubutton>
+        </u2-buttongroup>
+
+
+        <u2-buttongroup class="styled">
+            <button type=button>
+                <u2-tooltip>Nice!</u2-tooltip>
+                Styled
             </button>
-            <menu>
-                <li><button>update all</button>
-                <li><button>update selected</button>
-            </menu>
-        </u2-menubutton>
-    </u2-buttongroup>
+            <button type=button>Buttons</button>
+            <button type=button>Here</button>
+        </u2-buttongroup>
+
+    </div>
 
 
 
 </section>
 
-<style>
+<u2-code editable trim>
+    <style>
+        .styled {
+            --space:; /* makes one border dissapear */
+            border:2px solid black;
+            border-radius:9999px;
+            padding:1rem;
+            box-shadow: 0 0 .5rem #0006 inset;
+            background:#fff;
+            & button {
+                border: 2px solid black;
+                background: lightblue;
+                color: black;
+                border-radius:999px;
+                padding:1rem 2rem;
+                box-shadow: 0 0 .1rem #0006;
+                margin:0;
+            }
+            & button:is(:hover, :active, :focus) {
+                background: pink;
+                outline:none;
+                box-shadow: 0 0 1rem #000b;
+                z-index:1;
+            }
+            & menu {
+                border:2px solid black;
+                padding:0;
+                overflow:clip;
+            }
+        }
+    </style>
+</u2-code>
 
-</style>

@@ -11,7 +11,7 @@ export function done(el) {
     if (el.loadingTasks <= 0) {
         el.classList.remove('u2Loading');
         el.removeAttribute('aria-busy');
-        el.removeAttribute('inert');
+        //el.removeAttribute('inert');
         el.style.cssText = el.u2Loading_oldCssText;
         el.u2Loading_oldCssText = undefined;
     }
@@ -43,7 +43,7 @@ function _markElement(el, {delay = 0} = {}) {
 
         el.u2Loading_oldCssText = el.style.cssText;
         el.ariaBusy = 'true';
-        el.inert = true;
+        //el.inert = true;
 
         clearTimeout(el.u2ShowLoadingTO);
         el.u2ShowLoadingTO = setTimeout(()=>{
@@ -95,16 +95,20 @@ const css = `
 .u2Loading {
     --loading-svg: url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}");
     background-image: var(--loading-svg) !important;
-    background-repeat: no-repeat !important; 
-    background-position: 50% !important; 
+    background-repeat: no-repeat !important;
+    background-position: 50% !important;
     background-position-y: min(50%, 10rem) !important;
-    background-size: 32px !important; 
-    cursor: wait !important; 
+    background-size: 32px !important;
+    cursor: wait !important;
     opacity:1;
-
+    pointer-events:none;
+    & > * {
+        opacity:.1;
+        cursor: wait !important;
+    }
     &:is(button, span) {
-        background-size: 2px !important; 
-        background-position:-100% !important; 
+        background-size: 2px !important;
+        background-position:-100% !important;
         &::after {
             content:"";
             display:inline-block;
@@ -124,10 +128,6 @@ const css = `
     &:is(img) {
         object-position: -10000px -10000px !important;
     }
-}
-.u2Loading > * {
-  opacity:.1;
-  cursor: wait !important;
 }
 `;
 
