@@ -1,6 +1,8 @@
 /* https://dev.to/5t3ph/my-top-css-tips-as-shared-on-twitter-part-1-23e2 */
 /* https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */
 
+@layer normalize {
+
 html {
     background-color: var(--color-bg);
     color: var(--color-text);
@@ -77,7 +79,8 @@ fieldset {
     border: var(--line-width) solid currentColor;
     border-radius: var(--radius);
     padding: 1em;
-    margin: 1em 0;
+    margin-inline: 0;
+    margin-block: 1em;
 }
 
 /* all inputs, buttons */
@@ -117,7 +120,6 @@ button, .btn {
 .btn:not([hidden]) {
 	display:inline-block;
 }
-/* button:hover:not(:disabled), .btn:hover, button:focus { */
 :is(button, .btn):not(:disabled):where(:hover, :focus, [aria-pressed="true"]) {
     background-color: var(--color-dark);
 }
@@ -135,4 +137,6 @@ select[size], /* chrome */ select[multiple] {
 
 :focus::placeholder {
     opacity: .2;
+}
+
 }

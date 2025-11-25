@@ -1,0 +1,54 @@
+<article style="font-size:100px">
+  TgxO
+  <div class="lh"></div>
+  <div class="cap"></div>
+  <div class="ex"></div>
+  <div class="em"></div>
+  <br>
+  iTgxO 
+  <div class="lh"></div>
+  <div class="cap"></div>
+  <div class="ex"></div>
+  <div class="em"></div>
+  TWY
+</article>
+
+<style>
+
+.em {
+  height: 1em;
+  vertical-align:text-bottom;
+}
+.lh {
+  height: 1lh;
+  vertical-align:bottom;
+}
+.cap {
+  height: 1cap;
+}
+.ex {
+  height: 1ex;
+}
+
+html {
+    font-family: Arial;
+}
+
+div {
+  display:inline-block;
+  background:red;
+  vertical-align:baseline;
+  position: relative;
+  width: 30px;
+  &::after {
+    content: attr(class);
+    font-size:15px;
+    padding:4px;
+    align-self: end;
+    position: absolute;
+    inset:0;
+  }
+}
+
+
+</style>

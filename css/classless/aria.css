@@ -38,27 +38,9 @@ label[aria-label]:focus-within::before {
 
 
 /* more */
-[aria-controls] {
-  cursor: pointer;
-}
-[aria-busy=true] {
-  cursor: progress;
-}
+[aria-controls] { cursor: pointer; }
+[aria-busy=true] { cursor: progress; }
 
 
 nav a[aria-current] { color:var(--color); } /* parent pages */
 nav a[aria-current=page] { font-weight:bold; } /* current page */
-
-/*
-sticky footer plugin
-main {
-  background-color:var(--color-bg);
-}
-[role=contentinfo] {
-  position:sticky;
-  z-index:-1;
-  bottom:0;
-  left:0;
-  right:0;
-}
-*/

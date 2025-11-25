@@ -94,3 +94,34 @@
         <input type=text>
         <input type=checkbox>
     </section>
+
+
+    <section u2-skin=invert>
+        <h1>Invert Reqursive</h1>
+
+        <div>
+            <section u2-skin=invert>
+                <h1>Reqursive</h1>
+
+                <div>
+                    <section u2-skin=invert>
+                        <h1>Reqursive</h1>
+                    </section>
+
+                </div>
+
+            </section>
+        </div>
+
+        <div>
+            <section u2-skin=invert>
+                <h1>Reqursive not Working for direct Children!</h1>
+
+                <section u2-skin=invert>
+                    <h1>Reqursive not Working for direct Children!</h1>
+                </section>
+
+            </section>
+        </div>
+
+    </section>

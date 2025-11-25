@@ -5,8 +5,8 @@ class DynamicScrollSpy {
         this.observer = null;
         this.mutationObserver = null;
         this.ACTIVE_CLASS = 'active'; 
-        //this.ROOT_MARGIN = '0px 0px -50% 0px'; 
-        this.ROOT_MARGIN = '-30px'; 
+        //this.ROOT_MARGIN = '-30px'; 
+        this.ROOT_MARGIN = '0px 0px 0px 0px'; 
         this.init();
     }
 
@@ -31,10 +31,9 @@ class DynamicScrollSpy {
                 return section;
             }
         }).filter(Boolean);
-        console.log(sections)
 
         if (sections.length === 0) return;
-        const options = {root:null, rootMargin:this.ROOT_MARGIN, threshold: 0 };
+        const options = {root:null, rootMargin:this.ROOT_MARGIN, threshold: 0.1 };
         const intersections = new Set();
         this.observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

@@ -6,6 +6,7 @@
     <title>Demo Page | U2-Design-System</title>
     <script src="./test-init.js" type=module async></script>
     <script src="../auto.js" type=module async></script>
+    <link href="../../css/classless/simple.css" rel=stylesheet>
     <style>
         html {
             --u2-ico-dir: var(--u2-ico-dir-material);
@@ -23,15 +24,18 @@
 <script src="../tools/variable-styler.js" type=module></script>
 <element-variable-styler></element-variable-styler>
 
-<div class="u2-width">
+<header role="banner">
 
-    <h1>U2 Elements Demo</h1>
+    <h1><u2-textfit>U2 Elements Demo</u2-textfit></h1>
+    <u2-breadcrumb auto></u2-breadcrumb>
 
+</header>
+
+<main class="u2-width">
 
     <u2-toc u2-scrollspy style="position:fixed; inset:0 auto auto 0"></u2-toc>
     
-    <h2>Breadcrumb</h2>
-    <u2-breadcrumb auto></u2-breadcrumb>
+
 
     <h2>Splitpanel</h2>
     
@@ -57,13 +61,12 @@
                 <u2-rating value="4"></u2-rating>
                 <button>Submit</button>
             </form>
-            <u2-textfit>Textfit</u2-textfit>
-            <u2-typewriter text="Hallo U2 Elements!" speed="50">Hallo Welt</u2-typewriter>
+            <u2-typewriter speed="50">Hallo Welt</u2-typewriter>
         </u2-splitpanel>
     </u2-splitpanel>
 
     <u2-tabs>
-        <h3>Accordion demo</h3>
+        <h3>Accordion</h3>
         <u2-accordion id="accordion">
             <h4>Accordion 1</h4>
             <p>Accordion Inhalt 1</p>
@@ -72,8 +75,53 @@
             <h4>Accordion 3</h4>
             <p>Accordion Inhalt 3</p>
         </u2-accordion>
-        <h3>Tab 2</h3>
-        <p>Inhalt des zweiten Tabs</p>
+        <h3>Forms</h3>
+        <div class="u2-flex">
+            <fieldset>
+                <legend>standard inputs</legend>
+                <label>
+                    <input type=text></u2-input>
+                </label>
+                <label>
+                    <input type=password></u2-input>
+                    password
+                </label>
+                <label>
+                    text<br>
+                    <input type=text></u2-input>
+                </label>
+                <label>
+                    <input type=checkbox></u2-input>
+                    checkbox
+                </label>
+                <label>
+                    <input type=radio></u2-input>
+                    radio
+                </label>
+            </fieldset>
+            <fieldset>
+                <legend>u2-inputs</legend>
+                <label>
+                    <u2-input type="text"></u2-input>
+                    text
+                </label>
+                <label>
+                    <u2-input type="password"></u2-input>
+                    password
+                </label>
+            </fieldset>
+            <fieldset>
+                <legend>Buttons</legend>
+                <button>Normal</button>
+                <button>
+                    <u2-ico inline icon="home"></u2-ico>
+                    Icon
+                </button>
+                <button disabled>Disabled</button>
+                <a class="btn">Link as Button</a>
+            </fieldset>
+        </div>
+
         <h3>Tab 3</h3>
         <p>Inhalt des dritten Tabs</p>
     </u2-tabs>
@@ -208,4 +256,8 @@
         <u2-calendaritem start="2024-01-20">Event 2</u2-calendaritem>
     </u2-calendar>
 
-</div>
+</main>
+
+<footer role="contentinfo">
+    Foot
+</footer>

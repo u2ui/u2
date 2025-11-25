@@ -1,30 +1,26 @@
-## Install
-
-```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/scrollspy/scrollspy.min.js" type=module async></script>
-```
+# [u2-scrollspy] - attribute
+Make a navigation that changes the `active` class based on the scroll position.
 
 ## Usage
 
 ```html
-<nav u2-scrollspy>
+<nav u2-scrollspy style="position:absolute; top:0; display:grid">
     <a href="#article1">article 1</a> 
     <a href="#article2">article 2</a> 
     <a href="#article3">article 3</a> 
 </nav>
-<article style="overflow:auto">
-    <article id="article1">article 1</article>
-    <article id="article2">article 2</article>
-    <article id="article3">article 3</article>
-</article>
 ```
 
 ```css
 a.active {
     color:var(--color, pink);
 }
-article {
+section {
     height:5rem;
+    border:1px solid;
+}
+section {
+    min-height:5rem;
     border:1px solid;
 }
 ```

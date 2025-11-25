@@ -74,7 +74,7 @@
     },
     "scrollspy": {
       "name": "scrollspy",
-      "description": "",
+      "description": "Make a navigation that changes the `active` class based on the scroll position.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -342,7 +342,15 @@
     },
     "rating": {
       "name": "rating",
-      "description": "\r",
+      "description": "Rating element, form associated",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "responsive": {
+      "name": "responsive",
+      "description": "A Container, where you can define strategies, that are applied through CSS states. `<u2-responsive strategies=\"hideOptional\">`",
       "beta": false,
       "deprecated": false,
       "css": true,

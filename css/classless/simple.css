@@ -15,7 +15,6 @@ body > header {
     padding-block: 2rem;
 }
 
-
 :is(body > header, [role="banner"]) {
     border-block-end: .1em solid var(--color);
 
@@ -68,11 +67,21 @@ tr:not(:last-child) {
 
 label {
     display:block;
+    margin-block:.3rem;
 }
-
 :where(input, u2-input):not([type="checkbox"], [type="radio"]), textarea, select, button, .btn {
     margin-block:.3rem;
 }
+
+/* better?
+label {
+    display:block;
+    margin-block:.3rem;
+}
+button, .btn {
+    margin-block:.3rem;
+}
+*/
 
 blockquote {
     margin: 0;
@@ -127,3 +136,19 @@ figcaption {
 p, dd, li {
     max-inline-size: 80ch;
 }
+
+
+
+/*
+sticky footer plugin
+main {
+  background-color:var(--color-bg);
+}
+[role=contentinfo] {
+  position:sticky;
+  z-index:-1;
+  bottom:0;
+  left:0;
+  right:0;
+}
+*/

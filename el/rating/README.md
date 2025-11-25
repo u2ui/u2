@@ -1,16 +1,5 @@
-## Usage
-
-```html
-Your rating: <u2-rating value="2" max="6" icon="favorite"></u2-rating>
-```
-
-```css
-u2-rating {
-    font-size:2rem;
-    --color-inactive: #ccc;
-    --color-active: var(--color);
-}
-```
+# &lt;u2-rating&gt; - element
+Rating element, form associated
 
 ## Usage
 

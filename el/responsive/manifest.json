@@ -1,0 +1,45 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "responsive.js",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "A responsive container that applies different strategies based on available space.",
+                    "name": "U2Responsive",
+                    "members": [],
+                    "events": [{
+                        "name": "u2-responsive-strategy-add",
+                        "description": "Fired before a strategy is about to be added. Can be prevented.",
+                        "detail": "{ strategy: string }"
+                    },{
+                        "name": "u2-responsive-strategy-remove",
+                        "description": "Fired before a strategy is about to be removed. Can be prevented.",
+                        "detail": "{ strategy: string }"
+                    }],
+                    "attributes": [{
+                        "name": "strategies",
+                        "description": "Space-separated list of strategy names that are applied through CSS states if the container shrinks.",
+                        "u2Examples": ["hide-optional break"]
+                    }],
+                    "cssProperties": [],
+                    "slots": [],
+                    "superclass": { "name": "HTMLElement" },
+                    "tagName": "u2-responsive",
+                    "customElement": true
+                }
+            ],
+            "exports": [{
+                "kind": "custom-element-definition",
+                "name": "u2-responsive",
+                "declaration": {
+                    "name": "U2Responsive",
+                    "module": "responsive.js"
+                }
+            }]
+        }
+    ]
+}
