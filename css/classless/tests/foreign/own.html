@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+
+  <script src=../../../../u2/tests/test-init.js type=module></script>
+  <link rel="stylesheet" href="../../../../css/classless/full.css">
+  <link rel="stylesheet" href="../../../../css/classless/simple.css">
+
+  <title>Classless Theme Testseite</title>
+
+
+<body>
+
+<header role="banner">
+    <h1>Classless Theme – Testseite</h1>
+    <nav role="navigation" aria-label="Hauptnavigation">
+    <ul>
+        <li><a href="#formulare">Formulare</a></li>
+        <li><a href="#inhalt">Inhalt</a></li>
+        <li><a href="#tabellen">Tabellen</a></li>
+        <li><a href="#artikel">Artikel</a></li>
+    </ul>
+    </nav>
+</header>
+
+<aside role="complementary" aria-label="Zusatzinformationen">
+    <h2>Inhalte</h2>
+    <nav>
+        <ul>
+            <li><a href="#formulare">Formulare</a></li>
+            <li><a href="#inhalt">Inhalt</a></li>
+            <li><a href="#tabellen">Tabellen</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<section id="formulare" aria-labelledby="formulare-title">
+    <h1>Content outside of main</h1>
+</section>
+
+<main role="main">
+    <aside role="complementary" aria-label="Zusatzinformationen">
+        <h2>Hinweise & Tipps</h2>
+        <p>Dies ist ein aside-Bereich für zusätzliche Infos oder Hinweise.</p>
+    </aside>
+
+    <section id="formulare" aria-labelledby="formulare-title">
+        <h2 id="formulare-title">Formulare</h2>
+        <form aria-describedby="form-hinweis">
+
+            <p id="form-hinweis">
+                Dies ist ein Testformular mit verschiedenen Elementen.
+                <br>
+                Um das Formular abzuschicken, drücken Sie die Enter-Taste oder den Absenden-Button.
+            </p>
+
+            <fieldset>
+                <legend>Formular</legend>
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" aria-required="true">
+
+                <label for="email">E-Mail</label>
+                <input id="email" name="email" type="email" aria-required="true">
+
+                <label for="bereich">Bereich</label>
+                <select id="bereich" name="bereich">
+                <option value="dev">Development</option>
+                <option value="design">Design</option>
+                <option value="pm">Projektmanagement</option>
+                </select>
+
+                <label for="nachricht">Nachricht</label>
+                <textarea id="nachricht" name="nachricht" rows="4"></textarea>
+            </fieldset>
+
+            <button type="submit">Absenden</button>
+        </form>
+    </section>
+
+    <section id="inhalt" aria-labelledby="inhalt-title">
+    <h2 id="inhalt-title">Inhalt & Typografie</h2>
+    <p>Dies ist ein Absatz mit normalem Lauftext. Er dient zum Testen typografischer Standards.</p>
+    <p>Ein weiterer Absatz, um Abstände und Lesbarkeit zu prüfen.</p>
+
+    <h3>Liste</h3>
+    <ul>
+        <li>Listenpunkt eins</li>
+        <li>Listenpunkt zwei</li>
+        <li>Listenpunkt drei</li>
+    </ul>
+
+    <h3>Codebeispiel</h3>
+    <pre><code>function greet(name) {
+return "Hallo " + name;
+}</code></pre>
+    </section>
+
+    <section id="tabellen" aria-labelledby="tabellen-title">
+    <h2 id="tabellen-title">Tabellen</h2>
+
+    <table role="table" aria-label="Beispieltabelle">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Rolle</th>
+            <th scope="col">Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Alice</td>
+            <td>Designer</td>
+            <td>Aktiv</td>
+        </tr>
+        <tr>
+            <td>Bob</td>
+            <td>Developer</td>
+            <td>Inaktiv</td>
+        </tr>
+        <tr>
+            <td>Charlie</td>
+            <td>PM</td>
+            <td>Aktiv</td>
+        </tr>
+        </tbody>
+    </table>
+    </section>
+
+    <section id="artikel" aria-labelledby="artikel-title" role="group">
+        <h2 id="artikel-title">Artikel (Cards) in section[role=group] (grid-layout)</h2>
+
+        <article role="article" aria-labelledby="art1-title">
+            <h3 id="art1-title">Erster Artikel</h3>
+            <p>Dies ist ein Beispielartikel. Card-Layout wird automatisch durch das classless CSS dargestellt.</p>
+        </article>
+
+        <article role="article" aria-labelledby="art2-title">
+            <h3 id="art2-title">Zweiter Artikel</h3>
+            <p>Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
+        </article>
+
+        <article>
+            <header>
+                <h3>Card mit Header und Footer</h3>
+                <p>Subtitle oder Meta-Info</p>
+            </header>
+
+            <p>Hier kommt der Hauptinhalt der Card.</p>
+
+            <footer>
+                <small>Autor, Datum, Link, etc.</small>
+            </footer>
+        </article>
+
+        <dialog open>
+            <h3>Dialog open</h3>
+            <p>Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
+        </dialog>
+
+    </section>
+
+    <section>
+        <h2>Dialoge</h2>
+        <button command="show-modal" commandFor="dialog1">Show dialog</button>
+        <dialog id=dialog1>
+            <h3 id="art2-title">Dialog opened by command-button</h3>
+            <p>Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
+            <footer>
+                <button command="close" commandFor="dialog1">Close</button>
+            </footer>
+        </dialog>
+
+        <h3>Dialog is "open"</h3>
+        <dialog open>
+            <h3 id="art2-title">Zweiter Artikel</h3>
+            <p>Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
+        </dialog>
+
+    </section>
+
+    <section aria-label="Zitat-Beispiele">
+        <h2>Blockquote Beispiele</h2>
+
+        <blockquote>
+            <p>„Das Leben ist wie Fahrradfahren. Um das Gleichgewicht zu halten, musst du in Bewegung bleiben.“</p>
+            <footer>– Albert Einstein</footer>
+        </blockquote>
+
+        <blockquote>
+            <p>„Die beste Art, die Zukunft vorherzusagen, ist, sie zu gestalten.“</p>
+            <footer>– Peter F. Drucker</footer>
+        </blockquote>
+
+        <p>Ein normaler Absatz unter den Zitaten, um Abstände und Layout zu testen.</p>
+    </section>
+
+
+</main>
+
+
+<footer role="contentinfo">
+    <p>&copy; Testseite – Classless Theme</p>
+</footer>
+
+  
+<script src="../../../../u2/tools/variable-styler.js" type=module></script>
+<element-variable-styler></element-variable-styler>

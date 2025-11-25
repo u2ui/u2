@@ -176,14 +176,18 @@ export class tree extends HTMLElement {
         doit ??= !this.isExpanded();
 
         const event = new CustomEvent(doit?'u2-tree1-expand':'u2-tree1-collapse', {bubbles: true});
+        console.log({
+            ariaLive: this.ariaLive,
+            ariaBusy: this.ariaBusy
+        })
         if (this.ariaLive && this.ariaBusy !== 'true') {
 
             event.load = callback=>{
                 const promise = callback(this);
                 this.ariaBusy = true;
                 promise.then(data => {
-                    this.ariaLive = false;
-                    this.ariaBusy = false;
+                    this.ariaLive = null;
+                    this.ariaBusy = null;
                     setTimeout(()=>{ // make unexpandable if no children
                         !this.items().length && this.removeAttribute('aria-expanded');
                     },100);
