@@ -34,18 +34,30 @@
 <main class="u2-width">
 
     <u2-toc u2-scrollspy style="position:fixed; inset:0 auto auto 0"></u2-toc>
-    
-
 
     <h2>Splitpanel</h2>
     
     <u2-splitpanel vertical style="min-height:20rem">
         <u2-splitpanel>
-            <u2-tree1>Tree 1
-                <u2-tree1>Item 1</u2-tree1>
-                <u2-tree1>Item 2</u2-tree1>
-                <u2-tree1>Item 3</u2-tree1>
-            </u2-tree1>
+            <u2-responsive strategies="hideIcons">
+                <style>
+                    u2-responsive:state(hideIcons) {
+                        u2-tree1::part(icon) {
+                            display:none;
+                        }
+                    }
+                </style>
+                <u2-tree1>Tree 1
+                    <u2-tree1>
+                        Item 1
+                        <u2-tree1>Item 1.1</u2-tree1>
+                        <u2-tree1>Item 1.2</u2-tree1>
+                        <u2-tree1>Item 1.3</u2-tree1>
+                    </u2-tree1>
+                    <u2-tree1>Item 2</u2-tree1>
+                    <u2-tree1>Item 3</u2-tree1>
+                </u2-tree1>
+            </u2-responsive>
             <u2-code element="accordion" editable trim style="margin:0"></u2-code>
         </u2-splitpanel>
         <u2-splitpanel>

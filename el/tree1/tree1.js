@@ -47,7 +47,7 @@ export class tree extends HTMLElement {
         shadow.innerHTML = `
         <div part=row tabindex=-1>
             <span class=arrow></span>
-            <slot name=icon>📁</slot>
+            <slot name=icon part=icon>📁</slot>
             <slot part=content></slot>
         </div>
         <slot part=children name=children role=group></slot>`
@@ -85,15 +85,10 @@ export class tree extends HTMLElement {
                     current = current.nextFocusable() || this.root();
                 }
             }
-            if (fn) {
-                fn();
-                e.preventDefault();
-            }
+            if (fn) { fn(); e.preventDefault(); }
         });
 
-        this.addEventListener('mousedown',e=>{ // prevent dbl-click selection
-            if (e.detail >= 2) e.preventDefault();
-        });
+        this.addEventListener('mousedown', e => e.detail >= 2 && e.preventDefault() );  // prevent dbl-click selection
 
         this.childrenObserver = new MutationObserver(mutations => this._markup())
 
@@ -120,6 +115,10 @@ export class tree extends HTMLElement {
 
         // make it selectable if its the root and no other is selected
         if (root === this && !root._activeElement) this.row.tabIndex = 0;
+
+        // if (this.getAttribute('icon')) {
+        //     this.shadowRoot.querySelector('[part=icon]').innerHTML = '<u2-ico inline icon="' + this.getAttribute('icon') + '"></u2-ico>';
+        // }
 
         // if has children, its expandable
         if (!this.hasAttribute('aria-expanded')) {
@@ -166,10 +165,10 @@ export class tree extends HTMLElement {
         }
     }
     isExpanded() {
-        return this.getAttribute('aria-expanded') === 'true';
+        return this.ariaExpanded === 'true';
     }
     isExpandable() {
-        const attr = this.getAttribute('aria-expanded');
+        const attr = this.ariaExpanded;
         return attr === 'true' || attr === 'false' || this.items().length;
     }
     toggleExpand(doit) {
@@ -177,7 +176,7 @@ export class tree extends HTMLElement {
         doit ??= !this.isExpanded();
 
         const event = new CustomEvent(doit?'u2-tree1-expand':'u2-tree1-collapse', {bubbles: true});
-        if (this.getAttribute('aria-live') && this.getAttribute('aria-busy') !== 'true') {
+        if (this.ariaLive && this.ariaBusy !== 'true') {
 
             event.load = callback=>{
                 const promise = callback(this);
