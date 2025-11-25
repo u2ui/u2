@@ -24,18 +24,19 @@
                 display: none;
             }
             &:state(break) td {
+
                 display: block;
                 width: 100%;
             }
             &:state(break) tr {
                 display: block;
                 margin-bottom: 1rem;
-                border: 2px solid #000;
+                td { margin-bottom:-1px; }
             }
         }
         td {
             border: 1px solid #000;
-            padding: 1rem;
+            padding: .8rem;
             white-space:nowrap;
         }
     </style>
@@ -45,35 +46,32 @@
     <u2-responsive strategies="hide-optional1 hide-optional2 break">
         <table>
             <tr>
-                <td>Test</td>
-                <td>Test</td>
-                <td class="optional1">Optional 1</td>
-                <td class="optional2">Optional 2</td>
-                <td>Test</td>
-                <td>Test</td>
-            </tr>
+                <td>Website Update
+                <td>In Progress
+                <td class="optional1">High
+                <td class="optional2">2025-11-30
+                <td>Tobias
+                <td>Adjust layout
             <tr>
-                <td>Test</td>
-                <td>Test</td>
-                <td class="optional1">Optional 1</td>
-                <td class="optional2">Optional 2</td>
-                <td>Test</td>
-                <td>Test</td>
-            </tr>
+                <td>Server Maintenance
+                <td>Completed
+                <td class="optional1">Medium
+                <td class="optional2">2025-11-20
+                <td>Anna
+                <td>Backup created
             <tr>
-                <td>Test</td>
-                <td>Test</td>
-                <td class="optional1">Optional 1</td>
-                <td class="optional2">Optional 2</td>
-                <td>Test</td>
-                <td>Test</td>
-            </tr>
+                <td>Content Creation
+                <td>Pending
+                <td class="optional1">Low
+                <td class="optional2">2025-12-05
+                <td>Mark
+                <td>Topic planning needed
         </table>
     </u2-responsive>
 </section>
 
 <div style="margin-top: 2rem; padding: 1rem; background: #f0f0f0; border-radius: 4px;">
-    <strong>Event Log:</strong>
+    <strong>Event Log: <button id=clearLog>clear</button></strong>
     <div id="log" style="font-family: monospace; font-size: 0.7rem; overflow:auto; max-height:20rem"></div>
 </div>
 
@@ -83,6 +81,7 @@
 // Event Listener Demo
 const responsive = document.querySelector('u2-responsive');
 const log = document.getElementById('log');
+clearLog.onclick = ()=>{log.innerHTML = ''};
 
 responsive.addEventListener('u2-responsive-strategy-add', (e) => {
     const entry = document.createElement('div');
