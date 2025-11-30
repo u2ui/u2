@@ -1,0 +1,214 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+
+    <link rel=stylesheet href="../toc.css">
+    <script src="../toc.js" type=module async></script>
+
+</head>
+
+
+    <h1>Überschrift 1</h1>
+        
+    <aside>
+        <form id="attrForm" style="margin-bottom:1rem">
+            <u2-fields>
+                from:
+                <select name="from">
+                    <option value="">leer</option>
+                    <option value="auto">auto</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+                to:
+                <select name="to">
+                    <option value="">leer</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+                for: 
+                <select name="for">
+                    <option value="">leer</option>
+                    <option value="section1">section1</option>
+                    <option value="section2">section2</option>
+                </select>
+            </u2-fields>
+        </form>
+        <u2-toc id="mainToc" u2-scrollspy></u2-toc>
+    </aside>
+
+    <style>
+        u2-toc a.active {
+            font-weight:bold;
+        }
+    </style>
+
+    <script>
+        attrForm.addEventListener('input', e => {
+            for (const inp of attrForm.elements) {
+                mainToc.setAttribute(inp.name, inp.value);
+            }
+        });
+    </script>
+    
+
+
+<section id="section1" contenteditable>
+        <h2>h2 - Grundlagen</h2>
+        <p>Hier steht Text zum zweiten Level.</p>
+        
+        <h3>h3 - Einführung</h3>
+        <p>Dritte Ebene mit weiteren Informationen.</p>
+        
+        <h4>h4 - Definition</h4>
+        <p>Vierte Ebene für spezifische Themen.</p>
+        
+        <h4>h4 - Beispiele</h4>
+        <p>Weitere Details auf Ebene 4.</p>
+        
+        <h3>h3 - Vertiefung</h3>
+        <p>Noch ein Kapitel auf Ebene 3.</p>
+        
+        <h4>h4 - Konzepte</h4>
+        <p>Unterkapitel der Vertiefung.</p>
+        
+        <h5>h5 - Detail A</h5>
+        <p>Fünfte Ebene mit Feinheiten.</p>
+        
+        <h5>h5 - Detail B</h5>
+        <p>Noch mehr auf Ebene 5.</p>
+        
+        <h6>h6 - Spezifikation 1</h6>
+        <p>Sechste und kleinste Ebene.</p>
+        
+        <h6>h6 - Spezifikation 2</h6>
+        <p>Weitere Details auf Ebene 6.</p>
+        
+        <h4>h4 - Anwendungen</h4>
+        <p>Zurück auf Ebene 4.</p>
+        
+        <h2>h2 - Fortgeschritten</h2>
+        <p>Zweites Hauptkapitel.</p>
+        
+        <h3>h3 - Theorie</h3>
+        <p>Theoretische Grundlagen.</p>
+        
+        <h4>h4 - Mathematik</h4>
+        <p>Mathematische Aspekte.</p>
+        
+        <h5>h5 - Formeln</h5>
+        <p>Relevante Formeln.</p>
+        
+        <h5>h5 - Beweise</h5>
+        <p>Mathematische Beweise.</p>
+        
+        <h3>h3 - Praxis</h3>
+        <p>Praktische Umsetzung.</p>
+        
+        <h4>h4 - Werkzeuge</h4>
+        <p>Benötigte Werkzeuge.</p>
+        
+        <h4>h4 - Methoden</h4>
+        <p>Verschiedene Methoden.</p>
+        
+        <h5>h5 - Methode Alpha</h5>
+        <p>Erste Methode im Detail.</p>
+        
+        <h6>h6 - Schritt 1</h6>
+        <p>Erster Schritt.</p>
+        
+        <h6>h6 - Schritt 2</h6>
+        <p>Zweiter Schritt.</p>
+        
+        <h5>h5 - Methode Beta</h5>
+        <p>Alternative Methode.</p>
+    </section>
+    
+    <hr>
+    
+    <section id="section2">
+        <h2>h2 - Überblick</h2>
+        <p>Mehr Text auf der zweiten Ebene.</p>
+        
+        <h3>h3 - Einleitung</h3>
+        <p>Dritte Ebene der zweiten Sektion.</p>
+        
+        <h4>h4 - Hintergrund</h4>
+        <p>Historischer Hintergrund.</p>
+        
+        <h4>h4 - Motivation</h4>
+        <p>Warum ist das wichtig.</p>
+        
+        <h3>h3 - Hauptteil</h3>
+        <p>Der zentrale Teil.</p>
+        
+        <h4>h4 - Aspekt 1</h4>
+        <p>Erster wichtiger Aspekt.</p>
+        
+        <h5>h5 - Teilaspekt 1.1</h5>
+        <p>Detaillierte Betrachtung.</p>
+        
+        <h5>h5 - Teilaspekt 1.2</h5>
+        <p>Weitere Details.</p>
+        
+        <h6>h6 - Feinheit A</h6>
+        <p>Sehr spezifisches Detail.</p>
+        
+        <h6>h6 - Feinheit B</h6>
+        <p>Noch ein spezifisches Detail.</p>
+        
+        <h4>h4 - Aspekt 2</h4>
+        <p>Zweiter wichtiger Aspekt.</p>
+        
+        <h5>h5 - Teilaspekt 2.1</h5>
+        <p>Unterbereich von Aspekt 2.</p>
+        
+        <h2>h2 - Zusammenfassung</h2>
+        <p>Abschließende Gedanken.</p>
+        
+        <h3>h3 - Erkenntnisse</h3>
+        <p>Was haben wir gelernt.</p>
+        
+        <h4>h4 - Erkenntnis Alpha</h4>
+        <p>Erste wichtige Erkenntnis.</p>
+        
+        <h4>h4 - Erkenntnis Beta</h4>
+        <p>Zweite wichtige Erkenntnis.</p>
+        
+        <h5>h5 - Konsequenzen</h5>
+        <p>Was folgt daraus.</p>
+        
+        <h3>h3 - Ausblick</h3>
+        <p>Wie geht es weiter.</p>
+        
+        <h4>h4 - Zukünftige Entwicklungen</h4>
+        <p>Was kommt als nächstes.</p>
+        
+        <h5>h5 - Kurzfristig</h5>
+        <p>Nächste Schritte.</p>
+        
+        <h5>h5 - Langfristig</h5>
+        <p>Langfristige Vision.</p>
+        
+        <h6>h6 - Vision 2030</h6>
+        <p>Fernziele.</p>
+    </section>
+
+

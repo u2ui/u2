@@ -151,7 +151,7 @@ class code extends HTMLElement {
         if (el.tagName === 'TEXTAREA') return el.value;
         if (el.tagName === 'SCRIPT') return el.textContent.replaceAll('\\/script>','/script>');
         if (this.isForeign) {
-            return el.innerHTML;
+            return cleanInnerHTML(el.innerHTML);
         } else {
             return el.textContent;
         }
@@ -170,16 +170,13 @@ class code extends HTMLElement {
     }
     set value(value){
         if (this.trim) value = trimCode(value);
-
-        if (value === this.textarea.value) return;
-
         // setInputValueKeepSelection(this.textarea, value); way too slow
         this.unUpdatedValue = null;
+        if (value === this.textarea.value) return;
         if (this.textarea.matches(':focus')) {
             this.unUpdatedValue = value;
             return;
         }
-
         this.setHightlightValue(value);
         this.textarea.value = value;
 
@@ -231,7 +228,15 @@ function htmlEncode(input) {
 
 /* helper */
 
-
+function cleanInnerHTML(code) {
+    return code
+    .replace(/<\/(td|th|tr|tbody|thead|tfoot)>/gi, '')
+    .replace(/<([^>]+)>/g, (match, tagContent) => {
+        // Ersetze attribute="" und attribute=''
+        const cleaned = tagContent.replace(/([a-z][a-z0-9-]*)=(['"])\2/gi, '$1');
+        return `<${cleaned}>`;
+    });
+}
 // /* functions */
 // function setInputValueKeepSelection(input, newValue) {
 //     // if (document.activeElement !== input) { // not good for shadow dom

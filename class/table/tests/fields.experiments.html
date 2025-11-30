@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Test</title>
+
+        <script src="../../../u2/tests/test-init.js" type=module async></script>
+        <script src="../../../u2/auto.js" type=module async></script>
+
+        <link rel=stylesheet href="../../../css/classless/simple.css">
+
+        <link rel=stylesheet href="../table.css">
+<body>
+
+<h1>No need to wrap inputs, u2-fields?</h1>
+
+
+
+<section>
+    <h1>Flex</h1>
+        <form class="u2-fields2">
+
+            <label>
+                Input:
+                <input>
+            </label>
+
+            <label>
+                <span>Mit wrapper</span>
+                <input>
+            </label>
+
+            <label>
+                <span>Auch</span>
+                <input>
+            </label>
+
+            <label>
+                Radio:
+                <span><input type=radio></span>
+            </label>
+
+            <label>
+                Select:
+                <select name="from">
+                    <option value="">leer</option>
+                    <option value="auto">auto</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </label>
+            
+            <label>
+                Textarea:
+                <textarea>Test</textarea>
+            </label>
+            
+            <div>More inputs:
+                <select name="for">
+                    <option value="">leer</option>
+                    <option value="section1">section1</option>
+                    <option value="section2">section2</option>
+                </select>
+            </div>
+
+            <button>Send</button>
+        </form>
+
+        <form class="u2-fields2">
+
+            <label>
+                One more u2-Fields
+                <input>
+            </label>
+        </form>
+
+</section>
+
+<u2-code editable trim>
+    <style>
+    .u2-fields2 {
+        display:flex;
+        flex-direction:column;
+        row-gap:.5rem;
+        & > * {
+            display:flex;
+            flex-wrap:wrap;
+            column-gap:1rem;
+            align-items:baseline;
+            justify-content: space-between;
+            margin:0;
+
+            & > :first-child {
+                flex:1 1 max(10rem, 25%);
+            }
+            & > :last-child {
+                flex:1 1 max(15rem, 70%);
+            }
+        }
+    }
+    </style>
+</u2-code>
+
+
+
+
+
+<section>
+    <h1>Grid</h1>
+        <form class="u2-fields">
+
+            <label>
+                Input:
+                <input>
+            </label>
+
+            <label>
+                Checkbox
+                <span><input type=checkbox></span>
+            </label>
+
+            <label>
+                Radio:
+                <span><input type=radio></span>
+            </label>
+
+            <label>
+                Select:
+                <select name="from">
+                    <option value="">leer</option>
+                    <option value="auto">auto</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </label>
+            
+            <label>
+                Textarea:
+                <textarea>Test</textarea>
+            </label>
+            
+            <div>More inputs:
+                <select name="for">
+                    <option value="">leer</option>
+                    <option value="section1">section1</option>
+                    <option value="section2">section2</option>
+                </select>
+            </div>
+
+            <button>Send</button>
+        </form>
+
+        <form class="u2-fields">
+
+            <label>
+                One more u2-Fields
+                <input>
+            </label>
+        </form>
+
+</section>
+
+<u2-code editable trim>
+    <style>
+
+    .u2-fields {
+        --col-template: 1fr 2fr;
+        gap:.4rem 1rem;
+        display:grid;
+        grid-template-columns: var(--col-template);
+        white-space:nowrap;
+        align-items:baseline;
+
+        & > * { /* col */
+            display:contents;
+            & > * { /* cell */
+                width: -moz-available;
+                width: stretch;
+            }
+            &:is(button) {
+                display:block;
+                grid-column: -2 / -1;
+            }
+            &::after {
+                content:'';
+                grid-column-end: -1;
+            }
+        }
+    }
+
+    .u2-fields {
+        container-type: inline-size;
+
+        & > * { /* col */
+            @container (max-width: 22rem) {
+                display:block;
+                margin:0;
+                grid-column: 1 / -1;
+                & > * { display:block }
+                &::after { display: none; } /* Kein row-break mehr nötig */
+            }
+        }
+    }
+    
+    
+    </style>
+</u2-code>
+

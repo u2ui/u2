@@ -12,8 +12,8 @@ if (root.host === 'localhost') debug = true;
 if (debug) { // top level await safari >= 15.1
     //min = '';
     await Promise.all([
-        import('https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/mod.min.js'),
-        import('https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/htmlfills.min.js'),
+        //import('https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/mod.min.js'),
+        //import('https://cdn.jsdelivr.net/gh/nuxodin/lazyfill/htmlfills.min.js'),
         //import('https://cdn.jsdelivr.net/gh/nuxodin/cleanup.js/mod.min.js'),
     ]);
 }
@@ -70,8 +70,9 @@ impCss(rootUrl+'css/classless/more.css');
 function newNode(node){
     if (node.tagName.startsWith('U2-')) {
         let name = node.tagName.substring(3).toLowerCase();
-        if (customElements.get('u2-'+name)) return; // skip if registred
-        loadProject('el', name);
+        if (!customElements.get('u2-'+name)) {
+            loadProject('el', name);
+        }
     }
     let classList = node.classList;
     for (let i=0, l=classList.length; i<l; i++) {

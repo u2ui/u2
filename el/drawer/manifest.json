@@ -1,0 +1,29 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "drawer.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "todo",
+            "name": "u2-drawer",
+            "members": [],
+            "events": [],
+            "attributes": ["todo"],
+            "superclass": {
+                "name": "HTMLElement"
+            },
+            "tagName": "u2-drawer",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-drawer",
+            "declaration": {
+                "name": "u2-drawer",
+                "module": "drawer.js"
+            }
+        }]
+    }]
+}

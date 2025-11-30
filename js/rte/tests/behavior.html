@@ -12,7 +12,7 @@
     <link rel=stylesheet href="../../../css/classless/aria.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
-    <script src="../src/behavior.js" type=module async></script>
+    <xscript src="../src/behavior.js" type=module async></script>
     <style>
         body {
             max-width: 200rem;
@@ -83,6 +83,7 @@ force br inside p
         <li>Pharagraphs</li>
         <li>should not contain</li>
         <li>lists</li>
+        <li>default behavior?</li>
     </ul>
 </p>
         </div>
@@ -112,8 +113,17 @@ force br inside p
                 <td>cell 2
                 <td>cell 3
             </tr>
-        <table>
+        </table>
         <u2-code trim editable element=rte-6></u2-code>
+    </div>
+
+    <div class=u2-flex>
+        <div id="rte-7" contenteditable>
+            <p>Select the HR:</p>
+            <hr>
+            <p>Text</p>
+        </div>
+        <u2-code trim editable element=rte-7></u2-code>
     </div>
 
 

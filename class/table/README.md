@@ -47,6 +47,7 @@ Better tables
 
 ## Demos
 
+[fields.experiments.html](http://gcdn.li/u2ui/u2@main/class/table/tests/fields.experiments.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/class/table/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/class/table/tests/test.html)  
 

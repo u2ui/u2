@@ -5,6 +5,7 @@
         border-style:solid;
         border-radius: var(--radius);
         padding:0 !important;
+        background-color:Field;
     }
 }
 

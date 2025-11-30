@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <link href="../responsive.css" rel=stylesheet>
+    <script src="../responsive.js" type=module async></script>
+
+<body>
+
+<u2-code trim editable>
+    <style>
+    #grid {
+        background:#f5f5f5;
+        --u2-Items-width:8rem;
+        height:40rem;
+        resize:both;
+        padding:2rem;
+        grid-auto-rows: var(--u2-Items-width);
+        gap:1rem;
+
+        --max-cols: 4;
+        --max-cols-str:'4';
+        &:state(overflow-1) { --max-cols:5; --max-cols-str:'5'; }
+        &:state(overflow-2) { --max-cols:4; --max-cols-str:'4'; }
+        &:state(overflow-3) { --max-cols:3; --max-cols-str:'3'; }
+        &:state(overflow-4) { --max-cols:2; --max-cols-str:'2'; }
+        &:state(overflow-5) { --max-cols:1; --max-cols-str:'1'; }
+        &:state(overflow-6)  { --max-cols-str:'🧨'; }
+
+        & > * {
+            background: #ddd;
+            min-width:var(--u2-Items-width);
+            display:grid;
+            place-items:center;
+
+            &:first-child {
+                background: #a0f;
+                grid-column: span min(4, var(--max-cols));
+                grid-row: span 2;
+                &::before {
+                    content: 'grid-columns: span ' var(--max-cols-str);
+                    display:block;
+                    color:#fff;
+                }
+            }
+        }
+
+    }
+    </style>
+</u2-code>
+
+    <u2-responsive id=grid class=u2-grid>
+        <div contenteditable></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </u2-responsive>
+</section>
+
+

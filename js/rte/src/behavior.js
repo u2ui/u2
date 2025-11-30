@@ -94,7 +94,7 @@ document.addEventListener('input',function(e){
 
 
 
-/* force p's to not contain a ul  (NEEDED?)  */
+/* force p's to not contain a ul  (NEEDED?)  *
 document.addEventListener('input',function(e){
 	if (!e.target.isContentEditable) return;
 	if (e.target.tagName !== 'DIV') return;
@@ -176,7 +176,7 @@ document.addEventListener('click',function(e){
 // firefox: place selection before hr if it is inside
 document.addEventListener('selectionchange',function(e){
     const selection = getSelection();
-    if (selection.anchorNode.tagName === 'HR') {
+    if (selection.anchorNode?.tagName === 'HR') {
         $range().setStartBefore(selection.anchorNode).collapse().select(); // acts like chrome, selectNode(hr) will not work
     }
 

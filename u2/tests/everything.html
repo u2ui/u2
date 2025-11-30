@@ -31,13 +31,16 @@
 
 </header>
 
+<aside>
+    <u2-toc u2-scrollspy></u2-toc>
+</aside>
+
 <main class="u2-width">
 
-    <u2-toc u2-scrollspy style="position:fixed; inset:0 auto auto 0"></u2-toc>
 
     <h2>Splitpanel</h2>
     
-    <u2-splitpanel vertical style="min-height:20rem">
+    <u2-splitpanel vertical style="min-height:40rem">
         <u2-splitpanel>
             <u2-responsive strategies="hideIcons">
                 <style>
@@ -62,18 +65,27 @@
         </u2-splitpanel>
         <u2-splitpanel>
             <form u2-confirm="really?" u2-store id="demoForm">
-                <u2-input type="text">
-                    <input type="text" name="firstname">
-                </u2-input>
-                <u2-input type="password"></u2-input>
-                <u2-input type="text"></u2-input>
-                <u2-input type="stepper">
-                    <input type="number" name="age">
-                </u2-input>
-                <u2-rating value="4"></u2-rating>
+                <u2-fields>
+                    Benutzername:
+                    <input type="text" name="username" placeholder="Max Mustermann">
+                    Passwort:
+                    <u2-input type=password name="pw"></u2-input>
+                    Save Login?
+                    <input type="checkbox">
+                    Comment:
+                    <textarea></textarea>
+                    Age:
+                    <u2-input type="stepper" name="stepper">
+                        <input type="number">
+                    </u2-input>
+                    &nbsp;
+                    <u2-rating value="4" name="rating">
+                        <u2-tooltip position="left">Rate Us!</u2-tooltip>
+                    </u2-rating>
+                </u2-fields>
                 <button>Submit</button>
             </form>
-            <u2-typewriter speed="50">Hallo Welt</u2-typewriter>
+            <u2-typewriter autoplay loop>Hallo Welt</u2-typewriter>
         </u2-splitpanel>
     </u2-splitpanel>
 
@@ -226,8 +238,6 @@
     </u2-menubutton>
 
     <u2-time datetime="2024-01-15T10:30:00Z"></u2-time>
-
-    <u2-tooltip>Dies ist ein Tooltip</u2-tooltip>
 
     <section>
         <h2>Enhanced Table</h2>

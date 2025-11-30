@@ -268,6 +268,22 @@
       "css": true,
       "js": true
     },
+    "drawer": {
+      "name": "drawer",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "fields": {
+      "name": "fields",
+      "description": "Every content before a form element is considered as label",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "ico": {
       "name": "ico",
       "description": "Universal icon-element",
@@ -414,7 +430,7 @@
     },
     "toc": {
       "name": "toc",
-      "description": "Automatically generate a table of contents",
+      "description": "Automatically generate a Navigation by using the headings of the document.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -454,14 +470,6 @@
       "css": true,
       "js": false
     },
-    "classes": {
-      "name": "classes",
-      "description": "deprecated",
-      "beta": false,
-      "deprecated": true,
-      "css": true,
-      "js": false
-    },
     "classless": {
       "name": "classless",
       "description": "null",
@@ -473,6 +481,14 @@
     "norm": {
       "name": "norm",
       "description": "CSS normalization for crossbrowser compatibility",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": false
+    },
+    "utils": {
+      "name": "utils",
+      "description": "planned",
       "beta": false,
       "deprecated": false,
       "css": true,

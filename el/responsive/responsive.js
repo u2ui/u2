@@ -2,16 +2,31 @@ class U2Responsive extends HTMLElement {
     constructor() {
         super();
         this._internals = this.attachInternals();
-        this.currentLevel = -1;
+        this.currentLevel = 0;
         this.lastWidth = Infinity;
-        //this.updating = false;
+        this.criticalWidths = new Map();
         this.resizeObserver = new ResizeObserver(() => this.updateStrategy());
     }
+    
+    static observedAttributes = ['mutation'];
 
-    connectedCallback() { this.resizeObserver.observe(this); }
-    disconnectedCallback() { this.resizeObserver.disconnect(); }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+        if (name === 'mutation') setMutationObserver(this, newValue !== null);
+    }
+    connectedCallback() {
+        this.resizeObserver.observe(this);
+        setMutationObserver(this, this.getAttribute('mutation') !== null);
+    }
+    disconnectedCallback() {
+        this.resizeObserver.disconnect();
+        setMutationObserver(this, false);
+    }
 
-    get strategies() { return this.getAttribute('strategies')?.trim().split(/\s+/) || []; }
+    get strategies() { 
+        return this.getAttribute('strategies')?.trim().split(/\s+/) 
+            || ['overflow-1','overflow-2','overflow-3','overflow-4','overflow-5','overflow-6']
+    }
 
     applyStrategy(type, strategy) {
         const event = new CustomEvent(`u2-responsive-strategy-${type}`, {
@@ -25,43 +40,134 @@ class U2Responsive extends HTMLElement {
     applyStrategies(level) {
         const strats = this.strategies;
         const current = new Set(this._internals.states);
-        const target  = new Set(strats.slice(0, level + 1));
-        // Remove strategies that should be removed
-        for (const s of current) !target .has(s) && this.applyStrategy('remove', s);
-        // Add strategies that should be added
-        for (const s of target ) !current.has(s) && this.applyStrategy('add', s);
+        const target  = new Set(strats.slice(0, level));
+        for (const s of current) !target .has(s) && this.applyStrategy('remove', s); // Remove strategies
+        for (const s of target ) !current.has(s) && this.applyStrategy('add', s); // Add strategies
     }
 
     updateStrategy() {
-        //if (this.updating) return;
-        //this.updating = true;
-
         const width = this.clientWidth;
         const strats = this.strategies;
-        const shrinking = width < this.lastWidth; // need every pixel while shrinking
-        const growing = !shrinking; // need every pixel while shrinking
-        //const growing = width > this.lastWidth + 2; // save resources by not taking every pixel into account while growing, todo, track lastGrowinWidth?
+         
+        let growing = width > this.lastWidth;
         this.lastWidth = width;
 
-        if (growing) { // Growing: try to remove strategies
-            while (this.currentLevel >= 0) {
-                this.applyStrategies(this.currentLevel - 1);
-                if (this.scrollWidth > this.clientWidth) { // Doesn't fit, revert
-                    this.applyStrategies(this.currentLevel);
-                    break;
-                }
-                this.currentLevel--;
+        // debounce, not test every growing pixel if criticalWidth is known
+        if (growing && this.currentLevel > 0) {
+            const criticalWidth = this.criticalWidths.get(this.currentLevel-1);
+            let margin = 0;
+            if (criticalWidth !=null) {
+                const distanceToCritical = criticalWidth - width;
+                margin = Math.max(0, distanceToCritical / 1);
             }
-        }
-        if (shrinking) { // Shrinking: apply strategies
-            while (this.scrollWidth > this.clientWidth && this.currentLevel < strats.length - 1) {
-                this.currentLevel++;
-                this.applyStrategies(this.currentLevel);
-            }
-        }
-        //this.updating = false;
-    }
+            const growCheck = width > this.lastGrowingCheckAt + margin;
 
+            if (growCheck) {
+                this.lastGrowingCheckAt = width; // reset by trying
+                this.applyStrategies(--this.currentLevel); // try
+            }
+
+        } else {
+            this.lastGrowingCheckAt = width; // reset by shrinking
+        }
+
+
+        while (this.overflows() && this.currentLevel < strats.length) {
+            if (!growing) this.criticalWidths.set(this.currentLevel, width);
+            this.applyStrategies(++this.currentLevel);
+        }
+    }
+    // updateStrategy() {
+    //     const width = this.clientWidth;
+    //     const strats = this.strategies;
+    //     let growing = width > this.lastWidth;
+    //     this.lastWidth = width;
+    //     // debounce, not test every growing pixel if criticalWidth is known
+    //     if (growing && this.currentLevel > 0) {
+    //         const criticalWidth = this.criticalWidths.get(this.currentLevel-1);
+    //         let margin = 0;
+    //         if (criticalWidth !=null) {
+    //             const distanceToCritical = criticalWidth - width;
+    //             margin = Math.max(0, distanceToCritical / 1); 
+    //         }
+    //         growing = width > this.lastGrowingCheckAt + margin;
+    //         if (growing) this.lastGrowingCheckAt = width;
+    //     } else {
+    //         this.lastGrowingCheckAt = width;
+    //     }
+
+    //     if (growing && this.currentLevel > 0) { // Growing: try to remove strategies
+    // this.tryGrowingAt = width;
+    //         this.applyStrategies(--this.currentLevel);
+    //     }
+    //     while (this.overflows() && this.currentLevel < strats.length) {
+    //         if (!growing) this.criticalWidths.set(this.currentLevel, width);
+    //         this.applyStrategies(++this.currentLevel);
+    //     }
+    // }
+    overflows(){ return this.scrollWidth > this.clientWidth; }
+
+    debug(){
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+
+        setInterval(()=>{
+            const position = this.getBoundingClientRect();
+            div.style.cssText = `background:#999; position:absolute; top:${position.top-20}px; left:${position.left}px; width:${position.width}px; height:7px; font-size:11px`;
+
+            this.strategies.forEach((name, level) => {
+                const expectedWidth = this.criticalWidths.get(level);
+                const id = 'debugMarker'+level;
+                const marker = div.querySelector('#'+id) || document.createElement('div');
+                marker.id = id;
+                marker.style.cssText = `position:absolute; width:2px; height:20px; background:red; white-space:nowrap;`;
+                marker.innerHTML = 
+                    `<div style="position:absolute; left:-20px; bottom:20px; line-height:1.1; background:#fff7; padding:.3em; writing-mode:sideways-lr">
+                        ${name}<br> level: ${level+1}
+                    </div>`;
+
+                if (expectedWidth) {
+                    marker.style.left = expectedWidth+'px';
+                    marker.style.top = '-10px';
+                } else {
+                    marker.style.left = '-20px'; 
+                    marker.style.top = '-120px';
+                }
+                
+                div.append(marker);
+            });
+
+            const tryGrowingAt = this.lastGrowingCheckAt;
+            if (tryGrowingAt) {
+                const marker = div.querySelector('#tryGrowingAt') || document.createElement('div');
+                marker.id = 'tryGrowingAt';
+                marker.style.cssText = `position:absolute; width:2px; height:20px; background:blue; white-space:nowrap; text-aligen:center`;
+                marker.style.left = tryGrowingAt+'px';
+                marker.style.top = '-10px';
+                div.append(marker);
+            }
+
+            
+        },20);
+
+    }
 }
 
 customElements.define('u2-responsive', U2Responsive);
+
+
+
+function setMutationObserver(el, active){
+    if (active) {
+        el.mutationObserver ??= new MutationObserver(() => {
+            el.lastWidth = 0; // Force re-check for shrinking
+            el.lastGrowingCheckAt = null; // Force re-check for growing
+            el.updateStrategy()
+        });
+        el.mutationObserver.observe(el, {  childList: true,  subtree: true,  characterData: true, attributes: true });
+    } else {
+        el.mutationObserver?.disconnect();
+        el.mutationObserver = null;
+    }
+}
+

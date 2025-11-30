@@ -1,32 +1,44 @@
 class Toc extends HTMLElement {
     constructor() {
         super();
-        //this.attachShadow({ mode: 'open' });
-        //this.shadowRoot.innerHTML = `<slot></slot>`;
     }
 
     connectedCallback() {
-        this._build();
+        //this._build();
         requestAnimationFrame(() => this._build());
-        window.addEventListener('load', () => this._build());
+        addEventListener('load', () => this._build());
+    }
+
+    static observedAttributes = ['from', 'to', 'for'];
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (newValue === oldValue) return;
+        this._build();
     }
 
     _build() {
-        const container = this;
-        container.innerHTML = '';
-        
         const nav = document.createElement('nav');
-        container.appendChild(nav);
 
-        let headings = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+        const to = parseInt(this.getAttribute('to') || 6);
+        const scopeId = this.getAttribute('for');
+        const fromAttr = this.getAttribute('from') || 'auto';
 
-        // count h1 headings and if there is only one, use h2 as top level
-        let h1Count = 0;
-        for (let heading of headings) {
-            if (heading.tagName === 'H1') h1Count++;
-        }
-        if (h1Count < 2) {
-            headings = headings.filter(heading => heading.tagName !== 'H1');
+        let from = parseInt(fromAttr) || 1;
+
+        const root = scopeId ? document.getElementById(scopeId) : document;
+
+        const counts = [0,0,0,0,0,0,0];
+
+        let headings = [...root.querySelectorAll('h1,h2,h3,h4,h5,h6')]
+            .filter(h => {
+                const lvl = parseInt(h.tagName[1]);
+                counts[lvl]++;
+                return lvl >= from && lvl <= to;
+            });
+
+        // auto: from is the first level where there are at least 2 headings
+        if (fromAttr === 'auto') {
+            from = counts.findIndex(count => count > 1);
+            headings = headings.filter(h => h.tagName[1] >= from );
         }
 
         let lastLevel = 0;
@@ -34,17 +46,13 @@ class Toc extends HTMLElement {
         let currentLi = null;
 
         for (let heading of headings) {
-            if (!heading.id) heading.id = 'u2-toc-' + heading.textContent.trim().replace(/\s+/g, '-').toLowerCase();
+            heading.id ||= 'u2-toc-' + heading.textContent.trim().replace(/\s+/g, '-').toLowerCase();
 
             const level = parseInt(heading.tagName[1]);
 
             if (level > lastLevel) {
                 const ul = document.createElement('ul');
-                if (currentLi) {
-                    currentLi.appendChild(ul);
-                } else {
-                    currentUl.appendChild(ul);
-                }
+                currentLi ? currentLi.append(ul) : currentUl.append(ul);
                 currentUl = ul;
             } else if (level < lastLevel) {
                 for (let i = level; i < lastLevel; i++) {
@@ -53,15 +61,14 @@ class Toc extends HTMLElement {
             }
 
             currentLi = document.createElement('li');
-            currentUl.appendChild(currentLi);
-
-            const a = document.createElement('a');
-            a.href = '#' + heading.id;
-            a.textContent = heading.textContent;
-            currentLi.appendChild(a);
+            currentLi.innerHTML = `<a href="#${heading.id}">${heading.textContent}</a>`;
+            currentUl.append(currentLi);
 
             lastLevel = level;
         }
+        if (this.innerHTML.trim() === nav.outerHTML) return;
+        this.innerHTML = '';
+        this.appendChild(nav);
     }
 }
 

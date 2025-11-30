@@ -1,5 +1,5 @@
 # &lt;u2-toc&gt; - element
-Automatically generate a table of contents
+Automatically generate a Navigation by using the headings of the document.
 
 ## Usage
 
@@ -16,6 +16,7 @@ Automatically generate a table of contents
 
 ## Demos
 
+[attributes.html](http://gcdn.li/u2ui/u2@main/el/toc/tests/attributes.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/toc/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/toc/tests/test.html)  
 

@@ -7,10 +7,6 @@
 	border-width:0; /* removes default borders at fieldset, dialog, ... */
 }
 [type=number] { text-align: end; }
-legend {
-	padding-left: .3em;
-	padding-right: .3em;
-}
 tbody, thead, tfoot {
 	vertical-align: inherit;
 }

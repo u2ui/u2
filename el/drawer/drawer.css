@@ -1,0 +1,77 @@
+/* u2-drawer.css - Non-JS Fallback Styles */
+
+/* Base styles for u2-drawer */
+u2-drawer {
+  display: flex;
+  flex-direction:column;
+  & > * {
+    padding:1.5rem;
+  }
+  & > .-body {
+    flex:1 1 auto;
+    overflow:auto;
+  }
+  & > aside {
+    margin:0;
+    width: auto;
+    height:auto;
+    flex: 1 1 auto;
+  }
+}
+
+u2-drawer[popover] {
+  position: fixed;
+  height: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: var(--color-bg, white);
+  transition-property: transform, opacity, overlay, display;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Backdrop styles */
+u2-drawer::backdrop {
+  background:#0002;
+  transition-duration: inherit;
+}
+
+/* placement */
+u2-drawer:not([placement])[popover],
+u2-drawer[placement="right"][popover] {
+  inset: 0 0 0 auto;
+  width: fit-content;
+  transform: translateX(0);
+}
+u2-drawer[placement="left"][popover] {
+  inset: 0 auto 0 0;
+  width: fit-content;
+  transform: translateX(0);
+}
+u2-drawer[placement="top"][popover] {
+  inset: 0 0 auto 0;
+  height: fit-content;
+  transform: translateY(0);
+}
+u2-drawer[placement="bottom"][popover] {
+  inset: auto 0 0 0;
+  height: fit-content;
+  transform: translateY(0);
+}
+
+
+u2-drawer:not([placement]):not(:popover-open),
+u2-drawer[placement="right"]:not(:popover-open) { transform: translateX(100%); }
+u2-drawer[placement="left"]:not(:popover-open) { transform: translateX(-100%); }
+u2-drawer[placement="top"]:not(:popover-open) { transform: translateY(-100%); }
+u2-drawer[placement="bottom"]:not(:popover-open) { transform: translateY(100%); }
+
+
+
+
+/* Contained mode */
+u2-drawer[contained][popover] {
+  position: absolute;
+  inset:0;
+}

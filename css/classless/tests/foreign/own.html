@@ -10,6 +10,13 @@
 
   <title>Classless Theme Testseite</title>
 
+  <style>
+  html {
+    --line-height-relative: .8rem;
+    --line-height-absolute: .5rem;
+    --line-height:calc(var(--line-height-relative) * 1.2 + var(--line-height-absolute));  
+  }
+  </style>
 
 <body>
 
@@ -36,11 +43,44 @@
     </nav>
 </aside>
 
-<section id="formulare" aria-labelledby="formulare-title">
-    <h1>Content outside of main</h1>
+
+<section id="typography" aria-labelledby="formulare-title">
+    <h1 style="font-size:4rem">
+        Typography - Extra large Heading to test the line-height<br>
+        In CASES LIKE THIS
+    </h1>
+    <h2>This is a h2, often the highest level in the Content</h2>
+    <p>
+        A paragraph follows the heading to provide context and supporting information. 
+        This paragraph is intentionally longer to observe how line-height, spacing, and text wrapping behave 
+        in a real-world scenario. Sometimes paragraphs contain multiple sentences, punctuation, 
+        and even lists or emphasized words to fully test typographic rendering.
+    </p>
+    <p>
+        For example, when designing for readability, it’s important to check how the text flows 
+        over different screen sizes, whether it respects padding and margin, and if headings 
+        scale correctly relative to body text. Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </p>
+    <h3>This is an H3, used for subsection titles</h3>
+    <p>
+        A paragraph under the H3 provides more detailed information about a subsection. 
+        It allows us to see the spacing between H3 and its content, as well as relative to the preceding H2.
+    </p>
+
+    <hr>
+
+    <h1>Heading Level H1</h1>
+    <h2>Heading Level H2</h2>
+    <h3>Heading Level H3</h3>
+    <h4>Heading Level H4</h4>
+    <h5>Heading Level H5</h5>
+    <h6>Heading Level H6</h6>
 </section>
 
 <main role="main">
+
+
     <aside role="complementary" aria-label="Zusatzinformationen">
         <h2>Hinweise & Tipps</h2>
         <p>Dies ist ein aside-Bereich für zusätzliche Infos oder Hinweise.</p>
@@ -163,7 +203,7 @@ return "Hallo " + name;
 
     <section>
         <h2>Dialoge</h2>
-        <button command="show-modal" commandFor="dialog1">Show dialog</button>
+        <button command="show-modal" commandFor="dialog1">Show Dialog</button>
         <dialog id=dialog1>
             <h3 id="art2-title">Dialog opened by command-button</h3>
             <p>Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
@@ -177,6 +217,22 @@ return "Hallo " + name;
             <h3 id="art2-title">Zweiter Artikel</h3>
             <p>Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
         </dialog>
+
+
+        <h3>Drawer</h3>
+        <button command="show-popover" commandFor=drawer>Show Drawer</button>
+        <aside popover id="drawer">
+            <h2>Inhalte</h2>
+            <input autofocus placeholder="autofocus">
+            <nav>
+                <ul>
+                    <li><a href="#formulare">Formulare</a></li>
+                    <li><a href="#inhalt">Inhalt</a></li>
+                    <li><a href="#tabellen">Tabellen</a></li>
+                </ul>
+            </nav>
+        </aside>
+
 
     </section>
 

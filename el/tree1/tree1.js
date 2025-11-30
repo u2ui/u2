@@ -176,10 +176,7 @@ export class tree extends HTMLElement {
         doit ??= !this.isExpanded();
 
         const event = new CustomEvent(doit?'u2-tree1-expand':'u2-tree1-collapse', {bubbles: true});
-        console.log({
-            ariaLive: this.ariaLive,
-            ariaBusy: this.ariaBusy
-        })
+
         if (this.ariaLive && this.ariaBusy !== 'true') {
 
             event.load = callback=>{

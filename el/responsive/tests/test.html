@@ -14,6 +14,27 @@
 
 <body>
 
+    <h2>Attributes</h2>
+    <form id="attrForm">
+        <u2-fields>
+            <input name=mutation type=checkbox name="mutation"></u2-input>
+            <input name=strategies value="hide-optional1 hide-optional2 break">
+        </u2-fields>
+        <script>
+        attrForm.oninput = e=>{
+            for (const inp of attrForm.elements) {
+                if (inp.type === 'checkbox') {
+                    if (inp.checked) demoEl.setAttribute(inp.name, '');
+                    else demoEl.removeAttribute(inp.name);
+                } else {
+                    demoEl.setAttribute(inp.name, inp.value);
+                }
+            }
+        }
+        </script>
+    </form>
+
+
 <u2-code trim editable>
     <style>
         u2-responsive {
@@ -43,10 +64,10 @@
 </u2-code>
 
 <section style="resize:both; overflow:auto; padding:2rem; border:1px solid black">
-    <u2-responsive strategies="hide-optional1 hide-optional2 break">
+    <u2-responsive strategies="hide-optional1 hide-optional2 break" id="demoEl">
         <table>
             <tr>
-                <td>Website Update
+                <td contenteditable>Website Update (editable)
                 <td>In Progress
                 <td class="optional1">High
                 <td class="optional2">2025-11-30
@@ -65,7 +86,7 @@
                 <td class="optional1">Low
                 <td class="optional2">2025-12-05
                 <td>Mark
-                <td>Topic planning needed
+                <td contenteditable>Topic planning needed (editable)
         </table>
     </u2-responsive>
 </section>
@@ -80,6 +101,11 @@
 
 // Event Listener Demo
 const responsive = document.querySelector('u2-responsive');
+
+setTimeout(()=>{
+    responsive.debug();
+},1000);
+
 const log = document.getElementById('log');
 clearLog.onclick = ()=>{log.innerHTML = ''};
 

@@ -3,7 +3,7 @@ planned
 
 ## Demos
 
-[test.html](http://gcdn.li/u2ui/u2@main/css/classes/tests/test.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/css/utils/tests/test.html)  
 
 ## Inspiration
 

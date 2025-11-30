@@ -28,7 +28,13 @@ body {
     display: flow-root;/* so that margin of children does not affect body */
 	font-size:max(1rem, 16px);/* 16px => safari ios dont zoom in */
 }
-h1, h2, h3, h4, h5, h6 {
+
+/* todo: 
+h6, .h6 { font-size: 1rem }
+h5, .h5  { font-size: 1.25rem }
+*/
+
+h1, h2, h3, h4, h5, h6 { /* todo: more on top. unit lh? */
 	margin-block:1em;
 }
 h1, h2, h3, h4, h5, h6, figcaption, blockquote, legend, caption { /* th? */
@@ -37,6 +43,10 @@ h1, h2, h3, h4, h5, h6, figcaption, blockquote, legend, caption { /* th? */
 p, li {
 	text-wrap: pretty;
 }
+/*
+todo:;
+p { margin-top: 0 }
+*/
 hr {
 	border-style:solid;
 	border-width:0 0 1px 0;
@@ -86,6 +96,11 @@ select, summary, label, button:not(:disabled), input:where([type=checkbox], [typ
 [inert], :disabled { opacity:.4; }
 
 /* form */
+
+legend {
+	padding-inline: .4em;
+}
+
 input, textarea, select, button, ::file-selector-button, .btn {
 	padding:.2em;
 	border:1px solid rgba(0,0,0,.5);
@@ -123,24 +138,41 @@ input:where([type=range]) { vertical-align:middle }
 
 
 /* animatable dialog and popover */
+dialog, [popover], ::backdrop, :fullscreen { 
+	transition-behavior: allow-discrete;
+	transition-property: opacity, overlay, display;
+	/*transition-duration: 0.3s; todo? */
+	opacity: 0;
+}
+/* zzz
 dialog, [popover] {
     &, &::backdrop {
         transition-behavior: allow-discrete;
+        transition-property: opacity, overlay, display;
+        todo?transition-duration: 0.3s;
         opacity: 0;
     }
 }
-dialog:is(:modal,[open]), :popover-open {
+*/
+dialog:is(:modal,[open]), :popover-open, :fullscreen {
     &, &::backdrop {
-        opacity: 1;/*  @starting-style { opacity: 0; } why does this not work? */
+        opacity: 1;
+		@starting-style { opacity: 0; } /* seams to work now */
     }
 }
+/* zzz
 @starting-style {
     dialog:is(:modal,[open]), :popover-open {
         &, &::backdrop { opacity: 0; }
     }
 }
+*/
 
-:where([popover]) {/* ok? una: https://x.com/Una/status/1917662266427859202 */
+::backdrop {
+	transition-duration:inherit;
+}
+
+[popover] {/* ok? una: https://x.com/Una/status/1917662266427859202 */
     inset: auto;
 }
 

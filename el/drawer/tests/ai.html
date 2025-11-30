@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/auto.js" type=module async></script>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <link rel=stylesheet href="../drawer.css">
+    <script src="../drawer.js" type=module async></script>
+
+
+
+  <style>
+
+    h1 {
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .intro {
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+
+    .test-section {
+      background: white;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .test-section h2 {
+      color: #111827;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+
+    /* Contained Demo Container */
+    .contained-demo {
+      position: relative;
+      height: 400px;
+      background: #fef;
+      border-radius: 0.5rem;
+      border:1px solid;
+      padding: 2rem;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+
+    .contained-demo p {
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+  </style>
+
+<body>
+
+<h1>u2-drawer Test Page</h1>
+<p class="intro">Test alle Features der u2-drawer Komponente</p>
+
+<!-- Test 1: Basic Drawers -->
+<section class="test-section">
+    <h2>1. Basic Drawers (alle Positionen)</h2>
+    <div class="button-group">
+        <button onmouseover="placementDemo.removeAttribute('placement')" popovertarget="placementDemo">Default (Right Drawer)</button>
+        <button onmouseover="placementDemo.setAttribute('placement','right')" popovertarget="placementDemo">Right Drawer (Default)</button>
+        <button onmouseover="placementDemo.setAttribute('placement','left')" popovertarget="placementDemo">Left Drawer</button>
+        <button onmouseover="placementDemo.setAttribute('placement','top')" popovertarget="placementDemo">Top Drawer</button>
+        <button onmouseover="placementDemo.setAttribute('placement','bottom')" popovertarget="placementDemo">Bottom Drawer</button>
+    </div>
+
+    <u2-drawer id="placementDemo" popover>
+      <div class="drawer-header">
+          <h2>Right Drawer</h2>
+          <button class="u2-unstyle" u2-behavior="close">✖</button>
+      </div>
+      <div class="-body">
+          <p><strong>Default Position</strong></p>
+          <p>Slides in from the right side.</p>
+          <h3>Features</h3>
+          <p>✓ Smooth animations<br>
+          ✓ Backdrop blur<br>
+          ✓ ESC key closes<br>
+          ✓ Click outside closes<br>
+          ✓ Swipe to close (mit JS)</p>
+      </div>
+      <footer>
+          <button>button</button>
+      </footer>
+    </u2-drawer>
+
+</section>
+
+<!-- Test 2: Contained Drawer -->
+<section class="test-section">
+  <h2>2. Contained Drawer</h2>
+  <p>Dieser Drawer ist innerhalb des grauen Containers positioniert (position: absolute)</p>
+  <div class="contained-demo">
+    <p><strong>Container mit position: relative</strong></p>
+    <button popovertarget="drawer-contained">Open Contained Drawer</button>
+    
+    <u2-drawer id="drawer-contained" placement="right" contained popover style="background:yellow; border:4px solid red; transition-duration:2s">
+        <div class="drawer-header">
+            <h2>Contained Drawer</h2>
+            <button class="u2-unstyle" u2-behavior="close">✖</button>
+        </div>
+        <div class="drawer-content">
+            <p>
+              Dieser Drawer ist mit <code>position: absolute</code> <br>
+              innerhalb des Containers positioniert.
+            </p>
+        </div>
+    </u2-drawer>
+  </div>
+</section>
+
+<!-- Test 3: Manual vs Auto -->
+<section class="test-section">
+    <h2>3. Popover Modes</h2>
+    <div class="button-group">
+      <button popovertarget="drawer-manual">Manual (nur Button schließt)</button>
+    </div>
+</section>
+
+<u2-drawer id="drawer-manual" placement="right" popover="manual">
+    <aside>
+      <div class="drawer-header">
+          <h2>Manual Mode</h2>
+          <button class="u2-unstyle" u2-behavior="close">✖</button>
+      </div>
+      <div class="drawer-content">
+          <p><strong>popover="manual"</strong></p>
+          <p>• ESC schließt NICHT<br>
+          • Click außerhalb schließt NICHT<br>
+          • Muss manuell geschlossen werden<br>
+          • Mehrere können gleichzeitig offen sein</p>
+      </div>
+    </aside>
+</u2-drawer>

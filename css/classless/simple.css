@@ -10,12 +10,28 @@ body {
 
 body:has(> aside) {
     display: grid;
+
     grid-template-columns: minmax(15rem, 25%) 1fr;
+
     gap: 1rem;
     align-items: start;
 
+    grid-template-columns: 15rem minmax(1rem, 1fr) minmax(20rem, var(--width)) minmax(1rem, 1fr);
+    grid-template-areas: 
+        "header header header header"
+        "nav spacer content spacer"
+        "footer footer footer footer";
+        grid-template-areas: 
+    "header header header header"
+    "nav . content ."
+    "footer footer footer footer";
+    gap: 0;
+    max-width:none;
+
+
     & > aside {
-        grid-column:1;
+        xgrid-column:3;
+        grid-area:nav;
         position:sticky;
         width:auto;
         margin:0;
@@ -26,7 +42,8 @@ body:has(> aside) {
         }
     }
     & > * {
-        grid-column:2;
+        xgrid-area:content;
+        grid-column:3;
     }
 
 }
@@ -39,9 +56,9 @@ body > * {
 body > footer,
 body > header {
     padding-block: 2rem;
-    grid-column-start: 1;
-    grid-column-end:-1;
 }
+body > header { grid-area: header; }
+body > footer { grid-column:1 / -1 }
 
 :is(body > header, [role="banner"]) {
     border-block-end: var(--border);
@@ -116,7 +133,10 @@ label {
     display:block;
     margin-block:.3rem;
 }
-:where(input, u2-input):not([type="checkbox"], [type="radio"]), textarea, select, button, .btn {
+/* old :where(input, u2-input):not([type="checkbox"], [type="radio"]), textarea, select, button, .btn {
+    margin-block:.3rem;
+} */
+button, .btn {
     margin-block:.3rem;
 }
 
@@ -191,9 +211,10 @@ article, dialog {
     border: var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    display:flex;
     flex-direction: column;
     padding:0;
+
+    
 
     & > * {
         padding: 0 1rem;
@@ -211,8 +232,12 @@ article, dialog {
         font-size: 0.9rem;
     }
 }
+dialog:modal {
+    display:flex;
+}
 
 article {
+    display:flex;
     margin-block:1.5em;
     background-color: var(--color-light);
 }
@@ -230,6 +255,32 @@ aside {
     width: max(15rem, 25%);
     max-width:100%;
     margin-left: 1em;
+}
+
+aside[popover] {
+    position:fixed;
+    inset: 0 0 0 auto;
+    width:fit-content;
+    height:auto;
+    margin:0;
+    border:0;
+    padding: 2rem;
+    border-radius:0;
+    box-shadow: var(--shadow);
+    background-color: var(--color-bg);
+    transition-duration: .3s;
+    transition-property:transform, opacity, display, overlay;
+
+    transform:translateX(0);
+    &:not(:popover-open) {
+       transform:translateX(100%);
+    }
+    @starting-style {
+        transform:translateX(100%);
+    }
+    &::backdrop {
+        background-color:#0002;
+    }
 }
 
 

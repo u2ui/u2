@@ -8,24 +8,24 @@ class ElementVariableStyler extends HTMLElement {
         this.variables = [
             { name: '--color', label: 'Akzentfarbe', type: 'color', value: '#007bff' },
             { name: '--width', label: 'Layout Breite (rem)', min: 40, max: 120, step: 1, unit: 'rem', value: 75 },
-            
-            // Verschachtelte Gruppe: Schatten-Parameter mit Details/Summary
             { 
                 label: 'Schatten Einstellungen (rem)',
                 isGroup: true,
-                // Die Kinderliste muss in 'children' enthalten sein, um die Logik zu vereinfachen
                 children: [
-                    { name: '--shadow-x', label: 'Versatz X', min: -0.5, max: 2, step: 0.05, unit: 'rem', value: 0 },
                     { name: '--shadow-x', label: 'Versatz X', min: -0.5, max: 2, step: 0.05, unit: 'rem', value: 0 },
                     { name: '--shadow-y', label: 'Versatz Y', min: -0.5, max: 2, step: 0.05, unit: 'rem', value: 0.3 },
                     { name: '--shadow-blur', label: 'Unschärfe', min: 0, max: 2, step: 0.1, unit: 'rem', value: 0.6 }
                 ]
             },
-            
-            // Native CSS Eigenschaft (ohne --) - Beibehalten wie gewünscht
             { name: 'font-size', label: 'Schriftgröße (px)', min: 10, max: 24, step: .2, unit: 'px', value: 16 },
-            
-            // Einzelne Variablen
+            { 
+                label: 'Schrift einstellungen',
+                isGroup: true,
+                children: [
+                    { name: '--line-height-relative', label: 'Linienhöhe in abhängikeit zur aktuellen Schritgrösse', min: 0, max: 2, step: 0.001, unit: 'em', value: 1 },
+                    { name: '--line-height-absolute', label: 'Linienhöhe globaler Anteil (auf addiert)', min: 0, max: 1, step: 0.001, unit: 'rem', value: .5 }
+                ]
+            },
             { name: '--radius', label: 'Border Radius (rem)', min: 0, max: 2, step: 0.1, unit: 'rem', value: 0.5 },
             { name: '--line-width', label: 'Linienstärke (rem)', min: 0.05, max: 0.3, step: 0.01, unit: 'rem', value: 0.0625 } 
         ];
@@ -35,9 +35,9 @@ class ElementVariableStyler extends HTMLElement {
     }
 
     getStyleTarget() {
-        const targetSelector = this.getAttribute('target');
-        if (targetSelector) {
-            return document.querySelector(targetSelector) || document.documentElement;
+        const selector = this.getAttribute('target');
+        if (selector) {
+            return document.querySelector(selector) || document.documentElement;
         }
         return document.documentElement;
     }
@@ -72,7 +72,9 @@ class ElementVariableStyler extends HTMLElement {
             :host {
                 font:unset !important;
                 font-size:14px !important;
+                color:black;
                 display: block;
+                max-width:17em;
                 position: fixed;
                 top: 0.625em;
                 right: 0.625em;
@@ -82,6 +84,7 @@ class ElementVariableStyler extends HTMLElement {
                 border-radius: 0.5em; 
                 z-index: 9999;
                 box-shadow: 0 0.25em 0.75em rgba(0,0,0,0.1); 
+                line-height:1.2 !important;
             }
             .styler-grid {
                 display: grid;
@@ -108,6 +111,7 @@ class ElementVariableStyler extends HTMLElement {
                 font-size: 0.75em;
                 color: #555;
                 margin-left:auto;
+                white-space:nowrap;
             }
             
             /* Styling für die Details-Gruppe */
@@ -192,23 +196,31 @@ class ElementVariableStyler extends HTMLElement {
     // setInitialValue, handleInput, applyVariable bleiben funktional unverändert
     
     setInitialValue(input) {
-        const targetValue = this.targetElement.style.getPropertyValue(input.name) || 
-                            getComputedStyle(this.targetElement).getPropertyValue(input.name).trim();
+        // const targetValue = this.targetElement.style.getPropertyValue(input.name) || 
+        //                     getComputedStyle(this.targetElement).getPropertyValue(input.name).trim();
 
-        if (targetValue) {
-            const unit = input.dataset.unit || '';
-            const numericValue = parseFloat(targetValue.replace(unit, ''));
-            
-            if (!isNaN(numericValue) && input.type === 'range') {
-                input.value = numericValue;
+        const elValue = getComputedStyle(this.targetElement).getPropertyValue(input.name).trim();
+
+        console.log(input.name, elValue)
+        
+        
+
+        if (elValue) {
+            const inpUnit = input.dataset.unit || '';
+
+            if (input.type === 'range') {
+                const {unit:elUnit, value:elNumber} = parseCssLength(elValue)
+                const elPx = unitToPx(elNumber, elUnit, this.targetElement);
+                const inpNumber = pxToUnit(elPx, inpUnit, this.targetElement);
+                input.value = inpNumber;
             } else if (input.type === 'color') {
-                 input.value = targetValue;
+                input.value = elValue;
             }
             
             const valueDisplayId = input.name.replace('--', '') + '-value';
             const displayElement = this.shadowRoot.getElementById(valueDisplayId);
             if (displayElement) {
-                displayElement.textContent = targetValue;
+                displayElement.textContent = elValue;
             }
         }
 
@@ -238,3 +250,66 @@ class ElementVariableStyler extends HTMLElement {
 }
 
 customElements.define('element-variable-styler', ElementVariableStyler);
+
+
+function parseCssLength(str) {
+    const match = /^(\d*\.?\d+)([a-z%]*)$/.exec(str);
+    return match ? { value: parseFloat(match[1]), unit: match[2] || '' } : { value: NaN, unit: '' };
+}
+
+function unitToPx(value, unit, el){
+    if (unit === 'px') return value;
+    if (unit === 'cm') return value * 96 / 2.54;
+    if (unit === 'mm') return value * 96 / 25.4;
+    if (unit === 'in') return value * 96;
+    if (unit === 'pt') return value * 96 / 72;
+    if (unit === 'pc') return value * 96 / 6;
+    if (unit === 'rem') return value * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    if (unit === 'em') return value * parseFloat(getComputedStyle(el).fontSize);
+    if (unit === 'vw') return value * (innerWidth / 100);
+    if (unit === 'vh') return value * (innerHeight / 100);
+    if (unit === '%') {
+        console.warn('todo: "%" is dependant of the css-property used');
+        return null;
+        // return value * el.parentElement.offsetWidth / 100;
+    }
+    if (unit === 'lh') {
+        const raw = getComputedStyle(el).lineHeight;
+        if (raw === 'normal') {
+            console.warn('lh is "normal" which is not easy to pixelize');
+            return null;
+        }
+        const lh = parseFloat(raw);
+        return value * lh;
+    }
+
+    console.warn(`Unknown unit: ${unit}`);
+    return null;
+}
+
+function pxToUnit(px, unit, el){
+    if (unit === 'px')  return px;
+    if (unit === 'cm')  return px * 2.54 / 96;
+    if (unit === 'mm')  return px * 25.4 / 96;
+    if (unit === 'in')  return px / 96;
+    if (unit === 'pt')  return px * 72 / 96;
+    if (unit === 'pc')  return px * 6 / 96;
+    if (unit === 'rem') return px / parseFloat(getComputedStyle(document.documentElement).fontSize);
+    if (unit === 'em')  return px / parseFloat(getComputedStyle(el).fontSize); // not el.parentNode
+    if (unit === 'vw')  return px / (innerWidth / 100);
+    if (unit === 'vh')  return px / (innerHeight / 100);
+    if (unit === '%')   {
+        console.warn('todo: "%" is dependant of the css-property used');
+        return null;
+        //return px * 100 / el.parentElement.offsetWidth;
+    }
+    if (unit === 'lh')   {
+        const raw = getComputedStyle(el).lineHeight;
+        if (raw === 'normal') {
+            console.warn('lh is "normal" which is not easy to pixelize');
+            return null;
+        }
+        const lh = parseFloat(raw);
+        return px / lh;    
+    }
+}

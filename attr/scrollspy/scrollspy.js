@@ -6,7 +6,8 @@ class DynamicScrollSpy {
         this.mutationObserver = null;
         this.ACTIVE_CLASS = 'active'; 
         //this.ROOT_MARGIN = '-30px'; 
-        this.ROOT_MARGIN = '0px 0px 0px 0px'; 
+        //this.ROOT_MARGIN = '0px 0px 0px 0px'; 
+        this.ROOT_MARGIN = '2px 0px 20px 0px';
         this.init();
     }
 
@@ -24,7 +25,7 @@ class DynamicScrollSpy {
         const currentURL = location.href.split('#')[0];
         const sections = this.menuLinks.map(link => {
             const linkURL = link.href.split('#')[0];
-            const hash = link.href.split('#')[1];
+            const hash = decodeURIComponent(link.href.split('#')[1]);
             if (linkURL === currentURL && hash) {
                 const section = document.getElementById(hash);
                 this.idLinkMap.set(hash, link);
@@ -33,7 +34,7 @@ class DynamicScrollSpy {
         }).filter(Boolean);
 
         if (sections.length === 0) return;
-        const options = {root:null, rootMargin:this.ROOT_MARGIN, threshold: 0.1 };
+        const options = {root:null, rootMargin:this.ROOT_MARGIN, threshold: 0.05 };
         const intersections = new Set();
         this.observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

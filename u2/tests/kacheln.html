@@ -66,9 +66,9 @@
             padding:1rem;
             text-align:center;
             height:100%;
-            display:grid;
             place-items: safe stretch center;
             & > div {
+                min-width: 0;
                 max-width:100%;
                 display:flow-root;
                 margin-bottom: 2.4rem;
@@ -88,6 +88,9 @@
             & u2-code {
                 margin:0;
                 font-size:12px;
+            }
+            & u2-fields {
+                text-align:left;
             }
             & .u2-width {
                 --width:13em;
@@ -153,8 +156,6 @@
         <section id=reposSec>
             <script type=module>
                 import "../auto.js";
-
-
 
                 const repos = await fetch('../projects.json').then(res=>res.json());
 

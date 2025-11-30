@@ -312,6 +312,9 @@
     <br>
     <button onclick="favDialog.toggleAttribute('open')">toggle open</button>
     <button onclick="favDialog.showModal()">showModal()</button>
+    <button onclick="this.closest('section').requestFullscreen()">
+      fullscreen
+    </button>
     <style>
     #favDialog {
         transition-duration:1s
@@ -319,6 +322,17 @@
     #favDialog::backdrop {
         transition-duration:1s;
         background:rgba(0,0,0,.8);
+    }
+    section:fullscreen {
+      transition-duration:1s;
+      margin:5rem;
+      padding:5rem;
+      background:transparent;
+      overflow:auto;
+      &::backdrop {
+        transition-duration:1s;
+        background:#8008;
+      }
     }
     </style>
     <dialog id="favDialog">
@@ -512,7 +526,7 @@
   <ruby>ruby test</ruby>
   <s>s test</s>
   <samp>samp test</samp>
-  <script>script test</script>
+  <script>'script test'</script>
   <search>search test</search>
   <section>section test</section>
   <label>

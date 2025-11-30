@@ -64,50 +64,34 @@
     }
     </script>
 
-    <div class="u2-table -Fields -Flex">
-        <strong>
-            <span>
-                <span>Attribute</span>
-                <span>Value</span>
-            </span>
-        </strong>  
-        <form id=attrForm>
-            <label>
-                <span>value</span>
-                <input name=value>
-            </label>
-            <label>
-                <div>
-                    innerHTML* <br>
-                </div>
-                <input name=inner value="42847597">
-            </label>
-            <label>
-                <span>lang</span>
-                <select name=lang>
-                    <option value="">
-                    <option>de
-                    <option>en
-                    <option>es
-                    <option>it
-                    <option>fr
-                </select>
-            </label>
-            <label>
-                <span>digits</span>
-                <select name=digits>
-                    <option>
-                    <option>0
-                    <option>1
-                    <option>2
-                    <option>3
-                    <option>4
-                    <option>5
-                    <option>6
-                </select>
-            </label>
-        </form>
-    </div>  
+
+
+
+    <h3>Attribute</h3>
+    <form id=attrForm>
+        <u2-fields style="display:flex">
+            <input name="value">
+            <select name="lang">
+                <option value="">
+                <option>de
+                <option>en
+                <option>es
+                <option>it
+                <option>fr
+            </select>
+            <select name="digits">
+                <option>
+                <option>0
+                <option>1
+                <option>2
+                <option>3
+                <option>4
+                <option>5
+                <option>6
+            </select>
+        </u2-fields>
+        InnerHTML* <input name="inner" value="42847597">
+    </form>
 
     <br><br>
 

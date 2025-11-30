@@ -1,0 +1,5 @@
+u2-fields:not(:defined) {
+    display:grid;
+    grid-template-columns: auto 1fr;
+    gap:.5rem 1rem;
+}
