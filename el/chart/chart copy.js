@@ -4,29 +4,28 @@ class U2Chart extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML =
+        this.shadowRoot.innerHTML = 
             `<style>
-            .chart-container {
+            canvas {
                 width: 100%;
                 display:block;
                 &:not([height]) { aspect-ratio: 2; }
             }
-            :host([type="pie"]) .chart-container:not([height]) { aspect-ratio: 1; }
-            canvas { width: 100%; height: 100%; }
+            :host([type="pie"]) canvas:not([height]) { aspect-ratio: 1; }
             </style>
-            <div class="chart-container"></div>`;
-        this.container = this.shadowRoot.querySelector('.chart-container');
+            <canvas></canvas>`;
+        this.canvas = this.shadowRoot.querySelector('canvas');
         this.chart = null; // Initialisiere die Chart-Instanz
     }
     connectedCallback() {
         this._requestBuild();
     }
 
-    static get observedAttributes() { return ['for', 'type', 'flip-axis', 'axis-labels', 'grid', 'engine', 'renderer']; }
+    static get observedAttributes() { return ['for', 'type', 'flip-axis', 'axis-labels', 'grid']; }
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'for') {
-            this._forPromise = import('../../u2/tools/promiseElementById.js').then(({ promiseElementById }) => {
+            this._forPromise = import('../../u2/tools/promiseElementById.js').then(({promiseElementById}) => {
                 return promiseElementById(this.getAttribute('for'));
             });
         }
@@ -54,26 +53,26 @@ class U2Chart extends HTMLElement {
         });
     }
     async _build() {
-        if (this.engineInstance) {
-            this.engineInstance.destroy();
-            this.engineInstance = null;
-        }
+        if (this.canvas) this.canvas.remove();
 
-        this.container.innerHTML = ''; // Clear container
 
-        let { rows, cols, data } = await this._extractdata();
+        
+        this.canvas = document.createElement('canvas');
+        this.shadowRoot.appendChild(this.canvas);
+        //this.chart.destroy();
+        //this.chart = null;
+
+        const ctx = this.canvas.getContext('2d');
+        let {rows, cols, data} = await this._extractdata();
         if (!data) { console.error('No data found'); return; }
 
         const type = this.getAttribute('type') || 'line';
-        const engine = this.getAttribute('engine') || 'chart.js';
-        const renderer = this.getAttribute('renderer');
-
         const options = {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: { ticks: {}, grid: {}, border: {}, beginAtZero: true },
-                x: { ticks: {}, grid: {}, border: {} }
+                y: { ticks: {}, grid: {}, border:{}, beginAtZero: true },
+                x: { ticks: {}, grid: {}, border:{} }
             }
         };
 
@@ -81,12 +80,14 @@ class U2Chart extends HTMLElement {
             options.scales = undefined;
         }
 
-        const { hue, saturation, lightness } = getHSLofElement(this);
+        const {Chart, registerables} = await import ('https://cdn.skypack.dev/chart.js');
+        Chart.register(...registerables);
 
-        function getColor(i) {
-            return `hsl(${hue + i * 30}, ${saturation}, ${lightness})`;
+        const {hue, saturation, lightness} = getHSLofElement(this);
+
+        function colorNr(i) {
+            return `hsl(${hue + i*30}, ${saturation}, ${lightness})`;
         }
-
         if (this.hasAttribute('flip-axis')) {
             [rows, cols] = [cols, rows];
             data = data[0].map((_, i) => data.map(row => row[i]));
@@ -109,23 +110,22 @@ class U2Chart extends HTMLElement {
             }
         }
 
-        try {
-            const engineModule = await import(`./engines/${engine}.js`);
-            this.engineInstance = await engineModule.render(this.container, { rows, cols, data }, {
-                type,
-                options,
-                getColor,
-                renderer
-            });
-        } catch (e) {
-            console.error(`Failed to load engine ${engine}`, e);
-        }
+        new Chart(ctx, {
+            type,
+            data: {
+                labels: rows,
+                datasets: cols.map((col, i) => ({
+                    label: col,
+                    data:data.map(row => row[i]),
+                    backgroundColor: type==='pie' || type==='doughnut' ? data.map((_, j) => colorNr(j)) : colorNr(i),
+                    borderColor:     type==='pie' || type==='doughnut' ? '#fff' : colorNr(i),
+                }))
+            },
+            options
+        });
     }
     disconnectedCallback() {
-        if (this.engineInstance) {
-            this.engineInstance.destroy();
-            this.engineInstance = null;
-        }
+        if (this.chart) this.chart.destroy();
     }
 }
 
@@ -166,17 +166,20 @@ function extractTableData(table) {
         colHeaders = Array.from({ length: data[0].length }, (_, i) => 'Col ' + (i + 1));
     }
 
-    return { cols: colHeaders, rows: rowHeaders, data };
+    return {cols: colHeaders, rows: rowHeaders, data};
 }
 
 
 function extractDLData(dl) {
     let dts = [...dl.querySelectorAll('dt')];
     let dds = [...dl.querySelectorAll('dd')];
+
     let rows = dts.map(dt => dt.textContent.trim());
     let cols = [''];
     let data = dds.map(dd => [parseFloat(dd.textContent.trim())]);
-    return { cols, rows, data };
+
+
+    return {cols, rows, data};
 }
 
 

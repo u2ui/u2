@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Engine Test</title>
+    <script type="module" src="../chart.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        u2-chart {
+            height: 300px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Chart Engine Test</h1>
+
+    <h2>Default (Chart.js)</h2>
+    <u2-chart>
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Sales</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jan</td>
+                    <td>100</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>Feb</td>
+                    <td>120</td>
+                    <td>60</td>
+                </tr>
+                <tr>
+                    <td>Mar</td>
+                    <td>150</td>
+                    <td>80</td>
+                </tr>
+            </tbody>
+        </table>
+    </u2-chart>
+
+    <h2>ECharts</h2>
+    <u2-chart engine="echarts">
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Sales</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jan</td>
+                    <td>100</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>Feb</td>
+                    <td>120</td>
+                    <td>60</td>
+                </tr>
+                <tr>
+                    <td>Mar</td>
+                    <td>150</td>
+                    <td>80</td>
+                </tr>
+            </tbody>
+        </table>
+    </u2-chart>
+
+    <h2>ECharts (Pie)</h2>
+    <u2-chart engine="echarts" type="pie">
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>20</td>
+                </tr>
+            </tbody>
+        </table>
+    </u2-chart>
+
+    <h2>ECharts (SVG)</h2>
+    <u2-chart engine="echarts" renderer="svg">
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Sales</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jan</td>
+                    <td>100</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>Feb</td>
+                    <td>120</td>
+                    <td>60</td>
+                </tr>
+                <tr>
+                    <td>Mar</td>
+                    <td>150</td>
+                    <td>80</td>
+                </tr>
+            </tbody>
+        </table>
+    </u2-chart>
+
+    <h2>frappe (SVG)</h2>
+    <u2-chart engine="frappe" renderer="svg">
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Sales</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Jan</td>
+                    <td>100</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>Feb</td>
+                    <td>120</td>
+                    <td>60</td>
+                </tr>
+                <tr>
+                    <td>Mar</td>
+                    <td>150</td>
+                    <td>80</td>
+                </tr>
+            </tbody>
+        </table>
+    </u2-chart>
+
+</body>
+
+</html>

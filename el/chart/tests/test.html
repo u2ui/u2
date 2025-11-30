@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang=en>
+
 <head>
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
     <script src="../../../u2/tests/test-init.js" type=module async></script>
     <script src="../../../u2/auto.js" type=module async></script>
-    
+
 
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
@@ -18,21 +19,42 @@
     <style>
         u2-chart {
             width: 500px;
-            margin:auto;
+            margin: auto;
         }
     </style>
 
-<section class="main">
-    <h3>With thead and th's in rows</h3>
-    <u2-chart>
-        <table>
-            <thead>
-                <tr>
-                    <th>Month
-                    <th>Income
-                    <th>Expenses
-                    <th>Profit
-            <tbody>
+    <section class="main">
+        <h3>With thead and th's in rows</h3>
+        <u2-chart>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Month
+                        <th>Income
+                        <th>Expenses
+                        <th>Profit
+                <tbody>
+                    <tr>
+                        <th>January
+                        <td>100
+                        <td>200
+                        <td>300
+                    <tr>
+                        <th>February
+                        <td>200
+                        <td>300
+                        <td>400
+                    <tr>
+                        <th>March
+                        <td>300
+                        <td>400
+                        <td>500
+            </table>
+        </u2-chart>
+
+        <h3>No thead, no th only row in tbody </h3>
+        <u2-chart>
+            <table>
                 <tr>
                     <th>January
                     <td>100
@@ -48,66 +70,63 @@
                     <td>300
                     <td>400
                     <td>500
-        </table>
-    </u2-chart>
-
-    <h3>No thead, no th only row in tbody </h3>
-    <u2-chart>
-        <table>
-            <tr>
-                <th>January
-                <td>100
-                <td>200
-                <td>300
-            <tr>
-                <th>February
-                <td>200
-                <td>300
-                <td>400
-            <tr>
-                <th>March
-                <td>300
-                <td>400
-                <td>500
-        </table>
-    </u2-chart>
+            </table>
+        </u2-chart>
 
 
-    <h3>No but first row is th's</h3>
-    <u2-chart>
-        <table>
-            <tr>
-                <th>Month
-                <th>Income
-                <th>Expenses
-                <th>Profit
-            <tr>
-                <th>January
-                <td>100
-                <td>200
-                <td>300
-            <tr>
-                <th>February
-                <td>200
-                <td>300
-                <td>400
-            <tr>
-                <th>March
-                <td>300
-                <td>400
-                <td>500
-        </table>
-    </u2-chart>
-
-    <h3>Just "thead", no row-header</h3>
-    <u2-chart>
-        <table>
-            <thead>
+        <h3>No but first row is th's</h3>
+        <u2-chart>
+            <table>
                 <tr>
+                    <th>Month
                     <th>Income
                     <th>Expenses
                     <th>Profit
-            <tbody
+                <tr>
+                    <th>January
+                    <td>100
+                    <td>200
+                    <td>300
+                <tr>
+                    <th>February
+                    <td>200
+                    <td>300
+                    <td>400
+                <tr>
+                    <th>March
+                    <td>300
+                    <td>400
+                    <td>500
+            </table>
+        </u2-chart>
+
+        <h3>Just "thead", no row-header</h3>
+        <u2-chart>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Income
+                        <th>Expenses
+                        <th>Profit
+                <tbody>
+                    <tr>
+                        <td>100
+                        <td>200
+                        <td>300
+                    <tr>
+                        <td>200
+                        <td>300
+                        <td>400
+                    <tr>
+                        <td>300
+                        <td>400
+                        <td>500
+            </table>
+        </u2-chart>
+
+        <h3>No headers at all</h3>
+        <u2-chart>
+            <table>
                 <tr>
                     <td>100
                     <td>200
@@ -120,183 +139,163 @@
                     <td>300
                     <td>400
                     <td>500
-        </table>
-    </u2-chart>
+            </table>
+        </u2-chart>
 
-    <h3>No headers at all</h3>
-    <u2-chart>
-        <table>
-            <tr>
-                <td>100
-                <td>200
-                <td>300
-            <tr>
-                <td>200
-                <td>300
-                <td>400
-            <tr>
-                <td>300
-                <td>400
-                <td>500
-        </table>
-    </u2-chart>
+        <h3>Type line</h3>
+        <u2-chart type="line">
+            <table>
+                <tr>
+                    <th>Month
+                    <th>Income
+                    <th>Expenses
+                    <th>Profit
+                <tr>
+                    <th>January
+                    <td>100
+                    <td>200
+                    <td>300
+                <tr>
+                    <th>February
+                    <td>200
+                    <td>300
+                    <td>400
+                <tr>
+                    <th>March
+                    <td>300
+                    <td>400
+                    <td>500
+            </table>
+        </u2-chart>
 
-    <h3>Type line</h3>
-    <u2-chart type="line">
-        <table>
-            <tr>
-                <th>Month
-                <th>Income
-                <th>Expenses
-                <th>Profit
-            <tr>
-                <th>January
-                <td>100
-                <td>200
-                <td>300
-            <tr>
-                <th>February
-                <td>200
-                <td>300
-                <td>400
-            <tr>
-                <th>March
-                <td>300
-                <td>400
-                <td>500
-        </table>
-    </u2-chart>
+        <h3>Type bar</h3>
+        <u2-chart type="bar">
+            <table>
+                <tr>
+                    <th>Month
+                    <th>Income
+                    <th>Expenses
+                    <th>Profit
+                <tr>
+                    <th>January
+                    <td>100
+                    <td>200
+                    <td>300
+                <tr>
+                    <th>February
+                    <td>200
+                    <td>300
+                    <td>400
+                <tr>
+                    <th>March
+                    <td>300
+                    <td>400
+                    <td>500
+            </table>
+        </u2-chart>
 
-    <h3>Type bar</h3>
-    <u2-chart type="bar">
-        <table>
-            <tr>
-                <th>Month
-                <th>Income
-                <th>Expenses
-                <th>Profit
-            <tr>
-                <th>January
-                <td>100
-                <td>200
-                <td>300
-            <tr>
-                <th>February
-                <td>200
-                <td>300
-                <td>400
-            <tr>
-                <th>March
-                <td>300
-                <td>400
-                <td>500
-        </table>
-    </u2-chart>
+        <h3>Type pie</h3>
+        <u2-chart type="pie">
+            <table>
+                <tr>
+                    <th>Hans
+                    <td>100
+                <tr>
+                    <th>Grete
+                    <td>200
+                <tr>
+                    <th>Paul
+                    <td>400
+            </table>
+        </u2-chart>
 
-    <h3>Type pie</h3>
-    <u2-chart type="pie">
-        <table>
-            <tr>
-                <th>Hans
-                <td>100
-            <tr>
-                <th>Grete
-                <td>200
-            <tr>
-                <th>Paul
-                <td>400
-        </table>
-    </u2-chart>
+        <h3>Using dl</h3>
+        <u2-chart type="pie">
+            <dl>
+                <dt>Apples</dt>
+                <dd>10 pieces</dd>
 
-    <h3>Using dl</h3>
-    <u2-chart type="pie">
-        <dl>
-            <dt>Apples</dt>
-            <dd>10 pieces</dd>
+                <dt>Bananas</dt>
+                <dd>12 pieces</dd>
 
-            <dt>Bananas</dt>
-            <dd>12 pieces</dd>
+                <dt>Oranges</dt>
+                <dd>8 pieces</dd>
 
-            <dt>Oranges</dt>
-            <dd>8 pieces</dd>
+                <dt>Grapes</dt>
+                <dd>15 pieces</dd>
 
-            <dt>Grapes</dt>
-            <dd>15 pieces</dd>
+                <dt>Cherries</dt>
+                <dd>20 pieces</dd>
 
-            <dt>Cherries</dt>
-            <dd>20 pieces</dd>
-
-            <dt>Strawberries</dt>
-            <dd>30 pieces</dd>
-        </dl>    
-    </u2-chart>
-    
-
-    <h3>Type doughnut</h3>
-    <u2-chart type="doughnut">
-        <table>
-            <tr>
-                <th>Hans
-                <td>100
-            <tr>
-                <th>Grete
-                <td>200
-            <tr>
-                <th>Paul
-                <td>400
-        </table>
-    </u2-chart>
-
-    <h3>Type radar</h3>
-    <u2-chart type="radar">
-        <table>
-            <tr>
-                <th>Month
-                <th>Income
-                <th>Expenses
-                <th>Profit
-            <tr>
-                <th>January
-                <td>100
-                <td>200
-                <td>300
-            <tr>
-                <th>February
-                <td>200
-                <td>300
-                <td>400
-            <tr>
-                <th>March
-                <td>300
-                <td>400
-                <td>500
-        </table>
-    </u2-chart>
-
-    <h3>Type polarArea</h3>
-    <u2-chart type="polarArea">
-        <table>
-            <tr>
-                <th>Month
-                <th>Income
-                <th>Expenses
-                <th>Profit
-            <tr>
-                <th>January
-                <td>100
-                <td>200
-                <td>300
-            <tr>
-                <th>February
-                <td>200
-                <td>300
-                <td>400
-            <tr>
-                <th>March
-                <td>300
-                <td>400
-                <td>500
-        </table>
-    </u2-chart>
+                <dt>Strawberries</dt>
+                <dd>30 pieces</dd>
+            </dl>
+        </u2-chart>
 
 
+        <h3>Type doughnut</h3>
+        <u2-chart type="doughnut">
+            <table>
+                <tr>
+                    <th>Hans
+                    <td>100
+                <tr>
+                    <th>Grete
+                    <td>200
+                <tr>
+                    <th>Paul
+                    <td>400
+            </table>
+        </u2-chart>
+
+        <h3>Type radar</h3>
+        <u2-chart type="radar">
+            <table>
+                <tr>
+                    <th>Month
+                    <th>Income
+                    <th>Expenses
+                    <th>Profit
+                <tr>
+                    <th>January
+                    <td>100
+                    <td>200
+                    <td>300
+                <tr>
+                    <th>February
+                    <td>200
+                    <td>300
+                    <td>400
+                <tr>
+                    <th>March
+                    <td>300
+                    <td>400
+                    <td>500
+            </table>
+        </u2-chart>
+
+        <h3>Type polarArea</h3>
+        <u2-chart type="polarArea">
+            <table>
+                <tr>
+                    <th>Month
+                    <th>Income
+                    <th>Expenses
+                    <th>Profit
+                <tr>
+                    <th>January
+                    <td>100
+                    <td>200
+                    <td>300
+                <tr>
+                    <th>February
+                    <td>200
+                    <td>300
+                    <td>400
+                <tr>
+                    <th>March
+                    <td>300
+                    <td>400
+                    <td>500
+            </table>
+        </u2-chart>

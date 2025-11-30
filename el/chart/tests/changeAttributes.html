@@ -35,6 +35,19 @@
 
     Flip Axis: <input type="checkbox" onchange="this.checked ? chart.setAttribute('flip-axis', '') : chart.removeAttribute('flip-axis')">
 
+    
+    <select name="setType" onchange="chart.setAttribute('engine', this.value)">
+        <option value="">Engine (default chart.js)
+        <option value="echarts">echarts
+        <option value="frappe">frappe
+        <option value="chart.js">chart.js
+    </select>
+    <select name="setType" onchange="chart.setAttribute('renderer', this.value)">
+        <option value="renderer">
+        <option value="svg">SVG
+        <option value="canvas">canvas
+    </select>
+
     <u2-chart type="line" for="tableEl" id="chart" style="max-width:500px; margin:3rem auto"></u2-chart>
 
     <h3>Table as data source</h3>
