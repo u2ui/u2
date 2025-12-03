@@ -11,80 +11,107 @@
     <link href="../../../css/classless/full.css" rel=stylesheet>
     <link href="../../../css/classless/simple.css" rel=stylesheet>
 
-    <link href="../../../table.class/table.css" rel=stylesheet>
-
     <link href="../table.css" rel=stylesheet>
     <script src="../table.js" type=module async></script>
 
 <body>
 
     <section>
-        <u2-table style="white-space:nowrap" id=test sortable break>
-            <table>
-                <thead>
-                    <tr>
-                        <th> Salut
-                        <th> Firstname
-                        <th> Lastname
-                        <th> Age
-                        <th> X
-                <tbody>
-                    <tr>
-                        <td> Herr
-                        <td> Wolfgang Amadeus
-                        <td> Mozart
-                        <td> 46
-                        <td> b
-                    <tr>
-                        <td> Mr.
-                        <td colspan=2 style="text-align:center"> <b>N Colspan 2</b>
-                        <td> 88
-                        <td> a
-                    <tr>
-                        <td> Frau
-                        <td> Provident, quisquam.
-                        <td> Omnis, quisquam.
-                        <td> 1
-                        <td> c
-                    <tr>
-                        <td> Mister
-                        <td> Provident, quisquam.
-                        <td> Laudens, quisquam.
-                        <td data-sortby=".5"> 6 month
-                        <td> z
-            </table>
-        </u2-table>
-    </section>
+        <u2-responsive id="responsive">
+            <u2-table style="white-space:nowrap; max-height:min(60vh, 50rem)" id=test>
+                <table>
+                    <colgroup>
+                        <col class="salutation">
+                        <col class="name firstname">
+                        <col class="name lastname">
+                        <col class="age">
+                        <col class="category">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th> Salut
+                            <th data-sort-handler> Firstname
+                            <th data-sort-handler> Lastname
+                            <th data-sort-handler draggable="true"> Age
+                            <th data-sort-handler> X
+                    <tbody id=testBody>
+                        <tr>
+                            <td> Herr
+                            <td> Wolfgang Amadeus
+                            <td> Mozart
+                            <td> 46
+                            <td> b
+                        <tr>
+                            <td> Mr.
+                            <td colspan=2 style="text-align:center"> <b>N Colspan 2</b>
+                            <td> 88
+                            <td> a
+                        <tr>
+                            <td> Frau
+                            <td> Provident, quisquam.
+                            <td> Omnis, quisquam.
+                            <td> 1
+                            <td> c
+                        <tr>
+                            <td> Mister
+                            <td> Provident, quisquam.
+                            <td> Laudens, quisquam.
+                            <td data-sort=".5"> 6 month
+                            <td> z
+                </table>
+            </u2-table>
+        </u2-responsive>
+        <button id=double>
+            double items <sup class="u2-badge" style="background:var(--color-light); color:black"></sup>
+        </button>
+        <script>
+        double.addEventListener('click', e=>{
+            testBody.insertAdjacentHTML('beforeend',testBody.innerHTML)
+            double.querySelector('sup').innerHTML = testBody.children.length;
 
-    <section>
-        <h2>sortable=button (selector)</h2>
-        <u2-table style="white-space:nowrap; max-height:min(60vh, 20rem)" id=test2 sortable="button">
-            <table>
-                <thead>
-                    <tr>
-                        <th> Firstname
-                        <th> <button>Lastname</button>
-                        <th> <button>Age</button>
-                        <th> <button>X</button> not here
-                <tbody id=test2body>
-                    <tr>
-                        <td> Adam
-                        <td> Hungentobler
-                        <td> 88
-                        <td> a
-                    <tr>
-                        <td> Wolfgang Amadeus
-                        <td> Mozart
-                        <td> 46
-                        <td> b
-                    <tr>
-                        <td> Provident, quisquam.
-                        <td> Omnis, quisquam.
-                        <td> 1
-                        <td> c
-            </table>
-        </u2-table>
-        <button onclick="test2body.insertAdjacentHTML('beforeend',test2body.innerHTML)">double items</button>
+        })
+        </script>
+
+        <style>
+            .name {
+                background:#eaf;
+            }
+            .age {
+                text-align:right;
+            }
+            #responsive {
+                u2-table { overflow:visible; }
+                &:state(overflow-1) {
+                    table, thead, tbody, tr, td, th {
+                        display:block;
+                    }
+                    thead { display:none; }
+                    tbody {
+                        display:flex;
+                        flex-direction:column;
+                        gap:1rem;
+                    }
+                    tr {
+                        flex:1;
+                        border:1px solid;
+                    }
+                    td { text-align:left;}
+                    td::before {
+                        content:attr(data-title) ':';
+                        font-weight:bold;
+                    }
+
+                }
+                &:state(overflow-2) {
+                    td::before {
+                        display:block;
+                    }
+                    td {
+                        white-space:wrap;
+                    }
+                }
+            }
+        </style>
     </section>
 
     <u2-code editable trim>

@@ -294,9 +294,6 @@ class U2Calendar extends HTMLElement {
 
 
 
-
-
-
 class U2CalendarItem extends HTMLElement {
   static observedAttributes = ['start', 'end'];
 
@@ -325,13 +322,8 @@ class U2CalendarItem extends HTMLElement {
     }
   }
 
-  get start() {
-    return this._start;
-  }
-
-  get end() {
-    return this._end && this._end > this._start ? this._end : this._start;
-  }
+  get start() { return this._start; }
+  get end() { return this._end && this._end > this._start ? this._end : this._start; }
 
   updateLayout(layoutInfo) {
     if (!layoutInfo) return;

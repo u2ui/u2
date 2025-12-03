@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>u2-table Columns API Test</title>
+
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <link href="../../../css/classless/full.css" rel=stylesheet>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+    <link href="../table.css" rel=stylesheet>
+    <script src="../table.js" type=module async></script>
+
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .test-section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+        
+        .console {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .pass { color: #4caf50; }
+        .fail { color: #f44336; }
+        .info { color: #2196f3; }
+        
+        button {
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+
+        .highlight-cell {
+            background: yellow !important;
+            outline: 2px solid red;
+        }
+    </style>
+
+<body>
+
+<h1>🧪 u2-table Columns API Test Suite</h1>
+
+<!-- Test 1: Einfache Tabelle ohne col -->
+<div class="test-section">
+    <h2>Test 1: Einfache Tabelle ohne col-Elemente</h2>
+    <u2-table id="test1">
+        <table>
+            <thead>
+                <tr>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+            <tbody>
+                <tr>
+                    <td>A1</td>
+                    <td>B1</td>
+                    <td>C1</td>
+                <tr>
+                    <td>A2</td>
+                    <td>B2</td>
+                    <td>C2</td>
+        </table>
+    </u2-table>
+    <button onclick="test1()">Test ausführen</button>
+    <div class="console" id="console1"></div>
+</div>
+
+<!-- Test 2: Tabelle mit col-Elementen -->
+<div class="test-section">
+    <h2>Test 2: Tabelle mit col-Elementen</h2>
+    <u2-table id="test2">
+        <table>
+            <colgroup>
+                <col id="col-a" class="spalte-a">
+                <col id="col-b" class="spalte-b">
+                <col id="col-c" class="spalte-c">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+            <tbody>
+                <tr>
+                    <td>A1</td>
+                    <td>B1</td>
+                    <td>C1</td>
+                <tr>
+                    <td>A2</td>
+                    <td>B2</td>
+                    <td>C2</td>
+        </table>
+    </u2-table>
+    <button onclick="test2()">Test ausführen</button>
+    <div class="console" id="console2"></div>
+</div>
+
+<!-- Test 3: col mit span -->
+<div class="test-section">
+    <h2>Test 3: col-Elemente mit span-Attribut</h2>
+    <u2-table id="test3">
+        <table>
+            <colgroup>
+                <col id="col-span2" span="2" class="double-col">
+                <col id="col-single" class="single-col">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>A (span)</th>
+                    <th>B (span)</th>
+                    <th>C</th>
+            <tbody>
+                <tr>
+                    <td>A1</td>
+                    <td>B1</td>
+                    <td>C1</td>
+        </table>
+    </u2-table>
+    <button onclick="test3()">Test ausführen</button>
+    <div class="console" id="console3"></div>
+</div>
+
+<!-- Test 4: colgroup mit span (ohne col) -->
+<div class="test-section">
+    <h2>Test 4: colgroup mit span-Attribut (ohne col-Elemente)</h2>
+    <u2-table id="test4">
+        <table>
+            <colgroup id="cg-span2" span="2" class="group-a"></colgroup>
+            <colgroup id="cg-span1" span="1" class="group-b"></colgroup>
+            <thead>
+                <tr>
+                    <th>A (group)</th>
+                    <th>B (group)</th>
+                    <th>C</th>
+            <tbody>
+                <tr>
+                    <td>A1</td>
+                    <td>B1</td>
+                    <td>C1</td>
+        </table>
+    </u2-table>
+    <button onclick="test4()">Test ausführen</button>
+    <div class="console" id="console4"></div>
+</div>
+
+<!-- Test 5: Gemischt - colgroup mit cols UND span -->
+<div class="test-section">
+    <h2>Test 5: Gemischte col/colgroup Struktur</h2>
+    <u2-table id="test5">
+        <table>
+            <colgroup>
+                <col id="col5-a" class="col-a">
+                <col id="col5-b" span="2" class="col-b-span">
+            </colgroup>
+            <colgroup id="cg5-c" span="1" class="group-c"></colgroup>
+            <col id="col5-standalone" class="standalone">
+            <thead>
+                <tr>
+                    <th>A</th>
+                    <th>B (span start)</th>
+                    <th>B (span end)</th>
+                    <th>C (group)</th>
+                    <th>D (standalone)</th>
+            <tbody>
+                <tr>
+                    <td>A1</td>
+                    <td>B1</td>
+                    <td>B2</td>
+                    <td>C1</td>
+                    <td>D1</td>
+        </table>
+    </u2-table>
+    <button onclick="test5()">Test ausführen</button>
+    <div class="console" id="console5"></div>
+</div>
+
+<!-- Test 6: Tabelle mit colspan in Zellen -->
+<div class="test-section">
+    <h2>Test 6: Tabelle mit colspan in td/th</h2>
+    <u2-table id="test6">
+        <table>
+            <colgroup>
+                <col id="col6-a">
+                <col id="col6-b">
+                <col id="col6-c">
+                <col id="col6-d">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>A</th>
+                    <th colspan="2">B+C (colspan)</th>
+                    <th>D</th>
+            <tbody>
+                <tr>
+                    <td>A1</td>
+                    <td>B1</td>
+                    <td>C1</td>
+                    <td>D1</td>
+                <tr>
+                    <td colspan="2">A2+B2</td>
+                    <td>C2</td>
+                    <td>D2</td>
+        </table>
+    </u2-table>
+    <button onclick="test6()">Test ausführen</button>
+    <div class="console" id="console6"></div>
+</div>
+
+<!-- Test 7: Ohne thead -->
+<div class="test-section">
+    <h2>Test 7: Tabelle ohne thead</h2>
+    <u2-table id="test7">
+        <table>
+            <colgroup>
+                <col id="col7-a">
+                <col id="col7-b">
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td>A1</td>
+                    <td>B1</td>
+                <tr>
+                    <td>A2</td>
+                    <td>B2</td>
+        </table>
+    </u2-table>
+    <button onclick="test7()">Test ausführen</button>
+    <div class="console" id="console7"></div>
+</div>
+
+<!-- Test 8: Leere Tabelle -->
+<div class="test-section">
+    <h2>Test 8: Leere Tabelle / Edge Cases</h2>
+    <u2-table id="test8">
+        <table>
+            <colgroup>
+                <col id="col8-a">
+            </colgroup>
+            <tbody></tbody>
+        </table>
+    </u2-table>
+    <button onclick="test8()">Test ausführen</button>
+    <div class="console" id="console8"></div>
+</div>
+
+<script>
+    // Placeholder für u2-table Custom Element (in Realität von deiner Datei laden)
+    // HIER DEIN CODE EINFÜGEN
+    
+    // Test Helper Functions
+    function log(consoleId, message, type = 'info') {
+        const console = document.getElementById(consoleId);
+        const className = type === 'pass' ? 'pass' : type === 'fail' ? 'fail' : 'info';
+        console.innerHTML += `<span class="${className}">${message}</span>\n`;
+    }
+
+    function clear(consoleId) {
+        document.getElementById(consoleId).innerHTML = '';
+    }
+
+    function assert(consoleId, condition, message) {
+        if (condition) {
+            log(consoleId, `✓ PASS: ${message}`, 'pass');
+            return true;
+        } else {
+            log(consoleId, `✗ FAIL: ${message}`, 'fail');
+            return false;
+        }
+    }
+
+    // Test 1: Einfache Tabelle ohne col
+    function test1() {
+        clear('console1');
+        const table = document.getElementById('test1');
+        const cols = table.columns;
+        
+        log('console1', '=== Test 1: Einfache Tabelle ===');
+        assert('console1', cols !== null, 'columns ist nicht null');
+        assert('console1', cols.length === 3, `columns.length === 3 (ist: ${cols.length})`);
+        
+        // Test columns.item(0)
+        const col0 = cols.item(0);
+        assert('console1', col0 !== null, 'columns.item(0) existiert');
+        assert('console1', col0.index === 0, `columns.item(0).index === 0 (ist: ${col0.index})`);
+        assert('console1', col0.cells.length === 3, `columns.item(0).cells.length === 3 (ist: ${col0.cells.length})`);
+        assert('console1', col0.cells[0].textContent === 'A', `Erste Zelle ist 'A' (ist: '${col0.cells[0].textContent}')`);
+        assert('console1', col0.cells[1].textContent === 'A1', `Zweite Zelle ist 'A1' (ist: '${col0.cells[1].textContent}')`);
+        assert('console1', col0.colElement === null, 'colElement ist null (kein col vorhanden)');
+        
+        // Test columns.item(2)
+        const col2 = cols.item(2);
+        assert('console1', col2.cells[0].textContent === 'C', `columns.item(2).cells[0] ist 'C'`);
+    }
+
+    // Test 2: Mit col-Elementen
+    function test2() {
+        clear('console2');
+        const table = document.getElementById('test2');
+        const cols = table.columns;
+        
+        log('console2', '=== Test 2: Mit col-Elementen ===');
+        assert('console2', cols.length === 3, `columns.length === 3 (ist: ${cols.length})`);
+        
+        // Test colElement Zuordnung
+        const col0 = cols.item(0);
+        const colA = document.getElementById('col-a');
+        assert('console2', col0.colElement === colA, 'columns.item(0).colElement ist col-a');
+        assert('console2', col0.colElement?.id === 'col-a', `colElement.id === 'col-a' (ist: '${col0.colElement?.id}')`);
+        
+        const col1 = cols.item(1);
+        assert('console2', col1.colElement?.id === 'col-b', `columns.item(1).colElement.id === 'col-b'`);
+        
+        const col2 = cols.item(2);
+        assert('console2', col2.colElement?.id === 'col-c', `columns.item(2).colElement.id === 'col-c'`);
+        
+        // Test cells
+        assert('console2', col0.cells.length === 3, `column 0 hat 3 cells (thead + 2 tbody)`);
+        assert('console2', col1.cells[1].textContent === 'B1', `column 1, cell 1 ist 'B1'`);
+    }
+
+    // Test 3: col mit span
+    function test3() {
+        clear('console3');
+        const table = document.getElementById('test3');
+        const cols = table.columns;
+        
+        log('console3', '=== Test 3: col mit span ===');
+        assert('console3', cols.length === 3, `columns.length === 3 (ist: ${cols.length})`);
+        
+        const col0 = cols.item(0);
+        const col1 = cols.item(1);
+        const col2 = cols.item(2);
+        
+        const colSpan2 = document.getElementById('col-span2');
+        const colSingle = document.getElementById('col-single');
+        
+        // Spalte 0 und 1 sollten beide auf col-span2 zeigen
+        assert('console3', col0.colElement === colSpan2, 'columns.item(0).colElement ist col-span2');
+        assert('console3', col1.colElement === colSpan2, 'columns.item(1).colElement ist col-span2 (wegen span="2")');
+        assert('console3', col2.colElement === colSingle, 'columns.item(2).colElement ist col-single');
+        
+        // Test cells
+        assert('console3', col0.cells[0].textContent === 'A (span)', 'column 0 erste Zelle');
+        assert('console3', col1.cells[0].textContent === 'B (span)', 'column 1 erste Zelle');
+        assert('console3', col2.cells[0].textContent === 'C', 'column 2 erste Zelle');
+    }
+
+    // Test 4: colgroup mit span
+    function test4() {
+        clear('console4');
+        const table = document.getElementById('test4');
+        const cols = table.columns;
+        
+        log('console4', '=== Test 4: colgroup mit span ===');
+        assert('console4', cols.length === 3, `columns.length === 3 (ist: ${cols.length})`);
+        
+        const col0 = cols.item(0);
+        const col1 = cols.item(1);
+        const col2 = cols.item(2);
+        
+        const cg1 = document.getElementById('cg-span2');
+        const cg2 = document.getElementById('cg-span1');
+        
+        // Spalte 0 und 1 sollten auf colgroup mit span="2" zeigen
+        assert('console4', col0.colElement === cg1, 'columns.item(0).colElement ist cg-span2');
+        assert('console4', col1.colElement === cg1, 'columns.item(1).colElement ist cg-span2 (wegen span="2")');
+        assert('console4', col2.colElement === cg2, 'columns.item(2).colElement ist cg-span1');
+    }
+
+    // Test 5: Gemischte Struktur
+    function test5() {
+        clear('console5');
+        const table = document.getElementById('test5');
+        const cols = table.columns;
+        
+        log('console5', '=== Test 5: Gemischte Struktur ===');
+        assert('console5', cols.length === 5, `columns.length === 5 (ist: ${cols.length})`);
+        
+        const col0 = cols.item(0);
+        const col1 = cols.item(1);
+        const col2 = cols.item(2);
+        const col3 = cols.item(3);
+        const col4 = cols.item(4);
+        
+        assert('console5', col0.colElement?.id === 'col5-a', `col 0 -> col5-a (ist: ${col0.colElement?.id})`);
+        assert('console5', col1.colElement?.id === 'col5-b', `col 1 -> col5-b (span start) (ist: ${col1.colElement?.id})`);
+        assert('console5', col2.colElement?.id === 'col5-b', `col 2 -> col5-b (span end) (ist: ${col2.colElement?.id})`);
+        assert('console5', col3.colElement?.id === 'cg5-c', `col 3 -> cg5-c (ist: ${col3.colElement?.id})`);
+        assert('console5', col4.colElement?.id === 'col5-standalone', `col 4 -> col5-standalone (ist: ${col4.colElement?.id})`);
+        
+        // Test cells
+        assert('console5', col0.cells[1].textContent === 'A1', 'col 0, cell 1');
+        assert('console5', col1.cells[1].textContent === 'B1', 'col 1, cell 1');
+        assert('console5', col2.cells[1].textContent === 'B2', 'col 2, cell 1');
+    }
+
+    // Test 6: colspan in Zellen
+    function test6() {
+        clear('console6');
+        const table = document.getElementById('test6');
+        const cols = table.columns;
+        
+        log('console6', '=== Test 6: colspan in Zellen ===');
+        assert('console6', cols.length === 4, `columns.length === 4 (ist: ${cols.length})`);
+        
+        const col0 = cols.item(0);
+        const col1 = cols.item(1);
+        const col2 = cols.item(2);
+        const col3 = cols.item(3);
+        
+        // col0: A, A1, A2+B2
+        assert('console6', col0.cells.length === 3, `col 0 hat 3 cells (ist: ${col0.cells.length})`);
+        assert('console6', col0.cells[0].textContent === 'A', `col 0, cell 0 ist 'A'`);
+        assert('console6', col0.cells[2].textContent === 'A2+B2', `col 0, cell 2 ist 'A2+B2' (colspan)`);
+        
+        // col1: B+C (colspan), B1, A2+B2 (wegen colspan in vorheriger Zelle)
+        assert('console6', col1.cells[0].textContent === 'B+C (colspan)', `col 1, cell 0 (colspan Header)`);
+        assert('console6', col1.cells[1].textContent === 'B1', `col 1, cell 1`);
+        assert('console6', col1.cells[2].textContent === 'A2+B2', `col 1, cell 2 (erreicht durch colspan in A2+B2)`);
+        
+        // col2: B+C (colspan), C1, C2
+        assert('console6', col2.cells[0].textContent === 'B+C (colspan)', `col 2, cell 0 (colspan Header)`);
+        assert('console6', col2.cells[1].textContent === 'C1', `col 2, cell 1`);
+        assert('console6', col2.cells[2].textContent === 'C2', `col 2, cell 2`);
+        
+        // col3: D, D1, D2
+        assert('console6', col3.cells[2].textContent === 'D2', `col 3, cell 2`);
+    }
+
+    // Test 7: Ohne thead
+    function test7() {
+        clear('console7');
+        const table = document.getElementById('test7');
+        const cols = table.columns;
+        
+        log('console7', '=== Test 7: Ohne thead ===');
+        assert('console7', cols.length === 2, `columns.length === 2 (ist: ${cols.length})`);
+        
+        const col0 = cols.item(0);
+        const col1 = cols.item(1);
+        
+        assert('console7', col0.colElement?.id === 'col7-a', 'col 0 hat colElement');
+        assert('console7', col0.cells.length === 2, `col 0 hat 2 cells (nur tbody) (ist: ${col0.cells.length})`);
+        assert('console7', col0.cells[0].textContent === 'A1', 'col 0, erste Zelle');
+        
+        assert('console7', col1.cells[0].textContent === 'B1', 'col 1, erste Zelle');
+    }
+
+    // Test 8: Edge Cases
+    function test8() {
+        clear('console8');
+        const table = document.getElementById('test8');
+        const cols = table.columns;
+        
+        log('console8', '=== Test 8: Edge Cases ===');
+        
+        // Leere Tabelle - length sollte trotzdem funktionieren
+        const length = cols.length;
+        log('console8', `columns.length bei leerer tbody: ${length}`, 'info');
+        
+        const col0 = cols.item(0);
+        assert('console8', col0.colElement?.id === 'col8-a', 'colElement ist verfügbar');
+        assert('console8', col0.cells.length === 0, `cells ist leer bei leerer Tabelle (ist: ${col0.cells.length})`);
+        
+        // Test indexOf mit nicht-existierender Zelle
+        const result = cols.indexOf(null);
+        log('console8', `indexOf(null) gibt undefined zurück: ${result === undefined}`, result === undefined ? 'pass' : 'fail');
+    }
+
+    // Alle Tests ausführen
+    function runAllTests() {
+        setTimeout(() => test1(), 100);
+        setTimeout(() => test2(), 200);
+        setTimeout(() => test3(), 300);
+        setTimeout(() => test4(), 400);
+        setTimeout(() => test5(), 500);
+        setTimeout(() => test6(), 600);
+        setTimeout(() => test7(), 700);
+        setTimeout(() => test8(), 800);
+    }
+</script>
+
+<div style="margin-top: 2rem; padding: 1rem; background: #f0f0f0; border-radius: 4px;">
+    <button onclick="runAllTests()" style="background: #28a745; font-size: 1.1rem; padding: 0.75rem 1.5rem;">
+        🚀 Alle Tests ausführen
+    </button>
+</div>

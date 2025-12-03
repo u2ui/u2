@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>u2-table AutoFormat Demo</title>
+
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <link href="../../../css/classless/full.css" rel=stylesheet>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+    <link href="../table.css" rel=stylesheet>
+    <script src="../table.js" type=module async></script>
+
+
+    <style>
+        body {
+            max-width: 90rem;
+        }
+        
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        </style>
+
+<body>
+
+<h1>🎨 u2-table AutoFormat Demo</h1>
+<div class="info">
+    <strong>AutoFormat erkennt automatisch:</strong> Zahlen, Währungen, Prozente, Daten, Booleans, E-Mails, URLs, lange Texte und lange Header
+</div>
+
+<u2-table autoformat>
+    <table class="u2-table">
+        <thead style="vertical-align:bottom">
+            <tr>
+                <th>ID
+                <th>Product
+                <th>Price
+                <th>Discount
+                <th>Stock
+                <th>Available in Switzerland
+                <th>Last Updated
+                <th>Contact Email
+                <th>Website
+                <th>Extended Description With Many Characters That Will Trigger Long Text Handling
+                <th>Revenue
+        <tbody>
+            <tr>
+                <td>1
+                <td>Laptop
+                <td>CHF 1299.00
+                <td>15%
+                <td>42
+                <td>true
+                <td>2024-03-15
+                <td>sales@laptopstore.com
+                <td>https://www.laptopstore.com
+                <td>High-performance laptop with 16GB RAM, 512GB SSD, Intel i7 processor, perfect for professionals and gamers alike
+                <td>€ 54558.00
+            <tr>
+                <td>2
+                <td>Mouse
+                <td>CHF 29.99
+                <td>5%
+                <td>156
+                <td>yes
+                <td>2024-03-14
+                <td>info@peripherals.ch
+                <td>https://peripherals.ch/mouse
+                <td>Wireless ergonomic mouse with precision tracking, comfortable grip design, and long battery life for extended use
+                <td>€ 4678.44
+            <tr>
+                <td>3
+                <td>Keyboard
+                <td>CHF 89.50
+                <td>10%
+                <td>78
+                <td>ja
+                <td>2024-03-13
+                <td>keyboards@techgear.de
+                <td>https://www.techgear.de/keyboards
+                <td>Mechanical keyboard with RGB backlighting, customizable keys, and superior typing experience for both work and gaming
+                <td>€ 6981.00
+            <tr>
+                <td>4
+                <td>Monitor
+                <td>CHF 449.00
+                <td>20%
+                <td>23
+                <td>true
+                <td>2024-03-12
+                <td>displays@screenworld.com
+                <td>https://screenworld.com/27inch
+                <td>27-inch 4K UHD monitor with HDR support, 144Hz refresh rate, and wide color gamut for professionals and content creators
+                <td>€ 10327.00
+            <tr>
+                <td>5
+                <td>Webcam
+                <td>CHF 79.99
+                <td>0%
+                <td>91
+                <td>false
+                <td>2024-03-11
+                <td>support@videocams.net
+                <td>https://videocams.net/hd-webcam
+                <td>Full HD 1080p webcam with autofocus, built-in microphone, and excellent low-light performance for video conferencing
+                <td>€ 7279.09
+            <tr>
+                <td>6
+                <td>Headset
+                <td>CHF 119.00
+                <td>12%
+                <td>64
+                <td>no
+                <td>2024-03-10
+                <td>audio@soundpro.ch
+                <td>https://www.soundpro.ch
+                <td>Professional gaming headset with 7.1 surround sound, noise-canceling microphone, and comfortable over-ear design
+                <td>€ 7616.00
+            <tr>
+                <td>7
+                <td>USB Hub
+                <td>CHF 34.50
+                <td>8%
+                <td>203
+                <td>✓
+                <td>2024-03-09
+                <td>hubs@connectivity.com
+                <td>https://connectivity.com/usb-c
+                <td>7-port USB 3.0 hub with individual power switches, LED indicators, and compact design for desktop organization
+                <td>€ 7006.50
+            <tr>
+                <td>8
+                <td>Cable
+                <td>CHF 12.99
+                <td>3%
+                <td>445
+                <td>nein
+                <td>2024-03-08
+                <td>cables@wireworld.de
+                <td>https://wireworld.de/hdmi
+                <td>Premium HDMI 2.1 cable with 8K support, ethernet channel, and gold-plated connectors for optimal signal transmission
+                <td>€ 5779.55
+            <tr>
+                <td>9
+                <td>Docking Station
+                <td>CHF 189.00
+                <td>18%
+                <td>31
+                <td>yes
+                <td>2024-03-07
+                <td>docks@multiport.ch
+                <td>https://multiport.ch/thunderbolt
+                <td>Thunderbolt 4 docking station with dual 4K display support, 90W charging, and multiple connectivity options
+                <td>€ 5859.00
+            <tr>
+                <td>10
+                <td>SSD Drive
+                <td>CHF 159.99
+                <td>25%
+                <td>87
+                <td>ja
+                <td>2024-03-06
+                <td>storage@datasafe.net
+                <td>https://www.datasafe.net
+                <td>1TB NVMe M.2 SSD with read speeds up to 3500 MB/s, 5-year warranty, and exceptional reliability for demanding workloads
+                <td>€ 13919.13
+            <tr>
+                <td>11
+                <td>Mousepad
+                <td>CHF 19.90
+                <td>0%
+                <td>312
+                <td>true
+                <td>2024-03-05
+                <td>pads@gamingsurface.com
+                <td>https://gamingsurface.com/xl
+                <td>Extended gaming mousepad with anti-slip rubber base, water-resistant surface, and stitched edges for durability
+                <td>€ 6208.80
+            <tr>
+                <td>12
+                <td>Speaker
+                <td>CHF 249.00
+                <td>15%
+                <td>45
+                <td>false
+                <td>2024-03-04
+                <td>speakers@audiosystem.ch
+                <td>https://audiosystem.ch/wireless
+                <td>Bluetooth wireless speaker with 360-degree sound, waterproof design, and 24-hour battery life for indoor and outdoor use
+                <td>€ 11205.00
+            <tr>
+                <td>13
+                <td>Microphone
+                <td>CHF 139.50
+                <td>10%
+                <td>56
+                <td>✓
+                <td>2024-03-03
+                <td>mics@recordpro.de
+                <td>https://recordpro.de/usb
+                <td>Professional USB condenser microphone with cardioid pattern, shock mount, and pop filter for podcasting and streaming
+                <td>€ 7812.00
+            <tr>
+                <td>14
+                <td>Lamp
+                <td>CHF 45.00
+                <td>5%
+                <td>128
+                <td>no
+                <td>2024-03-02
+                <td>lighting@desklight.com
+                <td>https://www.desklight.com
+                <td>LED desk lamp with adjustable brightness, color temperature control, and USB charging port for convenient workspace lighting
+                <td>€ 5760.00
+            <tr>
+                <td>15
+                <td>Chair
+                <td>CHF 599.00
+                <td>30%
+                <td>18
+                <td>yes
+                <td>2024-03-01
+                <td>ergonomics@officechair.ch
+                <td>https://officechair.ch/premium
+                <td>Ergonomic office chair with lumbar support, adjustable armrests, breathable mesh back, and premium build quality
+                <td>€ 10782.00
+            <tr>
+                <td>16
+                <td>Desk
+                <td>CHF 799.00
+                <td>20%
+                <td>12
+                <td>ja
+                <td>2024-02-29
+                <td>furniture@workstation.de
+                <td>https://workstation.de/standing
+                <td>Electric height-adjustable standing desk with spacious work surface, memory presets, and cable management system
+                <td>€ 9588.00
+            <tr>
+                <td>17
+                <td>Printer
+                <td>CHF 349.99
+                <td>12%
+                <td>34
+                <td>true
+                <td>2024-02-28
+                <td>print@officepro.net
+                <td>https://www.officepro.net
+                <td>All-in-one wireless color laser printer with duplex printing, scanning, copying, and mobile printing capabilities
+                <td>€ 11899.66
+            <tr>
+                <td>18
+                <td>Scanner
+                <td>CHF 229.00
+                <td>8%
+                <td>29
+                <td>✗
+                <td>2024-02-27
+                <td>scan@docuscan.ch
+                <td>https://docuscan.ch/portable
+                <td>Portable document scanner with automatic feeding, OCR software, and cloud integration for paperless office solutions
+                <td>€ 6641.00
+            <tr>
+                <td>19
+                <td>Router
+                <td>CHF 179.90
+                <td>15%
+                <td>67
+                <td>nein
+                <td>2024-02-26
+                <td>network@wifimax.com
+                <td>https://wifimax.com/ac3000
+                <td>Tri-band WiFi 6 router with MU-MIMO technology, parental controls, and advanced security features for home networks
+                <td>€ 12053.30
+            <tr>
+                <td>20
+                <td>Switch
+                <td>CHF 89.99
+                <td>5%
+                <td>94
+                <td>false
+                <td>2024-02-25
+                <td>switches@netgear.de
+                <td>https://netgear.de/8port
+                <td>8-port gigabit ethernet switch with plug-and-play setup, energy-efficient design, and silent fanless operation
+                <td>€ 8459.06
+        </tbody>
+    </table>
+</u2-table>

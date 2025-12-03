@@ -71,41 +71,11 @@ class U2Responsive extends HTMLElement {
             this.lastGrowingCheckAt = width; // reset by shrinking
         }
 
-
-        while (this.overflows() && this.currentLevel < strats.length) {
+        while (this.scrollWidth > this.clientWidth && this.currentLevel < strats.length) { // while it overflows (and has more strategies left)
             if (!growing) this.criticalWidths.set(this.currentLevel, width);
             this.applyStrategies(++this.currentLevel);
         }
     }
-    // updateStrategy() {
-    //     const width = this.clientWidth;
-    //     const strats = this.strategies;
-    //     let growing = width > this.lastWidth;
-    //     this.lastWidth = width;
-    //     // debounce, not test every growing pixel if criticalWidth is known
-    //     if (growing && this.currentLevel > 0) {
-    //         const criticalWidth = this.criticalWidths.get(this.currentLevel-1);
-    //         let margin = 0;
-    //         if (criticalWidth !=null) {
-    //             const distanceToCritical = criticalWidth - width;
-    //             margin = Math.max(0, distanceToCritical / 1); 
-    //         }
-    //         growing = width > this.lastGrowingCheckAt + margin;
-    //         if (growing) this.lastGrowingCheckAt = width;
-    //     } else {
-    //         this.lastGrowingCheckAt = width;
-    //     }
-
-    //     if (growing && this.currentLevel > 0) { // Growing: try to remove strategies
-    // this.tryGrowingAt = width;
-    //         this.applyStrategies(--this.currentLevel);
-    //     }
-    //     while (this.overflows() && this.currentLevel < strats.length) {
-    //         if (!growing) this.criticalWidths.set(this.currentLevel, width);
-    //         this.applyStrategies(++this.currentLevel);
-    //     }
-    // }
-    overflows(){ return this.scrollWidth > this.clientWidth; }
 
     debug(){
         const div = document.createElement('div');

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html lang=en>
+
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
@@ -14,48 +15,17 @@
 
 <body>
 
-<section>
+    <section>
 
-    <script type=module>
-    import {dump, domRender} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@x.x/mod.min.js';
-    import './ce-inspector.js';
+        <script type=module>
+            import { dump, domRender } from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@x.x/mod.min.js';
+            import './ce-inspector.js';
 
-    import {BaseElement} from './baseElement.js';
+            import { BaseElement } from './baseElement.js';
 
-    class TestElement extends BaseElement {
-
-        static properties = {
-            number: {
-                attribute: true,
-                type: 'number',
-            },
-            boolean: {
-                attribute: true,
-                type: 'boolean',
-            },
-            string: {
-                attribute: true,
-                type: 'string',
-            },
-            tokens: {
-                attribute: true,
-                type: 'tokens',
-            },
-            propAttr: {
-                attribute: 'prop-attr',
-                type: 'string',
-            },
-        }
-
-        constructor() {
-            super();
-            this.attachShadow({mode: 'open'});
-        }
-
-        connectedCallback() {
-            this.shadowRoot.innerHTML = `
-            <style>
-            :host {
+            class TestElement extends BaseElement {
+                static css =
+                    `:host {
                 display: block;
                 border: 1px solid;
                 padding: 1em;
@@ -64,27 +34,55 @@
                 display: block;
                 border: 1px solid;
                 padding: 1em;
-            }
-            </style>
-            Slot:<slot></slot>
-            <div id=data></div>
-            `;
-        }
-        render() {
-            this.renderCount = (this.renderCount ?? 0) + 1;
+            }`;
+                static shadow = 'Slot:<slot></slot><div id=data></div>';
+                static properties = {
+                    number: {
+                        attribute: true,
+                        type: 'number',
+                        reflect: true,
+                    },
+                    boolean: {
+                        attribute: true,
+                        type: 'boolean',
+                        reflect: true,
+                    },
+                    string: {
+                        attribute: true,
+                        type: 'string',
+                        reflect: true,
+                    },
+                    tokens: {
+                        attribute: true,
+                        type: 'tokens',
+                        reflect: true,
+                    },
+                    propAttr: {
+                        attribute: 'prop-attr',
+                    },
+                    lang: {
+                        attribute: true,
+                    }
+                }
 
-            const propsObj = {};
-            Object.entries(this.constructor.properties).forEach( ([name, config]) => {
-                propsObj[name] = {
-                    value: this[name],
-                    type: config.type,
-                    attribute: config.attribute,
-                    attributeValue: this.getAttribute(config.attribute),
-                };
-            });
+                constructor() {
+                    super();
+                }
 
+                render() {
+                    this.renderCount = (this.renderCount ?? 0) + 1;
 
-            this.shadowRoot.getElementById('data').innerHTML = `
+                    const propsObj = {};
+                    Object.entries(this.constructor.properties).forEach(([name, config]) => {
+                        propsObj[name] = {
+                            value: this[name],
+                            type: config.type,
+                            attribute: config.attribute,
+                            attributeValue: this.getAttribute(config.attribute),
+                        };
+                    });
+
+                    this.$('#data').innerHTML = `
             <h3>Properties</h3>
             ${dump(propsObj)}
             <h3>el.locales()</h3>
@@ -93,27 +91,49 @@
             <h3>el.innerHTML</h3>
             ${dump(this.innerHTML)}
             <h3>Metrics</h3>
-            <div>${this.renderCount}</div>
+            <div>Render count: ${this.renderCount}</div>
             `;
 
+                }
+            }
+            customElements.define('test-element', TestElement);
+        </script>
 
-        }
-    }
-    customElements.define('test-element', TestElement);
-    </script>
 
+    </section>
 
-</section>
+    <div id="wrapper">
 
-<div id="wrapper">
+        <test-element id=testEl number="1234.567" boolean string="hello World" tokens="a b c" prop-attr="test">
+            Content
+        </test-element>
 
-<test-element id=testEl number="1234.567" boolean string="hello World" tokens="a b c" prop-attr="test">
-    Content
-</test-element>
+    </div>
 
-</div>
+    <h4>Attributes</h4>
+    <form oninput="testEl.setAttribute(event.target.name, event.target.value)">
+        <u2-fields>
+            <input name="number">
+            <input name="boolean">
+            <input name="string">
+            <input name="tokens">
+            <input name="propAttr">
+            <input name="lang">
+        </u2-fields>
+    </form>
 
-outer:
-<u2-code trim editable element="wrapper"></u2-code>
-inner:
-<u2-code trim editable element="testEl"></u2-code>
+    <h4>Properties</h4>
+    <form oninput="testEl[event.target.name] = event.target.value">
+        <u2-fields>
+            <input name="number">
+            <input name="boolean">
+            <input name="string">
+            <input name="tokens">
+            <input name="propAttr">
+        </u2-fields>
+    </form>
+
+    outer:
+    <u2-code trim editable element="wrapper"></u2-code>
+    inner:
+    <u2-code trim editable element="testEl"></u2-code>

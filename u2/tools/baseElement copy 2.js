@@ -46,10 +46,14 @@ export class BaseElement extends HTMLElement {
             });
 
             // Map attribute name to config
-            if (options.attribute) { this.attributesMap.set(options.attribute, options); }
+            if (options.attribute) {
+                this.attributesMap.set(options.attribute, options);
+            }
 
             // Set default value
-            if (options.default !== undefined) { this.prototype['_' + key] = options.default; }
+            if (options.default !== undefined) {
+                this.prototype['_' + key] = options.default;
+            }
         }
 
         // Only run once
@@ -133,13 +137,11 @@ export class BaseElement extends HTMLElement {
         // BaseElement Logik IMMER zuerst
         const config = this.constructor.attributesMap?.get(name);
         if (config) {
-
             const propValue = attrToProp(newValue, config);
             const propName = config.property;
             if (this['_' + propName] !== propValue) {
                 this[propName] = propValue;
             }
-            this.requestUpdate();
         }
 
         // Dann Subklassen-Callback falls vorhanden
@@ -204,15 +206,15 @@ export class BaseElement extends HTMLElement {
 
 // Type conversion helpers
 function attrToProp(value, { type }) {
-    if (type === 'boolean') return value != null;
-    if (type === 'number') return value ? parseFloat(value) : 0;
+    if (type === Boolean) return value != null;
+    if (type === Number) return value ? parseFloat(value) : 0;
     if (type === 'tokens') return new Set(value?.split(' ') || []);
     return value;
 }
 
 function propToAttr(value, { type }) {
-    if (type === 'boolean') return value ? '' : null;
-    if (type === 'number') return String(value);
+    if (type === Boolean) return value ? '' : null;
+    if (type === Number) return String(value);
     if (type === 'tokens') return [...value].join(' ');
     if (value == null) return null;
     return String(value);
