@@ -273,7 +273,6 @@ async function loadPage(url, shouldUpdateHistory = true) {
     // am liebsten würde ich ganzes dokument inklusive header morphen, aber dann kann generiertes css verloren gehen... :(
     const oldRoot = document.body;
     const newRoot = newDoc.body;
-    console.log('morph new body:', newRoot)
     
     if ('startViewTransition' in document) { // hm... macht, dass hover status kurz verloren geht!
         document.startViewTransition(() => {
