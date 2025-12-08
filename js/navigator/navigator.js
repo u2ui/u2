@@ -132,11 +132,7 @@ class Morph {
       }
       return;
     }
-    
-    // Attribute diffing mit NamedNodeMap
     this.#morphAttributes(oldNode, newNode);
-    
-    // Children morphing
     this.#morphChildren(oldNode, newNode);
   }
   
@@ -145,21 +141,16 @@ class Morph {
     const newAttrs = newNode.attributes;
     if (newAttrs) { // Update/Add attributes
       for (const attr of newAttrs) {
-        if (oldNode.getAttribute(attr.name) !== attr.value) {
-          oldNode.setAttribute(attr.name, attr.value);
-        }
+        if (oldNode.getAttribute(attr.name) !== attr.value) oldNode.setAttribute(attr.name, attr.value);
       }
     }
     if (oldAttrs) { // Remove old attributes
       for (let i = oldAttrs.length - 1; i >= 0; i--) {
         const attr = oldAttrs[i];
-        if (!newNode.hasAttribute(attr.name)) {
-          oldNode.removeAttribute(attr.name);
-        }
+        if (!newNode.hasAttribute(attr.name)) oldNode.removeAttribute(attr.name);
       }
     }
   }
-  
   static #morphChildren(oldNode, newNode) {
     const oldChildren = [...oldNode.childNodes];
     const newChildren = [...newNode.childNodes];
@@ -182,18 +173,11 @@ class Morph {
       }
     }
   }
-
   static #shouldReplace(oldNode, newNode) {
     if (oldNode.nodeType !== newNode.nodeType) return true;
-    if (oldNode.nodeType === Element.TEXT_NODE) {
-        return oldNode.textContent !== newNode.textContent;
-    }
+    if (oldNode.nodeType === Element.TEXT_NODE) return oldNode.textContent !== newNode.textContent;
     if (oldNode.tagName !== newNode.tagName) return true;
     return oldNode.id !== newNode.id;
-    // return oldNode.nodeType !== newNode.nodeType || 
-    //        oldNode.tagName !== newNode.tagName ||
-    //        (oldNode.nodeType === Node.ELEMENT_NODE && 
-    //         oldNode.getAttribute('id') !== newNode.getAttribute('id'));
   }
 }
 
@@ -202,17 +186,14 @@ const Utils = {
     isInternalLink(url) {
         try {
             const link = new URL(url, location.origin);
-            //return link.origin === location.origin && !link.hash;
             return link.origin === location.origin;
         } catch {
             return false;
         }
     },
-    
     getDistance(x1, y1, x2, y2) {
         return Math.hypot(x2 - x1, y2 - y1);
     },
-    
     idlePromise(options) {
         return new Promise(resolve => {
             if ('requestIdleCallback' in globalThis) {
@@ -221,8 +202,7 @@ const Utils = {
                 setTimeout(resolve, 1);
             }
         });
-    },  
-
+    },
 };
 
 // ==================== CACHE MANAGEMENT ====================
@@ -293,6 +273,7 @@ async function loadPage(url, shouldUpdateHistory = true) {
     // am liebsten würde ich ganzes dokument inklusive header morphen, aber dann kann generiertes css verloren gehen... :(
     const oldRoot = document.body;
     const newRoot = newDoc.body;
+    console.log('morph new body:', newRoot)
     
     if ('startViewTransition' in document) { // hm... macht, dass hover status kurz verloren geht!
         document.startViewTransition(() => {
