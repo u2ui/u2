@@ -24,8 +24,8 @@ Specificity: 0.1.0
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/class/unstyle/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/class/unstyle/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/unstyle/tests/minimal.html)  
 
 ## About
 

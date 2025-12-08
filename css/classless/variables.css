@@ -39,11 +39,17 @@ html, [u2-skin] {
 [u2-skin=dark] {
     --color-light: hsl(var(--hs), calc(var(--hsl-l) * .7 ) );
     --color-dark:  hsl(var(--hs), calc(var(--hsl-l) + (100% - var(--hsl-l)) * .9 ) );
-    --color-bg:   hsl(var(--hs), calc(var(--hsl-l) * .4 ) );
-    --color-text: hsl(var(--hs), 99.5%);
+    --color-bg:    hsl(var(--hs), calc(var(--hsl-l) * .4 ) );
+    --color-text:  hsl(var(--hs), 99.5%);
 }
 
+
 /*
+@property --min-font-size {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 12px;
+}
 @media (prefers-color-scheme: dark) {
   html {
     --color-light:   hsl(var(--hs), calc(var(--hsl-l) * .1 ) );

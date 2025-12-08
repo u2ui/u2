@@ -34,9 +34,10 @@ u2-chart {
 
 ## Demos
 
-[changeAttributes.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/changeAttributes.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/minimal.html)  
+[changeAttributes.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/changeAttributes.html)  
+[engines.html](http://gcdn.li/u2ui/u2@main/el/chart/tests/engines.html)  
 
 ## About
 

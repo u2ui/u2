@@ -25,67 +25,35 @@ html {
     /* Grundfarbe - hier ändern! */
     /* todo: https://x.com/jh3yy/status/1984192489155428848 */
 
-    --color: #000001;
-    x--color: #fff;
+    --color:#a83;
 
     /* Base - Helligkeit anpassen */
-    --color-light: color-mix(in oklch, var(--color), #fff 70%);
-    --color-dark:  color-mix(in oklch, var(--color), #000 50%);
+    --color-light: color-mix(in srgb, var(--color), #fff 85%);
+    --color-dark:  color-mix(in srgb, var(--color), #000 50%);
     
     /* Semantic - automatisch aus Grundfarbe */
-    --color-bg: color-mix(in oklch, var(--color), #fff 90%);
-    --color-text:  color-mix(in oklch, var(--color), #000 90%);
+    --color-bg: color-mix(in srgb, var(--color), #fff 99.5%);
+    --color-text: color-mix(in srgb, var(--color), #000 80%);
 
     --color-area: var(--color-light);
     --color-line: var(--color-text);
 
     /* Farbpalette - Hue-Rotation */
-    --palette-base: oklch(from var(--color) max(l, 0.5) max(c, 0.15) h);
+    --palette-base: oklch(from var(--color) max(l, 0.4) max(c, 0.15) h);
+    --hue-shift: -10;
 
-    --red: oklch(from var(--palette-base) l c 25);
-    --orange: oklch(from var(--palette-base) l c 60);
-    --yellow: oklch(from var(--palette-base) l c 95);
-    --lime: oklch(from var(--palette-base) l c 125);
-    --green: oklch(from var(--palette-base) l c 155);
-    --cyan: oklch(from var(--palette-base) l c 195);
-    --blue: oklch(from var(--palette-base) l c 240);
-    --purple: oklch(from var(--palette-base) l c 285);
-    --pink: oklch(from var(--palette-base) l c 340);
-
-    --line-width: 1px;
-}
-
-/* 
-zzzhtml {
-    --ok-l: .8;
-    --ok-c: .3;
-    --ok-h: 120;
-
-    --color: oklch(var(--ok-l) var(--ok-c) var(--ok-h));
-    --color-light:  color-mix(in srgb, var(--color), white 94%);
-    --color-dark:   color-mix(in srgb, var(--color), black 40%);
-
-    /* named * /
-    --color-bg:   color-mix(in srgb, var(--color), white 99.5%);
-    --color-text: color-mix(in srgb, var(--color), black 90%);
-    --color-area: var(--color-light);
-    --color-line: var(--color-text);
-
-    --red: oklch(var(--ok-l) var(--ok-c) 20);
-    --orange: oklch(var(--ok-l) var(--ok-c) 80);
-    --yellow: oklch(var(--ok-l) var(--ok-c) 100);
-    --green: oklch(var(--ok-l) var(--ok-c) 120);
-    --cyan: oklch(var(--ok-l) var(--ok-c) 180);
-    --blue: oklch(var(--ok-l) var(--ok-c) 240);
-    --purple: oklch(var(--ok-l) var(--ok-c) 280);
-    --pink: oklch(var(--ok-l) var(--ok-c) 320);
+    --red:    oklch(from var(--palette-base) l c calc(25 + var(--hue-shift)));
+    --orange: oklch(from var(--palette-base) l c calc(60 + var(--hue-shift)));
+    --yellow: oklch(from var(--palette-base) l c calc(95 + var(--hue-shift)));
+    --lime:   oklch(from var(--palette-base) l c calc(125 + var(--hue-shift)));
+    --green:  oklch(from var(--palette-base) l c calc(155 + var(--hue-shift)));
+    --cyan:   oklch(from var(--palette-base) l c calc(195 + var(--hue-shift)));
+    --blue:   oklch(from var(--palette-base) l c calc(240 + var(--hue-shift)));
+    --purple: oklch(from var(--palette-base) l c calc(285 + var(--hue-shift)));
+    --pink:   oklch(from var(--palette-base) l c calc(340 + var(--hue-shift)));
 
     --line-width: 1px;
 }
-*/
-
-
-
 </style>
 
 <style>

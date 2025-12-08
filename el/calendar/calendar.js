@@ -1,4 +1,3 @@
-const icoCssUrl = import.meta.resolve('../ico/ico.css');
 
 class U2Calendar extends HTMLElement {
   static observedAttributes = ['view', 'date', 'lang'];
@@ -10,6 +9,7 @@ class U2Calendar extends HTMLElement {
     this._locale = null;
     this._weekStart = 0; // 0 = Sunday .. 6 = Saturday
     import('../ico/ico.js');
+    const icoCssUrl = import.meta.resolve('../ico/ico.css');
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -96,6 +96,7 @@ class U2Calendar extends HTMLElement {
     if (!this.hasAttribute('lang')) this._setLocale();
     this.render();
     new MutationObserver(() => this.updateLayout()).observe(this, { childList: true });
+    import('./ext/keyNavigation.js');
   }
 
   set date(date) {
@@ -301,6 +302,7 @@ class U2CalendarItem extends HTMLElement {
     super();
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.adoptedStyleSheets = [itemStyle];
+    if (this.hasAttribute('draggable')) import('./ext/drag.js');
   }
 
   _parseDate(dateString) {

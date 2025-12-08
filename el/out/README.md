@@ -22,8 +22,8 @@ u2-out {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/out/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/out/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/out/tests/minimal.html)  
 
 ## About
 

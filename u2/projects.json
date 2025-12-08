@@ -1,8 +1,56 @@
 {
   "attr": {
+    "scrollspy": {
+      "name": "scrollspy",
+      "description": "Make a navigation that changes the `active` class based on the scroll position.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "skin": {
+      "name": "skin",
+      "description": "Change the skin of a widget",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": false
+    },
+    "draghandle": {
+      "name": "draghandle",
+      "description": "Defines a handle element to drag a draggable item.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "navigable": {
+      "name": "navigable",
+      "description": "Enables dialogs, details, etc. to open via links with back history support.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "store": {
+      "name": "store",
+      "description": "Persists form and input values using localStorage/sessionStorage.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "behavior": {
       "name": "behavior",
       "description": "behavior before action",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "intersect": {
+      "name": "intersect",
+      "description": "declarativ intersection-observer",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -24,41 +72,9 @@
       "css": false,
       "js": true
     },
-    "draghandle": {
-      "name": "draghandle",
-      "description": "Defines a handle element to drag a draggable item.",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": true
-    },
     "focusgroup": {
       "name": "focusgroup",
       "description": "Enables arrow-key navigation between focusable elements in a container.",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": true
-    },
-    "href": {
-      "name": "href",
-      "description": "Makes any element act as a link. `u2-href=\"url\"`",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": true
-    },
-    "intersect": {
-      "name": "intersect",
-      "description": "declarativ intersection-observer",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": true
-    },
-    "navigable": {
-      "name": "navigable",
-      "description": "Enables dialogs, details, etc. to open via links with back history support.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -72,25 +88,9 @@
       "css": false,
       "js": true
     },
-    "scrollspy": {
-      "name": "scrollspy",
-      "description": "Make a navigation that changes the `active` class based on the scroll position.",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": true
-    },
-    "skin": {
-      "name": "skin",
-      "description": "Change the skin of a widget\r",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
-    "store": {
-      "name": "store",
-      "description": "Persists form and input values using localStorage/sessionStorage.",
+    "href": {
+      "name": "href",
+      "description": "Makes any element act as a link. `u2-href=\"url\"`",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -98,25 +98,17 @@
     }
   },
   "class": {
-    "badge": {
-      "name": "badge",
-      "description": "Rendering badges",
+    "width": {
+      "name": "width",
+      "description": "The main width of your layout",
       "beta": false,
       "deprecated": false,
       "css": true,
       "js": false
     },
-    "card1": {
-      "name": "card1",
-      "description": "card-class (beta)",
-      "beta": true,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
-    "flex": {
-      "name": "flex",
-      "description": "Most wanted flexbox case",
+    "unstyle": {
+      "name": "unstyle",
+      "description": "Unstyle elements e.g. buttons",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -124,7 +116,7 @@
     },
     "grid": {
       "name": "grid",
-      "description": "Most wanted grid case\r",
+      "description": "Most wanted grid case",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -132,7 +124,15 @@
     },
     "reset": {
       "name": "reset",
-      "description": "A class to reset Styles (beta)\r",
+      "description": "A class to reset Styles (beta)",
+      "beta": true,
+      "deprecated": false,
+      "css": true,
+      "js": false
+    },
+    "card1": {
+      "name": "card1",
+      "description": "card-class (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -146,17 +146,17 @@
       "css": true,
       "js": false
     },
-    "unstyle": {
-      "name": "unstyle",
-      "description": "Unstyle elements e.g. buttons\r",
+    "badge": {
+      "name": "badge",
+      "description": "Rendering badges",
       "beta": false,
       "deprecated": false,
       "css": true,
       "js": false
     },
-    "width": {
-      "name": "width",
-      "description": "The main width of your layout\r",
+    "flex": {
+      "name": "flex",
+      "description": "Most wanted flexbox case",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -164,33 +164,9 @@
     }
   },
   "el": {
-    "accordion": {
-      "name": "accordion",
-      "description": "Turns HTML structures with headings into an accordion, using the content between headings as each panel’s content.",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "alert": {
-      "name": "alert",
-      "description": "Prominent hints, alerts and facts. `<u2-alert open variant=info>...</u2-alert>`",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "breadcrumb": {
-      "name": "breadcrumb",
-      "description": "Breadcrumb from a list of links",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "buttongroup": {
-      "name": "buttongroup",
-      "description": "A container for grouping buttons together; buttons that don’t have space will be moved into a dropdown menu.",
+    "tabs": {
+      "name": "tabs",
+      "description": "Turns HTML structures with headings into an interactive, tabbed interface, using the content between headings as each tab’s content.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -204,6 +180,38 @@
       "css": true,
       "js": true
     },
+    "responsive": {
+      "name": "responsive",
+      "description": "A Container, where you can define strategies, that are applied through CSS states. `<u2-responsive strategies=\"hideOptional\">`",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "out": {
+      "name": "out",
+      "description": "Output variables (beta)",
+      "beta": true,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "typewriter": {
+      "name": "typewriter",
+      "description": "Simple typewriter element",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "chart": {
+      "name": "chart",
+      "description": "Renders a chart from html like `<table>` or `<dl>` elements. `<u2-chart type=\"pie\"><table>...`",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "calendar": {
       "name": "calendar",
       "description": "Calendar / month view component, use `<u2-calendaritem>` as children",
@@ -212,25 +220,9 @@
       "css": true,
       "js": true
     },
-    "carousel": {
-      "name": "carousel",
-      "description": "Simple carousel component",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "carousel-nav": {
-      "name": "carousel-nav",
-      "description": "Carousel navigation element for u2-carousel. (beta)",
-      "beta": true,
-      "deprecated": false,
-      "css": false,
-      "js": true
-    },
-    "chart": {
-      "name": "chart",
-      "description": "Renders a chart from html like `<table>` or `<dl>` elements. `<u2-chart type=\"pie\"><table>...`",
+    "parallax-bg": {
+      "name": "parallax-bg",
+      "description": "Parallax backgrounds",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -244,9 +236,17 @@
       "css": true,
       "js": true
     },
-    "cookiebanner": {
-      "name": "cookiebanner",
-      "description": "Cookie banner for consent management.",
+    "rte": {
+      "name": "rte",
+      "description": "\"Rich\" Rich Text Editor (alpha)",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "fields": {
+      "name": "fields",
+      "description": "Every content before a form element is considered as label",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -260,9 +260,73 @@
       "css": true,
       "js": true
     },
+    "masonry": {
+      "name": "masonry",
+      "description": "Masonry layout with CSS grid fallback",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "time": {
+      "name": "time",
+      "description": "The better time-element, e.g. live changing relative dates",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "tooltip": {
+      "name": "tooltip",
+      "description": "Bind to target as child or via aria-labelledby",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "tree1": {
+      "name": "tree1",
+      "description": "Treeview component `<u2-tree1>Folder <u2-tree1>File</u2-tree1> </u2-tree1>`",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "carousel": {
+      "name": "carousel",
+      "description": "Simple carousel component",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "breadcrumb": {
+      "name": "breadcrumb",
+      "description": "Breadcrumb from a list of links",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "number": {
+      "name": "number",
+      "description": "Displays formatted numbers",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "counter": {
       "name": "counter",
       "description": "Animated Number Counter",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "buttongroup": {
+      "name": "buttongroup",
+      "description": "A container for grouping buttons together; buttons that don’t have space will be moved into a dropdown menu.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -276,9 +340,57 @@
       "css": true,
       "js": true
     },
-    "fields": {
-      "name": "fields",
-      "description": "Every content before a form element is considered as label",
+    "splitpanel": {
+      "name": "splitpanel",
+      "description": "A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "qrcode": {
+      "name": "qrcode",
+      "description": "QR-Code element",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "skeleton": {
+      "name": "skeleton",
+      "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "maintitlebar": {
+      "name": "maintitlebar",
+      "description": "Replaces the native browser toolbar in Desktop PWAs.",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "cookiebanner": {
+      "name": "cookiebanner",
+      "description": "Cookie banner for consent management.",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "rating": {
+      "name": "rating",
+      "description": "Rating element, form associated",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "table": {
+      "name": "table",
+      "description": "Wrap Tables to make them enhanced tables (sortable, responsive...)",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -300,113 +412,9 @@
       "css": true,
       "js": true
     },
-    "maintitlebar": {
-      "name": "maintitlebar",
-      "description": "Replaces the native browser toolbar in Desktop PWAs.",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "masonry": {
-      "name": "masonry",
-      "description": "Masonry layout with CSS grid fallback\r",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "menubutton": {
-      "name": "menubutton",
-      "description": "Buttons with options",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "number": {
-      "name": "number",
-      "description": "Displays formatted numbers",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "out": {
-      "name": "out",
-      "description": "Output variables (beta)",
-      "beta": true,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "parallax-bg": {
-      "name": "parallax-bg",
-      "description": "Parallax backgrounds",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "qrcode": {
-      "name": "qrcode",
-      "description": "QR-Code element",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "rating": {
-      "name": "rating",
-      "description": "Rating element, form associated",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "responsive": {
-      "name": "responsive",
-      "description": "A Container, where you can define strategies, that are applied through CSS states. `<u2-responsive strategies=\"hideOptional\">`",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "rte": {
-      "name": "rte",
-      "description": "\"Rich\" Rich Text Editor (alpha)",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "skeleton": {
-      "name": "skeleton",
-      "description": "Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "splitpanel": {
-      "name": "splitpanel",
-      "description": "A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "table": {
-      "name": "table",
-      "description": "Wrap Tables to make them enhanced tables (sortable, responsive...)",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "tabs": {
-      "name": "tabs",
-      "description": "Turns HTML structures with headings into an interactive, tabbed interface, using the content between headings as each tab’s content.",
+    "alert": {
+      "name": "alert",
+      "description": "Prominent hints, alerts and facts. `<u2-alert open variant=info>...</u2-alert>`",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -420,14 +428,6 @@
       "css": true,
       "js": true
     },
-    "time": {
-      "name": "time",
-      "description": "The better time-element, e.g. live changing relative dates",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": true
-    },
     "toc": {
       "name": "toc",
       "description": "Automatically generate a Navigation by using the headings of the document.",
@@ -436,25 +436,25 @@
       "css": true,
       "js": true
     },
-    "tooltip": {
-      "name": "tooltip",
-      "description": "Bind to target as child or via aria-labelledby",
+    "carousel-nav": {
+      "name": "carousel-nav",
+      "description": "Carousel navigation element for u2-carousel. (beta)",
+      "beta": true,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "accordion": {
+      "name": "accordion",
+      "description": "Turns HTML structures with headings into an accordion, using the content between headings as each panel’s content.",
       "beta": false,
       "deprecated": false,
       "css": true,
       "js": true
     },
-    "tree1": {
-      "name": "tree1",
-      "description": "Treeview component `<u2-tree1>Folder <u2-tree1>File</u2-tree1> </u2-tree1>`",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "typewriter": {
-      "name": "typewriter",
-      "description": "Simple typewriter element",
+    "menubutton": {
+      "name": "menubutton",
+      "description": "Buttons with options",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -462,14 +462,6 @@
     }
   },
   "css": {
-    "base": {
-      "name": "base",
-      "description": "⏚ Usefull css defaults",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
     "classless": {
       "name": "classless",
       "description": "null",
@@ -478,9 +470,17 @@
       "css": true,
       "js": false
     },
+    "base": {
+      "name": "base",
+      "description": "Best practices and useful defaults",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": false
+    },
     "norm": {
       "name": "norm",
-      "description": "CSS normalization for crossbrowser compatibility",
+      "description": "Browser normalization CSS – nothing else!",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -496,17 +496,25 @@
     }
   },
   "js": {
-    "contextmenu": {
-      "name": "contextmenu",
-      "description": "context menus, simple and highly customisable",
+    "SelectorObserver": {
+      "name": "SelectorObserver",
+      "description": "Watches elements matching a selector",
       "beta": false,
       "deprecated": false,
       "css": false,
       "js": true
     },
-    "dialog": {
-      "name": "dialog",
-      "description": "alert, prompt, confirm but async",
+    "rte": {
+      "name": "rte",
+      "description": "Easily Make Elements Editable with Intuitive Controls",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "PointerObserver": {
+      "name": "PointerObserver",
+      "description": "Observe mouse and touches",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -528,25 +536,17 @@
       "css": false,
       "js": true
     },
-    "PointerObserver": {
-      "name": "PointerObserver",
-      "description": "Observe mouse and touches",
+    "dialog": {
+      "name": "dialog",
+      "description": "alert, prompt, confirm but async",
       "beta": false,
       "deprecated": false,
       "css": false,
       "js": true
     },
-    "rte": {
-      "name": "rte",
-      "description": "Easily Make Elements Editable with Intuitive Controls",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": true
-    },
-    "SelectorObserver": {
-      "name": "SelectorObserver",
-      "description": "Watches elements matching a selector",
+    "navigator": {
+      "name": "navigator",
+      "description": "",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -559,84 +559,20 @@
       "deprecated": false,
       "css": false,
       "js": true
+    },
+    "contextmenu": {
+      "name": "contextmenu",
+      "description": "context menus, simple and highly customisable",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
     }
   },
   "theme": {
-    "brutalist": {
-      "name": "brutalist",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
     "elegance": {
       "name": "elegance",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "luxury": {
-      "name": "luxury",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "minimal": {
-      "name": "minimal",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "minimalism": {
-      "name": "minimalism",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "natur": {
-      "name": "natur",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "pastell": {
-      "name": "pastell",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "pop": {
-      "name": "pop",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "retro": {
-      "name": "retro",
-      "description": "\r",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "soft": {
-      "name": "soft",
-      "description": "\r",
+      "description": "",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -644,7 +580,7 @@
     },
     "tech": {
       "name": "tech",
-      "description": "\r",
+      "description": "",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -652,7 +588,79 @@
     },
     "test": {
       "name": "test",
-      "description": "\r",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "minimalism": {
+      "name": "minimalism",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "retro": {
+      "name": "retro",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "minimal": {
+      "name": "minimal",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "brutalist": {
+      "name": "brutalist",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "pastell": {
+      "name": "pastell",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "luxury": {
+      "name": "luxury",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "natur": {
+      "name": "natur",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "pop": {
+      "name": "pop",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "soft": {
+      "name": "soft",
+      "description": "",
       "beta": false,
       "deprecated": false,
       "css": false,

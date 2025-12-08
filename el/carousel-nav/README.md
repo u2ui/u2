@@ -30,8 +30,8 @@ u2-carousel-nav > .-active {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/minimal.html)  
 
 ## About
 

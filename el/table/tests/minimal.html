@@ -15,10 +15,17 @@
 <body>
 
 <section class="main">
-    <u2-table break sortable>
+    <u2-table>
         <table>
+            <colgroup>
+                <col>
+                <col>
+                <col class="age-col"/>
             <thead>
-                <tr><th> Firstname         <th> Lastname    <th> Age
+                <tr>
+                    <th data-sort-handler> Firstname         
+                    <th data-sort-handler> Lastname
+                    <th data-sort-handler> Age
             <tbody>
                 <tr><td> Wolfgang Amadeus  <td> Mozart      <td> 46
                 <tr><td> Hans              <td> Muster      <td> 1
@@ -32,7 +39,7 @@
     u2-table {
         white-space:nowrap;
     }
-    u2-table[\:overflows][break] td::before {
-        margin-right:auto;
+    .age-col {
+        text-align:right;
     }
 </style>

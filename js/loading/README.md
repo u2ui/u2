@@ -14,8 +14,8 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/loading/lo
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/js/loading/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/js/loading/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/loading/tests/minimal.html)  
 
 ## About
 

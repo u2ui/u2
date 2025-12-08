@@ -29,8 +29,8 @@ u2-splitpanel > :not(u2-splitpanel) {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/splitpanel/tests/minimal.html)  
 [tests.html](http://gcdn.li/u2ui/u2@main/el/splitpanel/tests/tests.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/splitpanel/tests/minimal.html)  
 
 ## About
 

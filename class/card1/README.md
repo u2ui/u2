@@ -41,9 +41,9 @@ We named it with the prefix "1" to prevent compatibility-issues if we like to ch
 
 ## Demos
 
+[test.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/test.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/minimal.html)  
 [play.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/play.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/class/card1/tests/test.html)  
 
 ## About
 

@@ -26,8 +26,8 @@ Shows a confirmation dialog on clicks or before form submits and only proceeds i
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/confirm/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/confirm/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/confirm/tests/minimal.html)  
 
 ## About
 

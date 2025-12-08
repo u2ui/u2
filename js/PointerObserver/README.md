@@ -24,8 +24,8 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/PointerObs
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/js/PointerObserver/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/js/PointerObserver/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/PointerObserver/tests/minimal.html)  
 
 ## About
 

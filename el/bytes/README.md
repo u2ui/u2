@@ -16,8 +16,8 @@ Displays formatted bytes
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/bytes/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/bytes/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/bytes/tests/minimal.html)  
 
 ## Attributes
 

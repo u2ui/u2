@@ -42,8 +42,8 @@ handy util-class to make a auto-column grid
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/class/grid/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/class/grid/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/grid/tests/minimal.html)  
 
 ## About
 

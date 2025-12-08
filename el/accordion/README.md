@@ -49,8 +49,8 @@ u2-accordion {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/accordion/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/accordion/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/accordion/tests/minimal.html)  
 
 ## About
 

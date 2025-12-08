@@ -9,9 +9,9 @@ customElements.define('u2-tooltip', class extends HTMLElement {
     }
     connectedCallback() {
         this.role = 'tooltip';
-        //this.popover = 'auto';
         this.popover = 'manual';
         this.popover = 'hint';
+        //this.popover = 'auto';
 
         if (!this.id) { // if no id is set, set one an make it the tooltip for its parent
             this.id = 'u2-tooltip-' + idCounter++;
@@ -41,7 +41,6 @@ customElements.define('u2-tooltip', class extends HTMLElement {
         clearTimeout(this.hideTimeout);
         setTimeout(()=>this.setAttribute('open',''),0); // to make sure the css transition is triggered
         this.showPopover();
-
 
         // beta
         if (this.getAttribute('position') === 'auto') {

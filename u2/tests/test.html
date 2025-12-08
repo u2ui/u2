@@ -113,13 +113,12 @@
             <h2>Usage</h2>
             <p>For fast prototyping just insert this:</p>
             <u2-code trim style="font-size:max(13px, .7rem); padding:.5rem">
-                <button slot=tools onclick="navigator.clipboard.writeText(this.parentNode.value); this.querySelector('.-done').showFor(this)" style="bottom:0; top:auto">
-                    <u2-ico xicon=copy style="font-size:1.2rem">📋</u2-ico>
-                    <span><u2-tooltip class=-done>Copied</u2-tooltip></span>
+                <button slot=tools onmousedown="navigator.clipboard.writeText(this.parentNode.value); let tt = this.querySelector('u2-tooltip'); tt.innerHTML = 'Copied!'; setTimeout(()=>tt.innerHTML = 'copy',2000)" style="bottom:0; top:auto">
+                    <u2-ico style="font-size:1.2rem">📋</u2-ico>
                     <u2-tooltip>Copy</u2-tooltip>
                 </button>
                 <script type=text/html>
-                    <script src="../../../u2/auto.min.js" type=module crossorigin async><\/script>
+                    <script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/u2/auto.js" type=module crossorigin async><\/script>
                 </script>
             </u2-code>
             <u2-alert open dismissible icon=star>

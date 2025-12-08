@@ -11,10 +11,17 @@ Wrap Tables to make them enhanced tables (sortable, responsive...)
 ## Usage
 
 ```html
-<u2-table break sortable>
+<u2-table>
     <table>
+        <colgroup>
+            <col>
+            <col>
+            <col class="age-col"/>
         <thead>
-            <tr><th> Firstname         <th> Lastname    <th> Age
+            <tr>
+                <th data-sort-handler> Firstname         
+                <th data-sort-handler> Lastname
+                <th data-sort-handler> Age
         <tbody>
             <tr><td> Wolfgang Amadeus  <td> Mozart      <td> 46
             <tr><td> Hans              <td> Muster      <td> 1
@@ -27,8 +34,8 @@ Wrap Tables to make them enhanced tables (sortable, responsive...)
 u2-table {
     white-space:nowrap;
 }
-u2-table[\:overflows][break] td::before {
-    margin-right:auto;
+.age-col {
+    text-align:right;
 }
 ```
 
@@ -41,8 +48,12 @@ u2-table[\:overflows][break] td::before {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/table/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/table/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/table/tests/minimal.html)  
+[multiselect.html](http://gcdn.li/u2ui/u2@main/el/table/tests/multiselect.html)  
+[test copy.html](http://gcdn.li/u2ui/u2@main/el/table/tests/test copy.html)  
+[autoformat.html](http://gcdn.li/u2ui/u2@main/el/table/tests/autoformat.html)  
+[columns.api.html](http://gcdn.li/u2ui/u2@main/el/table/tests/columns.api.html)  
 
 ## Todo
 

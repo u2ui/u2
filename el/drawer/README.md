@@ -23,9 +23,9 @@ u2-drawer {
 
 ## Demos
 
-[ai.html](http://gcdn.li/u2ui/u2@main/el/drawer/tests/ai.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/drawer/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/drawer/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/drawer/tests/minimal.html)  
+[ai.html](http://gcdn.li/u2ui/u2@main/el/drawer/tests/ai.html)  
 
 ## About
 

@@ -52,8 +52,8 @@ u2-typewriter .-Caret { ... } /* the caret (It moves and is in the active char e
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/typewriter/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/typewriter/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/typewriter/tests/minimal.html)  
 
 ## About
 

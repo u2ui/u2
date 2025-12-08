@@ -12,14 +12,14 @@ const calendarKeyDownFns = {
     'ArrowDown': (row, col, grid)=>{
         return grid.querySelector(`[aria-rowindex="${row + 1}"][aria-colindex="${col}"]`);
     },
-    'PageUp': (row, col, grid)=>{
+    'PageUp': (row, col, grid, calendar)=>{
         calendar.prev();
         setTimeout(()=>{
             const nextTarget = grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
             nextTarget.focus();
         }, 10);
     },
-    'PageDown': (row, col, grid)=>{
+    'PageDown': (row, col, grid, calendar)=>{
         calendar.next();
         setTimeout(()=>{
             const nextTarget = grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
@@ -39,13 +39,14 @@ document.addEventListener('keydown', e=>{
 
     const path = e.composedPath();
     const actualTarget = path[0];
+    const calendar = e.target;
 
     if (actualTarget.matches('.grid > *')) {
         const row = parseInt(actualTarget.ariaRowIndex, 10);
         const col = parseInt(actualTarget.ariaColIndex, 10);
         const grid = actualTarget.closest('.grid');
 
-        let nextTarget = calendarKeyDownFns[e.key]?.(row, col, grid);
+        let nextTarget = calendarKeyDownFns[e.key]?.(row, col, grid, calendar);
 
         if (nextTarget) {
             nextTarget.focus();
@@ -64,6 +65,7 @@ document.addEventListener('wheel', e => {
     const target = path[0];
 
     if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+    const calendar = e.target;
     
     const grid = target.closest('.grid');
     if (grid) {

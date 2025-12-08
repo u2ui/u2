@@ -19,7 +19,7 @@
     <section>
         <u2-responsive id="responsive">
             <u2-table style="white-space:nowrap; max-height:min(60vh, 50rem)" id=test>
-                <table>
+                <table aria-multiselectable="true" data-select-scope="any">
                     <colgroup>
                         <col class="salutation">
                         <col class="name firstname">
@@ -34,6 +34,7 @@
                             <th data-sort-handler> Lastname
                             <th data-sort-handler draggable="true"> Age
                             <th data-sort-handler> X
+                            <th> Select
                     <tbody id=testBody>
                         <tr>
                             <td> Herr
@@ -41,23 +42,27 @@
                             <td> Mozart
                             <td> 46
                             <td> b
+                            <td><input type="checkbox">
                         <tr>
                             <td> Mr.
                             <td colspan=2 style="text-align:center"> <b>N Colspan 2</b>
                             <td> 88
                             <td> a
+                            <td><input type="checkbox">
                         <tr>
                             <td> Frau
                             <td> Provident, quisquam.
                             <td> Omnis, quisquam.
                             <td> 1
                             <td> c
+                            <td><input type="checkbox">
                         <tr>
                             <td> Mister
                             <td> Provident, quisquam.
                             <td> Laudens, quisquam.
                             <td data-sort=".5"> 6 month
                             <td> z
+                            <td><input type="checkbox">
                 </table>
             </u2-table>
         </u2-responsive>

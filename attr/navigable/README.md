@@ -19,10 +19,10 @@ Link to navigable dialog:<br>
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/navigable/tests/minimal.html)  
-[targetObserver.html](http://gcdn.li/u2ui/u2@main/attr/navigable/tests/targetObserver.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/attr/navigable/tests/test.html)  
 [U1TargetObserver.html](http://gcdn.li/u2ui/u2@main/attr/navigable/tests/U1TargetObserver.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/attr/navigable/tests/test.html)  
+[targetObserver.html](http://gcdn.li/u2ui/u2@main/attr/navigable/tests/targetObserver.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/navigable/tests/minimal.html)  
 
 ## About
 

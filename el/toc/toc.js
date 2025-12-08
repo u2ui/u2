@@ -1,18 +1,22 @@
+import '../../js/navigator/url-change-event.js';
+
 class Toc extends HTMLElement {
     constructor() {
         super();
     }
 
     connectedCallback() {
-        //this._build();
         requestAnimationFrame(() => this._build());
         addEventListener('load', () => this._build());
+        addEventListener('u2-url-change', ({detail})=>{
+            !detail.sameDocument && setTimeout(()=>this._build(),20); // wait for navigator :(
+        });
     }
 
     static observedAttributes = ['from', 'to', 'for'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (newValue === oldValue) return;
-        this._build();
+        this._build();        
     }
 
     _build() {

@@ -29,32 +29,41 @@ class U2Breadcrumb extends HTMLElement {
         //nav.ariaLabel = this.getAttribute('aria-label') || 'Breadcrumb';
         nav.ariaLabel ??= 'Breadcrumb';
         this.ol = document.createElement('ol');
-        nav.appendChild(this.ol);
+        nav.append(this.ol);
         this.shadowRoot.adoptedStyleSheets = [styleSheet];
-        this.shadowRoot.appendChild(nav);
+        this.shadowRoot.append(nav);
     }
     connectedCallback() {
         this.render();
         this.observer = new MutationObserver(() => this.render());
         this.observer.observe(this, { childList: true });
         if (this.hasAttribute('auto')) {
-            const currentUrl = new URL(location.href);
-            const pathParts = currentUrl.pathname.split('/').filter(part => part.trim() !== '');
-            let currentPath = currentUrl.origin; // Startet mit der Basis-URL (z.B. https://example.com)
-            const homeLink = document.createElement('a'); // Start-Element "Home" (/)
-            homeLink.textContent = 'Home';
-            homeLink.href = currentUrl.origin + '/';
-            this.appendChild(homeLink);
-
-            pathParts.forEach((part, index) => {
-                currentPath += '/' + part;
-                const name = part.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                const link = document.createElement('a');
-                link.textContent = name;
-                link.href = currentPath; // Fertig aufgebaute URL
-                this.appendChild(link);
-            });
+            import('../../js/navigator/url-change-event.js');
+            this.generateFromLocation();
+            addEventListener('u2-url-change', ({detail})=>{
+                if (detail.sameDocument) return;
+                setTimeout(()=> this.generateFromLocation() ,20);
+            })
         }
+    }
+    generateFromLocation() {
+        this.innerHTML = '';
+        const currentUrl = new URL(location.href);
+        const pathParts = currentUrl.pathname.match(/[^/]+\/|[^/]+/g) || [];
+        let currentPath = currentUrl.origin + '/'; // Startet mit der Basis-URL (z.B. https://example.com)
+        const homeLink = document.createElement('a'); // Start-Element "Home" (/)
+        homeLink.textContent = 'Home';
+        homeLink.href = currentUrl.origin + '/';
+        this.append(homeLink);
+
+        pathParts.forEach((part, index) => {
+            currentPath += part;
+            const name = part.replace('/','').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const link = document.createElement('a');
+            link.textContent = name;
+            link.href = currentPath;
+            this.append(link);
+        });
     }
     disconnectedCallback() {
         this.observer.disconnect();

@@ -70,6 +70,7 @@ export function toggleParam(id, force, replace){
     if (shouldAdd === isPresent) return;
     shouldAdd ? targets.add(id) : targets.delete(id);
     url.searchParams.set('u2-target', [...targets].join(' '));
-    history[replace?'replaceState':'pushState'](null, '', url.href);
+    //console.log('u2targetobserver navigates:', {replace, url:url.href})
+    history[replace?'replaceState':'pushState']({source:'u2-target'}, '', url.href);
     checkTargets();
 }

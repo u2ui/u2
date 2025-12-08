@@ -31,8 +31,8 @@ u2-breadcrumb {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/breadcrumb/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/breadcrumb/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/breadcrumb/tests/minimal.html)  
 
 ## About
 

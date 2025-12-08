@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Über uns - Test Seite</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    <link href="./main.css" rel=stylesheet>
+</head>
+<body>
+    <nav id="navigation">
+        <a href="./index.html">Home</a>
+        <a href="./about.html">Über uns</a>
+        <div class="dropdown">
+            <a href="./contact.html" class="current">Kontakt ▼</a>
+            <div class="dropdown-content">
+                <a href="./contact.html" class="current">Kontaktformular</a>
+                <a href="./about.html">Team</a>
+            </div>
+        </div>
+    </nav>
+
+    <aside><u2-toc></u2-toc></aside>
+    
+    <main>
+
+        <u2-breadcrumb auto></u2-breadcrumb>
+
+        <h1>Kontaktieren Sie uns!</h1>
+        
+        <p>Dies ist die Kontakt-Seite. Beachte wie schnell die Navigation war!</p>
+
+        <h2>Was du hier testen kannst:</h2>
+        <ul>
+            <li>📧 Das Formular unten - Eingaben bleiben erhalten beim Navigieren!</li>
+            <li>🖱️ Tippe etwas in die Felder, navigiere weg und komme zurück</li>
+            <li>⚡ Alles lädt instant aus dem Cache</li>
+            <li>🎯 Die Dropdown-Navigation bleibt offen wenn du hovern bleibst</li>
+        </ul>
+
+        <h2>Kontaktformular</h2>
+        <form>
+            <p>
+                <label>Name:<br>
+                <input type="text" name="name" placeholder="Dein Name" size="40"></label>
+            </p>
+            
+            <p>
+                <label>Email:<br>
+                <input type="email" name="email" placeholder="deine@email.com" size="40"></label>
+            </p>
+            
+            <p>
+                <label>Nachricht:<br>
+                <textarea name="message" rows="5" cols="40" placeholder="Deine Nachricht..."></textarea></label>
+            </p>
+            
+            <p>
+                <button type="button">Absenden (Demo)</button>
+            </p>
+        </form>
+
+        <h2>Test-Anleitung:</h2>
+        <ol>
+            <li>Tippe deinen Namen ins Formular oben</li>
+            <li>Klicke auf <a href="./index.html">Startseite</a></li>
+            <li>Komme zurück zu <a href="./contact.html">Kontakt</a></li>
+            <li>Dein Name sollte noch im Feld stehen! 🎉</li>
+        </ol>
+
+        <h2>Weitere Kontakt-Möglichkeiten:</h2>
+        <p>
+            <strong>Telefon:</strong> +41 44 123 45 67<br>
+            <strong>Email:</strong> info@example.com<br>
+            <strong>Adresse:</strong> Musterstrasse 123, 8000 Zürich
+        </p>
+
+        <h2>Cache-Test</h2>
+        <p>
+            Öffne die Browser DevTools (F12) → Network Tab.<br>
+            Navigiere zwischen den Seiten und sieh wie nach dem ersten Laden 
+            alles aus dem Cache kommt (keine neuen Requests!).
+        </p>
+
+        <p>
+            <a href="./index.html">← Zurück zur Startseite</a> |
+            <a href="./about.html">Über uns</a>
+        </p>
+    </main>
+
+    <footer>
+        <p>Test Footer - Dieser bleibt auch erhalten beim Navigation</p>
+    </footer>
+
+    <script type="module" src="../navigator.js"></script>

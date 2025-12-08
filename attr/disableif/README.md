@@ -27,8 +27,8 @@ Disable form-elements (like inputs, buttons, fieldsets) based on a condition
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/disableif/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/disableif/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/disableif/tests/minimal.html)  
 
 ## About
 

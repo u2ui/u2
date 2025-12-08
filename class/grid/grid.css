@@ -5,26 +5,38 @@
     --u2-Row-gap: var(--u2-Gap);
     display: grid;
     column-gap: var(--u2-Col-gap);
-    row-gap:    var(--u2-Row-gap);
-    grid-template-columns: repeat(auto-fill, minmax( var(--u2-Items-width), 1fr) );/* min() not supported everywhere? */
-    grid-template-columns: repeat(auto-fill, minmax( min(var(--u2-Items-width), 100%) , 1fr) );/* problems in chrome? check if a parent flex-item needs min-width:0; */
-    grid-auto-flow:dense;
+    row-gap: var(--u2-Row-gap);
+    grid-template-columns: repeat(auto-fill, minmax(var(--u2-Items-width), 1fr));
+    /* min() not supported everywhere? */
+    grid-template-columns: repeat(auto-fill, minmax(min(var(--u2-Items-width), 100%), 1fr));
+    /* problems in chrome? check if a parent flex-item needs min-width:0; */
+    grid-auto-flow: dense;
     /* if using display:flex ?
     flex-wrap:wrap;
     justify-content:center;
     */
 }
 
+.u2-grid>* {
+    margin: 0;
+}
+
 
 table.u2-grid {
-    display:grid;
-    > * {
-        display:contents; /* tbody */
-        > * { /* tr */
-            display:block;
-            > * { /* td */
-                display:block;
-                padding:0;
+    display: grid;
+
+    >* {
+        display: contents;
+
+        /* tbody */
+        >* {
+            /* tr */
+            display: block;
+
+            >* {
+                /* td */
+                display: block;
+                padding: 0;
             }
         }
     }

@@ -38,8 +38,8 @@ html {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/class/width/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/class/width/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/width/tests/minimal.html)  
 
 ## About
 

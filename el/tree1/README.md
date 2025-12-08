@@ -91,10 +91,10 @@ treeElement.addEventListener('u2-tree1-select', (e) => { ... });
 
 ## Demos
 
-[animated.html](http://gcdn.li/u2ui/u2@main/el/tree1/tests/animated.html)  
 [custom.html](http://gcdn.li/u2ui/u2@main/el/tree1/tests/custom.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/tree1/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/tree1/tests/test.html)  
+[animated.html](http://gcdn.li/u2ui/u2@main/el/tree1/tests/animated.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/tree1/tests/minimal.html)  
 
 ## Todo
 

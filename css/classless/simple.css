@@ -5,6 +5,12 @@ body {
     padding:1rem;
 
     display: grid; /* center content. Margins will not collapse :/ */
+
+    grid-template-areas: 
+        "header"
+        "content"
+        "footer";
+
     place-content: start stretch;
 }
 
@@ -19,12 +25,8 @@ body:has(> aside) {
     grid-template-columns: 15rem minmax(1rem, 1fr) minmax(20rem, var(--width)) minmax(1rem, 1fr);
     grid-template-areas: 
         "header header header header"
-        "nav spacer content spacer"
+        "nav . content ."
         "footer footer footer footer";
-        grid-template-areas: 
-    "header header header header"
-    "nav . content ."
-    "footer footer footer footer";
     gap: 0;
     max-width:none;
 

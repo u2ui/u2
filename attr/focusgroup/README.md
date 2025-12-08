@@ -39,8 +39,8 @@ https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/focusgroup/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/focusgroup/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/focusgroup/tests/minimal.html)  
 
 ## About
 

@@ -13,6 +13,7 @@ class U2Chart extends HTMLElement {
             }
             :host([type="pie"]) .chart-container:not([height]) { aspect-ratio: 1; }
             canvas { width: 100%; height: 100%; }
+            svg { display:block; }
             </style>
             <div class="chart-container"></div>`;
         this.container = this.shadowRoot.querySelector('.chart-container');

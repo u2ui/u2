@@ -18,7 +18,7 @@ html {
 	--line-height: calc(1em + .5rem);
 	-webkit-tap-highlight-color: transparent;
 	font-family: system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-	font-size: calc(12px + .3vw);
+	font-size: calc(12.5px + .25vw);
 	scrollbar-gutter: stable;
 	overflow-y: auto;
 }
@@ -26,7 +26,7 @@ body {
 	margin:auto;
 	min-block-size: 100%;
     display: flow-root;/* so that margin of children does not affect body */
-	font-size:max(1rem, 16px);/* 16px => safari ios dont zoom in */
+	font-size:max(1rem, 14px);
 }
 
 /* todo: 
@@ -105,13 +105,14 @@ input, textarea, select, button, ::file-selector-button, .btn {
 	padding:.2em;
 	border:1px solid rgba(0,0,0,.5);
 	font: inherit;
+	line-height:var(--line-height);/* needed as font:inherit does inherit line-height */
+	--line-height:normal;
 	/*
 	try to match immutable select-line-height
 	in chrome:1.22, in ff:1.17 (best fit line-height:1.19?)
 	"normal" does not work in chrome unless not -webkit-appearance: none;
 	*/
-	line-height:var(--line-height);/* needed as font:inherit does inherit line-height */
-	--line-height:normal;
+	/* todo: min font-size? */
 }
 button, ::file-selector-button, .btn {
 	padding-inline:.7em;

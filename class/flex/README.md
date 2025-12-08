@@ -37,8 +37,8 @@ Most wanted flexbox case
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/class/flex/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/class/flex/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/flex/tests/minimal.html)  
 
 ## Note
 

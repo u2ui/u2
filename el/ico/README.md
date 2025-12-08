@@ -51,13 +51,13 @@ u2-ico {
 
 ## Demos
 
+[ico-directory.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/ico-directory.html)  
 [combinations.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/combinations.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/test.html)  
 [emojis.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/emojis.html)  
 [fonts.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/fonts.html)  
-[ico-directory.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/ico-directory.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/minimal.html)  
 [sprite.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/sprite.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/ico/tests/test.html)  
 
 ## Variant "icon-directory"
 

@@ -32,8 +32,8 @@ declarativ intersection-observer
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/intersect/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/intersect/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/intersect/tests/minimal.html)  
 
 ## About
 

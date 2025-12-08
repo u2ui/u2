@@ -25,9 +25,9 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/SelectorOb
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/js/SelectorObserver/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/js/SelectorObserver/tests/test.html)  
 [tests.html](http://gcdn.li/u2ui/u2@main/js/SelectorObserver/tests/tests.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/SelectorObserver/tests/minimal.html)  
 
 ## Options - "checkAnimation" (beta)
 

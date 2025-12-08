@@ -41,8 +41,8 @@ u2-masonry > * {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/masonry/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/masonry/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/masonry/tests/minimal.html)  
 
 ## About
 

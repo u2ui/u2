@@ -33,8 +33,8 @@ Change the skin of a widget
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/skin/tests/minimal.html)  
 
 ## Description
 

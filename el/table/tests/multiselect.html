@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Select Table Tests (Tags Optional)</title>
+
+    <script src="../../../u2/tests/test-init.js" type="module" async></script>
+    <script src="../../../u2/auto.js" type="module" async></script>
+    <link href="../../../css/classless/simple.css" rel="stylesheet">
+
+    <link href="../table.css" rel="stylesheet">
+    <script src="../table.js" type="module" async></script>
+
+    <style>
+        /* Minimales CSS für die Lesbarkeit der Tests */
+        table {
+            margin-bottom: 2rem;
+            border: 1px solid #ccc;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            white-space: nowrap;
+        }
+        .header {
+            background: #f0f0f0;
+        }
+        .highlight {
+            background-color: #eaf;
+        }
+        .empty-cell {
+            background-color: #ffcccc;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Checkbox Multi-Select Tests (Optional Tags)</h1>
+</header>
+
+<section>
+    
+    <u2-table>
+        <table aria-multiselectable="true" data-select-scope="any">
+            <tbody>
+                <tr>
+                    <td><input type="checkbox">A1
+                    <td><input type="checkbox">A2
+                    <td><input type="checkbox">A3
+                    <td rowspan="2"><input type="checkbox">A4-B4
+                    <td><input type="checkbox">A5
+                    <td><input type="checkbox">A6
+                <tr>
+                    <td colspan="2"><input type="checkbox">B1-2
+                    <td><input type="checkbox">B3
+                    <td><input type="checkbox">B5
+                    <td><input type="checkbox">B6
+                <tr>
+                    <td><input type="checkbox">C1
+                    <td colspan="3"><input type="checkbox">C (Colspan 3)
+                    <td><input type="checkbox">C5
+                    <td><input type="checkbox">C6
+                <tr>
+                    <td><input type="checkbox">D1
+                    <td><input type="checkbox">D2
+                    <td><input type="checkbox">D3
+                    <td><input type="checkbox">D4
+                    <td><input type="checkbox">D5
+                    <td><input type="checkbox">D6
+        </table>
+    </u2-table>
+
+    
+</section>

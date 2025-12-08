@@ -25,8 +25,8 @@ u2-number {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/number/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/number/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/number/tests/minimal.html)  
 
 ## Attributes
 

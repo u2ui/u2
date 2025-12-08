@@ -1,5 +1,5 @@
 # norm.css
-CSS normalization for crossbrowser compatibility
+Browser normalization CSS – nothing else!
 
 ## Features
 

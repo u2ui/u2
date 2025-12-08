@@ -16,9 +16,9 @@ Automatically generate a Navigation by using the headings of the document.
 
 ## Demos
 
+[test.html](http://gcdn.li/u2ui/u2@main/el/toc/tests/test.html)  
 [attributes.html](http://gcdn.li/u2ui/u2@main/el/toc/tests/attributes.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/toc/tests/minimal.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/el/toc/tests/test.html)  
 
 ## About
 

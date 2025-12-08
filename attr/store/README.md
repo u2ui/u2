@@ -31,8 +31,8 @@ Warnings:
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/store/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/store/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/store/tests/minimal.html)  
 
 ## About
 

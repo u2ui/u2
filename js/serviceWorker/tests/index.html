@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Über uns - Test Seite</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+<body>
+
+    <header>
+        <nav id="navigation">
+            <a href="./index.html" class="current">Home</a>
+            <a href="./about.html">Über uns</a>
+            <div class="dropdown">
+                <a href="./contact.html">Kontakt ▼</a>
+                <div class="dropdown-content">
+                    <a href="./contact.html">Kontaktformular</a>
+                    <a href="./about.html">Team</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Update Banner (hidden by default) -->
+        <u2-alert id="update-banner" variant="info">
+            Neue Version verfügbar!
+            <button id="update-button" slot="action">
+                Jetzt aktualisieren
+                <u2-tooltip>Seite wird neu geladen</u2-tooltip>
+            </button>
+            <button id="dismiss-button" slot="action">Später</button>
+        </u2-alert>
+    </header>
+
+    <main>
+    <script type="module">
+        import { register, onUpdateAvailable, skipWaiting, onCacheServed } from '../serviceWorker.js';
+
+        // Service Worker registrieren
+        const registration = await register({
+            scope: import.meta.resolve('./')
+        });
+
+        console.log('Registration:', registration);
+
+        // Update-Handling einrichten
+        onUpdateAvailable((newWorker) => {
+            const banner = document.getElementById('update-banner');
+            const updateBtn = document.getElementById('update-button');
+            const dismissBtn = document.getElementById('dismiss-button');
+
+            if (newWorker) { // Neuer Worker wartet - zeige Banner
+                setTimeout(()=>banner.toast(),200)
+                updateBtn.onclick = () => {
+                    console.log('⏩ Aktiviere Update...');
+                    skipWaiting();
+                    location.reload();
+                };
+                dismissBtn.onclick = () => banner.hide();
+            } else {
+                // Controller hat gewechselt - reload
+                console.log('🔄 Update aktiv - Seite wird neu geladen');
+                window.location.reload();
+            }
+        });
+
+        // Cache-Events loggen (optional)
+        onCacheServed((data) => {
+            console.log('📦 Aus Cache geladen:', data.url);
+        });
+
+        // Test: SW Status anzeigen
+        if (registration) {
+            const statusDiv = document.getElementById('sw-status');
+            const updateStatus = () => {
+                const active = registration.active?.state || 'none';
+                const installing = registration.installing?.state || 'none';
+                const waiting = registration.waiting?.state || 'none';
+
+                statusDiv.innerHTML = `
+        <strong>Active:</strong> ${active}<br>
+        <strong>Installing:</strong> ${installing}<br>
+        <strong>Waiting:</strong> ${waiting}
+    `;
+            };
+
+            updateStatus();
+
+            // Status bei Änderungen aktualisieren
+            registration.addEventListener('updatefound', updateStatus);
+            if (registration.installing) {
+                registration.installing.addEventListener('statechange', updateStatus);
+            }
+        }
+
+    </script>
+
+    <u2-breadcrumb auto></u2-breadcrumb>
+
+    <h1>Willkommen auf der Startseite!</h1>
+
+    <p>Dies ist die Home-Seite zum Testen des Service Workers.</p>
+
+    <!-- SW Status anzeigen -->
+    <article>
+        <h2>Service Worker Status</h2>
+        <div id="sw-status">
+            Lädt...
+        </div>
+    </article>
+
+    <h2>Features die du testen kannst:</h2>
+    <ul>
+        <li>Hover über "Kontakt" in der Navigation - das Dropdown klappt auf</li>
+        <li>Klicke dann auf einen Link</li>
+        <li>Die Navigation bleibt im Hover-Zustand! 🎉</li>
+        <li>Öffne DevTools → Network und sieh wie Seiten gecacht werden</li>
+        <li>Navigation ist instant ohne Page-Reload</li>
+        <li><strong>NEU:</strong> Ändere den Service Worker und sieh den Update-Banner!</li>
+    </ul>
+
+    <h2>Service Worker Update testen:</h2>
+    <ol>
+        <li>Öffne <code>sw.js</code> und ändere die Version (z.B. Kommentar hinzufügen)</li>
+        <li>Speichere die Datei</li>
+        <li>Lade diese Seite neu (oder warte ~24h)</li>
+        <li>Du siehst den Update-Banner oben!</li>
+        <li>Klicke "Jetzt aktualisieren" → Seite lädt neu mit neuer Version</li>
+    </ol>
+
+    <h2>Weitere Test-Möglichkeiten:</h2>
+    <p>
+        <a href="./about.html">Gehe zu "Über uns"</a> -
+        Diese Seite wird vorgeladen sobald deine Maus in der Nähe ist!
+    </p>
+    <p>
+        <a href="./contact.html">Kontaktiere uns</a> -
+        Auch diese Seite wird intelligent geprefetcht.
+    </p>
+    <p>
+        Hier ein Link ohne HREF-Attribute
+        <a>was passiert?</a> -
+    </p>
+
+    <h2>Browser Back/Forward Buttons</h2>
+    <p>
+        Navigiere zwischen den Seiten und nutze dann die Zurück/Vor-Buttons
+        deines Browsers. Alles funktioniert instant aus dem Cache!
+    </p>
+
+    <h2>Aktueller Timestamp:</h2>
+    <p>Seite geladen um: <strong id="timestamp"></strong></p>
+    <script>
+        document.getElementById('timestamp').textContent =
+            new Date().toLocaleTimeString('de-DE');
+    </script>
+    <p>(Beim Navigieren ändert sich dieser nicht, weil die Seite aus dem Cache kommt!)</p>
+
+    <h2>Debug-Info in der Console:</h2>
+    <p>Öffne die Browser DevTools (F12) und schau dir die Console an:</p>
+    <ul>

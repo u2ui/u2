@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../chart.js" type=module async></script>
+    <link href="../chart.css" rel=stylesheet>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 140rem;
+        }
+
+        u2-chart {
+            border-top: 1px solid;
+            padding: 0 !important;
+        }
+    </style>
+
+<body>
+
+    <h1>Chart Engine Test</h1>
+
+    <section class="u2-grid" style="--u2-Items-width:28rem">
+
+        <article>
+            <h2>Default (Chart.js)</h2>
+            <u2-chart for="dataTable"></u2-chart>
+        </article>
+
+        <article>
+            <h2>ECharts</h2>
+            <u2-chart engine="echarts" for="dataTable"></u2-chart>
+        </article>
+
+        <article>
+            <h2>ECharts (SVG)</h2>
+            <u2-chart engine="echarts" renderer="svg" for="dataTable"></u2-chart>
+        </article>
+
+        <article>
+            <h2>frappe (SVG)</h2>
+            <u2-chart engine="frappe" renderer="svg" for="dataTable"></u2-chart>
+        </article>
+
+        <article>
+            <h2>Chartist.js</h2>
+            <u2-chart for="dataTable" engine="chartist" type="line" axis-labels="false" grid="false"></u2-chart>
+        </article>
+
+        <article>
+            <h2>Billboard.js</h2>
+            <u2-chart for="dataTable" engine="billboard"></u2-chart>
+        </article>
+
+        <article>
+            <h2>ApexCharts</h2>
+            <u2-chart for="dataTable" engine="apexcharts"></u2-chart>
+        </article>
+
+        <article>
+            <h2>Plotly.js</h2>
+            <u2-chart for="dataTable" engine="plotly"></u2-chart>
+        </article>
+
+        <article>
+            <h2>NVD3</h2>
+            <u2-chart for="dataTable" engine="nvd3"></u2-chart>
+        </article>
+
+
+
+    </section>
+
+    <section>
+
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Month
+                    <th>Sales
+                    <th>Profit
+            <tbody>
+                <tr>
+                    <th>Jan
+                    <td>100
+                    <td>50
+                <tr>
+                    <th>Feb
+                    <td>120
+                    <td>60
+                <tr>
+                    <th>Mar
+                    <td>150
+                    <td>80
+                <tr>
+                    <th>Apr
+                    <td>180
+                    <td>90
+                <tr>
+                    <th>May
+                    <td>200
+                    <td>100
+        </table>
+
+    </section>

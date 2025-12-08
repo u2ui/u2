@@ -15,8 +15,8 @@ Rendering badges
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/class/badge/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/class/badge/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/class/badge/tests/minimal.html)  
 
 ## About
 

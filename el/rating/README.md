@@ -24,8 +24,8 @@ u2-rating {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/rating/tests/minimal.html)  
 [tests.html](http://gcdn.li/u2ui/u2@main/el/rating/tests/tests.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/rating/tests/minimal.html)  
 
 ## About
 

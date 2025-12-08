@@ -1,0 +1,48 @@
+::view-transition { pointer-events: none; }
+
+:root::view-transition-group(*) { animation-duration: .6s; }
+
+/*
+:root::view-transition-group(root) { background-color: #0002; }
+:root::view-transition-old(root) { animation: fadeOut 0.4s ease-out; }
+:root::view-transition-new(root) { animation: fadeIn 0.4s ease-in; }
+@keyframes fadeOut { to { opacity: 0; } }
+@keyframes fadeIn { from { opacity: 0; } }
+*/
+
+
+/* Nur für Navigation */
+nav {
+    background: #333;
+    padding: 1rem;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    display: inline-block;
+}
+nav a.current {
+    background: #555;
+}
+nav a:hover {
+    background: #444;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: #444;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown-content a {
+    display: block;
+}

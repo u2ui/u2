@@ -93,7 +93,9 @@ class U2Fields extends HTMLElement {
                 labelSlot.assign(...pair.labelNodes);
             } else {
                 const attr = ['aria-label','title','name', 'type'].find(a => pair.inputNode.hasAttribute(a));
-                if (attr) labelSlot.innerText = pair.inputNode.getAttribute(attr);
+                if (attr) {
+                    labelSlot.textContent = pair.inputNode.getAttribute(attr);
+                }
             }
             pair.inputNode.ariaLabelledByElements = [wrapperLabel]; // not working... why?
             inputSlot.assign(pair.inputNode);

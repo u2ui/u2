@@ -17,8 +17,8 @@ Makes any element act as a link. `u2-href="url"`
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/href/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/href/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/href/tests/minimal.html)  
 
 ## Description
 

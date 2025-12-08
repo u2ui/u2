@@ -27,8 +27,8 @@ u2-rte {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/minimal.html)  
 
 ## About
 

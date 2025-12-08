@@ -40,10 +40,10 @@ u2-carousel > :not([slot]) {
 
 ## Demos
 
-[experiments.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/experiments.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/minimal.html)  
-[nested.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/nested.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/test.html)  
+[nested.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/nested.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/minimal.html)  
+[experiments.html](http://gcdn.li/u2ui/u2@main/el/carousel/tests/experiments.html)  
 
 ## About
 

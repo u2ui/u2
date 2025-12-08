@@ -40,8 +40,8 @@ u2-counter {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/counter/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/counter/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/counter/tests/minimal.html)  
 
 ## About
 

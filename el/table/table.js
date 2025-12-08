@@ -10,19 +10,14 @@ class Table extends HTMLElement {
                 overflow: auto;
             }
             </style>
-            <!--u2-menubutton>
-                <button>Spalten</button>
-                <menu>
-                    <button>test</button>
-                </menu>
-            </u2-menubutton-->
             <slot></slot>
         `;
     }
     connectedCallback() {
         this.mutObs = new MutationObserver(mutations => {
             if (this._isUpdating) return; // IGNORIEREN WÄHREND UPDATE
-            this.#checkTable()
+            this.#checkTable();
+            this.columns.refresh();
         });
         this.mutObs.observe(this, {childList: true, subtree: true});
         this.#checkTable();
@@ -36,6 +31,7 @@ class Table extends HTMLElement {
 
         const firstHeadTr = this.querySelector(':scope > table > thead > tr');
 
+        this.addEventListener('click', tableCheckboxMultiSelectListener);
 
         if (firstHeadTr) {
 
@@ -57,243 +53,21 @@ class Table extends HTMLElement {
             }
         }
 
-        if (this.hasAttribute('autoformat')) this.#autoFormat();
+        //if (this.hasAttribute('autoformat')) this.#autoFormat();
+        if (this.hasAttribute('autoformat')) {
+            import('./ext/autoFormatTable.js').then(({autoFormatTable})=> {
+                this._isUpdating = true;
+                autoFormatTable(this.table)
+                queueMicrotask(() => this._isUpdating = false )
+            });
+        }
 
-        queueMicrotask(()=>{
-            this._isUpdating = false; // FLAG ZURÜCKSETZEN        
-        })
-
+        queueMicrotask(() => this._isUpdating = false )
     }
 
     get columns() {
         return this.table && getTableColumns(this.table);
     }
-
-
-
-    #autoFormat() {
-        // Inject styles into light DOM
-        let style = this.querySelector('style[data-autoformat]');
-        if (!style) {
-            style = document.createElement('style');
-            style.dataset.autoformat = '';
-            this.insertBefore(style, this.firstChild);
-        }
-        
-        style.textContent = `
-            /* AUTO-FORMAT STYLES (BETA) */
-            td.auto-numeric,
-            td.auto-currency {
-                text-align: right;
-                font-variant-numeric: tabular-nums;
-            }
-            
-            th.auto-vertical {
-                writing-mode: vertical-rl;
-                writing-mode: sideways-lr;
-                white-space: nowrap;
-            }
-            
-            td.auto-date {
-                text-align: center;
-                white-space: nowrap;
-            }
-            
-            td.auto-boolean {
-                text-align: center;
-                font-size: 1.2em;
-            }
-            
-            td.auto-percentage {
-                text-align: right;
-                font-variant-numeric: tabular-nums;
-            }
-            
-            td.auto-email {
-                word-break: break-all;
-                font-size: 0.9em;
-            }
-            
-            td.auto-url {
-                word-break: break-all;
-                xcolor: #0066cc;
-            }
-            
-            td.auto-long-text {
-                font-size:max(.8em, 12px);
-            }
-        `;
-
-        const firstHeadTr = this.querySelector(':scope > table > thead > tr');
-        if (firstHeadTr) {
-            for (const th of firstHeadTr.children) {
-                th.setAttribute('data-sort-handler', '');
-                th.tabIndex = '0';
-            }
-        }
-
-        // Analyze and format each column
-        for (const col of this.columns) {
-            const allCells = col.cells;
-            const bodyCells = allCells.filter(c => c.tagName === 'TD');
-            const headerCell = allCells.find(c => c.tagName === 'TH');
-            
-            if (bodyCells.length === 0) continue;
-            
-            const values = bodyCells.map(c => c.textContent.trim());
-            const nonEmptyValues = values.filter(v => v !== '');
-            
-            if (nonEmptyValues.length === 0) continue;
-
-            // 1. NUMERIC CHECK
-            const allNumeric = nonEmptyValues.every(v => !isNaN(v) && v !== '');
-            if (allNumeric) {
-                bodyCells.forEach(cell => cell.classList.add('auto-numeric'));
-                
-                // Normalize decimal places
-                const decimals = nonEmptyValues.map(v => (v.split('.')[1] || '').length);
-                const maxDecimals = Math.max(...decimals, 0);
-                
-                if (maxDecimals > 0) {
-                    bodyCells.forEach(cell => {
-                        const num = parseFloat(cell.textContent);
-                        if (!isNaN(num)) {
-                            cell.textContent = num.toFixed(maxDecimals);
-                        }
-                    });
-                }
-                continue; // Skip other checks if numeric
-            }
-
-            // 2. CURRENCY CHECK (€, $, £, CHF, etc.)
-            const allCurrency = nonEmptyValues.every(v => 
-                /^[€$£¥CHF]*\s*\d+([.,]\d{1,2})?$/.test(v)
-            );
-            if (allCurrency) {
-                bodyCells.forEach(cell => {
-                    const text = cell.textContent.trim();
-                    const numericValue = text.replace(/[€$£¥CHF\s]/g, '').replace(',', '.');
-                    cell.setAttribute('data-sort', parseFloat(numericValue));                    
-                    cell.classList.add('auto-currency')
-                });
-                continue;
-            }
-
-            // 3. PERCENTAGE CHECK
-            const allPercentage = nonEmptyValues.every(v => 
-                /^\d+([.,]\d+)?%$/.test(v)
-            );
-            if (allPercentage) {
-                bodyCells.forEach(cell => {
-                    cell.setAttribute('data-sort', parseFloat(cell.textContent.trim()));
-                    cell.classList.add('auto-percentage');
-                });
-                continue;
-            }
-
-            // 4. DATE CHECK
-            const allDates = nonEmptyValues.every(v => {
-                const parsed = Date.parse(v);
-                return !isNaN(parsed) && v.length > 5; // Avoid false positives
-            });
-            if (allDates) {
-                bodyCells.forEach(cell => {
-                    cell.classList.add('auto-date');
-                    const date = new Date(cell.textContent);
-                    if (!isNaN(date)) {
-                        cell.setAttribute('data-sort', date.getTime());
-                        cell.textContent = date.toLocaleDateString('de-CH');
-                    }
-                });
-                continue;
-            }
-
-            // 5. BOOLEAN CHECK
-            const booleanValues = ['true', 'false', 'yes', 'no', 'ja', 'nein', '✓', '✗', 'x'];
-            const allBoolean = nonEmptyValues.every(v => 
-                booleanValues.includes(v.trim().toLowerCase())
-            );
-            if (allBoolean) {
-                bodyCells.forEach(cell => {
-                    cell.classList.add('auto-boolean');
-                    const val = cell.textContent.trim().toLowerCase();
-                    if (['true', 'yes', 'ja', '✓'].includes(val)) {
-                        cell.textContent = '🟢'; // ✓ ●
-                    } else if (['false', 'no', 'nein', '✗', 'x'].includes(val)) {
-                        cell.textContent = '⚪'; // ✗ ○
-                    }
-                });
-                continue;
-            }
-
-            // 6. EMAIL CHECK
-            const allEmail = nonEmptyValues.every(v => 
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
-            );
-            if (allEmail) {
-                bodyCells.forEach(cell => cell.classList.add('auto-email'));
-                continue;
-            }
-
-            // 7. URL CHECK
-            const allUrl = nonEmptyValues.every(v => 
-                /^https?:\/\/.+/.test(v)
-            );
-            if (allUrl) {
-                bodyCells.forEach(cell => {
-                    cell.classList.add('auto-url');
-                    const url = cell.textContent;
-                    cell.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
-                });
-                continue;
-            }
-
-            // 8. LONG TEXT CHECK
-            const avgLength = nonEmptyValues.join('').length / nonEmptyValues.length;
-            if (avgLength > 50) {
-                bodyCells.forEach(cell => cell.classList.add('auto-long-text'));
-            }
-
-            // 9. LONG HEADER CHECK (vertical writing)
-            if (headerCell) {
-                const headerLength = headerCell.textContent.trim().length;
-                const maxContentLength = Math.max(...nonEmptyValues.map(v => v.length));
-                console.log(headerCell, headerLength)
-                if (headerLength > maxContentLength * 1.5 && headerLength > 15) {
-                    headerCell.classList.add('auto-vertical');
-                }
-            }
-        }
-
-        for (const col of this.columns) {
-            const allCells = col.cells;
-            const bodyCells = allCells.filter(c => c.tagName === 'TD');
-            const headerCell = allCells.find(c => c.tagName === 'TH');
-
-            if (bodyCells.length === 0) continue;
-            
-            const values = bodyCells.map(c => c.textContent.trim());
-            const nonEmptyValues = values.filter(v => v !== '');
-
-            // 8. LONG TEXT CHECK
-            // todo: muss nur schauen ob irgend ein text länger als 50 ist.
-            //const avgLength = nonEmptyValues.join('').length / nonEmptyValues.length;
-            const maxContentLength = Math.max(...nonEmptyValues.map(v => v.length));
-            if (maxContentLength > 50) {
-                bodyCells.forEach(cell => cell.classList.add('auto-long-text'));
-            }
-
-            // 9. LONG HEADER CHECK (vertical writing)
-            if (headerCell) {
-                const headerLength = headerCell.textContent.trim().length;
-                const maxContentLength = Math.max(...nonEmptyValues.map(v => v.length));
-                console.log(headerCell, headerLength)
-                if (headerLength > maxContentLength * 1.5 && headerLength > 15) {
-                    headerCell.classList.add('auto-vertical');
-                }
-            }
-        }
-    }    
 
 }
 
@@ -329,11 +103,93 @@ function tableSortListener(e){
 
 
 
+
+
+/**
+ * Multi-Select Listener (click) für Tabellen mit Checkboxen (Shift/Ctrl/Meta-Unterstützung).
+ * @param {MouseEvent} e 
+ */
+function tableCheckboxMultiSelectListener(e) {
+    const checkbox = e.target.closest('input[type="checkbox"]');
+    if (!checkbox) return;
+
+    const tr = checkbox.closest('tr');
+    const table = checkbox.closest('table');
+    if (!tr || !table || table.getAttribute('aria-multiselectable') !== 'true') return;
+
+    // 1. Einfache Klick-Logik (Reset oder Setzen)
+    if (!e.shiftKey || !table._lastSelectedCheckbox) {
+        table._lastSelectedCheckbox = checkbox;
+        return;
+    }
+
+    // --- Shift-Klick: Bereichsauswahl ---
+    
+    const columns = getTableColumns(table); 
+
+    const lastTr = table._lastSelectedCheckbox.closest('tr');
+    const targetState = table._lastSelectedCheckbox.checked; // Status übernehmen
+    const scope = table.dataset.selectScope || 'any';
+
+    // 2. Bereich bestimmen (Zeilen)
+    // tr.rowIndex ist native DOM API und sehr schnell
+    const startRowIndex = Math.min(lastTr.rowIndex, tr.rowIndex);
+    const endRowIndex = Math.max(lastTr.rowIndex, tr.rowIndex);
+
+    // 3. Bereich bestimmen (Spalten)
+    let minColIndex = 0;
+    let maxColIndex = Infinity;
+
+    if (scope !== 'row') {
+        const lastCell = table._lastSelectedCheckbox.closest('td, th');
+        const currentCell = checkbox.closest('td, th');
+        
+        // Hier nutzen wir unser neues, schnelles indexOf()
+        const lastColIdx = columns.indexOf(lastCell);
+        const currentColIdx = columns.indexOf(currentCell);
+
+        if (scope === 'column') {
+            // Nur die Spalte der aktuell angeklickten Checkbox
+            minColIndex = maxColIndex = currentColIdx;
+        } else { // scope === 'any' (Rechteck)
+            minColIndex = Math.min(lastColIdx, currentColIdx);
+            maxColIndex = Math.max(lastColIdx, currentColIdx);
+        }
+    }
+
+    // 4. Iteration und Selektion
+    // Wir iterieren direkt über die rows Collection (enthält alle tr)
+    for (let r = startRowIndex; r <= endRowIndex; r++) {
+        const row = table.rows[r];
+        
+        // Optimierung: Wenn Scope 'row' ist, brauchen wir keine Spaltenprüfung
+        if (scope === 'row') {
+            const inputs = row.querySelectorAll('input[type="checkbox"]');
+            for (const input of inputs) input.checked = targetState;
+            continue;
+        }
+
+        // Für 'column' oder 'any': Zellen prüfen
+        for (const cell of row.cells) {
+            // Ist die Zelle im relevanten Spaltenbereich?
+            const cellColIdx = columns.indexOf(cell);
+            
+            if (cellColIdx >= minColIndex && cellColIdx <= maxColIndex) {
+                const input = cell.querySelector('input[type="checkbox"]');
+                if (input) input.checked = targetState;
+            }
+        }
+    }
+}
+
+
+
+
 /**
  * The factory for the Columns class.
  */
 const TableColMap = new WeakMap();
-const getTableColumns = (table) => {
+export const getTableColumns = (table) => {
     if (!TableColMap.has(table)) {
         TableColMap.set(table, new Columns(table));
     }
@@ -342,10 +198,10 @@ const getTableColumns = (table) => {
 
 /**
  * The Columns class represents a collection of the columns in a table.
- * A Column is a collection of all its cells taking into account shifts caused by colspan.
+ * A Column is a collection of all its cells taking into account shifts caused by colspan AND rowspan.
  *
  * Example usage:
- * const columns = new Columns(tableElement);
+ * const columns = getTableColumns(tableElement);
  * columns.item(3).cells().forEach(...)
  */
 
@@ -353,25 +209,82 @@ class Columns {
     constructor(table) {
         this.table = table;
         this._columns = {};
+        this._matrix = null;
+        this._cellIndexMap = null;
     }
+
+    refresh() {
+        this._matrix = null;
+        this._cellIndexMap = null;
+        this._columns = {};
+        this._colMap = null;
+    }
+
+    _ensureMatrix() {
+        if (this._matrix && this._cellIndexMap) return;
+
+        this._matrix = [];
+        this._cellIndexMap = new Map();
+        
+        // Wir nutzen table.rows, da dies alle tr (thead, tbody, tfoot) in korrekter Reihenfolge enthält
+        const rows = this.table.rows; 
+
+        for (let r = 0; r < rows.length; r++) {
+            const row = rows[r];
+            this._matrix[r] ??= [];
+            
+            let colIdx = 0;
+            
+            for (const cell of row.children) {
+                // 1. Überspringe Plätze, die durch ein rowspan von oben belegt sind
+                while (this._matrix[r][colIdx]) colIdx++;
+
+                // 2. Speichere den Index für diese Zelle
+                this._cellIndexMap.set(cell, colIdx);
+
+                // 3. Markiere das Grid basierend auf colspan und rowspan
+                const spanX = cell.colSpan;
+                const spanY = cell.rowSpan;
+
+                for (let x = 0; x < spanX; x++) {
+                    for (let y = 0; y < spanY; y++) {
+                        const targetRow = r + y;
+                        this._matrix[targetRow] ??= [];
+                        
+                        // Wir markieren den Slot als "belegt"
+                        // (Man könnte hier auch die Cell-Referenz speichern)
+                        this._matrix[targetRow][colIdx + x] = cell;
+                    }
+                }
+
+                // Index weiterschieben um die Breite der aktuellen Zelle
+                colIdx += spanX;
+            }
+        }
+    }
+
     get length() {
-        const last = this.table.querySelector(':scope > * > tr > :last-child');
-        return this.indexOf(last)+1; // todo: endIndexOf
+        this._ensureMatrix();
+        return this._matrix.length > 0 ? this._matrix[0].length : 0;
     }
+
     indexOf(cell) {
-        let currentIndex = -1;
-        for (const td of cell.parentNode.children) {
-            ++currentIndex;
-            if (td === cell) return currentIndex;
-            if (td.colSpan > 1) currentIndex += td.colSpan -1;
-        }
+        this._ensureMatrix();
+        return this._cellIndexMap.has(cell) ? this._cellIndexMap.get(cell) : -1;
     }
+
     item(i) {
-        if (!this._columns[i]) {
-            this._columns[i] = new Column(this.table, i);
-        }
+        this._columns[i] ??= new Column(this, i); // Übergebe 'this' (die Columns Instanz) statt nur table
         return this._columns[i];
     }
+    
+    // cellAt(rowIndex, colIndex) { // not used, but usefull
+    //     this._ensureMatrix(); 
+    //     const matrix = this._matrix;
+    //     if (rowIndex < 0 || rowIndex >= matrix.length || colIndex < 0) return null;
+    //     return matrix[rowIndex] ? matrix[rowIndex][colIndex] || null : null;
+    // }
+
     [Symbol.iterator]() {
         const length = this.length;
         let i = 0;
@@ -383,77 +296,75 @@ class Columns {
         }
     }
 
-    /**
-     * Gibt das col-Element für eine bestimmte Spaltennummer (index) zurück.
-     * Berücksichtigt colgroup- und col-span.
-     */
     _getColElement(index) {
-        if (!this._colMap) {
-            this._colMap = this.#createColMap();
-        }
+        this._colMap ??= this.#createColMap();
         return this._colMap[index] || null;
     }
 
-    /**
-     * Erstellt eine Zuordnung von Spaltenindex zu col-Element.
-     * @private
-     */
     #createColMap() {
-        const colMap = []; // Array, wobei der Index der Spaltenindex ist
+        const colMap = [];
         const colgroups = this.table.querySelectorAll(':scope > colgroup');
         const standaloneCols = this.table.querySelectorAll(':scope > col');
-        for (const colgroup of colgroups) {
-            const colgroupSpan = parseInt(colgroup.getAttribute('span')) || 1;
-            const cols = colgroup.querySelectorAll(':scope > col');
-            if (cols.length > 0) {
-                for (const col of cols) {
-                    const colSpan = parseInt(col.getAttribute('span')) || 1;
-                    for (let i = 0; i < colSpan; i++) {
-                        colMap.push(col);
-                    }
-                }
-            } else {
-                for (let i = 0; i < colgroupSpan; i++) {
-                    colMap.push(colgroup);
+        
+        // Helper function to push cols
+        const pushCols = (elements) => {
+             for (const el of elements) {
+                const span = parseInt(el.getAttribute('span')) || 1;
+                // Wenn es eine colgroup mit cols ist, iterieren wir deren cols
+                const innerCols = el.tagName === 'COLGROUP' ? el.querySelectorAll(':scope > col') : [];
+                
+                if (innerCols.length > 0) {
+                    pushCols(innerCols);
+                } else {
+                    for (let i = 0; i < span; i++) colMap.push(el);
                 }
             }
         }
-        for (const col of standaloneCols) {
-            const colSpan = parseInt(col.getAttribute('span')) || 1;
-            for (let i = 0; i < colSpan; i++) {
-                colMap.push(col);
-            }
-        }
+
+        // Standardisiert colgroups und cols verarbeiten
+        if(colgroups.length > 0) pushCols(colgroups);
+        pushCols(standaloneCols); // Falls cols außerhalb von colgroups existieren (selten, aber valide)
+
         return colMap;
     }
-
 }
 
 class Column {
-    constructor(table, index) {
-        this.table = table;
+    constructor(columnsInstance, index) {
+        this.columns = columnsInstance; // Referenz auf die Hauptklasse
+        this.table = columnsInstance.table;
         this.index = index;
     }
-    get cells(){
+
+    get cells() {
         const cells = [];
+        // Wir iterieren über alle Gruppen (thead, tbody, tfoot)
         for (const group of this.table.children) {
+            if(group.tagName === 'COLGROUP' || group.tagName === 'CAPTION') continue;
             this.cellsByGroup(group).forEach(cell => cells.push(cell));
         }
         return cells;
     }
+
     get colElement() {
-        const columnsCollection = getTableColumns(this.table);
-        return columnsCollection._getColElement(this.index);
-    }    
-    cellsByGroup(group){
+        return this.columns._getColElement(this.index);
+    }
+
+    cellsByGroup(group) {
         const cells = [];
+        // Iteriere über die Zeilen dieser Gruppe
         for (const row of group.children) {
-            let currentIndex = -1;
+            if (row.tagName !== 'TR') continue;
+
             for (const cell of row.children) {
-                currentIndex += (cell.colSpan||1);
-                if (currentIndex >= this.index) {
+                // Wir nutzen die zentrale Logik der Columns-Klasse
+                // Das löst das Rowspan Problem automatisch
+                if (this.columns.indexOf(cell) === this.index) {
                     cells.push(cell);
-                    break; // next row
+                    // Wir brechen hier NICHT ab, da theoretisch durch colspan
+                    // eine Zelle relevant sein könnte, aber für eine *einzelne* Spalte 
+                    // gibt es pro Zeile meist nur eine Zelle (außer bei komplexen Verschachtelungen).
+                    // Bei Standard-Tabellen ist break ok, aber sicher ist sicher.
                 }
             }
         }

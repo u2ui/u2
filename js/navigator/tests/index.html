@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Über uns - Test Seite</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    <link href="./main.css" rel=stylesheet>
+</head>
+<body>
+    <nav id="navigation">
+        <a href="./index.html" class="current">Home</a>
+        <a href="./about.html">Über uns</a>
+        <div class="dropdown">
+            <a href="./contact.html">Kontakt ▼</a>
+            <div class="dropdown-content">
+                <a href="./contact.html">Kontaktformular</a>
+                <a href="./about.html">Team</a>
+            </div>
+        </div>
+    </nav>
+
+    <aside><u2-toc></u2-toc></aside>
+
+    <main>
+        
+        <u2-breadcrumb auto></u2-breadcrumb>
+
+        <h1>Willkommen auf der Startseite!</h1>
+        
+        <p>Dies ist die Home-Seite zum Testen des Smart Routers.</p>
+        
+        <h2>Features die du testen kannst:</h2>
+        <ul>
+            <li>Hover über "Kontakt" in der Navigation - das Dropdown klappt auf</li>
+            <li>Klicke dann auf einen Link</li>
+            <li>Die Navigation bleibt im Hover-Zustand! 🎉</li>
+            <li>Öffne DevTools → Network und sieh wie Seiten gecacht werden</li>
+            <li>Navigation ist instant ohne Page-Reload</li>
+        </ul>
+
+        <h2>Weitere Test-Möglichkeiten:</h2>
+        <p>
+            <a href="./about.html">Gehe zu "Über uns"</a> - 
+            Diese Seite wird vorgeladen sobald deine Maus in der Nähe ist!
+        </p>
+        
+        <p>
+            <a href="./contact.html">Kontaktiere uns</a> - 
+            Auch diese Seite wird intelligent geprefetcht.
+        </p>
+
+        <p>
+            Hier ein Link ohne HREF-Attribute
+            <a>was passiert?</a> - 
+        </p>
+
+        <h2>Browser Back/Forward Buttons</h2>
+        <p>
+            Navigiere zwischen den Seiten und nutze dann die Zurück/Vor-Buttons 
+            deines Browsers. Alles funktioniert instant aus dem Cache!
+        </p>
+
+        <h2>Aktueller Timestamp:</h2>
+        <p>Seite geladen um: <strong>12:45:30</strong></p>
+        <p>(Beim Navigieren ändert sich dieser nicht, weil die Seite aus dem Cache kommt!)</p>
+    </main>
+
+    <footer>
+        <p>Test Footer - Dieser bleibt auch erhalten beim Navigation</p>
+    </footer>
+
+    <script type="module" src="../navigator.js"></script>

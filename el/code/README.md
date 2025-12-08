@@ -52,8 +52,8 @@ Slots:
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/code/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/code/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/code/tests/minimal.html)  
 
 ## Attributes
 

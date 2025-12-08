@@ -58,8 +58,8 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/contextmen
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/js/contextmenu/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/js/contextmenu/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/contextmenu/tests/minimal.html)  
 
 ## About
 

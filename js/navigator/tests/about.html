@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Über uns - Test Seite</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    <link href="./main.css" rel=stylesheet>
+</head>
+<body>
+    <nav id="navigation">
+        <a href="./index.html">Home</a>
+        <a href="./about.html" class="current">Über uns</a>
+        <div class="dropdown">
+            <a href="./contact.html">Kontakt ▼</a>
+            <div class="dropdown-content">
+                <a href="./contact.html">Kontaktformular</a>
+                <a href="./about.html">Team</a>
+            </div>
+        </div>
+    </nav>
+
+    <aside><u2-toc></u2-toc></aside>
+
+    <main>
+
+        <u2-breadcrumb auto></u2-breadcrumb>
+
+        <h1>Über uns</h1>
+        
+        <p>Diese Seite demonstriert das Smart Router System.</p>
+        
+        <h2>Was passiert gerade?</h2>
+        <ul>
+            <li>✅ Die Navigation-ID bleibt gleich - nur die Klasse "current" wurde verschoben</li>
+            <li>✅ Wenn du mit der Maus über "Kontakt" hoverst und dann klickst, bleibt das Dropdown offen</li>
+            <li>✅ Kein Page-Reload, nur der Main-Content wurde geändert</li>
+            <li>✅ Im DevTools Network siehst du: Nach dem ersten Besuch kommt alles aus dem Cache</li>
+        </ul>
+
+        <h2>Unser Team</h2>
+        <section class="u2-grid">
+            <p>
+                <strong>Max Mustermann</strong> - Entwickler<br>
+                Ein talentierter Programmierer mit Fokus auf Performance.
+            </p>
+            
+            <p>
+                <strong>Anna Schmidt</strong> - Designerin<br>
+                Kreative Köpfin hinter unseren schönen Interfaces.
+            </p>
+            
+            <p>
+                <strong>Tom Weber</strong> - DevOps<br>
+                Sorgt dafür dass alles reibungslos läuft.
+            </p>
+        </section>
+
+        <h2>Test: Hover-State bleibt erhalten!</h2>
+        <p>
+            Probiere es aus: Hover über "Kontakt" im Menu (damit das Dropdown aufgeht),
+            und klicke dann auf <a href="./index.html">zurück zur Startseite</a>.
+            Das Dropdown sollte offen bleiben! 🚀
+        </p>
+
+        <h2>Navigation zu anderen Seiten:</h2>
+        <p><a href="./index.html">← Zurück zur Startseite</a></p>
+        <p><a href="./contact.html">Weiter zum Kontakt →</a></p>
+    </main>
+
+    <footer>
+        <p>Test Footer - Dieser bleibt auch erhalten beim Navigation</p>
+    </footer>
+
+    <script type="module" src="../navigator.js"></script>

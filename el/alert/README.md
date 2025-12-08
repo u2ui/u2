@@ -76,8 +76,8 @@ u2-alert::part(icon) {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/alert/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/alert/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/alert/tests/minimal.html)  
 
 ## About
 

@@ -27,14 +27,14 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/rte/rte.mi
 
 ## Demos
 
-[ai.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/ai.html)  
 [behavior.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/behavior.html)  
-[events.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/events.html)  
-[fixes.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/fixes.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/minimal.html)  
-[range.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/range.html)  
-[selection-explorer.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/selection-explorer.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/test.html)  
+[selection-explorer.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/selection-explorer.html)  
+[events.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/events.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/minimal.html)  
+[fixes.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/fixes.html)  
+[range.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/range.html)  
+[ai.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/ai.html)  
 
 ## Files
 

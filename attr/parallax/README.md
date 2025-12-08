@@ -32,9 +32,9 @@ Makes elements scroll at different speeds for a parallax effect.
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/attr/parallax/tests/minimal.html)  
 [performance.html](http://gcdn.li/u2ui/u2@main/attr/parallax/tests/performance.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/parallax/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/attr/parallax/tests/minimal.html)  
 
 ## Also interesting
 

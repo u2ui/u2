@@ -29,8 +29,8 @@ u2-menubutton menu {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/menubutton/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/menubutton/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/menubutton/tests/minimal.html)  
 
 ## About
 

@@ -32,8 +32,9 @@ u2-responsive {
 
 ## Demos
 
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/responsive/tests/minimal.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/responsive/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/responsive/tests/minimal.html)  
+[grid.html](http://gcdn.li/u2ui/u2@main/el/responsive/tests/grid.html)  
 
 ## About
 
