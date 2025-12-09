@@ -1,6 +1,5 @@
 ## navigator.js
 
-
 ## Install
 
 ```js

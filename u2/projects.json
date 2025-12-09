@@ -230,7 +230,7 @@
     },
     "code": {
       "name": "code",
-      "description": "Highlighted, editable code-blocks.",
+      "description": "Code-blocks. <u2-code editable trim><style|textarea|script>...",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -496,6 +496,14 @@
     }
   },
   "js": {
+    "serviceWorker": {
+      "name": "serviceWorker",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "SelectorObserver": {
       "name": "SelectorObserver",
       "description": "Watches elements matching a selector",
@@ -604,14 +612,6 @@
     },
     "retro": {
       "name": "retro",
-      "description": "",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
-    "minimal": {
-      "name": "minimal",
       "description": "",
       "beta": false,
       "deprecated": false,

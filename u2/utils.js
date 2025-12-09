@@ -26,10 +26,10 @@ function _importCss(url, options={}){
         const calledFile = e.stack.split('\n')[2].match(/[a-z]+:[^:]+/);
         const calledUrl = new URL(calledFile);
         calledUrl.search = '';
-        const url = new URL(url, calledUrl).toString(); // todo, this should not be working as const url is only in this scope
+        url = new URL(url, calledUrl).toString();
     }
 
-    const rootNode = options.for ?? document.documentElement;
+    const rootNode = options.for ?? document.head ?? document.documentElement;
 
     if (cssImported[url]) return; // check if imported already
     cssImported[url] = true;

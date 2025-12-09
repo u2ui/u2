@@ -1,5 +1,5 @@
 # &lt;u2-code&gt; - element
-Highlighted, editable code-blocks.
+Code-blocks. <u2-code editable trim><style|textarea|script>...
 
 ## Usage
 

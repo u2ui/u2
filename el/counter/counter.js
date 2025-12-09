@@ -23,6 +23,7 @@ class counter extends HTMLElement {
         if (name === 'no-grouping') this.noGrouping = newValue!==null;
     }
     set value(value){
+        value = String(value).trim();
         let [ integer, digits='' ] = value.trim().split('.');
         this._minDigits = digits.length;
 
