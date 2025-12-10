@@ -283,7 +283,9 @@ u2Carousel.mode.slide = {
 		const vertical = wMode.includes('vertical');
         const XY = vertical ? 'Y' : 'X';
         const translate = (vertical ? -target.offsetTop : -target.offsetLeft) + paddingStart;
+		//const translate = -(target.offsetLeft - (this.offsetWidth - target.offsetWidth) / 2) - paddingStart;
 		this.slider.style.transform = `translate${XY}(${translate}px)`;
+		//this.slider.style.transform = 'translateX(-'+(100*this.activeIndex())+'%)'; Advantage: It stays in the right place even when resized.
 	},
 }
 // fade (entirely done by css)

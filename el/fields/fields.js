@@ -69,6 +69,7 @@ class U2Fields extends HTMLElement {
 
         for (const node of lightDomNodes) {
             if (node.nodeType === Node.ELEMENT_NODE && 
+                node.tagName !== 'LABEL' &&
                 (node.form !== undefined || node.hasAttribute('name'))
             ) {
                 assignments.push({
