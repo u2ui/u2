@@ -2,31 +2,32 @@ u2-table {
     display:block;
     overflow: auto;
 }
+/*
 u2-table[\:overflows][break] > table {
     display: block;
 }
 u2-table[\:overflows][break] > table > thead {
     display:none;
 }
-u2-table[\:overflows][break] > table > * { /* group */
+u2-table[\:overflows][break] > table > * { / * group * /
     display: block;
 }
-u2-table[\:overflows][break] > table > * > * { /* row */
+u2-table[\:overflows][break] > table > * > * { / * row * /
     display: block;
 }
-u2-table[\:overflows][break] > table > * > * > * { /* cell */
+u2-table[\:overflows][break] > table > * > * > * { / * cell * /
     display: flex;
-    /* justify-content: space-between;*/
+    / * justify-content: space-between;* /
     gap: 0 1rem;
     padding: .2rem 0;
     padding-right:0;
 }
-u2-table[\:overflows][break] > table > * > * > *::before { /* cell */
+u2-table[\:overflows][break] > table > * > * > *::before { / * cell * /
     content: attr(aria-label);
     display: block;
     font-weight: bold;
 }
-
+*/
 
 
 /* trs in a grid *

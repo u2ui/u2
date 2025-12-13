@@ -72,6 +72,14 @@
       "css": false,
       "js": true
     },
+    "dropzone": {
+      "name": "dropzone",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "focusgroup": {
       "name": "focusgroup",
       "description": "Enables arrow-key navigation between focusable elements in a container.",
@@ -222,7 +230,7 @@
     },
     "parallax-bg": {
       "name": "parallax-bg",
-      "description": "Parallax backgrounds",
+      "description": "Scroll-driven parallax background-layer with dynamic container sizing for full content visibility",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -498,6 +506,14 @@
   "js": {
     "serviceWorker": {
       "name": "serviceWorker",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
+    "drag": {
+      "name": "drag",
       "description": "",
       "beta": false,
       "deprecated": false,

@@ -12,8 +12,8 @@ export function autoFormatTable(table) {
 
     style.textContent = `
         /* AUTO-FORMAT STYLES (BETA) */
-        td.auto-numeric,
-        td.auto-currency {
+        :is(td, th).auto-numeric,
+        :is(td, th).auto-currency {
             text-align: right;
             font-variant-numeric: tabular-nums;
         }
@@ -29,7 +29,7 @@ export function autoFormatTable(table) {
             white-space: nowrap;
         }
         
-        td.auto-boolean {
+        :is(td, th).auto-boolean {
             text-align: center;
             font-size: 1.2em;
         }
@@ -80,7 +80,7 @@ export function autoFormatTable(table) {
         // 1. NUMERIC CHECK
         const allNumeric = nonEmptyValues.every(v => !isNaN(v) && v !== '');
         if (allNumeric) {
-            bodyCells.forEach(cell => cell.classList.add('auto-numeric'));
+            allCells.forEach(cell => cell.classList.add('auto-numeric'));
             
             // Normalize decimal places
             const decimals = nonEmptyValues.map(v => (v.split('.')[1] || '').length);
@@ -118,6 +118,8 @@ export function autoFormatTable(table) {
         if (allPercentage) {
             bodyCells.forEach(cell => {
                 cell.setAttribute('data-sort', parseFloat(cell.textContent.trim()));
+            });
+            allCells.forEach(cell => {
                 cell.classList.add('auto-percentage');
             });
             continue;

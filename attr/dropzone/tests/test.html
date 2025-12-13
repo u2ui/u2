@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../dropzone.js" type=module async></script>
+
+
+<body>
+
+    <section>
+
+        <h2>Tests</h2>
+
+        <u2-code trim editable>
+            <style>
+                [u2-dropzone] {
+                    border: 1px solid #ccc;
+                    padding: 1em;
+                    --shadow-size: .1em;
+                }
+
+                ::view-transition-group(*) {
+                    animation-duration: 1s;
+                }
+
+                [u2-dropzone].\:drop-valid {
+                    border-color: green;
+                    box-shadow: 0 0 var(--shadow-size) rgba(0, 255, 0, 0.7);
+                }
+
+                [u2-dropzone].\:drop-invalid {
+                    border-color: red;
+                    box-shadow: 0 0 var(--shadow-size) rgba(255, 0, 0, 0.7);
+                }
+
+                [u2-dropzone].\:dragover {
+                    --shadow-size: 1rem;
+                }
+
+                [draggable] {
+                    view-transition-name: match-element;
+                }
+            </style>
+        </u2-code>
+
+        <h2>Selector Tests</h2>
+        <div class="u2-flex">
+            <div>
+                <h3>Accept p</h3>
+                <div u2-dropzone="p">
+                    <p draggable="true">Paragaph 1</p>
+                    <p draggable="false">
+                        <u2-ico icon="drag" u2-draghandle>⠿</u2-ico>
+                        Paragaph 2 (with handle)
+                    </p>
+                </div>
+                <p draggable="true">Paragaph 3 (outside)</p>
+            </div>
+            <div>
+                <h3>Accept own</h3>
+                <ul u2-dropzone>
+                    <li draggable="true">List Item 1</li>
+                    <li draggable="true">List Item 2</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Accept all LIs</h3>
+                <ul u2-dropzone="li">
+                    <li draggable="true">List Item 1</li>
+                    <li draggable="true">List Item 2</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Accept all</h3>
+                <ul u2-dropzone="*">
+                    <li draggable="true">List Item 1</li>
+                    <li draggable="true">List Item 2</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <h2>Nested Tests</h2>
+        <div id="nestedTest">
+            <div u2-dropzone="*" id="level1">
+                <b>first dropzone</b>
+                <div>
+                    <div u2-dropzone="*" id="level2">
+                        <b>second dropzone</b>
+                        <p draggable="true">Paragaph 1</p>
+                        <p draggable="false">
+                            <u2-ico icon="drag" u2-draghandle>⠿</u2-ico>
+                            Paragaph 2 (with handle)
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <pre id="log"></pre>
+            <script>
+                nestedTest.addEventListener('drop', (e) => {
+                    log.textContent += e.target.id + '\n';
+                });
+            </script>
+        </div>
+
+
+        <h2>Table Rows</h2>
+        <table>
+            <tbody u2-dropzone="tr:has(>:nth-child(3)):not(:has(>:nth-child(4)))">
+                <tr draggable="true">
+                    <td>1
+                    <td>Zelle
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>2
+                    <td>Zelle
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>3
+                    <td>Zelle
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>4
+                    <td>Zelle
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>5
+                    <td>Zelle
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>6
+                    <td>Zelle
+                    <td>Zelle
+        </table>
+
+    </section>
+
+    <section id="layouts">
+        <h2>Different Layouts</h2>
+
+        <h3>Flex</h3>
+        <div u2-dropzone="*" style="display:flex; flex-wrap:wrap; gap:1rem;">
+            <div draggable="true">1</div>
+            <div draggable="true">2</div>
+            <div draggable="true">3</div>
+            <div draggable="true">4</div>
+            <div draggable="true">5</div>
+            <div draggable="true">6</div>
+            <div draggable="true">7</div>
+            <div draggable="true">8</div>
+            <div draggable="true">9</div>
+            <div draggable="true">10</div>
+        </div>
+
+        <h3>Grid</h3>
+        <div u2-dropzone="*" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem;">
+            <div draggable="true">1</div>
+            <div draggable="true">2</div>
+            <div draggable="true">3</div>
+            <div draggable="true">4</div>
+            <div draggable="true">5</div>
+            <div draggable="true">6</div>
+            <div draggable="true">7</div>
+            <div draggable="true">8</div>
+            <div draggable="true">9</div>
+            <div draggable="true">10</div>
+        </div>
+
+        <h3>Table cells</h3>
+        <table>
+            <tr u2-dropzone="*">
+                <td draggable="true">TD 1
+                <td draggable="true">TD 2
+                <td draggable="true">TD 3
+                <td draggable="true">TD 4
+                <td draggable="true">TD 5
+                <td draggable="true">TD 6
+                <td draggable="true">TD 7
+                <td draggable="true">TD 8
+            <tr u2-dropzone="*">
+                <td draggable="true">TD 9
+                <td draggable="true">TD 10
+                <td draggable="true">TD 11
+                <td draggable="true">TD 12
+                <td draggable="true">TD 13
+                <td draggable="true">TD 14
+                <td draggable="true">TD 15
+                <td draggable="true">TD 16
+            <tr u2-dropzone="*">
+                <td draggable="true">TD 17
+                <td draggable="true">TD 18
+                <td draggable="true">TD 19
+                <td draggable="true">TD 20
+                <td draggable="true">TD 21
+                <td draggable="true">TD 22
+                <td draggable="true">TD 23
+                <td draggable="true">TD 24
+        </table>
+
+
+
+    </section>
+
+    <style>
+        #layouts {
+            [draggable] {
+                border: 1px solid var(--color);
+                background: var(--color-light);
+                border-radius: 1rem;
+                padding: 2rem;
+                transition: background 5s;
+
+                &.\:dragging {
+                    background: var(--color);
+                    transition-duration: .2s;
+                }
+            }
+
+        }
+    </style>

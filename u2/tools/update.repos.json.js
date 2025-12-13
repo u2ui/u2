@@ -106,6 +106,9 @@ async function writeReadMe(category, entry) {
 async function UsagePart(category, entry){
     const name = entry.name;
 
+    if (category === 'theme') return '';
+    if (category === 'css') return '';
+
     let code = null
     try {
         code = await Deno.readTextFile(base+''+category+'/'+name+'/tests/minimal.html');

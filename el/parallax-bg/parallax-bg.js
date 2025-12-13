@@ -33,26 +33,29 @@ function setVPDimensions(){
 }
 setVPDimensions();
 
+const passive = {passive:true};
 function addListeners(){
 	addEventListener('DOMContentLoaded', paraxBg.layout);
 	addEventListener('load', ()=>{
         paraxBg.layout();
         paraxBg.positionize();
-    });
+    },passive);
 	document.addEventListener('scroll', ()=>{
         pageY = scrollY;
         requestAnimationFrame(()=>paraxBg.positionize()) // better!
-    });
+    },passive);
+
 	addEventListener('wheel', ()=>{ // for firefox
         pageY = scrollY;
         requestAnimationFrame(()=>paraxBg.positionize())
-    });
+    },passive);
 
 	addEventListener('resize', ()=>{
         setVPDimensions();
         paraxBg.layout();
         paraxBg.positionize();
-    });
+    },passive);
+
     const rs = new ResizeObserver(entries => {
         setVPDimensions();
         paraxBg.layout();
@@ -102,17 +105,10 @@ class ParallaxBg extends HTMLElement {
         this.speed = speed === '' ? .5 : parseFloat(speed);
     }
 	connectedCallback() {
-        /*
-        let stage = this.closest('.u2-parallax-bg-stage');
-        if (!stage) {
-            stage = this.parentNode;
-            stage.setAttribute('parallax-bg-stage','');
-        }
-        */
         this.stage = this.offsetParent;
         if (this.stage.tagName === 'BODY') this.stage.style.position = 'relative'; // what can go wrong?
 
-        scrollHeight = document.documentElement.scrollHeight; // todo: little slow
+        //scrollHeight = document.documentElement.scrollHeight; // todo: little slow
 
         this.layout();
         this.positionize();
@@ -178,7 +174,16 @@ class ParallaxBg extends HTMLElement {
         const moved = this.stageRect.yCenter - (pageY + winHeight/2);
         return moved*(this.speed-1);
     }
+
+    positionizing = false;
     positionize(){
+        if (this.positionizing) return;
+        requestAnimationFrame(()=>{
+            this._positionize()
+            this.positionizing = false;
+        });
+    }
+    _positionize(){
         this.mover.style.transform = 'translate3d(0, '+ this.offsetAtPageY(pageY) +'px, 0)';
     }
 }

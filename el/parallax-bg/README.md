@@ -1,5 +1,5 @@
 # &lt;u2-parallax-bg&gt; - element
-Parallax backgrounds
+Scroll-driven parallax background-layer with dynamic container sizing for full content visibility
 
 ## Features
 
@@ -9,6 +9,26 @@ Parallax backgrounds
 - reduced background-container to the reachable area!
 - css only fallback
 - light weight
+
+## Usage
+
+```html
+<div class=u2-parallax-bg-stage style="height:100%">
+    <u2-parallax-bg>
+        <img src="https://raw.githubusercontent.com/u2ui/u2/main/el/parallax-bg/tests/bg.jpg" alt="parallax-bg demo">
+    </u2-parallax-bg>
+</div>
+```
+
+```css
+u2-parallax-bg {
+    --parallax-bg-speed:.7
+}
+u2-parallax-bg div {
+    display:grid;
+    place-items: center;
+}
+```
 
 ## Install
 

@@ -7,6 +7,15 @@ addEventListener('mousedown', e => {
     e.preventDefault();
 });
 
+/* open hidden until-found elements on invalid */
+addEventListener('invalid', (e) => {
+    e.composedPath().forEach(element => {
+        if (element.hidden === 'until-found') element.hidden = false;
+        // if (element.tagName === 'DETAILS' && !element.open) { /* todo? */
+        //     element.open = true;
+        // }
+    });
+}, true);
 
 /*
 

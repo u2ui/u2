@@ -14,17 +14,23 @@ const root = document;
 //    root.releasePointerCapture(e.pointerId);
 // })
 root.addEventListener('pointerenter', e => {
-    if (!e.target.matches) return // document
-    if (!e.target.matches('[u2-draghandle]')) return;
+    if (!e.target.matches?.('[u2-draghandle]')) return;
     const draggable = e.target.closest('[draggable]');
-    if (!draggable) console.warn('u2-draghandle: no draggable parent found');
+    if (!draggable) {
+        console.warn('u2-draghandle: no draggable parent found');
+        return;
+    }
     if (draggable.getAttribute('draggable') === 'true') console.warn('u2-draghandle: draggable-attribute should be empty or false, but was true');
     draggable.setAttribute('draggable', true);
 },true);
 root.addEventListener('pointerleave', e => {
-    if (!e.target.matches) return // document
-    if (!e.target.matches('[u2-draghandle]')) return;
-    e.target.closest('[draggable]').setAttribute('draggable', 'false');
+    if (!e.target.matches?.('[u2-draghandle]')) return;
+    const draggable = e.target.closest('[draggable]');
+    if (!draggable) {
+        console.warn('u2-draghandle: no draggable parent found');
+        return;
+    }
+    draggable.setAttribute('draggable', 'false');
 },true);
 
 // desktop only

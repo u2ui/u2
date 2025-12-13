@@ -81,6 +81,7 @@ fieldset {
     padding: 1em;
     margin-inline: 0;
     margin-block: 1em;
+    min-inline-size: 0; /* behave like normal block-elements */
 }
 
 /* all inputs, buttons */

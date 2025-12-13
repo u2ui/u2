@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <meta name="viewport" content="width=device-width">
+
+
+    <script src="../../../js/init.js" type=module crossorigin></script>
+
+    <link href="../../full.css" rel=stylesheet>
+    <link href="../../simple.css" rel=stylesheet>
+    <link href="./icons.css" rel=stylesheet>
+
+<body>
+
+<h1>Link Icon Test</h1>
+
+<h2>Attribute</h2>
+<div class="test-group">
+  <a href="https://example.com" target="_blank">Externer Link (target)</a><br>
+  <a href="file.pdf" download>Download Link</a><br>
+  <a href="mailto:test@example.com">E-Mail Link</a><br>
+  <a href="tel:+41123456789">Telefon Link</a><br>
+  <a href="#abschnitt">Anker Link</a>
+</div>
+
+<h2>Video-Plattformen</h2>
+<div class="test-group">
+  <a href="https://youtube.com/watch?v=123">YouTube</a><br>
+  <a href="https://vimeo.com/123456">Vimeo</a><br>
+  <a href="https://youtu.be/abc123">YouTube Short</a>
+</div>
+
+<h2>Suche</h2>
+<div class="test-group">
+  <a href="/search?q=test">Suche mit ?q=</a><br>
+  <a href="/search">Suche mit /search</a>
+</div>
+
+<h2>rel-Werte (Navigation)</h2>
+<div class="test-group">
+  <a href="#prev" rel="prev">Vorherige Seite</a><br>
+  <a href="#next" rel="next">Nächste Seite</a>
+</div>
+
+<h2>rel-Werte (Metadaten)</h2>
+<div class="test-group">
+  <a href="#author" rel="author">Autor</a><br>
+  <a href="#license" rel="license">Lizenz</a><br>
+  <a href="#help" rel="help">Hilfe</a><br>
+  <a href="#search" rel="search">Suche (rel)</a><br>
+  <a href="#tag" rel="tag">Tag</a><br>
+  <a href="#bookmark" rel="bookmark">Lesezeichen</a><br>
+  <a href="#alt" rel="alternate">Alternative</a>
+</div>
+
+<h2>rel-Werte (Legal)</h2>
+<div class="test-group">
+  <a href="#privacy" rel="privacy-policy">Datenschutz</a><br>
+  <a href="#terms" rel="terms-of-service">AGB</a>
+</div>
+
+<h2>rel-Werte (Annotation)</h2>
+<div class="test-group">
+  <a href="https://external.com" rel="external">Externe Seite (rel)</a>
+</div>
+
+<h2>Kombinationen</h2>
+<div class="test-group">
+  <a href="https://youtube.com" target="_blank">YouTube extern</a><br>
+  <a href="mailto:help@example.com" rel="help">Hilfe per E-Mail</a><br>
+  <a href="#top" rel="bookmark">Anker-Lesezeichen</a>
+</div>
+
+<h2>Fliesstext-Beispiele</h2>
+<div class="test-group">
+  <p>
+    Willkommen auf unserer Website! Wenn Sie Fragen haben, können Sie uns jederzeit unter 
+    <a href="mailto:info@beispiel.ch">info@beispiel.ch</a> erreichen oder direkt 
+    <a href="tel:+41441234567">anrufen</a>. Weitere Informationen finden Sie in unserer 
+    <a href="dokumentation.pdf" download>Dokumentation</a> oder in der 
+    <a href="https://wikipedia.org/wiki/Example" target="_blank">Wikipedia</a>.
+  </p>
+  
+  <p>
+    Dieser Artikel wurde von <a href="#maria-mueller" rel="author">Maria Müller</a> verfasst und steht unter 
+    <a href="#cc-by" rel="license">Creative Commons Lizenz</a>. Für weitere Themen siehe 
+    <a href="#webentwicklung" rel="tag">Webentwicklung</a> und 
+    <a href="#design" rel="tag">Design</a>. Den vorherigen Artikel finden Sie 
+    <a href="artikel-2.html" rel="prev">hier</a>, den nächsten Teil 
+    <a href="artikel-4.html" rel="next">dort</a>.
+  </p>
+  
+  <p>
+    In unserem <a href="https://youtube.com/watch?v=tutorial123" target="_blank">Video-Tutorial</a> 
+    erklären wir die Grundlagen. Alternativ können Sie auch das 
+    <a href="https://vimeo.com/987654" target="_blank">Vimeo-Video</a> anschauen. 
+    Nutzen Sie unsere <a href="/search?q=css">Suchfunktion</a>, um mehr Artikel zu finden, 
+    oder springen Sie direkt zu <a href="#zusammenfassung">Zusammenfassung</a>.
+  </p>
+  
+  <p>
+    Wichtige Links: Lesen Sie unsere <a href="datenschutz.html" rel="privacy-policy">Datenschutzerklärung</a> 
+    und <a href="agb.html" rel="terms-of-service">Nutzungsbedingungen</a>. Bei Problemen besuchen Sie 
+    unser <a href="hilfe.html" rel="help">Hilfe-Center</a> oder setzen Sie ein 
+    <a href="#wichtig" rel="bookmark">Lesezeichen</a> für diese Seite. Eine 
+    <a href="mobile.html" rel="alternate">mobile Version</a> ist ebenfalls verfügbar.
+  </p>
+  
+  <p>
+    Externe Ressourcen: Besuchen Sie die offizielle 
+    <a href="https://developer.mozilla.org" rel="external">MDN Dokumentation</a> oder laden Sie 
+    <a href="cheatsheet.pdf" download>unser Cheat Sheet</a> herunter. Kontaktieren Sie den Support unter 
+    <a href="mailto:support@beispiel.ch" rel="help">support@beispiel.ch</a> oder per 
+    <a href="tel:+41800123456">Hotline</a>. Weitere Videos auf 
+    <a href="https://youtu.be/abc123">YouTube</a>.
+  </p>

@@ -52,6 +52,7 @@ u2-table {
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/table/tests/minimal.html)  
 [multiselect.html](http://gcdn.li/u2ui/u2@main/el/table/tests/multiselect.html)  
 [test copy.html](http://gcdn.li/u2ui/u2@main/el/table/tests/test copy.html)  
+[drag.html](http://gcdn.li/u2ui/u2@main/el/table/tests/drag.html)  
 [autoformat.html](http://gcdn.li/u2ui/u2@main/el/table/tests/autoformat.html)  
 [columns.api.html](http://gcdn.li/u2ui/u2@main/el/table/tests/columns.api.html)  
 

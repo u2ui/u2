@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Select Table Tests (Tags Optional)</title>
+
+    <script src="../../../u2/tests/test-init.js" type="module" async></script>
+    <script src="../../../u2/auto.js" type="module" async></script>
+    <link href="../../../css/classless/simple.css" rel="stylesheet">
+
+    <link href="../table.css" rel="stylesheet">
+    <script src="../table.js" type="module" async></script>
+
+</head>
+
+<body>
+
+    <section>
+
+        <style>
+            ::view-transition-group(*) {
+                xanimation-duration: 2s;
+                /* oder 5s, 10s ... */
+                animation-timing-function: ease;
+            }
+
+            #drag-drop-tabelle {
+                margin-block: 2rem;
+                max-height: 20rem;
+                border: 1px solid black;
+
+                thead {
+                    position: sticky;
+                    top: 0;
+                    background-color: #000;
+                    color: #fff;
+                    z-index: 1;
+                }
+
+                tbody tr {
+                    border: 1px solid #ccc;
+                    border-width: 1px 0;
+
+                    &.\:dragging {
+                        view-transition-name: match-element;
+                        opacity: .3;
+                    }
+                }
+            }
+        </style>
+
+
+        <u2-table id="drag-drop-tabelle" autoformat drag-column>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID
+                        <th>Element
+                        <th>Status
+                <tbody>
+                    <tr draggable="true" id="item_1">
+                        <td>1
+                        <td>Apfel
+                        <td>Erledigt
+                    <tr draggable="true" id="item_2">
+                        <td>2
+                        <td>Banane
+                        <td>In Bearbeitung
+                    <tr draggable="true" id="item_3">
+                        <td>3
+                        <td>Kirsche
+                        <td>Offen
+                    <tr draggable="true" id="item_4">
+                        <td>4
+                        <td>Orange
+                        <td>Erledigt
+                    <tr draggable="true" id="item_5">
+                        <td>5
+                        <td>Erdbeere
+                        <td>In Bearbeitung
+                    <tr draggable="true" id="item_6">
+                        <td>6
+                        <td>Karotte
+                        <td>Erledigt
+                    <tr draggable="true" id="item_7">
+                        <td>7
+                        <td>Tomate
+                        <td>Offen
+                    <tr draggable="true" id="item_8">
+                        <td>8
+                        <td>Gurke
+                        <td>In Bearbeitung
+                    <tr draggable="true" id="item_9">
+                        <td>9
+                        <td>Zwiebel
+                        <td>Erledigt
+                    <tr draggable="true" id="item_10">
+                        <td>10
+                        <td>Salat
+                        <td>Offen
+                    <tr draggable="true" id="item_11">
+                        <td>11
+                        <td>Bericht schreiben
+                        <td>In Bearbeitung
+                    <tr draggable="true" id="item_12">
+                        <td>12
+                        <td>E-Mails prüfen
+                        <td>Erledigt
+                    <tr draggable="true" id="item_13">
+                        <td>13
+                        <td>Meeting planen
+                        <td>Offen
+                    <tr draggable="true" id="item_14">
+                        <td>14
+                        <td>Kunden anrufen
+                        <td>In Bearbeitung
+                    <tr draggable="true" id="item_15">
+                        <td>15
+                        <td>Daten sichern
+                        <td>Erledigt
+            </table>
+        </u2-table>
+
+
+        <u2-table id="drag-drop-tabelle" autoformat drag-column>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID
+                        <th>Element
+                        <th>Status
+                <tbody>
+                    <tr draggable="true" id="item_1">
+                        <td>1
+                        <td>Apfel
+                        <td>Erledigt
+                    <tr draggable="true" id="item_2">
+                        <td>2
+                        <td>Banane
+                        <td>In Bearbeitung
+                    <tr draggable="true" id="item_3">
+                        <td>3
+                        <td>Kirsche
+                        <td>Offen
+                    <tr draggable="true" id="item_4">
+                        <td>4
+                        <td>Orange
+                        <td>Erledigt
+                    <tr draggable="true" id="item_5">
+                        <td>5
+                        <td>Erdbeere
+                        <td>In Bearbeitung
+                    <tr draggable="true" id="item_6">
+                        <td>6
+                        <td>Karotte
+                        <td>Erledigt
+            </table>
+        </u2-table>
+
+
+    </section>

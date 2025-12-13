@@ -163,6 +163,7 @@
 
 <script type=module>
 /* drag & drop experiment */
+// import { indicateDrop } from "../../../js/utils/indicateDrop.js"; todo
 
 const dropPositionIndicator = document.createElement('div');
 dropPositionIndicator.innerHTML = '➔';
@@ -214,8 +215,10 @@ const dragAndDropHandler = {
         let x = closest.shadowRoot.querySelector('[name=icon]').getBoundingClientRect().left - 50;
         let y;
         if (this.currentNext) {
+            //indicateDrop('before', this.currentNext);
             y = this.currentNext.offsetTop;
         } else {
+            //indicateDrop('before', closest);
             y = closest.offsetTop + closest.offsetHeight / 2;
         }
         dropPositionIndicator.style.display = 'block';

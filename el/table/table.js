@@ -2,7 +2,7 @@
 class Table extends HTMLElement {
     constructor() {
         super();
-        this.attachShadow({mode: 'open'});
+        this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = `
             <style>
             :host {
@@ -19,7 +19,7 @@ class Table extends HTMLElement {
             this.#checkTable();
             this.columns.refresh();
         });
-        this.mutObs.observe(this, {childList: true, subtree: true});
+        this.mutObs.observe(this, { childList: true, subtree: true });
         this.#checkTable();
     }
 
@@ -52,17 +52,60 @@ class Table extends HTMLElement {
                 td.classList.add(...colEl.classList); // test!!
             }
         }
+        if (this.hasAttribute('check-column')) {
+            if (this.checkboxColumnInitialized) return;
+            this.checkboxColumnInitialized = true;
+            for (const group of this.table.children) {
+                if (group.tagName === 'COLGROUP') {
+                    const col = document.createElement('col')
+                    col.style.width = '1em';
+                    group.prepend(col);
+                    continue;
+                }
+                for (const tr of group.children) {
+                    const td = document.createElement('td');
+                    tr.prepend(td);
+                    if (group.tagName === 'TBODY') {
+                        td.innerHTML = '<input type="checkbox">';
+                    }
+                }
+            }
+        }
+        if (this.hasAttribute('drag-column')) {
+            if (this.dragColumnInitialized) return;
+            this.dragColumnInitialized = true;
+            import('../../attr/dropzone/dropzone.js');
+            for (const group of this.table.children) {
+                if (group.tagName === 'COLGROUP') {
+                    const col = document.createElement('col')
+                    col.style.width = '1em';
+                    group.prepend(col);
+                    continue;
+                }
+                if (group.tagName === 'TBODY' && !group.hasAttribute('u2-dropzone')) {
+                    group.setAttribute('u2-dropzone', '')
+                };
+                for (const tr of group.children) {
+                    const td = document.createElement('td');
+                    tr.prepend(td);
+                    if (group.tagName === 'TBODY') {
+                        tr.setAttribute('draggable', 'false');
+                        td.innerHTML = '<u2-icon>⠿</u2-ico>';
+                        td.setAttribute('u2-draghandle', '');
+                    }
+                }
+            }
+        }
 
-        //if (this.hasAttribute('autoformat')) this.#autoFormat();
         if (this.hasAttribute('autoformat')) {
-            import('./ext/autoFormatTable.js').then(({autoFormatTable})=> {
+            import('./ext/autoFormatTable.js').then(({ autoFormatTable }) => {
                 this._isUpdating = true;
                 autoFormatTable(this.table)
-                queueMicrotask(() => this._isUpdating = false )
+                queueMicrotask(() => this._isUpdating = false)
             });
         }
 
-        queueMicrotask(() => this._isUpdating = false )
+        queueMicrotask(() => this._isUpdating = false)
     }
 
     get columns() {
@@ -72,7 +115,7 @@ class Table extends HTMLElement {
 }
 
 /* Sort-listener that would also work for other tables, even globally. */
-function tableSortListener(e){
+function tableSortListener(e) {
     const btn = e.target.closest('[data-sort-handler]');
     if (!btn) return;
     const th = btn.closest('th');
@@ -91,13 +134,13 @@ function tableSortListener(e){
 
     const tds = columns.item(index).cellsByGroup(tbody);
     tds
-        .map( td => { return { td, val: td.getAttribute('data-sort') ?? td.textContent.trim() }; } )
+        .map(td => { return { td, val: td.getAttribute('data-sort') ?? td.textContent.trim() }; })
         .sort((a, b) => {
             if (!ascending) [a, b] = [b, a];
             const [v1, v2] = [a.val, b.val];
             return v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2);
         })
-        .forEach(item => tbody.appendChild(item.td.parentNode) );
+        .forEach(item => tbody.appendChild(item.td.parentNode));
 
 }
 
@@ -124,8 +167,8 @@ function tableCheckboxMultiSelectListener(e) {
     }
 
     // --- Shift-Klick: Bereichsauswahl ---
-    
-    const columns = getTableColumns(table); 
+
+    const columns = getTableColumns(table);
 
     const lastTr = table._lastSelectedCheckbox.closest('tr');
     const targetState = table._lastSelectedCheckbox.checked; // Status übernehmen
@@ -143,7 +186,7 @@ function tableCheckboxMultiSelectListener(e) {
     if (scope !== 'row') {
         const lastCell = table._lastSelectedCheckbox.closest('td, th');
         const currentCell = checkbox.closest('td, th');
-        
+
         // Hier nutzen wir unser neues, schnelles indexOf()
         const lastColIdx = columns.indexOf(lastCell);
         const currentColIdx = columns.indexOf(currentCell);
@@ -161,7 +204,7 @@ function tableCheckboxMultiSelectListener(e) {
     // Wir iterieren direkt über die rows Collection (enthält alle tr)
     for (let r = startRowIndex; r <= endRowIndex; r++) {
         const row = table.rows[r];
-        
+
         // Optimierung: Wenn Scope 'row' ist, brauchen wir keine Spaltenprüfung
         if (scope === 'row') {
             const inputs = row.querySelectorAll('input[type="checkbox"]');
@@ -173,7 +216,7 @@ function tableCheckboxMultiSelectListener(e) {
         for (const cell of row.cells) {
             // Ist die Zelle im relevanten Spaltenbereich?
             const cellColIdx = columns.indexOf(cell);
-            
+
             if (cellColIdx >= minColIndex && cellColIdx <= maxColIndex) {
                 const input = cell.querySelector('input[type="checkbox"]');
                 if (input) input.checked = targetState;
@@ -225,16 +268,16 @@ class Columns {
 
         this._matrix = [];
         this._cellIndexMap = new Map();
-        
+
         // Wir nutzen table.rows, da dies alle tr (thead, tbody, tfoot) in korrekter Reihenfolge enthält
-        const rows = this.table.rows; 
+        const rows = this.table.rows;
 
         for (let r = 0; r < rows.length; r++) {
             const row = rows[r];
             this._matrix[r] ??= [];
-            
+
             let colIdx = 0;
-            
+
             for (const cell of row.children) {
                 // 1. Überspringe Plätze, die durch ein rowspan von oben belegt sind
                 while (this._matrix[r][colIdx]) colIdx++;
@@ -250,7 +293,7 @@ class Columns {
                     for (let y = 0; y < spanY; y++) {
                         const targetRow = r + y;
                         this._matrix[targetRow] ??= [];
-                        
+
                         // Wir markieren den Slot als "belegt"
                         // (Man könnte hier auch die Cell-Referenz speichern)
                         this._matrix[targetRow][colIdx + x] = cell;
@@ -277,7 +320,7 @@ class Columns {
         this._columns[i] ??= new Column(this, i); // Übergebe 'this' (die Columns Instanz) statt nur table
         return this._columns[i];
     }
-    
+
     // cellAt(rowIndex, colIndex) { // not used, but usefull
     //     this._ensureMatrix(); 
     //     const matrix = this._matrix;
@@ -305,14 +348,14 @@ class Columns {
         const colMap = [];
         const colgroups = this.table.querySelectorAll(':scope > colgroup');
         const standaloneCols = this.table.querySelectorAll(':scope > col');
-        
+
         // Helper function to push cols
         const pushCols = (elements) => {
-             for (const el of elements) {
+            for (const el of elements) {
                 const span = parseInt(el.getAttribute('span')) || 1;
                 // Wenn es eine colgroup mit cols ist, iterieren wir deren cols
                 const innerCols = el.tagName === 'COLGROUP' ? el.querySelectorAll(':scope > col') : [];
-                
+
                 if (innerCols.length > 0) {
                     pushCols(innerCols);
                 } else {
@@ -322,7 +365,7 @@ class Columns {
         }
 
         // Standardisiert colgroups und cols verarbeiten
-        if(colgroups.length > 0) pushCols(colgroups);
+        if (colgroups.length > 0) pushCols(colgroups);
         pushCols(standaloneCols); // Falls cols außerhalb von colgroups existieren (selten, aber valide)
 
         return colMap;
@@ -340,7 +383,7 @@ class Column {
         const cells = [];
         // Wir iterieren über alle Gruppen (thead, tbody, tfoot)
         for (const group of this.table.children) {
-            if(group.tagName === 'COLGROUP' || group.tagName === 'CAPTION') continue;
+            if (group.tagName === 'COLGROUP' || group.tagName === 'CAPTION') continue;
             this.cellsByGroup(group).forEach(cell => cells.push(cell));
         }
         return cells;

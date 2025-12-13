@@ -1,12 +1,66 @@
-
-a[download], a[target] {
+a::after, a::before {
     text-decoration: none;
+    display:inline-block;
+    font-variant-emoji: text;
 }
+a::after { margin-left: .1em; }
+a::before { margin-right: .1em; }
 a[target]::after {
-    content: '🠆';
-    margin-left: .2em;
+    content: '↗'; /* ⇗ ⤴ ⎋ ⧉ ⇱ */
 }
 a[download]::after {
-    content: ' 🠇'; /* 🠇⤵↓ */
+    content: '🠇'; /* ↓ ⇓ ⬇ ⇩ ↡ ⤓ */
+}
+a[href^="mailto:"]::before {
+    content: '✉'; /* ✉️ 📧 ✉ ✆ ⚑ @ */
+}
+a[href^="tel:"]::before {
+    content: '🕿'; /* ☎ ☏ ✆ */
+}
+a[href^="#"]::before {
+    content: '#'; /* § ¶ ◊ ⚓ */
+}
+a[href*="youtube.com"]::after,
+a[href*="vimeo.com"]::after,
+a[href*="youtu.be"]::after { 
+    content: '⏵'; /* ▶️ ▷ ► ⯈ ▸ ⏵ */
     margin-left: .2em;
+}
+a[href*="/search"]::before,
+a[href*="?q="]::before { 
+    content: '🔍'; /* ⌕ ⚲ ◎ ⊙ 🔍 */
+}
+a[rel="prev"]::before { 
+    content: '←'; /* ⇐ ⬅ ◀ ⇦ ◂ */
+}
+a[rel="next"]::after { 
+    content: ' →'; /* ⇒ ⮕ ▶ ⇨ ▸ */
+}
+a[rel="author"]::before { 
+    content: '@'; /* @ 🚶 웃 👨 👤 ✎ ✍ ✏ ⚲ ◈ */
+}
+a[rel="license"]::before { 
+    content: '©'; /* ⓒ Ⓒ ℗ ® */
+}
+a[rel="help"]::before { 
+    content: '❓'; /* 🛈 ? ⍰ ⓘ ℹ ❓ ⁇ */
+}
+a[rel="search"]::before { 
+    content: '⌕'; /* ⚲ ◎ ⊙ 🔍 */
+}
+a[rel="privacy-policy"]::before,
+a[rel="terms-of-service"]::before { 
+    content: '§'; /* ¶ ⁋ ℘ ※ */
+}
+a[rel="tag"]::before { 
+    content: '#'; /* ⚐ ⚑ ※ ⌗ */
+}
+a[rel="bookmark"]::before { 
+    content: '⚑'; /* ⚐ ◆ ★ ☆ ⚘ */
+}
+a[rel="alternate"]::before { 
+    content: '⇄'; /* ⇌ ⇋ ⇆ ↔ ⟷ */
+}
+a[rel="external"]::after { 
+    content: '↗'; /* ⇗ ⤴ ⎋ ⧉ ⇱ */
 }

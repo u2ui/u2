@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+  <meta charset="utf-8">
+  <meta name=viewport content="width=device-width">
+  <script src="../../../u2/tests/test-init.js" type=module async></script>
+  <title>dialog.js test.html | U2 design-system</title>
+
+  <link rel=stylesheet href="../../../css/classless/full.css">
+  <link rel=stylesheet href="../../../css/classless/simple.css">
+  <link rel=stylesheet href="../../../class/table/table.css">
+
+  <script src="../../../el/code/code.js" type=module async></script>
+  <link rel=stylesheet href="../../../el/code/code.css">
+
+</head>
+
+<body>
+
+  <script type=module>
+    import * as drag from '../drag.js';
+
+    document.addEventListener('dragover', e => {
+      draggedOut.value = drag.dragged.id;
+    });
+  </script>
+
+
+  <section>
+
+    <u2-code trim editable>
+      <style>
+        .\:dragging {
+          background: yellow;
+        }
+
+        .\:dragging-image {
+          border: 2px solid blue;
+          background: #ddd;
+          padding: .4rem;
+        }
+      </style>
+    </u2-code>
+
+    <ul class="draggableLis">
+      <li draggable="true" id="li1">Item 1</li>
+      <li draggable="true" id="li2">Item 2</li>
+      <li draggable="true" id="li3">Item 3</li>
+      <li draggable="true" id="li4">Item 4</li>
+      <li draggable="true" id="li5">Item 5</li>
+    </ul>
+
+    <div>
+      <label>
+        Last dragged:
+        <output id="draggedOut">none</output>
+      </label>
+
+    </div>
+  </section>
