@@ -56,14 +56,20 @@
                             <td> Frau
                             <td> Provident, quisquam.
                             <td> Omnis, quisquam.
-                            <td> 1
-                            <td> c
+                            <td> <input type="number" value="22">
+                            <td>
                         <tr>
                             <td> Mister
                             <td> Provident, quisquam.
                             <td> Laudens, quisquam.
-                            <td data-sort=".5"> 6 month
+                            <td data-value=".5"> 6 month
                             <td> z
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">Footer
+                            <td>
+                            <td data-sum>
+                            <td data-count>
                 </table>
             </u2-table>
         </u2-responsive>
@@ -74,7 +80,6 @@
             double.addEventListener('click', e => {
                 testBody.insertAdjacentHTML('beforeend', testBody.innerHTML)
                 double.querySelector('sup').innerHTML = testBody.children.length;
-
             })
         </script>
 

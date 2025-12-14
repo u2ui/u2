@@ -1,13 +1,14 @@
-
+# [u2-dropzone] - attribute
+Dropzone for draggable elements. <div u2-dropzone=":scope selektor">
 
 ## Usage
 
 ```html
-<div u2-dropzone="p">
-    <p draggable="true">item 1</p>
-    <p draggable="true">item 2</p>
+<div u2-dropzone>
+    <div draggable="true">item 1</div>
+    <div draggable="true">item 2</div>
+    <div draggable="true">item 3</div>
 </div>
-<p draggable="true">item 3</p>
 ```
 
 ## Install

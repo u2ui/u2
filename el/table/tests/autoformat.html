@@ -19,7 +19,6 @@
         body {
             max-width: 90rem;
         }
-        
         h1 {
             margin-bottom: 0.5rem;
         }
@@ -40,7 +39,7 @@
 
 <u2-table autoformat>
     <table class="u2-table">
-        <thead style="vertical-align:bottom">
+        <thead style="vertical-align:bottom; position:sticky; top:0;" u2-skin="invert">
             <tr>
                 <th>ID
                 <th>Product
@@ -294,6 +293,18 @@
                 <td>https://netgear.de/8port
                 <td>8-port gigabit ethernet switch with plug-and-play setup, energy-efficient design, and silent fanless operation
                 <td>€ 8459.06
-        </tbody>
+        <tfoot style="position: sticky; bottom: 0;" u2-skin="invert">
+            <tr>
+                <td>
+                <td data-count>
+                <td data-sum>
+                <td data-avg>
+                <td data-sum>
+                <td data-sum>
+                <td>
+                <td>
+                <td>
+                <td>
+                <td data-sum>
     </table>
 </u2-table>

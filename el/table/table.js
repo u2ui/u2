@@ -7,7 +7,6 @@ class Table extends HTMLElement {
             <style>
             :host {
                 display: block;
-                overflow: auto;
             }
             </style>
             <slot></slot>
@@ -15,11 +14,13 @@ class Table extends HTMLElement {
     }
     connectedCallback() {
         this.mutObs = new MutationObserver(mutations => {
+            console.log('check?', this._isUpdating)
             if (this._isUpdating) return; // IGNORIEREN WÄHREND UPDATE
+            console.log('check')
             this.#checkTable();
             this.columns.refresh();
         });
-        this.mutObs.observe(this, { childList: true, subtree: true });
+        this.mutObs.observe(this, { childList: true, subtree: true, /* attributes: true, characterData: true*/});
         this.#checkTable();
     }
 
@@ -29,16 +30,12 @@ class Table extends HTMLElement {
 
         this._isUpdating = true; // FLAG SETZEN
 
-        const firstHeadTr = this.querySelector(':scope > table > thead > tr');
 
         this.addEventListener('click', tableCheckboxMultiSelectListener);
 
+        const firstHeadTr = this.querySelector(':scope > table > thead > tr');
         if (firstHeadTr) {
-
-            // sortable
             firstHeadTr.addEventListener('click', tableSortListener);
-
-            // th-text to each td
             for (const th of firstHeadTr.children) {
                 const title = th.innerText.trim();
                 const index = this.columns.indexOf(th);
@@ -105,7 +102,37 @@ class Table extends HTMLElement {
             });
         }
 
-        queueMicrotask(() => this._isUpdating = false)
+        const tdValue = td => {
+            let string = (td.dataset.value ?? td.textContent).trim();
+            if (string === '') {
+                if (td.querySelector('input')) {
+                    string = td.querySelector('input').value;
+                } else {
+                    return null;
+                }
+            }
+            return parseFloat(string);
+        }
+
+        const firstFootTr = this.querySelector(':scope > table > tfoot > tr');
+        if (firstHeadTr) {
+            for (const td of firstFootTr.children) {
+                if (td.hasAttribute('data-sum')) {
+                    const index = this.columns.indexOf(td);
+                    td.textContent = this.columns.item(index).cellsByGroup(this.table.tBodies[0]).reduce((a, b) => a + tdValue(b), 0);
+                }
+                if (td.hasAttribute('data-avg')) {
+                    const index = this.columns.indexOf(td);
+                    td.textContent = this.columns.item(index).cellsByGroup(this.table.tBodies[0]).reduce((a, b) => a + tdValue(b), 0) / this.columns.item(index).cellsByGroup(this.table.tBodies[0]).length;
+                }
+                if (td.hasAttribute('data-count')) {
+                    const index = this.columns.indexOf(td);
+                    td.textContent = this.columns.item(index).cellsByGroup(this.table.tBodies[0]).filter(td => tdValue(td) !== null).length;
+                }
+            }
+        }
+
+        queueMicrotask(() => this._isUpdating = false);
     }
 
     get columns() {
@@ -134,7 +161,7 @@ function tableSortListener(e) {
 
     const tds = columns.item(index).cellsByGroup(tbody);
     tds
-        .map(td => { return { td, val: td.getAttribute('data-sort') ?? td.textContent.trim() }; })
+        .map(td => { return { td, val: td.getAttribute('data-value') ?? td.textContent.trim() }; })
         .sort((a, b) => {
             if (!ascending) [a, b] = [b, a];
             const [v1, v2] = [a.val, b.val];

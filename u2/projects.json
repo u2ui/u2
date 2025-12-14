@@ -74,7 +74,7 @@
     },
     "dropzone": {
       "name": "dropzone",
-      "description": "",
+      "description": "Dropzone for draggable elements. <div u2-dropzone=\":scope selektor\">",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -370,6 +370,14 @@
       "beta": false,
       "deprecated": false,
       "css": true,
+      "js": true
+    },
+    "video": {
+      "name": "video",
+      "description": "Video-element with controls and keyboard shortcuts.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
       "js": true
     },
     "maintitlebar": {

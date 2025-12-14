@@ -25,7 +25,7 @@ u2 is a design system that is intended to fulfill the following goals:
 
 Just add this script to have all the u2-stuff available on demand, without including them separately:  
 ```html
-<script type=module async src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/u2/auto.min.js"></script>
+<script type=module async src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/u2/auto.js"></script>
 ```
 
 

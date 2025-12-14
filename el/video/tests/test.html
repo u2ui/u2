@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>u2-video test</title>
+
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../video.js" type=module async></script>
+<body>
+
+<section class=main>
+    <h2>Styled</h2>
+    <div style="overflow:auto; resize: both; padding:1rem; border:1px solid">
+        <u2-video controls playback-speed src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></u2-video>
+    </div>
+
+    <h2>u2-video element</h2>
+    <div id=styled style="overflow:auto; resize: both; padding:1rem; border:1px solid">
+        <u2-video controls>
+            <h2 style="position:absolute; inset:0 0 auto 0; background: #0004; padding:.5rem; color:#fff; text-align:center">
+                Eine sehr schöne Blume
+            </h2>
+            <video src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
+        </u2-video>
+    </div>
+</section>
+
+<u2-code trim editable>
+    <style>
+    #styled u2-video {
+        font-size:11px;
+        color:yellow;
+        border-radius: .5rem;
+        box-shadow:0 0 1rem #0008;
+        --gap:.5em;
+
+        &::part(controls) {
+            opacity:1;
+            gap:0;
+            background:#0008;
+            color:lightblue;
+            padding:0;
+            grid-template-columns: auto 1fr;
+            grid-template-areas:
+                "progress progress progress progress progress progress"
+                "time . speed volume fullscreen play";            
+        }
+    }
+    </style>
+</u2-code>
