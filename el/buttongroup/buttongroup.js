@@ -34,12 +34,6 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
         
         const items = [...this.children].filter(item => item.tagName !== 'U2-MENUBUTTON');
         
-        // if (this.scrollWidth > this.clientWidth) {
-        //     const last = items.pop();
-        //     if (last) this.addItemToMenu(last);
-        //     hasmMore = true;
-        // }
-
         while (this.scrollWidth > this.clientWidth) {
             const item = items.pop();
             if (!item) break;
@@ -48,28 +42,6 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
         }
 
         hasMore ? this.appendChild(this.menuButton) : this.menuButton.remove();
-    }
-
-
-    x_build() {
-        let hasmMore = false;
-        const containerWidth = this.clientWidth;
-        const items = [...this.children].map(btn => {return {btn, width: btn.clientWidth}}); // todo: clientWidth when flex:0 0 auto
-        let fullWidth = items.reduce((acc, item) => acc + item.width, 0);
-
-
-        while (fullWidth > containerWidth) {
-            const item = items.pop();
-            if (item.btn.tagName === 'U2-MENUBUTTON') continue;
-            const li = document.createElement('li');
-            li.appendChild(item.btn);
-            this.menuButton.querySelector('menu').prepend(li);
-            fullWidth -= item.width;
-            hasmMore = true;
-        }
-        if (hasmMore) {
-            this.appendChild(this.menuButton);
-        }
     }
 
     connectedCallback() {

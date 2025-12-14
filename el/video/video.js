@@ -12,7 +12,7 @@ class U2Video extends HTMLElement {
     static observedAttributes = [
         'src', 'poster', 'preload', 'autoplay', 'loop', 'muted', 
         'controls', 'width', 'height', 'playsinline', 'crossorigin',
-        'playback-speed', 'picture-in-picture'
+        'picture-in-picture'
         ];
 
     connectedCallback() {
@@ -68,6 +68,7 @@ class U2Video extends HTMLElement {
             }
 
             #container {
+                white-space: nowrap;
                 font-size: clamp(10px, 1em, 3cqw);
                 position: relative;
                 width: 100%;
@@ -94,10 +95,13 @@ class U2Video extends HTMLElement {
                 display: grid;
                 gap: .4rem;
                 grid-template-columns: auto auto 1fr auto auto;
+                grid-template-rows: auto auto;
+                grid-auto-columns: 0;
+                grid-auto-rows: 0;
                 grid-template-areas:
                     "progress progress progress progress progress"
-                    "play volume time speed fullscreen";
-                alitn-items: stretch;
+                    "play mute time speed fullscreen";
+                align-items: stretch;
                 justify-items: stretch;
             }
             
@@ -105,6 +109,7 @@ class U2Video extends HTMLElement {
             
             #progressBar {
                 grid-area: progress;
+                align-self: center;
                 height: .3em;
                 border: solid #0000;
                 border-width: var(--gap) 0;
@@ -133,42 +138,13 @@ class U2Video extends HTMLElement {
             .controls-row { display: contents; }
 
             #playPause { grid-area: play; }
-            .volume-container { grid-area: volume; }
+            #muteToggle { grid-area: mute; }
+            #speedToggle { grid-area: speed; }
+            #fullscreenToggle { grid-area: fullscreen; }
             #timeDisplay {
                 grid-area: time;
                 align-self: center;
                 min-width: 0;
-                white-space: nowrap;
-            }
-            #speedToggle { grid-area: speed; }
-            #fullscreenToggle { grid-area: fullscreen; }
-            
-            /*
-            .volume-container {
-                display: flex;
-                align-items: center;
-                gap: var(--gap);
-            }
-            input[type="range"] {
-                width: 5rem;
-                height: 0.25rem;
-                -webkit-appearance: none;
-                background: rgba(255,255,255,0.3);
-                border-radius: 0.125rem;
-                outline: none;
-                accent-color: var(--u2-video-accent);
-            }
-            input[type="range"]::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                width: 0.75rem;
-                height: 0.75rem;
-                background: white;
-                border-radius: 50%;
-                cursor: pointer;
-            }
-            */
-            
-            #timeDisplay {
                 margin-inline: var(--gap);
             }
 
@@ -205,7 +181,7 @@ class U2Video extends HTMLElement {
                 font-size: 6em;
                 opacity: 0;
                 pointer-events: none;
-                transition: opacity 0.3s;
+                transition: opacity 0.4s;
                 z-index: 3;
                 display:flex;
                 align-items:center;
@@ -234,10 +210,7 @@ class U2Video extends HTMLElement {
                     <div class=-filled id=progressFilled></div>
                 </div>
                 <button id=playPause title="Play/Pause (Space)">${svg.play}</button>
-                <div class=volume-container>
-                    <button id=muteToggle title="Mute (M)">${svg.mute}</button>
-                    <!--input type=range id=volumeSlider min=0 max=1 step="0.1" value=1-->
-                </div>
+                <button id=muteToggle title="Mute (M)">${svg.mute}</button>
                 <span id=timeDisplay>0:00 / 0:00</span>
                 <button id=speedToggle title="Playback Speed" popovertarget="speedMenu" popovertargetaction="toggle">1x</button>
                 <button id=fullscreenToggle title="Fullscreen (F)">${svg.fullscreen}</button>
@@ -314,25 +287,21 @@ class U2Video extends HTMLElement {
         });
 
         // Playback speed
-        if (this.hasAttribute('playback-speed')) {
-            this._playbackRates.forEach(rate => {
-                const btn = document.createElement('button');
-                btn.className = 'speed-option';
-                btn.textContent = `${rate}x`;
-                if (rate === 1) btn.classList.add('active');
-                btn.addEventListener('click', () => {
-                    this._video.playbackRate = rate;
-                    speedToggle.textContent = `${rate}x`;
-                    speedMenu.querySelectorAll('.speed-option').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    if (typeof speedMenu.hidePopover === 'function') speedMenu.hidePopover();
-                    else speedMenu.removeAttribute('open');
-                });
-                speedMenu.appendChild(btn);
+        this._playbackRates.forEach(rate => {
+            const btn = document.createElement('button');
+            btn.className = 'speed-option';
+            btn.textContent = `${rate}x`;
+            if (rate === 1) btn.classList.add('active');
+            btn.addEventListener('click', () => {
+                this._video.playbackRate = rate;
+                speedToggle.textContent = `${rate}x`;
+                speedMenu.querySelectorAll('.speed-option').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                if (typeof speedMenu.hidePopover === 'function') speedMenu.hidePopover();
+                else speedMenu.removeAttribute('open');
             });
-        } else {
-            speedToggle.style.display = 'none';
-        }
+            speedMenu.appendChild(btn);
+        });
 
 
         // Click auf video = play/pause

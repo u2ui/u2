@@ -15,12 +15,12 @@
 <body>
 
 <section class=main>
-    <h2>Styled</h2>
+    <h2>u2-video element</h2>
     <div style="overflow:auto; resize: both; padding:1rem; border:1px solid">
         <u2-video controls playback-speed src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></u2-video>
     </div>
 
-    <h2>u2-video element</h2>
+    <h2>styled</h2>
     <div id=styled style="overflow:auto; resize: both; padding:1rem; border:1px solid">
         <u2-video controls>
             <h2 style="position:absolute; inset:0 0 auto 0; background: #0004; padding:.5rem; color:#fff; text-align:center">
@@ -41,15 +41,19 @@
         --gap:.5em;
 
         &::part(controls) {
-            opacity:1;
             gap:0;
-            background:#0008;
+            inset: 0 0 auto auto;
+            margin:1rem;
+            padding:.8rem .5rem .3rem .5rem;
+            border-radius:.4rem;
+            backdrop-filter:blur(1rem);
             color:lightblue;
-            padding:0;
-            grid-template-columns: auto 1fr;
+            background:#00f9;
+            grid-template-columns: auto 1fr auto auto auto auto;
             grid-template-areas:
                 "progress progress progress progress progress progress"
-                "time . speed volume fullscreen play";            
+                "time . mute speed fullscreen play";
+            font-family:monospace;
         }
     }
     </style>
