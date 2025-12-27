@@ -21,11 +21,11 @@
         </svg>
         <style>
         html {
-            --hsl-h:40;
+            --color: #98742c;
             x--u2-ico-dir-material: '#i-';
             --u2-ico-dir:var(--u2-ico-dir-material);
             --width:100rem;
-            background-color:var(--color-light);
+            background-color:var(--color-lighter);
             background-attachment: fixed;
         }
         u2-code {
@@ -119,15 +119,16 @@
         }
         #repos > div > header {
             position:absolute;
-            background:#0005;
+            background:#0004;
             backdrop-filter: blur(.3rem);
-            color:var(--color-light);
-            bottom:0;
-            left:0;
-            right:0;
+            color:var(--color-lighter);
+            inset: auto 0 0 0;
             text-align:center;
             z-index:10;
             transition: .3s;
+            & h3 {
+                font-size:1.3rem;
+            }
         }
         #repos > div:has(>header:hover) > u2-code {
             opacity:1;
@@ -161,7 +162,7 @@
 
                 for (const name in repos.js) {
                     import(`../../js/${name}/${name}.js`).then(exports => {
-                        window[name] = exports;
+                        window['u2_'+name] = exports;
                     });
                 }
 

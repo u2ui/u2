@@ -1,0 +1,9 @@
+.test, h1 + p::first-letter {
+	--span: 2;
+	line-height: .68; /* make box-height same in firefox (normal span would be good) and chrome */
+	font-size: calc(1lh * var(--span) * (2 - .68)); /* line-height from parent, add the line-height that was removed */
+	float: left;
+	margin-right: .25ch;
+	margin-top: -0.05lh;
+	color: var(--accent);
+}

@@ -1,3 +1,5 @@
+alert('used??') // zzz
+
 class ElementVariableStyler extends HTMLElement {
     constructor() {
         super();

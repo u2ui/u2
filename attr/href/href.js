@@ -1,14 +1,18 @@
-/* Copyright (c) 2016 Tobias Buschor https://goo.gl/gl0mbf | MIT License https://goo.gl/HgajeK */
-
 document.addEventListener('click', e => {
 	if (e.button !== 0) return; // only left-click
 	if (e.defaultPrevented) return; // not if prevented
     if (!e.target.closest) return; // some targets have no closest method?
 	const A = e.target.closest('[u2-href]');
 	if (!A) return;
-	const href = A.getAttribute('u2-href'); // get the url
-	if (!href) return;
-	if (e.target.isContentEditable) return; // not if contenteditable
+	let href = A.getAttribute('u2-href'); // get the url
+
+	if (href === '') {
+		const realA = A.querySelector('a[href]');
+		if (!realA) return;
+		href = realA.href;
+	}
+
+	if (e.target.isContentEditable) return;
     if (e.target.closest('a,input,textarea,select,button,label')) return;
 	//if (e.target.closest('[onclick]')) return; //
 	//if (e.target.closest(c1.href.ignoreSelector)) return;

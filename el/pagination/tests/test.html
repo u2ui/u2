@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/vars/vars.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+
+    <script src="../pagination.js" type=module async></script>
+    <link href="../pagination.css" rel=stylesheet>
+
+
+<h1>u2-pagination Demo</h1>
+
+<section>
+    <h2>Variante 1: Mit Links (SEO/SSR)</h2>
+    <u2-pagination total="88" href="?page={page}"></u2-pagination>
+</section>
+
+<section>
+    <h2>Variante 2: Mit JavaScript (AJAX)</h2>
+    <u2-pagination id="js-pagination" total="20" current="4" u2-pagination></u2-pagination>
+    <p>Aktuelle Seite: <strong id="current-page">1</strong></p>
+</section>
+
+<section>
+    <h2>Variante 3: Wenig Seiten</h2>
+    <u2-pagination total="5" href="?page={page}"></u2-pagination>
+</section>
+
+<section>
+    <h2>Variante 4: Viele Seiten, am Anfang</h2>
+    <u2-pagination total="200" href="?page={page}"></u2-pagination>
+</section>
+
+<section>
+    <h2>Variante 5: Viele Seiten, am Ende</h2>
+    <u2-pagination total="150" href="?page={page}"></u2-pagination>
+</section>
+
+<section>
+    <h2>Variante 6: nur eine Seite</h2>
+    <u2-pagination total="1" href="?page={page}"></u2-pagination>
+</section>
+
+<section>
+    <h2>Variante 7: nur zwei Seiten</h2>
+    <u2-pagination total="2" href="?page={page}"></u2-pagination>
+</section>
+
+<section>
+    <h2>Variante 8: Current gesetzt</h2>
+    <u2-pagination total="6" current="3" href="?page={page}"></u2-pagination>
+</section>
+
+<script>
+    // Demo für JavaScript-Variante
+    const jsPagination = document.getElementById('js-pagination');
+    const currentPageDisplay = document.getElementById('current-page');
+
+    jsPagination?.addEventListener('u2-pagination-change', e => {
+        e.preventDefault();
+        console.log('Page changed:', e.detail);
+
+        // Simuliere Daten-Laden
+        currentPageDisplay.textContent = e.detail.page;
+        e.target.setAttribute('current', e.detail.page);
+
+        // Simuliere AJAX-Call
+        console.log('Loading data for page', e.detail.page, '...');
+    });
+</script>
+

@@ -21,8 +21,7 @@
     </style>
 <body>
 
-<script src="../tools/variable-styler.js" type=module></script>
-<element-variable-styler></element-variable-styler>
+<u2-system></u2-system>
 
 <header role="banner">
 
@@ -92,10 +91,18 @@
     <u2-tabs>
         <h3>Accordion</h3>
         <u2-accordion id="accordion">
-            <h4>Accordion 1</h4>
-            <p>Accordion Inhalt 1</p>
-            <h4>Accordion 2</h4>
-            <p>Accordion Inhalt 2</p>
+            <h4>Calendar</h4>
+
+            <u2-calendar date="2024-01-15" class=u2-card>
+                <u2-tooltip>Calendar</u2-tooltip>
+                <u2-calendaritem start="2024-01-15" draggable>Event 1</u2-calendaritem>
+                <u2-calendaritem start="2024-01-20">Event 2</u2-calendaritem>
+            </u2-calendar>
+
+            <h4>Video</h4>
+
+            <u2-video src="https://github.com/mediaelement/mediaelement-files/blob/master/big_buck_bunny.mp4?raw=true" controls></u2-video>
+
             <h4>Accordion 3</h4>
             <p>Accordion Inhalt 3</p>
         </u2-accordion>
@@ -152,9 +159,15 @@
     
 
     <h2>Flex</h2>
-    <div class="u2-grid">
-        <div class="u2-card1">
-            <h3>Card1 Class</h3>
+    <div class=u2-flex>
+        <div class=u2-card>
+            <h3 class="u2-flex -Between">
+                Card Class
+                <button class="u2-unstyle">
+                    <u2-ico icon="close">x</u2-ico>
+                    <u2-tooltip>Close</u2-tooltip>
+                </button>
+            </h3>
             <hr>
             <p class=-body>Card 1</p>
             <hr>
@@ -163,7 +176,7 @@
                 <button>Button 2</button>
             </u2-buttongroup>
         </div>
-        <u2-qrcode data="https://u2.dev"></u2-qrcode>
+        <u2-qrcode data="https://u2.dev" style="width:10rem"></u2-qrcode>
     </div>
 
     <h2>Grid</h2>
@@ -177,7 +190,7 @@
     <h2>Masonry</h2>
     <u2-masonry>
 
-        <u2-carousel class="u2-card1" autoplay>
+        <u2-carousel class="u2-card" autoplay>
             <div>Slide 1</div>
             <u2-counter>333.11</u2-counter>
             <div>Slide 3</div>
@@ -185,7 +198,7 @@
 
         <u2-carousel-nav></u2-carousel-nav>
 
-        <table class="u2-table u2-card1" id="table">
+        <table class="u2-table u2-card" id="table">
             <thead>
                 <tr>
                     <th>Year
@@ -219,7 +232,7 @@
                     <td>400
                     <td>500
         </table>
-        <div class="u2-card1" style="xheight:20rem;">
+        <div class=u2-card style="xheight:20rem;">
             <u2-chart for="table" type=line axis-labels=false grid=false></u2-chart>
         </div>
         <u2-alert open variant="info" icon="home" dismissible>Dies ist eine Info-Nachricht</u2-alert>
@@ -241,27 +254,22 @@
 
     <section>
         <h2>Enhanced Table</h2>
-        <u2-table>
+        <u2-table autoformat check-column sort-column>
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Wert</th>
-                    </tr>
-                </thead>
+                        <th>Name
+                        <th>Status
+                        <th>Wert
                 <tbody>
                     <tr>
-                        <td>Item 1</td>
-                        <td><small class="u2-badge">aktiv</small></td>
-                        <td>€100</td>
-                    </tr>
+                        <td>Item 1
+                        <td><small class="u2-badge">aktiv</small>
+                        <td>€100
                     <tr>
-                        <td>Item 2</td>
-                        <td><small class="u2-badge">inaktiv</small></td>
-                        <td>€50</td>
-                    </tr>
-                </tbody>
+                        <td>Item 2
+                        <td><small class="u2-badge">inaktiv</small>
+                        <td>€50
             </table>
         </u2-table>
     </section>
@@ -270,13 +278,6 @@
     <u2-skeleton width="100%" height="100px"></u2-skeleton>
 
 
-
-    <h2>Calendar</h2>
-    <u2-calendar date="2024-01-15" class="u2-card1">
-        <u2-tooltip>Calendar</u2-tooltip>
-        <u2-calendaritem start="2024-01-15" draggable>Event 1</u2-calendaritem>
-        <u2-calendaritem start="2024-01-20">Event 2</u2-calendaritem>
-    </u2-calendar>
 
 </main>
 

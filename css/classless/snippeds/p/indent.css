@@ -1,0 +1,9 @@
+p + p {
+  text-indent: 1.5em;
+}
+
+p {
+  text-align: justify;
+  text-align-last: left;
+  hyphens: auto;
+}

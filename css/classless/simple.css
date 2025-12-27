@@ -2,7 +2,7 @@ body {
     --border: var(--line-width) solid var(--color-line);
 
     max-width:var(--width);
-    padding:1rem;
+    padding:var(--gap);
 
     display: grid; /* center content. Margins will not collapse :/ */
 
@@ -19,10 +19,10 @@ body:has(> aside) {
 
     grid-template-columns: minmax(15rem, 25%) 1fr;
 
-    gap: 1rem;
+    gap: var(--gap);
     align-items: start;
 
-    grid-template-columns: 15rem minmax(1rem, 1fr) minmax(20rem, var(--width)) minmax(1rem, 1fr);
+    grid-template-columns: 15rem minmax(var(--gap), 1fr) minmax(20rem, var(--width)) minmax(var(--gap), 1fr);
     grid-template-areas: 
         "header header header header"
         "nav . content ."
@@ -32,19 +32,13 @@ body:has(> aside) {
 
 
     & > aside {
-        xgrid-column:3;
         grid-area:nav;
         position:sticky;
         width:auto;
         margin:0;
-        top:1rem;
-
-        nav {
-            
-        }
+        top:var(--gap);
     }
     & > * {
-        xgrid-area:content;
         grid-column:3;
     }
 
@@ -57,9 +51,9 @@ body > * {
 
 body > footer,
 body > header {
-    padding-block: 2rem;
+    padding-block: var(--gap);
 }
-body > header { grid-area: header; }
+body > header { grid-area: header; margin-bottom: var(--gap); }
 body > footer { grid-column:1 / -1 }
 
 :is(body > header, [role="banner"]) {
@@ -69,13 +63,13 @@ body > footer { grid-column:1 / -1 }
         white-space: nowrap;
         > ul {
             display: flex;
-            gap: 1em;
+            gap: var(--gap);
         }
         li { position: relative; }
         a { display:block; }
         ul ul a {
-            padding-inline: 1rem;
-            padding-block: .5rem;
+            padding-inline: var(--gap);
+            padding-block: calc(var(--gap) / 2);
         }
         li > ul {
             position: absolute;
@@ -108,7 +102,7 @@ section {
     &[role="group"] {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-        gap: 1rem;
+        gap: var(--gap);
 
         & > :is(h1,h2,h3,h4) {
             grid-column: 1 / -1; /* gesamte Breite */
@@ -121,45 +115,59 @@ section {
 }
 
 
+table, article, blockquote, dialog, figure, pre, aside {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: var(--gap);
+    background-color: var(--color-light);
+}
+
+
+
+
 table {
     font-size: max(.85rem, 14px);
+    background-color: var(--color-bg);
+    overflow:hidden;
 }
-tr:not(:last-child) {
+thead {
+    background-color: var(--color-dark);
+    color: var(--color-bg); 
+}
+tbody > tr {
     border-style:solid; /* new: not on td/th any problems? */
-    border-color:var(--color-line);
+    border-color: color-mix(in srgb, var(--color-line), transparent 80%);
     border-block-width: 0 var(--line-width);
     border-inline-width: 0;
+    &:hover {
+        background-color: var(--color-lighter);
+    }
+    &:last-child {
+        border-block-end: var(--line-width);
+    }   
 }
 
 label {
     display:block;
     margin-block:.3rem;
 }
-/* old :where(input, u2-input):not([type="checkbox"], [type="radio"]), textarea, select, button, .btn {
-    margin-block:.3rem;
-} */
-button, .btn {
-    margin-block:.3rem;
-}
-
-/* better?
-label {
-    display:block;
-    margin-block:.3rem;
+input, textarea, select {
+    width: 100%;
+    width: -webkit-fill-available;
+    width: -moz-available;
+    width: stretch;
 }
 button, .btn {
     margin-block:.3rem;
 }
-*/
 
 blockquote {
-    margin: 1.5rem 0;
-    padding: .5rem;
+    margin: var(--gap) 0;
+    padding: var(--gap);
     
-    padding-inline-start: 1rem;
+    padding-inline-start: var(--gap);
     border-inline-start: var(--line-width) solid var(--color);
 
-    background-color: var(--color-light);
     font-size: .85em;
     & > footer {
         font-style:italic;
@@ -167,10 +175,7 @@ blockquote {
 }
 
 pre {
-    background-color: var(--color-light);
-    padding: 1rem;
     overflow-x: auto;
-    border-radius: var(--radius);
     font-size: .8em;
 }
 code {
@@ -188,10 +193,8 @@ code {
 /* figure */
 figure {
     padding:0;
-    margin-block: 1rem;
+    margin-block: var(--gap);
     margin-inline: auto;
-    box-shadow: var(--shadow);
-    border-radius: var(--radius);
     overflow:auto;
 }
 figure > img {
@@ -210,25 +213,20 @@ p, dd, li {
 }
 
 article, dialog {
-    border: var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
     flex-direction: column;
     padding:0;
 
-    
-
     & > * {
-        padding: 0 1rem;
+        padding: 0 var(--gap);
         margin:0;
     }    
-    & > :first-child { padding-top:1rem; border-start-start-radius: inherit; border-start-end-radius: inherit; }
-    & > :last-child { padding-bottom:1rem; border-end-start-radius: inherit; border-end-end-radius: inherit; }    
+    & > :first-child { padding-top:var(--gap); border-start-start-radius: inherit; border-start-end-radius: inherit; }
+    & > :last-child { padding-bottom:var(--gap); border-end-start-radius: inherit; border-end-end-radius: inherit; }    
 
     & header, & footer {
-        padding:1rem;
+        padding:var(--gap);
     }
-    & header { margin-bottom:1rem; }
+    & header { margin-bottom:var(--gap); }
     & footer {
         margin-top:auto;
         font-size: 0.9rem;
@@ -240,23 +238,19 @@ dialog:modal {
 
 article {
     display:flex;
-    margin-block:1.5em;
+    margin-block:var(--gap);
     background-color: var(--color-light);
 }
 
 
 aside {
-    margin-block: 1.5em;
-    padding: 1em;
-    border: var(--border);
-    border-radius: var(--radius);
+    margin-block: var(--gap);
     font-size:.8rem;
-    background-color: var(--color-light);
 
     float: right;
     width: max(15rem, 25%);
     max-width:100%;
-    margin-left: 1em;
+    margin-left: var(--gap)
 }
 
 aside[popover] {
@@ -287,19 +281,29 @@ aside[popover] {
 
 
 dialog {
-    box-shadow: var(--shadow);
-    border:var(--border);
-    border-radius: var(--radius);
     transition: .2s ease-out;
+    background: var(--color-bg);
+    border:0;
 }
 dialog[open]:not(:modal) {
     position:static;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+
+dl {
+  display: grid;
+  grid-template-columns: minmax(auto, max-content) auto;
+  gap: calc(var(--gap) / 2);
 }
+dt {
+  font-weight: 600;
+  text-align: right;
+}
+dd {
+  margin: 0;
+  grid-column: 2;
+}
+
 
 
 /*
@@ -310,8 +314,6 @@ main {
 [role=contentinfo] {
   position:sticky;
   z-index:-1;
-  bottom:0;
-  left:0;
-  right:0;
+  inset: auto 0 0 0;
 }
 */

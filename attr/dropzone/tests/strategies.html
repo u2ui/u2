@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../dropzone.js" type=module async></script>
+
+<body>
+
+    <section>
+        <h1>Drag Strategy Tests</h1>
+        <p>Test the three different drag strategies: <code>indicate</code>, <code>move</code>, and <code>ghost</code></p>
+
+        <u2-code trim editable>
+            <style>
+                [u2-dropzone] {
+                    border: 1px solid #ccc;
+                    padding: 1em;
+                    min-height: 3em;
+                    --shadow-size: .1em;
+                }
+
+                ::view-transition { pointer-events: none; }
+
+                ::view-transition-group(*) {
+                    animation-duration: 0.2s;
+                    pointer-events: none;
+                }
+
+                [u2-dropzone].\:drop-valid {
+                    border-color: green;
+                    box-shadow: 0 0 var(--shadow-size) rgba(0, 255, 0, 0.7);
+                }
+
+                [u2-dropzone].\:drop-invalid {
+                    border-color: red;
+                    box-shadow: 0 0 var(--shadow-size) rgba(255, 0, 0, 0.7);
+                }
+
+                [u2-dropzone].\:dragover {
+                    --shadow-size: 1rem;
+                }
+
+                [draggable] {
+                    view-transition-name: match-element;
+                    cursor: move;
+                    user-select: none;
+                }
+
+                /* Strategy-specific styles */
+                .drag-placeholder {
+                    background: rgba(0, 0, 0, 0.1);
+                    border: 2px dashed #999;
+                    border-radius: 4px;
+                }
+
+                .drag-clone {
+                    pointer-events: none;
+                    outline:2px solid;
+                    border-radius:.3rem;
+                    opacity:.5;
+                    background:yellow;
+                }
+
+                [draggable].\:dragging {
+                    opacity: 0.5;
+                }
+
+                /* Strategy zone indicators */
+                .strategy-indicate {
+                    --u2-dropzone-strategy: indicate;
+                }
+
+                .strategy-move {
+                    --u2-dropzone-strategy: move;
+                }
+
+                .strategy-ghost {
+                    --u2-dropzone-strategy: ghost;
+                }
+            </style>
+        </u2-code>
+
+
+        <h2>Cross-Strategy Drag</h2>
+        <p>Drag between zones with different strategies</p>
+        <div class="u2-flex" style="gap: 1rem;">
+            <div style="flex: 1;">
+                <h3>Indicate</h3>
+                <div u2-dropzone="*" class="strategy-indicate">
+                    <p draggable="true">🔵 Blue 1</p>
+                    <p draggable="true">🔵 Blue 2</p>
+                    <p draggable="true">🔵 Blue 3</p>
+                    <p draggable="true">🔵 Blue 4</p>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <h3>Move</h3>
+                <div u2-dropzone="*" class="strategy-move">
+                    <p draggable="true">🟢 Green 1</p>
+                    <p draggable="true">🟢 Green 2</p>
+                    <p draggable="true">🟢 Green 3</p>
+                    <p draggable="true">🟢 Green 4</p>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <h3>Ghost</h3>
+                <div u2-dropzone="*" class="strategy-ghost">
+                    <p draggable="true">🟡 Yellow 1</p>
+                    <p draggable="true">🟡 Yellow 2</p>
+                    <p draggable="true">🟡 Yellow 3</p>
+                    <p draggable="true">🟡 Yellow 4</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section id="layouts">
+        <h2>Different Layouts with Strategies</h2>
+
+        <h3>Flex (Indicate)</h3>
+        <div u2-dropzone="*" class="strategy-indicate" style="display:flex; flex-wrap:wrap; gap:1rem;">
+            <div draggable="true">1</div>
+            <div draggable="true">2</div>
+            <div draggable="true">3</div>
+            <div draggable="true">4</div>
+            <div draggable="true">5</div>
+            <div draggable="true">6</div>
+        </div>
+
+        <h3>Flex (Move)</h3>
+        <div u2-dropzone="*" class="strategy-move" style="display:flex; flex-wrap:wrap; gap:1rem;">
+            <div draggable="true">A</div>
+            <div draggable="true">B</div>
+            <div draggable="true">C</div>
+            <div draggable="true">D</div>
+            <div draggable="true">E</div>
+            <div draggable="true">F</div>
+            <div draggable="true">G</div>
+            <div draggable="true">H</div>
+            <div draggable="true">I</div>
+            <div draggable="true">J</div>
+            <div draggable="true">K</div>
+            <div draggable="true">L</div>
+            <div draggable="true">M</div>
+            <div draggable="true">N</div>
+            <div draggable="true">O</div>
+        </div>
+
+        <h3>Grid (Ghost)</h3>
+        <div u2-dropzone="*" class="strategy-ghost" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem;">
+            <div draggable="true">1</div>
+            <div draggable="true">2</div>
+            <div draggable="true">3</div>
+            <div draggable="true">4</div>
+            <div draggable="true">5</div>
+            <div draggable="true">6</div>
+            <div draggable="true">7</div>
+            <div draggable="true">8</div>
+            <div draggable="true">9</div>
+        </div>
+
+        <style>
+            #layouts {
+                [draggable] {
+                    border: 1px solid var(--color);
+                    background: var(--color-light);
+                    border-radius: 1rem;
+                    padding: 2rem;
+                    transition: background 0.2s;
+                }
+
+                [draggable].\:dragging {
+                    background: var(--color);
+                }
+
+                .drag-placeholder {
+                    background: repeating-linear-gradient(
+                        45deg,
+                        rgba(0,0,0,0.05),
+                        rgba(0,0,0,0.05) 10px,
+                        rgba(0,0,0,0.1) 10px,
+                        rgba(0,0,0,0.1) 20px
+                    );
+                }
+
+                .drag-clone {
+                    opacity: 0.5;
+                    border-style: dashed;
+                }
+            }
+        </style>
+    </section>
+
+    <section>
+        <h2>Table (Different Strategies per Row)</h2>
+        <select onchange="tbodyDemo.style = '--u2-dropzone-strategy: ' + this.value">
+            <option value="indicate">Indicate</option>
+            <option value="move">Move</option>
+            <option value="ghost">Ghost</option>
+        </select>
+        <table>
+            <tbody u2-dropzone="tr" id=tbodyDemo class="strategy-indicate" style="--u2-dropzone-strategy: indicate">
+                <tr draggable="true">
+                    <td>1
+                    <td>Indicate Row
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>2
+                    <td>Indicate Row
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>3
+                    <td>Move Row
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>4
+                    <td>Move Row
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>5
+                    <td>Ghost Row
+                    <td>Zelle
+                <tr draggable="true">
+                    <td>6
+                    <td>Ghost Row
+                    <td>Zelle
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Empty Zones Test</h2>
+        <p>Test dropping into empty zones with different strategies</p>
+        <div class="u2-flex" style="gap: 1rem;">
+            <div style="flex: 1;">
+                <h3>Indicate (Empty)</h3>
+                <div u2-dropzone="*" class="strategy-indicate"></div>
+            </div>
+            <div style="flex: 1;">
+                <h3>Move (Empty)</h3>
+                <div u2-dropzone="*" class="strategy-move"></div>
+            </div>
+            <div style="flex: 1;">
+                <h3>Ghost (Empty)</h3>
+                <div u2-dropzone="*" class="strategy-ghost"></div>
+            </div>
+        </div>
+        <div>
+            <h3>Source Items</h3>
+            <div u2-dropzone="*" class="strategy-indicate">
+                <p draggable="true">Drag me into empty zones</p>
+                <p draggable="true">Me too!</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Nested Zones with Different Strategies</h2>
+        <div u2-dropzone="*" class="strategy-ghost" style="padding: 2rem; background: rgba(255,255,0,0.1);">
+            <b>Outer Zone (Ghost Strategy)</b>
+            <div u2-dropzone="*" class="strategy-move" style="padding: 1rem; background: rgba(0,255,0,0.1); margin: 1rem 0;">
+                <b>Inner Zone (Move Strategy)</b>
+                <p draggable="true">Item 1</p>
+                <p draggable="true">Item 2</p>
+            </div>
+            <p draggable="true">Outer Item 1</p>
+            <p draggable="true">Outer Item 2</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Strategy Comparison</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Strategy
+                    <th>Behavior
+                    <th>Use Case
+            <tbody>
+                <tr>
+                    <td><code>indicate</code>
+                    <td>Blue line shows where item will drop
+                    <td>Clean, non-intrusive (default)
+                <tr>
+                    <td><code>move</code>
+                    <td>Element moves immediately, placeholder shows origin
+                    <td>Direct feedback, sortable lists
+                <tr>
+                    <td><code>ghost</code>
+                    <td>Clone moves, original stays until drop
+                    <td>Copy-like behavior, preview mode
+        </table>
+    </section>
+
+</body>
+</html>

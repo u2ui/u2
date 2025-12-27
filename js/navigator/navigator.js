@@ -238,7 +238,11 @@ class CacheManager {
         headers: { 'X-Requested-With': 'SmartRouter' },
       });
       
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) return null; // todo: 404 will try again and again
+        throw new Error(`HTTP ${response.status}`);
+      }
       
       const html = await response.text();
       this.addToCache(url, html);

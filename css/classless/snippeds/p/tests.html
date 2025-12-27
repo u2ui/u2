@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Level.css TEST</title>
+  <meta name="viewport" content="width=device-width">
+
+
+
+  <script src="../../../../u2/auto.js" type=module crossorigin></script>
+
+  <link rel="stylesheet" href="../../variables.css">
+  <link rel="stylesheet" href="../../../vars/vars.css">
+  <link rel="stylesheet" href="../../classless.css">
+  <link rel="stylesheet" href="../../more.css">
+  <link rel="stylesheet" href="../../simple.css">
+
+<body>
+
+<section>
+
+<div class=links>
+    <link rel="stylesheet" href="none">
+    <link rel="stylesheet" href="./initial.css">
+    <link rel="stylesheet" href="./indent.css">
+</div>
+
+<h1>P Snippeds Demo</h1>
+<fieldset id=selectEl>
+    <legend>Choose Stylesheet</legend>
+</fieldset>
+
+<script>
+let links = document.querySelectorAll('.links > link')
+links.forEach(link=>{
+    var label = document.createElement('label');
+    label.innerHTML += '<input type=radio name=x> ' + link.getAttribute('href') + '<br>';
+    label._link = link;
+    selectEl.append(label)
+});
+selectEl.addEventListener('change', e=>{
+    links.forEach(link=>link.rel='x');
+    console.log(e.target)
+    e.target.closest('label')._link.rel = 'stylesheet';
+})
+</script>
+
+<p><span class="test">L</span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit! Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit! Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit!</p>
+
+<h1>Heading 1</h1>
+<p>LLorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit! Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit! Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit!</p>
+<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit! Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit!</p>
+
+<h1>Heading 1</h1>
+<p>Yorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit!</p>
+<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur voluptas tempore qui hic ab dignissimos pariatur voluptatem dolorem rem et minus natus, libero animi! Sunt atque corporis illo architecto sit!</p>
+
+<u2-system></u2-system>
+
+</section>

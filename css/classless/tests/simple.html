@@ -4,24 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
 
-  <script src=../../../../u2/tests/test-init.js type=module></script>
-  <link rel="stylesheet" href="../../../../css/classless/full.css">
-  <link rel="stylesheet" href="../../../../css/classless/simple.css">
+  <script src=../../../u2/tests/test-init.js type=module></script>
+  <link rel="stylesheet" href="../../../css/classless/full.css">
+  <link rel="stylesheet" href="../../../css/vars/vars.css">
+  <link rel="stylesheet" href="../../../css/classless/aria.css">
+  <link rel="stylesheet" href="../../../css/classless/simple.css">
 
   <title>Classless Theme Testseite</title>
 
   <style>
   html {
-    --line-height-relative: .8rem;
+    --line-height-relative: .8em;
     --line-height-absolute: .5rem;
-    --line-height:calc(var(--line-height-relative) * 1.2 + var(--line-height-absolute));  
+    --line-height:calc(var(--line-height-relative) + var(--line-height-absolute));  
   }
   </style>
 
 <body>
 
 <header role="banner">
-    <h1>Classless Theme – Testseite</h1>
+    <h1>Classless Theme <br> Testseite</h1>
     <nav role="navigation" aria-label="Hauptnavigation">
     <ul>
         <li><a href="#formulare">Formulare</a></li>
@@ -45,11 +47,10 @@
 
 
 <section id="typography" aria-labelledby="formulare-title">
-    <h1 style="font-size:4rem">
-        Typography - Extra large Heading to test the line-height<br>
-        In CASES LIKE THIS
+    <h1>
+        Typography
     </h1>
-    <h2>This is a h2, often the highest level in the Content</h2>
+    <h2>This is a h2</h2>
     <p>
         A paragraph follows the heading to provide context and supporting information. 
         This paragraph is intentionally longer to observe how line-height, spacing, and text wrapping behave 
@@ -63,12 +64,17 @@
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </p>
     <h3>This is an H3, used for subsection titles</h3>
-    <p>
-        A paragraph under the H3 provides more detailed information about a subsection. 
-        It allows us to see the spacing between H3 and its content, as well as relative to the preceding H2.
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </p>
-
-    <hr>
+    <h4>This is a H4 heading to demonstrate the spacing</h4>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <h5>This is an H5 heading</h5>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <h6>This is an H6 heading</h6>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>
+        As you can see below, consecutive headings have smaller gaps.
+    </p>
 
     <h1>Heading Level H1</h1>
     <h2>Heading Level H2</h2>
@@ -82,7 +88,7 @@
 
 
     <aside role="complementary" aria-label="Zusatzinformationen">
-        <h2>Hinweise & Tipps</h2>
+        <h4>Hinweise & Tipps</h4>
         <p>Dies ist ein aside-Bereich für zusätzliche Infos oder Hinweise.</p>
     </aside>
 
@@ -120,10 +126,7 @@
     </section>
 
     <section id="inhalt" aria-labelledby="inhalt-title">
-    <h2 id="inhalt-title">Inhalt & Typografie</h2>
-    <p>Dies ist ein Absatz mit normalem Lauftext. Er dient zum Testen typografischer Standards.</p>
-    <p>Ein weiterer Absatz, um Abstände und Lesbarkeit zu prüfen.</p>
-
+    <h2 id="inhalt-title">Inhalt</h2>
     <h3>Liste</h3>
     <ul>
         <li>Listenpunkt eins</li>
@@ -133,52 +136,46 @@
 
     <h3>Codebeispiel</h3>
     <pre><code>function greet(name) {
-return "Hallo " + name;
+   return "Hallo " + name;
 }</code></pre>
     </section>
 
     <section id="tabellen" aria-labelledby="tabellen-title">
-    <h2 id="tabellen-title">Tabellen</h2>
+        <h2 id="tabellen-title">Tabellen</h2>
 
-    <table role="table" aria-label="Beispieltabelle">
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Rolle</th>
-            <th scope="col">Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Alice</td>
-            <td>Designer</td>
-            <td>Aktiv</td>
-        </tr>
-        <tr>
-            <td>Bob</td>
-            <td>Developer</td>
-            <td>Inaktiv</td>
-        </tr>
-        <tr>
-            <td>Charlie</td>
-            <td>PM</td>
-            <td>Aktiv</td>
-        </tr>
-        </tbody>
-    </table>
+        <table role="table" aria-label="Beispieltabelle">
+            <thead>
+                <tr>
+                    <th scope="col">Name
+                    <th scope="col">Rolle
+                    <th scope="col">Status
+            <tbody>
+                <tr>
+                    <td>Alice
+                    <td>Designer
+                    <td>Aktiv
+                <tr>
+                    <td>Bob
+                    <td>Developer
+                    <td>Inaktiv
+                <tr>
+                    <td>Charlie
+                    <td>PM
+                    <td>Aktiv
+        </table>
     </section>
 
     <section id="artikel" aria-labelledby="artikel-title" role="group">
         <h2 id="artikel-title">Artikel (Cards) in section[role=group] (grid-layout)</h2>
 
-        <article role="article" aria-labelledby="art1-title">
+        <article aria-labelledby="art1-title">
             <h3 id="art1-title">Erster Artikel</h3>
             <p>Dies ist ein Beispielartikel. Card-Layout wird automatisch durch das classless CSS dargestellt.</p>
         </article>
 
-        <article role="article" aria-labelledby="art2-title">
+        <article role="note" aria-labelledby="art2-title">
             <h3 id="art2-title">Zweiter Artikel</h3>
-            <p>Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
+            <p>Hervorgehobener Artikel mit <code>role=note</code>. Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
         </article>
 
         <article>
@@ -193,11 +190,6 @@ return "Hallo " + name;
                 <small>Autor, Datum, Link, etc.</small>
             </footer>
         </article>
-
-        <dialog open>
-            <h3>Dialog open</h3>
-            <p>Noch ein Beispielartikel zum Testen der Abstände und Typografie.</p>
-        </dialog>
 
     </section>
 
@@ -260,6 +252,5 @@ return "Hallo " + name;
     <p>&copy; Testseite – Classless Theme</p>
 </footer>
 
-  
-<script src="../../../../u2/tools/variable-styler.js" type=module></script>
-<element-variable-styler></element-variable-styler>
+<script src="../../../el/system/system.js" type=module></script>
+<u2-system></u2-system>

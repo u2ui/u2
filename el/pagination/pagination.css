@@ -1,0 +1,27 @@
+u2-pagination nav {
+    & ul {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        flex-wrap: wrap;
+    }
+
+    & a {
+        display: block;
+        padding: calc(var(--gap) / 2) var(--gap);
+        text-decoration: none;
+        color: inherit;
+        text-align: center;
+    }
+
+    & a:hover {
+        background: var(--color-light);
+    }
+
+    & a[aria-current="page"] {
+        font-weight: bold;
+        background: var(--color);
+        color: white;
+    }
+}

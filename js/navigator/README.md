@@ -1,5 +1,11 @@
 ## navigator.js
 
+## Usage
+
+```html
+<button id="btn1" onclick="setTimeout(u2_loading.mark(this),2000)">load</button>
+```
+
 ## Install
 
 ```js
@@ -10,6 +16,7 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/navigator/
 
 [about.html](http://gcdn.li/u2ui/u2@main/js/navigator/tests/about.html)  
 [contact.html](http://gcdn.li/u2ui/u2@main/js/navigator/tests/contact.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/navigator/tests/minimal.html)  
 [index.html](http://gcdn.li/u2ui/u2@main/js/navigator/tests/index.html)  
 
 ## About

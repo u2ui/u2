@@ -1,6 +1,7 @@
 /* functional styles */
 u2-menubutton {
     position:relative;
+    display:inline-block;
 }
 u2-menubutton menu {
     position:absolute;

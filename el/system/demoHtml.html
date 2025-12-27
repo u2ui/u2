@@ -1,0 +1,626 @@
+<style>
+.slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    
+    & > section {
+        position:relative;
+        padding:1rem;
+        min-width: 100%;
+        scroll-snap-align: start;
+    }
+}
+.colors2 {
+    display:flex;
+    gap: var(--gap);
+    flex-wrap:wrap;
+}
+[data-color] {
+    border-radius: var(--radius);
+    overflow:hidden;
+    box-shadow: var(--shadow);
+    flex: 1 1 5rem;
+    &::before {
+        content: '';
+        display:block;
+        height:7rem;
+        background-color: inherit;
+    }
+    &::after {
+        content: attr(data-color);
+        display:block;
+        background: var(--color-bg);
+        text-align:center;
+        font-size:11px;
+    }
+}
+</style>
+
+<div class=slider>
+
+<section id="colors">
+
+    <h1>Colors</h1>
+
+    <h3>Basis-Abstufungen</h3>
+    <div class="colors2">
+        <div data-color="--color-lightest" style="background-color: var(--color-lightest)"></div>
+        <div data-color="--color-lighter" style="background-color: var(--color-lighter)"></div>
+        <div data-color="--color-light" style="background-color: var(--color-light)"></div>
+        <div data-color="--color" style="background-color: var(--color)"></div>
+        <div data-color="--color-dark" style="background-color: var(--color-dark)"></div>
+        <div data-color="--color-darker" style="background-color: var(--color-darker)"></div>
+        <div data-color="--color-darkest" style="background-color: var(--color-darkest)"></div>
+    </div>
+
+    <h3>Accent-Abstufungen</h3>
+    <div class="colors2">
+        <div data-color="--accent-lightest" style="background-color: var(--accent-lightest)"></div>
+        <div data-color="--accent-lighter" style="background-color: var(--accent-lighter)"></div>
+        <div data-color="--accent-light" style="background-color: var(--accent-light)"></div>
+        <div data-color="--accent" style="background-color: var(--accent)"></div>
+        <div data-color="--accent-dark" style="background-color: var(--accent-dark)"></div>
+        <div data-color="--accent-darker" style="background-color: var(--accent-darker)"></div>
+        <div data-color="--accent-darkest" style="background-color: var(--accent-darkest)"></div>
+    </div>
+    
+    <h3>Gray-Abstufungen</h3>
+    <div class="colors2">
+        <div data-color="--gray-lighter" style="background-color: var(--gray-lighter)"></div>
+        <div data-color="--gray-light" style="background-color: var(--gray-light)"></div>
+        <div data-color="--gray" style="background-color: var(--gray)"></div>
+        <div data-color="--gray-dark" style="background-color: var(--gray-dark)"></div>
+        <div data-color="--gray-darker" style="background-color: var(--gray-darker)"></div>
+    </div>
+
+    <h3>Semantische Variablen</h3>
+    <div class="colors2">
+        <div data-color="--color-bg" style="background-color: var(--color-bg)"></div>
+        <div data-color="--color-text" style="background-color: var(--color-text)"></div>
+        <div data-color="--color-line" style="background-color: var(--color-line)"></div>
+        <div data-color="--color-area" style="background-color: var(--color-area)"></div>
+    </div>
+
+    <h3>Farbpalette</h3>
+    <div class="colors2" style="flex-wrap: nowrap;">
+        <div data-color="--red" style="background-color: var(--red)"></div>
+        <div data-color="--orange" style="background-color: var(--orange)"></div>
+        <div data-color="--yellow" style="background-color: var(--yellow)"></div>
+        <div data-color="--lime" style="background-color: var(--lime)"></div>
+        <div data-color="--green" style="background-color: var(--green)"></div>
+        <div data-color="--cyan" style="background-color: var(--cyan)"></div>
+        <div data-color="--blue" style="background-color: var(--blue)"></div>
+        <div data-color="--purple" style="background-color: var(--purple)"></div>
+        <div data-color="--pink" style="background-color: var(--pink)"></div>
+    </div>
+
+</section>
+
+<section id="typography">
+    <h1>Typography</h1>
+    <p>In this section, you can observe how longer blocks of body text behave within your layout. A successful paragraph should have a comfortable line length ideally between 45 and 75 characters to prevent the reader from losing their place when transitioning from the end of one line to the beginning of the next. Furthermore, the vertical spacing between these lines, often referred to as leading.</p>
+    <p>This second paragraph allows you to test the vertical margin (whitespace) between two distinct text blocks. In professional typesetting, this "white space" is just as important as the characters themselves. It provides the necessary breathing room that prevents the page from feeling cluttered or overwhelming. By adjusting the margins, you can create a clear distinction between ideas.</p>
+
+    <h2>Visual Hierarchies and Spatial Consistency</h2>
+
+    <p>Typography is far more than just selecting a legible font; it is the silent ambassador of your brand and the primary vehicle for your message. A well-designed typographic system balances aesthetics with functionality, ensuring that the reader can absorb information without unnecessary eye strain.</p>
+
+    <h3>Structural Subdivisions and Reader Guidance</h3>
+    <p>Subheadings serve as vital anchors in a sea of text, allowing the reader to scan the document and quickly identify the sections most relevant to them. They act as a roadmap for the eye, breaking down complex subjects into digestible pieces.</p>
+
+    <h4>Typography Checklist for Designers</h4>
+    <p>Before finalizing your styles, it is helpful to review how different elements interact with one another. A robust typography system should address the following technical and aesthetic considerations to ensure a high-quality user experience across all platforms:</p>
+
+    <h5>Refining the Minor Details (H5)</h5>
+    <p>While often overlooked, the fifth and sixth levels of heading hierarchy are crucial for technical documentation, academic papers, or complex blog posts.</p>
+
+    <h6>Captions and Metadata Standards (H6)</h6>
+    <p>The smallest heading level is typically reserved for supplementary information such as image captions, author bylines, or metadata. Although the font size is reduced, the importance of clarity remains.</p>
+
+    <h1>Heading Level H1</h1>
+    <h2>Heading Level H2</h2>
+    <h3>Heading Level H3</h3>
+    <h4>Heading Level H4</h4>
+    <h5>Heading Level H5</h5>
+    <h6>Heading Level H6</h6>
+
+</section>
+
+<section id="inline">
+    <h1>Inline Elements</h1>
+    <dl>
+        <dt>link (a)
+        <dd><a href="#">Hyperlink</a>
+
+        <dt>span
+        <dd><span>Generic inline container</span>
+
+        <dt>emphasis (em)
+        <dd><em>Stress emphasis (meist kursiv)</em>
+
+        <dt>strong
+        <dd><strong>Strong importance (meist fett)</strong>
+
+        <dt>italic (i)
+        <dd><i>Idiomatic text (Fachbegriffe, Gedanken)</i>
+
+        <dt>bold (b)
+        <dd><b>Bring attention (ohne semantische Wichtung)</b>
+
+        <dt>small
+        <dd><small>Side comments (Kleingedrucktes)</small>
+
+        <dt>citation (cite)
+        <dd><cite>Title of a Work</cite>
+
+        <dt>definition (dfn)
+        <dd><dfn>Defining instance</dfn>
+
+        <dt>abbreviation (abbr)
+        <dd><abbr title="Hypertext Markup Language">HTML</abbr>
+
+        <dt>inserted (ins)
+        <dd><ins>Newly added text</ins>
+
+        <dt>deleted (del)
+        <dd><del>Deleted text</del>
+
+        <dt>strikethrough (s)
+        <dd><s>Inaccurate or irrelevant text</s>
+
+        <dt>code
+        <dd><code>const x = 10;</code>
+
+        <dt>keyboard (kbd)
+        <dd><kbd>Esc</kbd>
+
+        <dt>sample (samp)
+        <dd><samp>System error 404</samp>
+
+        <dt>variable (var)
+        <dd><var>E</var> = <var>m</var><var>c</var><sup>2</sup>
+
+        <dt>time
+        <dd><time datetime="2025-12-24">24. Dezember</time>
+
+        <dt>data
+        <dd><data value="123">Product 123</data>
+
+        <dt>highlight (mark)
+        <dd><mark>Marked for reference</mark>
+
+        <dt>inline quote (q)
+        <dd><q>Quote inside text</q>
+
+        <dt>subscript (sub)
+        <dd>H<sub>2</sub>O
+
+        <dt>superscript (sup)
+        <dd>E=mc<sup>2</sup>
+
+        <dt>underline (u)
+        <dd><u>Unarticulated annotation (Vermeiden bei Verwechslung mit Links)</u>
+
+        <dt>word break (wbr)
+        <dd>Super<wbr>califragilistic<wbr>expialidocious
+
+        <dt>bi-directional isolation (bdi)
+        <dd><bdi>إيان</bdi> (Isoliert Texte mit anderer Leserichtung)
+    </dl>    
+
+</section>
+
+<section id="form">
+    
+    <h1>Form</h1>
+    <form>
+        <fieldset class="u2-flex -Col" style="background:var(--color-lighter)">
+            <legend>Legende für das Formular</legend>
+            <label>
+                Test Label
+                <input type="text" placeholder="Test Input">
+                <button>Button</button>
+            </label>
+            <label>
+                Another Label
+                <input type="email" placeholder="Email Input">
+            </label>
+            <label>
+                Number Label
+                <input type="number" placeholder="Number Input">
+            </label>
+            <label>
+                Date Label
+                <input type="date" value="2024-01-01">
+            </label>
+            <label>
+                Select Label
+                <select>
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                </select>
+            </label>
+            <label>
+                Textarea Label
+                <textarea placeholder="Textarea Input"></textarea>
+            <label>
+                Checkbox Label
+                <input type="checkbox">
+            </label>
+            <label>
+                Radio Label
+                <input type="radio" name="test-radio">
+            </label>
+            <label>
+                Radio Label
+                <input type="radio" name="test-radio">
+            </label>
+        </fieldset>
+        <button>Submit</button>
+        <button disabled>Disabled</button>
+        <a href="#" class=btn>Link as Button</a>
+        <button class="u2-unstyle">Unstyled</button>
+    </form>
+</section>
+
+<section id="blocks">
+    <h1>Blocks Elements</h1>
+
+    <pre>Preformatted Text
+Line 2
+Line 3</pre>
+
+    <blockquote>
+        This is a blockquote. It is used to indicate the quotation of a large section of text from another source. Blockquotes are typically indented and may have different styling to set them apart from the main content.
+    </blockquote>
+
+    <figure>
+        <img src="https://via.placeholder.com/150" alt="Placeholder Image">
+        <figcaption>This is a caption for the above image.</figcaption>
+    </figure>
+
+    <address>
+        John Doe<br>
+        123 Main St.<br>
+        Anytown, USA<br>
+        <a href="mailto:xyz@xyz.xyz">xyz@xyz.xyz</a>
+    </address>
+
+    <details>
+        <summary>Klick mich</summary>
+        <p>Versteckter Inhalt</p>
+    </details>
+
+    <dialog open>
+        <h3>Dialog Titel</h3>
+        <p>Dialog Inhalt</p>
+        <button>Schließen</button>
+    </dialog>
+
+    <table>
+        <caption>Tabellen-Überschrift</caption>
+        <thead>
+            <tr><th>Header 1<th>Header 2
+        <tbody>
+            <tr><td>Data 1<td>Data 2
+    </table>    
+
+    <ul>
+        <li>Unordered List Item 1</li>
+        <li>Unordered List Item 2
+            <ul>
+                <li>Nested Unordered List Item 1</li>
+                <li>Nested Unordered List Item 2</li>
+            </ul>
+        </li>
+        <li>Unordered List Item 3</li>
+    </ul>
+
+    <ol>
+        <li>Ordered List Item 1</li>
+        <li>Ordered List Item 2
+            <ol>
+                <li>Nested Ordered List Item 1</li>
+                <li>Nested Ordered List Item 2</li>
+            </ol>
+        </li>
+        <li>Ordered List Item 3</li>
+    </ol>
+
+    <dl>
+        <dt>Definition Term 1
+        <dd>Definition Description 1
+
+        <dt>Term 2
+        <dd>Definition Description 2
+
+        <dt>Term 3
+        <dd>Definition Description 3
+    </dl>
+
+    <article>
+        <h2>Article Title</h2>
+        <p>This is an article element. Articles are used to encapsulate a self-contained piece of content that could stand alone, such as a blog post, news story, or forum post.</p>
+    </article>
+
+
+
+</section>
+
+<section id="shadow">
+
+    <h1>Shadow</h1>
+
+    <div style="display:flex; gap: 3rem;">
+        <article style="box-shadow: var(--shadow-s); padding: var(--gap); background: var(--color-area); border-radius: var(--radius); border:0">
+            <h3>Small Shadow "--shadow-s"</h3>
+            <p>This is some content inside the article with the defined styles.</p>
+        </article>   
+        <article style="box-shadow: var(--shadow);   padding: var(--gap); background: var(--color-area); border-radius: var(--radius); border:0">
+            <h3>Normal "--shadow"</h3>
+            <p>This is some content inside the article with the defined styles.</p>
+        </article>   
+        <article style="box-shadow: var(--shadow-l); padding: var(--gap); background: var(--color-area); border-radius: var(--radius); border:0">
+            <h3>Large "--shadow-l"</h3>
+            <p>This is some content inside the article with the defined styles.</p>
+        </article>
+    </div>
+
+</section>
+
+
+<section id="u2Elements">
+    <h1>U2-Elements</h1>
+
+    <u2-accordion>
+        <h4>Accordion Panel 1</h4>
+        <p>Content for the first panel. It should be hidden until the heading is clicked.</p>
+        <h4>Accordion Panel 2</h4>
+        <p>Content for the second panel. Using headings as triggers.</p>
+    </u2-accordion>
+
+    <hr>
+
+    <u2-alert open variant="info">
+        This is an informative alert message using the <code>u2-alert</code> element.
+    </u2-alert>
+
+    <hr>
+
+    <u2-table sortable>
+        <table>
+            <thead><tr><th>Name<th>Age
+            <tbody>
+                <tr><td>Alice<td>25
+                <tr><td>Bob<td>30
+            </tbody>
+        </table>
+    </u2-table>
+
+    <hr>
+
+    <u2-buttongroup>
+        <button>Save</button>
+        <button>Edit</button>
+        <button>Delete</button>
+        <button>Export as PDF</button>
+        <button>Share on Social Media</button>
+    </u2-buttongroup>
+
+    <hr>
+
+    <u2-carousel id="myCarousel">
+        <img src="https://picsum.photos/id/10/400/200" alt="Slide 1">
+        <img src="https://picsum.photos/id/20/400/200" alt="Slide 2">
+        <img src="https://picsum.photos/id/30/400/200" alt="Slide 3">
+    </u2-carousel>
+    <u2-carousel-nav for="myCarousel"></u2-carousel-nav>
+
+    <hr>
+
+    <u2-breadcrumb>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/components">Components</a>
+            <span>Breadcrumb</span>
+        </nav>
+    </u2-breadcrumb>
+
+    <hr>
+
+    <p>File size: <u2-bytes>1234567</u2-bytes></p>
+
+    <hr>
+
+    <u2-calendar>
+        <u2-calendaritem date="2025-12-24">Christmas Eve</u2-calendaritem>
+        <u2-calendaritem date="2025-12-31">New Year's Eve</u2-calendaritem>
+    </u2-calendar>
+
+    <hr>
+
+    <u2-chart type="pie">
+        <table>
+            <thead><tr><th>Category<th>Value
+            <tbody>
+                <tr><td>Apples<td>45
+                <tr><td>Bananas<td>23
+        </table>
+    </u2-chart>
+
+    <hr>
+
+    <u2-code editable trim language="javascript">
+        const greet = () => console.log("Hello U2!");
+    </u2-code>
+
+    <hr>
+
+    <u2-cookiebanner>
+        <p>We use cookies to improve your experience.</p>
+        <button>Accept All</button>
+    </u2-cookiebanner>
+
+    <hr>
+
+    <div id="sourceText">This text will be mirrored.</div>
+    <u2-copy for="sourceText" sync></u2-copy>
+
+    <hr>
+
+    <p>Current Score: <u2-counter>1500</u2-counter></p>
+
+    <hr>
+
+    <u2-drawer id="sideDrawer">
+        <nav>
+            <ul><li>Menu Item</li></ul>
+        </nav>
+    </u2-drawer>
+    <button onclick="document.getElementById('sideDrawer').open = true">Open Drawer</button>
+
+    <hr>
+
+    <u2-fields>
+        Username: <input type="text" name="user">
+        Password: <input type="password" name="pass">
+    </u2-fields>
+
+    <hr>
+
+    <u2-ico icon="home"></u2-ico>
+    <u2-ico icon="settings" size="large"></u2-ico>
+
+    <hr>
+
+    <u2-input type="date" label="Pick a date"></u2-input>
+
+    <hr>
+
+    <u2-maintitlebar>My Awesome PWA</u2-maintitlebar>
+
+    <hr>
+
+    <u2-masonry>
+        <div style="height: 100px; background: #eee;">Item 1</div>
+        <div style="height: 150px; background: #ddd;">Item 2</div>
+        <div style="height: 80px; background: #ccc;">Item 3</div>
+    </u2-masonry>
+
+    <hr>
+
+    <u2-menubutton label="Options">
+        <button>Profile</button>
+        <menu>
+            <li><button>Settings</button>
+            <li><button>Help</button>
+            <li><button>Logout</button>
+        </menu>
+    </u2-menubutton>
+
+    <hr>
+
+    <u2-number>1234.56</u2-number>
+
+    <hr>
+
+    <u2-out name="total">42</u2-out>
+
+    <hr>
+
+    <u2-pagination total="100" current="1"></u2-pagination>
+
+    <hr>
+
+    <div style="height: 300px; position: relative; overflow: hidden;">
+        <u2-parallax-bg>
+            <img src="https://picsum.photos/id/50/800/600" alt="Parallax">
+        </u2-parallax-bg>
+        <h2 style="position: relative; color: white;">Content on Top</h2>
+    </div>
+
+    <hr>
+
+    <u2-qrcode data="https://example.com"></u2-qrcode>
+
+    <hr>
+
+    <u2-rating value="4" max="5"></u2-rating>
+
+    <hr>
+
+    <u2-responsive strategies="hideOptional">
+        <div>Main Content</div>
+        <div class="optional">Optional Sidebar</div>
+    </u2-responsive>
+
+    <hr>
+
+    <u2-rte>
+        <p>Edit this <b>rich</b> text...</p>
+    </u2-rte>
+
+    <hr>
+
+    <u2-skeleton style="width: 200px; height: 20px;"></u2-skeleton>
+
+    <hr>
+
+    <u2-splitpanel direction="horizontal" style="height: 200px;">
+        <section>Left Side</section>
+        <section>Right Side</section>
+    </u2-splitpanel>
+
+    <hr>
+
+    <u2-system debug></u2-system>
+
+    <hr>
+
+
+    <u2-tabs>
+        <h3>Tab 1</h3>
+        <div>Content for Tab 1</div>
+        <h3>Tab 2</h3>
+        <div>Content for Tab 2</div>
+    </u2-tabs>
+
+    <hr>
+
+    <div style="width: 300px; height: 100px; border: 1px solid #000;">
+        <u2-textfit>BIG TEXT</u2-textfit>
+    </div>
+
+    <hr>
+
+    <u2-time datetime="2025-12-24T20:00:00Z" relative live></u2-time>
+
+    <hr>
+
+    <u2-toc for="u2Elements"></u2-toc>
+
+    <hr>
+
+    <button id="btnTooltip">Hover me</button>
+    <u2-tooltip for="btnTooltip">This is a helpful tooltip</u2-tooltip>
+
+    <hr>
+
+    <u2-tree1>
+        Project
+        <u2-tree1>Src</u2-tree1>
+        <u2-tree1>Tests</u2-tree1>
+    </u2-tree1>
+
+    <hr>
+
+    <u2-typewriter>Hello World, welcome to U2.</u2-typewriter>
+
+    <hr>
+
+    <u2-video src="https://www.w3schools.com/html/mov_bbb.mp4" controls></u2-video>
+
+</section>
+
+</div>

@@ -33,7 +33,7 @@
         border-top:.1em solid var(--color);
         text-align:center;
     }
-    .u2-card1 {
+    .u2-card {
         text-align:center;
         background-color:var(--color-bg);
         background-color:var(--color-light);
@@ -45,26 +45,6 @@
         max-height:30rem;
     }
     </style>
-
-    <div class=u2-card1 u2-parallax style="position:absolute; top:200px; right:20px; width:13em; --u2-parallax-speed:.1; font-size:12px; padding:10px;">
-        <h2>Costumize</h2>
-        <label>
-            Hue<br>
-            <input type=range min=0 max=360 oninput="document.documentElement.style.setProperty('--hsl-h', this.value)">
-        </label>
-        <label>
-            Saturation<br>
-            <input type=range min=0 max=100 oninput="document.documentElement.style.setProperty('--hsl-s', this.value+'%')">
-        </label>
-        <label>
-            Lightness<br>
-            <input type=range min=0 max=60 oninput="document.documentElement.style.setProperty('--hsl-l', this.value+'%')">
-        </label>
-        <label>
-            Font Size<br>
-            <input type=range min=7 max=20 step=".25" oninput="document.documentElement.style.setProperty('font-size', 'calc('+this.value+'px + .7vmin)')">
-        </label>
-    </div>
 
     <header role=banner style="text-align:center; box-shadow:var(--shadow);" class=u2-parallax-bg-stage>
         <u2-parallax-bg style="background-color:black">
@@ -88,19 +68,19 @@
     <main class=u2-width>
 
         <section class=u2-grid>
-            <div class=u2-card1 u2-href="#feaures">
+            <div class=u2-card u2-href="#feaures">
                 <u2-ico>♥</u2-ico>
                 <h3>Features</h3>
                 <p>Progressive, declarative, responsive, easy...</p>
                 <a href="#feaures">more</a>
             </div>
-            <div class=u2-card1 u2-href="#reposSec">
+            <div class=u2-card u2-href="#reposSec">
                 <u2-ico>🍽</u2-ico>
                 <h3>Repos</h3>
                 <p>Browse the overview of all modules...</p>
                 <a href="#repos">more</a>
             </div>
-            <div class=u2-card1 u2-href="#customize">
+            <div class=u2-card u2-href="#customize">
                 <u2-ico>📱</u2-ico>
                 <script>
                     const esc = html => html.replace(/[<>"']/g, c => `&${{'<':'lt', '>':'gt', '"':'quot', "'":'#039'}[c]};`);
@@ -383,5 +363,5 @@
             </div>
         </div>
     </footer>
-
+    <u2-system></u2-system>
     <u2-cookiebanner></u2-cookiebanner>

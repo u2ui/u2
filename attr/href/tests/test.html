@@ -57,6 +57,15 @@
     security, should not execute u2-href=" &amp;#14; jAvascript:alert('xss')"
 </div>
 
+<div u2-href class=pseudoLink>
+    u2-href without value should search for the first <code>&lt;a:link&gt;</code> element inside, and use its href
+    <a href="https://example.com">test link</a>
+</div>
+
+<div u2-href class=pseudoLink>
+    u2-href without and no child a element - should not navigate
+</div>
+
 <style>
 li {
     padding:1rem;

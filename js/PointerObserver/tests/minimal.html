@@ -9,6 +9,10 @@
     <link rel=stylesheet href="../../../css/classless/aria.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
+    <script type=module>
+        import * as mod from '../PointerObserver.js';
+        window.u2_PointerObserver = mod;
+    </script>
 
 
 <body>
@@ -22,8 +26,7 @@
 </section>
 
 <script type=module class="main">
-import {PointerObserver} from "../PointerObserver.js";
-new PointerObserver(el).onmove = function(e){
+new u2_PointerObserver(el).onmove = function(e){
     console.log(this.pos);
 }
 </script>

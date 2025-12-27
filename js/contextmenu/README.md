@@ -14,7 +14,7 @@ context menus, simple and highly customisable
 
 ```js
 import * as contextmenue from '../contextmenu.js';
-window.contextmenue = contextmenue;
+window.u2_contextmenue = contextmenue;
 ```
 
 ```html

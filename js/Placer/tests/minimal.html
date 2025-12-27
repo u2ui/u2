@@ -6,6 +6,8 @@
     <script src="../../../u2/tests/test-init.js" type=module async></script>
 
     <script type=module>
+        import * as mod from '../Placer.js';
+        window.u2_Placer = mod;
     </script>
 
 <body>
@@ -19,9 +21,7 @@
 
 <script type=module class="main">
 
-import {Placer} from "../Placer.js";
-
-let placer = new Placer(moverEl, {
+let placer = new u2_Placer(moverEl, {
     x:'after',
     y:'after',
     margin: 0,

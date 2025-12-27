@@ -115,7 +115,7 @@ class Table extends HTMLElement {
         }
 
         const firstFootTr = this.querySelector(':scope > table > tfoot > tr');
-        if (firstHeadTr) {
+        if (firstFootTr) {
             for (const td of firstFootTr.children) {
                 if (td.hasAttribute('data-sum')) {
                     const index = this.columns.indexOf(td);

@@ -3,10 +3,6 @@ Easily Make Elements Editable with Intuitive Controls
 
 ## Usage
 
-```js
-import  "../rte.js";
-```
-
 ```html
 <div contenteditable id="myEditor" style="--u2-rte:true">
     Start <strong>typing</strong> here...

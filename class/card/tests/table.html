@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../../../u2/tests/test-init.js" type=module async></script>
+        <script src="../../../u2/auto.js" type=module async></script>
+        
+        <title>u2-card Test</title>
+
+        <link rel=stylesheet href="../../../css/classless/full.css">
+        <link rel=stylesheet href="../../../css/classless/simple.css">
+
+        <link rel=stylesheet href="../card.css">
+
+<body>
+
+
+<section>
+
+    <div class=u2-flex style="padding:0; --u2-Gap:2rem">
+        <table class="u2-card"  u2-skin="invert">
+            <tr><td>Normal Cell 1</td><td>Cell 2</td></tr>
+            <tr><td>Cell 3</td><td>Cell 4</td></tr>
+            <tr><td>Cell 5</td><td>Cell 6</td></tr>
+            <tr><td>Cell 7</td><td>Cell 8</td></tr>
+        </table>
+        <div class="u2-card">
+            <div contenteditable>Normal card, contenteditable</div>
+            <div>Foot</div>
+        </div>
+    </div>
+
+    
+    <u2-code trim editable>
+        <style>
+        table.u2-card {
+            width:auto;
+            display:table;
+            --p: var(--gap);
+            & > * tr > :first-child { padding-left: var(--p); }
+            & > * tr > :last-child { padding-right: var(--p); }
+            & > :first-child > tr:first-child > * { padding-top: var(--p); }
+            & > :last-child > tr:last-child > * { padding-bottom: var(--p); }
+            & > :last-child > tr:last-child { border-bottom:0; }
+        }
+        </style>
+    </u2-code>
+
+</section>

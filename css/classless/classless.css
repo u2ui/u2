@@ -6,42 +6,49 @@
 html {
     background-color: var(--color-bg);
     color: var(--color-text);
-    accent-color: var(--color); /* ch 93, ff 92, sa 15.4 */
+    accent-color: var(--color);
+    font-family: var(--font-1, system-ui, sans-serif);
+    font-variation-settings: var(--font-1-variation);
 }
 a {
     color: var(--color);
     /* transition: color .2s; ff flickers on visited-color-change https://bugzilla.mozilla.org/show_bug.cgi?id=868975 */
-    transition: color .2s;
 }
-/* a:visited {
-    xcolor: var(--color-dark);
-    color: hsl(calc(var(--hsl-h) + 64), var(--hsl-s), var(--hsl-l));
-} */
+a:visited {
+    color: var(--color-dark);
+}
 a:hover, a:focus {
     color: var(--color-text);
 }
 hr {
     color: var(--color-line);
-    margin-inline:0;
-    margin-block:2rem;
-    border-width:var(--line-width);
+    xmargin-inline:0;
+    margin-block: calc(var(--gap) * 2);
+    border-width: var(--line-width);
 }
 
+h6,.h6 { font-size: calc(1rem * pow(1.24, -1)); }
+h5,.h5 { font-size: calc(1rem * pow(1.24, 0)); }
+h4,.h4 { font-size: calc(1rem * pow(1.24, 1)); }
+h3,.h3 { font-size: calc(1rem * pow(1.24, 2)); }
+h2,.h2 { font-size: calc(1rem * pow(1.24, 3)); }
+h1,.h1 { font-size: calc(1rem * pow(1.24, 4)); }
+
 /* margin-trim on the container may be a good alternative, only safari for now */
-:is(h1,h2,h3,h4,h5,h6,p,ul,ol):first-child { margin-top:0; }
-:is(h1,h2,h3,h4,h5,h6,p,ul,ol):last-child { margin-bottom:0; }
+:is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6,ul,ol,p):first-child { margin-top:0; }
+:is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6,ul,ol,p):last-child { margin-bottom:0; }
 
 /* little margin betweet headings */
-:is(h1, h2, h3, h4, h5, h6) + :is(h1, h2, h3, h4, h5, h6) { margin-top: 0; }
-:is(h1, h2, h3, h4, h5, h6):has(+ :is(h1, h2, h3, h4, h5, h6)) { margin-bottom: .4em; }
+:is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6) + :is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6) { margin-top: 0; }
+:is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6):has(+ :is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6)) { margin-bottom: .3em; }
 
 
 table {
     inline-size: 100%;/* -moz-available; not working in firefox https://jsfiddle.net/1hkp6dfg/21/ */
     word-break: normal;
 }
-td, th {
-    padding: .5em;
+td,th {
+    padding: calc(var(--gap) / 2);
 }
 
 dialog {
@@ -50,26 +57,16 @@ dialog {
 }
 
 mark {
-    background-color: hsl(var(--hsl-h), 100%, 70%, 0.5);
+    background-color: oklch(from var(--color-light) .9 .3 h / 0.8);
 }
 
-/* focus/active style */
-/* :focus {
-    outline: .4rem solid hsl(var(--hsl), .2);
-    transition: .15s;
-}
-:focus:not(:focus-visible) { outline-width: 0; }
-:active:active {
-    outline-width: .6rem;
-}
-*/
 
 :focus-visible, u2-input:focus-within { /* how to prevent custom-elements to recive the outline they are focu and active if an inner element is focus and active */
-    outline: .4rem solid hsl(var(--hsl), .2);
+    outline: .4rem solid hsl(from var(--accent) h s l / 0.2);
     transition: .15s;
 }
 :where(input,button,textarea,select,a,u2-input):active {
-    outline: .6rem solid hsl(var(--hsl), .2);
+    outline: .55rem solid hsl(from var(--accent) h s l / 0.2);
     transition: .15s;
 }
 
@@ -78,54 +75,36 @@ mark {
 fieldset {
     border: var(--line-width) solid currentColor;
     border-radius: var(--radius);
-    padding: 1em;
+    padding: var(--gap);
     margin-inline: 0;
-    margin-block: 1em;
+    margin-block: var(--gap);
     min-inline-size: 0; /* behave like normal block-elements */
 }
 
-/* all inputs, buttons */
-/* is:(input, textarea, select, button, .btn, ::file-selector-button, ::-webkit-file-upload-button) { forgiving :is-selector usable after safari 13.7 */
 input, textarea, select, button, .btn, u2-input {
-    padding-inline: .4em;
-    padding-block: .3em;
     font-family:inherit;
     max-inline-size: 100%;
-    /* todo: new ok? */
-    /* xborder: 1px solid; */
-    border-radius: var(--radius); /* remove? */
-    /* min-height:1.3em; todo? for select, input same height in chrome, firefox has same height if they have borders? or line-height: 1.2;? line-height can not be set on select */
-    border-width:var(--line-width);
+    padding-inline: var(--control-padding-x, .4em);
+    padding-block: var(--control-padding-y, .3em);
+    border-radius: var(--control-radius, var(--radius));
+    border-width:var(--control-border-width);
     border-color:var(--color-line);
+    /* min-height:1.3em; todo? for select, input same height in chrome, firefox has same height if they have borders? or line-height: 1.2;? line-height can not be set on select */
 }
 
-
-/* file-input */
-input[type=file] {
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    border: 0;
-    background-color: var(--color-light);
-}
 
 /* buttons */
 button, .btn {
     background-color: var(--color);
     color: var(--color-bg);
     border-color: transparent;
-    padding-inline: 1em;
-    transition: background-color .1s; /* better every property? does not get along with focus-animation */
-	text-decoration:none; /* .btn */
+    padding-inline: var(--gap);
+    transition: background-color .15s; /* better every property? does not get along with focus-animation */
+    transition-property: background-color, color, outline;
 }
-.btn:not([hidden]) {
-	display:inline-block;
-}
+
 :is(button, .btn):not(:disabled):where(:hover, :focus, [aria-pressed="true"]) {
     background-color: var(--color-dark);
-}
-button:disabled {
-    opacity: .5;
 }
 
 /* ::file-selector-button, ::-webkit-file-upload-button, select[size], / * chrome * / select[multiple] { */
@@ -136,8 +115,5 @@ select[size], /* chrome */ select[multiple] {
     margin-inline-end: .5em;
 }
 
-:focus::placeholder {
-    opacity: .2;
-}
 
 }

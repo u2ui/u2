@@ -33,6 +33,7 @@ class U2Fields extends HTMLElement {
                         text-align:left;
                         grid-template-columns: 1fr;
                         label { display: block; min-width: 0; }
+                        [part=label] { text-align: start !important; }
                         &::slotted(*) {
                             flex:1 1 auto;
                         }
@@ -102,6 +103,31 @@ class U2Fields extends HTMLElement {
             inputSlot.assign(pair.inputNode);
         });
     }
+    get values() {
+        const result = {};
+        const inputs = [...this.querySelectorAll('[name]')];
+        for (const input of inputs) {
+            const name = input.name;
+            if (!name || input.form === undefined || input.disabled) continue;
+            if (input.type === 'checkbox') {
+                result[name] = input.checked;
+            }
+            else if (input.type === 'radio') {
+                if (input.checked) result[name] = input.value;
+            }
+            else if (input.type === 'file') {
+                result[name] = input.files;
+            }
+            else if (input.tagName === 'SELECT' && input.multiple) {
+                result[name] = [...input.selectedOptions].map(opt => opt.value);
+            }
+            else {
+                result[name] = input.value;
+            }
+        }
+        return result;
+    }
+
 }
 
 customElements.define('u2-fields', U2Fields);

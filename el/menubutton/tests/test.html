@@ -81,6 +81,38 @@
 
 </article>
 
+<section>
+    <h2>Attribute: openby</h2>
+    <u2-menubutton openby="none (click only)">
+        <button>click</button>
+        <menu>
+            <li> <button>Do this</button>
+            <li> <button>Do that other thing</button>
+        </menu>
+    </u2-menubutton>
+    <u2-menubutton openby="hover">
+        <button>hover</button>
+        <menu>
+            <li> <button>Do this</button>
+            <li> <button>Do that other thing</button>
+        </menu>
+    </u2-menubutton>
+    <u2-menubutton openby="focus">
+        <button>focus</button>
+        <menu>
+            <li> <button>Do this</button>
+            <li> <button>Do that other thing</button>
+        </menu>
+    </u2-menubutton>
+    <u2-menubutton openby="focus hover">
+        <button>focus and hover</button>
+        <menu>
+            <li> <button>Do this</button>
+            <li> <button>Do that other thing</button>
+        </menu>
+    </u2-menubutton>
+</section>
+
 <u2-code trim editable>
     <style style="display: block" contenteditable>
     u2-menubutton menu {
@@ -90,5 +122,33 @@
     u2-menubutton menu button {
         text-align:left;
     }
+
+    u2-menubutton menu {
+        /* 1. Der "geschlossene" Zustand (Ziel beim Schließen) */
+        opacity: 0;
+        transform: translateY(-8px) scale(0.95); /* Leicht nach oben + kleiner */
+
+        /* 2. Transition-Setup */
+        transition: 
+            opacity 0.2s ease-out,
+            transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), /* "Snappy" Bewegung */
+            display 0.2s allow-discrete, /* Zwingend nötig für Exit-Animation */
+            overlay 0.2s allow-discrete; /* Zwingend nötig für Top-Layer */
+    }
+
+    /* 3. Der "offene" Zustand */
+    u2-menubutton menu:popover-open {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    /* 4. Der Startpunkt beim Öffnen (Entry-Animation) */
+    @starting-style {
+        u2-menubutton menu:popover-open {
+            opacity: 0;
+            transform: translateY(-8px) scale(0.95);
+        }
+    }
+
     </style>
 </u2-code>

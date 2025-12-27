@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset=utf-8>
+  <meta name=viewport content="width=device-width">
+  <title>gpu-image-editor Demo</title>
+
+  <script src="../../tests/test-init.js" type=module async></script>
+  <script src="../../auto.js" type=module async></script>
+
+  <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+  <script src="./imageEditor.js" type=module async></script>
+
+<body>
+
+
+<section>
+
+    <u2-fields id="fields" oninput="imageEditor">
+        <input name="image" type="file">
+        <input name="brightness" type="range" min="-100" max="100" value="0" step="1">
+        <input name="contrast" type="range" min="-100" max="100" value="0" step="1">
+        <input name="saturation" type="range" min="-100" max="100" value="0" step="1">
+    </u2-fields>
+    <button onclick="imageEditor.rotate(-90)">rotate</button>
+    <button onclick="imageEditor.flipHorizontal()">flip horizontal</button>
+    <button onclick="imageEditor.flipVertical()">flip vertical</button>
+    <button onclick="imageEditor.enableCropMode()">crop</button>
+
+    editor.enableCropMode();
+// ... user wählt bereich ...
+editor.applyCrop();
+
+    <script>
+        fields.addEventListener('input',e=>{
+            const values = fields.values;
+            imageEditor.src = values.image[0];
+            imageEditor.brightness = values.brightness;
+            imageEditor.contrast = values.contrast;
+            imageEditor.saturation = values.saturation;
+        })
+    </script>
+
+    <u2-imageeditor id=imageEditor src="" style="border:2px solid"></u2-imageeditor>
+</section>

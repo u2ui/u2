@@ -3,7 +3,7 @@
 ## Usage
 
 ```html
-<button id="btn1" onclick="setTimeout(loading.mark(this),2000)">load</button>
+<button id="btn1" onclick="setTimeout(u2_loading.mark(this),2000)">load</button>
 ```
 
 ## Install

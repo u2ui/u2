@@ -6,18 +6,24 @@ u2-buttongroup {
     max-inline-size: -moz-available;
     max-inline-size: stretch;
     
-    --space:var(--line-width);
-    gap: var(--space, 1px) !important;
-
     --u2-ico-dir:var(--u2-ico-dir-material);
+
     &:not(:defined) {
         flex-wrap:wrap;
+    }
+
+    &[gap] {
+        gap: var(--line-width, 1px);
+    }
+    &:not([gap]) {
+        & > :not(:last-child) {
+            border-right-width: 0;
+        }
     }
 }
 
 :is(u2-buttongroup, .S.S.S) {
     & > :not(:last-child) {
-        border-right-width: var(--space) 0;
         border-end-end-radius: 0;
         border-start-end-radius: 0;
     }

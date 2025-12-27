@@ -11,7 +11,7 @@ alert, prompt, confirm but async
 ## Usage
 
 ```html
-<button onclick="dialog.prompt('Just a test').then((res)=>this.innerHTML = 'value: '+res)">run</button>
+<button onclick="u2_dialog.prompt('Just a test').then((res)=>this.innerHTML = 'value: '+res)">run</button>
 ```
 
 ```css

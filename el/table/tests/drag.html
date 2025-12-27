@@ -26,9 +26,10 @@
                 animation-timing-function: ease;
             }
 
-            #drag-drop-tabelle {
-                margin-block: 2rem;
+            .drag-drop-tabelle {
+                overflow:auto;
                 max-height: 20rem;
+                margin-block: 2rem;
                 border: 1px solid black;
 
                 thead {
@@ -52,7 +53,7 @@
         </style>
 
 
-        <u2-table id="drag-drop-tabelle" autoformat drag-column>
+        <u2-table class="drag-drop-tabelle" autoformat drag-column>
             <table>
                 <thead>
                     <tr>

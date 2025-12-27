@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <title>card test | U2 design-system</title>
+
+    <link rel=stylesheet href="../card.css">
+
+<body>
+
+<section class="main">
+    <article class=u2-card>
+        <img src="https://picsum.photos/800/200" width=800 height=200 alt="image">
+        <div class=-body>
+            <h4>Card</h4>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </div>
+        <div>
+            <button>button 1</button>
+            <button>button 2</button>
+        </div>
+    </article>
+</section>
+
+<style class="main">
+    .u2-card {
+        --gap:.7rem;
+        max-width:30rem;
+        border-radius: 1.2rem;
+    }
+</style>

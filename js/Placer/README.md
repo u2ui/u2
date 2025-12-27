@@ -4,9 +4,7 @@ Positions elements relative to a target, auto-adjusting on move or resize.
 ## Usage
 
 ```js
-import {Placer} from "../Placer.js";
-
-let placer = new Placer(moverEl, {
+let placer = new u2_Placer(moverEl, {
     x:'after',
     y:'after',
     margin: 0,

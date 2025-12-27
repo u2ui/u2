@@ -5,7 +5,9 @@
     padding: unset;
     display: inline;
     border: unset;
-    border-radius:unset;
+    border-radius: unset;
+    box-shadow: unset;
+    text-transform: unset;
 }
 .u2-unstyle:is(:hover,:focus) {
     background:unset;

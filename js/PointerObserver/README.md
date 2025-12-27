@@ -4,8 +4,7 @@ Observe mouse and touches
 ## Usage
 
 ```js
-import {PointerObserver} from "../PointerObserver.js";
-new PointerObserver(el).onmove = function(e){
+new u2_PointerObserver(el).onmove = function(e){
     console.log(this.pos);
 }
 ```

@@ -1,0 +1,46 @@
+/* header nav */
+[role=banner] nav {
+
+	& > ul { display: flex; }
+	& > ul > li { flex: 1 1 auto; }
+	& > ul > li > a { text-align: center; }
+	& ul { padding: 0; }
+	& li { position: relative; }
+	& a {
+		padding: .5em 1em;
+		display: block;
+	}
+	& li > ul {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		z-index: 1;
+		min-width: 100%;
+		white-space: nowrap;
+		transition-duration: .4s;
+		visibility: hidden;
+		opacity: 0;
+	}
+	& li:hover > ul ,
+	& li:focus-within > ul {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	/* customize */
+	& li > ul {
+		background-color: rgba(255,255,255,.9);
+		color: var(--color-text);
+		-webkit-backdrop-filter: blur(3px);
+		backdrop-filter: blur(3px);
+	}
+
+	& li > ul a.cmsActive,
+	& li > ul a:hover,
+	& li > ul a:focus-within {
+		background-color: var(--color);
+		color: #fff;
+	}
+
+
+}

@@ -8,7 +8,7 @@ null
 [aria.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/aria.html)  
 [variables.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/variables.html)  
 [more.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/more.html)  
-[oklch.experiments.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/oklch.experiments.html)  
+[simple.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/simple.html)  
 
 ## Resources
 

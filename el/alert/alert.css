@@ -1,17 +1,8 @@
-body {
-    --color-red: oklch(70% 0.138 25);
-    --color-green: oklch(70% 0.138 165);
-    --color-yellow: oklch(70% 0.138 84);
-    --color-blue: oklch(70% 0.138 223);
-
-    --color-red: hsl( 0, var(--hsl-s), var(--hsl-l));
-    --color-green: hsl( 130, var(--hsl-s), var(--hsl-l));
-    --color-yellow: hsl( 50, var(--hsl-s), var(--hsl-l));
-    --color-blue: hsl( 223, var(--hsl-s), var(--hsl-l));
-}
-
-
 u2-alert {
+    --color-red: var(--red, #dc2626);
+    --color-green: var(--green, #16a34a);
+    --color-yellow: var(--yellow, #f59e0b);
+    --color-blue: var(--blue, #2563eb);
     display:block;
     padding: 1em;
     margin-block: 1em;

@@ -8,5 +8,8 @@
     flex-wrap:wrap;
     column-gap: var(--u2-Col-gap);
     row-gap:    var(--u2-Row-gap);
-
 }
+
+.u2-flex > * { margin:0; }
+.u2-flex.-Between { justify-content:space-between; }
+.u2-flex.-Col { flex-direction: column; }

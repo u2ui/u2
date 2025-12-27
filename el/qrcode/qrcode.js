@@ -7,9 +7,15 @@ customElements.define('u2-qrcode', class extends HTMLElement {
         let shadowRoot = this.attachShadow({ mode: 'open' });
         shadowRoot.innerHTML = `
         <style>
+        :host {
+            width:13rem;
+        }
         #container { display:contents; }
         #container > * { display:block; }
-        svg { fill:currentColor; }
+        svg {
+            fill:currentColor;
+            image-rendering: pixelated;
+        }
         </style>
         <div id=container></div>
         `;

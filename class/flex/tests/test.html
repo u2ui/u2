@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <title>u2-ico Test</title>
+        <title>u2 Tests</title>
         <script src="../../../u2/tests/test-init.js" type=module async></script>
 
         <link rel=stylesheet href="../../../css/classless/full.css">
-        <link rel=stylesheet href="../../../css/classless/simple.css">
-
+        <link rel=stylesheet href="../../../css/classless/simple.css">  
+        
         <link rel=stylesheet href="../flex.css">
 <body>
 
@@ -41,6 +41,59 @@
     </div>
 
     <style>
+        .u2-flex > * {
+            margin:0;
+            align-items: center;
+        }
+        .wrapper {
+            border:2px solid green;
+            padding:10px;
+            margin:10px;
+            overflow:auto;
+            resize:horizontal
+        }
+        #u2-flex .u2-flex > * {
+            background: black;
+            color:white;
+            padding: 10px;
+        }
+    </style>
+
+</section>
+
+
+
+<section id=u2-flex>
+    <h2>Different Content</h2>
+
+    <div class=wrapper>
+        <div class=u2-flex>
+            <h2>Header</h2>
+            <p>Paragraph</p>
+            <label>
+                Label
+                <input type=text>
+            </label>
+            <label>
+                Label
+                <textarea></textarea>
+            </label>
+            <label>
+                Select
+                <select>
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                </select>
+            </label>
+            <button>Button</button>
+            
+        </div>
+    </div>
+
+    <style>
+        u2-flex > * {
+            xmargin:0;
+        }
         .wrapper {
             border:2px solid green;
             padding:10px;

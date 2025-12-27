@@ -46,7 +46,7 @@ Custom skins can easily be added.
 Just change `--hsl-h` for example:
     
 ```css
-[u1-skin=pink] {
+[u2-skin=pink] {
     --hsl-h: 330;
 }
 ```

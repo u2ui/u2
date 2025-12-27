@@ -122,6 +122,14 @@
       "css": true,
       "js": false
     },
+    "card": {
+      "name": "card",
+      "description": "All children except img/video/hr have padding. Child with class=\"-body\" fills space, last element is pushed down. ",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": false
+    },
     "grid": {
       "name": "grid",
       "description": "Most wanted grid case",
@@ -133,14 +141,6 @@
     "reset": {
       "name": "reset",
       "description": "A class to reset Styles (beta)",
-      "beta": true,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
-    "card1": {
-      "name": "card1",
-      "description": "card-class (beta)",
       "beta": true,
       "deprecated": false,
       "css": true,
@@ -236,6 +236,14 @@
       "css": true,
       "js": true
     },
+    "pagination": {
+      "name": "pagination",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
     "code": {
       "name": "code",
       "description": "Code-blocks. <u2-code editable trim><style|textarea|script>...",
@@ -314,6 +322,14 @@
       "beta": false,
       "deprecated": false,
       "css": true,
+      "js": true
+    },
+    "system": {
+      "name": "system",
+      "description": "Manage U2 system: preferences, debug, optimization",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
       "js": true
     },
     "number": {
@@ -497,6 +513,14 @@
     "norm": {
       "name": "norm",
       "description": "Browser normalization CSS – nothing else!",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": false
+    },
+    "vars": {
+      "name": "vars",
+      "description": "",
       "beta": false,
       "deprecated": false,
       "css": true,

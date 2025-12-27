@@ -11,12 +11,7 @@
             "members": [],
             "events": [],
             "attributes": [],
-            "cssProperties": [{
-                "name": "--space",
-                "syntax": "<length>",
-                "default": "0.25rem",
-                "description": "Controls the spacing between buttons in the group. \"--space:;\" will remove the space and the right border except for the last button"
-            }],
+            "cssProperties": [],
             "superclass": {
                 "name": "HTMLElement"
             },

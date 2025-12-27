@@ -26,7 +26,7 @@
 <section style="background:var(--color-light, #eee); resize:both; overflow:auto">
 
     <div>
-        <u2-buttongroup>
+        <u2-buttongroup gap>
             <button type=button>Button</button>
             <button type=button>Group</button>
             <button type=button>Component</button>
@@ -34,7 +34,7 @@
         <button>Reference Button</button>
 
         <h3>Too mutch</h3>
-        <u2-buttongroup role=toolbar style="justify-content: center; display:flex;">
+        <u2-buttongroup role=toolbar style="justify-content: center; display:flex;" gap>
             <button type=button>Button 1</button>
             <button type=button>Button 2</button>
             <button type=button>Button 3</button>
@@ -50,7 +50,7 @@
         </u2-buttongroup>
 
         <h3>Using .btn class</h3>
-        <u2-buttongroup>
+        <u2-buttongroup gap>
             <label class=btn>
                 <input type=radio name=x value="radio1">
                 Radio 1
@@ -78,7 +78,8 @@
             </u2-buttongroup>
         </label>
 
-        <u2-buttongroup>
+        <h3>Move the buttons out of the menu button if there is enough space.</h3>
+        <u2-buttongroup gap>
             <button type=button>update</button>
             <u2-menubutton>
                 <button type=button style="padding-inline:.2em">
@@ -92,6 +93,7 @@
         </u2-buttongroup>
 
 
+        <h4>Custom styled button group</h4>
         <u2-buttongroup class="styled">
             <button type=button>
                 <u2-tooltip>Nice!</u2-tooltip>
@@ -110,7 +112,6 @@
 <u2-code editable trim>
     <style>
         .styled {
-            --space:; /* makes one border dissapear */
             border:2px solid black;
             border-radius:9999px;
             padding:1rem;

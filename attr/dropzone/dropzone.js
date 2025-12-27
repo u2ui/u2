@@ -1,6 +1,8 @@
-/* Copyright (c) 2016 Tobias Buschor https://goo.gl/gl0mbf | MIT License https://goo.gl/HgajeK */
-
 import * as dnd from '../../js/drag/drag.js';
+
+let currentStrategy = null;
+let currentDropzone = null;
+let currentBefore = null;
 
 const dropzoneHandler = {
     dragstart: () => {
@@ -11,12 +13,26 @@ const dropzoneHandler = {
             zone.classList.toggle(':drop-invalid', !valid);
             zone.classList.toggle(':drop-valid', valid);
         });
+        
+        // NEU: Strategy vorbereiten (placeholder/clone erstellen)
+        const firstValidZone = document.querySelector('[u2-dropzone].\\:drop-valid');
+        currentStrategy = getStrategy(firstValidZone);
     },
-    dragend: () => {
+    
+    dragend: (e) => {
+        // NEU: Cancel aufrufen wenn nicht gedropped (ESC oder invalid drop)
+        if (e.dataTransfer.dropEffect === 'none') {
+            currentStrategy?.cancel?.();
+        }
+        
         document.querySelectorAll('[u2-dropzone]').forEach(zone => {
             zone.classList.remove(':drop-invalid', ':drop-valid', ':dragover');
         });
+        
+        // NEU: Strategy zurücksetzen
+        //currentStrategy = null; // Nein! wird noch gebraucht für effekt
     },
+    
     dragover: (e) => {
         const dropzone = e.target.closest('[u2-dropzone]');
         if (!dropzone || !dnd.dragged) return;
@@ -24,18 +40,41 @@ const dropzoneHandler = {
         if (!canDrop(dropzone, dnd.dragged)) return;
 
         const before = getElementBefore(dropzone, e);
-        indicateDrop(dropzone, 'before', before);
+
+        if (currentDropzone !== dropzone || currentBefore !== before) {
+            // NEU: Strategy von dieser Zone verwenden
+            const strategy = getStrategy(dropzone);
+            // NEU: Wenn Strategy wechselt, cleanup alte & prepare neue
+            if (currentStrategy && currentStrategy !== strategy) {
+                currentStrategy.cancel?.();
+                strategy.prepare?.(dnd.dragged);
+                currentStrategy = strategy;
+            }
+            // NEU: Strategy move() aufrufen statt direkt indicateDrop()
+            strategy.move(dropzone, 'before', before);
+        }
+        currentBefore = before;
+        currentDropzone = dropzone;
+        
+        // ALT: indicateDrop(dropzone, 'before', before);
 
         e.preventDefault();
     },
+    
     dragleave: (e) => {
         const dropzone = e.target.closest('[u2-dropzone]');
         if (!dropzone) return;
         if (!dropzone.contains(e.relatedTarget)) {
             dropzone.classList.remove(':dragover');
-            indicateDrop(null);
+            
+            // NEU: Nur cleanup wenn wir ALLE Dropzones verlassen
+            const stillInAnyZone = document.querySelector('[u2-dropzone].\\:dragover');
+            if (!stillInAnyZone) currentStrategy?.cancel?.();
+            
+            // ALT: indicateDrop(null);
         }
     },
+    
     drop: (e) => {
         e.preventDefault();
         const dropzone = e.target.closest('[u2-dropzone]');
@@ -55,15 +94,26 @@ const dropzoneHandler = {
             bubbles: true
         }));
 
-        const performDrop = () => dropzone.insertBefore(dnd.dragged, before);
+        // NEU: performDrop unterscheidet sich je nach Strategy
+        const performDrop = () => {
+            // Bei 'move' und 'ghost' ist Element schon am richtigen Ort
+            // Bei 'indicate' muss es erst jetzt bewegt werden
+            if (currentStrategy !== strategies.move && currentStrategy !== strategies.ghost) {
+                dropzone.insertBefore(dnd.dragged, before);
+            }
+            
+            // NEU: Strategy finalisieren (cleanup placeholder/clone)
+            currentStrategy?.finalize?.();
+        };
+        
+        // ALT: const performDrop = () => dropzone.insertBefore(dnd.dragged, before);
 
-        if (document.startViewTransition) {
-            document.startViewTransition(performDrop)
-        } else {
-            performDrop();
-        }
+        startViewTransition(performDrop);
 
-        indicateDrop(null);
+        // ALT: indicateDrop(null);
+        
+        // NEU: Strategy zurücksetzen
+        //currentStrategy = null;
     }
 };
 
@@ -71,8 +121,88 @@ Object.entries(dropzoneHandler).forEach(([type, handler]) => document.addEventLi
 
 
 
+function getStrategy(el) {
+    if (!el) return strategies.indicate;
+    const style = getComputedStyle(el);
+    const strategyName = style.getPropertyValue('--u2-dropzone-strategy').trim() || 'indicate';
+    return strategies[strategyName] || strategies.indicate;
+}
+export const strategies = {
+    indicate: {
+        prepare() {},
+        move(zone, position, element) {
+            indicateDrop(zone, position, element);
+        },
+        finalize() {
+            indicateDrop(null);
+        },
+        cancel() {
+            indicateDrop(null);
+        }
+    },
+    move: {
+        originalParent: null,
+        originalNext: null,
+        
+        prepare(dragging) {
+            // Ursprungsposition merken für cancel
+            this.originalParent = dragging.parentNode;
+            this.originalNext = dragging.nextElementSibling;
+        },
+        move(zone, position, element) {
+            if (!dnd.dragged) return;
+            const perform = ()=>{
+                const before = position === 'before' ? element : element?.nextElementSibling;
+                zone.insertBefore(dnd.dragged, before);
+            }
+            startViewTransition(perform);
+        },
+        finalize() {
+            // Cleanup references
+            this.originalParent = null;
+            this.originalNext = null;
+        },
+        cancel() {
+            // Zurück zur Ursprungsposition
+            if (this.originalParent && dnd.dragged) {
+                this.originalParent.insertBefore(dnd.dragged, this.originalNext);
+            }
+            this.originalParent = null;
+            this.originalNext = null;
+        }
+    },
+    ghost: {
+        clone: null,
+        prepare(dragging) {
+            this.clone = dragging.cloneNode(true); // Ghost/Preview während drag
+            this.clone.classList.add('drag-clone');
+            this.clone.style.opacity = '0.5';
+            dragging.parentNode.insertBefore(this.clone, dragging);
+            return this.clone;
+        },
+        move(zone, position, element) {
+            if (!this.clone) return;
+            const before = position === 'before' ? element : element?.nextElementSibling;
+            zone.insertBefore(this.clone, before);
+        },
+        finalize() {
+            if (this.clone && dnd.dragged) { // Clone wird zum echten Element
+                this.clone.parentNode.insertBefore(dnd.dragged, this.clone);
+            }
+            this.clone?.remove();
+            this.clone = null;
+        },
+        cancel() {
+            this.clone?.remove(); // Einfach clone entfernen
+            this.clone = null;
+        }
+    },
+};
 
 
+function startViewTransition(fn){
+    document.startViewTransition ? document.startViewTransition(fn) : fn();
+}
 
 
 
@@ -182,17 +312,6 @@ function isAfterInGrid(item, mouseX, mouseY) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // === Helper Function ===
 function canDrop(dropzone, dragged) {
     let selector = dropzone.getAttribute('u2-dropzone').trim();
@@ -209,13 +328,6 @@ function canDrop(dropzone, dragged) {
     dropzone.id === 'u2-dropzone-tmp' && dropzone.removeAttribute('id');
     return valid;
 }
-
-
-
-
-
-
-
 
 
 function indicateDrop(container, position, element = null) {
