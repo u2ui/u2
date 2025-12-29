@@ -71,12 +71,14 @@ class System extends HTMLElement {
 customElements.define('u2-system', System);
 
 addEventListener('keydown', (e) => {
-    if (e.key === 's') {
-        if (!document.querySelector('u2-system').matches(':popover-open')) {
-            document.querySelector('u2-system').showPopover();
-        } else {
-            console.log('nhide')
-            document.querySelector('u2-system').hidePopover();
-        }
+    if (e.target.form !== null) return;
+    if (e.target.isContentEditable) return;
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    if (e.key !== 's') return;
+
+    if (!document.querySelector('u2-system').matches(':popover-open')) {
+        document.querySelector('u2-system').showPopover();
+    } else {
+        document.querySelector('u2-system').hidePopover();
     }
 });

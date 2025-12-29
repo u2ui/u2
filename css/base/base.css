@@ -120,12 +120,6 @@ input, textarea, select, button, .btn {
 button, .btn {
 	padding-inline:.7em;
 }
-.btn {
-	inline-size: fit-content;
-	text-decoration: none;
-	color:inherit;
-	&:not([hidden]) { display:inline-block; }
-}
 
 
 select { background-color:Field; }
@@ -182,4 +176,12 @@ dialog:is(:modal,[open]), :popover-open, :fullscreen {
     inset: auto;
 }
 
+}
+
+/* outside layer, other ways it will be overwritten by a simple "a" selector */
+.btn {
+	inline-size: fit-content;
+	text-decoration: none;
+	color:inherit;
+	&:not([hidden]) { display:inline-block; }
 }

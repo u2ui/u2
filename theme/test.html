@@ -8,7 +8,6 @@
     <script src="../../u2/u2/tests/test-init.js" type=module async></script>
     <script src="../../u2/u2/auto.js" type=module async></script>
     <link href="../css/classless/full.css" rel=stylesheet>
-    <link href="../css/vars/vars.css" rel=stylesheet>
     <link href="../css/classless/simple.css" rel=stylesheet>
 
 <body>
@@ -94,11 +93,34 @@
 
         <h3>Block-Elements</h3>
 
+        <h4>Details and Summary</h4>
         <details>
             <summary>Details and Summary</summary>
             <p>Here is some more information.</p>
         </details>
-        
+
+        <h4>Table</h4>
+        <table class="u2-table">
+            <thead>
+                <tr>
+                    <th>Product
+                    <th>Price
+                    <th>Status
+            <tbody>
+                <tr>
+                    <td>Apple
+                    <td>1.20 CHF
+                    <td>In Stock
+                <tr>
+                    <td>Bread
+                    <td>2.80 CHF
+                    <td>Low Stock
+                <tr>
+                    <td>Cheese
+                    <td>4.50 CHF
+                    <td>Out of Stock
+        </table>        
+
         <article>
             <h4>Article Title</h4>
             <p>Article content goes here.</p>
@@ -142,15 +164,16 @@
                 <p>Boil some water.</p>
             <li>
                 <p>Dump everything in the pot and follow this algorithm:</p>
-                <pre><code>find wooden spoon
-                    uncover pot
-                    stir
-                    cover pot
-                    balance wooden spoon precariously on pot handle
-                    wait 10 minutes
-                    goto first step (or shut off burner when done)</code></pre>
-            <p>Do not bump wooden spoon or it will fall.</p>
+                <p>Do not bump wooden spoon or it will fall.</p>
         </ol>
+
+        <pre><code>find wooden spoon
+uncover pot
+stir
+cover pot
+balance wooden spoon precariously on pot handle
+wait 10 minutes
+goto first step (or shut off burner when done)</code></pre>
 
         <table>
             <caption>Table: Data on shoe sizes, materials, and colors</caption>
@@ -186,13 +209,13 @@
     </section>
 
     <section style="padding-block:2rem; margin-block:2rem" class="u2-width" u2-skin="invert">
-        <h2>U2 Elements</h2>
+        <h3>U2 Elements</h3>
         <p>The U2 Pattern Library is a collection of reusable components and patterns for modern web development. It is designed to be a starting point for building web applications and even other Design Systems.</p>
     </section>
 
     <section class="u2-width">
 
-        <h3>Tabs</h3>
+        <h4>Tabs</h4>
 
         <u2-tabs>
             <h4>First Tab</h4>
@@ -200,6 +223,8 @@
             <h4>Second Tab</h4>
             <p>Content of the second tab</p>
         </u2-tabs>
+
+        <h4>Alert</h4>
 
         <u2-alert open variant="error" dismissable>
             <h4>Alert title goes here.</h4>
@@ -210,20 +235,9 @@
             <p>Alert text goes here.</p>
         </u2-alert>
 
-        <u2-input type=checkbox>
-            <select>
-                <option>on</option>
-                <option>off</option>
-            </select>
-        </u2-input>
-
-        <u2-input type=stepper>
-            <input type="number">
-        </u2-input>
-
         <br><br>
 
-        <h3>Accordion</h3>
+        <h4>Accordion</h4>
         <u2-accordion>
             <h4>Accordion</h4>
             <h5>Here you can put any content you want.</h5>
@@ -239,9 +253,9 @@
         </u2-accordion>
 
 
-        <br><br>
+        <h4>Button Group</h4>
 
-        <u2-buttongroup>
+        <u2-buttongroup gap>
             <button>Button</button>
             <button>Group</button>
             <button>Button 3</button>

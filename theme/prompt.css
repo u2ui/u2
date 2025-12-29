@@ -1,0 +1,175 @@
+/*
+You are writing CSS for a design system.
+make a beautiful, consistent and stylesheet based on this CSS.
+A base css is already included with best practices, also available variables are already included, you can adjust them if needed.
+Use appropriate Google Fonts.
+
+
+IMPORTANT CONTEXT:
+- A base CSS file is ALREADY LOADED with all foundational styles
+- All variables listed below are ALREADY DEFINED and AUTOMATICALLY APPLIED
+- You can CHANGE the values of variables (like --color, --gap, --radius) if it makes sense for your design
+- You can USE the generated variables (like --accent-light, --color-darker) in your styles
+- Add Optionated styles at the bottom of the file.
+- Don't invent new classes
+
+Your tasks:
+1. Adjust base variables (--color, --accent, --gap, --radius, etc.) as needed
+2. Fill in empty style properties marked with comments or empty values
+3. Add hover/focus states and component-specific styles
+4. Use Google Fonts (import at the top if needed)
+5. Add a section at the end for questionable/opinionated styles (mark them clearly so they can be easily reviewed or removed)
+
+*/
+
+html {
+    --color: #ff6b35;
+    --accent: #004e89;
+
+    /* available custom properties:
+    --color-lightest: color-mix(in var(--color-space), var(--color), #fff 97%);
+    --color-lighter:  color-mix(in var(--color-space), var(--color), #fff 85%);
+    --color-light:    color-mix(in var(--color-space), var(--color), #fff 50%);
+    --color-dark:     color-mix(in var(--color-space), var(--color), #000 30%);
+    --color-darker:   color-mix(in var(--color-space), var(--color), #000 60%);
+    --color-darkest:  color-mix(in var(--color-space), var(--color), #000 87%);
+
+    --accent-lightest: color-mix(in var(--color-space), var(--accent), #fff 97%);
+    --accent-lighter:  color-mix(in var(--color-space), var(--accent), #fff 85%);
+    --accent-light:    color-mix(in var(--color-space), var(--accent), #fff 50%);
+    --accent-dark:     color-mix(in var(--color-space), var(--accent), #000 30%);
+    --accent-darker:   color-mix(in var(--color-space), var(--accent), #000 60%);
+    --accent-darkest:  color-mix(in var(--color-space), var(--accent), #000 87%);
+
+    --gray:          oklch(from var(--color) l min(c,0.01) h);
+    --gray-lighter:  color-mix(in var(--color-space), var(--gray), #fff 85%);
+    --gray-light:    color-mix(in var(--color-space), var(--gray), #fff 50%);
+    --gray-dark:     color-mix(in var(--color-space), var(--gray), #000 30%);
+    --gray-darker:   color-mix(in var(--color-space), var(--gray), #000 60%);
+
+    /* Semantic - automatisch aus Grundfarbe * /
+    --color-bg:   light-dark(var(--color-lightest), var(--color-darkest)); /* wird bereits auf "html" angewendet * /
+    --color-text: light-dark(var(--color-darkest), var(--color-lightest)); /* wird bereits auf "html" angewendet * /
+    --color-line: var(--color-text);
+    --color-area: light-dark(var(--color-lighter), var(--color-darker));
+
+    /* Farbpalette - Hue-Rotation * /
+    --palette-base: oklch(from var(--color) max(l, 0.4) max(c, 0.15) h);
+
+    --red:    oklch(from var(--palette-base) l c calc(25 + var(--hue-shift)));
+    --orange: oklch(from var(--palette-base) l c calc(60 + var(--hue-shift)));
+    --yellow: oklch(from var(--palette-base) l c calc(95 + var(--hue-shift)));
+    --lime:   oklch(from var(--palette-base) l c calc(125 + var(--hue-shift)));
+    --green:  oklch(from var(--palette-base) l c calc(155 + var(--hue-shift)));
+    --cyan:   oklch(from var(--palette-base) l c calc(195 + var(--hue-shift)));
+    --blue:   oklch(from var(--palette-base) l c calc(240 + var(--hue-shift)));
+    --purple: oklch(from var(--palette-base) l c calc(285 + var(--hue-shift)));
+    --pink:   oklch(from var(--palette-base) l c calc(340 + var(--hue-shift)));
+
+    --shadow-blur: var(--gap);
+    --shadow-color: color-mix(in srgb, var(--color-text), transparent 70%);
+    --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) var(--shadow-color);
+    --shadow-s: calc(var(--shadow-x) * 0.5) calc(var(--shadow-y) * 0.5) calc(var(--shadow-blur) * 0.5) var(--shadow-color);
+    --shadow-l: calc(var(--shadow-x) * 1.5) calc(var(--shadow-y) * 1.5) calc(var(--shadow-blur) * 1.5) var(--shadow-color);
+
+    --color: #207acc;
+
+    --accent: var(--color);
+
+    --color-space: oklch;
+    --hue-shift: 0;
+
+    /* misc * /
+    --width: 50rem;
+    --gap: 1rem;
+
+    --line-width: 1px;
+    --radius: .3rem;
+
+    --shadow-x:0rem;
+    --shadow-y:.25rem;
+
+    /* form controls * /
+    --control-padding-x: .4em;
+    --control-padding-y: .3em;
+    --control-border-width: var(--line-width);
+    --control-radius: var(--radius);
+
+    --line-height: calc(var(--line-height-absolute) + var(--line-height-relative)); /* --line-height is set on every element, use this instead of line-height * /
+    --font-1: system-ui, sans-serif; /* main font * /
+    --font-2: system-ui, sans-serif;
+
+    --font-1-variation: 
+        "wdth" var(--font-1-wdth, 100), 
+        "opsz" var(--font-1-opsz, 14), 
+        "GRAD" var(--font-1-grad, 0),
+        "MONO" var(--font-1-mono, 0),
+        "CASL" var(--font-1-casl, 0);
+
+    --font-2-variation: 
+        "wdth" var(--font-2-wdth, 100), 
+        "opsz" var(--font-2-opsz, 14), 
+        "GRAD" var(--font-2-grad, 0),
+        "MONO" var(--font-2-mono, 0),
+        "CASL" var(--font-2-casl, 0);
+
+    */
+}
+
+:focus-visible {
+    outline: .12rem solid var(--color-text);
+    outline-offset: .18rem;
+    &:active { outline-width: .3rem; }
+}
+
+input, textarea, select, button, .btn {
+    box-shadow: var(--shadow);
+}
+
+button, .btn { /* button styles */
+    background-color:; /* default is var(--color) */
+    color:; /* default is var(--color-bg) */
+    padding-inline: var(--gap);
+    &:hover, &:focus {
+    }
+}
+
+dialog {
+}
+
+u2-alert {
+    background-color: var(--color);
+    color: var(--color-bg);
+    border: var(--line-width) solid var(--color-text);
+    padding: var(--gap);
+    &::part(icon) {
+        align-self: start;
+        color:inherit;
+    }
+}
+
+u2-accordion {
+    gap:; /* gap between triggers */
+    &::part(trigger) {
+    }
+    &::part(trigger):hover {
+    }
+    &::part(trigger):focus, &::part(trigger):active {
+    }
+    &::part(content) {
+    }
+}
+
+table.u2-table {
+    & > thead {}
+    & > tbody {}
+    & > tfoot {}
+    & > * td {}
+    & > * th {}
+}
+
+.u2-card {
+    & > * {
+        padding: var(--gap); /* children have gaps not the card */
+    }
+}

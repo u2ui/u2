@@ -123,14 +123,12 @@ table, article, blockquote, dialog, figure, pre, aside {
 }
 
 
-
-
 table {
     font-size: max(.85rem, 14px);
     background-color: var(--color-bg);
     overflow:hidden;
 }
-thead {
+thead, tfoot {
     background-color: var(--color-dark);
     color: var(--color-bg); 
 }
@@ -142,9 +140,6 @@ tbody > tr {
     &:hover {
         background-color: var(--color-lighter);
     }
-    &:last-child {
-        border-block-end: var(--line-width);
-    }   
 }
 
 label {

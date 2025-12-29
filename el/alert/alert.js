@@ -32,9 +32,11 @@ slot[name=icon] {
     padding: 0;
     border: 0;
     background: none;
+    color: currentColor;
     font-size: 1.5em;
     cursor: pointer;
     line-height: 1;
+    align-self: center;
 }
 #body {
     display:flex;

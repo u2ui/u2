@@ -518,14 +518,6 @@
       "css": true,
       "js": false
     },
-    "vars": {
-      "name": "vars",
-      "description": "",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": false
-    },
     "utils": {
       "name": "utils",
       "description": "planned",
@@ -676,6 +668,14 @@
     },
     "pastell": {
       "name": "pastell",
+      "description": "",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": false
+    },
+    "tmp": {
+      "name": "tmp",
       "description": "",
       "beta": false,
       "deprecated": false,

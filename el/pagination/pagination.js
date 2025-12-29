@@ -1,4 +1,4 @@
-console.log('U1Pagination loaded');
+
 class U1Pagination extends HTMLElement {
     connectedCallback() {
         console.log(1)

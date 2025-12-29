@@ -12,7 +12,7 @@ u2-pagination {
 ## Usage
 
 ```html
-<u2-pagination total="5" current="3" href="/page/{page}"></u2-pagination>
+<u2-pagination total="3" current="2" href="/page/{page}" onclick="event.preventDefault()"></u2-pagination>
 ```
 
 ```css

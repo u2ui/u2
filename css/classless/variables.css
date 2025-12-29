@@ -26,7 +26,7 @@ html {
     --radius: .3rem;
 
     --shadow-x:0rem; /* unit needed for calc! */
-    --shadow-y:.25rem;
+    --shadow-y:.1rem;
 
     /* form controls */
     --control-padding-x: .4em;

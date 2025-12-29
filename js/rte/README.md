@@ -4,7 +4,7 @@ Easily Make Elements Editable with Intuitive Controls
 ## Usage
 
 ```html
-<div contenteditable id="myEditor" style="--u2-rte:true">
+<div contenteditable style="--u2-rte:true" id="myEditor">
     Start <strong>typing</strong> here...
 </div>
 ```

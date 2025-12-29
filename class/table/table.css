@@ -59,8 +59,8 @@ https://jsfiddle.net/x90cz65o/103/
     padding-block: 0;
     padding-inline: calc(var(--u2-Col-gap) / 2);
     border:0 !important; /* overwrite inherit from sticky, and border makes no sense if flex */
-    /* display:flex; /* new ok? better textarea-baseline / no it should not be flex, bad for content */
-    /* flex-direction:column;
+    /* display:flex; /* new ok? better textarea-baseline / no it should not be flex, bad for content, mybe just -Fields ? */
+    /* flex-direction:column; */
 }
 .u2-table.-Flex.-NoSideGaps > * > * { column-gap:var(--u2-Col-gap); }
 .u2-table.-Flex.-NoSideGaps > * > * > * { padding:0; }
