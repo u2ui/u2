@@ -453,6 +453,7 @@ class ColorSystemStyler extends HTMLElement {
                 display: grid;
                 gap: 0.6em;
             }
+            [u2-movable-handler] { cursor: move; background: repeating-linear-gradient(45deg,transparent 0 3px,rgba(0,0,0,0.1) 3px 6px); height:.8rem; border-radius:.2rem; }
         `;
 
         // Gruppen vs einzelne Controls
@@ -471,9 +472,11 @@ class ColorSystemStyler extends HTMLElement {
 
         const controls = this.variables.map(v => renderItem(v)).join('');        
 
-
+        import('../../attr/movable/movable.js');
+        this.setAttribute('u2-movable', '');
         this.shadowRoot.innerHTML = `<style>${style}</style>
             <div class="styler-grid">
+                <div u2-movable-handler></div>
                 <details open>
                     <summary>Styler</summary>
                     <div class=details-content>

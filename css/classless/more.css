@@ -65,6 +65,8 @@ input:is([type=radio], [type=checkbox]) {
 		content: "";
 		position: absolute;
 		inset: 0;
+		xinset: -1px;
+		xborder-radius:inherit;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -106,6 +108,7 @@ input[type=radio] {
 /* indeterminate */
 input:is([type=radio],[type=checkbox]):indeterminate::before {
 	color: currentColor;
+	color: #000;
 	font-size: 1em;
 	content: "−"; /* − ﹣*/
 	opacity:.6;

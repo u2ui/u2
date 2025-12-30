@@ -67,7 +67,7 @@ https://jsfiddle.net/x90cz65o/103/
 
 
 /* .-Fields */
-.u2-table.-Fields input:not([type=radio], [type=checkbox], [type=date], [type=color]),
+.u2-table.-Fields input:not([type=radio], [type=checkbox], [type=date], [type=color], [type=time]),
 .u2-table.-Fields textarea,
 .u2-table.-Fields select {
     width: 100%;

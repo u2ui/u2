@@ -64,6 +64,14 @@
       "css": false,
       "js": true
     },
+    "movable": {
+      "name": "movable",
+      "description": "Make an element movable. Optionally define a [u2-movable-handler] element.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "disableif": {
       "name": "disableif",
       "description": "Disable form-elements (like inputs, buttons, fieldsets) based on a condition",

@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../movable.js" type=module async></script>
+
+
+<body>
+
+<u2-system></u2-system>
+
+<section>
+
+
+
+  <h1>U2 Movable Test Suite</h1>
+
+  <!-- Test 1: Absolute Positioning -->
+  <h2>Test 1: position: absolute</h2>
+  <div style="position: relative; height: 300px; background: #eee; margin: 20px 0;">
+    
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 50px; width: 150px; background: white; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #333; color: white; padding: 8px; cursor: grab;">absolute XY</div>
+      <p style="padding: 10px;">Beide Achsen</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: false; position: absolute; top: 50px; left: 250px; width: 150px; background: white; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #333; color: white; padding: 8px; cursor: grab;">absolute X</div>
+      <p style="padding: 10px;">Nur horizontal</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: false; --u2-movable-y: true; position: absolute; top: 150px; left: 50px; width: 150px; background: white; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #333; color: white; padding: 8px; cursor: grab;">absolute Y</div>
+      <p style="padding: 10px;">Nur vertikal</p>
+    </div>
+
+  </div>
+
+  <!-- Test 2: Relative Positioning -->
+  <h2>Test 2: position: relative</h2>
+  <div style="position: relative; min-height: 200px; background: #eee; margin: 20px 0; padding: 20px;">
+    
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: relative; width: 200px; background: white; border: 2px solid black; margin-bottom: 20px;">
+      <div u2-movable-handler style="background: #555; color: white; padding: 8px; cursor: grab;">relative XY</div>
+      <p style="padding: 10px;">Position relative</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: relative; left: 50px; width: 200px; background: white; border: 2px solid black;">
+      <div u2-movable-handler style="background: #555; color: white; padding: 8px; cursor: grab;">relative mit left:50px</div>
+      <p style="padding: 10px;">Startet verschoben</p>
+    </div>
+
+  </div>
+
+  <!-- Test 3: Static Positioning -->
+  <h2>Test 3: position: static (auto → relative)</h2>
+  <div style="position: relative; min-height: 150px; background: #eee; margin: 20px 0; padding: 20px;">
+    
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: static; width: 200px; background: white; border: 2px solid black;">
+      <div u2-movable-handler style="background: #777; color: white; padding: 8px; cursor: grab;">static (wird relative)</div>
+      <p style="padding: 10px;">Auto-detect zu relative</p>
+    </div>
+
+  </div>
+
+  <!-- Test 4: Transform Method -->
+  <h2>Test 4: --u2-movable-method: transform</h2>
+  <div style="position: relative; height: 300px; background: #eee; margin: 20px 0;">
+    
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; --u2-movable-method: transform; position: absolute; top: 50px; left: 50px; width: 180px; background: white; border: 2px solid blue; padding: 10px;">
+      <div u2-movable-handler style="background: blue; color: white; padding: 8px; cursor: grab;">method: transform</div>
+      <p style="padding: 10px;">Nutzt translate()</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; --u2-movable-method: transform; position: relative; left: 250px; width: 180px; background: white; border: 2px solid blue; padding: 10px;">
+      <div u2-movable-handler style="background: blue; color: white; padding: 8px; cursor: grab;">transform + relative</div>
+      <p style="padding: 10px;">Transform auf relative</p>
+    </div>
+
+  </div>
+
+  <!-- Test 5: Fixed Container -->
+  <h2>Test 5: position: fixed Container</h2>
+  <div style="position: fixed; top: 20px; right: 20px; width: 250px; height: 350px; background: #ffe0b2; border: 3px solid #ff9800; z-index: 1000;">
+    
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 20px; width: 180px; background: white; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #ff9800; color: white; padding: 8px; cursor: grab;">in fixed container</div>
+      <p style="padding: 10px;">absolute in fixed</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; --u2-movable-method: transform; position: absolute; top: 180px; left: 20px; width: 180px; background: white; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #ff9800; color: white; padding: 8px; cursor: grab;">transform in fixed</div>
+      <p style="padding: 10px;">Mit transform</p>
+    </div>
+
+  </div>
+
+  <!-- Test 6: Native Popover -->
+  <h2>Test 6: Native Popover</h2>
+  <button popovertargetaction="toggle" popovertarget="testpopover" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Open Popover</button>x
+
+  <div popover u2-movable id="testpopover" style="width: 300px; padding: 0; border: 3px solid #4caf50; top:200px">
+    
+    <div style="--u2-movable-x: true; --u2-movable-y: true; position: relative; background: white; border-bottom: 2px solid #ddd;">
+      <div u2-movable-handler style="background: #4caf50; color: white; padding: 10px; cursor: grab;">Popover Header (movable)</div>
+    </div>
+    
+    <div style="padding: 20px;">
+      <p>Dies ist ein natives Popover-Element!</p>
+      <p>Der Header kann gedragged werden.</p>
+      <button popovertarget="testpopover" popovertargetaction="hide" style="margin-top: 10px; padding: 8px 16px;">Close</button>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 120px; left: 20px; width: 150px; background: #fff3cd; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #ffc107; color: black; padding: 8px; cursor: grab;">Element im Popover</div>
+      <p style="padding: 10px;">Absolute im Popover</p>
+    </div>
+
+  </div>
+
+  <!-- Test 7: Multitouch Test -->
+  <h2>Test 7: Multitouch (auf Touch-Device testen)</h2>
+  <div style="position: relative; height: 400px; background: #e1f5fe; margin: 20px 0; border: 2px solid #03a9f4;">
+    
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 50px; width: 120px; background: #ff5722; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #d32f2f; color: white; padding: 8px; cursor: grab;">Touch 1</div>
+      <p style="padding: 10px; color: white;">Finger 1</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 200px; width: 120px; background: #4caf50; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #388e3c; color: white; padding: 8px; cursor: grab;">Touch 2</div>
+      <p style="padding: 10px; color: white;">Finger 2</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 350px; width: 120px; background: #2196f3; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #1976d2; color: white; padding: 8px; cursor: grab;">Touch 3</div>
+      <p style="padding: 10px; color: white;">Finger 3</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 200px; left: 50px; width: 120px; background: #ff9800; border: 2px solid black; padding: 10px;">
+      <div u2-movable-handler style="background: #f57c00; color: white; padding: 8px; cursor: grab;">Touch 4</div>
+      <p style="padding: 10px; color: white;">Finger 4</p>
+    </div>
+
+  </div>
+
+
+  <!-- Test 8: Verschachtelte Movables -->
+  <h2>Test 8: Verschachtelte Movables</h2>
+  <div style="position: relative; height: 400px; background: #f5f5f5; margin: 20px 0; padding: 20px;">
+    
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 50px; width: 300px; background: white; border: 3px solid #9c27b0; padding: 10px;">
+      <div u2-movable-handler style="background: #9c27b0; color: white; padding: 8px; cursor: grab;">Äußeres Movable (Handler)</div>
+      <p style="padding: 10px;">Nur der Header bewegt das äußere Element</p>
+      
+      <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 80px; left: 20px; width: 180px; background: #ffe0b2; border: 2px solid #ff9800; padding: 10px;">
+        <div u2-movable-handler style="background: #ff9800; color: white; padding: 8px; cursor: grab;">Inneres Movable (Handler)</div>
+        <p style="padding: 10px;">Kann unabhängig bewegt werden</p>
+      </div>
+
+      <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 80px; left: 20px; width: 180px; background: #ffe0b2; border: 2px solid #ff9800; padding: 10px;">
+        <p style="padding: 10px;">Ohne Handler</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Test 9: Threshold Tests -->
+  <h2>Test 9: Threshold Tests</h2>
+  <div style="position: relative; height: 350px; background: #e8f5e9; margin: 20px 0; padding: 20px;">
+    
+    <div u2-movable style="--u2-movable-threshold: 0; --u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 50px; width: 150px; background: white; border: 2px solid #4caf50; padding: 10px;">
+      <div u2-movable-handler style="background: #4caf50; color: white; padding: 8px; cursor: grab;">Threshold: 0px</div>
+      <p style="padding: 10px;">Sofort bewegbar</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-threshold: 10; --u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 230px; width: 150px; background: white; border: 2px solid #ff9800; padding: 10px;">
+      <div u2-movable-handler style="background: #ff9800; color: white; padding: 8px; cursor: grab;">Threshold: 10px</div>
+      <p style="padding: 10px;">10px Mindestweg</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-threshold: 30; --u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 410px; width: 150px; background: white; border: 2px solid #f44336; padding: 10px;">
+      <div u2-movable-handler style="background: #f44336; color: white; padding: 8px; cursor: grab;">Threshold: 30px</div>
+      <p style="padding: 10px;">30px Mindestweg</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-threshold: 50; --u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 200px; left: 50px; width: 150px; background: white; border: 2px solid #9c27b0; padding: 10px;">
+      <div u2-movable-handler style="background: #9c27b0; color: white; padding: 8px; cursor: grab;">Threshold: 50px</div>
+      <p style="padding: 10px;">50px Mindestweg</p>
+    </div>
+
+  </div>
+
+  <!-- Test 10: Movable ohne Handler -->
+  <h2>Test 10: Movable ohne Handler (gesamtes Element ist draggable)</h2>
+  <div style="position: relative; height: 350px; background: #fff3e0; margin: 20px 0; padding: 20px;">
+    
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 50px; left: 50px; width: 150px; background: white; border: 2px solid #03a9f4; padding: 15px; cursor: grab;">
+      <h4 style="margin: 0 0 10px 0; color: #03a9f4;">Ohne Handler</h4>
+      <p style="margin: 0;">Das gesamte Element kann gedragged werden</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: false; position: absolute; top: 50px; left: 230px; width: 150px; background: white; border: 2px solid #673ab7; padding: 15px; cursor: ew-resize;">
+      <h4 style="margin: 0 0 10px 0; color: #673ab7;">Nur X (ohne Handler)</h4>
+      <p style="margin: 0;">Horizontal bewegbar</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-x: true; --u2-movable-y: true; --u2-movable-method: transform; position: absolute; top: 200px; left: 50px; width: 150px; background: white; border: 2px solid #009688; padding: 15px; cursor: grab;">
+      <h4 style="margin: 0 0 10px 0; color: #009688;">Transform (ohne Handler)</h4>
+      <p style="margin: 0;">Mit translate() Methode</p>
+    </div>
+
+    <div u2-movable style="--u2-movable-threshold: 20; --u2-movable-x: true; --u2-movable-y: true; position: absolute; top: 200px; left: 230px; width: 150px; background: white; border: 2px solid #e91e63; padding: 15px; cursor: grab;">
+      <h4 style="margin: 0 0 10px 0; color: #e91e63;">Threshold 20px (ohne Handler)</h4>
+      <p style="margin: 0;">20px Mindestweg</p>
+    </div>
+
+  </div>
+
+  <div style="height: 100px;"></div>
+</section>  

@@ -18,6 +18,7 @@ export class EventsExplorer {
                             <th>Event
                             <th>Target
                             <th>Phase
+                            <th width=10>
                     <tbody>
                 </table>
             </div>`;

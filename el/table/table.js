@@ -14,11 +14,10 @@ class Table extends HTMLElement {
     }
     connectedCallback() {
         this.mutObs = new MutationObserver(mutations => {
-            console.log('check?', this._isUpdating)
+            // console.log('check?', !this._isUpdating)
             if (this._isUpdating) return; // IGNORIEREN WÄHREND UPDATE
-            console.log('check')
-            this.#checkTable();
             this.columns.refresh();
+            this.#checkTable();
         });
         this.mutObs.observe(this, { childList: true, subtree: true, /* attributes: true, characterData: true*/});
         this.#checkTable();
@@ -49,8 +48,7 @@ class Table extends HTMLElement {
                 td.classList.add(...colEl.classList); // test!!
             }
         }
-        if (this.hasAttribute('check-column')) {
-            if (this.checkboxColumnInitialized) return;
+        if (this.hasAttribute('check-column') && !this.checkboxColumnInitialized) {
             this.checkboxColumnInitialized = true;
             for (const group of this.table.children) {
                 if (group.tagName === 'COLGROUP') {
@@ -60,16 +58,41 @@ class Table extends HTMLElement {
                     continue;
                 }
                 for (const tr of group.children) {
-                    const td = document.createElement('td');
-                    tr.prepend(td);
                     if (group.tagName === 'TBODY') {
-                        td.innerHTML = '<input type="checkbox">';
+                        const td = document.createElement('td');
+                        tr.prepend(td);
+                        td.innerHTML = '<input class=row-checkbox type="checkbox">';
+                    }
+                    if (group.tagName === 'THEAD') {
+                        const th = document.createElement('th');
+                        tr.prepend(th);
+                        th.innerHTML = '<input class=summary-checkbox type="checkbox">';
+                    }
+                    if (group.tagName === 'TFOOT') {
+                        const td = document.createElement('td');
+                        tr.prepend(td);
                     }
                 }
             }
+            const summaryCheck = this.querySelector(':scope .summary-checkbox');
+            const headCheckAdjust = () => {
+                const allChecked = this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]:checked').length === this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]').length;
+                const noneChecked = this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]:checked').length === 0;
+                const someChecked = !allChecked && !noneChecked;
+                summaryCheck.checked = allChecked;
+                summaryCheck.indeterminate = someChecked;
+            };
+            headCheckAdjust();
+            this.addEventListener('input', e=>{
+                if (e.target.classList.contains('row-checkbox')) {
+                    headCheckAdjust();
+                }
+                if (e.target === summaryCheck) {
+                    this.querySelectorAll(':scope > table > tbody > tr > td > input.row-checkbox').forEach(el => el.checked = e.target.checked);
+                }
+            });
         }
-        if (this.hasAttribute('drag-column')) {
-            if (this.dragColumnInitialized) return;
+        if (this.hasAttribute('drag-column') && !this.dragColumnInitialized) {
             this.dragColumnInitialized = true;
             import('../../attr/dropzone/dropzone.js');
             for (const group of this.table.children) {
@@ -87,7 +110,7 @@ class Table extends HTMLElement {
                     tr.prepend(td);
                     if (group.tagName === 'TBODY') {
                         tr.setAttribute('draggable', 'false');
-                        td.innerHTML = '<u2-icon>⠿</u2-ico>';
+                        td.innerHTML = '<u2-ico inline>⠿</u2-ico>';
                         td.setAttribute('u2-draghandle', '');
                     }
                 }

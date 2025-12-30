@@ -18,7 +18,6 @@ export class PointerObserver {
         this.start = this.start.bind(this);
         this.move = this.move.bind(this);
         this.stop = this.stop.bind(this);
-		this.scroll = this.scroll.bind(this);
 
 
 		el.addEventListener('mousedown', this.start);  // why mousedown when only options.touch? To be able to change options after creating the observer?
@@ -44,7 +43,7 @@ export class PointerObserver {
 		let signal = this.abortCtrl.signal;
 
 
-		/* neu: *
+		/* neu: */
 		const initial = {
             x: pointer.pageX,
             y: pointer.pageY,
@@ -54,13 +53,12 @@ export class PointerObserver {
         this.posStart = { ...initial };
         this.pos      = { ...initial };
         this.last     = { ...initial };
-		/* */
+		/*
 		this.posStart = this.pos = {
 			x:pointer.pageX,
 			y:pointer.pageY
 		};
-		/* */
-		this.clientPos = { x: pointer.clientX, y: pointer.clientY }; // für scroll
+		*/
 
 		this.onstart && this.onstart(e);
 
@@ -74,7 +72,6 @@ export class PointerObserver {
             d.addEventListener('touchend' , this.stop, {signal});
             //d.addEventListener('touchstart', gstart);
 		}
-		d.addEventListener('scroll', this.scroll, {signal, passive: true, capture: true});
 		this.running = true;
 	}
 	move(e) {
@@ -107,22 +104,10 @@ export class PointerObserver {
 			y: pointer.pageY,
 			time: e.timeStamp,
 		};
-		this.clientPos = { x: pointer.clientX, y: pointer.clientY }; // für scroll
-
         if (this.last.x===this.pos.x && this.last.y === this.pos.y) return;
 
         this.onmove && this.onmove(e);
 	}
-	scroll(e) {
-		const syntEvent = {
-			pageX: this.clientPos.x + window.pageXOffset,
-			pageY: this.clientPos.y + window.pageYOffset,
-			clientX: this.clientPos.x,
-			clientY: this.clientPos.y,
-			timeStamp: e.timeStamp,
-		};
-		this.move(syntEvent);
-	}	
 	stop(e) {
 		if (e.changedTouches && e.changedTouches[0].identifier !== this.identifier) return;
 		this.onstop && this.onstop(e);

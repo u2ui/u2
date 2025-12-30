@@ -71,7 +71,7 @@ class System extends HTMLElement {
 customElements.define('u2-system', System);
 
 addEventListener('keydown', (e) => {
-    if (e.target.form !== null) return;
+    if (e.target.form !== undefined) return;
     if (e.target.isContentEditable) return;
     if (e.ctrlKey || e.altKey || e.metaKey) return;
     if (e.key !== 's') return;
