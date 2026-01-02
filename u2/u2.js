@@ -1,8 +1,14 @@
-
+import { importCss } from "./utils.js";
 
 window.u2 ??= Object.create(null);
-window.u2.js = function(jsRepo){
+u2.js = function(jsRepo){
     const file = import.meta.resolve('../js/'+jsRepo+'/'+jsRepo+'.js');
+    return import(file);
+}
+u2.el = function(elRepo, options){
+    const file = import.meta.resolve('../el/'+elRepo+'/'+elRepo+'.js');
+    const css = import.meta.resolve('../el/'+elRepo+'/'+elRepo+'.css');
+    importCss(css, options);
     return import(file);
 }
 

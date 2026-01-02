@@ -1,5 +1,13 @@
 {
   "attr": {
+    "lightbox": {
+      "name": "lightbox",
+      "description": "Link an image to a lightbox.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "scrollspy": {
       "name": "scrollspy",
       "description": "Make a navigation that changes the `active` class based on the scroll position.",

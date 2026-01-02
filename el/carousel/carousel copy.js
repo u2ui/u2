@@ -12,7 +12,6 @@ class u2Carousel extends HTMLElement {
 			:host {
 				position:relative;
 				contain: layout;
-contain: layout style paint;  /* Neu ok? */
 			}
 			:host .-arrow {
 				position:absolute;
@@ -32,9 +31,6 @@ contain: layout style paint;  /* Neu ok? */
 				stroke-width:.1rem;
 				box-sizing:content-box;
 				contain:layout;
-				color:inherit;
-
-contain: layout style paint;  /* Neu ok? */
 			}
 			:host .-prev { inset-inline-start: 0; }
 			:host .-next { inset-inline-end: 0; }
@@ -76,11 +72,6 @@ contain: layout style paint;  /* Neu ok? */
 				will-change: transform;
 				overflow: visible;
 			}
-:host([mode=slide]) > slot.body::slotted(*) {
-    contain: layout style paint;
-}
-
-
 			/* scroll */
 			:host([mode=scroll]) {
 				overflow:visible !important;
@@ -107,15 +98,14 @@ contain: layout style paint;  /* Neu ok? */
 			:host([mode=fade]) .body::slotted(*) {
 				transition:opacity var(--u2-carousel-animation-speed, .7s) ease-in-out;
 				will-change: opacity;
-				opacity:0 !important;
+				opacity:0;
 				margin-left:-100% !important;
 			}
-				
-			:host([mode=fade]) .body::slotted(:not([slot]):first-of-type)  {
+			:host([mode=fade]) .body::slotted(:first-child)  {
 				margin-left:0 !important;
 			}
 			:host([mode=fade]) .body::slotted([aria-hidden=false]) {
-				opacity:1 !important;
+				opacity:1;
 				z-index:1;
 			}
 		</style>
@@ -130,7 +120,6 @@ contain: layout style paint;  /* Neu ok? */
 
 		setTimeout(()=>{ !this.active && this.next(); }); // this way i can add eventlistener that reacts to the change
 		this._nextDelayed = this._nextDelayed.bind(this);
-		this._onSlotChange = this._onSlotChange.bind(this);
 
 
 		this.slider = this.shadowRoot.querySelector('slot.body');
@@ -156,10 +145,6 @@ contain: layout style paint;  /* Neu ok? */
 
 
 	}
-	_onSlotChange(){
-		this.setAttribute('item-count', this._items().length);
-	}
-
 	static observedAttributes = ['play', 'autoplay', 'mode'/*, 'tabindex'*/]; // zzz "play"
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
@@ -253,11 +238,7 @@ contain: layout style paint;  /* Neu ok? */
 	}
 	connectedCallback() {
 		this.hasAttribute('play') && this.play();
-		this.slider.addEventListener('slotchange', this._onSlotChange);
-		//this._updateItemCount(); // needed here?
-	}
-	disconnectedCallback() {
-		this.slider && this.slider.removeEventListener('slotchange', this._onSlotChange);
+		this.setAttribute('item-count', this._items().length); // todo, dynamic react on dynamic added slides, mutation observer?
 	}
 }
 
@@ -303,11 +284,10 @@ u2Carousel.mode.slide = {
 		const wMode = sliderStyle.getPropertyValue('writing-mode'); // trigger reflow
         const paddingStart = parseFloat(sliderStyle.getPropertyValue('padding-inline-start'));
 		const vertical = wMode.includes('vertical');
+        const XY = vertical ? 'Y' : 'X';
         const translate = (vertical ? -target.offsetTop : -target.offsetLeft) + paddingStart;
-        //const XY = vertical ? 'Y' : 'X';
 		//const translate = -(target.offsetLeft - (this.offsetWidth - target.offsetWidth) / 2) - paddingStart;
-		//this.slider.style.transform = `translate${XY}(${translate}px)`;
-		this.slider.style.transform = `translate3d(${vertical ? 0 : translate}px, ${vertical ? translate : 0}px, 0)`;
+		this.slider.style.transform = `translate${XY}(${translate}px)`;
 		//this.slider.style.transform = 'translateX(-'+(100*this.activeIndex())+'%)'; Advantage: It stays in the right place even when resized.
 	},
 }

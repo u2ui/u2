@@ -127,6 +127,7 @@ const css = `
     }
     &:is(img) {
         object-position: -10000px -10000px !important;
+        background-position-y: 50% !important;
     }
 }
 `;
