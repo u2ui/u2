@@ -1,10 +1,10 @@
 # [u2-lightbox] - attribute
-Link an image to a lightbox.
+Link an image to a lightbox. `<a u2-lightbox=group1 src="image.jpg">`
 
 ## Usage
 
 ```html
-<a u2-lightbox href="https://picsum.photos/seed/10/1000/800">
+<a u2-lightbox=group1 href="https://picsum.photos/seed/10/1000/800">
     <img src="https://picsum.photos/seed/10/100/100" alt="Alt Text" width="100" height="100">
 </a>
 ```

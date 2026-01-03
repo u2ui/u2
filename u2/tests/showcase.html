@@ -4,10 +4,9 @@
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>U2 design system | Showcase</title>
-        <script src="./test-init.js" type=module async></script>
+        <!--script src="./test-init.js" type=module async></script-->
         <script src="../tools/dev-iframe.js" type=module async></script>
         
-
         <style>
         html {
             --hsl-h:275.4;
@@ -70,6 +69,7 @@
 
                 const repos = await fetch('../projects.json').then(res=>res.json());
 
+                const esc = s => new Option(s).innerHTML;
                 const extToName = {
                     'el':'Elements',
                     'attr':'Attributes',
@@ -93,7 +93,6 @@
 
                         (async function(){
 
-                            //let url = `https://github.com/u2ui/u2/tree/main/el/alert`
                             let url = `https://github.com/u2ui/u2/tree/main/${ext}/${name}`;
 
                             const localUrl = '../../' + ext + '/' + name;
@@ -103,8 +102,8 @@
                             <section>
                                 <header>
                                     <div style="flex:1 1 auto">
-                                        <h2 style="margin-bottom:0">${repo.name}</h2>
-                                        <small>${repo.description}</small>
+                                        <h2 style="margin-bottom:0">${esc(repo.name)}</h2>
+                                        <small>${esc(repo.description)}</small>
                                     </div>
                                     <a href="${url}" target=github rel=noopener><u2-ico>github</u2-ico></a>
                                 </header>

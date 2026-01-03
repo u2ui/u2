@@ -2,7 +2,7 @@
   "attr": {
     "lightbox": {
       "name": "lightbox",
-      "description": "Link an image to a lightbox.",
+      "description": "Link an image to a lightbox. <a u2-lightbox=group1 src=\"image.jpg\">",
       "beta": false,
       "deprecated": false,
       "css": false,
