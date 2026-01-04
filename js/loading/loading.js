@@ -49,8 +49,11 @@ function _markElement(el, {delay = 0} = {}) {
         el.u2ShowLoadingTO = setTimeout(()=>{
             el.classList.add('u2Loading');
             //if (el.hasAttribute('aria-life')) el.ariaBusy = 'true';
-            if (!el.offsetHeight) el.style.minHeight = '36px';
-            if (!el.offsetWidth)  el.style.minWidth = '36px';
+            
+            // this is bad:
+            //if (!el.offsetHeight) el.style.minHeight = '36px';
+            //if (!el.offsetWidth)  el.style.minWidth = '36px';
+            
             let svg = getComputedStyle(el).getPropertyValue('--loading-svg');
             svg = svg.replace('currentColor', getComputedStyle(el).color);
             el.style.setProperty('background-image', svg, 'important');

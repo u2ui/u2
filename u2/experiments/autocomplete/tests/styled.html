@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../../auto.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../../css/classless/simple.css">
+
+    <style>
+        body {
+            place-content: initial;
+        }
+    </style>
+
+    <!--link href="../autocomplete.css" rel=stylesheet-->
+    <script src="../autocomplete.js" type=module async></script>
+
+<body>
+
+<u2-system></u2-system>
+
+<section>
+
+    <u2-autocomplete 
+        src="https://restcountries.com/v3.1/name/{query}"
+        min-length="0"
+        value-key="cca2"
+        label-key="name.common"
+        >
+
+        <input type="text" placeholder="Search..." autofocus>
+
+        <template>
+            <div style="display:flex;gap:8px;align-items:center">
+                <img src="{{flags.svg}}" width="24" height="16" style="object-fit:cover">
+                <span>{{@value}}</span>
+                <span>{{@label}}</span>
+                <small>(index: {{@index}})</small>
+            </div>
+        </template>
+
+    </u2-autocomplete>
+
+    <u2-code trim editable>
+        <style>
+            u2-autocomplete {
+                width: 300px;
+                margin-bottom: 24px;
+            }
+            u2-autocomplete input {
+                padding: 8px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            u2-autocomplete::part(menu) {
+                padding:1rem;
+                border-radius:.5rem;
+                border: 1px solid black;
+                max-height: 80vh;
+                overflow-y: auto;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            u2-autocomplete::part(option) {
+                padding:1rem;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+            }
+            u2-autocomplete::part(active) {
+                background-color: #f0f0f0;
+            }
+        </style>
+    </u2-code>

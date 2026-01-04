@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>Test</title>
+    <script src="../../../auto.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../../css/classless/simple.css">
+
+    <style>
+        body {
+            place-content: initial;
+        }
+    </style>
+
+    <!--link href="../autocomplete.css" rel=stylesheet-->
+    <script src="../autocomplete.js" type=module async></script>
+
+<body>
+
+<u2-system></u2-system>
+
+<section>
+
+    <u2-autocomplete 
+        src="https://restcountries.com/v3.1/name/{query}"
+        min-length="1"
+        value-key="cca2"
+        label-key="name.common"
+        >
+
+        <input type="text" placeholder="Search...">
+
+        <template>
+            <div style="display:flex;gap:8px;align-items:center">
+                <img src="{{flags.svg}}" width="24" height="16" style="object-fit:cover">
+                <span>{{@value}}</span>
+                <span>{{@label}}</span>
+                <small>(index: {{@index}})</small>
+            </div>
+        </template>
+
+    </u2-autocomplete>
+
+
+    <h2>No template</h2>
+    <u2-autocomplete 
+        src="https://restcountries.com/v3.1/name/{query}"
+        min-length="1"
+        value-key="cca2"
+        label-key="name.common"
+        >
+        <input type="text" placeholder="Search...">
+    </u2-autocomplete>
+
+
+    <h2>With options</h2>
+    <u2-autocomplete 
+        src="https://thisfails.asdfasdf.com/{query}"
+        min-length="1">
+
+        <input type="text" placeholder="Search...">
+
+        <datalist>
+            <option value="CH">Switzerland
+            <option value="DE">Germany
+            <option value="AT">Austria
+            <option value="FR">France
+            <option value="IT">Italy
+        </datalist>
+
+    </u2-autocomplete>
+
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <h2>Menu should be on top of element</h2>
+    <u2-autocomplete 
+    src="https://restcountries.com/v3.1/name/{query}"
+    min-length="1"
+    value-key="cca2"
+    label-key="name.common"
+    >
+
+        <input type="text" placeholder="Search...">
+    </u2-autocomplete>

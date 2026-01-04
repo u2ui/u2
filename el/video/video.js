@@ -209,7 +209,7 @@ class U2Video extends HTMLElement {
                     <div class=-buffered id=progressBuffered></div>
                     <div class=-filled id=progressFilled></div>
                 </div>
-                <button id=playPause title="Play/Pause (Space)">${svg.play}</button>
+                <button id=playPause title="Play/Pause (Space)">${svg.pause}</button>
                 <button id=muteToggle title="Mute (M)">${svg.mute}</button>
                 <span id=timeDisplay>0:00 / 0:00</span>
                 <button id=speedToggle title="Playback Speed" popovertarget="speedMenu" popovertargetaction="toggle">1x</button>
@@ -372,10 +372,10 @@ class U2Video extends HTMLElement {
     togglePlay() {
         if (this._video.paused) {
             this._video.play();
-            this.showOverlay(svg.play);
+            this.showOverlay(svg.pause);
         } else {
             this._video.pause();
-            this.showOverlay(svg.pause);
+            this.showOverlay(svg.play);
         }
     }
 
@@ -425,7 +425,7 @@ class U2Video extends HTMLElement {
     }
 
     updatePlayButton() {
-        this.$('playPause').innerHTML = this._video.paused ? svg.play : svg.pause;
+        this.$('playPause').innerHTML = this._video.paused ? svg.pause : svg.play;
     }
 
     updateVolumeDisplay() {
