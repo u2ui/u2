@@ -11,6 +11,7 @@ class U2Autocomplete extends HTMLElement {
         <style>
             :host { display: inline-block; }
             [role=listbox] {
+                position:absolute;
                 margin: 0;
                 padding: 0;
                 background: white;
@@ -18,6 +19,7 @@ class U2Autocomplete extends HTMLElement {
                 border: 0;
                 max-height: 20rem;
                 overflow-y: auto;
+                overscroll-behavior: contain;
                 [part~="active"] { background: var(--color-light); }
                 [part~="selected"] { background: var(--color); color: var(--color-bg); }
                 [role="option"] { padding: .4rem; cursor: pointer; }
@@ -151,8 +153,8 @@ class U2Autocomplete extends HTMLElement {
     }
 
     async _place() {
-        new Placer(this.menu.element, { x: 'prepend', y: 'after', margin: 0 }).toElement(this);
         this.menu.element.style.minWidth = this.offsetWidth + 'px';
+        new Placer(this.menu.element, { x: 'prepend', y: 'after', margin: 0 }).toElement(this);
     }
 
     showMenu() {

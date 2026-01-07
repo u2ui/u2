@@ -23,7 +23,6 @@ class TextareaHandler extends TypeHandler {
     get fallback() { return '<textarea></textarea>'; }
 }
 
-/*
 class SelectHandler extends TypeHandler {
     get fallback() { return '<select></select>'; }
 
@@ -38,90 +37,8 @@ class SelectHandler extends TypeHandler {
             const clone = document.createElement('option');
             clone.value = opt.value;
             clone.textContent = opt.textContent;
-            this.realInput.append(clone);
+            this.realInput.appendChild(clone);
         });
-    }
-}
-*/
-
-const selectCache = new Map();
-
-class SelectHandler extends TypeHandler {
-    get fallback() { return '<select></select>'; }
-
-    renderOptions(options) {
-        const value = this.element.getAttribute('value');
-
-        options = options.map(opt =>  // Normalisiere Options-Format
-            typeof opt === 'string' ? { value: opt, label: opt } : opt
-        );
-
-        // Bestimme selected value (Priorität: value Attribut > <option selected>)
-        let selectedValue = value;
-        if (!selectedValue && this.element.querySelector('option[selected]')) {
-            selectedValue = this.element.querySelector('option[selected]').value;
-        }
-        // Füge selectedValue hinzu wenn nicht in options
-        if (selectedValue && !options.some(o => o.value === selectedValue)) {
-            options.unshift({ value: selectedValue, label: selectedValue });
-        }
-        this.realInput.innerHTML = '';
-        options.forEach(opt => {
-            const option = document.createElement('option');
-            option.value = opt.value;
-            option.textContent = opt.label;
-            if (opt.value === selectedValue) option.selected = true;
-            this.realInput.append(option);
-        });
-    }
-
-    async init() {
-        // Validierung: value und <select> schließen sich aus
-//        if (this.element.hasAttribute('value') && this.element.querySelector('select')) throw new Error('u2-input: Cannot use both "value" attribute and <select> element. Use either <select> with <option selected> or "value" with "list".');
-        let options = [];
-
-        if (this.element.fallbackActive && this.element.getAttribute('value')) {
-            options = [{ value: this.realInput.value, label: this.realInput.value }];
-        }
-
-        const src = this.element.getAttribute('src');
-        const listId = this.element.getAttribute('list');
-        
-        
-        // Lade Remote-Daten (mit Cache)
-
-        if (src) {
-            try {
-                if (selectCache.has(src)) options = selectCache.get(src);
-                else {
-                    fetch(src).then(r => r.json()).then(options => {
-                        selectCache.set(src, options);
-                        this.renderOptions(options);
-                    });
-                }
-            } catch (err) {
-                console.warn('u2-input: Failed to load remote options, falling back to local', err);
-            }
-        }
-
-        // Fallback auf lokale Daten wenn Remote fehlschlägt oder nicht vorhanden
-        if (listId) {
-            const list = document.getElementById(listId);
-            if (list) {
-                [...list.querySelectorAll('option')].forEach(opt => options.push({
-                    value: opt.value,
-                    label: opt.label || opt.textContent || opt.value,
-                }));
-            }
-        } else if (this.element.querySelector('select')) {
-            [...this.element.querySelectorAll('option')].forEach(opt => options.push({
-                value: opt.value,
-                label: opt.textContent
-            }));
-        }
-                
-        // Befülle Select
-        this.renderOptions(options);
     }
 }
 
@@ -199,9 +116,6 @@ class PasswordHandler extends TypeHandler {
         this.visibilityBtn?.removeEventListener('click', this.toggleHandler);
     }
 }
-
-
-
 
 class CheckboxHandler extends TypeHandler {
     get fallback() { return '<select><option value="">off</option><option>on</option></select>'; }
@@ -299,8 +213,6 @@ class FileHandler extends TypeHandler {
       }
       #browse {
         font: inherit;
-        background:none;
-        border:0;
       }
       #num {
         background: var(--color-light, #eee);
@@ -312,12 +224,15 @@ class FileHandler extends TypeHandler {
       #preview {
         white-space: nowrap;
         overflow: auto;
-        font-size: 14px;
-        max-height: 20em;
+        font-size: 12px;
+        width: 100%;
+        max-height: 10em;
       }
       #previewTable {
+        flex-wrap: wrap;
+        gap: .2em;
+        width: 100%;
         max-height: 10em;
-        td { padding: .3em .5em; }
       }
       #preview img {
         display: block;
@@ -360,7 +275,6 @@ class FileHandler extends TypeHandler {
         this.element.addEventListener('drop', this.dropHandler);
         this.element.addEventListener('paste', this.pasteHandler);
         this.element.setPicker(this.element.$('#preview'));
-        
 
     }
 
@@ -398,10 +312,10 @@ class FileHandler extends TypeHandler {
                 img.src = URL.createObjectURL(file);
                 img.alt = file.name;
                 img.onload = () => URL.revokeObjectURL(img.src);
-                tr.querySelector('.img').append(img);
+                tr.querySelector('.img').appendChild(img);
             }
 
-            preview.append(tr);
+            preview.appendChild(tr);
         }
 
         this.shadow.getElementById('num').textContent = this.realInput.files.length || '';
@@ -469,36 +383,26 @@ customElements.define('u2-input', class extends HTMLElement {
         }
         ::slotted(input) { inline-size: 100% !important; }
         
-        :where(#input > button) {
-            background: var(--color-light, #eee);
-            align-self: stretch;
-            min-inline-size: 2em;
-            transition: .2s;
-            opacity: 0;
-            border: 0;
-            &:active, &:focus, &:hover {
-                background: #e9e9e9;
-                outline: 0;
-                opacity: 1;
-            }
+        #input > button {
+          background: var(--color-light, #eee);
+          align-self: stretch;
+          min-inline-size: 2em;
+          transition: .2s;
+          opacity: 0;
+          border: 0;
+        }
+        #input > button:active, 
+        #input > button:focus, 
+        #input > button:hover {
+          background: #e9e9e9;
+          outline: 0;
+          opacity: 1;
         }
         :host(:hover) #input > button { opacity: 1; }
 
         #picker-trigger {
             opacity: 1;
-            background: #ffff;
-        }
-        .picker {
-            box-sizing: border-box;
-            position: absolute;
-            inset: auto;
-            border-radius:var(--radius, 4px);
-            box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,0.15));
-            background: #fff;
-            border: 0;
-            max-width: 50vw;
-            overscroll-behavior: contain;
-        }
+        }        
       </style>
       <style id=typeCss></style>
       <div id=input>
@@ -599,14 +503,13 @@ customElements.define('u2-input', class extends HTMLElement {
         TYPE_REGISTRY[name] = HandlerClass;
     }
 
-    // Picker
+    // Picker API (analog zu showPicker())
     setPicker(element, options = {}) {
         this._removePicker();
 
         const { icon = 'arrow-drop-down' } = options;
 
         element.popover = 'manual';
-        element.classList.add('picker');
         element.id ||= `picker-${Math.random().toString(36).slice(2)}`;
 
         const btn = document.createElement('button');
@@ -630,7 +533,7 @@ customElements.define('u2-input', class extends HTMLElement {
 
         this.$('#input').append(btn);
 
-        if (!element.parentElement) this.shadowRoot.append(element);
+        if (!element.parentElement) this.shadowRoot.appendChild(element);
 
         this._picker = { element, btn };
         return this;
@@ -638,21 +541,19 @@ customElements.define('u2-input', class extends HTMLElement {
 
     _removePicker() {
         this._picker?.btn.remove();
-        if (this._picker?.element) {
-            this._picker.element.classList.remove('picker');
-            this._picker.element.popover = null;
-        }
         this._picker = null;
     }
 
     async _showPicker() {
         if (!this._picker) return;
-        const picker = this._picker.element;
-        picker.showPopover();
+
+        this._picker.element.showPopover();
         this._picker.btn.ariaExpanded = 'true';
+
         const { Placer } = await import('../../js/Placer/Placer.js');
-        picker.style.minWidth = this.offsetWidth + 'px';
-        new Placer(picker, { x: 'prepend', y: 'after', margin: 0 }).toElement(this);
+        new Placer(element, { x: 'prepend', y: 'after', margin: 0 }).toElement(this);
+        element.style.minWidth = this.offsetWidth + 'px';
+        element.style.maxWidth = '50vw';
     }
 
     _hidePicker() {

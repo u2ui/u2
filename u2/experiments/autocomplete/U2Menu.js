@@ -37,8 +37,6 @@ export class U2Menu {
 
         const actions = {
             'active': () => enabled.find(item => item.part.contains('active')) || null,
-            // 'next': () => enabled[(current + 1) % enabled.length],
-            // 'prev': () => enabled[(current - 1 + enabled.length) % enabled.length],
             'next': () => enabled[Math.min(current + 1, enabled.length - 1)],
             'prev': () => enabled[Math.max(current - 1, 0)],
             'first': () => enabled[0],
@@ -59,9 +57,12 @@ export class U2Menu {
         this.items.forEach(item => item.part.remove('active'));
         element.part.add('active');
         this.activeIndex = parseInt(element.dataset.idx);
-        this.element.ariaActiveDescendantElement = element; // needed? input also has it
+        this.element.ariaActiveDescendantElement = element;
         element.dispatchEvent(new CustomEvent('u2Menu-active', { bubbles: true, detail: { element } }));
-        element.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+        //element.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+        setTimeout(() => {
+            element.scrollIntoViewIfNeeded? element.scrollIntoViewIfNeeded() : element.scrollIntoView({ block: 'nearest' });
+        },0);
     }
 
     select(element) {
@@ -74,9 +75,7 @@ export class U2Menu {
     }
 
     addItem(element, options = {}) {
-        if (this.role === 'menu' && element.tagName !== 'LI') {
-            console.warn('u2-menu: <menu> should contain <li> elements');
-        }
+        if (this.role === 'menu' && element.tagName !== 'LI') console.warn('u2-menu: <menu> should contain <li> elements');
 
         element.id ||= `${this.element.id}-item-${this.items.length}`;
 
@@ -84,7 +83,7 @@ export class U2Menu {
         if (options.separator) {
             element.role = 'separator';
             element.part = 'separator';
-            this.element.appendChild(element);
+            this.element.append(element);
             this.items.push(element);
             return element;
         }
@@ -93,16 +92,23 @@ export class U2Menu {
         element.part = 'option';
         element.dataset.idx = this.items.length;
 
-        // Disabled
+        // Event handlers - prüfen selbst ob disabled
+        element.onmouseenter = () => {
+            if (element.ariaDisabled === 'true') return;
+            this.setActive(element);
+        };
+        element.onclick = () => {
+            if (element.ariaDisabled === 'true') return;
+            this.select(element);
+        };
+
+        // Disabled state setzen
         if (options.disabled) {
             element.ariaDisabled = 'true';
             element.part.add('disabled');
-        } else {
-            element.onmouseenter = () => this.setActive(element);
-            element.onclick = () => this.select(element);
         }
 
-        this.element.appendChild(element);
+        this.element.append(element);
         this.items.push(element);
         return element;
     }
@@ -124,20 +130,8 @@ export class U2Menu {
     setDisabled(index, disabled) {
         const item = this.items[index];
         if (!item) return;
-
-        if (disabled) {
-            item.ariaDisabled = true;
-            item.part.add('disabled');
-            item.onmouseenter = item.onclick = null;
-        } else {
-            item.ariaDisabled = null;
-            item.part.remove('disabled');
-            item.onmouseenter = () => this.setActive(item);
-            item.onclick = () => item.dispatchEvent(new CustomEvent('select', {
-                bubbles: true,
-                detail: { index, element: item }
-            }));
-        }
+        item.ariaDisabled = disabled ? 'true' : null;
+        item.part.toggle('disabled', disabled);
     }
 
     clear() {

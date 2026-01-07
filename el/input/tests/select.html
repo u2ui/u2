@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+    <link href="../input.css" rel=stylesheet>
+    <script src="../input.js" type=module async></script>
+
+<body>
+
+<section>
+
+<h3>select</h3>
+<u2-input type="select">
+    <select>
+        <option value="1">Option 1
+        <option value="2" selected>Option 2
+        <option value="3">Option 3
+    </select>
+</u2-input>
+
+
+<u2-input type="select">
+    <select multiple>
+        <option value="1">Option 1
+        <option value="2" selected>Option 2
+        <option value="3" selected>Option 3
+        <option value="4">Option 4
+    </select>
+</u2-input>
+
+<script>
+const mockAPI = {
+    '/api/countries': [
+        {value: 'ch', label: 'Schweiz'},
+        {value: 'de', label: 'Deutschland'},
+        {value: 'at', label: 'Österreich'},
+        {value: 'fr', label: 'Frankreich'}
+    ],
+    '/api/languages': ['Deutsch', 'English', 'Français', 'Italiano']
+};
+
+const originalFetch = window.fetch;
+window.fetch = async (url, ...args) => {
+    if (mockAPI[url]) {
+        await new Promise(r => setTimeout(r, 1000));
+        return { json: async () => mockAPI[url] };
+    }
+    return originalFetch(url, ...args);
+};
+</script>
+
+<h1>u2-input Select Examples</h1>
+
+  <datalist id="countries">
+    <option value="ch">Schweiz</option>
+    <option value="de">Deutschland</option>
+    <option value="at">Österreich</option>
+  </datalist>
+
+  <datalist id="colors">
+    <option value="red">Rot</option>
+    <option value="green">Grün</option>
+    <option value="blue">Blau</option>
+  </datalist>
+
+  <hr>
+
+  <h2>1. Natives Select (volle Kontrolle)</h2>
+  <u2-input type="select">
+    <select>
+      <option value="de" selected>Deutschland</option>
+      <option value="fr">Frankreich</option>
+      <option value="it">Italien</option>
+    </select>
+  </u2-input>
+
+  <hr>
+
+  <h2>2. Mit datalist</h2>
+  <u2-input type="select" list="countries"></u2-input>
+
+  <hr>
+
+  <h2>3. Mit datalist + value (Preselect)</h2>
+  <u2-input type="select" list="countries" value="de"></u2-input>
+
+  <hr>
+
+  <h2>4. Mit Remote src (lädt von API)</h2>
+  <u2-input type="select" src="/api/countries"></u2-input>
+  <small>Lädt Länder von Mock-API</small>
+
+  <hr>
+
+  <h2>5. Remote + value (Label wird von remote übernommen)</h2>
+  <u2-input type="select" src="/api/countries" value="de"></u2-input>
+  <small>"de" wird zu Deutschland</small>
+
+  <hr>
+
+  <h2>5. Remote + value (Preselect, auch wenn nicht in Liste)</h2>
+  <u2-input type="select" src="/api/countries" value="us"></u2-input>
+  <small>"us" wird hinzugefügt, da nicht in Remote-Liste</small>
+
+  <hr>
+
+  <h2>6. Remote + Fallback auf datalist (bei Error)</h2>
+  <u2-input type="select" src="/api/invalid" list="countries"></u2-input>
+  <small>API-Fehler → fällt auf datalist zurück</small>
+
+  <hr>
+
+  <h2>7. String-Array von Remote</h2>
+  <u2-input type="select" src="/api/languages"></u2-input>
+  <small>Remote liefert String-Array statt Objekte</small>
+
+  <hr>
+
+  <h2>8. Nur generiert (ohne Daten)</h2>
+  <u2-input type="select"></u2-input>
+  <small>Leeres Select wird erstellt</small>
+
+  <hr>
+
+  <h2>❌ Error: value + select zusammen</h2>
+  <button onclick="testError()">Test Error</button>
+  <div id="error-output"></div>
+
+  <script>
+    function testError() {
+      try {
+        const el = document.createElement('u2-input');
+        el.setAttribute('type', 'select');
+        el.setAttribute('value', 'test');
+        el.innerHTML = '<select><option>foo</option></select>';
+        document.body.appendChild(el);
+      } catch(e) {
+        document.getElementById('error-output').innerHTML = 
+          '<pre style="color:red">' + e.message + '</pre>';
+      }
+    }
+  </script>
+
+  <hr>
+
+  <h2>Form Integration</h2>
+  <form>
+    <label>
+      Land:
+      <u2-input type="select" list="countries" value="ch" name="country"></u2-input>
+    </label>
+    <label>
+      Farbe:
+      <u2-input type="select" list="colors" name="color"></u2-input>
+    </label>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.querySelector('form').addEventListener('submit', e => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      alert('Submitted:\n' + JSON.stringify(Object.fromEntries(data), null, 2));
+    });
+  </script>
+

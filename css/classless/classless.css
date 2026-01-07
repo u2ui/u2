@@ -93,7 +93,18 @@ input, textarea, select, button, .btn, u2-input {
 }
 
 
-/* buttons */
+/* ::file-selector-button, ::-webkit-file-upload-button, select[size], / * chrome * / select[multiple] { */
+select[size], /* chrome */ select[multiple] {
+    border-top-right-radius: 0;/* recheck: border-end-end-radius supported? (-safari) */
+    border-bottom-right-radius: 0;
+    margin: 0;
+    margin-inline-end: .5em;
+}
+
+
+}
+
+/* outside layer */
 button, .btn {
     background-color: var(--color);
     color: var(--color-bg);
@@ -105,15 +116,4 @@ button, .btn {
 
 :is(button, .btn):not(:disabled):where(:hover, :focus, [aria-pressed="true"]) {
     background-color: var(--color-dark);
-}
-
-/* ::file-selector-button, ::-webkit-file-upload-button, select[size], / * chrome * / select[multiple] { */
-select[size], /* chrome */ select[multiple] {
-    border-top-right-radius: 0;/* recheck: border-end-end-radius supported? (-safari) */
-    border-bottom-right-radius: 0;
-    margin: 0;
-    margin-inline-end: .5em;
-}
-
-
 }

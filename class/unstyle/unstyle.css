@@ -1,5 +1,6 @@
 .u2-unstyle {
-    background: unset;
+    xbackground: unset;
+    background-color:unset;
     color: unset;
     margin: unset;
     padding: unset;
@@ -10,5 +11,6 @@
     text-transform: unset;
 }
 .u2-unstyle:is(:hover,:focus) {
-    background:unset;
+    xbackground:unset;
+    background-color:unset;
 }

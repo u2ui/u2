@@ -54,6 +54,10 @@ input:is([type=radio], [type=checkbox]) {
     vertical-align: -15%;
 	background-color: #fff;
 	border: solid 1px;
+
+	border-width: var(--control-border-width, 1px);
+	border-color: var(--color-line, currentColor);
+
 	position: relative;
 	border-radius: .15em;
 	padding: 0;

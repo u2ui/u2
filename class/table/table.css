@@ -54,7 +54,7 @@ https://jsfiddle.net/x90cz65o/103/
     padding-inline: 0;
 }
 .u2-table.-Flex > * > * > * { /* td */
-    flex: 1 1 11em;
+    flex: 7 1 11em;
     min-width:0;
     padding-block: 0;
     padding-inline: calc(var(--u2-Col-gap) / 2);
@@ -78,7 +78,7 @@ https://jsfiddle.net/x90cz65o/103/
 .u2-table.-Fields > * > * > :first-child {
     inline-size: var(--col-1-width, 9em);
     flex-basis: var(--col-1-width, 9em);
-    flex-grow:0.1;
+    flex-grow:1;
 }
 
 .u2-table.-NoSideGaps > * > * > :first-child { padding-inline-start:0; }

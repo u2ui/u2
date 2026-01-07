@@ -98,7 +98,7 @@ html, [u2-skin] {
     --pink:   oklch(from var(--palette-base) l c calc(340 + var(--hue-shift)));
 
     --shadow-blur: var(--gap);
-    --shadow-color: color-mix(in srgb, var(--color-text), transparent 70%);
+    --shadow-color: color-mix(in srgb, var(--color-text), transparent 60%);
     --shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) var(--shadow-color);
     --shadow-s: calc(var(--shadow-x) * 0.5) calc(var(--shadow-y) * 0.5) calc(var(--shadow-blur) * 0.5) var(--shadow-color);
     --shadow-l: calc(var(--shadow-x) * 1.5) calc(var(--shadow-y) * 1.5) calc(var(--shadow-blur) * 1.5) var(--shadow-color);

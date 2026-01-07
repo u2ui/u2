@@ -44,7 +44,8 @@ function handleStart(e) {
         const targetIndex = path.indexOf(target);
         if (handlerIndex > targetIndex) return;
     } else {
-        if (target.querySelector('[u2-movable-handler]')) return;
+        //if (target.querySelector('[u2-movable-handler]')) return;
+        if (findOwnHandler(target)) return;
         handler = target;
     }
 
@@ -89,3 +90,22 @@ function handleStart(e) {
 
 document.addEventListener('mousedown', handleStart);
 document.addEventListener('touchstart', handleStart, { passive: true });
+
+
+
+
+function findOwnHandler(root) {
+    let found = null;
+    function walk(node) {
+        if (found) return;
+        if (node !== root && node.hasAttribute?.('u2-movable')) return;
+        if (node.hasAttribute?.('u2-movable-handler')) found = node;
+        for (const child of node.children) {
+            walk(child);
+            if (found) return;
+        }
+        if (node.shadowRoot) walk(node.shadowRoot);
+    }
+    walk(root);
+    return found;
+}

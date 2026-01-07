@@ -21,7 +21,8 @@ u2-input {
     }
     input, select, textarea {
         color:inherit;
-        background:inherit;
+        background-color:inherit; /* not background shorthand, because it removes select-dropdown-icon */
+        &:not(select) { background:inherit; }
         direction:inherit;
         unicode-bidi:inherit;
         font:inherit;

@@ -141,6 +141,9 @@ tbody > tr {
         background-color: var(--color-lighter);
     }
 }
+tbody > tr:last-child {
+    border-block-end: 0;
+}
 
 label {
     display:block;
@@ -153,7 +156,7 @@ input, textarea, select {
     width: stretch;
 }
 button, .btn {
-    margin-block:.3rem;
+    xmargin-block:.3rem;
 }
 
 blockquote {

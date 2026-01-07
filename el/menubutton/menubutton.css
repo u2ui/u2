@@ -17,9 +17,10 @@ u2-menubutton menu {
     visibility: hidden;
     transition: opacity .2s .1s;
     box-shadow: var(--shadow);
-
-    /* for popover */
-    overflow:visible;
+    background:var(--color-bg, Canvas);
+    border: 1px solid color-mix(in srgb, var(--color-text, CanvasText), transparent 70%);
+    border-radius: calc(var(--radius) + 2px);
+    overflow:visible; /* for popover */
 }
 u2-menubutton menu > * {
     display:block;
@@ -41,11 +42,6 @@ u2-menubutton menu:is(:hover, :focus-within, :popover-open) {
 }
 
 /* minimal styled */
-u2-menubutton menu {
-    background:var(--color-bg, Canvas);
-    border: 1px solid var(--color-text, CanvasText);
-    border-radius: calc(var(--radius) + 2px);
-}
 u2-menubutton menu hr {
     margin:.2em 0;
 }
