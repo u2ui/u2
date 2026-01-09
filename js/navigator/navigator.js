@@ -4,7 +4,7 @@ import './url-change-event.js';
  * Smart Client-Side Router mit intelligentem Prefetching
  * 
  * Verwendung:
- * <script type="module" src="router.js"></script>
+ * <script type="module" src="navigator.js"></script>
  */
 
 // ==================== CONFIG ====================
@@ -175,7 +175,7 @@ class Morph {
   }
   static #shouldReplace(oldNode, newNode) {
     if (oldNode.nodeType !== newNode.nodeType) return true;
-    if (oldNode.nodeType === Element.TEXT_NODE) return oldNode.textContent !== newNode.textContent;
+    if (oldNode.nodeType === Node.TEXT_NODE) return oldNode.textContent !== newNode.textContent;
     if (oldNode.tagName !== newNode.tagName) return true;
     return oldNode.id !== newNode.id;
   }

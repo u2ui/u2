@@ -1,7 +1,6 @@
 
 class U1Pagination extends HTMLElement {
     connectedCallback() {
-        console.log(1)
         this.render();
         this.addEventListener('click', this.#handleClick);
     }

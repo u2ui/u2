@@ -46,9 +46,7 @@ class Accordion extends HTMLElement {
         .title::slotted(*) {
             margin:0 !important;
             flex:1 1 auto;
-            xfont-size:1em; /* wird leider vom base überschrieben, slotted ist sehr schwach */
             font-size: inherit !important;
-            display:contents;
         }
         .wrapper {
             display:grid;

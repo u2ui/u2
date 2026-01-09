@@ -367,7 +367,7 @@ class Columns {
     }
 
     item(i) {
-        this._columns[i] ??= new Column(this, i); // Übergebe 'this' (die Columns Instanz) statt nur table
+        this._columns[i] ??= new Column(this, i);
         return this._columns[i];
     }
 

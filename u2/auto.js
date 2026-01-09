@@ -158,4 +158,4 @@ addEventListener('pagehide',mergeNewlyNeeded);
 //
 ////////////////////////////////////////////////////////////////
 
-console.log('%c%s','color:#2c8898;xfont-size:1.3em', '💡 press ctrl+F12 to configure the U2-design-system!');
+console.log('%c%s','color:#2c8898;', '💡 press ctrl+F12 to configure the U2-design-system!');

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
 
+    <script src="../../../u2/auto.js" type="module" async></script>
     <link rel=stylesheet href="../../../css/classless/full.css">
     <!--link rel=stylesheet href="../../../css/classless/aria.css"-->
     <link rel=stylesheet href="../../../css/classless/simple.css">
@@ -12,7 +13,7 @@
     <link rel=stylesheet href="../tabs.css">
     <script src="../tabs.js" type=module async></script>
 
-    <script type=module async src=../../../attr/navigatable/navigatable.js crossorigin></script>
+    <script type=module async src=../../../attr/navigable/navigable.js crossorigin></script>
 
 </head>
 
@@ -178,3 +179,61 @@
             <section>content panel 1</section>
         </u2-tabs>
     </section>
+
+    <section id=spot style="position:relative">
+        <h2>Using u2-spot</h2>
+
+        <u2-spot target="u2-tabs h2" active=":hover" fallback="[aria-selected=true]" style="background:transparent">
+            <div style="position:absolute; inset:auto 0 0 0; height:.2rem; background: var(--color-light)"></div>
+        </u2-spot>
+        <u2-spot target="u2-tabs h2" active="[aria-selected=true]" style="background:transparent">
+            <div style="position:absolute; inset:auto 0 0 0; height:.2rem; background: var(--color)"></div>
+        </u2-spot>
+
+        <u2-tabs>
+            <h2>Title 1</h2>
+            <section>content panel 1</section>
+            <h2>Title 2</h2>
+            <section>content panel 2</section>
+            <h2>Title 3</h2>
+            <section>content panel 3</section>
+            <h2>Title 4</h2>
+            <section>content panel 4</section>
+            <h2>Title 5</h2>
+            <section>content panel 5</section>
+            <h2>Title 6</h2>
+            <section>content panel 6</section>
+            <h2>Title 7</h2>
+            <section>content panel 7</section>
+            <h2>Title 8</h2>
+            <section>content panel 8</section>
+            <h2>Title 9</h2>
+            <section>content panel 9</section>
+            <h2>Title 10</h2>
+            <section>content panel 10</section>
+            <h2>Title 11</h2>
+            <section>content panel 11</section>
+            <h2>Title 12</h2>
+            <section>content panel 12</section>
+            <h2>Title 13</h2>
+            <section>content panel 13</section>
+            <h2>Title 14</h2>
+            <section>content panel 14</section>
+            <h2>Title 15</h2>
+            <section>content panel 15</section>
+            <h2>Title 16</h2>
+            <section>content panel 16</section>
+            <h2>Title 17</h2>
+            <section>content panel 17</section>
+            <h2>Title 18</h2>
+            <section>content panel 18</section>
+            <h2>Title 19</h2>
+            <section>content panel 19</section>
+            <h2>Title 20</h2>
+            <section>content panel 20</section>
+        </u2-tabs>
+        <style>
+            #spot u2-tabs [role="tab"] { background:transparent; border-bottom-color:transparent; }
+        </style>
+    </section>
+

@@ -67,6 +67,7 @@
             text-align:center;
             height:100%;
             place-items: safe stretch center;
+            z-index:0;
             & > div {
                 min-width: 0;
                 max-width:100%;
@@ -104,6 +105,10 @@
             & :is(u2-table, u2-toc, u2-alert) {
                 text-align:left;
             }
+            & > div > u2-splitpanel {
+                position:absolute;
+                inset:0;
+            }
             [u2-scrollspy] a.active {
                 font-weight:bold;
             }
@@ -116,6 +121,7 @@
             padding:1rem;
             background:var(--color-bg);
             font-size:13px;
+            z-index:1;
         }
         #repos > div > header {
             position:absolute;

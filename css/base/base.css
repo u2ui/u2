@@ -1,180 +1,148 @@
 @layer normalize {
 
-@view-transition {
-  navigation: auto;
-}
+	@view-transition {
+		navigation: auto;
+	}
 
-*, ::before, ::after {
-	box-sizing: border-box;
-	scroll-behavior: smooth;
-	line-height:var(--line-height);/* also for: letter-spacing? */
-	background-repeat: no-repeat;
-}
-html {
-	interpolate-size: allow-keywords;
-	block-size: 100%;/* 100dvh? */
-	word-break:break-word;
-	overflow-wrap:break-word;
-	-webkit-hyphens: auto;/* safari < 17 */
-	hyphens: auto;
-	hyphenate-limit-chars:auto 4 4;/* chrome, firefox */
-	tab-size: 4;
-	--line-height: calc(1em + .5rem);
-	-webkit-tap-highlight-color: transparent;
-	font-family: system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-	font-size: calc(12.5px + .25vw);
-	scrollbar-gutter: stable;
-	overflow-y: auto;
-}
-body {
-	margin:auto;
-	min-block-size: 100%;
-    display: flow-root;/* so that margin of children does not affect body */
-	font-size:max(1rem, 14px);
-}
+	*, ::before, ::after {
+		box-sizing: border-box;
+		scroll-behavior: smooth;
+		line-height:var(--line-height);/* also for: letter-spacing? */
+		background-repeat: no-repeat;
+	}
+	html {
+		interpolate-size: allow-keywords;
+		block-size: 100%;/* 100dvh? */
+		word-break:break-word;
+		overflow-wrap:break-word;
+		-webkit-hyphens: auto;/* safari < 17 */
+		hyphens: auto;
+		hyphenate-limit-chars:auto 4 4;/* chrome, firefox */
+		tab-size: 4;
+		--line-height: calc(1em + .5rem);
+		-webkit-tap-highlight-color: transparent;
+		font-family: system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+		font-size: calc(12.5px + .25vw);
+		scrollbar-gutter: stable;
+		overflow-y: auto;
+	}
+	body {
+		margin:auto;
+		min-block-size: 100%;
+		display: flow-root;/* so that margin of children does not affect body */
+		font-size:max(1rem, 14px);
+	}
 
-h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
-    margin-block-start: 1.2em; /* would lh be better? */
-	margin-block-end: 0.5em;
-}
-h1, h2, h3, h4, h5, h6, figcaption, blockquote, legend, caption { /* th? */
-	text-wrap: balance;
-}
-p, li {
-	text-wrap: pretty;
-}
-p { margin-top: 0 }
-hr {
-	border-style:solid;
-	border-width:0 0 1px 0;
-	border-top-width:0 !important;
-}
-video, audio, video, iframe {
-	inline-size: 100%;
-	inline-size:-moz-available;
-	inline-size:-webkit-fill-available;
-	inline-size:stretch;
-}
-iframe {
-    display:block;
-}
-img, svg, canvas {
-	max-inline-size: 100%;
-	max-inline-size:-moz-available;
-	max-inline-size:-webkit-fill-available;
-	max-inline-size:stretch;
-}
-img, svg, video, canvas {
-	object-fit:cover;
-	block-size: auto;
-}
-video { background-color:#aaa; }
-script, style {
-	white-space: pre;
-	font-family: monospace;
-	margin-block: 1rem;
-	overflow:auto;
-}
-/* table */
-table {
-	border-collapse: collapse;
-	border-spacing: 0;/* if not collapsed, border-spacing defaults to 0 */
-	font-variant-numeric: tabular-nums;
-}
-th {
-	text-align: inherit;
-	text-align: -webkit-match-parent;/* inherit not working in safari */
-}
-/* nav */
-nav a { text-decoration:none; }/* display:block? color:inherit? */
-nav li { list-style: none; }
-nav ul { padding-inline-start:1.5em; }
-nav > ul { padding-inline-start:0; }
+	h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
+		margin-block-start: 1.2em; /* would lh be better? */
+		margin-block-end: 0.5em;
+	}
+	h1, h2, h3, h4, h5, h6, figcaption, blockquote, legend, caption { /* th? */
+		text-wrap: balance;
+	}
+	p, li {
+		text-wrap: pretty;
+	}
+	p { margin-top: 0 }
+	hr {
+		border-style:solid;
+		border-width:0 0 1px 0;
+		border-top-width:0 !important;
+	}
+	video, audio, video, iframe {
+		inline-size: 100%;
+		inline-size:-moz-available;
+		inline-size:-webkit-fill-available;
+		inline-size:stretch;
+	}
+	iframe { display:block; }
+	img, svg, canvas {
+		max-inline-size: 100%;
+		max-inline-size:-moz-available;
+		max-inline-size:-webkit-fill-available;
+		max-inline-size:stretch;
+	}
+	img, svg, video, canvas {
+		object-fit:cover;
+		block-size: auto;
+	}
+	video { background-color:#aaa; }
+	script, style {
+		white-space: pre;
+		font-family: monospace;
+		margin-block: 1rem;
+		overflow:auto;
+	}
+	/* table */
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;/* if not collapsed, border-spacing defaults to 0 */
+		font-variant-numeric: tabular-nums;
+	}
+	th {
+		text-align: inherit;
+		text-align: -webkit-match-parent;/* inherit not working in safari */
+	}
+	/* nav */
+	nav a { text-decoration:none; }/* display:block? color:inherit? */
+	nav li { list-style: none; }
+	nav ul { padding-inline-start:1.5em; }
+	nav > ul { padding-inline-start:0; }
 
-/* clickable */
-:where(select, summary, label, button, input:is([type=checkbox], [type=radio], [type=file]), .btn):not(:disabled) {
-	cursor:pointer;
-}
+	/* clickable */
+	:where(select, summary, label, button, input:is([type=checkbox], [type=radio], [type=file]), .btn):not(:disabled) {
+		cursor:pointer;
+	}
 
-[inert], :disabled { opacity:.4; }
+	[inert], :disabled { opacity:.4; }
 
-/* form */
+	/* form */
 
-legend {
-	padding-inline: .4em;
-}
+	legend { padding-inline: .4em; }
 
-input, textarea, select, button, .btn {
-	padding:.2em;
-	border:1px solid rgba(0,0,0,.5);
-	font: inherit;
-	line-height:var(--line-height);/* needed as font:inherit does inherit line-height */
-	--line-height:normal;
-	/*
-	try to match immutable select-line-height
-	in chrome:1.22, in ff:1.17 (best fit line-height:1.19?)
-	"normal" does not work in chrome unless not -webkit-appearance: none;
-	*/
-	/* todo: min font-size? */
-}
-button, .btn {
-	padding-inline:.7em;
-}
+	input, textarea, select, button, .btn {
+		padding:.2em;
+		border:1px solid rgba(0,0,0,.5);
+		font: inherit;
+		line-height:var(--line-height);/* needed as font:inherit does inherit line-height */
+		--line-height:normal;
+		/* try to match immutable select-line-height (best fit line-height:1.19?) "normal" not work in chrome unless not -webkit-appearance: none; */
+	}
+	button, .btn {
+		padding-inline:.7em;
+	}
 
 
-select { background-color:Field; }
-textarea {
-	vertical-align: baseline;
-	vertical-align: -webkit-baseline-middle;
-}
-textarea { resize: vertical; }
-/* textarea:not(:hover) { resize:none; } some browsers may stop resizing if mouse resize is none */
+	select { background-color:Field; }
+	textarea {
+		vertical-align: baseline;
+		vertical-align: -webkit-baseline-middle;
+	}
+	textarea { resize: vertical; }
 
-input:not([type=radio], [type=checkbox], [type=file], [type=date], [type=time], [type=datetime-local], [type=color]), textarea { inline-size:13rem; }
-input:where([type=range]) { vertical-align:middle }
+	input:not([type=radio], [type=checkbox], [type=file], [type=date], [type=time], [type=datetime-local], [type=color]), textarea { inline-size:13rem; }
+	input:where([type=range]) { vertical-align:middle }
 
-:focus::placeholder {
-    opacity: .2;
-}
+	:focus::placeholder { opacity: .2; }
 
-/* animatable dialog and popover */
-dialog, [popover], ::backdrop, :fullscreen { 
-	transition-behavior: allow-discrete;
-	transition-property: opacity, overlay, display;
-	/*transition-duration: 0.3s; todo? */
-	opacity: 0;
-}
-/* zzz
-dialog, [popover] {
-    &, &::backdrop {
-        transition-behavior: allow-discrete;
-        transition-property: opacity, overlay, display;
-        todo?transition-duration: 0.3s;
-        opacity: 0;
-    }
-}
-*/
-dialog:is(:modal,[open]), :popover-open, :fullscreen {
-    &, &::backdrop {
-        opacity: 1;
-		@starting-style { opacity: 0; } /* seams to work now */
-    }
-}
-/* zzz
-@starting-style {
-    dialog:is(:modal,[open]), :popover-open {
-        &, &::backdrop { opacity: 0; }
-    }
-}
-*/
+	/* animatable dialog and popover */
+	dialog, [popover], ::backdrop, :fullscreen { 
+		transition-behavior: allow-discrete;
+		transition-property: opacity, overlay, display;
+		/*transition-duration: 0.3s; todo? */
+		opacity: 0;
+	}
 
-::backdrop {
-	transition-duration:inherit;
-}
+	dialog:is(:modal,[open]), :popover-open, :fullscreen {
+		&, &::backdrop {
+			opacity: 1;
+			@starting-style { opacity: 0; } /* seams to work now */
+		}
+	}
 
-[popover] {/* ok? una: https://x.com/Una/status/1917662266427859202 */
-    inset: auto;
-}
+	::backdrop { transition-duration:inherit; }
+
+	[popover] { inset: auto; }/* ok? una: https://x.com/Una/status/1917662266427859202 */
 
 }
 

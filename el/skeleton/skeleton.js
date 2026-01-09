@@ -9,6 +9,7 @@ class skeleton extends HTMLElement {
     }
     render() {
         const template = this.getAttribute('template');
+        if (template == null) return;
         requestAnimationFrame(() => {
             this.innerHTML = templateToHtml(template)
         });

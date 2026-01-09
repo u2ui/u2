@@ -1,0 +1,23 @@
+u2-spot {
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  background-color: rgba(0,0,0,0.15);
+  opacity: 0;
+  will-change:transform;
+  transition-duration: .3s;
+  transition-property: width, height, transform, opacity, border-radius;
+  transition-timing-function: ease;
+  border-radius: var(--target-border-radius);
+  inset: 0;
+}
+
+@supports (position-anchor: --test) {
+  u2-spot {
+    inset: anchor(top) anchor(right) anchor(bottom) anchor(left);
+    width: auto;
+    height: auto;
+    transform: none;
+    transition-property: opacity, border-radius, inset;
+  }
+}

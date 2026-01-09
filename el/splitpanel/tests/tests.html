@@ -64,13 +64,13 @@
 </u2-code>
 
 <script>
-
+let dragSrcEl = null;
 const dragAndDropHandler = {
     handleEvent(event) {
         if (event.type !== 'dragstart' && !dragSrcEl) return;
         if (!this['on' + event.type]) return
         const target = event.target;
-        const closest = target.closest('u2-splitpanel > *');
+        const closest = target.closest?.('u2-splitpanel > *');
         if (!closest) return;
         this['on' + event.type]({closest, target, event});
     },

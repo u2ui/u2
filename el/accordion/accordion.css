@@ -5,3 +5,7 @@ there are no style-fallbacks for accordion, as without js, they should be headin
 u2-accordion:not(:defined) {
     display:contents;
 }
+
+u2-accordion .accTrigger {
+    font-size:inherit;
+}

@@ -53,6 +53,7 @@ function sortByHeight(a, b){
 
 
 /* helper */
+/* todo: similiar code in styler.js (unitToPx) and variable-styler.js */
 function cssLengthToPixelsStyle(element, property) {
     const length = getComputedStyle(element).getPropertyValue(property);
     return cssLengthToPixels(length, element);
@@ -61,7 +62,7 @@ function cssLengthToPixels(length, element) {
     if (length === undefined) return undefined;
     length = length.trim();
     const value = parseFloat(length);
-    const unit = length.match(/\D+$/)[0];
+    const unit = length.match(/\D+$/)[0] || '';
     switch (unit) {
         case '':
         case 'px':

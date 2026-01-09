@@ -155,9 +155,7 @@ input, textarea, select {
     width: -moz-available;
     width: stretch;
 }
-button, .btn {
-    xmargin-block:.3rem;
-}
+/* button, .btn { margin-block:.3rem; }*/
 
 blockquote {
     margin: var(--gap) 0;

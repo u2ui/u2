@@ -278,8 +278,8 @@ u2Carousel.mode.scroll = {
 		this.slider.style.transform = ''; // if changed from mode=slide
 
 		this.slider.addEventListener('scroll',()=>{ // trigger on manual scroll
-			clearTimeout(this.scroll_slideing_timeout);
-			this.scroll_slideing_timeout = setTimeout(()=>{
+			clearTimeout(this.scroll_sliding_timeout);
+			this.scroll_sliding_timeout = setTimeout(()=>{
 				const rect = this.slider.getBoundingClientRect();
 				const targets = document.elementsFromPoint(rect.left + rect.width/2, rect.top + rect.height/2);
 				for (let target of targets) {

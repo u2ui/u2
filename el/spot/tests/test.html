@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+
+    <link href="../spot.css" rel=stylesheet>
+    <script src="../spot.js" type=module async></script>
+
+<body>
+
+    <section>
+
+
+    <h1>u2-spot</h1>
+
+    <div class="test1">
+        <u2-spot target="a" active=":focus" style="background:yellow"></u2-spot>
+        <u2-spot target="a" active=":hover" fallback=":focus"></u2-spot>
+        <nav>
+            <ul>
+                <li><a href="#">A</a></li>
+                <li><a href="#">B</a></li>
+                <li><a href="#">C</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <u2-code editable trim>
+        <style>
+        .test1 ul {
+            display:flex;
+            a {
+                padding:0.5rem; border-radius:4px;
+            }
+        }
+        </style>
+    </u2-code>
+
+
+    </section>

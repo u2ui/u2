@@ -2,7 +2,7 @@
   "attr": {
     "lightbox": {
       "name": "lightbox",
-      "description": "Link an image to a lightbox. <a u2-lightbox=group1 src=\"image.jpg\">",
+      "description": "Link an image to a lightbox. `<a u2-lightbox=group1 src=\"image.jpg\">`",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -279,6 +279,14 @@
     "fields": {
       "name": "fields",
       "description": "Every content before a form element is considered as label",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "spot": {
+      "name": "spot",
+      "description": "",
       "beta": false,
       "deprecated": false,
       "css": true,

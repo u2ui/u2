@@ -33,7 +33,7 @@ customElements.define('u2-tooltip', class extends HTMLElement {
 
         let sEvent = new CustomEvent('u2-show', {bubbles: true, cancelable: true, detail: {target: el} });
         this.dispatchEvent(sEvent);
-        if (event.defaultPrevented) return;
+        if (sEvent.defaultPrevented) return;
 
         return this.showFor(el);
     }

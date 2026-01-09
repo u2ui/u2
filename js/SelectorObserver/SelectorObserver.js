@@ -163,7 +163,7 @@ export class SelectorObserver {
         // for the moment subtree not checked
         if (this.options.deep) {
 
-            for (const el of target.querySelectorAll('*')) { // expected to be expensiv
+            for (const el of target.querySelectorAll('*')) { // expected to be expensiv (why not target.querySelectorAll(this.selector)?)
                 el.matches(this.selector) ? this._add(el) : this._remove(el);
             }
             //for (const el of this.targets) if (!el.matches(this.selector)) this._remove(el); // not iterable, use WeekRef if supported
