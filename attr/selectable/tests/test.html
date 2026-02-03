@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>u2-selectable Demos</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+    <script src="../../../u2/auto.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../selectable.js" type=module async></script>
+
+
+<body>
+
+<u2-system></u2-system>
+
+
+<style>
+:is(#id, body) [aria-selected="true"] {
+  background: var(--color);
+  color: white;
+}
+</style>
+
+
+<h1>u2-selectable Demos</h1>
+
+<h2>No Selector (default :scope > *)</h2>
+<div u2-selectable>
+    <div>Item 1</div>
+    <div>Item 2</div>
+</div>
+
+<h2>Single Selection (Default)</h2>
+<div u2-selectable=".task">
+  <div class="task">Task 1: Review PR #123</div>
+  <div class="task">Task 2: Update documentation</div>
+  <div class="task">Task 3: Fix bug in authentication</div>
+  <div class="task">Task 4: Deploy to staging</div>
+</div>
+<p><small>Click any task. Only one can be selected.</small></p>
+
+<hr>
+
+<h2>Multiple Selection</h2>
+<div u2-selectable=".file" aria-multiselectable="true">
+  <div class="file">📄 readme.md</div>
+  <div class="file">📄 package.json</div>
+  <div class="file">📁 src/</div>
+  <div class="file">📁 components/</div>
+  <div class="file">📄 index.html</div>
+  <div class="file">📄 style.css</div>
+  <div class="file">📄 app.js</div>
+</div>
+<p><small>
+  • Click to select<br>
+  • Ctrl/Cmd+Click to toggle<br>
+  • Shift+Click for range<br>
+  • Ctrl/Cmd+A to select all<br>
+  • Arrow keys to navigate
+</small></p>
+
+<hr>
+
+<h2>Table Row Selection</h2>
+<table u2-selectable="tbody tr" aria-multiselectable="true">
+  <thead>
+    <tr>
+      <th>Name
+      <th>Email
+      <th>Role
+      <th>Status
+  <tbody>
+    <tr>
+      <td>Anna Schmidt
+      <td>anna@example.com
+      <td>Admin
+      <td>Active
+    <tr>
+      <td>Max Müller
+      <td>max@example.com
+      <td>User
+      <td>Active
+    <tr>
+      <td>Lisa Weber
+      <td>lisa@example.com
+      <td>Editor
+      <td>Inactive
+    <tr>
+      <td>Tom Fischer
+      <td>tom@example.com
+      <td>User
+      <td>Active
+    <tr>
+      <td>Sarah Klein
+      <td>sarah@example.com
+      <td>Admin
+      <td>Active
+</table>
+
+<hr>
+
+<h2>Table Cell Selection (Excel-like)</h2>
+<table u2-selectable="td" aria-multiselectable="true">
+  <thead>
+    <tr>
+      <th>Q1
+      <th>Q2
+      <th>Q3
+      <th>Q4
+  <tbody>
+    <tr>
+      <td>$125k
+      <td>$132k
+      <td>$145k
+      <td>$158k
+    <tr>
+      <td>$98k
+      <td>$105k
+      <td>$112k
+      <td>$120k
+    <tr>
+      <td>$210k
+      <td>$225k
+      <td>$240k
+      <td>$255k
+</table>
+<p><small>Select individual cells like in Excel</small></p>
+
+<hr>
+
+
+<h2>Mixed Content (Only some items selectable)</h2>
+<div u2-selectable=".selectable">
+  <div>Header (not selectable)</div>
+  <div class="selectable">Selectable Item 1</div>
+  <div class="selectable" tabindex=0>Inital focusable Item 2</div>
+  <div>Separator (not selectable)</div>
+  <div class="selectable">Selectable Item 3</div>
+  <div class="selectable">Selectable Item 4</div>
+  <div>Footer (not selectable)</div>
+</div>
+

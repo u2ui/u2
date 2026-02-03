@@ -13,11 +13,8 @@ u2-fields {
 
 ```html
 <u2-spot></u2-spot>
-<ul>
-    <li>Text</li>
-    <li>Hover</li>
-    <li>Me</li>
-</ul>
+<h5>Test</h5>
+<h6>By hover me</h6>
 ```
 
 ```css

@@ -28,20 +28,15 @@ class Accordion extends HTMLElement {
             cursor:pointer;
             padding-inline:1em;
             padding-block:.5em;
-            background-color:#ddd;
-            background-color:var(--color-light);
+            background-color:var(--color-light, #ddd);
         }
         .icon {
             margin-inline-start:auto;
             display:flex;
             transition:0.2s;
             --size:1em;
-            & > u2-ico {
-                --size:inherit;
-            }
-            [aria-expanded="true"] > & {
-                transform:rotate(180deg);
-            }
+            & > u2-ico { --size:inherit; }
+            [aria-expanded="true"] > & { transform:rotate(180deg); }
         }
         .title::slotted(*) {
             margin:0 !important;
@@ -84,9 +79,8 @@ class Accordion extends HTMLElement {
         //     e.preventDefault();
         //     this._toggleItem([...item.parentElement.children].indexOf(item));
         // });
-
-
     }
+
     disconnectedCallback() {
         this.shadowRoot.removeEventListener('click', this._onClick);
         this.shadowRoot.removeEventListener('keydown', this._onKeyDown);
@@ -108,7 +102,7 @@ class Accordion extends HTMLElement {
         let activeContent = null;
         let collectedContents = [];
         for (let node of this.childNodes) {
-            if (node.tagName === 'H'+hLevel) {
+            if (node.tagName === 'H' + hLevel) {
                 activeContent && activeContent.assign(...collectedContents);
                 index++;
                 let item = container.childNodes[index];
@@ -161,7 +155,7 @@ class Accordion extends HTMLElement {
         item.querySelector('.trigger').focus();
         this.hasAttribute('single') && this._toggleItem(index, true);
     }
-    _toggleItem(index, expand){
+    _toggleItem(index, expand) {
         const item = this.items[index];
         const trigger = item.querySelector('.trigger');
         const wrapper = item.querySelector('.wrapper');

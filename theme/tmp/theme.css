@@ -1,235 +1,345 @@
-/* Import Google Fonts - Elegant typography-focused selection */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
-
-/*
-Design System Stylesheet
-Focus: Beautiful, consistent design with exceptional typography
-Base CSS and variables are already loaded and applied
-*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 html {
-    /* Primary brand colors - sophisticated, professional palette */
-    --color: #2563eb;
-    --accent: #dc2626;
-
-    /* Color space for smooth mixing */
-    --color-space: oklch;
-    --hue-shift: 0;
-
-    /* Layout & Spacing - harmonious rhythm */
-    --width: 65rem;
-    --gap: 1.5rem;
-    
-    /* Lines & Borders - refined details */
-    --line-width: 1.5px;
-    --radius: 0.5rem;
-    
-    /* Shadows - subtle depth */
-    --shadow-x: 0rem;
-    --shadow-y: 0.35rem;
-    --shadow-blur: 1.25rem;
-    
-    /* Form Controls - comfortable interaction */
-    --control-padding-x: 0.875em;
-    --control-padding-y: 0.625em;
-    --control-border-width: var(--line-width);
-    --control-radius: var(--radius);
-    
-    /* Typography - the heart of this design */
-    --font-1: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-2: 'Crimson Pro', Georgia, serif;
-    
-    /* Typography scale - refined proportions */
-    --line-height-absolute: 0.5em;
-    --line-height-relative: 0.75;
-    
-    /* Font variations for Inter */
-    --font-1-wdth: 100;
-    --font-1-opsz: 14;
-    --font-1-grad: 0;
-    
-    /* Enhanced letter spacing for better readability */
-    letter-spacing: -0.011em;
+  --color: #207acc;
+  --accent: #ff6b35;
+  --color-space: oklch;
+  --hue-shift: 0;
+  
+  --width: 50rem;
+  --gap: 1rem;
+  --line-width: 1px;
+  --radius: .5rem;
+  --shadow-x: 0rem;
+  --shadow-y: .25rem;
+  
+  --control-padding-x: .75em;
+  --control-padding-y: .5em;
+  --control-border-width: var(--line-width);
+  --control-radius: var(--radius);
+  
+  --font-1: 'Inter', system-ui, sans-serif;
+  --font-2: 'JetBrains Mono', monospace;
+  --font-1-variation: "wdth" var(--font-1-wdth, 100), "opsz" var(--font-1-opsz, 14), "GRAD" var(--font-1-grad, 0), "MONO" var(--font-1-mono, 0), "CASL" var(--font-1-casl, 0);
+  --font-2-variation: "wdth" var(--font-2-wdth, 100), "opsz" var(--font-2-opsz, 14), "GRAD" var(--font-2-grad, 0), "MONO" var(--font-2-mono, 0), "CASL" var(--font-2-casl, 0);
 }
 
-/* Focus states - accessible and elegant */
 :focus-visible {
-    outline: 0.15rem solid var(--color);
-    outline-offset: 0.2rem;
-    border-radius: calc(var(--radius) * 0.5);
-    transition: outline-width 0.15s ease;
-    
-    &:active { 
-        outline-width: 0.25rem;
-        outline-offset: 0.15rem;
-    }
+  outline: .12rem solid var(--color);
+  outline-offset: .18rem;
+  transition: outline-width .15s ease;
+  
+  &:active {
+    outline-width: .3rem;
+  }
 }
 
-/* Form elements - refined with subtle shadows */
 input, textarea, select, button, .btn {
-    box-shadow: var(--shadow-s);
-    transition: box-shadow 0.2s ease, transform 0.15s ease;
-    
-    &:hover {
-        box-shadow: var(--shadow);
-    }
-    
-    &:active {
-        transform: translateY(1px);
-        box-shadow: var(--shadow-s);
-    }
-}
-
-/* Buttons - clear hierarchy and interaction */
-button, .btn {
-    background-color: var(--color);
-    color: var(--color-bg);
-    padding-inline: calc(var(--gap) * 1.25);
-    padding-block: calc(var(--gap) * 0.5);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    border-radius: var(--control-radius);
-    border: none;
-    cursor: pointer;
-    font-family: var(--font-1);
-    transition: background-color 0.2s ease, transform 0.15s ease;
-    
-    &:hover, &:focus {
-        background-color: var(--color-dark);
-    }
-    
-    &:active {
-        background-color: var(--color-darker);
-    }
-}
-
-/* Dialog - elegant modal presentation */
-dialog {
-    border: var(--line-width) solid var(--color-line);
-    border-radius: calc(var(--radius) * 1.5);
-    padding: calc(var(--gap) * 2);
+  box-shadow: var(--shadow);
+  transition: box-shadow .2s ease, transform .15s ease;
+  
+  &:hover {
     box-shadow: var(--shadow-l);
-    background-color: var(--color-bg);
-    max-width: min(90vw, var(--width));
-    
-    &::backdrop {
-        backdrop-filter: blur(4px);
-        background-color: color-mix(in srgb, var(--color-text), transparent 70%);
-    }
+  }
+  
+  &:active {
+    transform: translateY(1px);
+    box-shadow: var(--shadow-s);
+  }
 }
 
-/* Alert component - clear visual hierarchy */
+button, .btn {
+  background-color: var(--color);
+  color: var(--color-bg);
+  padding-inline: var(--gap);
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  
+  &:hover {
+    background-color: var(--color-dark);
+  }
+  
+  &:focus {
+    background-color: var(--color-dark);
+    outline-color: var(--color);
+  }
+  
+  &:active {
+    background-color: var(--color-darker);
+  }
+  
+  &:disabled {
+    background-color: var(--gray);
+    cursor: not-allowed;
+    opacity: .6;
+  }
+}
+
+dialog {
+  border: var(--line-width) solid var(--color-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-l);
+  padding: calc(var(--gap) * 1.5);
+  max-width: min(90vw, var(--width));
+  
+  &::backdrop {
+    background-color: color-mix(in srgb, var(--color-text), transparent 60%);
+    backdrop-filter: blur(4px);
+  }
+}
+
 u2-alert {
-    background-color: var(--color-lightest);
-    color: var(--color-darkest);
-    border: var(--line-width) solid var(--color-light);
-    border-left-width: calc(var(--line-width) * 4);
-    border-left-color: var(--color);
-    padding: calc(var(--gap) * 0.875);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-s);
+  background-color: var(--color-lightest);
+  color: var(--color-darkest);
+  border: var(--line-width) solid var(--color);
+  border-left-width: calc(var(--line-width) * 4);
+  padding: var(--gap);
+  border-radius: var(--radius);
+  
+  &::part(icon) {
+    align-self: start;
+    color: var(--color);
+  }
+  
+  &[type="warning"] {
+    background-color: color-mix(in srgb, var(--orange), #fff 90%);
+    border-color: var(--orange);
+    color: color-mix(in srgb, var(--orange), #000 70%);
     
     &::part(icon) {
-        align-self: start;
-        color: var(--color);
-        margin-top: 0.125em;
+      color: var(--orange);
     }
+  }
+  
+  &[type="error"] {
+    background-color: color-mix(in srgb, var(--red), #fff 90%);
+    border-color: var(--red);
+    color: color-mix(in srgb, var(--red), #000 70%);
+    
+    &::part(icon) {
+      color: var(--red);
+    }
+  }
+  
+  &[type="success"] {
+    background-color: color-mix(in srgb, var(--green), #fff 90%);
+    border-color: var(--green);
+    color: color-mix(in srgb, var(--green), #000 70%);
+    
+    &::part(icon) {
+      color: var(--green);
+    }
+  }
 }
 
-/* Accordion - smooth interactions */
 u2-accordion {
-    gap: calc(var(--gap) * 0.5);
-    
-    &::part(trigger) {
-        background-color: var(--color-area);
-        padding: calc(var(--gap) * 0.75) var(--gap);
-        border-radius: var(--radius);
-        border: var(--line-width) solid transparent;
-        font-weight: 500;
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-    
-    &::part(trigger):hover {
-        background-color: var(--color-lighter);
-        border-color: var(--color-light);
-    }
-    
-    &::part(trigger):focus, &::part(trigger):active {
-        background-color: var(--color-lighter);
-        border-color: var(--color);
-    }
-    
-    &::part(content) {
-        padding: var(--gap);
-        padding-top: calc(var(--gap) * 0.75);
-        line-height: var(--line-height);
-    }
-}
-
-/* Tables - clean data presentation */
-table.u2-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-s);
-    
-    & > thead {
-        background-color: var(--color);
-        color: var(--color-bg);
-        font-family: var(--font-1);
-        font-weight: 600;
-        letter-spacing: -0.01em;
-    }
-    
-    & > tbody {
-        background-color: var(--color-bg);
-    }
-    
-    & > tfoot {
-        background-color: var(--color-area);
-        font-weight: 500;
-    }
-    
-    & > * td {
-        padding: calc(var(--gap) * 0.625) calc(var(--gap) * 0.875);
-        border-bottom: var(--line-width) solid var(--color-area);
-    }
-    
-    & > * th {
-        padding: calc(var(--gap) * 0.75) calc(var(--gap) * 0.875);
-        text-align: left;
-        font-size: 0.9em;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-    }
-    
-    & > tbody tr:hover {
-        background-color: var(--color-lightest);
-    }
-    
-    & > tbody tr:last-child td {
-        border-bottom: none;
-    }
-}
-
-/* Cards - flexible content containers */
-.u2-card {
-    background-color: var(--color-bg);
+  gap: calc(var(--gap) * .5);
+  
+  &::part(trigger) {
+    background-color: var(--color-area);
     border: var(--line-width) solid var(--color-line);
-    border-radius: calc(var(--radius) * 1.25);
-    box-shadow: var(--shadow);
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
-    overflow: hidden;
+    padding: var(--control-padding-y) var(--control-padding-x);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color .2s ease, border-color .2s ease;
+  }
+  
+  &::part(trigger):hover {
+    background-color: var(--color-lighter);
+    border-color: var(--color);
+  }
+  
+  &::part(trigger):focus,
+  &::part(trigger):active {
+    background-color: var(--color-lighter);
+    border-color: var(--color);
+  }
+  
+  &::part(trigger)[aria-expanded="true"] {
+    background-color: var(--color);
+    color: var(--color-bg);
+    border-color: var(--color-dark);
+  }
+  
+  &::part(content) {
+    padding: var(--gap);
+    border: var(--line-width) solid var(--color-line);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+}
+
+table.u2-table {
+  border-collapse: collapse;
+  width: 100%;
+  
+  & > thead {
+    border-bottom: calc(var(--line-width) * 2) solid var(--color);
+  }
+  
+  & > tbody {
+    & tr:hover {
+      background-color: var(--color-lightest);
+    }
+  }
+  
+  & > tfoot {
+    border-top: calc(var(--line-width) * 2) solid var(--color-line);
+    font-weight: 600;
+  }
+  
+  & > * td {
+    padding: calc(var(--gap) * .5) var(--gap);
+    border-bottom: var(--line-width) solid var(--color-line);
+  }
+  
+  & > * th {
+    padding: calc(var(--gap) * .75) var(--gap);
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-darker);
+  }
+}
+
+.u2-card {
+  border: var(--line-width) solid var(--color-line);
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  
+  & > * {
+    padding: var(--gap);
+  }
+  
+  & > header {
+    background-color: var(--color-area);
+    font-weight: 600;
+    border-bottom: var(--line-width) solid var(--color-line);
+  }
+  
+  & > footer {
+    background-color: var(--color-area);
+    border-top: var(--line-width) solid var(--color-line);
+  }
+}
+
+/* ============================================
+   OPINIONATED STYLES
+   Feel free to review, modify, or remove these
+   ============================================ */
+
+/* Smooth scrolling for better UX */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Code blocks and inline code styling */
+code, pre, kbd, samp {
+  font-family: var(--font-2);
+  font-size: .9em;
+}
+
+code {
+  background-color: var(--color-area);
+  padding: .2em .4em;
+  border-radius: calc(var(--radius) * .5);
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Link styling - opinionated underline behavior */
+a {
+  color: var(--color);
+  text-decoration-thickness: .1em;
+  text-underline-offset: .15em;
+  transition: color .2s ease, text-decoration-color .2s ease;
+  
+  &:hover {
+    color: var(--color-dark);
+    text-decoration-thickness: .15em;
+  }
+  
+  &:active {
+    color: var(--color-darker);
+  }
+}
+
+/* Subtle hover effect on interactive elements */
+button, .btn, select, input[type="checkbox"], input[type="radio"] {
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+}
+
+/* Selection styling */
+::selection {
+  background-color: var(--color-light);
+  color: var(--color-bg);
+}
+
+/* Custom scrollbar - only for webkit browsers */
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: var(--color-area);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-light);
+    border-radius: var(--radius);
+    border: 2px solid var(--color-area);
     
     &:hover {
-        box-shadow: var(--shadow-l);
-        transform: translateY(-2px);
+      background-color: var(--color);
     }
-    
-    & > * {
-        padding: calc(var(--gap) * 1.25);
-    }
+  }
 }
 
+/* Fancy focus rings for keyboard navigation */
+@media (prefers-reduced-motion: no-preference) {
+  :focus-visible {
+    animation: focus-pulse .3s ease-out;
+  }
+  
+  @keyframes focus-pulse {
+    0% { outline-width: .3rem; opacity: .7; }
+    100% { outline-width: .12rem; opacity: 1; }
+  }
+}
+
+/* Dark mode adjustments - subtle shadow tweaks */
+@media (prefers-color-scheme: dark) {
+  html {
+    --shadow-blur: calc(var(--gap) * 1.5);
+  }
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>test</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../selectable.js" type=module async></script>
+
+<body>
+
+    <section class=main>
+
+        <div u2-selectable aria-multiselectable=true>
+            <div>item 1</div>
+            <div>item 2</div>
+            <div>item 3</div>
+        </div>
+
+    </section>
+
+    <style>
+        [u2-selectable] > * {
+            padding: .5rem;
+            margin-block: 1rem;
+            background-color: var(--color-lighter);
+        }
+        [u2-selectable] > [aria-selected="true"] {
+            background-color: var(--color);
+            color: white;
+        }
+    </style>
+

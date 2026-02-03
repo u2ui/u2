@@ -1,13 +1,13 @@
 // See https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel
 
 const tagToTab = {
-    H1:1,
-    H2:1,
-    H3:1,
-    H4:1,
-    H5:1,
-    H6:1,
-    BUTTON:1,
+    H1: 1,
+    H2: 1,
+    H3: 1,
+    H4: 1,
+    H5: 1,
+    H6: 1,
+    BUTTON: 1,
 };
 
 customElements.define('u2-tabs', class extends HTMLElement {
@@ -35,7 +35,7 @@ customElements.define('u2-tabs', class extends HTMLElement {
             display:grid;
             min-height:0;
         }
-        #panels::slotted(*)  {
+        #panels::slotted(*) {
             grid-area:1/1;
             overflow:auto;
             opacity:1;
@@ -56,7 +56,7 @@ customElements.define('u2-tabs', class extends HTMLElement {
         this._onTitleClick = this._onTitleClick.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
 
-        this.addEventListener('beforematch', e=>{
+        this.addEventListener('beforematch', e => {
             let el = e.target;
             while (el && el.parentNode) {
                 if (el.parentNode === this) {
@@ -94,9 +94,9 @@ customElements.define('u2-tabs', class extends HTMLElement {
 
         for (let child of this.children) if (tagToTab[child.tagName]) child.slot = 'title';
 
-        const update = ()=>{
-            this.tabs = tabsSlot.assignedNodes({flatten: true});
-            this.panels = panelsSlot.assignedNodes({flatten: true}).filter(el => el.nodeType === Node.ELEMENT_NODE);
+        const update = () => {
+            this.tabs = tabsSlot.assignedNodes({ flatten: true });
+            this.panels = panelsSlot.assignedNodes({ flatten: true }).filter(el => el.nodeType === Node.ELEMENT_NODE);
             for (let panel of this.panels.values()) {
                 panel.role = 'tabpanel';
             }
@@ -122,7 +122,7 @@ customElements.define('u2-tabs', class extends HTMLElement {
         tabsSlot.removeEventListener('keydown', this._onKeyDown);
     }
 
-    _onTitleClick({target}) {
+    _onTitleClick({ target }) {
         if (target.slot === 'title') { // todo closest?
 
             // beta, should not be here but in "_selectTab"?

@@ -112,6 +112,14 @@
       "css": false,
       "js": true
     },
+    "selectable": {
+      "name": "selectable",
+      "description": "Makes a container with selectable items. <div u2-selectable=\".selector\">",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "href": {
       "name": "href",
       "description": "Makes any element act as a link. `u2-href=\"url\"`",

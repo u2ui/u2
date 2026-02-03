@@ -1,5 +1,5 @@
 {
-  "version": "3",
+  "version": "5",
   "remote": {
     "https://deno.land/std@0.100.0/_util/assert.ts": "2f868145a042a11d5ad0a3c748dcf580add8a0dbc0e876eaa0026303a5488f58",
     "https://deno.land/std@0.100.0/_util/os.ts": "e282950a0eaa96760c0cf11e7463e66babd15ec9157d4c9ed49cc0925686f6a7",

@@ -75,7 +75,7 @@ class U2Calendar extends HTMLElement {
       </div>
       <div class=header></div>
       <div class=grid role=grid><slot></slot></div>
-    `;    
+    `;
   }
 
   _setLocale(localeStr) {
@@ -85,7 +85,7 @@ class U2Calendar extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue) return;    
+    if (oldValue === newValue) return;
     if (name === 'date') this._currentDate = new Date(newValue);
     if (name === 'lang') this._setLocale(newValue);
     this.render();
@@ -100,7 +100,7 @@ class U2Calendar extends HTMLElement {
   }
 
   set date(date) {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
     this.setAttribute('date', d.toISOString().split('T')[0]);
   }
 
@@ -132,17 +132,17 @@ class U2Calendar extends HTMLElement {
     this.shadowRoot.querySelector('.navigation h2').innerHTML = dateString;
     this.shadowRoot.querySelector('.header').innerHTML = `
       ${(() => {
-          const localeTag = (this._locale && this._locale.baseName) || this.getAttribute('lang') || navigator.language;
-          const dtf = getTimeFormatter(localeTag, { weekday: 'short' });
-          const out = [];
-          for (let i = 0; i < 7; i++) {
-            const idx = (this._weekStart + i) % 7;
-            const ref = new Date(Date.UTC(1970, 0, 4 + idx));
-            const label = dtf.format(ref);
-            out.push(`<div class="header-day">${label}</div>`);
-          }
-          return out.join('');
-        })()}
+        const localeTag = (this._locale && this._locale.baseName) || this.getAttribute('lang') || navigator.language;
+        const dtf = getTimeFormatter(localeTag, { weekday: 'short' });
+        const out = [];
+        for (let i = 0; i < 7; i++) {
+          const idx = (this._weekStart + i) % 7;
+          const ref = new Date(Date.UTC(1970, 0, 4 + idx));
+          const label = dtf.format(ref);
+          out.push(`<div class="header-day">${label}</div>`);
+        }
+        return out.join('');
+      })()}
     `;
     this.shadowRoot.querySelector('.grid').innerHTML = `<slot></slot>`;
 
@@ -154,12 +154,12 @@ class U2Calendar extends HTMLElement {
     const grid = this.shadowRoot.querySelector('.grid');
     const firstOfMonth = new Date(Date.UTC(year, month, 1));
     const startOffset = (firstOfMonth.getUTCDay() - this._weekStart + 7) % 7;
-    
+
     for (let i = 0; i < 42; i++) { // 6 Wochen x 7 Tage
       const date = new Date(Date.UTC(year, month, 1 - startOffset + i));
       const isOtherMonth = date.getUTCMonth() !== month;
       if (isOtherMonth && i === 35) break; // stop, if other month and last row
-      const isToday = date.toDateString() === today.toDateString();      
+      const isToday = date.toDateString() === today.toDateString();
       grid.appendChild(this.createDayCell(date, i, isOtherMonth, isToday));
     }
   }
@@ -173,7 +173,7 @@ class U2Calendar extends HTMLElement {
     cell.role = 'gridcell';
     cell.ariaColIndex = (index % 7) + 1;
     cell.ariaRowIndex = Math.floor(index / 7) + 1;
-    
+
     cell.className = `day ${isOtherMonth ? 'other-month' : ''}`;
     isToday && cell.setAttribute('aria-current', 'date');
     cell.innerHTML = `<div class="day-number">${day}</div>`;
@@ -192,7 +192,7 @@ class U2Calendar extends HTMLElement {
   }
   _updateLayout() {
     const items = Array.from(this.querySelectorAll('u2-calendaritem'));
-    
+
     // Berechne Wochen-Segmente für alle Items
     const itemWeeks = items.map(item => ({
       item,
@@ -238,39 +238,39 @@ class U2Calendar extends HTMLElement {
     const firstDay = new Date(Date.UTC(year, month, 1));
     const monthEnd = new Date(Date.UTC(year, month + 1, 0));
     const startOffset = (firstDay.getUTCDay() - this._weekStart + 7) % 7;
-    
+
     // Calculate the first and last day of the visible calendar view
     const viewStart = new Date(Date.UTC(year, month, 1 - startOffset));
     const daysInMonth = monthEnd.getUTCDate();
     const totalDays = Math.ceil((daysInMonth + startOffset) / 7) * 7;
     const viewEnd = new Date(Date.UTC(year, month, 1 - startOffset + totalDays - 1));
-    
+
     // Parse input dates and normalize to start of day
     const eventStart = new Date(start);
     eventStart.setUTCHours(0, 0, 0, 0);
-    
+
     const eventEnd = new Date(end);
     eventEnd.setUTCHours(0, 0, 0, 0);
-    
+
     // Return early if event is outside visible range
     if (eventEnd < viewStart || eventStart > viewEnd) return weeks;
-    
+
     // Calculate the actual start and end dates we need to process
     const current = new Date(Math.max(viewStart.getTime(), eventStart.getTime()));
     const finalEnd = new Date(Math.min(viewEnd.getTime(), eventEnd.getTime()));
-        
+
     // Process each week
-    while (current <= finalEnd) {      
+    while (current <= finalEnd) {
       // Calculate days since view start
       const daysSinceStart = Math.floor((current - viewStart) / (1000 * 60 * 60 * 24));
       const row = Math.floor(daysSinceStart / 7);
       const col = daysSinceStart % 7;
-      
+
       // Calculate how many days until the end of the week or event, whichever comes first
       const daysRemainingInWeek = 6 - col;
       const daysUntilEventEnd = Math.ceil((finalEnd - current) / (1000 * 60 * 60 * 24));
       const span = Math.min(daysRemainingInWeek, daysUntilEventEnd) + 1;
-      
+
       // Add the week segment
       weeks.push({
         gridColumn: `${col + 1} / span ${span}`,
@@ -279,14 +279,14 @@ class U2Calendar extends HTMLElement {
         endCol: col + span - 1,
         row
       });
-      
+
       // Move to the next day after this segment
       current.setDate(current.getDate() + span);
-      
+
       // If we've reached the end of the event, break
       if (current > finalEnd) break;
     }
-    
+
     return weeks;
   }
 }
@@ -308,7 +308,7 @@ class U2CalendarItem extends HTMLElement {
   _parseDate(dateString) {
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
       const [year, month, day] = dateString.split('-').map(Number);
-      return new Date(year, month - 1, day);
+      return new Date(Date.UTC(year, month - 1, day));
     }
     return new Date(dateString);
   }

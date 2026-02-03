@@ -5,24 +5,13 @@
         <meta name=viewport content="width=device-width">
         <title>U2 design system | Showcase</title>
         <link rel=manifest href="./kacheln.manifest.json">
-        <!--script src="https://cdn.jsdelivr.net/gh/nuxodin/lazyfill@main/mod.min.js"></script-->
         <script src="./test-init.js" type=module async></script>
 
         <script type=module src="../../el/ico/debug.js"></script>
 
-        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-            <svg id="i-expand-more" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.59 8.59L12 13.17L7.41 8.59L6 10l6 6l6-6z"></path></svg>
-            <svg id="i-house" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9.3V4h-3v2.6L12 3L2 12h3v8h5v-6h4v6h5v-8h3l-3-2.7zm-9 .7c0-1.1.9-2 2-2s2 .9 2 2h-4z"></path></svg>
-            <svg id="i-favorite" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
-            <svg id="i-more-vert" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2s-2 .9-2 2s.9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2z"></path></svg>
-            <svg id="i-bug_report" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8h-2.81a5.985 5.985 0 0 0-1.82-1.96L17 4.41L15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3L7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"></path></svg>
-            <svg id="i-chevron-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"></path></svg>
-            <svg id="i-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6L8.59 7.41L13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-        </svg>
         <style>
         html {
             --color: #98742c;
-            x--u2-ico-dir-material: '#i-';
             --u2-ico-dir:var(--u2-ico-dir-material);
             --width:100rem;
             background-color:var(--color-lighter);
@@ -78,13 +67,18 @@
             [u2-intersect] {
                 --u2-intersect-margin:-10%;
                 --u2-intersect-threshold:1;
-                margin-block:2rem;
                 background-color:var(--color);
             }
-            & :is(u2-masonry, .u2-flex, .u2-grid, u2-carousel) > :not([slot]), [u2-intersect~="0.5"], .u2-width {
+            & :is(u2-masonry, .u2-flex, .u2-grid, u2-carousel, [u2-selectable], [u2-dropzone]) > :not([slot]), [u2-intersect], .u2-width {
                 background-color:var(--color-light);
                 padding: .2rem;
-                border-radius: 0.3rem;
+                border-radius: .3rem;
+                margin-block: .6rem;
+
+                &[aria-selected="true"], &.\:dragging, &[u2-intersect~="0.5"] {
+                    background-color: var(--color);
+                    color: white;
+                }
             }
             & u2-code {
                 margin:0;

@@ -1,12 +1,5 @@
 import './url-change-event.js';
 
-/**
- * Smart Client-Side Router mit intelligentem Prefetching
- * 
- * Verwendung:
- * <script type="module" src="navigator.js"></script>
- */
-
 // ==================== CONFIG ====================
 const CONFIG = {
   cacheSize: 50,
@@ -20,11 +13,11 @@ const CONFIG = {
 const state = {
   pageCache: new Map(),
   prefetchQueue: new Set(),
+  failedUrls: new Set(),
   mouse: { x: 0, y: 0 },
   isIdle: false,
   idleTimer: null,
   persistentCache: null,
-  abortController: null,
 };
 
 // ==================== PERSISTENT STORAGE ====================
@@ -181,6 +174,23 @@ class Morph {
   }
 }
 
+// import morphdom from 'https://esm.sh/morphdom@2.7.4';
+// morphdom(oldNode, newNode);
+// import nanomorph from 'https://esm.sh/nanomorph@5.4.3';
+// nanomorph(oldNode, newNode);
+// import Idiomorph from 'https://esm.sh/idiomorph@0.3.0';
+// Idiomorph.morph(oldNode, newNode);
+
+import morphdom from 'https://esm.sh/morphdom@2.7.4';
+function morphDocument(newDoc) {
+  // am liebsten würde ich ganzes dokument inklusive header morphen, aber dann kann generiertes css verloren gehen... :(
+  //morphdom(document.body, newDoc.body);
+  //morphdom(document.documentElement, newDoc.documentElement);
+  document.title = newDoc.title;
+  Morph.morph(document.body, newDoc.body);
+}
+
+
 // ==================== UTILITIES ====================
 const Utils = {
     isInternalLink(url) {
@@ -218,10 +228,11 @@ class CacheManager {
   }
   
   static async fetchPage(url) {
+    // Blacklist-Check
+    if (state.failedUrls.has(url)) return null;
+
     // 1. Memory Cache
-    if (state.pageCache.has(url)) {
-      return state.pageCache.get(url);
-    }
+    if (state.pageCache.has(url)) return state.pageCache.get(url);
     
     // 2. Persistent Storage
     const cachedHtml = await PersistentStorage.get(url);
@@ -230,33 +241,28 @@ class CacheManager {
       return cachedHtml;
     }
     
-    // 3. Network (mit AbortController)
+    // 3. Network
     try {
-      state.abortController = new AbortController();
       const response = await fetch(url, {
-        signal: state.abortController.signal,
         headers: { 'X-Requested-With': 'SmartRouter' },
       });
       
       
       if (!response.ok) {
-        if (response.status === 404) return null; // todo: 404 will try again and again
-        throw new Error(`HTTP ${response.status}`);
+        state.failedUrls.add(url); // In Blacklist eintragen
+        return null;
       }
       
       const html = await response.text();
       this.addToCache(url, html);
       return html;
     } catch (error) {
-      if (error.name === 'AbortError') {
-        console.log('Fetch aborted:', url);
-      } else {
         console.error('Fetch failed:', url, error);
-      }
-      return null;
+        return null;
     }
   }
 }
+
 
 // ==================== PAGE NAVIGATION ====================
 async function loadPage(url, shouldUpdateHistory = true) {
@@ -270,19 +276,9 @@ async function loadPage(url, shouldUpdateHistory = true) {
     const parser = new DOMParser();
     const newDoc = parser.parseFromString(html, 'text/html');
     
-    // Update document
-    document.title = newDoc.title;
-    
-    // Morph Body
-    // am liebsten würde ich ganzes dokument inklusive header morphen, aber dann kann generiertes css verloren gehen... :(
-    const oldRoot = document.body;
-    const newRoot = newDoc.body;
-    
-    if ('startViewTransition' in document) { // hm... macht, dass hover status kurz verloren geht!
-        document.startViewTransition(() => {
-            Morph.morph(oldRoot, newRoot);
-        });
-    } else Morph.morph(oldRoot, newRoot);
+    if ('startViewTransition' in document) {
+        document.startViewTransition(() => morphDocument(newDoc));
+    } else morphDocument(newDoc);
     
     if (shouldUpdateHistory) history.pushState({ url }, '', url);
 

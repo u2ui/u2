@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <title>Kanban Board</title>
+<style>
+
+html { --width:70rem; }
+#board { --u2-Items-width: 19rem; }
+
+.column { display: flex; flex-direction: column; gap: 0.5rem; }
+.column h3 { font-size: 1rem; font-weight: 600; color: #27272a; }
+.column-header { display: flex; flex-direction: column; gap: 0.25rem; }
+.task-count { font-size: 0.875rem; color: #71717a; }
+
+.tasks {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--shadow);
+}
+
+.task {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 0.5rem;
+  transition: 0.2s;
+}
+
+.task:hover { 
+  border-color: rgba(0,0,0,0.2); 
+  box-shadow: var(--shadow-s);
+}
+
+.task.\:dragging { opacity: 0.5; cursor: grabbing; }
+.task[aria-selected="true"] { box-shadow: var(--shadow-s); }
+
+.task-title { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.task-id { font-size: 0.875rem; color: #71717a; justify-self: end; }
+.task-desc { 
+  font-size: 0.875rem; 
+  color: #64748b; 
+  grid-column: 1 / -1;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+.task-user { 
+  display: flex; 
+  align-items: center; 
+  gap: 0.25rem; 
+  grid-column: 1;
+}
+.task-user img { width: 1rem; height: 1rem; border-radius: 50%; }
+.task-user span { font-size: 0.875rem; }
+
+[u2-draghandle] {
+  background: transparent;
+  border: none;
+  color: #71717a;
+  font-size: 1rem;
+  cursor: grab;
+  padding: 0;
+  justify-self: end;
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.tasks.drag-over { background: rgba(59,130,246,0.1); outline: 2px solid #3b82f6; }
+
+/* Status-spezifische Styles */
+[data-column=open] .task[aria-selected=true] { background: #dcfce7; border-color: #22c55e; }
+[data-column=progress] .task[aria-selected=true] { background: #dbeafe; border-color: #3b82f6; }
+[data-column=closed] .task[aria-selected=true] { background: #fee2e2; border-color: #ef4444; }
+
+</style>
+</head>
+<body>
+    <section>
+        <div class="u2-grid" id="board"></div>
+    </section>
+
+<script>
+const data = {
+  open: [
+    {id: 107, title: "Broken Link on Homepage", desc: "The \"Learn More\" link on the homepage is leading to a 404 error.", user: "Alex Turner", avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"},
+    {id: 108, title: "Feature: Export to PDF", desc: "Implement a feature to allow users to export their data to PDF format.", user: "Maia Pettegree", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"},
+    {id: 109, title: "Mobile Responsiveness Issue", desc: "The application is not rendering properly on certain mobile devices.", user: "Kevin Williams", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"}
+  ],
+  progress: [
+    {id: 102, title: "Login Page Redesign", desc: "Requesting a redesign of the login page to improve user experience.", user: "Maia Pettegree", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"},
+    {id: 106, title: "Performance Optimization", desc: "Requesting performance optimization for the application to reduce load times.", user: "Sarah Lee", avatar: "https://images.unsplash.com/photo-1569913486515-b74bf7751574?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"},
+    {id: 103, title: "Database Connection Error", desc: "Users are experiencing intermittent connection errors when accessing the database.", user: "Mike Johnson", avatar: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80", selected: true},
+    {id: 105, title: "Missing User Profile Pictures", desc: "Some user profile pictures are not displaying properly in the user dashboard.", user: "David Chen", avatar: "https://images.unsplash.com/photo-1528763380143-65b3ac89a3ff?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"},
+    {id: 110, title: "Feature: Two-Factor Authentication", desc: "Requesting the addition of two-factor authentication for improved security.", user: "Maia Pettegree", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
+  ],
+  closed: [
+    {id: 104, title: "Feature: Dark Mode", desc: "Implement a dark mode option for improved accessibility and user preference.", user: "Sarah Lee", avatar: "https://images.unsplash.com/photo-1569913486515-b74bf7751574?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"},
+    {id: 101, title: "UI Button Alignment Issue", desc: "Buttons in the Settings menu are misaligned on smaller screens.", user: "Gilberto Miguel", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
+  ]
+};
+
+const columns = {open: "Open", progress: "In Progress", closed: "Closed"};
+let draggedEl = null, draggedFrom = null;
+
+function render() {
+  const board = document.getElementById('board');
+  board.innerHTML = Object.entries(columns).map(([key, title]) => `
+    <div class="column">
+      <div class="column-header">
+        <h3>${title}</h3>
+        <span class="task-count">${data[key].length} tasks</span>
+      </div>
+      <div class="tasks" data-column="${key}" u2-dropzone=".task" u2-selectable aria-multiselectable="true">
+        ${data[key].map(t => `
+          <div class="task" draggable="false" data-id="${t.id}" ${t.selected ? ' aria-selected="true"' : ''}>
+            <span class="task-title">${t.title}</span>
+            <span class="task-id">#${t.id}</span>
+            <span class="task-desc">${t.desc}</span>
+            <span class="task-user">
+              <img src="${t.avatar}" alt="">
+              <span>${t.user}</span>
+            </span>
+            <button u2-draghandle>≡</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+render();
+</script>

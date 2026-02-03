@@ -19,6 +19,7 @@ Dropzone for draggable elements. <div u2-dropzone=":scope selektor">
 
 ## Demos
 
+[board.html](http://gcdn.li/u2ui/u2@main/attr/dropzone/tests/board.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/attr/dropzone/tests/test.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/attr/dropzone/tests/minimal.html)  
 [strategies.html](http://gcdn.li/u2ui/u2@main/attr/dropzone/tests/strategies.html)  
