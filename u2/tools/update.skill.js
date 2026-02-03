@@ -95,7 +95,7 @@ function generateSkillContent(repos) {
 
         **Modules marked** *(beta)* or *(deprecated)* in descriptions.
 
-        **Module details:** Each module has its own README at \`/{category}/{name}/README.md\` with usage examples, API docs, and demos.
+        **Module details:** Each module has its own README at \`https://raw.githubusercontent.com/u2ui/u2/main/{category}/{name}/README.md\` with usage examples, API docs, and demos.
 
         https://github.com/u2ui/u2
     `).trim() + '\n';
