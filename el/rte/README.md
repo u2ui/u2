@@ -21,8 +21,8 @@ u2-rte {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/rte/rte.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/rte/rte.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte/rte.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte/rte.js" type=module async></script>
 ```
 
 ## Demos

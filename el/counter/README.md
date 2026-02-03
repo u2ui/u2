@@ -34,8 +34,8 @@ u2-counter {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/counter/counter.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/counter/counter.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/counter/counter.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/counter/counter.js" type=module async></script>
 ```
 
 ## Demos

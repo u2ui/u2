@@ -53,7 +53,7 @@ Adds a single menu item to the context menu. `item` is an object with the same p
 ## Install
 
 ```js
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/contextmenu/contextmenu.js"
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/contextmenu/contextmenu.js"
 ```
 
 ## Demos

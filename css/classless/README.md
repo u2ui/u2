@@ -1,6 +1,12 @@
 # classless.css
 null
 
+## Install
+
+```html
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/css/classless/classless.css" rel=stylesheet>
+```
+
 ## Demos
 
 [list-bullet.html](http://gcdn.li/u2ui/u2@main/css/classless/tests/list-bullet.html)  

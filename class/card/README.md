@@ -34,7 +34,7 @@ All children except img/video/hr have padding. Child with class="-body" fills sp
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/card/card.css" rel=stylesheet>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/class/card/card.css" rel=stylesheet>
 ```
 
 ## Demos

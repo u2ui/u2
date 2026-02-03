@@ -1,6 +1,12 @@
 # base.css
 Best practices and useful defaults
 
+## Install
+
+```html
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/css/base/base.css" rel=stylesheet>
+```
+
 ## Demos
 
 [test.html](http://gcdn.li/u2ui/u2@main/css/base/tests/test.html)  

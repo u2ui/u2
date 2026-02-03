@@ -26,7 +26,7 @@ Makes a container with selectable items. <div u2-selectable=".selector">
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/selectable/selectable.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/attr/selectable/selectable.js" type=module async></script>
 ```
 
 ## Demos

@@ -12,7 +12,7 @@ Make an element movable. Optionally define a [u2-movable-handler] element.
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/movable/movable.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/attr/movable/movable.js" type=module async></script>
 ```
 
 ## Demos

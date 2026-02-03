@@ -33,7 +33,7 @@ html {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/width/width.css" rel=stylesheet>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/class/width/width.css" rel=stylesheet>
 ```
 
 ## Demos

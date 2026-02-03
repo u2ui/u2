@@ -14,7 +14,7 @@ Dropzone for draggable elements. <div u2-dropzone=":scope selektor">
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/dropzone/dropzone.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/attr/dropzone/dropzone.js" type=module async></script>
 ```
 
 ## Demos

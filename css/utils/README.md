@@ -1,6 +1,12 @@
 # utils.css
 planned
 
+## Install
+
+```html
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/css/utils/utils.css" rel=stylesheet>
+```
+
 ## Demos
 
 [test.html](http://gcdn.li/u2ui/u2@main/css/utils/tests/test.html)  

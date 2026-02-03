@@ -21,7 +21,7 @@ Shows a confirmation dialog on clicks or before form submits and only proceeds i
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/confirm/confirm.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/attr/confirm/confirm.js" type=module async></script>
 ```
 
 ## Demos

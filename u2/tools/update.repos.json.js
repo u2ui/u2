@@ -140,7 +140,7 @@ async function UsagePart(category, entry){
 
     // if (name.endsWith('.js')) {
     //     // let version = reposData.get(entry.name)?.release_latest.tag_name;
-    //     // version = version ? version.replace('v','') : 'x.x.x';
+    //     // version = version ? version.replace('v','') : 'main';
     //     // let docUrl = `https://doc.deno.land/../../../${name}@${version}/${blankName}.js`;
     //     let docUrl = `https://doc.deno.land/../../../${name}@x/${blankName}.js`;
     //     content += '[doc]('+docUrl+')  \n';
@@ -151,9 +151,9 @@ async function UsagePart(category, entry){
 }
 
 
-function installPart(category, entry) {
+function zzzinstallPart(category, entry) {
     const name = entry.name;
-    const baseUrl = 'https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/'+category+'/'+name+'/';
+    const baseUrl = 'https://cdn.jsdelivr.net/gh/u2ui/u2@main/'+category+'/'+name+'/';
 
     let html = '';
     if (category === 'el') {
@@ -171,6 +171,30 @@ function installPart(category, entry) {
         const js = `import * as module from "${baseUrl}${name}.js"`;
         return '```js\n'+js+'\n```';
     }
+    return html ? '```html\n'+html+'\n```' : null;
+}
+function installPart(category, entry) {
+    const name = entry.name;
+    const baseUrl = 'https://cdn.jsdelivr.net/gh/u2ui/u2@main/'+category+'/'+name+'/';
+    
+    const hasCss = fs.existsSync(`${base}${category}/${name}/${name}.css`);
+    const hasJs = fs.existsSync(`${base}${category}/${name}/${name}.js`);
+    
+    let html = '';
+    
+    if (category === 'js' && hasJs) {
+        const js = `import * as module from "${baseUrl}${name}.js"`;
+        return '```js\n'+js+'\n```';
+    }
+    
+    if (hasCss) {
+        html += `<link href="${baseUrl}${name}.css" rel=stylesheet>`;
+    }
+    if (hasJs) {
+        if (html) html += '\n';
+        html += `<script src="${baseUrl}${name}.js" type=module async></script>`;
+    }
+    
     return html ? '```html\n'+html+'\n```' : null;
 }
 

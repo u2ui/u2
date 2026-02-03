@@ -12,7 +12,7 @@ Makes any element act as a link. `u2-href="url"`
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/href/href.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/attr/href/href.js" type=module async></script>
 ```
 
 ## Demos

@@ -20,7 +20,7 @@ new SelectorObserver({
 ## Install
 
 ```js
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/SelectorObserver/SelectorObserver.js"
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/SelectorObserver/SelectorObserver.js"
 ```
 
 ## Demos

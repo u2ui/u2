@@ -9,7 +9,7 @@
 ## Install
 
 ```js
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/loading/loading.js"
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/loading/loading.js"
 ```
 
 ## Demos

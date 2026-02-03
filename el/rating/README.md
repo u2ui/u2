@@ -18,8 +18,8 @@ u2-rating {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/rating/rating.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/rating/rating.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rating/rating.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rating/rating.js" type=module async></script>
 ```
 
 ## Demos

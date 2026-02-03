@@ -19,8 +19,8 @@ u2-number {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/number/number.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/number/number.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/number/number.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/number/number.js" type=module async></script>
 ```
 
 ## Demos

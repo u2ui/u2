@@ -23,8 +23,8 @@ u2-menubutton menu {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/menubutton/menubutton.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/menubutton/menubutton.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/menubutton/menubutton.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/menubutton/menubutton.js" type=module async></script>
 ```
 
 ## Demos

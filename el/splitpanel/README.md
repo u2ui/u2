@@ -23,8 +23,8 @@ u2-splitpanel > :not(u2-splitpanel) {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/splitpanel/splitpanel.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/splitpanel/splitpanel.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/splitpanel/splitpanel.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/splitpanel/splitpanel.js" type=module async></script>
 ```
 
 ## Demos

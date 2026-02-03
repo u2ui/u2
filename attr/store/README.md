@@ -26,7 +26,7 @@ Warnings:
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/store/store.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/attr/store/store.js" type=module async></script>
 ```
 
 ## Demos

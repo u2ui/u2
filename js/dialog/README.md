@@ -25,7 +25,7 @@ dialog:modal {
 ## Install
 
 ```js
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/dialog/dialog.js"
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/dialog/dialog.js"
 ```
 
 ## Demos
