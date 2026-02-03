@@ -1,5 +1,5 @@
 # [u2-store] - attribute
-Persists form and input values using localStorage/sessionStorage.
+Persists form/input values using localStorage (form[id] / input[name] as keys)
 
 ## Features
 
@@ -26,7 +26,7 @@ Warnings:
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/store/store.min.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/store/store.js" type=module async></script>
 ```
 
 ## Demos

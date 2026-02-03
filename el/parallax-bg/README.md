@@ -33,8 +33,8 @@ u2-parallax-bg div {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/parallax-bg/parallax-bg.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/parallax-bg/parallax-bg.min.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/parallax-bg/parallax-bg.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/parallax-bg/parallax-bg.js" type=module async></script>
 ```
 
 ## Demos

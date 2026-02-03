@@ -10,7 +10,7 @@ Rendering badges
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/badge/badge.min.css" rel=stylesheet>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/badge/badge.css" rel=stylesheet>
 ```
 
 ## Demos

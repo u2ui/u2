@@ -26,7 +26,7 @@ Defines a handle element to drag a draggable item.
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/draghandle/draghandle.min.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/draghandle/draghandle.js" type=module async></script>
 ```
 
 ## Demos

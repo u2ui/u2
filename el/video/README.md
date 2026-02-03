@@ -22,8 +22,8 @@ u2-video {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/video/video.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/video/video.min.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/video/video.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/video/video.js" type=module async></script>
 ```
 
 ## Demos

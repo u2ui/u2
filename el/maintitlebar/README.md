@@ -24,8 +24,8 @@ u2-maintitlebar[hidden] { /* hidden is set by the element itself if not installe
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/maintitlebar/maintitlebar.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/maintitlebar/maintitlebar.min.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/maintitlebar/maintitlebar.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/maintitlebar/maintitlebar.js" type=module async></script>
 ```
 
 ## Demos

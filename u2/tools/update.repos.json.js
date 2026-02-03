@@ -158,17 +158,17 @@ function installPart(category, entry) {
     let html = '';
     if (category === 'el') {
         html = dedent(`
-        <link href="${baseUrl}${name}.min.css" rel=stylesheet>
-        <script src="${baseUrl}${name}.min.js" type=module async></script>`);
+        <link href="${baseUrl}${name}.css" rel=stylesheet>
+        <script src="${baseUrl}${name}.js" type=module async></script>`);
     }
     if (category === 'class') {
-        html = `<link href="${baseUrl}${name}.min.css" rel=stylesheet>`;
+        html = `<link href="${baseUrl}${name}.css" rel=stylesheet>`;
     }
     if (category === 'attr') {
-        html = `<script src="${baseUrl}${name}.min.js" type=module async></script>`;
+        html = `<script src="${baseUrl}${name}.js" type=module async></script>`;
     }
     if (category === 'js') {
-        const js = `import * as module from "${baseUrl}${name}.min.js"`;
+        const js = `import * as module from "${baseUrl}${name}.js"`;
         return '```js\n'+js+'\n```';
     }
     return html ? '```html\n'+html+'\n```' : null;

@@ -42,7 +42,7 @@
     },
     "store": {
       "name": "store",
-      "description": "Persists form and input values using localStorage/sessionStorage.",
+      "description": "Persists form/input values using localStorage (form[id] / input[name] as keys)",
       "beta": false,
       "deprecated": false,
       "css": false,

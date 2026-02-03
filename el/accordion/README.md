@@ -43,8 +43,8 @@ u2-accordion {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/accordion/accordion.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/accordion/accordion.min.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/accordion/accordion.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/accordion/accordion.js" type=module async></script>
 ```
 
 ## Demos

@@ -19,7 +19,7 @@ Specificity: 0.1.0
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/unstyle/unstyle.min.css" rel=stylesheet>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/unstyle/unstyle.css" rel=stylesheet>
 ```
 
 ## Demos

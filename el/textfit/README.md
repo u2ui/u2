@@ -18,8 +18,8 @@ u2-textfit {
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/textfit/textfit.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/textfit/textfit.min.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/textfit/textfit.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/textfit/textfit.js" type=module async></script>
 ```
 
 ## Demos

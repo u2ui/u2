@@ -32,7 +32,7 @@ Most wanted flexbox case
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/flex/flex.min.css" rel=stylesheet>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/flex/flex.css" rel=stylesheet>
 ```
 
 ## Demos

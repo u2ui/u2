@@ -18,7 +18,7 @@ listen('a+b+c', () => {
 ## Install
 
 ```js
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/shortcut/shortcut.min.js"
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/shortcut/shortcut.js"
 ```
 
 ## Demos

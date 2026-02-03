@@ -42,7 +42,7 @@ Better tables
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/table/table.min.css" rel=stylesheet>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/class/table/table.css" rel=stylesheet>
 ```
 
 ## Demos

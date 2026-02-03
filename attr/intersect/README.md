@@ -27,7 +27,7 @@ declarativ intersection-observer
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/intersect/intersect.min.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/intersect/intersect.js" type=module async></script>
 ```
 
 ## Demos

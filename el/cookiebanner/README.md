@@ -50,8 +50,8 @@ Methods:
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/cookiebanner/cookiebanner.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/cookiebanner/cookiebanner.min.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/cookiebanner/cookiebanner.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/cookiebanner/cookiebanner.js" type=module async></script>
 ```
 
 ## Demos

@@ -12,7 +12,7 @@ behavior before action
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/behavior/behavior.min.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/behavior/behavior.js" type=module async></script>
 ```
 
 ## Demos

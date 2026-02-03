@@ -12,7 +12,7 @@ Link an image to a lightbox. `<a u2-lightbox=group1 src="image.jpg">`
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/lightbox/lightbox.min.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/lightbox/lightbox.js" type=module async></script>
 ```
 
 ## Demos

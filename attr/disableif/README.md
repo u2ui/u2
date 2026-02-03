@@ -22,7 +22,7 @@ Disable form-elements (like inputs, buttons, fieldsets) based on a condition
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/disableif/disableif.min.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/attr/disableif/disableif.js" type=module async></script>
 ```
 
 ## Demos
