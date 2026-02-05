@@ -1,5 +1,5 @@
 # [u2-behavior] - attribute
-behavior before action (beta)
+Assigns a predefined action to a button, e.g., behavior="share" (beta)
 
 ## Usage
 

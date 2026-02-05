@@ -18,7 +18,7 @@
     },
     "skin": {
       "name": "skin",
-      "description": "Change the skin of a widget",
+      "description": "Change the skin of a widget, recalculat css color vars, sets background and color (--color-text, --color-bg)",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -26,7 +26,7 @@
     },
     "draghandle": {
       "name": "draghandle",
-      "description": "Defines a handle element to drag a draggable item.",
+      "description": "Defines a handle element to drag a `draggable=false` container.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -34,7 +34,7 @@
     },
     "navigable": {
       "name": "navigable",
-      "description": "Enables dialogs, details, etc. to open via links with back history support.",
+      "description": "Turns dialogs, details, etc. into link-navigable elements with history support.",
       "beta": false,
       "deprecated": false,
       "css": false,
@@ -50,7 +50,7 @@
     },
     "behavior": {
       "name": "behavior",
-      "description": "behavior before action (beta)",
+      "description": "Assigns a predefined action to a button, e.g., behavior=\"share\" (beta)",
       "beta": true,
       "deprecated": false,
       "css": false,

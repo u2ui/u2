@@ -6,21 +6,21 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 
 **`attr/`** - Add behavior via HTML attributes
 
-- **behavior** - behavior before action (beta) *(beta)*
+- **behavior** - Assigns a predefined action to a button, e.g., behavior="share" (beta) *(beta)*
 - **confirm** - Shows a confirmation dialog on clicks or before form submits and only proceeds if confirmed.
 - **disableif** - Disable form-elements (like inputs, buttons, fieldsets) based on a condition
-- **draghandle** - Defines a handle element to drag a draggable item.
+- **draghandle** - Defines a handle element to drag a `draggable=false` container.
 - **dropzone** - Dropzone for draggable elements. <div u2-dropzone=":scope selektor">
 - **focusgroup** - Enables arrow-key navigation between focusable elements in a container.
 - **href** - Makes any element act as a link. `u2-href="url"`
 - **intersect** - declarativ intersection-observer
 - **lightbox** - Link an image to a lightbox. `<a u2-lightbox=group1 src="image.jpg">`
 - **movable** - Make an element movable. Optionally define a [u2-movable-handler] element.
-- **navigable** - Enables dialogs, details, etc. to open via links with back history support.
+- **navigable** - Turns dialogs, details, etc. into link-navigable elements with history support.
 - **parallax** - Makes elements scroll at different speeds for a parallax effect.
 - **scrollspy** - Make a navigation that changes the `active` class based on the scroll position.
 - **selectable** - Makes a container with selectable items. <div u2-selectable=".selector">
-- **skin** - Change the skin of a widget
+- **skin** - Change the skin of a widget, recalculat css color vars, sets background and color (--color-text, --color-bg)
 - **store** - Persists form/input values using localStorage (form[id] / input[name] as keys)
 
 **`class/`** - CSS-only utilities via class names

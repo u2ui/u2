@@ -1,5 +1,5 @@
 # [u2-skin] - attribute
-Change the skin of a widget
+Change the skin of a widget, recalculat css color vars, sets background and color (--color-text, --color-bg)
 
 - Recalculates css color-variables
 - Sets the background and the text color
