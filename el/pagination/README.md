@@ -1,13 +1,5 @@
-## Usage
-
-```html
-<u2-pagination total="10" current="3" href="/page/{page}"></u2-pagination>
-```
-
-```css
-u2-pagination {
-}
-```
+# &lt;u2-pagination&gt; - element
+Page number navigation with customizable URL patterns
 
 ## Usage
 

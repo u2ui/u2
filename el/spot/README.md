@@ -1,24 +1,19 @@
-## Usage
-
-```html
-
-```
-
-```css
-u2-fields {
-}
-```
+# &lt;u2-spot&gt; - element
+Visual indicator tracking elements by selector
 
 ## Usage
 
 ```html
-<u2-spot></u2-spot>
-<h5>Test</h5>
+<u2-spot target=":scope > h6" active=":hover"></u2-spot>
+<h5>Target:</h5>
 <h6>By hover me</h6>
+<h6>Or hover me</h6>
 ```
 
 ```css
-u2-fields {
+u2-spot {
+    transition-duration: 0.5s;
+    background:var(--color-light);
 }
 ```
 

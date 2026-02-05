@@ -1,5 +1,5 @@
 # [u2-behavior] - attribute
-behavior before action
+behavior before action (beta)
 
 ## Usage
 

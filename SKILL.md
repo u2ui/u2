@@ -6,7 +6,7 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 
 **`attr/`** - Add behavior via HTML attributes
 
-- **behavior** - behavior before action
+- **behavior** - behavior before action (beta) *(beta)*
 - **confirm** - Shows a confirmation dialog on clicks or before form submits and only proceeds if confirmed.
 - **disableif** - Disable form-elements (like inputs, buttons, fieldsets) based on a condition
 - **draghandle** - Defines a handle element to drag a draggable item.
@@ -47,9 +47,9 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 - **chart** - Renders a chart from html like `<table>` or `<dl>` elements. `<u2-chart type="pie"><table>...`
 - **code** - Code-blocks. <u2-code editable trim><style|textarea|script>...
 - **cookiebanner** - Cookie banner for consent management.
-- **copy** - Mirrors an element’s content. `<u2-copy for="id" sync></u2-copy>`
+- **copy** - Mirrors an element's content. `<u2-copy for="id" sync></u2-copy>`
 - **counter** - Animated Number Counter
-- **drawer**
+- **drawer** - (beta) *(beta)*
 - **fields** - Every content before a form element is considered as label
 - **ico** - Universal icon-element
 - **input** - Input element, lot of types and options.
@@ -58,15 +58,15 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 - **menubutton** - Buttons with options
 - **number** - Displays formatted numbers
 - **out** - Output variables (beta) *(beta)*
-- **pagination**
+- **pagination** - Page number navigation with customizable URL patterns
 - **parallax-bg** - Scroll-driven parallax background-layer with dynamic container sizing for full content visibility
 - **qrcode** - QR-Code element
 - **rating** - Rating element, form associated
 - **responsive** - A Container, where you can define strategies, that are applied through CSS states. `<u2-responsive strategies="hideOptional">`
 - **rte** - "Rich" Rich Text Editor (alpha)
 - **skeleton** - Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.
-- **splitpanel** - A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.
-- **spot**
+- **splitpanel** - A container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.
+- **spot** - Visual indicator tracking elements by selector
 - **system** - Manage U2 system: preferences, debug, optimization
 - **table** - Wrap Tables to make them enhanced tables (sortable, responsive...)
 - **tabs** - Turns HTML structures with headings into an interactive, tabbed interface, using the content between headings as each tab’s content.

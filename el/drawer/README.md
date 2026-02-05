@@ -1,4 +1,5 @@
 # &lt;u2-drawer&gt; - element
+(beta)
 
 ## Usage
 

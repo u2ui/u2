@@ -1,5 +1,5 @@
 # &lt;u2-splitpanel&gt; - element
-A splitpanel is a container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.
+A container that can be split horizontally or vertically. Parts are resizable by dragging the dividers.
 
 ## Usage
 
@@ -19,6 +19,26 @@ u2-splitpanel > :not(u2-splitpanel) {
     background: #f8f8f8;
 }
 ```
+
+## API
+
+### Attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `vertical` | boolean | Split vertically (top/bottom) instead of horizontally (left/right) |
+
+### Parts
+
+| Part | Description |
+|------|-------------|
+| `divider` | The draggable separator between panels. |
+
+### CSS Custom Properties
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--size` | `0.3em` | Width/height of the divider |
 
 ## Install
 
