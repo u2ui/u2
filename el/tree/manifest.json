@@ -13,19 +13,19 @@
                     "members": [],
                     "events": [
                         {
-                            "name": "u2-tree1-expand",
+                            "name": "u2-tree-expand",
                             "type": {
                                 "text": "Event"
                             }
                         },
                         {
-                            "name": "u2-tree1-collapse",
+                            "name": "u2-tree-collapse",
                             "type": {
                                 "text": "Event"
                             }
                         },
                         {
-                            "name": "u2-tree1-select",
+                            "name": "u2-tree-select",
                             "type": {
                                 "text": "Event"
                             }

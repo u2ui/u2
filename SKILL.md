@@ -65,7 +65,7 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 - **responsive** - A Container, where you can define strategies, that are applied through CSS states. `<u2-responsive strategies="hideOptional">`
 - **rte** - "Rich" Rich Text Editor (alpha)
 - **skeleton** - Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.
-- **splitpanel** - A container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.
+- **splitpanel** - A container that can be split horizontally or vertically. Parts are resizable by dragging the dividers.
 - **spot** - Visual indicator tracking elements by selector
 - **system** - Manage U2 system: preferences, debug, optimization
 - **table** - Wrap Tables to make them enhanced tables (sortable, responsive...)
@@ -74,7 +74,7 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 - **time** - The better time-element, e.g. live changing relative dates
 - **toc** - Automatically generate a Navigation by using the headings of the document.
 - **tooltip** - Bind to target as child or via aria-labelledby
-- **tree1** - Treeview component `<u2-tree1>Folder <u2-tree1>File</u2-tree1> </u2-tree1>`
+- **tree** - Treeview component `<u2-tree>Folder <u2-tree>File</u2-tree> </u2-tree>`
 - **typewriter** - Simple typewriter element
 - **video** - Video-element with controls and keyboard shortcuts.
 

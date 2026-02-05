@@ -1,25 +1,25 @@
-u2-tree1 {
+u2-tree {
     display:block;
 }
-u2-tree1::part(row) {
+u2-tree::part(row) {
     white-space: nowrap;
     cursor:pointer;
 }
-u2-tree1::part(row):focus {
+u2-tree::part(row):focus {
     outline:1px dotted black;
 }
-u2-tree1[aria-selected=true]::part(row) {
+u2-tree[aria-selected=true]::part(row) {
     background:#00000008;
 }
-u2-tree1[draggable]::part(row) {
+u2-tree[draggable]::part(row) {
     cursor:grab;
 }
 
-u2-tree1:not(:defined) {
+u2-tree:not(:defined) {
     padding-block-start:.2em;
     display:list-item;
     list-style-position: inside;
-    > u2-tree1 {
+    > u2-tree {
         padding-inline-start:1.2em;
     }
 }

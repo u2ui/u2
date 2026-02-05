@@ -12,11 +12,11 @@ let css = `
     font-size:.8em;
 }
 [part=row] {
-    display:flex;
-    align-items:baseline;
+    display: flex;
+    align-items: center;
     padding-block: .15em;
-    padding-inline-start:calc( var(--indent) * (var(--level) - 1) );
-    gap:.3em;
+    padding-inline-start: calc( var(--indent) * (var(--level) - 1) );
+    gap: .3em;
 }
 .arrow {
     font-weight:normal !important;
@@ -175,7 +175,7 @@ export class tree extends HTMLElement {
         if (!this.isExpandable()) return;
         doit ??= !this.isExpanded();
 
-        const event = new CustomEvent(doit?'u2-tree1-expand':'u2-tree1-collapse', {bubbles: true});
+        const event = new CustomEvent(doit?'u2-tree-expand':'u2-tree-collapse', {bubbles: true});
 
         if (this.ariaLive && this.ariaBusy !== 'true') {
 
@@ -205,7 +205,7 @@ export class tree extends HTMLElement {
         this.root()._selected = this;
     }
     _select(){ // like selected but also fires event
-        const event = new CustomEvent('u2-tree1-select', {bubbles: true});
+        const event = new CustomEvent('u2-tree-select', {bubbles: true});
         this.dispatchEvent(event);
         this.select();
     }
@@ -235,4 +235,4 @@ export class tree extends HTMLElement {
     }
 }
 
-customElements.define('u2-tree1', tree);
+customElements.define('u2-tree', tree);

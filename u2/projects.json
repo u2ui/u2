@@ -302,7 +302,7 @@
     },
     "copy": {
       "name": "copy",
-      "description": "Mirrors an element’s content. `<u2-copy for=\"id\" sync></u2-copy>`",
+      "description": "Mirrors an element's content. `<u2-copy for=\"id\" sync></u2-copy>`",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -327,14 +327,6 @@
     "tooltip": {
       "name": "tooltip",
       "description": "Bind to target as child or via aria-labelledby",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "tree1": {
-      "name": "tree1",
-      "description": "Treeview component `<u2-tree1>Folder <u2-tree1>File</u2-tree1> </u2-tree1>`",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -398,7 +390,7 @@
     },
     "splitpanel": {
       "name": "splitpanel",
-      "description": "A container that can be split horizontally or vertically. It is a simple container that can be used to split the screen into two or more parts.",
+      "description": "A container that can be split horizontally or vertically. Parts are resizable by dragging the dividers.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -511,6 +503,14 @@
     "accordion": {
       "name": "accordion",
       "description": "Turns HTML structures with headings into an accordion, using the content between headings as each panel’s content.",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "tree": {
+      "name": "tree",
+      "description": "Treeview component `<u2-tree>Folder <u2-tree>File</u2-tree> </u2-tree>`",
       "beta": false,
       "deprecated": false,
       "css": true,

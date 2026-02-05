@@ -24,62 +24,62 @@
         body { place-content: initial; }
     </style>
 
-    <script src="../tree1.js" type=module async></script>
-    <link href="../tree1.css" rel=stylesheet>
+    <script src="../tree.js" type=module async></script>
+    <link href="../tree.css" rel=stylesheet>
 
 <body>
 
 <section id=demo class=main>
     
-    <u2-tree1 aria-expanded=true>root
-        <u2-tree1 aria-expanded=true>Folder 2
+    <u2-tree aria-expanded=true>root
+        <u2-tree aria-expanded=true>Folder 2
 
-            <u2-tree1>File 2.1</u2-tree1>
-            <u2-tree1>Folder 2.2
-                <u2-tree1>
+            <u2-tree>File 2.1</u2-tree>
+            <u2-tree>Folder 2.2
+                <u2-tree>
                     <u2-ico slot=icon icon=home>x</u2-ico>
                     Home
-                </u2-tree1>
-                <u2-tree1>
+                </u2-tree>
+                <u2-tree>
                     <u2-ico slot=icon icon=star>x</u2-ico>
                     Star
-                </u2-tree1>
-                <u2-tree1>
+                </u2-tree>
+                <u2-tree>
                     <u2-ico slot=icon icon=search>x</u2-ico>
                     Search
-                </u2-tree1>
-                <u2-tree1>
+                </u2-tree>
+                <u2-tree>
                     <u2-ico slot=icon icon=accessible>x</u2-ico>
                     Accessible
-                </u2-tree1>
-                <u2-tree1>
+                </u2-tree>
+                <u2-tree>
                     <u2-ico slot=icon icon=alarm>x</u2-ico>
                     Alarm
-                </u2-tree1>
-            </u2-tree1>
+                </u2-tree>
+            </u2-tree>
 
-            <u2-tree1>
+            <u2-tree>
                 <input type=checkbox slot=icon id="check1">
                 Checkbox
-                <u2-tree1>
+                <u2-tree>
                     <input type=checkbox slot=icon id="check2">
                     Checkbox
-                </u2-tree1>
-                <u2-tree1>
+                </u2-tree>
+                <u2-tree>
                     <input type=checkbox slot=icon id="check3">
                     Checkbox
-                </u2-tree1>
-            </u2-tree1>
+                </u2-tree>
+            </u2-tree>
 
-        </u2-tree1>
+        </u2-tree>
 
-    </u2-tree1>
+    </u2-tree>
 
 </section>
 
 <u2-code trim>
     <script type=module class=main>
-    document.addEventListener('u2-tree1-expand', event => {
+    document.addEventListener('u2-tree-expand', event => {
         const childrenEl = event.target.shadowRoot.querySelector('[part=children]');
         childrenEl.style.setProperty('--js-scroll-height', childrenEl.scrollHeight + 'px');
     });
@@ -116,13 +116,13 @@
             overflow:hidden;
         }
     }
-    u2-tree1::part(children) {
+    u2-tree::part(children) {
         display:block;
         max-height:0;
         overflow:hidden;
         animation: u2-children-close .2s;
     }
-    u2-tree1[aria-expanded=true]::part(children) {
+    u2-tree[aria-expanded=true]::part(children) {
         max-height:none;
         overflow:visible;
         animation: u2-children-open .3s;

@@ -9,34 +9,34 @@
     <link rel=stylesheet href="../../../css/classless/aria.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
 
-    <script src="../tree1.js" type=module async></script>
-    <link rel=stylesheet href="../tree1.css">
+    <script src="../tree.js" type=module async></script>
+    <link rel=stylesheet href="../tree.css">
 
 <body>
 
 <section class=main>
 
-    <u2-tree1 aria-expanded=true>root
-        <u2-tree1>Folder 1
-            <u2-tree1>File 1.1</u2-tree1>
-        </u2-tree1>
-        <u2-tree1 aria-expanded="true">Folder 3
-            <u2-tree1>File 3.1</u2-tree1>
-            <u2-tree1>File 3.2</u2-tree1>
-        </u2-tree1>
-    </u2-tree1>
+    <u2-tree aria-expanded=true>root
+        <u2-tree>Folder 1
+            <u2-tree>File 1.1</u2-tree>
+        </u2-tree>
+        <u2-tree aria-expanded="true">Folder 3
+            <u2-tree>File 3.1</u2-tree>
+            <u2-tree>File 3.2</u2-tree>
+        </u2-tree>
+    </u2-tree>
 
 </section>
 
 
 <style class=main>
-    u2-tree1::part(row):hover {
+    u2-tree::part(row):hover {
         background:#00000004;
     }
-    u2-tree1[aria-selected=true]::part(row) {
+    u2-tree[aria-selected=true]::part(row) {
         background:#00000008;
     }
-    u2-tree1::part(row):focus {
+    u2-tree::part(row):focus {
         outline:1px dotted;
     }
 </style>
