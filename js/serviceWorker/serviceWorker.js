@@ -11,7 +11,7 @@ export async function register(options = {}) {
             });
         }
 
-        const registration = await navigator.serviceWorker.register('../sw.js', {
+        const registration = await navigator.serviceWorker.register('../sw.js', { // '.. ???? im selben verzeichnis'
             scope: options.scope || '/'
         });
 

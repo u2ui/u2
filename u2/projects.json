@@ -18,7 +18,7 @@
     },
     "skin": {
       "name": "skin",
-      "description": "Change the skin of a widget, recalculat css color vars, sets background and color (--color-text, --color-bg)",
+      "description": "Scoped theme. `[u2-skin=myskin] { --color: red }` — derived tokens recalculate automatically. Sets `background-color: var(--color-bg)` and `color: var(--color-text)`.",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -454,7 +454,7 @@
     },
     "ico": {
       "name": "ico",
-      "description": "Universal icon-element",
+      "description": "Icon `<u2-ico icon=\"edit\" aria-label=\"edit\">🖉</u2-ico>` uses `html { --u2-ico-dir:'https://example.com/svg/{icon_name}.svg'`",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -528,7 +528,7 @@
   "css": {
     "classless": {
       "name": "classless",
-      "description": "null",
+      "description": "Applies color vars and minimal styling to plain HTML — buttons, links, typography, background. No classes involved.",
       "beta": false,
       "deprecated": false,
       "css": true,

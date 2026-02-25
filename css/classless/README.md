@@ -1,5 +1,5 @@
 # classless.css
-null
+Applies color vars and minimal styling to plain HTML — buttons, links, typography, background. No classes involved.
 
 ## Install
 

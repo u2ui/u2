@@ -1,5 +1,5 @@
 # &lt;u2-ico&gt; - element
-Universal icon-element
+Icon `<u2-ico icon="edit" aria-label="edit">🖉</u2-ico>` uses `html { --u2-ico-dir:'https://example.com/svg/{icon_name}.svg'`
 
 ## Features
 

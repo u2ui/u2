@@ -1,28 +1,19 @@
 const itemJsRoot = '../../../../nuxodin/item.js/';
 //import { effect } from '../../../../nuxodin/item.js/item.js';
 
-
 class Out extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});
-        this.outEl = this.shadowRoot;
-    }
     connectedCallback() {}
     async render() {
-        const value = await this._item.get();
+        const item = this._item;
         const {effect} = await import(itemJsRoot+'item.js');
         effect(async ()=>{
-            this._item.get(); // just to register the signal
-            this.outEl.innerHTML = value;
+            this.innerText = item.value;
         });
     }
     static observedAttributes = ['item'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
-        if (name === 'item') {
-            this._setPath(newValue);
-        }
+        if (name === 'item') this._setPath(newValue);
     }
     async _setPath(string) {
         let item = null;
@@ -31,29 +22,21 @@ class Out extends HTMLElement {
         const first = path.shift();
         switch (first) {
             case 'localStorage':
-                item = (await import(itemJsRoot+'drivers/LocalStorage.js')).getStore();
+                item = (await import(itemJsRoot+'drivers/localStorage.js')).getStore();
                 break;
-                case 'cookie':
-                    item = (await import(itemJsRoot+'drivers/Cookie.js')).cookies();
-                    break;
+            case 'cookie':
+                item = (await import(itemJsRoot+'drivers/Cookie.js')).cookies();
+                break;
             case 'navigator':
                 item = (await import(itemJsRoot+'drivers/navigator.js')).store();
                 break;
             default:
                 throw new Error('Unknown item: '+first);
         }
-
-        path.forEach( key => {
-            item = item.item(key);
-        });
-        this._item = item;
+        this._item = item.sub(path);
         this.render();
     }
 
 }
-
-const localStorage = (await import(itemJsRoot+'drivers/LocalStorage.js')).getStore();
-
-
 
 customElements.define('u2-out', Out);

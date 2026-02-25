@@ -40,7 +40,6 @@ const blocklessElements = {
     'STRONG':1,
     'LABEL':1,
     'A':1,
-	'BUTTON':1,
 }
 
 const lang = {
@@ -236,7 +235,7 @@ import('./ui/items/ai.js');
 		cleanContents(node);
 	    node.nodeType === Node.COMMENT_NODE && node.remove();
 		if (node.nodeType === Node.ELEMENT_NODE) {
-			removeTags[node.tagName] && node.removeNode();
+			removeTags[node.tagName] && node.replaceWith(...node.childNodes);
 			removeAttrs.forEach(attr=>node.removeAttribute(attr));
 			if (node.tagName !== 'IMG') ['width','height'].forEach(attr=>node.removeAttribute(attr))
 		}
@@ -246,7 +245,7 @@ import('./ui/items/ai.js');
 	}
 	Rte.ui.setItem('Removeformat', {
 		click() {
-			const root = state.range.callapsed ? active : state.range.commonAncestorContainer;
+			const root = state.range.collapsed ? active : state.range.commonAncestorContainer;
 			cleanContents(root);
 		},
 		shortcut:'space',

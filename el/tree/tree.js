@@ -233,6 +233,10 @@ export class tree extends HTMLElement {
         if (this.isRoot()) return [this];
         return this.parentNode.path().concat(this);
     }
+
+    bindItem(item) {
+        import('./ext/item.js').then(({applyItemjs}) => applyItemjs(this, item));
+    }
 }
 
 customElements.define('u2-tree', tree);

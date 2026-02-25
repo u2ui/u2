@@ -3,6 +3,21 @@
 //  or should we add an option to use shadowDom or just to define the container for the dialog-element?
 // - rename to modal.js? see <iframe sandbox="allow-modals">
 
+const d = document;
+d.head.insertAdjacentHTML(
+    'afterbegin',
+    '<style>'+
+    '.u2x-modal .-buttons {'+
+        'display:flex;'+
+        'flex-wrap:wrap;'+
+        'justify-content:flex-end;'+
+        'gap:.5rem;'+
+        'margin-top:1rem;'+
+    '}'+
+    '</style>'
+);
+
+
 class Dialog {
     constructor(options) {
 
@@ -133,24 +148,6 @@ export function form(html){
     return dialog.show();
 }
 /* */
-
-
-/* init */
-const d = document;
-
-d.head.insertAdjacentHTML(
-    'afterbegin',
-    '<style>'+
-    '.u2x-modal .-buttons {'+
-        'display:flex;'+
-        'flex-wrap:wrap;'+
-        'justify-content:flex-end;'+
-        'gap:.5rem;'+
-        'margin-top:1rem;'+
-    '}'+
-    '</style>'
-);
-
 
 
 // close dialog on backdrop-click if it has the backdropClose-class

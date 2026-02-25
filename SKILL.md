@@ -1,6 +1,8 @@
 # u2 Framework
 
-Modular web component framework. Lightweight, CDN-first, each module works standalone.
+Modular web component framework.
+https://github.com/u2ui/u2
+
 
 ## Categories
 
@@ -20,7 +22,7 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 - **parallax** - Makes elements scroll at different speeds for a parallax effect.
 - **scrollspy** - Make a navigation that changes the `active` class based on the scroll position.
 - **selectable** - Makes a container with selectable items. <div u2-selectable=".selector">
-- **skin** - Change the skin of a widget, recalculat css color vars, sets background and color (--color-text, --color-bg)
+- **skin** - Scoped theme. `[u2-skin=myskin] { --color: red }` — derived tokens recalculate automatically. Sets `background-color: var(--color-bg)` and `color: var(--color-text)`.
 - **store** - Persists form/input values using localStorage (form[id] / input[name] as keys)
 
 **`class/`** - CSS-only utilities via class names
@@ -51,7 +53,7 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 - **counter** - Animated Number Counter
 - **drawer** - (beta) *(beta)*
 - **fields** - Every content before a form element is considered as label
-- **ico** - Universal icon-element
+- **ico** - Icon `<u2-ico icon="edit" aria-label="edit">🖉</u2-ico>` uses `html { --u2-ico-dir:'https://example.com/svg/{icon_name}.svg'`
 - **input** - Input element, lot of types and options.
 - **maintitlebar** - Replaces the native browser toolbar in Desktop PWAs.
 - **masonry** - Masonry layout with CSS grid fallback
@@ -81,7 +83,7 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 **`css/`** - Global CSS utilities
 
 - **base** - Best practices and useful defaults
-- **classless** - null
+- **classless** - Applies color vars and minimal styling to plain HTML — buttons, links, typography, background. No classes involved.
 - **norm** - Browser normalization CSS – nothing else!
 - **utils** - planned
 
@@ -99,6 +101,10 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 - **serviceWorker**
 - **shortcut** - Easy keyboard shortcuts
 
+**Naming:** `<u2-{name}>`, `.u2-{name}`, `[u2-{name}]`
+
+**Module details:** Each module has its own README at `https://raw.githubusercontent.com/u2ui/u2/main/{category}/{name}/README.md` with usage examples, API docs, and demos.
+
 ## Installation
 
 **Prototyping (auto-loads all):**
@@ -106,30 +112,58 @@ Modular web component framework. Lightweight, CDN-first, each module works stand
 <script type=module async src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/u2/auto.js"></script>
 ```
 
-**Production (individual modules):**
-```html
-<!-- Custom Elements -->
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/{name}/{name}.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/{name}/{name}.js" type=module async></script>
+## CSS
 
-<!-- CSS Classes -->
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/class/{name}/{name}.css" rel=stylesheet>
+auto.js also loads: css/base/base.css, css/classless/variables.css, css/classless/classless.css
 
-<!-- Attributes -->
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/attr/{name}/{name}.js" type=module async></script>
+Sets sensible defaults — do not re-implement these when base is loaded:
 
-<!-- JS Modules -->
-<script type=module>
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/{name}/{name}.js"
-</script>
+- `box-sizing: border-box` everywhere
+- Fluid `font-size: calc(12.5px + .25vw)` on `html`
+- `body { margin: auto; display: flow-root }` — child margins don't bleed out
+- `interpolate-size: allow-keywords` — enables `height: auto` transitions
+- `@view-transition { navigation: auto }` — free page transitions
+- `hyphens: auto` with sensible limits
+- `img/svg/video/canvas` → `max-inline-size: 100%; object-fit: cover; block-size: auto`
+- `video/audio/iframe` → `inline-size: 100%`
+- Tables: `border-collapse: collapse; font-variant-numeric: tabular-nums`
+- `nav a { text-decoration: none }`, `nav li { list-style: none }`
+- Form elements get `font: inherit`, unified padding, border
+- `dialog/[popover]` fade in/out via `transition + @starting-style` — no JS needed
+- `[inert], :disabled { opacity: .4 }`
+- `.btn` — link styled as button, `display: inline-block`, no underline
+
+
+The only thing you normally set: `--color`
+
+```css
+html {
+    --color: #207acc; /* primary color — everything else derives from this */
+}
 ```
 
-**Version pinning:** Replace `@main` with `@x.x.x` (e.g., `@1.2.3`) for production to lock to a specific version.
+All other color tokens are **automatically computed** via `color-mix()` and `oklch()` from `--color`:
 
-**Naming:** `<u2-{name}>`, `.u2-{name}`, `[u2-{name}]`
+```css
+/* tints / shades — auto-derived, override only if needed */
+--color-lightest  /* color-mix(--color, #fff 97%) */
+--color-lighter   /* color-mix(--color, #fff 85%) */
+--color-light     /* color-mix(--color, #fff 50%) */
+--color-dark      /* color-mix(--color, #000 30%) */
+--color-darker    /* color-mix(--color, #000 60%) */
+--color-darkest   /* color-mix(--color, #000 87%) */
 
-**Modules marked** *(beta)* or *(deprecated)* in descriptions.
+/* semantic — auto light/dark mode */
+--color-bg        /* light: --color-lightest  /  dark: --color-darkest  */
+--color-text      /* light: --color-darkest   /  dark: --color-lightest */
+--color-area      /* light: --color-lighter   /  dark: --color-darker   */
+--color-line      /* = --color-text */
 
-**Module details:** Each module has its own README at `https://raw.githubusercontent.com/u2ui/u2/main/{category}/{name}/README.md` with usage examples, API docs, and demos.
+/* gray — derived from --color hue, desaturated */
+--gray, --gray-lighter, --gray-light, --gray-dark, --gray-darker
 
-https://github.com/u2ui/u2
+/* full palette — hue-rotated from --color's lightness/chroma */
+--red, --orange, --yellow, --lime, --green, --cyan, --blue, --purple, --pink
+```
+
+`--accent` defaults to `--color` but can be set independently for e.g. focus rings.

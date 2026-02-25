@@ -1,5 +1,5 @@
 # [u2-skin] - attribute
-Change the skin of a widget, recalculat css color vars, sets background and color (--color-text, --color-bg)
+Scoped theme. `[u2-skin=myskin] { --color: red }` — derived tokens recalculate automatically. Sets `background-color: var(--color-bg)` and `color: var(--color-text)`.
 
 - Recalculates css color-variables
 - Sets the background and the text color
