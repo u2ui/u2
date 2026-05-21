@@ -234,8 +234,8 @@ export class tree extends HTMLElement {
         return this.parentNode.path().concat(this);
     }
 
-    bindItem(item) {
-        import('./ext/item.js').then(({applyItemjs}) => applyItemjs(this, item));
+    bindItem(item,options={}) {
+        import('./ext/item.js').then(({applyItemjs}) => applyItemjs(this, item, options));
     }
 }
 

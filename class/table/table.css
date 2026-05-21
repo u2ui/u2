@@ -102,7 +102,7 @@ https://jsfiddle.net/x90cz65o/103/
 .u2-table.-Sticky > thead > * > th {
     position:sticky;
     top:0;
-    background-color:var(--color-bg);
+    background-color:var(--color-bg); /* too strong */
 }
 .u2-table.-Sticky > * > * > * { /* border-collapse:separate prevents borders on tr */
     border-bottom:inherit;
