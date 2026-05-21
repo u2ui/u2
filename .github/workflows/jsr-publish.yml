@@ -1,31 +1,26 @@
-name: Publish to JSR
+name: Release
 
 on:
   push:
     branches:
       - main
     paths:
-      - jsr.json
+      - package.json
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
 
       - name: Version lesen
         id: version
-        run: echo "version=$(jq -r '.version' jsr.json)" >> $GITHUB_OUTPUT
+        run: echo "version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
       - name: Tag + Release erstellen
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
           generate_release_notes: true
-
-      - uses: denoland/setup-deno@v2
-
-      - run: deno publish
