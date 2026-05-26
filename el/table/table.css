@@ -1,4 +1,4 @@
 u2-table {
     display:block;
-    xoverflow: auto; /* sticky will not work on body-scroll */
+    /* overflow: auto; sticky will not work on body-scroll */
 }

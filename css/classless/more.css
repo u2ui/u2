@@ -69,8 +69,6 @@ input:is([type=radio], [type=checkbox]) {
 		content: "";
 		position: absolute;
 		inset: 0;
-		xinset: -1px;
-		xborder-radius:inherit;
 		display: flex;
 		align-items: center;
 		justify-content: center;

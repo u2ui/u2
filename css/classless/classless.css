@@ -22,7 +22,6 @@ a:hover, a:focus {
 }
 hr {
     color: var(--color-line);
-    xmargin-inline:0;
     margin-block: calc(var(--gap) * 2);
     border-width: var(--line-width);
 }
