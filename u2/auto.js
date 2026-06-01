@@ -28,8 +28,8 @@ setTimeout(()=>prio = 2);
 setTimeout(()=>prio = 3, 2000);
 const needed = { js:{}, css:{} };
 function impJs(url){
-    if (!url || url in needed.js) return;
-    needed.js[url] = prio;
+    if (!url) return;
+    needed.js[url] ??= prio;
     return import(url);
 }
 function impCss(url, options={}){
