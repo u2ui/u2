@@ -92,7 +92,7 @@ function eventTargets(event){
 		if (!target) return {};
 		container = target.closest('[u2-focusgroup]');
 	}
-	if (!container) container = target.assignedSlot?.closest('[u2-focusgroup]'); // if slotted, ok?
+	container ||= target.assignedSlot?.closest('[u2-focusgroup]'); // if slotted, ok?
 	return {
 		target,
 		container

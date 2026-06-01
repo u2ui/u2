@@ -76,8 +76,10 @@ export default class U2Table extends HTMLElement {
             }
             const summaryCheck = this.querySelector(':scope .summary-checkbox');
             const headCheckAdjust = () => {
-                const allChecked = this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]:checked').length === this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]').length;
-                const noneChecked = this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]:checked').length === 0;
+                const checks = this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]');
+                const checked = this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]:checked');
+                const allChecked = checked.length === checks.length;
+                const noneChecked = checked.length === 0;
                 const someChecked = !allChecked && !noneChecked;
                 summaryCheck.checked = allChecked;
                 summaryCheck.indeterminate = someChecked;

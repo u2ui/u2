@@ -1,4 +1,4 @@
-# &lt;u2-rating&gt; - element
+# &lt;u2-responsive&gt; - element
 A Container, where you can define strategies, that are applied through CSS states. `<u2-responsive strategies="hideOptional">`
 
 ## Usage

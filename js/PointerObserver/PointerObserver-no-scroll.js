@@ -4,11 +4,12 @@ const d = document;
 export class PointerObserver {
     constructor(el, options) {
 
-        this.options = Object.assign({
+        this.options = {
             mouse: true,
             touch: true,
             passive: true,
-        }, options);
+            ...options
+        };
 
         this.el   = el;
         this.pos  = {};
@@ -104,8 +105,6 @@ export class PointerObserver {
 			y: pointer.pageY,
 			time: e.timeStamp,
 		};
-        if (this.last.x===this.pos.x && this.last.y === this.pos.y) return;
-
         this.onmove && this.onmove(e);
 	}
 	stop(e) {

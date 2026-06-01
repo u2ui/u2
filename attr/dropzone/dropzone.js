@@ -316,7 +316,7 @@ function isAfterInGrid(item, mouseX, mouseY) {
 function canDrop(dropzone, dragged) {
     let selector = dropzone.getAttribute('u2-dropzone').trim();
     if (selector === '*') return true;
-    if (!selector) selector = ':scope > *'; // just own
+    selector ||= ':scope > *'; // just own
     dropzone.id ||= 'u2-dropzone-tmp';
     selector = selector.replaceAll(':scope', '#' + dropzone.id);
     let valid = false;

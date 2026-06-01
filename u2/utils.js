@@ -51,10 +51,11 @@ function _importCss(url, options={}){
 
 const styleWrappers = new WeakMap();
 function rootGetStyleWrapper(root) {
-    if (!styleWrappers.has(root)) {
-        let styleWrapper = document.createElement('div');
+    let styleWrapper = styleWrappers.get(root);
+    if (!styleWrapper) {
+        styleWrapper = document.createElement('div');
         root.prepend(styleWrapper);
         styleWrappers.set(root, styleWrapper);
     }
-    return styleWrappers.get(root);
+    return styleWrapper;
 }

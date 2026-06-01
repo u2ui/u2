@@ -188,7 +188,7 @@ contain: layout style paint;  /* Neu ok? */
 
 		if (typeof target === 'number') target = this._items()[target]; // by index
 
-		if (Array.from(this._items()).indexOf(target) === -1) console.error('target not a child of this slider!')
+		if (!Array.from(this._items()).includes(target)) console.error('target not a child of this slider!')
 
 		if (this.active !== target) { // just trigger if not active
 			for (let child of this._items()) {
@@ -379,7 +379,7 @@ U2Carousel.prototype.addSwipe = function(){
 			let next = Math.round(x / this.offsetWidth);
 			next = Math.max(0, Math.min(next, this.children.length-1));
 			next = this.children[next];
-			if (!next) next = this.active;
+			next ||= this.active;
 			this.style.transition = '';
 			this.slideTo(next);
 		}

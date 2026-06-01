@@ -74,16 +74,12 @@ function newNode(node){
             loadProject('el', name);
         }
     }
-    let classList = node.classList;
-    for (let i=0, l=classList.length; i<l; i++) {
-        let klass = classList[i]
+    for (const klass of node.classList) {
         if (!klass.startsWith('u2-')) continue;
         let name = klass.substring(3);
         loadProject('class', name);
     }
-    const attris = node.attributes;
-    for (let i=0, l=attris.length; i<l; i++) {
-        let attr = attris[i]
+    for (const attr of node.attributes) {
         if (!attr.name.startsWith('u2-')) continue;
         let name = attr.name.substring(3).replace(/-.*/,''); // example: u2-href-target => href
         loadProject('attr', name);
@@ -106,11 +102,8 @@ function newNodeRoot(node){
     node.querySelectorAll('*').forEach(newNode);
 }
 var mo = new MutationObserver((entries)=>{
-    for (let i=0, l=entries.length; i<l; i++) {
-        let nodes = entries[i].addedNodes;
-        for (let j=0, l2=nodes.length; j<l2; j++) {
-            newNodeRoot(nodes[j]);
-        }
+    for (const entry of entries) {
+        for (const node of entry.addedNodes) newNodeRoot(node);
     }
 });
 
@@ -142,8 +135,8 @@ addEventListener('keydown',e=>{
 function mergeNewlyNeeded(){
     let allNeeded = localStorage.getItem('u2-needed');
     allNeeded = JSON.parse(allNeeded) || {};
-    allNeeded.js = Object.assign(allNeeded.js||{}, needed.js);
-    allNeeded.css = Object.assign(allNeeded.css||{}, needed.css);
+    Object.assign(allNeeded.js ||= {}, needed.js);
+    Object.assign(allNeeded.css ||= {}, needed.css);
     //Object.assign(allNeeded, needed);
     localStorage.setItem('u2-needed', JSON.stringify(allNeeded));
 }

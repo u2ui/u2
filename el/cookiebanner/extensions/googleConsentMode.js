@@ -1,5 +1,5 @@
 // Google Consent Mode v2
-window.dataLayer = window.dataLayer || [];
+window.dataLayer ||= [];
 function gtag(){dataLayer.push(arguments)};
 gtag('js', new Date());
 
@@ -13,11 +13,13 @@ const googleConsentMap = {
     'security_storage': 'necessary'
 };
 
-const defaultConsent = {};
-Object.entries(googleConsentMap).forEach(([key, value]) => {
-  defaultConsent[key] = value === 'necessary' ? 'granted' : 'denied';
-});
-defaultConsent.wait_for_update = 700;
+const defaultConsent = {
+    ...Object.fromEntries(Object.entries(googleConsentMap).map(([key, value]) => [
+        key,
+        value === 'necessary' ? 'granted' : 'denied'
+    ])),
+    wait_for_update: 700
+};
 gtag('consent', 'default', defaultConsent);
 
 

@@ -115,7 +115,7 @@ function fromElement(el) {
 
     // slots
     var slotEls = el.shadowRoot ? el.shadowRoot.querySelectorAll('slot') : [];
-    const slots = Array.from(slotEls).map(el=>{
+    const slots = Array.from(slotEls, el=>{
         return {
             name: el.name,
             summary: '',
@@ -126,7 +126,7 @@ function fromElement(el) {
 
     // CSS Shadow Parts
     var partEls = el.shadowRoot ? el.shadowRoot.querySelectorAll('[part]') : [];
-    const cssParts = Array.from(partEls).map(el=>{
+    const cssParts = Array.from(partEls, el=>{
         return {
             name: el.getAttribute('part'),
             summary: '',

@@ -51,11 +51,9 @@ async function writeReadMe(category, entry) {
     const intro = rawParts.shift();
 
     for (let part of rawParts) {
-        const lines = part.split('\n');
-        let firstLine = lines[0];
-        let content = lines.slice(1).join('\n').trim();
-        let title = firstLine.replaceAll('#', '').trim();
-        parts[title] = content;
+        const [firstLine, ...contentLines] = part.split('\n');
+        const title = firstLine.replaceAll('#', '').trim();
+        parts[title] = contentLines.join('\n').trim();
     }
 
     // tmp:
@@ -93,9 +91,9 @@ async function writeReadMe(category, entry) {
     //     `)+'\n\n';
     let content = intro.trim()+'\n\n';
 
-    Object.entries(orderedParts).forEach(([key, value])=>{
+    for (const [key, value] of Object.entries(orderedParts)) {
         if (value) content += `## ${key}\n\n${value}\n\n`;
-    })
+    }
 
     Deno.writeTextFile(readme, content);
     return {description: intro.split('\n')[1]??''};

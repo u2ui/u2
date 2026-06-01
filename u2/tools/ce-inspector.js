@@ -10,7 +10,7 @@ const tabsCss = import.meta.resolve('../../el/tabs/tabs.css');
 const tableCss = import.meta.resolve('../../class/table/table.css');
 
 
-import {attributes} from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@main/drivers/htmlElementAttributes.js';
+import {attributes} from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@main/old/old-adapters/htmlElementAttributes.js';
 import {effect} from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@main/item.js';
 import {render, html, htmlFor} from 'https://unpkg.com/uhtml@4.4.7/keyed.js';
 

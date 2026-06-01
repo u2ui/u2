@@ -102,7 +102,7 @@ export default class U2Ico extends HTMLElement {
 
 function dirTemplateToUrl(dir, name) {
     let [prefix, firstWord, between='', nextWord, suffix] = dir.split(/{(icon)([^n]*)?(name)?}/i);
-    if (!suffix) suffix = prefix.includes('#') ? '' : '.svg';
+    suffix ||= prefix.includes('#') ? '' : '.svg';
     if (!nextWord) between = '-'; // if just: {icon}
 
     // icon naming convertion
@@ -153,12 +153,10 @@ async function loadSvgString(url) {
 const cachedRequests = {};
 
 async function loadCached(url) {
-    if (cachedRequests[url]) return cachedRequests[url];
-    cachedRequests[url] = fetch(url, {cache: "force-cache"}).then(res => {
+    return cachedRequests[url] ??= fetch(url, {cache: "force-cache"}).then(res => {
         if (!res.ok) throw new Error(`Failed to fetch icon ${url}: ${res.status} ${res.statusText}`);
         return res.text();
     });
-    return cachedRequests[url];
 }
 
 

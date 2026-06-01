@@ -134,7 +134,7 @@ export default class U2Tree extends HTMLElement {
         while (item) {
             let next = null;
             if (item.isExpanded()) next = item.items().at(0);
-            if (!next) next = item.nextElementSibling; // todo: only next treeitem
+            next ||= item.nextElementSibling; // todo: only next treeitem
             if (!next) {
                 while (item.parentNode) {
                     item = item.parentNode;
@@ -159,7 +159,7 @@ export default class U2Tree extends HTMLElement {
                     next = next.items().at(-1);
                 }
             }
-            if (!next) next = item.parentNode;
+            next ||= item.parentNode;
             if (next) return next;
             item = next;
         }

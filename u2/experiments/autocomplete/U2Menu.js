@@ -10,7 +10,7 @@ export class U2Menu {
         this.element = role === 'menu' ? document.createElement('menu') : document.createElement('div');
         this.element.part = 'menu';
         if (role !== 'menu') this.element.role = role;
-        this.element.id = `u2-menu-${Math.random().toString(36).substr(2, 9)}`;
+        this.element.id = `u2-menu-${Math.random().toString(36).slice(2, 11)}`;
 
         // Lifecycle
         this.element.addEventListener('toggle', e => {

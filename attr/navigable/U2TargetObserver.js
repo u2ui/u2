@@ -15,7 +15,7 @@ export class U2TargetObserver {
 	}
     _matches(el){
         if (!el) return false;
-        return el!==false && this.opts.matches==null || el.matches(this.opts.matches);
+        return this.opts.matches==null || el.matches(this.opts.matches);
     }
     _testOn(el){
         this.opts.on && this._matches(el) && this.opts.on(el);

@@ -19,7 +19,7 @@ export class SelectionManager {
                 firstTabIndex0 = item;
                 break;
             }
-            if (item.ariaSelected === 'true' && firstSelected == null) firstSelected = item;
+            if (item.ariaSelected === 'true') firstSelected ??= item;
         }
         const focusable = firstTabIndex0 || firstSelected || items[0];
         if (focusable) {

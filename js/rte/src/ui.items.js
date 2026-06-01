@@ -495,23 +495,23 @@ import {TableHandles} from '../c1/tableHandles.mjs?qgUniq=bbcd4cc';
 
 
 	var matchText = function(node, regex, callback, excludeElements) {
-		excludeElements || (excludeElements = ['script', 'style', 'iframe', 'canvas']);
+		excludeElements ||= ['script', 'style', 'iframe', 'canvas'];
 		var child = node.firstChild;
 		while (child) {
 			if (child.nodeType === 1) {
-				if (excludeElements.indexOf(child.tagName.toLowerCase()) > -1) break;
+				if (excludeElements.includes(child.tagName.toLowerCase())) break;
 				matchText(child, regex, callback, excludeElements);
 			}
 			if (child.nodeType === 3) {
 				var bk = 0;
 				child.data.replace(regex, function(str) {
-					var args = [].slice.call(arguments);
+					var args = Array.from(arguments);
 					var tag = callback.apply(window, [child].concat(args));
 					if (!tag) return false;
 					var offset = args[args.length - 2];
 					var newTextNode = child.splitText(offset+bk);
 					bk -= child.data.length + str.length;
-					newTextNode.data = newTextNode.data.substr(str.length);
+					newTextNode.data = newTextNode.data.slice(str.length);
 					child.parentNode.insertBefore(tag, newTextNode);
 					child = newTextNode;
 				});

@@ -4,7 +4,7 @@ const selection = getSelection();
 const chainedFns = {setStart:1,setStartBefore:1,setStartAfter:1,setEnd:1,setEndAfter:1,selectNode:1,selectNodeContents:1,insertNode:1,collapse:1,deleteContents:1};
 
 export function $range(range) { // better name? rProxy, rangeProxy, ranger
-	if (!range) range = document.createRange();
+	range ||= document.createRange();
     return new Proxy(range, handler);
 }
 $range.fromSelection = function(){
@@ -466,5 +466,4 @@ older zzz?
         return els;
     };
 */
-
 

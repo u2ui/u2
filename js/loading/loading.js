@@ -1,7 +1,7 @@
 
 export function mark(el, opt) {
     if (!el.length) return _markElement(el, opt);
-    const dones = Array.from(el).map(el=>_markElement(el, opt));
+    const dones = Array.from(el, el=>_markElement(el, opt));
     return ()=>{ for (let done of dones) done(); }
 }
 

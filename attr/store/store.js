@@ -1,6 +1,8 @@
 import { SelectorObserver } from '../../js/SelectorObserver/SelectorObserver.js';
 
 let store = sessionStorage;
+const readStore = key => JSON.parse(store.getItem(key) || '{}');
+
 cookieStore && cookieStore.get("u2-cookiebanner")
     .then(data => JSON.parse(data.value??'{}'))
     .then(data=> {if (data.functional) store = localStorage; })
@@ -16,14 +18,14 @@ document.addEventListener('input', e => {
     if (form && form.hasAttribute('u2-store')) {
         const formId = form.id || '_noid_';
         const key = 'u2-store-form-' + formId;
-        const data = JSON.parse(store.getItem(key) || '{}');
+        const data = readStore(key);
         data[name] = value;
         store.setItem(key, JSON.stringify(data));
     }
     // and/or save in global-store
     if (target.hasAttribute('u2-store')) {
         const key = 'u2-store-input';
-        const data = JSON.parse(store.getItem(key) || '{}');
+        const data = readStore(key);
         data[name] = value;
         store.setItem(key, JSON.stringify(data));
     }
@@ -33,7 +35,7 @@ const elObserver = new SelectorObserver({
     on: (el) => {
         if (el.tagName === 'FORM' && el.id) { // form-store
             const formId = el.id;
-            const data = JSON.parse(store.getItem('u2-store-form-' + formId) || '{}');
+            const data = readStore('u2-store-form-' + formId);
             for (let input of el.elements) {
                 if (!input.name) continue;
                 if (input.hasAttribute('value') && input.type !== 'checkbox') continue;
@@ -46,7 +48,7 @@ const elObserver = new SelectorObserver({
                 }
             }
         } else { // global-store
-            const data = JSON.parse(store.getItem('u2-store-input') || '{}');
+            const data = readStore('u2-store-input');
             if (el.hasAttribute('value')) return;
             if (data[el.name] == null) return;
             if (el.type === 'checkbox') {
