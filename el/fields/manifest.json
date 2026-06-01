@@ -1,0 +1,32 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "fields.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Every content before a form element is considered as label",
+            "name": "U2Fields",
+            "members": [{
+                "kind": "getter",
+                "name": "values",
+                "description": "Object with the values of all named inputs"
+            }],
+            "events": [],
+            "attributes": [],
+            "cssProperties": [],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-fields",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-fields",
+            "declaration": {
+                "name": "U2Fields",
+                "module": "fields.js"
+            }
+        }]
+    }]
+}

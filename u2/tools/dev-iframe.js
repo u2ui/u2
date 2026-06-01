@@ -126,8 +126,7 @@ class DevIframe extends HTMLElement {
         const form = shadow.querySelector('#tools');
     
         form.addEventListener('change', e => {
-            if (template) this.loadDoc(template.innerHTML);
-            else this.loadUrl(frame.src);
+            template ? this.loadDoc(template.innerHTML) : this.loadUrl(frame.src);
         });
 
         const template = this.querySelector(':scope > template');

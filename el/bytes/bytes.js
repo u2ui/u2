@@ -50,8 +50,7 @@ export default class U2Bytes extends HTMLElement {
     get value() {
         let value = this.getAttribute('value') ?? this.textContent;
         value = value.trim();
-        if (value==='') return null;
-        return parseFloat(value);
+        return value === '' ? null : parseFloat(value);
     }
 }
 
@@ -78,8 +77,7 @@ function convertBytes(bytes, options) {
     }
 
     let i = bytes === 0 ? 0 : Math.floor(Math.log(Math.abs(bytes)) / Math.log(base));
-
-    if (i < 0) i = 0;
+    i = Math.max(0, i);
 
     let unit = 'B';
     if (i === 0) {
@@ -89,10 +87,7 @@ function convertBytes(bytes, options) {
     if (lang === 'fr') unit = 'o';
     if (lang === 'ru') unit = 'б';
     
-    let space = '\u00A0'; // nbsp
-    if (lang === 'fr') space = '\u202f';
-    if (lang === 'ja') space = '';
-    if (lang === 'zh') space = '';
+    const space = lang === 'fr' ? '\u202f' : (lang === 'ja' || lang === 'zh') ? '' : '\u00A0'; // nbsp
   
     return {
         number: bytes / Math.pow(base, i),

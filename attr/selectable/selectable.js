@@ -21,7 +21,7 @@ function destroy(el) {
 }
 
 function init(el) {
-    return managers.has(el) ? managers.get(el) : create(el);
+    return managers.get(el) ?? create(el);
 }
 
 import { SelectorObserver } from '../../js/SelectorObserver/SelectorObserver.js';

@@ -71,15 +71,12 @@ function getAssetType(url) {
   if (/\.(jpg|jpeg|png|gif|webp|svg|ico)$/i.test(path)) return 'images';
   if (/\.(js|mjs)$/i.test(path)) return 'scripts';
   if (/\.css$/i.test(path)) return 'styles';
-  if (path.startsWith('/api/')) return 'api';
-  if (path === '/' || path.endsWith('.html')) return 'html';
-  return 'html';
+  return path.startsWith('/api/') ? 'api' : 'html';
 }
 
 async function handleFetch(req, strategy, assetType, preloadRes) {
   if (strategy === 'cache-first') return cacheFirst(req, assetType, preloadRes);
-  if (strategy === 'network-first') return networkFirst(req, assetType, preloadRes);
-  return fetchWithFallback(req);
+  return strategy === 'network-first' ? networkFirst(req, assetType, preloadRes) : fetchWithFallback(req);
 }
 
 // ============================================================

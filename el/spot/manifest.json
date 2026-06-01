@@ -1,0 +1,55 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "spot.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Visual indicator tracking elements by selector",
+            "name": "U2Spot",
+            "members": [{
+                "kind": "method",
+                "name": "moveTo",
+                "description": "Moves the spot to the given element"
+            },{
+                "kind": "method",
+                "name": "reset",
+                "description": "Resets the spot to the fallback or hides it"
+            },{
+                "kind": "method",
+                "name": "updatePosition",
+                "description": "Re-positions the spot on the current target"
+            }],
+            "events": [],
+            "attributes": [{
+                "name": "target",
+                "description": "Selector of the elements to track (default: *)",
+                "u2Examples": ["*", ":scope > h6"]
+            },{
+                "name": "active",
+                "description": "Selector deciding which target is active (default: :hover)",
+                "u2Examples": [":hover", ".active"]
+            },{
+                "name": "fallback",
+                "description": "Selector of the element to track when none is active"
+            }],
+            "cssProperties": [{
+                "name": "--target-border-radius",
+                "description": "Read only! Border radius of the current target",
+                "syntax": "<length>"
+            }],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-spot",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-spot",
+            "declaration": {
+                "name": "U2Spot",
+                "module": "spot.js"
+            }
+        }]
+    }]
+}

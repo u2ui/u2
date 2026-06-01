@@ -1,0 +1,40 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "path": "skin.css",
+        "declarations": [{
+            "description": "Scoped theme — recalculates color variables and sets background/text color",
+            "name": "u2-skin",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "u2-skin",
+                "description": "Name of the skin to apply",
+                "u2Examples": ["invert", "theme", "pink"]
+            }],
+            "cssProperties": [{
+                "name": "--color",
+                "description": "Primary color the skin derives all tokens from",
+                "syntax": "<color>"
+            },{
+                "name": "--color-bg",
+                "description": "Background color applied by the skin",
+                "syntax": "<color>"
+            },{
+                "name": "--color-text",
+                "description": "Text color applied by the skin",
+                "syntax": "<color>"
+            }],
+            "attributeName": "u2-skin"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-skin",
+            "declaration": {
+                "name": "u2-skin",
+                "module": "skin.css"
+            }
+        }]
+    }]
+}

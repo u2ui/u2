@@ -1,0 +1,54 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "chart.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Renders a chart from HTML like <table> or <dl> elements",
+            "name": "U2Chart",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "type",
+                "description": "The chart type",
+                "u2Examples": ["pie", "bar", "line", "doughnut"]
+            },{
+                "name": "for",
+                "description": "ID of the element to read the data from, instead of a child table/dl"
+            },{
+                "name": "flip-axis",
+                "description": "Flips the x and y axis",
+                "u2-type": "boolean"
+            },{
+                "name": "axis-labels",
+                "description": "Shows the axis labels",
+                "u2-type": "boolean"
+            },{
+                "name": "grid",
+                "description": "Shows the grid lines",
+                "u2-type": "boolean"
+            },{
+                "name": "engine",
+                "description": "The charting engine to use"
+            },{
+                "name": "renderer",
+                "description": "The renderer to use",
+                "u2Examples": ["canvas", "svg"]
+            }],
+            "cssProperties": [],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-chart",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-chart",
+            "declaration": {
+                "name": "U2Chart",
+                "module": "chart.js"
+            }
+        }]
+    }]
+}

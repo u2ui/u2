@@ -94,8 +94,7 @@ export default class U2Accordion extends HTMLElement {
         let hLevel = 6;
         for (let node of this.children) { // get highest heading level
             if (!node.tagName.match(/^H[1-6]$/)) continue;
-            let level = parseInt(node.tagName[1]);
-            if (level < hLevel) hLevel = level;
+            hLevel = Math.min(hLevel, parseInt(node.tagName[1]));
         }
 
         let index = -1;

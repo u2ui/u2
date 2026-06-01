@@ -77,10 +77,8 @@ export default class U2Pagination extends HTMLElement {
         a.innerHTML = label ? `<span aria-hidden="true">${label}</span>` : page;
         a.dataset.page = page;
         a.setAttribute('aria-label', rel ? `${rel} page` : `Page ${page}`);
-        if (rel) a.setAttribute('rel', rel);
-        else a.removeAttribute('rel');
-        if (page === this.current) a.setAttribute('aria-current', 'page');
-        else a.removeAttribute('aria-current');
+        rel ? a.setAttribute('rel', rel) : a.removeAttribute('rel');
+        page === this.current ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
     }
 
     render() {

@@ -1,0 +1,29 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "lightbox.js",
+        "declarations": [{
+            "description": "Link an image to a lightbox",
+            "name": "u2-lightbox",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "u2-lightbox",
+                "description": "Group name; links sharing a group form one gallery",
+                "u2Examples": ["", "group1"]
+            }],
+            "cssProperties": [],
+            "attributeName": "u2-lightbox"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-lightbox",
+            "declaration": {
+                "name": "u2-lightbox",
+                "module": "lightbox.js"
+            }
+        }]
+    }]
+}

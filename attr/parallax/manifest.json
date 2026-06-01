@@ -1,0 +1,36 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "parallax.js",
+        "declarations": [{
+            "description": "Makes elements scroll at different speeds for a parallax effect",
+            "name": "u2-parallax",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "u2-parallax",
+                "description": "Enables the parallax effect on the element"
+            }],
+            "cssProperties": [{
+                "name": "--u2-parallax-speed",
+                "description": "Scroll speed factor (1 = normal)",
+                "syntax": "<number>"
+            },{
+                "name": "--u2-parallax-direction",
+                "description": "Direction of the parallax movement",
+                "syntax": "*"
+            }],
+            "attributeName": "u2-parallax"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-parallax",
+            "declaration": {
+                "name": "u2-parallax",
+                "module": "parallax.js"
+            }
+        }]
+    }]
+}

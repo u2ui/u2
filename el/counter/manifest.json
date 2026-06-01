@@ -7,7 +7,7 @@
         "declarations": [{
             "kind": "class",
             "description": "Animated Number Counter",
-            "name": "u2-counter",
+            "name": "U2Counter",
             "members": [],
             "events": [],
             "attributes": [{
@@ -34,9 +34,7 @@
                 "description": "Read only! The final width of the counter",
                 "syntax": "<length>"
             }],
-            "superclass": {
-                "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-counter",
             "customElement": true
         }],
@@ -44,7 +42,7 @@
             "kind": "custom-element-definition",
             "name": "u2-counter",
             "declaration": {
-                "name": "u2-counter",
+                "name": "U2Counter",
                 "module": "counter.js"
             }
         }]

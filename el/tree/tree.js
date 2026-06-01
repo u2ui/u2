@@ -122,8 +122,7 @@ export default class U2Tree extends HTMLElement {
 
         // if has children, its expandable
         if (!this.hasAttribute('aria-expanded')) {
-            if (this.items().length) this.setAttribute('aria-expanded', 'false');
-            else this.removeAttribute('aria-expanded');
+            this.items().length ? this.setAttribute('aria-expanded', 'false') : this.removeAttribute('aria-expanded');
         }
     }
     items(){
@@ -132,8 +131,7 @@ export default class U2Tree extends HTMLElement {
     nextFocusable(){
         let item = this;
         while (item) {
-            let next = null;
-            if (item.isExpanded()) next = item.items().at(0);
+            let next = item.isExpanded() ? item.items().at(0) : null;
             next ||= item.nextElementSibling; // todo: only next treeitem
             if (!next) {
                 while (item.parentNode) {
@@ -230,8 +228,7 @@ export default class U2Tree extends HTMLElement {
         return this.parentNode?.tagName !== this.tagName;
     }
     path(){
-        if (this.isRoot()) return [this];
-        return this.parentNode.path().concat(this);
+        return this.isRoot() ? [this] : this.parentNode.path().concat(this);
     }
 
     bindItem(item,options={}) {

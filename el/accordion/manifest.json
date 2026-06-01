@@ -7,7 +7,7 @@
         "declarations": [{
             "kind": "class",
             "description": "A custom HTML element for creating an accordion component.",
-            "name": "accordion",
+            "name": "U2Accordion",
             "members": [],
             "events": [],
             "attributes": [{
@@ -36,7 +36,7 @@
             "kind": "custom-element-definition",
             "name": "u2-accordion",
             "declaration": {
-                "name": "accordion",
+                "name": "U2Accordion",
                 "module": "accordion.js"
             }
         }]

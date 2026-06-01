@@ -1,0 +1,33 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "selectable.js",
+        "declarations": [{
+            "description": "Makes a container with selectable items",
+            "name": "u2-selectable",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "u2-selectable",
+                "description": "Selector of selectable items (default: direct children)",
+                "u2Examples": ["", ".item"]
+            },{
+                "name": "aria-multiselectable",
+                "description": "Allows selecting multiple items",
+                "u2-type": "boolean"
+            }],
+            "cssProperties": [],
+            "attributeName": "u2-selectable"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-selectable",
+            "declaration": {
+                "name": "u2-selectable",
+                "module": "selectable.js"
+            }
+        }]
+    }]
+}

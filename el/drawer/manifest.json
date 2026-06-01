@@ -7,13 +7,11 @@
         "declarations": [{
             "kind": "class",
             "description": "todo",
-            "name": "u2-drawer",
+            "name": "U2Drawer",
             "members": [],
             "events": [],
             "attributes": ["todo"],
-            "superclass": {
-                "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-drawer",
             "customElement": true
         }],
@@ -21,7 +19,7 @@
             "kind": "custom-element-definition",
             "name": "u2-drawer",
             "declaration": {
-                "name": "u2-drawer",
+                "name": "U2Drawer",
                 "module": "drawer.js"
             }
         }]

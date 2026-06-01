@@ -35,12 +35,7 @@ export default class U2Chart extends HTMLElement {
     }
 
     async _extractdata() {
-        let target = null;
-        if (this.hasAttribute('for')) {
-            target = await this._forPromise
-        } else {
-            target = this.querySelector(':scope > table, :scope > dl');
-        }
+        const target = this.hasAttribute('for') ? await this._forPromise : this.querySelector(':scope > table, :scope > dl');
         if (target) {
             if (target.tagName === 'TABLE') return extractTableData(target);
             if (target.tagName === 'DL') return extractDLData(target);

@@ -365,7 +365,7 @@ class Columns {
 
     indexOf(cell) {
         this._ensureMatrix();
-        return this._cellIndexMap.has(cell) ? this._cellIndexMap.get(cell) : -1;
+        return this._cellIndexMap.get(cell) ?? -1;
     }
 
     item(i) {

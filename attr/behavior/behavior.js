@@ -189,8 +189,7 @@ register('darkmode.toggle',{
         const value = localStorage.u2Skin;
         document.documentElement.setAttribute('u2-skin', value);
         document.documentElement.setAttribute('data-theme', value); // compatibility
-        const state = value === 'dark';
-        return state;
+        return value === 'dark';
     },
     action: (e, el) => {
         const newVal = localStorage.u2Skin === 'dark' ? 'light' : 'dark';

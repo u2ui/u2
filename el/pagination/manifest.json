@@ -1,0 +1,47 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "pagination.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Page number navigation with customizable URL patterns",
+            "name": "U2Pagination",
+            "members": [{
+                "kind": "method",
+                "name": "render",
+                "description": "Re-renders the pagination"
+            }],
+            "events": [{
+                "name": "u2-pagination-change",
+                "description": "Fired when a page is selected"
+            }],
+            "attributes": [{
+                "name": "total",
+                "description": "Total number of pages",
+                "u2-type": "number"
+            },{
+                "name": "current",
+                "description": "The current page, auto-detected from the URL if not set",
+                "u2-type": "number"
+            },{
+                "name": "href",
+                "description": "URL pattern, {page} is replaced by the page number",
+                "u2Examples": ["?page={page}", "/page/{page}"]
+            }],
+            "cssProperties": [],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-pagination",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-pagination",
+            "declaration": {
+                "name": "U2Pagination",
+                "module": "pagination.js"
+            }
+        }]
+    }]
+}

@@ -31,8 +31,7 @@ export class TargetObserver {
      * @private
      */
     _matches(el){
-        if (!el) return false;
-        return this.opts.matches==null || el.matches(this.opts.matches);
+        return !!el && (this.opts.matches==null || el.matches(this.opts.matches));
     }
 
     /**

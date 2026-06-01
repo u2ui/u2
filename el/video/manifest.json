@@ -1,0 +1,96 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "video.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Video element with custom controls and keyboard shortcuts",
+            "name": "U2Video",
+            "members": [{
+                "kind": "method",
+                "name": "togglePlay",
+                "description": "Plays or pauses the video"
+            },{
+                "kind": "method",
+                "name": "toggleMute",
+                "description": "Mutes or unmutes the video"
+            },{
+                "kind": "method",
+                "name": "skip",
+                "description": "Skips by the given number of seconds"
+            },{
+                "kind": "method",
+                "name": "toggleFullscreen",
+                "description": "Enters or exits fullscreen"
+            }],
+            "events": [],
+            "attributes": [{
+                "name": "src",
+                "description": "URL of the video"
+            },{
+                "name": "poster",
+                "description": "URL of the poster image"
+            },{
+                "name": "preload",
+                "description": "How the video is preloaded",
+                "u2Examples": ["none", "metadata", "auto"]
+            },{
+                "name": "autoplay",
+                "description": "Starts playing automatically",
+                "u2-type": "boolean"
+            },{
+                "name": "loop",
+                "description": "Restarts the video when finished",
+                "u2-type": "boolean"
+            },{
+                "name": "muted",
+                "description": "Mutes the audio",
+                "u2-type": "boolean"
+            },{
+                "name": "controls",
+                "description": "Shows the custom controls",
+                "u2-type": "boolean"
+            },{
+                "name": "width",
+                "description": "Width of the video"
+            },{
+                "name": "height",
+                "description": "Height of the video"
+            },{
+                "name": "playsinline",
+                "description": "Plays inline on mobile instead of fullscreen",
+                "u2-type": "boolean"
+            },{
+                "name": "crossorigin",
+                "description": "CORS setting",
+                "u2Examples": ["anonymous", "use-credentials"]
+            },{
+                "name": "picture-in-picture",
+                "description": "Enables picture-in-picture",
+                "u2-type": "boolean"
+            }],
+            "cssProperties": [{
+                "name": "--u2-video-bg",
+                "description": "Background color of the video area",
+                "syntax": "<color>"
+            },{
+                "name": "--gap",
+                "description": "Spacing of the controls",
+                "syntax": "<length>"
+            }],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-video",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-video",
+            "declaration": {
+                "name": "U2Video",
+                "module": "video.js"
+            }
+        }]
+    }]
+}

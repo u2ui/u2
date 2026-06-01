@@ -112,12 +112,9 @@ export default class U2Code extends HTMLElement {
         if (el.tagName === 'TEMPLATE') return 'html';
         if (el.tagName === 'SCRIPT') {
             const type = el.getAttribute('type');
-            if (type==='module') return 'javascript';
-            if (type) return type.replace(/^text\/(x-)?/, '');
-            return 'javascript';
+            return type === 'module' ? 'javascript' : type ? type.replace(/^text\/(x-)?/, '') : 'javascript';
         }
-        if (this.isForeign) return 'html';
-        return false;
+        return this.isForeign ? 'html' : false;
     }
     setHightlightValue(value){
         if (!this.libLoaded) this.shadowRoot.querySelector('#code').innerHTML = htmlEncode(value); // fast display and then highlight

@@ -30,9 +30,7 @@ addEventListener('keydown', e => {
 	if (!options.horizontal && isHorizontal) return;
 	if (!options.vertical && isVertical) return;
 
-	let direction = 0;
-	if (e.code === 'ArrowLeft' || e.code === 'ArrowUp') direction = -1;
-	if (e.code === 'ArrowRight' || e.code === 'ArrowDown') direction = 1;
+	const direction = e.code === 'ArrowLeft' || e.code === 'ArrowUp' ? -1 : e.code === 'ArrowRight' || e.code === 'ArrowDown' ? 1 : 0;
 	if (direction === 0) return;
 
 	const items = groupItems(container);
@@ -45,8 +43,7 @@ addEventListener('keydown', e => {
 		return;
 	}
 
-	let next = items[index + direction];
-	if (!next && options.wrap) next = direction === 1 ? items.at(0) : items.at(-1);
+	let next = items[index + direction] || (options.wrap ? direction === 1 ? items.at(0) : items.at(-1) : null);
 	if (!next) return;
 
 	next.focus();

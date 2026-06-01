@@ -7,7 +7,7 @@
         "declarations": [{
             "kind": "class",
             "description": "Simple carousel component",
-            "name": "carousel",
+            "name": "U2Carousel",
             "members": [{
                 "kind": "method",
                 "name": "slideTo"
@@ -15,9 +15,7 @@
             "events": [{
                 "name": "u2-carousel.slide",
                 "description": "Fired when the carousel slides to a new item.",
-                "type": {
-                    "text": "Event"
-                }
+                "type": { "text": "Event" }
             }],
             "attributes": [{
                 "name": "autoplay",
@@ -26,13 +24,11 @@
             },{
                 "name": "mode",
                 "description": "The mode of the carousel. scroll: uses native scroll, fade: uses css opacity, slide: uses css-transform.",
-                "u2-type": ["slide","fade","scroll"]
+                "u2-type": ["slide", "fade", "scroll"]
             }],
             "cssProperties": [],
             "cssParts": [],
-            "superclass": {
-                "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-carousel",
             "customElement": true
         }],
@@ -40,7 +36,7 @@
             "kind": "custom-element-definition",
             "name": "u2-carousel",
             "declaration": {
-                "name": "carousel",
+                "name": "U2Carousel",
                 "module": "carousel.js"
             }
         }]

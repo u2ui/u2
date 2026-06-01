@@ -1,0 +1,32 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "maintitlebar.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Replaces the native browser toolbar in Desktop PWAs",
+            "name": "U2Maintitlebar",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "hidden",
+                "description": "Set by the element itself when not installed as a Desktop-PWA",
+                "u2-type": "boolean"
+            }],
+            "cssProperties": [],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-maintitlebar",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-maintitlebar",
+            "declaration": {
+                "name": "U2Maintitlebar",
+                "module": "maintitlebar.js"
+            }
+        }]
+    }]
+}

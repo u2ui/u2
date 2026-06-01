@@ -1,38 +1,26 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-      {
+    "modules": [{
         "kind": "javascript-module",
         "path": "out.js",
-        "declarations": [
-          {
+        "declarations": [{
             "kind": "class",
             "description": "Displays formatted outs",
-            "name": "u2-out",
+            "name": "U2Out",
             "members": [],
             "events": [],
             "attributes": [],
             "cssProperties": [],
             "cssParts": [],
-            "superclass": {
-              "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-out",
             "customElement": true
-          }
-        ],
-        "exports": [
-          {
+        }],
+        "exports": [{
             "kind": "custom-element-definition",
             "name": "u2-out",
-            "declaration": {
-              "name": "u2-out",
-              "module": "out.js"
-            }
-          }
-        ]
-      }
-    ]
-  }
-  
+            "declaration": { "name": "U2Out", "module": "out.js" }
+        }]
+    }]
+}

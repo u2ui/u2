@@ -1,0 +1,32 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "parallax-bg.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Scroll-driven parallax background layer with dynamic container sizing",
+            "name": "U2ParallaxBg",
+            "members": [],
+            "events": [],
+            "attributes": [],
+            "cssProperties": [{
+                "name": "--parallax-bg-speed",
+                "description": "Parallax speed factor (1 = normal scroll speed)",
+                "syntax": "<number>"
+            }],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-parallax-bg",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-parallax-bg",
+            "declaration": {
+                "name": "U2ParallaxBg",
+                "module": "parallax-bg.js"
+            }
+        }]
+    }]
+}

@@ -206,14 +206,12 @@ export class BaseElement extends HTMLElement {
 function attrToProp(value, { type }) {
     if (type === 'boolean') return value != null;
     if (type === 'number') return value ? parseFloat(value) : 0;
-    if (type === 'tokens') return new Set(value?.split(' ') || []);
-    return value;
+    return type === 'tokens' ? new Set(value?.split(' ') || []) : value;
 }
 
 function propToAttr(value, { type }) {
     if (type === 'boolean') return value ? '' : null;
     if (type === 'number') return String(value);
     if (type === 'tokens') return [...value].join(' ');
-    if (value == null) return null;
-    return String(value);
+    return value == null ? null : String(value);
 }

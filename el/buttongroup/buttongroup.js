@@ -27,8 +27,7 @@ export default class U2Buttongroup extends HTMLElement {
                 const item = li.querySelector('*');
                 li.remove();
                 const last = this.querySelector(':scope > :not(u2-menubutton):last-of-type');
-                if (last) last.after(item);
-                else this.prepend(item);
+                last ? last.after(item) : this.prepend(item);
             }
         }
         

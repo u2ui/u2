@@ -26,9 +26,7 @@
                 "default": "0.4rem",
                 "description": "The horizontal margin around the separator."
             }],
-            "superclass": {
-                "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-breadcrumb",
             "customElement": true
         }],

@@ -297,8 +297,7 @@ export default class U2Video extends HTMLElement {
                 speedToggle.textContent = `${rate}x`;
                 speedMenu.querySelectorAll('.speed-option').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                if (typeof speedMenu.hidePopover === 'function') speedMenu.hidePopover();
-                else speedMenu.removeAttribute('open');
+                typeof speedMenu.hidePopover === 'function' ? speedMenu.hidePopover() : speedMenu.removeAttribute('open');
             });
             speedMenu.appendChild(btn);
         });
@@ -454,8 +453,7 @@ export default class U2Video extends HTMLElement {
             case 'muted':
             case 'playsinline':
                 if (!booleanAttrs.has(name)) break;
-                if (newVal !== null) this._video.setAttribute(name, '');
-                else this._video.removeAttribute(name);
+                this._video.toggleAttribute(name, newVal !== null);
                 break;
         }
     }

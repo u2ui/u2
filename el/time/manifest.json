@@ -1,103 +1,79 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-      {
+    "modules": [{
         "kind": "javascript-module",
         "path": "time.js",
-        "declarations": [
-          {
+        "declarations": [{
             "kind": "class",
             "description": "A better time-element, e.g. live changing relative dates",
-            "name": "u2-time",
-            "members": [
-              {
+            "name": "U2Time",
+            "members": [{
                 "kind": "method",
                 "name": "render",
                 "description": "Render the time element"
-              },
-              {
+            },{
                 "kind": "method",
                 "name": "reset",
                 "description": "Reset the time element"
-              }
-            ],
+            }],
             "events": [],
-            "attributes": [
-              {
+            "attributes": [{
                 "name": "datetime",
                 "description": "The date and time to display, in ISO 8601 format"
-              },
-              {
+            },{
                 "name": "lang",
                 "description": "The language to use for formatting the date and time",
-                "u2Examples": ["de-CH","de","fr-CA","ja-JP","zh-Hans-CN"]
-              },
-              {
+                "u2Examples": ["de-CH", "de", "fr-CA", "ja-JP", "zh-Hans-CN"]
+            },{
                 "name": "type",
                 "description": "The type of display to use, either 'date' or 'relative'",
-                "u2-type": ["date","relative"]
-              },
-              {
+                "u2-type": ["date", "relative"]
+            },{
                 "name": "weekday",
                 "description": "The format to use for the weekday, either 'narrow', 'short', 'long', or 'none'",
-                "u2-type": ["narrow","short","long","none"]
-              },
-              {
+                "u2-type": ["narrow", "short", "long", "none"]
+            },{
                 "name": "year",
                 "description": "The format to use for the year, either 'numeric', '2-digit', or 'none'",
-                "u2-type": ["numeric","2-digit","none"]
-              },
-              {
+                "u2-type": ["numeric", "2-digit", "none"]
+            },{
                 "name": "month",
                 "description": "The format to use for the month, either 'numeric', '2-digit', 'narrow', 'short', 'long', or 'none'",
-                "u2-type": ["numeric","2-digit","narrow","short","long","none"]
-              },
-              {
+                "u2-type": ["numeric", "2-digit", "narrow", "short", "long", "none"]
+            },{
                 "name": "day",
                 "description": "The format to use for the day, either 'numeric', '2-digit', or 'none'",
-                "u2-type": ["numeric","2-digit","none"]
-              },
-              {
+                "u2-type": ["numeric", "2-digit", "none"]
+            },{
                 "name": "hour",
                 "description": "The format to use for the hour, either 'numeric', '2-digit', or 'none'",
-                "u2-type": ["numeric","2-digit","none"]
-              },
-              {
+                "u2-type": ["numeric", "2-digit", "none"]
+            },{
                 "name": "minute",
                 "description": "The format to use for the minute, either 'numeric', '2-digit', or 'none'",
-                "u2-type": ["numeric","2-digit","none"]
-              },
-              {
+                "u2-type": ["numeric", "2-digit", "none"]
+            },{
                 "name": "second",
                 "description": "The format to use for the second, either 'numeric', '2-digit', or 'none'",
-                "u2-type": ["numeric","2-digit","none"]
-              },
-              {
+                "u2-type": ["numeric", "2-digit", "none"]
+            },{
                 "name": "mode",
                 "description": "The mode to use for the relative type, either 'narrow', 'short', or 'long'",
-                "u2-type": ["narrow","short","long"]
-              }
-            ],
+                "u2-type": ["narrow", "short", "long"]
+            }],
             "cssProperties": [],
-            "superclass": {
-              "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-time",
             "customElement": true
-          }
-        ],
-        "exports": [
-          {
+        }],
+        "exports": [{
             "kind": "custom-element-definition",
             "name": "u2-time",
             "declaration": {
-              "name": "u2-time",
-              "module": "time.js"
+                "name": "U2Time",
+                "module": "time.js"
             }
-          }
-        ]
-      }
-    ]
-  }
-  
+        }]
+    }]
+}

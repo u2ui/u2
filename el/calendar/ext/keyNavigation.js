@@ -23,8 +23,7 @@ const calendarKeyDownFns = {
         calendar.next();
         setTimeout(()=>{
             const nextTarget = grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
-            if (nextTarget) nextTarget.focus();
-            else grid.querySelector(':scope > :last-child').focus();
+            nextTarget ? nextTarget.focus() : grid.querySelector(':scope > :last-child').focus();
         }, 10);
     },
     'Home': (row, col, grid)=>{
@@ -70,8 +69,7 @@ document.addEventListener('wheel', e => {
     const grid = target.closest('.grid');
     if (grid) {
         e.preventDefault();
-        if (e.deltaY > 0) calendar.next();
-        else calendar.prev();
+        e.deltaY > 0 ? calendar.next() : calendar.prev();
     }
 }, { passive: false });
 

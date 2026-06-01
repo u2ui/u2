@@ -1,49 +1,37 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-    {
+    "modules": [{
         "kind": "javascript-module",
         "path": "copy.js",
-        "declarations": [
-          {
+        "declarations": [{
             "kind": "class",
             "description": "copys the content of an other element",
-            "name": "u2-copy",
-            "members": [
-            ],
+            "name": "U2Copy",
+            "members": [],
             "events": [],
-            "attributes": [
-                {
-                    "name": "for",
-                    "description": "The id of the element to copy",
-                    "type": "string"
-                },{
-                    "name": "sync",
-                    "description": "If true, the copy will be updated when the original element changes",
-                    "type": "boolean"
-                }
-            ],
+            "attributes": [{
+                "name": "for",
+                "description": "The id of the element to copy",
+                "type": "string"
+            },{
+                "name": "sync",
+                "description": "If true, the copy will be updated when the original element changes",
+                "type": "boolean"
+            }],
             "cssProperties": [],
             "cssParts": [],
-            "superclass": {
-              "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-copy",
             "customElement": true
-          }
-        ],
-        "exports": [
-          {
+        }],
+        "exports": [{
             "kind": "custom-element-definition",
             "name": "u2-copy",
             "declaration": {
-              "name": "u2-copy",
-              "module": "copy.js"
+                "name": "U2Copy",
+                "module": "copy.js"
             }
-          }
-        ]
-      }
-    ]
-  }
-  
+        }]
+    }]
+}

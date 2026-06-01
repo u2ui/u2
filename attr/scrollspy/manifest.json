@@ -1,0 +1,28 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "scrollspy.js",
+        "declarations": [{
+            "description": "Navigation that sets the active class based on scroll position",
+            "name": "u2-scrollspy",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "u2-scrollspy",
+                "description": "Enables scrollspy on a navigation container"
+            }],
+            "cssProperties": [],
+            "attributeName": "u2-scrollspy"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-scrollspy",
+            "declaration": {
+                "name": "u2-scrollspy",
+                "module": "scrollspy.js"
+            }
+        }]
+    }]
+}

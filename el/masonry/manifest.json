@@ -1,60 +1,49 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-      {
+    "modules": [{
         "kind": "javascript-module",
         "path": "masonry.js",
-        "declarations": [
-          {
+        "declarations": [{
             "kind": "class",
             "description": "Masonry Layout",
-            "name": "u2-masonry",
+            "name": "U2Masonry",
             "members": [],
             "events": [],
             "attributes": [],
-            "cssProperties": [
-                {
-                    "name": "--u2-Items-width",
-                    "description": "The max-width (if available) of the masonry items",
-                    "syntax": "<length>",
-                    "u2Examples": ["10rem","100px","10%"]
-                },{
-                    "name": "--u2-Gap",
-                    "description": "The gap between the masonry items",
-                    "syntax": "<length>",
-                    "u2Examples": ["1rem","10px","1%"]
-                },{
-                    "name": "--u2-Col-gap",
-                    "description": "The gap between the masonry columns",
-                    "syntax": "<length>",
-                    "u2Examples": ["1rem","10px","1%"]
-                },{
-                    "name": "--u2-Row-gap",
-                    "description": "The gap between the masonry rows",
-                    "syntax": "<length>",
-                    "u2Examples": ["1rem","10px","1%"]
-                }
-            ],
+            "cssProperties": [{
+                "name": "--u2-Items-width",
+                "description": "The max-width (if available) of the masonry items",
+                "syntax": "<length>",
+                "u2Examples": ["10rem", "100px", "10%"]
+            },{
+                "name": "--u2-Gap",
+                "description": "The gap between the masonry items",
+                "syntax": "<length>",
+                "u2Examples": ["1rem", "10px", "1%"]
+            },{
+                "name": "--u2-Col-gap",
+                "description": "The gap between the masonry columns",
+                "syntax": "<length>",
+                "u2Examples": ["1rem", "10px", "1%"]
+            },{
+                "name": "--u2-Row-gap",
+                "description": "The gap between the masonry rows",
+                "syntax": "<length>",
+                "u2Examples": ["1rem", "10px", "1%"]
+            }],
             "cssParts": [],
-            "superclass": {
-              "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-masonry",
             "customElement": true
-          }
-        ],
-        "exports": [
-          {
+        }],
+        "exports": [{
             "kind": "custom-element-definition",
             "name": "u2-masonry",
             "declaration": {
-              "name": "u2-masonry",
-              "module": "masonry.js"
+                "name": "U2Masonry",
+                "module": "masonry.js"
             }
-          }
-        ]
-      }
-    ]
-  }
-  
+        }]
+    }]
+}

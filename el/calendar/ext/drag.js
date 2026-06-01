@@ -11,8 +11,7 @@ function addPart(el, partName) {
 
 function removePart(el, partName) {
     const parts = (el.getAttribute('part') || '').split(/\s+/).filter(p => p !== partName);
-    if (parts.length) el.setAttribute('part', parts.join(' '));
-    else el.removeAttribute('part');
+    parts.length ? el.setAttribute('part', parts.join(' ')) : el.removeAttribute('part');
 }
 
 document.addEventListener('dragstart', (e) => {

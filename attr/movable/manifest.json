@@ -1,0 +1,47 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "movable.js",
+        "declarations": [{
+            "description": "Make an element movable, optionally via a [u2-movable-handler] child",
+            "name": "u2-movable",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "u2-movable",
+                "description": "Makes the element movable"
+            },{
+                "name": "u2-movable-handler",
+                "description": "Marks a child element as the drag handle"
+            }],
+            "cssProperties": [{
+                "name": "--u2-movable-method",
+                "description": "How the movement is applied",
+                "syntax": "*"
+            },{
+                "name": "--u2-movable-threshold",
+                "description": "Drag threshold in px (default 10)",
+                "syntax": "<number>"
+            },{
+                "name": "--u2-movable-x",
+                "description": "Set to false to disable horizontal movement",
+                "syntax": "*"
+            },{
+                "name": "--u2-movable-y",
+                "description": "Set to false to disable vertical movement",
+                "syntax": "*"
+            }],
+            "attributeName": "u2-movable"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-movable",
+            "declaration": {
+                "name": "u2-movable",
+                "module": "movable.js"
+            }
+        }]
+    }]
+}

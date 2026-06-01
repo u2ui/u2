@@ -1,0 +1,28 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "store.js",
+        "declarations": [{
+            "description": "Persists form/input values using localStorage or sessionStorage",
+            "name": "u2-store",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "u2-store",
+                "description": "Enables persistence on a form (needs id) or input (needs name, no value)"
+            }],
+            "cssProperties": [],
+            "attributeName": "u2-store"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-store",
+            "declaration": {
+                "name": "u2-store",
+                "module": "store.js"
+            }
+        }]
+    }]
+}

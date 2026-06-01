@@ -7,13 +7,13 @@
         "declarations": [{
             "kind": "class",
             "description": "Prominent hints, alerts, and facts",
-            "name": "u2-alert",
+            "name": "U2Alert",
             "members": [],
             "events": [],
             "attributes": [{
                 "name": "variant",
                 "description": "Determines the type of the alert (success, warn, error, info).",
-                "u2-type": ["info","success","warn","error"]
+                "u2-type": ["info", "success", "warn", "error"]
             },{
                 "name": "dismissable",
                 "description": "Allows the alert to be closed by the user.",
@@ -21,7 +21,7 @@
             },{
                 "name": "icon",
                 "description": "Adds an icon to the alert, if not set, the icon will be determined by the variant.",
-                "u2Examples": ["home","star","favorite","share","link"]
+                "u2Examples": ["home", "star", "favorite", "share", "link"]
             },{
                 "name": "open",
                 "description": "Determines if the alert is visible or not.",
@@ -43,9 +43,7 @@
                 "name": "close",
                 "description": "The close (dismiss) button part of the alert"
             }],
-            "superclass": {
-                "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-alert",
             "customElement": true
         }],
@@ -53,7 +51,7 @@
             "kind": "custom-element-definition",
             "name": "u2-alert",
             "declaration": {
-                "name": "u2-alert",
+                "name": "U2Alert",
                 "module": "alert.js"
             }
         }]

@@ -237,8 +237,7 @@ function getElementBefore(container, e) {
         } else {
             // Grid/Flex mit Wrapping: erst Y, dann X
             const yDiff = Math.abs(a.centerY - b.centerY);
-            if (yDiff > 10) return a.centerY - b.centerY;
-            return a.centerX - b.centerX;
+            return yDiff > 10 ? a.centerY - b.centerY : a.centerX - b.centerX;
         }
     });
 
@@ -305,9 +304,7 @@ function isAfterInGrid(item, mouseX, mouseY) {
 
     // Gleiche Zeile, aber rechts von Maus
     const sameLine = Math.abs(centerY - mouseY) < box.height / 2;
-    if (sameLine && centerX > mouseX) return true;
-
-    return false;
+    return sameLine && centerX > mouseX;
 }
 
 

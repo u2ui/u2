@@ -1,0 +1,44 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "menubutton.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Buttons with options",
+            "name": "U2Menubutton",
+            "members": [{
+                "kind": "method",
+                "name": "open",
+                "description": "Opens the menu"
+            },{
+                "kind": "method",
+                "name": "close",
+                "description": "Closes the menu"
+            },{
+                "kind": "method",
+                "name": "toggle",
+                "description": "Toggles the menu"
+            }],
+            "events": [],
+            "attributes": [{
+                "name": "openby",
+                "description": "How the menu opens additionally to clicking",
+                "u2Examples": ["hover", "focus", "hover focus"]
+            }],
+            "cssProperties": [],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-menubutton",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-menubutton",
+            "declaration": {
+                "name": "U2Menubutton",
+                "module": "menubutton.js"
+            }
+        }]
+    }]
+}

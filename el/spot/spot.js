@@ -27,8 +27,7 @@ export default class U2Spot extends HTMLElement {
         }
         // sonst prüfen, ob noch irgendein Element matcht
         const match = this.parent.querySelector(`${this.targetSelector}${this.activeSelector}`);
-        if (match) this.moveTo(match);
-        else this.reset();
+        match ? this.moveTo(match) : this.reset();
     }
 
 

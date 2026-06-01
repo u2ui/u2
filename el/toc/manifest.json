@@ -1,0 +1,36 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "toc.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Automatically generates a navigation from the document's headings",
+            "name": "U2Toc",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "from",
+                "description": "Lowest heading level to include",
+                "u2Examples": ["h2", "2"]
+            },{
+                "name": "to",
+                "description": "Highest heading level to include",
+                "u2Examples": ["h4", "4"]
+            },{
+                "name": "for",
+                "description": "Selector of the container whose headings are used"
+            }],
+            "cssProperties": [],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-toc",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-toc",
+            "declaration": { "name": "U2Toc", "module": "toc.js" }
+        }]
+    }]
+}

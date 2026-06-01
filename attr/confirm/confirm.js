@@ -8,9 +8,7 @@ document.addEventListener('submit', e=>{
     if (resentConfirmed) return; // dont check again
     const form = e.target;
     const btn = e.submitter;
-    let element = null;
-    if (form.hasAttribute('u2-confirm')) element = form;
-    if (btn && btn.hasAttribute('u2-confirm')) element = btn;
+    const element = btn?.hasAttribute('u2-confirm') ? btn : form.hasAttribute('u2-confirm') ? form : null;
     if (!element) return;
     confirmEvent(e, element, ()=> form.requestSubmit(btn) );
 },true);
@@ -46,9 +44,7 @@ async function confirmEvent(e, element, then){
 
 function getMessage(el, lang) {
     // get lang of el
-    let msg = el.getAttribute('u2-confirm');
-    if (msg) return msg;
-    msg = sure[lang];
+    const msg = el.getAttribute('u2-confirm') || sure[lang];
     if (msg) return msg;
     console.warn('no translation for lang "'+lang+'" in confirm.js. Please report!');
     return sure.en;

@@ -37,8 +37,7 @@ new U2TargetObserver({
 addEventListener('toggle',e=>{
 	const el = e.target;
 	if (!el.matches('details[u2-navigable][id]')) return;
-	if (el.open) toggleParam(el.id, true);
-	else toggleParam(el.id, false);
+	toggleParam(el.id, el.open);
 },true);
 
 
@@ -57,8 +56,7 @@ addEventListener('change',e=>{
 		elements.forEach(e => toggleParam(e.id, false)); // toggleParam(e.id, false, TRUE) does not work as expected, why?
 	}
 
-	if (el.checked) toggleParam(el.id, true);
-	else toggleParam(el.id, false);
+	toggleParam(el.id, el.checked);
 });
 
 

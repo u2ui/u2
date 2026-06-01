@@ -169,8 +169,7 @@ class Morph {
   static #shouldReplace(oldNode, newNode) {
     if (oldNode.nodeType !== newNode.nodeType) return true;
     if (oldNode.nodeType === Node.TEXT_NODE) return oldNode.textContent !== newNode.textContent;
-    if (oldNode.tagName !== newNode.tagName) return true;
-    return oldNode.id !== newNode.id;
+    return oldNode.tagName !== newNode.tagName || oldNode.id !== newNode.id;
   }
 }
 

@@ -1,0 +1,31 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "carousel-nav.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Carousel navigation element for u2-carousel. (beta)",
+            "name": "U2CarouselNav",
+            "members": [],
+            "events": [],
+            "attributes": [{
+                "name": "sync-group",
+                "description": "Syncs with all u2-carousel elements sharing the same sync-group value"
+            }],
+            "cssProperties": [],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-carousel-nav",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-carousel-nav",
+            "declaration": {
+                "name": "U2CarouselNav",
+                "module": "carousel-nav.js"
+            }
+        }]
+    }]
+}

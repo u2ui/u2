@@ -1,66 +1,45 @@
 {
     "schemaVersion": "1.0.0",
     "readme": "README.md",
-    "modules": [
-        {
-            "kind": "javascript-module",
-            "path": "typewriter.js",
-            "declarations": [
-                {
-                    "kind": "class",
-                    "description": "",
-                    "name": "carousel",
-                    "members": [
-                        {
-                            "kind": "method",
-                            "name": "play"
-                        }
-                    ],
-                    "events": [
-                        {
-                            "name": "u2-typewriter-play",
-                            "type": {
-                                "text": "Event"
-                            }
-                        },
-                        {
-                            "name": "u2-typewriter-end",
-                            "type": {
-                                "text": "Event"
-                            }
-                        },
-                        {
-                            "name": "u2-typewriter-pause",
-                            "type": {
-                                "text": "Event"
-                            }
-                        }
-                    ],
-                    "attributes": [
-                        {
-                            "name": "autoplay",
-                            "u2-type": "boolean"
-                        },
-                        {
-                            "name": "loop",
-                            "u2-type": "boolean"
-                        }
-                    ],
-                    "superclass": { "name": "HTMLElement" },
-                    "tagName": "u2-typewriter",
-                    "customElement": true
-                }
-            ],
-            "exports": [
-                {
-                    "kind": "custom-element-definition",
-                    "name": "u2-typewriter",
-                    "declaration": {
-                        "name": "MyElement",
-                        "module": "typewriter.js"
-                    }
-                }
-            ]
-        }
-    ]
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "typewriter.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Simple typewriter element",
+            "name": "U2Typewriter",
+            "members": [{
+                "kind": "method",
+                "name": "play"
+            }],
+            "events": [{
+                "name": "u2-typewriter-play",
+                "type": { "text": "Event" }
+            },{
+                "name": "u2-typewriter-end",
+                "type": { "text": "Event" }
+            },{
+                "name": "u2-typewriter-pause",
+                "type": { "text": "Event" }
+            }],
+            "attributes": [{
+                "name": "autoplay",
+                "u2-type": "boolean"
+            },{
+                "name": "loop",
+                "u2-type": "boolean"
+            }],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-typewriter",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-typewriter",
+            "declaration": {
+                "name": "U2Typewriter",
+                "module": "typewriter.js"
+            }
+        }]
+    }]
 }

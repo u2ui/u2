@@ -7,14 +7,12 @@
         "declarations": [{
             "kind": "class",
             "description": "A container for grouping buttons together; buttons that don’t have space will be moved into a dropdown menu.",
-            "name": "U2ButtonGroup",
+            "name": "U2Buttongroup",
             "members": [],
             "events": [],
             "attributes": [],
             "cssProperties": [],
-            "superclass": {
-                "name": "HTMLElement"
-            },
+            "superclass": { "name": "HTMLElement" },
             "tagName": "u2-buttongroup",
             "customElement": true
         }],
@@ -22,7 +20,7 @@
             "kind": "custom-element-definition",
             "name": "u2-buttongroup",
             "declaration": {
-                "name": "U2ButtonGroup",
+                "name": "U2Buttongroup",
                 "module": "buttongroup.js"
             }
         }]

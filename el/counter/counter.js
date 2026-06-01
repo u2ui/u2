@@ -56,8 +56,7 @@ export default class U2Counter extends HTMLElement {
         let start = performance.now();
         this._interval = setInterval(()=>{
             let now = performance.now();
-            let progress = (now - start) / duration;
-            if (progress>1) progress = 1;
+            let progress = Math.min((now - start) / duration, 1);
             this.animatedValue = from + diff * easeOutCubic(progress);
             if (progress >= 1) {
                 this.animatedValue = to;

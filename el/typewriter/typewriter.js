@@ -105,12 +105,7 @@ customElements.define('u2-typewriter', U2Typewriter);
 
 // find the next Char in children or sibling of the node but not outside the root
 function findNextChar(root, node) {
-    let next = null;
-    if (node.classList.contains('-Symbol')) {
-        next = node.nextElementSibling;
-    } else {
-        next = node.firstElementChild || node.nextElementSibling;
-    }
+    let next = node.classList.contains('-Symbol') ? node.nextElementSibling : node.firstElementChild || node.nextElementSibling;
     if (!next) {
         while (1) {
             node = node.parentNode;

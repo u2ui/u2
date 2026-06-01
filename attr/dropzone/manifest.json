@@ -1,0 +1,36 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "dropzone.js",
+        "declarations": [{
+            "description": "Dropzone for draggable elements",
+            "name": "u2-dropzone",
+            "members": [],
+            "events": [{
+                "name": "u2-dropzone-drop",
+                "description": "Fired on the dropzone when an element is dropped"
+            }],
+            "attributes": [{
+                "name": "u2-dropzone",
+                "description": "Selector of accepted draggable items, empty for all",
+                "u2Examples": ["", ":scope > *"]
+            }],
+            "cssProperties": [{
+                "name": "--u2-dropzone-strategy",
+                "description": "The drop strategy",
+                "syntax": "*"
+            }],
+            "attributeName": "u2-dropzone"
+        }],
+        "exports": [{
+            "kind": "custom-attribute-definition",
+            "name": "u2-dropzone",
+            "declaration": {
+                "name": "u2-dropzone",
+                "module": "dropzone.js"
+            }
+        }]
+    }]
+}

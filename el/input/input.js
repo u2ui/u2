@@ -531,8 +531,7 @@ export default class U2Input extends HTMLElement {
         if (this.hasAttribute('type')) return this.getAttribute('type');
         if (this.realInput) {
             if (this.realInput.tagName === 'TEXTAREA') return 'textarea';
-            if (this.realInput.tagName === 'SELECT') return 'select';
-            return this.realInput.type;
+            return this.realInput.tagName === 'SELECT' ? 'select' : this.realInput.type;
         }
         return 'text';
     }

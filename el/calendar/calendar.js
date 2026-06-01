@@ -382,10 +382,8 @@ itemStyle.replaceSync(`
 const __u2_timeFormatterCache = new Map();
 function getTimeFormatter(localeTag, options = { hour: '2-digit', minute: '2-digit' }) {
   const key = `${localeTag}::${JSON.stringify(options)}`;
-  if (__u2_timeFormatterCache.has(key)) return __u2_timeFormatterCache.get(key);
-  const f = new Intl.DateTimeFormat(localeTag, options);
-  __u2_timeFormatterCache.set(key, f);
-  return f;
+  return __u2_timeFormatterCache.get(key)
+    ?? __u2_timeFormatterCache.set(key, new Intl.DateTimeFormat(localeTag, options)).get(key);
 }
 
 

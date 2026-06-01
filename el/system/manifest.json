@@ -1,0 +1,32 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "system.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Manage U2 system: preferences, debug, optimization",
+            "name": "U2System",
+            "members": [{
+                "kind": "method",
+                "name": "demo",
+                "description": "Opens the system demo UI"
+            }],
+            "events": [],
+            "attributes": [],
+            "cssProperties": [],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-system",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-system",
+            "declaration": {
+                "name": "U2System",
+                "module": "system.js"
+            }
+        }]
+    }]
+}
