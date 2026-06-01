@@ -1,5 +1,5 @@
 
-class U2Calendar extends HTMLElement {
+export default class U2Calendar extends HTMLElement {
   static observedAttributes = ['view', 'date', 'lang'];
 
   constructor() {

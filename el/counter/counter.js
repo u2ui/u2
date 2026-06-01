@@ -1,4 +1,4 @@
-class counter extends HTMLElement {
+export default class U2Counter extends HTMLElement {
     constructor() {
         super();
 
@@ -93,4 +93,4 @@ function format(el, val){
     }).format(val);
 }
 
-customElements.define('u2-counter', counter)
+customElements.define('u2-counter', U2Counter)

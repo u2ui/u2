@@ -1,5 +1,5 @@
 
-class U2Number extends HTMLElement {
+export default class U2Number extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});

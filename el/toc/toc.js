@@ -1,6 +1,6 @@
 import '../../js/navigator/url-change-event.js';
 
-class Toc extends HTMLElement {
+export default class U2Toc extends HTMLElement {
     constructor() {
         super();
     }
@@ -76,4 +76,4 @@ class Toc extends HTMLElement {
     }
 }
 
-customElements.define('u2-toc', Toc);
+customElements.define('u2-toc', U2Toc);

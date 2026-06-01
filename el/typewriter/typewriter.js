@@ -27,7 +27,7 @@ u2-typewriter .-Caret {
 document.head.prepend(style);
 
 
-class Typewriter extends HTMLElement {
+export default class U2Typewriter extends HTMLElement {
     constructor() {
         super();
 
@@ -100,7 +100,7 @@ class Typewriter extends HTMLElement {
     }
 
 }
-customElements.define('u2-typewriter', Typewriter);
+customElements.define('u2-typewriter', U2Typewriter);
 
 
 // find the next Char in children or sibling of the node but not outside the root

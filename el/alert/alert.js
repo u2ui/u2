@@ -80,7 +80,7 @@ slot[name=icon] {
 /* slot[name=action]:empty-slot { display:none; } not possible */`;
 
 
-class alert extends HTMLElement {
+export default class U2Alert extends HTMLElement {
     constructor() {
         super();
  
@@ -163,9 +163,9 @@ const variantData = {
     }
 };
 
-customElements.define('u2-alert', alert);
+customElements.define('u2-alert', U2Alert);
 
-alert = function(message, variant, options={}) {
+function alert(message, variant, options={}) {
     const el = document.createElement('u2-alert');
     el.textContent = message;
     options.icon && el.setAttribute('icon', options.icon);

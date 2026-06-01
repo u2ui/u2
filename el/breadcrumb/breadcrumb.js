@@ -21,7 +21,7 @@ styleSheet.replaceSync(`
     }
 `);
 
-class U2Breadcrumb extends HTMLElement {
+export default class U2Breadcrumb extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open', slotAssignment: 'manual' });

@@ -1,6 +1,6 @@
 // Dependencies: u2/tools/promiseElementById.js
 
-class U2Chart extends HTMLElement {
+export default class U2Chart extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });

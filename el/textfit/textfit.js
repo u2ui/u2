@@ -11,7 +11,7 @@ const throttle = (func, ms) => {
     }
 }
 
-class textfit extends HTMLElement {
+export default class U2Textfit extends HTMLElement {
     constructor() {
         super();
         let shadowRoot = this.attachShadow({ mode: 'open' });
@@ -77,4 +77,4 @@ class textfit extends HTMLElement {
     }
 }
 
-customElements.define('u2-textfit', textfit);
+customElements.define('u2-textfit', U2Textfit);

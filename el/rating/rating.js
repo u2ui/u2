@@ -25,7 +25,7 @@ const style = `
 }
 `;
 
-class rating extends HTMLElement {
+export default class U2Rating extends HTMLElement {
     static formAssociated = true;
     #value = null;
     constructor() {
@@ -145,4 +145,4 @@ function translate(text) {
     return texts[text][lang] ?? texts[text].en;
 }
 
-customElements.define('u2-rating', rating);
+customElements.define('u2-rating', U2Rating);

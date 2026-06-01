@@ -10,7 +10,7 @@ const tagToTab = {
     BUTTON: 1,
 };
 
-customElements.define('u2-tabs', class extends HTMLElement {
+export default class U2Tabs extends HTMLElement {
 
     constructor() {
         super();
@@ -176,7 +176,8 @@ customElements.define('u2-tabs', class extends HTMLElement {
         }
     }
 
-});
+}
+customElements.define('u2-tabs', U2Tabs);
 
 // beta, does not work if initial u2-target is already fired
 // problem: sometimes, on initial load, the event is fired before the listener is added

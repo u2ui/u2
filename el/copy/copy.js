@@ -1,7 +1,7 @@
 import { promiseElementById } from "../../u2/tools/promiseElementById.js";
 
 
-class U2Copy extends HTMLElement {
+export default class U2Copy extends HTMLElement {
     constructor() {
         super();
         this.mutationObserver = new MutationObserver(() => {

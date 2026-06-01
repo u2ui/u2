@@ -1,5 +1,5 @@
 
-class splitpanel extends HTMLElement {
+export default class U2Splitpanel extends HTMLElement {
     constructor() {
         super();
 
@@ -114,4 +114,4 @@ class splitpanel extends HTMLElement {
     }
 }
 
-customElements.define('u2-splitpanel', splitpanel);
+customElements.define('u2-splitpanel', U2Splitpanel);

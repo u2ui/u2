@@ -1,4 +1,4 @@
-class U2spot extends HTMLElement {
+export default class U2Spot extends HTMLElement {
     constructor() {
         super();
         this.targetSelector = this.getAttribute('target') || '*';
@@ -104,4 +104,4 @@ class U2spot extends HTMLElement {
     }
 }
 
-customElements.define('u2-spot', U2spot);
+customElements.define('u2-spot', U2Spot);

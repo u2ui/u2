@@ -1,7 +1,7 @@
 
 import '../../js/rte/rte.js';
 
-class rte extends HTMLElement {
+export default class U2Rte extends HTMLElement {
     constructor() {
         super();
         let shadowRoot = this.attachShadow({mode:'open'});
@@ -44,7 +44,7 @@ class rte extends HTMLElement {
     }
 }
 
-customElements.define('u2-rte', rte);
+customElements.define('u2-rte', U2Rte);
 
 
 // import Showdown from 'https://cdn.skypack.dev/showdown';

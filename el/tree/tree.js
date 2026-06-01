@@ -38,7 +38,7 @@ const styleSheet = new CSSStyleSheet();
 styleSheet.replaceSync(css);
 
 
-export class tree extends HTMLElement {
+export default class U2Tree extends HTMLElement {
 
     constructor() {
         super();
@@ -239,4 +239,4 @@ export class tree extends HTMLElement {
     }
 }
 
-customElements.define('u2-tree', tree);
+customElements.define('u2-tree', U2Tree);

@@ -1,7 +1,7 @@
 
 const baseUrl = import.meta.url.replace('system.js', '');
 
-class System extends HTMLElement {
+export default class U2System extends HTMLElement {
     constructor() {
         super();
 
@@ -68,7 +68,7 @@ class System extends HTMLElement {
 
 }
 
-customElements.define('u2-system', System);
+customElements.define('u2-system', U2System);
 
 addEventListener('keydown', (e) => {
     if (e.target.form !== undefined) return;

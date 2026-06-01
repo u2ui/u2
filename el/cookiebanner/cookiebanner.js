@@ -3,7 +3,7 @@
 
 let initialEmitted = false;
 
-class U2CookieBanner extends HTMLElement {
+export default class U2Cookiebanner extends HTMLElement {
   constructor() {
     super();
     this.consent = {};
@@ -55,7 +55,7 @@ function getCookie() {
   }
 }
 
-customElements.define('u2-cookiebanner', U2CookieBanner);
+customElements.define('u2-cookiebanner', U2Cookiebanner);
 
 
 

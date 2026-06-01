@@ -1,5 +1,5 @@
 
-class Bytes extends HTMLElement {
+export default class U2Bytes extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
@@ -55,7 +55,7 @@ class Bytes extends HTMLElement {
     }
 }
 
-customElements.define('u2-bytes', Bytes);
+customElements.define('u2-bytes', U2Bytes);
 
 
 function localesFromElement(el) {

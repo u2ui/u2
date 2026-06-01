@@ -1,7 +1,7 @@
 
 const icoCssUrl = import.meta.resolve('../../el/ico/ico.css');
 
-class Accordion extends HTMLElement {
+export default class U2Accordion extends HTMLElement {
 
     constructor() {
         super();
@@ -208,4 +208,4 @@ class Accordion extends HTMLElement {
     }
 }
 
-customElements.define('u2-accordion', Accordion);
+customElements.define('u2-accordion', U2Accordion);

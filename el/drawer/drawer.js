@@ -1,5 +1,5 @@
 // u2-drawer Custom Element
-class U2Drawer extends HTMLElement {
+export default class U2Drawer extends HTMLElement {
     constructor() {
         super();
         this.startX = 0;

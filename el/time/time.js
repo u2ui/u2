@@ -1,5 +1,5 @@
 
-class Time extends HTMLElement {
+export default class U2Time extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
@@ -176,4 +176,4 @@ const ensureOption = (val, ...options) => {
     return options[0];
 }
 
-customElements.define('u2-time', Time);
+customElements.define('u2-time', U2Time);

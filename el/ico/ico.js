@@ -25,7 +25,7 @@ const observeStyle = (
 }
 */
 
-const uIco = class extends HTMLElement {
+export default class U2Ico extends HTMLElement {
     constructor() {
         super();
     }
@@ -162,4 +162,4 @@ async function loadCached(url) {
 }
 
 
-customElements.define('u2-ico', uIco);
+customElements.define('u2-ico', U2Ico);

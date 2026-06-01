@@ -1,6 +1,6 @@
 // todo add privet fields
 /* element */
-class u2Carousel extends HTMLElement {
+export default class U2Carousel extends HTMLElement {
 	constructor() {
 		super();
 
@@ -168,9 +168,9 @@ contain: layout style paint;  /* Neu ok? */
 		if (name === 'mode') this.mode = newValue;
 	}
 	set mode(mode){
-		if (!u2Carousel.mode[mode]) mode = 'slide';
+		if (!U2Carousel.mode[mode]) mode = 'slide';
 		this.setAttribute('mode', mode);
-		this.handler = u2Carousel.mode[mode];
+		this.handler = U2Carousel.mode[mode];
 		this.handler.init && this.handler.init.call(this);
 	}
 	get mode(){
@@ -262,10 +262,10 @@ contain: layout style paint;  /* Neu ok? */
 }
 
 
-u2Carousel.mode = {};
+U2Carousel.mode = {};
 
 // scroll
-u2Carousel.mode.scroll = {
+U2Carousel.mode.scroll = {
 	slideTo:function(target){
 		let left = target.offsetLeft - this.slider.offsetLeft;
 		this.slider.scroll({ // todo: better calculation of offset
@@ -294,7 +294,7 @@ u2Carousel.mode.scroll = {
 }
 
 // slide
-u2Carousel.mode.slide = {
+U2Carousel.mode.slide = {
 	init:function(){
 		//this.addSwipe();
 	},
@@ -312,14 +312,14 @@ u2Carousel.mode.slide = {
 	},
 }
 // fade (entirely done by css)
-u2Carousel.mode.fade = {
+U2Carousel.mode.fade = {
 	init:function(){
 		this.slider.style.transform = ''; // if changed from mode=slide
 	}
 }
 
 
-customElements.define('u2-carousel', u2Carousel)
+customElements.define('u2-carousel', U2Carousel)
 
 
 // slide on target
@@ -357,7 +357,7 @@ addEventListener('u2-carousel.slide', e=>{
 /*  */
 
 /*
-u2Carousel.prototype.addSwipe = function(){
+U2Carousel.prototype.addSwipe = function(){
 	c1.c1Use('pointerObserver',function(){
 		const pO = this.pointerObserver = new c1.pointerObserver(this);
 		let startX = 0;

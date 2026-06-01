@@ -1,4 +1,4 @@
-customElements.define('u2-maintitlebar', class extends HTMLElement {
+export default class U2Maintitlebar extends HTMLElement {
     constructor() {
         super();
         this._check = this._check.bind(this);
@@ -13,4 +13,5 @@ customElements.define('u2-maintitlebar', class extends HTMLElement {
     disconnectedCallback() {
         navigator.windowControlsOverlay?.removeEventListener('geometrychange', this._check);
     }
-});
+}
+customElements.define('u2-maintitlebar', U2Maintitlebar);

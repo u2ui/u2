@@ -2,7 +2,7 @@ import {Placer} from '../../js/Placer/Placer.js';
 
 let idCounter = 0;
 
-customElements.define('u2-tooltip', class extends HTMLElement {
+export default class U2Tooltip extends HTMLElement {
     constructor() {
         super();
         this.placer = new Placer(this, { x:'center', y:'after', margin:15 });
@@ -66,7 +66,8 @@ customElements.define('u2-tooltip', class extends HTMLElement {
         }
     }
     static observedAttributes = ['position'];
-});
+}
+customElements.define('u2-tooltip', U2Tooltip);
 
 
 document.addEventListener('mouseenter',function(e){

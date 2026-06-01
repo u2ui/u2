@@ -1,7 +1,7 @@
 const itemJsRoot = '../../../../nuxodin/item.js/';
 //import { effect } from '../../../../nuxodin/item.js/item.js';
 
-class Out extends HTMLElement {
+export default class U2Out extends HTMLElement {
     connectedCallback() {}
     async render() {
         const item = this._item;
@@ -39,4 +39,4 @@ class Out extends HTMLElement {
 
 }
 
-customElements.define('u2-out', Out);
+customElements.define('u2-out', U2Out);

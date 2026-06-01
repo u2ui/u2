@@ -44,7 +44,7 @@ function refSlideshows(el) {
 	}
 }
 
-class u2CarouselNav extends HTMLElement {
+export default class U2CarouselNav extends HTMLElement {
 	constructor() {
 		super();
 	}
@@ -71,4 +71,4 @@ class u2CarouselNav extends HTMLElement {
 		})
 	}
 }
-customElements.define('u2-carousel-nav', u2CarouselNav)
+customElements.define('u2-carousel-nav', U2CarouselNav)

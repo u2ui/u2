@@ -1,6 +1,6 @@
 // alternative qr-code writer: https://zxing-js.github.io/library/examples/qr-svg-writer/
 
-customElements.define('u2-qrcode', class extends HTMLElement {
+export default class U2Qrcode extends HTMLElement {
 
     constructor() {
         super();
@@ -34,7 +34,8 @@ customElements.define('u2-qrcode', class extends HTMLElement {
         container.innerHTML = toSvgString(qr0, 4);
     }
 
-});
+}
+customElements.define('u2-qrcode', U2Qrcode);
 
 function toSvgString(qr) {
     const border = 0;

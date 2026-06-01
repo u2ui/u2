@@ -1,4 +1,4 @@
-class U2Responsive extends HTMLElement {
+export default class U2Responsive extends HTMLElement {
     constructor() {
         super();
         this._internals = this.attachInternals();

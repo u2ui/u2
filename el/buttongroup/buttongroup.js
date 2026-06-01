@@ -2,7 +2,7 @@
 
 // todo? attribute overflow: scroll | dropdown | break
 
-customElements.define('u2-buttongroup', class extends HTMLElement {
+export default class U2Buttongroup extends HTMLElement {
     constructor(...args) {
         super(...args);
         this.resizeObserver = new ResizeObserver(() => this._build());
@@ -65,4 +65,5 @@ customElements.define('u2-buttongroup', class extends HTMLElement {
         this.resizeObserver.unobserve(this.parentElement);
     }
 
-});
+}
+customElements.define('u2-buttongroup', U2Buttongroup);

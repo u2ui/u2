@@ -1,5 +1,5 @@
 
-class Table extends HTMLElement {
+export default class U2Table extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -465,4 +465,4 @@ class Column {
     }
 }
 
-customElements.define('u2-table', Table);
+customElements.define('u2-table', U2Table);

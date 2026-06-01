@@ -1,5 +1,5 @@
 
-class U1Pagination extends HTMLElement {
+export default class U2Pagination extends HTMLElement {
     connectedCallback() {
         this.render();
         this.addEventListener('click', this.#handleClick);
@@ -146,4 +146,4 @@ class U1Pagination extends HTMLElement {
     }
 }
 
-customElements.define('u2-pagination', U1Pagination);
+customElements.define('u2-pagination', U2Pagination);

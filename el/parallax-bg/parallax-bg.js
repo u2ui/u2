@@ -65,7 +65,7 @@ function addListeners(){
 }
 
 
-class ParallaxBg extends HTMLElement {
+export default class U2ParallaxBg extends HTMLElement {
     constructor() {
         super();
         let shadowRoot = this.attachShadow({mode:'open'});
@@ -188,4 +188,4 @@ class ParallaxBg extends HTMLElement {
     }
 }
 
-customElements.define('u2-parallax-bg', ParallaxBg)
+customElements.define('u2-parallax-bg', U2ParallaxBg)

@@ -1,4 +1,4 @@
-class U2Fields extends HTMLElement {
+export default class U2Fields extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open', slotAssignment: 'manual' });

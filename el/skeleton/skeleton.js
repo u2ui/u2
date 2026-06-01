@@ -1,5 +1,5 @@
 
-class skeleton extends HTMLElement {
+export default class U2Skeleton extends HTMLElement {
     constructor() {
         super();
     }
@@ -23,7 +23,7 @@ class skeleton extends HTMLElement {
     }
 }
 
-customElements.define('u2-skeleton', skeleton);
+customElements.define('u2-skeleton', U2Skeleton);
 
 
 

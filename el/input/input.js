@@ -432,7 +432,7 @@ const TYPE_REGISTRY = {
 };
 
 // Custom Element
-customElements.define('u2-input', class extends HTMLElement {
+export default class U2Input extends HTMLElement {
     constructor() {
         super();
         import('../ico/ico.js');
@@ -664,7 +664,8 @@ customElements.define('u2-input', class extends HTMLElement {
     // Helper
     $(selector) { return this.shadowRoot.querySelector(selector); }
 
-});
+}
+customElements.define('u2-input', U2Input);
 
 // Globales File-Drag-Feedback
 document.addEventListener('dragenter', e => {

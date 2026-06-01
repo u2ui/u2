@@ -1,5 +1,5 @@
 
-class menubutton extends HTMLElement {
+export default class U2Menubutton extends HTMLElement {
     constructor() {
         super();
     }
@@ -82,7 +82,7 @@ class menubutton extends HTMLElement {
         });
     }
 }
-customElements.define('u2-menubutton', menubutton);
+customElements.define('u2-menubutton', U2Menubutton);
 
 
 function nextFocusable(root) {

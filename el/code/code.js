@@ -3,7 +3,7 @@
 const libRoot = 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/';
 const libPromise = import(libRoot + 'es/highlight.min.js');
 
-class code extends HTMLElement {
+export default class U2Code extends HTMLElement {
     constructor() {
         super();
         let shadowRoot = this.attachShadow({mode:'open'});
@@ -200,7 +200,7 @@ class code extends HTMLElement {
 
 }
 
-customElements.define('u2-code', code);
+customElements.define('u2-code', U2Code);
 
 
 function trimCode(value){
