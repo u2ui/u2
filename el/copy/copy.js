@@ -9,9 +9,7 @@ export default class U2Copy extends HTMLElement {
         });
     }
 
-    static get observedAttributes() {
-        return ['for', 'sync'];
-    }
+    static observedAttributes = ['for', 'sync'];
 
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;

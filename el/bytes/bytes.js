@@ -91,8 +91,7 @@ function convertBytes(bytes, options) {
     
     let space = '\u00A0'; // nbsp
     if (lang === 'fr') space = '\u202f';
-    if (lang === 'jp') space = '';
-    if (lang === 'cn') space = '';
+    if (lang === 'ja') space = '';
     if (lang === 'zh') space = '';
   
     return {

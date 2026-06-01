@@ -14,9 +14,7 @@ export default class U2Skeleton extends HTMLElement {
             this.innerHTML = templateToHtml(template)
         });
     }
-    static get observedAttributes() {
-        return ['template'];
-    }
+    static observedAttributes = ['template'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         this.render();

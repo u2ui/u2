@@ -23,7 +23,7 @@ export default class U2Chart extends HTMLElement {
         this._requestBuild();
     }
 
-    static get observedAttributes() { return ['for', 'type', 'flip-axis', 'axis-labels', 'grid', 'engine', 'renderer']; }
+    static observedAttributes = ['for', 'type', 'flip-axis', 'axis-labels', 'grid', 'engine', 'renderer'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'for') {
