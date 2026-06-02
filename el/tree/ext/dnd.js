@@ -20,7 +20,8 @@ const ask = (type, target) => target.dispatchEvent(new CustomEvent(type, {
 
 document.addEventListener('dragover', e => {
     if (!dragged) return;
-    const target = e.target.closest?.(dragged.localName);
+    // composedPath() durchquert Shadow-Grenzen; e.target wäre auf den Shadow-Host retargetiert.
+    const target = e.composedPath().find(n => n.localName === dragged.localName);
     if (!target || dragged.contains(target)) return clear();
     const row = target.shadowRoot.querySelector('[part=row]');
     const r = row.getBoundingClientRect();

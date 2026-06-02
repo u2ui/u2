@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>u2-tree DnD inside Shadow DOM</title>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <script src="../tree.js" type=module async></script>
+    <link href="../tree.css" rel=stylesheet>
+</head>
+<body>
+
+<h1>u2-tree DnD inside Shadow DOM</h1>
+<p>
+    Regression: <code>js/drag/drag.js</code> + <code>el/tree/ext/dnd.js</code> hören auf
+    <code>document</code> und lasen früher <code>e.target</code> — bei Events aus einem Shadow-Root
+    ist das aber auf den Host retargetiert, also fand DnD den Knoten nicht. Seit dem Wechsel auf
+    <code>e.composedPath()</code> muss Drag&amp;Drop hier <b>genauso</b> funktionieren wie im Light-DOM.
+</p>
+<p>Ziehe einen Knoten innerhalb des Shadow-Roots: Marker (Linie/Rahmen) und Reorder müssen klappen.</p>
+
+<dnd-shadow-host></dnd-shadow-host>
+
+<script type=module>
+// Baum lebt komplett in einem Shadow-Root (wie qinos CMS-Panel).
+customElements.define('dnd-shadow-host', class extends HTMLElement {
+    constructor() {
+        super();
+        const root = this.attachShadow({ mode: 'open' });
+        root.innerHTML = `
+            <link rel=stylesheet href="../tree.css">
+            <style> :host { display:block; border:1px dashed gray; padding:.5em; } </style>
+            <u2-tree aria-expanded=true>root
+                <u2-tree aria-expanded=true>Folder A
+                    <u2-tree>A.1</u2-tree>
+                    <u2-tree>A.2</u2-tree>
+                    <u2-tree aria-expanded=false>A.3 (Ordner)
+                        <u2-tree>A.3.1</u2-tree>
+                    </u2-tree>
+                </u2-tree>
+                <u2-tree aria-expanded=true>Folder B
+                    <u2-tree>B.1</u2-tree>
+                    <u2-tree>B.2</u2-tree>
+                </u2-tree>
+            </u2-tree>`;
+        // alle Knoten ziehbar (DnD-Extension lädt lazy über das draggable-Attribut)
+        const makeDraggable = () => root.querySelectorAll('u2-tree').forEach(n => n.draggable = true);
+        makeDraggable();
+        new MutationObserver(makeDraggable).observe(root, { subtree: true, childList: true });
+    }
+});
+</script>
+
+</body>
+</html>

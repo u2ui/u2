@@ -3,8 +3,11 @@ export let dragged = null;
 
 document.addEventListener('dragstart', (e) => {
     dragged = null;
-    if (e.target.nodeType === Node.TEXT_NODE) return;
-    dragged = e.target;
+    // composedPath() statt e.target: bei Events aus einem Shadow-Root ist e.target auf den
+    // Host retargetiert -> wir würden das falsche Element ziehen. Das gezogene Element ist
+    // das erste [draggable] im Pfad (funktioniert in Light- und Shadow-DOM gleich).
+    dragged = e.composedPath().find(n => n.nodeType === 1 && n.draggable);
+    if (!dragged) return;
     dragged.classList.add(':dragging-image');
     requestAnimationFrame(() => { // add styles after native dragImage is created
         dragged.classList.remove(':dragging-image')
