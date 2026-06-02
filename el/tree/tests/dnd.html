@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>u2-tree DnD (minimal)</title>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../../../el/ico/ico.js" type=module async></script>
+    <link  href="../../../el/ico/ico.css" rel=stylesheet>
+
+    <style>
+        html { --u2-ico-dir: var(--u2-ico-dir-material) }
+        body { place-content: initial; }
+    </style>
+
+    <script src="../tree.js" type=module async></script>
+    <link href="../tree.css" rel=stylesheet>
+
+    <!-- die minimale DnD-Extension -->
+    <script src="../ext/dnd.js" type=module async></script>
+
+    <style>
+        u2-tree::part(row) { border-radius:.3rem; }
+        u2-tree:focus::part(row) { outline:.1rem solid var(--color); background:transparent; }
+        u2-tree[aria-selected=true]::part(row) { background:#00000008; }
+        u2-tree::part(row):hover { background:#00000004; }
+    </style>
+</head>
+<body>
+
+<h1>u2-tree DnD — minimal</h1>
+<p>Knoten ziehen → wird <b>vor</b> das Ziel einsortiert. Keine Sperre, kein Marker.</p>
+
+<!-- Demo: alle Knoten ziehbar machen. Im echten Einsatz setzt die App `draggable` gezielt pro Knoten. -->
+<script type=module>
+    const mark = () => document.querySelectorAll('u2-tree').forEach(n => n.draggable = true);
+    new MutationObserver(mark).observe(document.body, { subtree: true, childList: true });
+    mark();
+</script>
+
+<section id=demo class=main>
+
+    <u2-tree aria-expanded=true>root
+        <u2-tree aria-expanded=true>Folder 2
+            <u2-tree>File 2.1</u2-tree>
+            <u2-tree aria-expanded=true>Folder 2.2
+                <u2-tree><u2-ico slot=icon icon=home>x</u2-ico>Home</u2-tree>
+                <u2-tree><u2-ico slot=icon icon=star>x</u2-ico>Star</u2-tree>
+                <u2-tree><u2-ico slot=icon icon=search>x</u2-ico>Search</u2-tree>
+            </u2-tree>
+            <u2-tree><u2-ico slot=icon icon=drag_indicator>x</u2-ico>Draggable</u2-tree>
+        </u2-tree>
+        <u2-tree aria-expanded=true>Folder 3
+            <u2-tree>File 3.1</u2-tree>
+            <u2-tree>File 3.2</u2-tree>
+        </u2-tree>
+    </u2-tree>
+
+    <div draggable=true style="margin-top:1rem; padding:.5rem; background:#00000008; border-radius:.3rem; width:max-content;">External Draggable</div>
+
+</section>
+
+</body>
+</html>

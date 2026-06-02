@@ -37,7 +37,7 @@ export function indicateDrop(position, element) {
                     right:-5px; left:auto;
                 }
             }
-            <style>
+            </style>
         `;
         document.body.appendChild(indicator);
     }
