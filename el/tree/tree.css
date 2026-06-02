@@ -1,19 +1,12 @@
-u2-tree {
-    display:block;
-}
+u2-tree { display:block; }
 u2-tree::part(row) {
     white-space: nowrap;
     cursor:pointer;
 }
-u2-tree::part(row):focus {
-    outline:1px dotted black;
-}
-u2-tree[aria-selected=true]::part(row) {
-    background:#00000008;
-}
-u2-tree[draggable]::part(row) {
-    cursor:grab;
-}
+u2-tree::part(row):focus { outline:1px dotted black; }
+u2-tree[aria-selected=true]::part(row) { background:#00000008; }
+u2-tree[draggable]::part(row) { cursor:grab; }
+u2-tree.\:dragging { opacity:.3; }  /* class set by js/drag/drag.js on the drag source */
 
 u2-tree:not(:defined) {
     padding-block-start:.2em;

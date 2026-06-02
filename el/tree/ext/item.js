@@ -4,10 +4,7 @@
  */
 export async function applyItemjs(treeElement, item, { render = null } = {}) {
     if (!item) return;
-    // Set label
-    console.log(render);
     treeElement.textContent = item.key || '';
-    //await item.loadItems();
     syncTreeItem(treeElement, item, render);
     item.addEventListener('changeIn', ({add, remove}) => {
         if (add || remove) syncTreeItem(treeElement, item, render);
@@ -26,11 +23,11 @@ function syncTreeItem(treeElement, item, render) {
     const subItems = item.items() ?? [];
     const subItemKeys = new Set(subItems.map(i => i.key));
 
-    // Veraltete entfernen
+    // remove stale children
     [...treeElement.querySelectorAll(':scope > u2-tree')]
         .forEach(child => !subItemKeys.has(child.dataset.key) && child.remove());
 
-    // Neue hinzufügen & alle synken
+    // add new & sync all
     subItems.forEach(subItem => {
         const child = treeElement.querySelector(`:scope > u2-tree[data-key="${subItem.key}"]`) ?? treeElement.appendChild(createTreeItem(subItem, render));
         syncTreeItem(child, subItem, render);

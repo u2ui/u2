@@ -72,10 +72,10 @@
                     Alarm
                 </u2-tree>
             </u2-tree>
-            <u2-tree draggable="true">
-                <u2-ico slot=icon icon=drag_indicator>x</u2-ico>
+            <u2-tree>
+                <u2-ico slot=icon icon=label>x</u2-ico>
                 <label>
-                    Draggable
+                    Slotted controls
                     <input placeholder="same baseline">
                 </label>
                 <button>clickable</button>
@@ -121,11 +121,6 @@
     u2-tree::part(row):hover {
         background:#00000004;
     }
-    u2-tree[aria-grabbed=true] {
-        transition:.2s .2s;
-        opacity:.4;
-        outline-width:0 !important;
-    }
     </style>
     </u2-code>
 
@@ -158,99 +153,3 @@
     </script>
 
 </section>
-
-
-
-<script type=module>
-
-// Drop-Indikator: Linie (before/after) bzw. Rahmen (into). var(--color) statt fixer Farbe.
-const indicator = document.createElement('div');
-indicator.style.cssText = 'position:absolute;pointer-events:none;z-index:1000;display:none;box-sizing:border-box;';
-document.body.append(indicator);
-const hideIndicator = () => indicator.style.display = 'none';
-
-function showIndicator(rect, mode) {
-    const s = indicator.style;
-    s.display = 'block';
-    s.left = (rect.left + scrollX) + 'px';
-    s.width = rect.width + 'px';
-    if (mode === 'into') {                       // als Kind hinein -> Rahmen
-        s.top = (rect.top + scrollY) + 'px';
-        s.height = rect.height + 'px';
-        s.border = '2px solid var(--color)';
-    } else {                                     // davor/danach -> Linie
-        s.top = ((mode === 'before' ? rect.top : rect.bottom) + scrollY) + 'px';
-        s.height = '0';
-        s.border = 'none';
-        s.borderTop = '2px solid var(--color)';
-    }
-}
-
-let dragSrc = null;      // gezogener Knoten
-let dropParent = null;   // Ziel-Elternknoten
-let dropNext = null;     // Knoten, davor eingefügt wird (null = anhängen)
-let expandTimer = null;
-
-const scheduleExpand = node => {
-    clearTimeout(expandTimer);
-    expandTimer = setTimeout(() => { expandTimer = null; node.toggleExpand(true); }, 500);
-};
-
-document.addEventListener('dragstart', e => {
-    const node = e.target.closest?.('u2-tree');   // closest, nicht tagName-Vergleich (war GROSS/klein-Bug)
-    if (!node) return;
-    dragSrc = node;
-    node.setAttribute('aria-grabbed', 'true');
-    e.dataTransfer.effectAllowed = 'move';
-});
-
-document.addEventListener('dragover', e => {
-    if (!dragSrc) return;
-    const node = e.target.closest?.('u2-tree');
-    if (!node) return;
-
-    // nie auf sich selbst oder in den eigenen Teilbaum droppen
-    if (node === dragSrc || dragSrc.contains(node)) { clearTimeout(expandTimer); expandTimer = null; hideIndicator(); return; }
-
-    e.preventDefault();                  // Drop erlauben
-    e.dataTransfer.dropEffect = 'move';  // Cursor
-
-    // Region aus der echten Row-Geometrie, nicht aus event.offsetY (zeigt aufs Event-Target)
-    const rect = node.shadowRoot.querySelector('[part=row]').getBoundingClientRect();
-    const rel = (e.clientY - rect.top) / rect.height;
-
-    clearTimeout(expandTimer); expandTimer = null;
-    if (rel < 0.25) {                    // davor
-        dropParent = node.parentNode; dropNext = node;
-        showIndicator(rect, 'before');
-    } else if (rel > 0.75) {             // danach
-        dropParent = node.parentNode; dropNext = node.nextElementSibling;
-        showIndicator(rect, 'after');
-    } else {                             // hinein
-        dropParent = node; dropNext = null;
-        if (node.isExpandable() && !node.isExpanded()) scheduleExpand(node);
-        showIndicator(rect, 'into');
-    }
-});
-
-document.addEventListener('drop', e => {
-    if (!dragSrc || !dropParent) return;
-    e.preventDefault();
-    if (dropNext !== dragSrc) dropParent.insertBefore(dragSrc, dropNext);  // No-op-Move vermeiden
-    dropParent.localName === 'u2-tree' && dropParent.toggleExpand(true);
-});
-
-document.addEventListener('dragend', () => {
-    clearTimeout(expandTimer); expandTimer = null;
-    hideIndicator();
-    dragSrc?.removeAttribute('aria-grabbed');
-    dragSrc = dropParent = dropNext = null;
-});
-
-// Demo: alle Knoten ziehbar (im echten Baum gezielt pro Knoten setzen)
-const makeDraggable = () => document.querySelectorAll('u2-tree').forEach(n => n.draggable = true);
-makeDraggable();
-new MutationObserver(makeDraggable).observe(document.body, { subtree: true, childList: true });
-
-</script>
-    

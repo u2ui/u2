@@ -18,6 +18,12 @@
             },{
                 "name": "u2-tree-select",
                 "type": { "text": "Event" }
+            },{
+                "name": "u2-tree-dragover",
+                "type": { "text": "Event" }
+            },{
+                "name": "u2-tree-drop",
+                "type": { "text": "Event" }
             }],
             "attributes": [],
             "cssProperties": [{

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
-    <title>u2-tree DnD (minimal)</title>
+    <title>u2-tree DnD — full demo</title>
 
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
@@ -14,54 +14,142 @@
     <style>
         html { --u2-ico-dir: var(--u2-ico-dir-material) }
         body { place-content: initial; }
+        .cols { display:flex; gap:2rem; align-items:flex-start; }
+        .cols > * { flex:1; }
+
+        u2-tree::part(row) { border-radius:.3rem; }
+        u2-tree:focus::part(row) { outline:.1rem solid var(--color); background:transparent; }
+        u2-tree::part(row):hover { background:#00000006; }
+        u2-tree[draggable]::part(row) { cursor:default; }      /* with a handle, only the grip drags */
+        u2-ico[u2-draghandle] { cursor:grab; opacity:.4; margin-inline-end:.1em; }
+        u2-ico[u2-draghandle]:hover { opacity:1; }
+
+        /* highlight locked nodes (myaccess<2) */
+        u2-tree[data-myaccess="1"]::part(row) { opacity:.5; }
+        /* set content nodes (type=c) apart */
+        u2-tree[data-type=c] [part=content] { font-style:italic; color:#888; }
+
+        #log { background:#0b1020; color:#9ad; padding:.6rem .8rem; border-radius:.4rem;
+               font:.8rem/1.5 monospace; height:18rem; overflow:auto; white-space:pre-wrap; }
+        #log .ok  { color:#7d7; }
+        #log .no  { color:#f88; }
+        #log .srv { color:#fd6; }
+        kbd { font-size:.85em; }
     </style>
 
     <script src="../tree.js" type=module async></script>
     <link href="../tree.css" rel=stylesheet>
-
-    <!-- die minimale DnD-Extension -->
-    <script src="../ext/dnd.js" type=module async></script>
-
-    <style>
-        u2-tree::part(row) { border-radius:.3rem; }
-        u2-tree:focus::part(row) { outline:.1rem solid var(--color); background:transparent; }
-        u2-tree[aria-selected=true]::part(row) { background:#00000008; }
-        u2-tree::part(row):hover { background:#00000004; }
-    </style>
+    <!-- dnd.js is lazy-loaded by tree.js as soon as a node gets `draggable` -->
+    <script src="../../../attr/draghandle/draghandle.js" type=module async></script>
 </head>
 <body>
 
-<h1>u2-tree DnD — minimal</h1>
-<p>Knoten ziehen → wird <b>vor</b> das Ziel einsortiert. Keine Sperre, kein Marker.</p>
+<h1>u2-tree DnD — full demo</h1>
 
-<!-- Demo: alle Knoten ziehbar machen. Im echten Einsatz setzt die App `draggable` gezielt pro Knoten. -->
-<script type=module>
-    const mark = () => document.querySelectorAll('u2-tree').forEach(n => n.draggable = true);
-    new MutationObserver(mark).observe(document.body, { subtree: true, childList: true });
-    mark();
-</script>
+<p>
+    Rules (via <kbd>u2-tree-dragover</kbd> veto): you cannot drop into <b>locked</b> folders
+    (<code>myaccess&lt;2</code>, dimmed); a <b>content</b> node (italic) accepts no <b>page</b>.
+    Locked but filled folders still expand on hover (just slower) → so you can reach droppable
+    <b>sub-pages</b>. Moving runs <b>server-first</b> (simulated, ~400 ms) via <kbd>u2-tree-drop</kbd>.
+    You drag by the <b>grip</b> (via <code>attr/draghandle</code>) — so no ancestor is ever dragged along.
+    Nodes with <code>myaccess&lt;2</code> have no grip → not draggable.
+</p>
 
-<section id=demo class=main>
+<div class=cols>
 
-    <u2-tree aria-expanded=true>root
-        <u2-tree aria-expanded=true>Folder 2
-            <u2-tree>File 2.1</u2-tree>
-            <u2-tree aria-expanded=true>Folder 2.2
-                <u2-tree><u2-ico slot=icon icon=home>x</u2-ico>Home</u2-tree>
-                <u2-tree><u2-ico slot=icon icon=star>x</u2-ico>Star</u2-tree>
-                <u2-tree><u2-ico slot=icon icon=search>x</u2-ico>Search</u2-tree>
-            </u2-tree>
-            <u2-tree><u2-ico slot=icon icon=drag_indicator>x</u2-ico>Draggable</u2-tree>
+<section id=demo>
+    <u2-tree aria-expanded=true data-key=1 data-myaccess=9>Root
+        <u2-tree aria-expanded=true data-key=2 data-myaccess=2>Folder A <small>(open, droppable)</small>
+            <u2-tree data-key=3 data-myaccess=2><u2-ico slot=icon icon=description>x</u2-ico>Page A1</u2-tree>
+            <u2-tree data-key=4 data-myaccess=2><u2-ico slot=icon icon=description>x</u2-ico>Page A2</u2-tree>
+            <u2-tree data-key=5 data-myaccess=2><u2-ico slot=icon icon=description>x</u2-ico>Page A3</u2-tree>
         </u2-tree>
-        <u2-tree aria-expanded=true>Folder 3
-            <u2-tree>File 3.1</u2-tree>
-            <u2-tree>File 3.2</u2-tree>
+
+        <u2-tree aria-expanded=false data-key=6 data-myaccess=1>Folder B <small>(locked — long hover opens)</small>
+            <u2-tree data-key=7 data-myaccess=2><u2-ico slot=icon icon=description>x</u2-ico>Page B1 <small>(droppable)</small></u2-tree>
+            <u2-tree data-key=8 data-myaccess=2><u2-ico slot=icon icon=description>x</u2-ico>Page B2 <small>(droppable)</small></u2-tree>
         </u2-tree>
+
+        <u2-tree aria-expanded=true data-key=9 data-myaccess=2 data-type=c><u2-ico slot=icon icon=article>x</u2-ico>Content block <small>(takes no page)</small>
+            <u2-tree data-key=10 data-myaccess=2 data-type=c>Text element</u2-tree>
+        </u2-tree>
+
+        <u2-tree aria-expanded=false aria-live=off data-key=11 data-myaccess=2>Lazy folder <small>(loads on open)</small></u2-tree>
+
+        <u2-tree data-key=12 data-myaccess=1><u2-ico slot=icon icon=lock>x</u2-ico>Page locked <small>(not draggable)</small></u2-tree>
     </u2-tree>
-
-    <div draggable=true style="margin-top:1rem; padding:.5rem; background:#00000008; border-radius:.3rem; width:max-content;">External Draggable</div>
-
 </section>
+
+<aside>
+    <b>Event log</b>
+    <div id=log></div>
+    <p><button onclick="document.getElementById('log').textContent=''">clear</button></p>
+</aside>
+
+</div>
+
+
+<script type=module>
+const tree = document.querySelector('#demo > u2-tree');
+const logEl = document.getElementById('log');
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+const label = n => [...n.childNodes].filter(c => c.nodeType === 3)
+    .map(c => c.textContent).join(' ').trim().split('\n')[0].trim() || n.dataset.key;
+const log = (msg, cls='') => {
+    logEl.insertAdjacentHTML('beforeend', `<span class="${cls}">${msg}</span>\n`);
+    logEl.scrollTop = logEl.scrollHeight;
+};
+
+/* Draghandle: every allowed node gets a grip; draggable only while the pointer is over the grip
+   (draggable=false otherwise -> no ancestor is dragged). Locked nodes get no grip -> not grabbable. */
+const arm = () => document.querySelectorAll('#demo u2-tree').forEach(n => {
+    if (+(n.dataset.myaccess ?? 9) < 2 || n.hasAttribute('draggable')) return;
+    n.setAttribute('draggable', 'false');
+    n.insertAdjacentHTML('afterbegin', '<u2-ico u2-draghandle icon=drag_indicator title="drag">x</u2-ico>');
+});
+new MutationObserver(arm).observe(tree, { subtree:true, childList:true });
+arm();
+
+/* Live veto: decides where a drop is allowed */
+tree.addEventListener('u2-tree-dragover', e => {
+    const { source, parent } = e.detail;
+    if (parent.dataset.type === 'c' && source.dataset.type !== 'c')   // content accepts content only
+        return e.preventDefault();
+    if (+(parent.dataset.myaccess ?? 9) < 2)                          // requires access
+        return e.preventDefault();
+});
+
+/* Commit: server-first (simulated) */
+tree.addEventListener('u2-tree-drop', e => {
+    const { source, parent, next, region } = e.detail;
+    e.preventDefault();                                              // we move it ourselves, after "server OK"
+    log(`PUT move "${label(source)}" → ${region} "${label(parent)}"`
+        + (next ? ` (before "${label(next)}")` : ' (append)'), 'srv');
+    delay(400).then(() => {
+        parent.insertBefore(source, next);
+        region === 'into' && parent.toggleExpand(true);
+        log(`✓ committed: "${label(source)}" in "${label(parent)}"`, 'ok');
+    });
+});
+
+/* visible veto feedback in the log (only on node/region change, since the event is deduplicated) */
+tree.addEventListener('u2-tree-dragover', e => {
+    const { parent, region } = e.detail;
+    log(e.defaultPrevented ? `✗ ${region} "${label(parent)}" forbidden` : `· ${region} "${label(parent)}"`,
+        e.defaultPrevented ? 'no' : '');
+});
+
+/* Lazy load: fetch children on expand */
+document.addEventListener('u2-tree-expand', e => e.load?.(async item => {
+    log(`GET children of "${label(item)}" …`, 'srv');
+    await delay(600);
+    item.innerHTML += '<u2-tree data-key=101 data-myaccess=2><u2-ico slot=icon icon=description>x</u2-ico>Loaded 1</u2-tree>';
+    await delay(300);
+    item.innerHTML += '<u2-tree data-key=102 data-myaccess=2><u2-ico slot=icon icon=description>x</u2-ico>Loaded 2</u2-tree>';
+    log(`✓ loaded`, 'ok');
+}));
+</script>
 
 </body>
 </html>

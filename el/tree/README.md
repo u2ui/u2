@@ -7,6 +7,7 @@ Treeview component `<u2-tree>Folder <u2-tree>File</u2-tree> </u2-tree>`
 - Focus on the next item that starts with the pressed key
 - Expand/collapse events
 - Lazy loading of children
+- Drag and drop (opt-in, loaded on demand via the `draggable` attribute)
 
 ## Usage
 
@@ -74,6 +75,21 @@ treeElement.addEventListener('u2-tree-collapse', (e) => {...});
 treeElement.addEventListener('u2-tree-select', (e) => { ... });
 ```
 
+#### drag and drop
+Set `draggable` on the nodes you want movable — this loads the DnD extension on demand.
+Two cancelable events fire with `detail = { source, parent, next, region }` (`region`: `before` | `after` | `into`):
+```js
+// decide where dropping is allowed; preventDefault() forbids it (hides the marker)
+treeElement.addEventListener('u2-tree-dragover', (e) => {
+    if (notAllowed(e.detail)) e.preventDefault();
+});
+// commit on release; preventDefault() to move it yourself (e.g. server-first)
+treeElement.addEventListener('u2-tree-drop', (e) => {
+    e.preventDefault();
+    save(e.detail).then(() => e.detail.parent.insertBefore(e.detail.source, e.detail.next));
+});
+```
+
 ### CSS
 
 | Selector | Description |
@@ -93,6 +109,7 @@ treeElement.addEventListener('u2-tree-select', (e) => { ... });
 
 [custom.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/custom.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/test.html)  
+[dnd.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/dnd.html)  
 [animated.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/animated.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/minimal.html)  
 
@@ -100,7 +117,6 @@ treeElement.addEventListener('u2-tree-select', (e) => { ... });
 
 Ask me if you need it!
 - Add support for multiple selection
-- Drag and drop
 
 ## About
 

@@ -14,8 +14,8 @@ let css = `
 [part=row] {
     display: flex;
     align-items: center;
-    padding-block: .15em;
     padding-inline-start: calc( var(--indent) * (var(--level) - 1) );
+    min-height: 1.8em;
     gap: .3em;
 }
 .arrow {
@@ -39,6 +39,9 @@ styleSheet.replaceSync(css);
 
 
 export default class U2Tree extends HTMLElement {
+
+    static observedAttributes = ['draggable'];
+    attributeChangedCallback() { U2Tree.dnd ??= import('./ext/dnd.js'); }  // load DnD lazily once draggable appears
 
     constructor() {
         super();
@@ -120,9 +123,11 @@ export default class U2Tree extends HTMLElement {
         //     this.shadowRoot.querySelector('[part=icon]').innerHTML = '<u2-ico inline icon="' + this.getAttribute('icon') + '"></u2-ico>';
         // }
 
-        // if has children, its expandable
-        if (!this.hasAttribute('aria-expanded')) {
-            this.items().length ? this.setAttribute('aria-expanded', 'false') : this.removeAttribute('aria-expanded');
+        // expandability follows children; lazy nodes (aria-live) keep the arrow despite 0 children
+        if (!this.ariaLive) {
+            this.items().length
+                ? this.hasAttribute('aria-expanded') || this.setAttribute('aria-expanded', 'false')
+                : this.removeAttribute('aria-expanded');
         }
     }
     items(){
