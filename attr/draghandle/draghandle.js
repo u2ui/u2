@@ -9,40 +9,16 @@ const css = `
 document.head.insertAdjacentHTML('afterbegin', `<style>${css}</style>`);
 
 
-const root = document;
-// root.addEventListener("pointerdown",(e)=>{
-//    root.releasePointerCapture(e.pointerId);
-// })
-root.addEventListener('pointerenter', e => {
-    if (!e.target.matches?.('[u2-draghandle]')) return;
-    const draggable = e.target.closest('[draggable]');
-    if (!draggable) {
-        console.warn('u2-draghandle: no draggable parent found');
-        return;
-    }
-    if (draggable.getAttribute('draggable') === 'true') console.warn('u2-draghandle: draggable-attribute should be empty or false, but was true');
-    draggable.setAttribute('draggable', true);
-},true);
-root.addEventListener('pointerleave', e => {
-    if (!e.target.matches?.('[u2-draghandle]')) return;
-    const draggable = e.target.closest('[draggable]');
-    if (!draggable) {
-        console.warn('u2-draghandle: no draggable parent found');
-        return;
-    }
-    draggable.setAttribute('draggable', 'false');
-},true);
-
-// desktop only
-// addEventListener('mouseenter', e => {
-//     if (!e.target.matches('[u2-draghandle]')) return;
-//     const draggable = e.target.closest('[draggable]');
-//     if (!draggable) console.warn('u2-draghandle: no draggable parent found');
-//     if (draggable.getAttribute('draggable') === 'true') console.warn('u2-draghandle: draggable-attribute should be empty or false, but was true');
-//     draggable.setAttribute('draggable', true);
-// },true);
-
-// addEventListener('mouseleave', e => {
-//     if (!e.target.matches('[u2-draghandle]')) return;
-//     e.target.closest('[draggable]').setAttribute('draggable', 'false');
-// },true);
+// pointermove statt pointerover/-out: Bewegungen INNERHALB eines Shadow-Roots erzeugen für einen
+// document-Listener keine over/out-Events (target & relatedTarget retargeten beide auf den Host ->
+// gleicher Knoten -> Event wird unterdrückt). pointermove feuert dagegen kontinuierlich, und
+// composedPath()[0] liefert das echte Element unter dem Zeiger – auch im Shadow-DOM.
+let activeDraggable = null;
+document.addEventListener('pointermove', e => {
+    const handle = e.composedPath()[0]?.closest?.('[u2-draghandle]');
+    const draggable = handle ? handle.closest('[draggable]') : null;
+    if (draggable === activeDraggable) return; // kein Wechsel -> nichts tun
+    activeDraggable?.setAttribute('draggable', 'false');
+    activeDraggable = draggable;
+    draggable?.setAttribute('draggable', 'true');
+}, true);

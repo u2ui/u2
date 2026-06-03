@@ -208,7 +208,10 @@ export const strategies = {
 
 
 function startViewTransition(fn){
-    document.startViewTransition ? document.startViewTransition(fn) : fn();
+    if (!document.startViewTransition) return fn();
+    // Wird die Transition übersprungen (z.B. weil schon eine andere startet), rejected .ready –
+    // der Update-Callback (fn) läuft trotzdem. Rejection abfangen, sonst unhandled in der Konsole.
+    document.startViewTransition(fn).ready.catch(() => {});
 }
 
 

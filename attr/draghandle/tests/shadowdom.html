@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>draghandle in shadow-dom</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../draghandle.js" type=module async></script>
+    <script src="../../dropzone/dropzone.js" type=module async></script>
+
+<body>
+
+    <section class=main>
+
+        <h2>Draghandle in Shadow-DOM</h2>
+        <p>
+            Regression test: Items liegen in einem Shadow-Root. <code>draghandle.js</code>
+            lauscht auf <code>document</code>. Bewegungen <em>innerhalb</em> eines Shadow-Roots
+            erzeugen für einen äußeren Listener aber keine <code>pointerover</code>/<code>pointerout</code>
+            (target &amp; relatedTarget retargeten beide auf den Host → gleicher Knoten → unterdrückt).
+            Darum nutzt draghandle <code>pointermove</code> + <code>composedPath()[0]</code>, sonst
+            würde <code>draggable</code> im Shadow nie umgeschaltet.
+        </p>
+        <p>
+            Erwartung: Zeile ist <b>grau</b> (nicht ziehbar). Maus über den Griff <code>⠿</code>
+            → Rahmen wird <b>grün</b> (<code>draggable=true</code>), nur dann lässt sie sich ziehen
+            und per dropzone umsortieren. Greifen am Text zieht nicht.
+        </p>
+
+        <shadow-list></shadow-list>
+
+        <h2>Light-DOM (Kontrolle)</h2>
+        <ul u2-dropzone class=lightzone>
+            <li draggable="false"><span u2-draghandle>⠿</span> Light 1</li>
+            <li draggable="false"><span u2-draghandle>⠿</span> Light 2</li>
+            <li draggable="false"><span u2-draghandle>⠿</span> Light 3</li>
+        </ul>
+
+        <h2>Drop-Reihenfolge</h2>
+        <pre id="log">noch nichts gedroppt …</pre>
+
+    </section>
+
+    <style>
+        .lightzone { list-style: none; padding: 0; }
+        .lightzone li { padding: .5em 1em; margin: .25em 0; border: .25rem solid #ccc; }
+        .lightzone li[draggable="true"] { border-color: var(--color, #4caf50); }
+        [u2-draghandle] { cursor: grab; display: inline-block; padding: .3em .7em; margin-inline-end: .5em; background: #ddd; border-radius: .25em; }
+    </style>
+
+    <script type=module>
+        const log = document.getElementById('log');
+
+        // u2-dropzone-drop bubbelt, ist aber nicht composed -> Listener direkt auf die Zone.
+        function wireZone(zone, label) {
+            zone.addEventListener('u2-dropzone-drop', (e) => {
+                if (!e.detail?.add) return;
+                requestAnimationFrame(() => {
+                    const order = [...zone.children].map(li => li.textContent.replace('⠿', '').trim());
+                    log.textContent = `[${label}] ` + order.join(' , ');
+                });
+            });
+        }
+
+        // Custom-Element mit Shadow-Root – wie das CMS-Panel.
+        customElements.define('shadow-list', class extends HTMLElement {
+            connectedCallback() {
+                if (this.shadowRoot) return;
+                const root = this.attachShadow({ mode: 'open' });
+                root.innerHTML = `
+                    <style>
+                        ul { list-style: none; padding: 0; }
+                        li {
+                            padding: .5em 1em;
+                            margin: .25em 0;
+                            border: .25rem solid #ccc;
+                        }
+                        li { display: flex; align-items: center; gap: .5em; }
+                        li[draggable="true"] { border-color: #4caf50; }
+                        [u2-draghandle] { cursor: grab; padding: .3em .6em; background: #ddd; border-radius: .25em; }
+                    </style>
+                    <ul u2-dropzone>
+                        <li draggable="false"><span u2-draghandle>⠿</span> Shadow A</li>
+                        <li draggable="false"><span u2-draghandle>⠿</span> Shadow B</li>
+                        <li draggable="false"><span u2-draghandle>⠿</span> Shadow C</li>
+                        <li draggable="false"><span u2-draghandle>⠿</span> Shadow D</li>
+                    </ul>
+                `;
+                wireZone(root.querySelector('[u2-dropzone]'), 'shadow');
+            }
+        });
+
+        wireZone(document.querySelector('.lightzone'), 'light');
+    </script>
