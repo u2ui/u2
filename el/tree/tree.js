@@ -156,11 +156,10 @@ export default class U2Tree extends HTMLElement {
     prevFocusable(){
         let item = this;
         while (item) {
-            let next = item.previousElementSibling; // todo: only next treeitem
-            if (next) {
-                if (next.isExpanded()) {
-                    next = next.items().at(-1);
-                }
+            let next = item.previousElementSibling;
+            if (next && next.tagName !== this.tagName) next = null; // nur treeitems; Inhalt (Icon/Label/…) überspringen
+            if (next && next.isExpanded()) {
+                next = next.items().at(-1);
             }
             next ||= item.parentNode;
             if (next) return next;
