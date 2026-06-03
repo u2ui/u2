@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>dropzone in shadow-dom</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../dropzone.js" type=module async></script>
+
+<body>
+
+    <section class=main>
+
+        <h2>Dropzone in Shadow-DOM</h2>
+        <p>
+            Regression test: die Dropzone liegt in einem Shadow-Root. Drag-Events
+            werden auf <code>document</code> verarbeitet, dort ist <code>e.target</code>
+            auf den Host retargetiert. <code>dropzone.js</code> muss die Zone darum über
+            <code>composedPath()</code> finden (statt <code>e.target.closest()</code>),
+            sonst passiert nichts.
+        </p>
+
+        <shadow-list></shadow-list>
+
+        <h2>Light-DOM (Kontrolle)</h2>
+        <ul u2-dropzone class=lightzone>
+            <li draggable="true">Light 1</li>
+            <li draggable="true">Light 2</li>
+            <li draggable="true">Light 3</li>
+        </ul>
+
+        <h2>Drop-Reihenfolge</h2>
+        <pre id="log">noch nichts gedroppt …</pre>
+
+    </section>
+
+    <script type=module>
+        const log = document.getElementById('log');
+
+        // u2-dropzone-drop bubbelt (bubbles:true), ist aber nicht composed -> verlässt den
+        // Shadow-Root nicht. Darum den Listener direkt auf die Dropzone hängen – genau wie
+        // das CMS es auf der <tbody> macht.
+        function wireZone(zone, label) {
+            zone.addEventListener('u2-dropzone-drop', (e) => {
+                if (!e.detail?.add) return; // gleiche Zone feuert remove+add
+                requestAnimationFrame(() => {
+                    const order = [...zone.children].map(li => li.textContent.trim());
+                    log.textContent = `[${label}] ` + order.join(' , ');
+                });
+            });
+        }
+
+        // Custom-Element mit Shadow-Root, das eine u2-dropzone enthält – wie das CMS-Panel.
+        customElements.define('shadow-list', class extends HTMLElement {
+            connectedCallback() {
+                if (this.shadowRoot) return;
+                const root = this.attachShadow({ mode: 'open' });
+                root.innerHTML = `
+                    <style>
+                        ul { list-style: none; padding: 0; }
+                        li {
+                            padding: .5em 1em;
+                            margin: .25em 0;
+                            border: 1px solid #ccc;
+                            cursor: grab;
+                        }
+                        li.\\:dragging { opacity: .4; }
+                    </style>
+                    <ul u2-dropzone>
+                        <li draggable="true">Shadow A</li>
+                        <li draggable="true">Shadow B</li>
+                        <li draggable="true">Shadow C</li>
+                        <li draggable="true">Shadow D</li>
+                    </ul>
+                `;
+                wireZone(root.querySelector('[u2-dropzone]'), 'shadow');
+            }
+        });
+
+        wireZone(document.querySelector('.lightzone'), 'light');
+    </script>

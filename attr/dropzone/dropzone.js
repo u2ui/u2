@@ -1,5 +1,12 @@
 import * as dnd from '../../js/drag/drag.js';
 
+function eventDropzone(e) {
+    for (const node of e.composedPath()) {
+        if (node.nodeType === 1 && node.matches?.('[u2-dropzone]')) return node;
+    }
+    return null;
+}
+
 let currentStrategy = null;
 let currentDropzone = null;
 let currentBefore = null;
@@ -34,7 +41,7 @@ const dropzoneHandler = {
     },
     
     dragover: (e) => {
-        const dropzone = e.target.closest('[u2-dropzone]');
+        const dropzone = eventDropzone(e);
         if (!dropzone || !dnd.dragged) return;
         dropzone.classList.add(':dragover');
         if (!canDrop(dropzone, dnd.dragged)) return;
@@ -62,7 +69,7 @@ const dropzoneHandler = {
     },
     
     dragleave: (e) => {
-        const dropzone = e.target.closest('[u2-dropzone]');
+        const dropzone = eventDropzone(e);
         if (!dropzone) return;
         if (!dropzone.contains(e.relatedTarget)) {
             dropzone.classList.remove(':dragover');
@@ -77,7 +84,7 @@ const dropzoneHandler = {
     
     drop: (e) => {
         e.preventDefault();
-        const dropzone = e.target.closest('[u2-dropzone]');
+        const dropzone = eventDropzone(e);
         if (!dropzone || !dnd.dragged) return;
         if (!canDrop(dropzone, dnd.dragged)) return;
         const before = getElementBefore(dropzone, e);
@@ -230,15 +237,11 @@ function getElementBefore(container, e) {
 
     // Nach visueller Position sortieren
     elements.sort((a, b) => {
-        if (layout === 'vertical') {
-            return a.centerY - b.centerY;
-        } else if (layout === 'horizontal') {
-            return a.centerX - b.centerX;
-        } else {
-            // Grid/Flex mit Wrapping: erst Y, dann X
-            const yDiff = Math.abs(a.centerY - b.centerY);
-            return yDiff > 10 ? a.centerY - b.centerY : a.centerX - b.centerX;
-        }
+        if (layout === 'vertical') return a.centerY - b.centerY;
+        if (layout === 'horizontal') return a.centerX - b.centerX;
+        // Grid/Flex mit Wrapping: erst Y, dann X
+        const yDiff = Math.abs(a.centerY - b.centerY);
+        return yDiff > 10 ? a.centerY - b.centerY : a.centerX - b.centerX;
     });
 
     // Finde erstes Element NACH der Maus
@@ -284,14 +287,10 @@ function detectLayout(container, children) {
     const horizontalGap = Math.abs(second.left - first.right);
 
     // Gleiche Zeile = horizontal
-    if (Math.abs(first.top - second.top) < 10) {
-        return 'horizontal';
-    }
+    if (Math.abs(first.top - second.top) < 10) return 'horizontal';
 
     // Gleiche Spalte = vertical
-    if (Math.abs(first.left - second.left) < 10) {
-        return 'vertical';
-    }
+    if (Math.abs(first.left - second.left) < 10) return 'vertical';
 
     // Wrapping Grid/Flex
     return 'grid';
@@ -431,14 +430,9 @@ function indicateDrop(container, position, element = null) {
                 const gap = siblingRect.left - rect.right;
                 left = rect.right + gap / 2;
             }
-        } else {
-            // Kein Nachbar: Am Rand mit Margin
-            const margin = position === 'before'
-                ? parseFloat(styles.marginLeft)
-                : parseFloat(styles.marginRight);
-            left = position === 'before'
-                ? rect.left - margin / 2
-                : rect.right + margin / 2;
+        } else { // Kein Nachbar: Am Rand mit Margin
+            const margin = position === 'before' ? parseFloat(styles.marginLeft) : parseFloat(styles.marginRight);
+            left = position === 'before' ? rect.left - margin / 2 : rect.right + margin / 2;
         }
 
         indicator.style.left = `${left - 1}px`;
@@ -454,23 +448,17 @@ function indicateDrop(container, position, element = null) {
         if (sibling) {
             const siblingRect = sibling.getBoundingClientRect();
 
-            if (position === 'before') {
-                // Zwischen previousSibling und element
+            if (position === 'before') { // Zwischen previousSibling und element
                 const gap = rect.top - siblingRect.bottom;
                 top = siblingRect.bottom + gap / 2;
-            } else {
-                // Zwischen element und nextSibling
+            } else { // Zwischen element und nextSibling
                 const gap = siblingRect.top - rect.bottom;
                 top = rect.bottom + gap / 2;
             }
         } else {
             // Kein Nachbar: Am Rand mit Margin
-            const margin = position === 'before'
-                ? parseFloat(styles.marginTop)
-                : parseFloat(styles.marginBottom);
-            top = position === 'before'
-                ? rect.top - margin / 2
-                : rect.bottom + margin / 2;
+            const margin = position === 'before' ? parseFloat(styles.marginTop) : parseFloat(styles.marginBottom);
+            top = position === 'before' ? rect.top - margin / 2 : rect.bottom + margin / 2;
         }
 
         indicator.style.top = `${top - 1}px`;
