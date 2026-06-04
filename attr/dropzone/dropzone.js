@@ -96,11 +96,6 @@ const dropzoneHandler = {
                 bubbles: true
             }));
         }
-        dropzone.dispatchEvent(new CustomEvent('u2-dropzone-drop', {
-            detail: { add: dnd.dragged },
-            bubbles: true
-        }));
-
         // NEU: performDrop unterscheidet sich je nach Strategy
         const performDrop = () => {
             // Bei 'move' und 'ghost' ist Element schon am richtigen Ort
@@ -111,6 +106,10 @@ const dropzoneHandler = {
             
             // NEU: Strategy finalisieren (cleanup placeholder/clone)
             currentStrategy?.finalize?.();
+            dropzone.dispatchEvent(new CustomEvent('u2-dropzone-drop', {
+                detail: { add: dnd.dragged },
+                bubbles: true
+            }));
         };
         
         // ALT: const performDrop = () => dropzone.insertBefore(dnd.dragged, before);
