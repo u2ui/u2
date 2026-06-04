@@ -44,7 +44,14 @@ el.select(); // selects the element
 el.toggleExpand(true/false/undefined); // undefined toggles
 el.path(); // returns path to element
 el.root(); // returns root element of the tree-item
+el.next(); // next sibling treeitem (skips slotted icon/label)
+el.prev(); // previous sibling treeitem
 ```
+
+### Keyboard
+
+Expand/collapse is on the arrow keys (WAI-ARIA tree pattern): `ArrowRight` expands,
+`ArrowLeft` collapses. `Enter` and `Space` just select the focused node.
 
 ### Attributes
 

@@ -71,7 +71,7 @@ export default class U2Tree extends HTMLElement {
                 ArrowDown:  ()=> this.nextFocusable()?.setFocus(),
                 ArrowRight: ()=> !this.isExpanded() ? this.toggleExpand(true) : this.nextFocusable()?.setFocus(),
                 ArrowLeft:  ()=> this.isExpanded() ? this.toggleExpand(false) : this.parentNode.setFocus?.(),
-                Enter:      ()=> {this._select(); this.toggleExpand(); }, // todo toggle?
+                Enter:      ()=> this._select(), // expand/collapse is on Arrow keys (WAI-ARIA); Enter just selects
                 ' ':        ()=> this._select(),
                 Home:       ()=> this.root().setFocus(),
             }[e.key];
@@ -133,38 +133,30 @@ export default class U2Tree extends HTMLElement {
     items(){
         return this.shadowRoot.querySelector('[part=children]').assignedElements();
     }
-    nextFocusable(){
-        let item = this;
-        while (item) {
-            let next = item.isExpanded() ? item.items().at(0) : null;
-            next ||= item.nextElementSibling; // todo: only next treeitem
-            if (!next) {
-                while (item.parentNode) {
-                    item = item.parentNode;
-                    if (item.nextElementSibling) {
-                        next = item.nextElementSibling;
-                        break;
-                    }
-                }
-            }
-
-            if (next.tagName !== this.tagName) return null;
-            if (next) return next;
-            item = next;
-        }
+    next(){ // next sibling treeitem (skips slotted icon/label)
+        let n = this.nextElementSibling;
+        while (n && n.tagName !== this.tagName) n = n.nextElementSibling;
+        return n;
     }
-    prevFocusable(){
+    prev(){ // previous sibling treeitem (skips slotted icon/label)
+        let n = this.previousElementSibling;
+        while (n && n.tagName !== this.tagName) n = n.previousElementSibling;
+        return n;
+    }
+    nextFocusable(){ // next visible row: first child, else next item, else nearest ancestor's next item
+        if (this.isExpanded() && this.items().length) return this.items()[0];
         let item = this;
-        while (item) {
-            let next = item.previousElementSibling;
-            if (next && next.tagName !== this.tagName) next = null; // nur treeitems; Inhalt (Icon/Label/…) überspringen
-            if (next && next.isExpanded()) {
-                next = next.items().at(-1);
-            }
-            next ||= item.parentNode;
+        while (item?.tagName === this.tagName) {
+            const next = item.next();
             if (next) return next;
-            item = next;
+            item = item.parentNode;
         }
+        return null;
+    }
+    prevFocusable(){ // previous visible row: previous item (its last child if expanded), else parent
+        let prev = this.prev();
+        if (prev?.isExpanded()) prev = prev.items().at(-1);
+        return prev || this.parentNode;
     }
     isExpanded() {
         return this.ariaExpanded === 'true';
