@@ -54,6 +54,14 @@
     <button onclick="dialog.alert({audio:'./notification.mp3', body:'sound'})">custom notification sound</button>
     <br>
 
+    <div id=shadowHost></div>
+    <button id=shadowBtn>open in shadow DOM (scope)</button>
+    <script>
+        const shadowRoot = shadowHost.attachShadow({mode:'open'});
+        shadowBtn.addEventListener('click', ()=>dialog.scope({root: shadowRoot, lang:'de'}).confirm('I live in a shadow root'));
+    </script>
+    <br>
+
     <button id=formTestHtml>form(html) beta</button>
     <script>
     formTestHtml.addEventListener('click',async e=>{

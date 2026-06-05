@@ -20,22 +20,52 @@
     <script type=module>
     import * as dialog from '../dialog.js';
 
-    // grabs the body html of the just-opened dialog, then removes it
-    function bodyHtml() {
-        const el = document.querySelector('dialog.u2x-modal');
+    // returns the just-opened dialog of the given root (default: document), then removes it
+    function pop(root = document) {
+        const el = root.querySelector('dialog.u2x-modal');
         const html = el.querySelector('form').innerHTML;
         el.remove();
-        return html;
+        return {el, html};
     }
 
     describe('dialog body', () => {
         it('escapes html', () => {
             dialog.alert('a <b>x</b>');
-            chai.expect(bodyHtml()).to.contain('a &lt;b&gt;x&lt;/b&gt;');
+            chai.expect(pop().html).to.contain('a &lt;b&gt;x&lt;/b&gt;');
         });
         it('keeps line breaks as <br>', () => {
             dialog.alert('line1\nline2');
-            chai.expect(bodyHtml()).to.contain('line1<br>line2');
+            chai.expect(pop().html).to.contain('line1<br>line2');
+        });
+        it('object body stays raw html', () => {
+            dialog.alert({body:'<b>x</b>'});
+            chai.expect(pop().html).to.contain('<b>x</b>');
+        });
+    });
+
+    describe('lang', () => {
+        it('option translates the Cancel button', () => {
+            dialog.confirm({body:'?', lang:'de'});
+            chai.expect(pop().html).to.contain('Abbrechen');
+        });
+    });
+
+    describe('shadow DOM', () => {
+        const host = document.body.appendChild(document.createElement('div'));
+        const root = host.attachShadow({mode:'open'});
+
+        it('A: root option opens inside the shadow root + adopts styles', () => {
+            dialog.alert({body:'hi', root});
+            chai.expect(pop(root).el.open).to.equal(true);
+            chai.expect(root.adoptedStyleSheets.length).to.be.above(0);
+        });
+        it('C: scope(defaults) binds root + lang, strings still escaped', () => {
+            const m = dialog.scope({root, lang:'de'});
+            m.confirm('a <b>x</b>');
+            const {el, html} = pop(root);
+            chai.expect(el.open).to.equal(true);          // opened in shadow root
+            chai.expect(html).to.contain('a &lt;b&gt;');  // string escaped, not raw
+            chai.expect(html).to.contain('Abbrechen');    // lang default applied
         });
     });
     </script>

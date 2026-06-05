@@ -4,18 +4,14 @@
 // - rename to modal.js? see <iframe sandbox="allow-modals">
 
 const d = document;
-d.head.insertAdjacentHTML(
-    'afterbegin',
-    '<style>'+
-    '.u2x-modal .-buttons {'+
-        'display:flex;'+
-        'flex-wrap:wrap;'+
-        'justify-content:flex-end;'+
-        'gap:.5rem;'+
-        'margin-top:1rem;'+
-    '}'+
-    '</style>'
-);
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(`.u2x-modal .-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: .5rem;
+    margin-top: 1rem;
+}`);
 
 
 class Dialog {
@@ -41,7 +37,7 @@ class Dialog {
                 el.value = btn.value;
                 el.type = btn.type || 'submit';
                 el.addEventListener('click', e=>{
-                    btn.then && btn.then.call(this,e);
+                    btn.action && btn.action.call(this,e);
                 });
                 btnCont.appendChild(el);
                 if (i === 0) setTimeout(()=>el.focus());
@@ -52,17 +48,20 @@ class Dialog {
     }
     show(){
         const element = this.element;
-        d.body.appendChild(element);
+        (this.options.root ?? d.body).appendChild(element);
+        // make our styles available in the current root (document or a shadow root)
+        const root = element.getRootNode();
+        if (!root.adoptedStyleSheets.includes(sheet)) root.adoptedStyleSheets.push(sheet);
         element.showModal();
         if (this.options.audio) {
             const url = this.options.audio === true ? import.meta.url + '/../notification.mp3' : this.options.audio;
             const audio = new Audio();
             audio.volume = 0.2;
             audio.src = url;
-            audio.play();            
+            audio.play().catch(()=>{}); // autoplay policy may reject
         }
 
-        return new Promise((resolve, reject)=>{
+        return new Promise(resolve=>{
             element.addEventListener('close',()=>{
                 resolve(this.value);
                 element.remove();
@@ -79,8 +78,8 @@ class Dialog {
  * @example
  * await alert('This is an alert message');
  */
-export function alert(text) {
-    const options = toOptions(text);
+export function alert(text, defaults) {
+    const options = toOptions(text, defaults);
     options.buttons = [{title:'OK'}];
     return new Dialog(options).show();
 };
@@ -94,10 +93,10 @@ export function alert(text) {
  *    deleteItem();
  * }
  */
-export function confirm(text) {
-    const options = toOptions(text);
+export function confirm(text, defaults) {
+    const options = toOptions(text, defaults);
     options.buttons = [
-        {title: 'OK',then(){ dialog.value = true; } },
+        {title: 'OK',action(){ dialog.value = true; } },
         {title: translate(options.lang, 'Cancel')}
     ];
     const dialog = new Dialog(options);
@@ -113,11 +112,11 @@ export function confirm(text) {
  * @example
  * const name = await prompt('Enter your name:');
  */
-export function prompt(text, initial) {
-    const options = toOptions(text);
+export function prompt(text, initial, defaults) {
+    const options = toOptions(text, defaults);
     options.body = '<label>'+options.body+'<input style="width:100%;display:block;margin-top:.5rem"></label>';
     options.buttons = [
-        {title: 'OK', then(){ dialog.value = input.value; } },
+        {title: 'OK', action(){ dialog.value = input.value; } },
         {title: translate(options.lang, 'Cancel')}
     ];
     const dialog = new Dialog(options);
@@ -129,18 +128,18 @@ export function prompt(text, initial) {
 };
 
 /* */
-export function form(html){
+export function form(html, defaults){
     if (typeof html === 'string') html = { body: html };
-    const options = toOptions(html);
-    options.buttons = 
-        [{title:'OK',then(){ // TODO: triggers by click but would be better by form.submit?
+    const options = toOptions(html, defaults);
+    options.buttons =
+        [{title:'OK',action(){ // TODO: triggers by click but would be better by form.submit?
             const form = dialog.element.querySelector('form');
             if (!form.checkValidity()) dialog.value = null;
             else {
                 const data = Object.fromEntries(new FormData(form).entries());
                 dialog.value = data;
             }
-        }},{title: translate(lang(), 'Cancel'), type:'button', then(){
+        }},{title: translate(options.lang, 'Cancel'), type:'button', action(){
             dialog.element.close();
         }}];
 
@@ -149,10 +148,21 @@ export function form(html){
 }
 /* */
 
+// bind default options (e.g. a shadow root and/or lang) to all dialogs:
+// const m = scope({root: this.shadowRoot, lang:'de'}); m.alert('hi')
+export function scope(defaults){
+    return {
+        alert:   (text)          => alert(text, defaults),
+        confirm: (text)          => confirm(text, defaults),
+        prompt:  (text, initial) => prompt(text, initial, defaults),
+        form:    (html)          => form(html, defaults),
+    };
+}
+
 
 // close dialog on backdrop-click if it has the backdropClose-class
 addEventListener('click', event=>{
-    const el = event.target;
+    const el = event.composedPath()[0]; // composedPath: real target, also inside shadow DOM
     if (el.tagName !== 'DIALOG') return;
     if (!el.classList.contains('backdropClose')) return;
     const rect = el.getBoundingClientRect();
@@ -166,12 +176,11 @@ addEventListener('click', event=>{
 
 // helper functions
 
-function toOptions(options) {
-    if (typeof options === 'string') {
-        options = { body: htmlEntities(options).replace(/\n/g, '<br>') };
-    }
-    options.lang ??= lang();
-    return options;
+function toOptions(input, defaults) {
+    const options = typeof input === 'string'
+        ? { body: htmlEntities(input).replace(/\n/g, '<br>') } // plain string: escape it
+        : input;                                               // object: trusted html body
+    return { lang: lang(), ...defaults, ...options };
 }
 
 
@@ -179,7 +188,7 @@ function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 function translate(lang, v) {
-    return text[v][lang] || v;
+    return text[v]?.[lang] || v;
 }
 function lang() {
     return navigator.language.substring(0,2);
@@ -200,58 +209,3 @@ const text = {
     }
 }
 
-
-/* 
-
-Works! Waiting for demand
-There are standards on the way that allow animations (@starting-style, transition-behavior: allow-discrete;)
-
-needs css:
-dialog.animated[hidden] {
-    display:block !important;
-    pointer-events:none !important;
-}
-
-function hideAnimated(el, then) {
-    if (!el.classList.contains('animated')) {
-        then();
-        return;
-    }
-    el.style.animation = 'none'; // animation can be the same in reverse, so remove it first to avoid it not triggering
-    setTimeout(()=>{
-        el.style.animation = '';
-        const end = e=>{
-            if (e && e.type && e.target !== el) return;
-            el.hidden = false;
-            then && then();
-            el.removeEventListener('animationend',end);
-            el.removeEventListener('transitionend',end);
-            clearTimeout(timeout);
-            return;
-        }
-        el.addEventListener('animationend',end);
-        el.addEventListener('transitionend',end);
-        const timeout = setTimeout(end,2000);
-        el.hidden = true;
-    });
-
-};
-addEventListener('cancel', e=>{
-    if (e.defaultPrevented) return;
-    const el = e.target;
-    if (el.hidden) return;
-    if (!el.classList.contains('animated')) return;
-    e.preventDefault();
-    hideAnimated(el, ()=>el.close());
-}, true)
-addEventListener('submit', e=>{
-    if (e.defaultPrevented) return;
-    const form = e.target;
-    if (form.method!=='dialog') return;
-    const el = el.closest('.dialog');
-    if (el.hidden) return;
-    if (!el.classList.contains('animated')) return;
-    e.preventDefault();
-    hideAnimated(el, ()=>form.submit());
-}, true)
-/* */
