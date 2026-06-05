@@ -168,7 +168,7 @@ addEventListener('click', event=>{
 
 function toOptions(options) {
     if (typeof options === 'string') {
-        options = { body: htmlEntities(options) };
+        options = { body: htmlEntities(options).replace(/\n/g, '<br>') };
     }
     options.lang ??= lang();
     return options;

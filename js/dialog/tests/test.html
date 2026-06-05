@@ -40,6 +40,9 @@
 
     <button onclick="dialog.alert('Html content: <b>bold</b>')">Html content not parsed </button>
     <br>
+    <button onclick="dialog.alert('line1\nline2\nline3')">line breaks</button>
+    <button onclick="alert('line1\nline2\nline3')">native</button>
+    <br>
     <button onclick="dialog.alert({body:'Html content: <b>bold</b>'})">Html parsed </button>
     <br>
     <button onclick="dialog.prompt({body:'Annuler?', lang:'fr'}, '👍')">option "lang" </button>

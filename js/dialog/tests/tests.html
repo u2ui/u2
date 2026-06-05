@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Tests</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+
+<body>
+    <div id="mocha"></div>
+
+    <script src="https://unpkg.com/chai@4.4.1/chai.js"></script>
+    <script src="https://unpkg.com/mocha@10.2.0/mocha.js"></script>
+
+    <script class="mocha-init">
+        mocha.setup('bdd');
+    </script>
+
+    <script type=module>
+    import * as dialog from '../dialog.js';
+
+    // grabs the body html of the just-opened dialog, then removes it
+    function bodyHtml() {
+        const el = document.querySelector('dialog.u2x-modal');
+        const html = el.querySelector('form').innerHTML;
+        el.remove();
+        return html;
+    }
+
+    describe('dialog body', () => {
+        it('escapes html', () => {
+            dialog.alert('a <b>x</b>');
+            chai.expect(bodyHtml()).to.contain('a &lt;b&gt;x&lt;/b&gt;');
+        });
+        it('keeps line breaks as <br>', () => {
+            dialog.alert('line1\nline2');
+            chai.expect(bodyHtml()).to.contain('line1<br>line2');
+        });
+    });
+    </script>
+    <script class="mocha-exec" type=module>
+      mocha.run();
+    </script>
+</body>
+
+</html>
