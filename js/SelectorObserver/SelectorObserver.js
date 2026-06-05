@@ -1,33 +1,28 @@
 const observers = new Set();
 
-// global mutation observer
-const muObserver = new MutationObserver(checkMutations);
-muObserver.observe(document, {
-    childList: true,
-    subtree: true,
-    attributes: true
-});
-function addTree(el) {
-    for (const observer of observers) observer._addTree(el);
+// one mutation observer per root (document or a ShadowRoot)
+const roots = new Map();
+function observeRoot(root) {
+    if (roots.has(root)) return;
+    const mo = new MutationObserver(m => checkMutations(m, root));
+    mo.observe(root, { childList: true, subtree: true, attributes: true });
+    roots.set(root, mo);
 }
-function removeTree(el) {
-    for (const observer of observers) observer._removeTree(el);
+function forRoot(root, method, el) {
+    for (const observer of observers) observer.root === root && observer[method](el);
 }
-function treeModified(el) {
-    for (const observer of observers) observer._treeModified(el);
-}
-function checkMutations(mutations) {
+function checkMutations(mutations, root) {
     for (const mutation of mutations) {
         if (mutation.type==='childList') {
             for (const target of mutation.addedNodes) {
-                target.nodeType === 1 && addTree(target);
+                target.nodeType === 1 && forRoot(root, '_addTree', target);
             }
             for (const target of mutation.removedNodes) {
-                target.nodeType === 1 && removeTree(target);
+                target.nodeType === 1 && forRoot(root, '_removeTree', target);
             }
         }
         if (mutation.type==='attributes') {
-            treeModified(mutation.target);
+            forRoot(root, '_treeModified', mutation.target);
         }
     }
 }
@@ -89,11 +84,15 @@ export class SelectorObserver {
 
     /**
      * @param {String} selector
+     * @param {Object} [options]
+     * @param {Document|ShadowRoot} [options.root=document] - scope to observe (e.g. a shadow root)
      */
     observe(selector, options={}) {
         this.selector = selector;
         this.options = options;
-        const els = document.querySelectorAll(this.selector);
+        const root = this.root = options.root ?? document;
+        observeRoot(root);
+        const els = root.querySelectorAll(this.selector);
         for (const el of els) this._add(el);
 
         //if (options.checkMutations!==false) {

@@ -126,6 +126,72 @@
 
     });
 
+    describe('SelectorObserver in shadow DOM', () => {
+        const host = document.createElement('div');
+        document.body.append(host);
+        const root = host.attachShadow({mode:'open'});
+        root.innerHTML = '<div class=container><div class=item id=sEl1>existing</div></div>';
+        const sEl1 = root.getElementById('sEl1');
+
+        let lastAdded = null;
+        let lastRemoved = null;
+        const o = new SelectorObserver({
+            on: el => lastAdded = el ,
+            off: el => lastRemoved = el ,
+        });
+        o.observe('.container .item', {root});
+
+        it('found existing inside shadow root:', () => {
+            chai.expect(lastAdded).to.equal(sEl1);
+        });
+
+        it('add dynamicly inside shadow root:', done => {
+            lastAdded = lastRemoved = null;
+            const sEl2 = document.createElement('div');
+            sEl2.className = 'item';
+            sEl2.id = 'sEl2';
+            root.querySelector('.container').append(sEl2);
+            setTimeout(()=>{
+                chai.expect(lastAdded).to.equal(sEl2);
+                done();
+            },50);
+        });
+
+        it('remove inside shadow root:', done => {
+            lastAdded = lastRemoved = null;
+            root.getElementById('sEl2').remove();
+            setTimeout(()=>{
+                chai.expect(lastRemoved.id).to.equal('sEl2');
+                done();
+            },50);
+        });
+
+        it('root isolation: does not see light-DOM elements:', done => {
+            lastAdded = lastRemoved = null;
+            document.body.insertAdjacentHTML('beforeend', '<div class=container><div class=item>light</div></div>');
+            const light = document.body.lastElementChild;
+            setTimeout(()=>{
+                chai.expect(lastAdded).to.equal(null);
+                light.remove();
+                done();
+            },50);
+        });
+
+        it('add after disconnect:', done => {
+            lastAdded = lastRemoved = null;
+            o.disconnect();
+            const sEl3 = document.createElement('div');
+            sEl3.className = 'item';
+            root.querySelector('.container').append(sEl3);
+            setTimeout(()=>{
+                chai.expect(lastAdded).to.equal(null);
+                host.remove();
+                done();
+            },50);
+        });
+
+    });
+
     /*
     describe('SelectorObserver check by animationend', () => {
         it('nested, add parent class:', done => {
