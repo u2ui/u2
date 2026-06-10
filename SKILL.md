@@ -3,6 +3,7 @@
 Modular web component framework.
 https://github.com/u2ui/u2
 
+> The one-liners below are an **index, not a spec** — they show the common case, not the full behavior (edge cases, bare/valueless attributes, defaults). For any concrete question, read the module before answering — don't assume from the one-liner. README: `https://raw.githubusercontent.com/u2ui/u2/main/{category}/{name}/README.md` (usage, API, demos); for undocumented edge-cases read the source `…/{category}/{name}/{name}.js`.
 
 ## Categories
 
@@ -102,8 +103,6 @@ https://github.com/u2ui/u2
 - **shortcut** - Easy keyboard shortcuts
 
 **Naming:** `<u2-{name}>`, `.u2-{name}`, `[u2-{name}]`
-
-**Module details:** Each module has its own README at `https://raw.githubusercontent.com/u2ui/u2/main/{category}/{name}/README.md` with usage examples, API docs, and demos.
 
 ## Installation
 
