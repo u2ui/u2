@@ -51,14 +51,12 @@
 	}
 	video, audio, video, iframe {
 		inline-size: 100%;
-		inline-size:-moz-available;
 		inline-size:-webkit-fill-available;
 		inline-size:stretch;
 	}
 	iframe { display:block; }
 	img, svg, canvas {
 		max-inline-size: 100%;
-		max-inline-size:-moz-available;
 		max-inline-size:-webkit-fill-available;
 		max-inline-size:stretch;
 	}

@@ -9,7 +9,6 @@ u2-alert {
     border: var(--line-width,1px) solid var(--color);
     background-color: var(--color-bg, Canvas);
     width:100%;
-    width:-moz-available;
     width:-webkit-fill-available;
     width:stretch;
 }

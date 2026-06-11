@@ -18,8 +18,7 @@ u2-carousel {
 u2-carousel > :not([slot]) {
 	inline-size:100%;
 	box-sizing: border-box;
-    /* width:-moz-available; to be able to use margins, not working properly
-    width:-webkit-fill-available; */
+    /* width:-webkit-fill-available; to be able to use margins, not working properly */
 
 	flex-shrink:0;
 	scroll-snap-align: center;

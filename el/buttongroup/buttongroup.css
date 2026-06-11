@@ -3,7 +3,6 @@ u2-buttongroup {
     white-space: nowrap;
     max-inline-size:100%;
     max-inline-size: -webkit-fill-available;
-    max-inline-size: -moz-available;
     max-inline-size: stretch;
     
     --u2-ico-dir:var(--u2-ico-dir-material);

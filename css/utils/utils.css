@@ -72,7 +72,7 @@ codyhouse: .width-100%
 bulma: .is-fullwidth
 .u2-width-full {
     width:100%;
-    width:-moz-available;
     width:-webkit-fill-available;
+    width:stretch;
 }
 */

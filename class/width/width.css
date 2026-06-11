@@ -12,8 +12,8 @@
 
     /* if used as flexbox-col-item */
     width: 100%;
-    width: -moz-available;
     width: -webkit-fill-available;
+    width: stretch;
 }
 /* remove padding on nested width-containers */
 .u2-width .u2-width {

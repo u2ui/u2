@@ -13,7 +13,6 @@ https://jsfiddle.net/x90cz65o/103/
     border-collapse:collapse;
     width:100%;
     /* todo?
-    width:-moz-available;
     width:-webkit-fill-available;
     border-spacing: 0; /* css-tables: border-spacing in not table-elements is already 0 *
     font-variant-numeric: tabular-nums; /* in base.css but not for css-tables
@@ -71,8 +70,8 @@ https://jsfiddle.net/x90cz65o/103/
 .u2-table.-Fields textarea,
 .u2-table.-Fields select {
     width: 100%;
-    width: -moz-available;
     width: -webkit-fill-available;
+    width: stretch;
     margin: 0;
 }
 .u2-table.-Fields > * > * > :first-child {

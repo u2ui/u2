@@ -152,7 +152,6 @@ label {
 input, textarea, select {
     width: 100%;
     width: -webkit-fill-available;
-    width: -moz-available;
     width: stretch;
 }
 /* button, .btn { margin-block:.3rem; }*/
