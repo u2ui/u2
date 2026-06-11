@@ -31,6 +31,7 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/dialog/dial
 ## Demos
 
 [test.html](http://gcdn.li/u2ui/u2@main/js/dialog/tests/test.html)  
+[tests.html](http://gcdn.li/u2ui/u2@main/js/dialog/tests/tests.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/js/dialog/tests/minimal.html)  
 
 ## Pro-Tip

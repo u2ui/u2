@@ -114,11 +114,12 @@ treeElement.addEventListener('u2-tree-drop', (e) => {
 
 ## Demos
 
+[dnd-shadow.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/dnd-shadow.html)  
 [custom.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/custom.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/test.html)  
-[dnd.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/dnd.html)  
 [animated.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/animated.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/minimal.html)  
+[dnd.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/dnd.html)  
 
 ## Todo
 

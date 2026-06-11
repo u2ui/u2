@@ -608,6 +608,14 @@
       "css": false,
       "js": true
     },
+    "Tour": {
+      "name": "Tour",
+      "description": "Simple guided tours for existing interfaces.",
+      "beta": false,
+      "deprecated": false,
+      "css": false,
+      "js": true
+    },
     "Placer": {
       "name": "Placer",
       "description": "Positions elements relative to a target, auto-adjusting on move or resize.",

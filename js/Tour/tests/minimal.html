@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+
+    <script type=module>
+        import * as Tour from '../Tour.js';
+        window.u2_Tour = Tour;
+    </script>
+
+
+<body>
+
+<section class="main">
+    <button id=start onclick="(new u2_Tour.Tour([{target:'#title', content:'This is the title.'}, {target:'#text', content:'And this is the description.'}]).start())">Start tour</button>
+    <h1 id=title>Simple Tour</h1>
+    <p id=text>A tour highlights existing elements.</p>
+</section>

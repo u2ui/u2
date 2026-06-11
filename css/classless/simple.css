@@ -221,9 +221,9 @@ article, dialog {
     & header, & footer {
         padding:var(--gap);
     }
-    & header { margin-bottom:var(--gap); }
+    & header { padding-bottom:var(--gap); }
     & footer {
-        margin-top:auto;
+        padding-top:auto;
         font-size: 0.9rem;
     }
 }

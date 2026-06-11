@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <script src="../../../u2/auto.js" type=module async></script>
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <style>
+        .u2TourInfo {
+            inline-size: min(22rem, calc(100vw - 2rem));
+        }
+        .u2TourContent {
+            min-block-size: 3lh;
+            font-size: 1.05em;
+        }
+        .u2TourInfo footer {
+            background: var(--color-area);
+        }
+    </style>
+
+    <title>Tour.js demo</title>
+
+<body>
+
+<section>
+    <h1>Tour.js</h1>
+    <p>Guide people through an existing interface without changing its elements.</p>
+    <button id=start>Start tour</button>
+    <button id=showSettings>Show settings step</button>
+    <button id=showPopover>Show popover step</button>
+    <button id=stop>Stop</button>
+</section>
+
+<aside id=popover popover=manual>
+    <strong>Top-layer element</strong>
+    <p>An open popover can also be a tour target.</p>
+    <style>
+        #popover::backdrop { background: #fff0; }
+    </style>
+</aside>
+
+<section style="min-height:100vh">
+    <h2 id=navigation>Project overview</h2>
+    <div class=u2-grid>
+        <article class=u2-card id=visitors>
+            <h3>Visitors</h3>
+            <p><strong>12,480</strong><br>+18% this month</p>
+        </article>
+        <article class=u2-card>
+            <h3>Conversions</h3>
+            <p><strong>4.8%</strong><br>+0.6% this month</p>
+        </article>
+        <article class=u2-card>
+            <h3>Revenue</h3>
+            <p><strong>$38,200</strong><br>+12% this month</p>
+        </article>
+    </div>
+</section>
+
+<section id=settings>
+    <h2>Settings</h2>
+    <label>
+        Report frequency
+        <select>
+            <option>Daily
+            <option>Weekly
+            <option>Monthly
+        </select>
+    </label>
+    <label><input type=checkbox checked> Email notifications</label>
+</section>
+
+<section>
+    <h2>Events</h2>
+    <output id=log>Waiting for the tour.</output>
+</section>
+
+<script type=module>
+import { Tour } from '../Tour.js';
+
+const details = document.createElement('div');
+details.innerHTML = '<strong>Live metrics</strong><br>The content may also be a DOM node.';
+popover.showPopover();
+
+const tour = new Tour([
+    {target:'#navigation', content:'The tour accepts selectors or elements as targets.'},
+    {target:'#visitors', content:details},
+    {target:'#popover', content:'Open top-layer elements can be tour targets too.'},
+    {target:'#settings', content:'Targets outside the viewport are scrolled into view.'},
+]);
+
+start.onclick = () => tour.start();
+showSettings.onclick = () => tour.show(3);
+showPopover.onclick = () => tour.show(2);
+stop.onclick = () => tour.stop();
+
+tour.addEventListener('step', e => log.value = `Step ${e.detail.index + 1} of ${tour.steps.length}`);
+tour.addEventListener('complete', () => log.value = 'Tour completed.');
+tour.addEventListener('close', () => log.value = 'Tour closed.');
+</script>

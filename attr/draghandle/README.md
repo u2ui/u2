@@ -31,6 +31,7 @@ Defines a handle element to drag a `draggable=false` container.
 
 ## Demos
 
+[shadowdom.html](http://gcdn.li/u2ui/u2@main/attr/draghandle/tests/shadowdom.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/attr/draghandle/tests/minimal.html)  
 
 ## About
