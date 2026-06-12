@@ -13,6 +13,7 @@ import { Tour } from '../Tour.js';
 
 const tour = new Tour([
     {target:'#title', content:'This is the title.'},
+    {target:async () => { await openMenu(); return menu.querySelector('button'); }, content:'This button was loaded asynchronously.'},
     {target:'#text', content:'And this is the description.'},
 ]);
 
@@ -39,6 +40,9 @@ tour.addEventListener('complete', () => console.log('completed'));
 tour.addEventListener('close', () => console.log('closed'));
 ```
 
+`target` may be an element, selector, or function returning an element or
+promise. Target functions run when their step is shown and may prepare it.
+
 The tour buttons support horizontal arrow-key navigation using
 [`u2-focusgroup`](../../attr/focusgroup/README.md).
 
@@ -60,4 +64,3 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/Tour/Tour.j
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
-

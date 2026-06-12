@@ -6,14 +6,17 @@ export class Tour extends EventTarget {
         this.steps = steps;
     }
 
-    start() { this.show(0); }
+    start() { return this.show(0); }
 
-    show(index) {
+    async show(index) {
         const step = this.steps[index];
         if (!step) return;
 
-        this.target = typeof step.target === 'string' ? document.querySelector(step.target) : step.target;
-        if (!this.target) throw new Error(`Tour target not found: ${step.target}`);
+        const pending = this.pending = {};
+        const target = typeof step.target === 'function' ? await step.target(this) : typeof step.target === 'string' ? document.querySelector(step.target) : step.target;
+        if (this.pending !== pending) return;
+        if (!target) throw new Error(`Tour target not found: ${step.target}`);
+        this.target = target;
         const opened = !this.info;
         if (opened) this.#create();
 
@@ -29,8 +32,8 @@ export class Tour extends EventTarget {
         this.dispatchEvent(new CustomEvent('step', {detail:{step, index}}));
     }
 
-    next() { this.current === this.steps.length - 1 ? this.stop('complete') : this.show(this.current + 1); }
-    back() { this.show(this.current - 1); }
+    next() { return this.current === this.steps.length - 1 ? this.stop('complete') : this.show(this.current + 1); }
+    back() { return this.show(this.current - 1); }
 
     stop(event = 'close') {
         this.placer?.unfollow();
@@ -39,6 +42,7 @@ export class Tour extends EventTarget {
         globalThis.removeEventListener('resize', this.#scheduleDraw);
         cancelAnimationFrame(this.drawFrame);
         this.drawFrame = 0;
+        this.pending = null;
         this.host = this.info = this.target = null;
         if (this.returnFocus?.isConnected) this.returnFocus.focus();
         this.returnFocus = null;
