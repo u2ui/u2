@@ -42,6 +42,7 @@ tour.addEventListener('close', () => console.log('closed'));
 
 `target` may be an element, selector, or function returning an element or
 promise. Target functions run when their step is shown and may prepare it.
+`content` may also be a promise.
 
 The tour buttons support horizontal arrow-key navigation using
 [`u2-focusgroup`](../../attr/focusgroup/README.md).

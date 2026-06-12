@@ -16,12 +16,14 @@ export class Tour extends EventTarget {
         const target = typeof step.target === 'function' ? await step.target(this) : typeof step.target === 'string' ? document.querySelector(step.target) : step.target;
         if (this.pending !== pending) return;
         if (!target) throw new Error(`Tour target not found: ${step.target}`);
+        const content = await step.content;
+        if (this.pending !== pending) return;
         this.target = target;
         const opened = !this.info;
         if (opened) this.#create();
 
         this.current = index;
-        this.content.replaceChildren(step.content instanceof Node ? step.content.cloneNode(true) : step.content);
+        this.content.replaceChildren(content instanceof Node ? content.cloneNode(true) : content);
         this.info.ariaLabel = `Tour step ${index + 1} of ${this.steps.length}`;
         this.backButton.disabled = index === 0;
         this.nextButton.textContent = index === this.steps.length - 1 ? 'Done' : 'Next';
@@ -40,6 +42,7 @@ export class Tour extends EventTarget {
         this.host?.remove();
         document.removeEventListener('scroll', this.#scheduleDraw, true);
         globalThis.removeEventListener('resize', this.#scheduleDraw);
+        clearInterval(this.drawInterval);
         cancelAnimationFrame(this.drawFrame);
         this.drawFrame = 0;
         this.pending = null;
@@ -90,6 +93,7 @@ export class Tour extends EventTarget {
         this.hole = root.querySelector('.hole');
         document.addEventListener('scroll', this.#scheduleDraw, {passive:true, capture:true});
         globalThis.addEventListener('resize', this.#scheduleDraw, {passive:true});
+        this.drawInterval = setInterval(this.#scheduleDraw, 200);
 
         const info = this.info = document.createElement('dialog');
         info.className = 'u2TourInfo';
@@ -113,11 +117,14 @@ export class Tour extends EventTarget {
             </footer>
         `;
         info.onkeydown = e => {
+            e.stopPropagation();
             if (e.key !== 'Escape') return;
             e.preventDefault();
-            e.stopPropagation();
             this.stop();
         };
+        for (const event of ['pointerdown', 'mousedown', 'touchstart', 'click', 'dblclick', 'contextmenu']) {
+            info.addEventListener(event, e => e.stopPropagation());
+        }
         host.append(info);
         this.content = info.querySelector('.u2TourContent');
         [this.closeButton, this.backButton, this.nextButton] = info.querySelectorAll('button');
