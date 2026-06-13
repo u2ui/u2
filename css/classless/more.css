@@ -153,16 +153,8 @@ html {
 	scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
 }
 
-* {
-	scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
-}
-
-::-webkit-scrollbar-track {
-	background: var(--scrollbar-color-track);
-}
-::-webkit-scrollbar-thumb {
-	background-color: var(--scrollbar-color-thumb);
-}
+::-webkit-scrollbar-track { background: var(--scrollbar-color-track); }/* remove after safari 26.2 */
+::-webkit-scrollbar-thumb { background-color: var(--scrollbar-color-thumb); }
 
 select, textarea { scrollbar-width: thin; }
 
