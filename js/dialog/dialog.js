@@ -37,7 +37,8 @@ class Dialog {
                 el.value = btn.value;
                 el.type = btn.type || 'submit';
                 el.addEventListener('click', e=>{
-                    btn.action && btn.action.call(this,e);
+                    if (btn.value !== undefined) this.value = btn.value; // default to button value, like native returnValue
+                    btn.action?.call(this, e);                           // action may override this.value
                 });
                 btnCont.appendChild(el);
                 if (i === 0) setTimeout(()=>el.focus());
@@ -148,6 +149,18 @@ export function form(html, defaults){
 }
 /* */
 
+/**
+ * Creates and shows a modal dialog with arbitrary content and buttons.
+ * Resolves to `this.value` — set via the clicked button's `value`, or in a button `action`.
+ * @param {string|object} options - HTML body string, or { body, buttons, root, lang, init, audio }.
+ * @returns {Promise<*>} Resolves to the dialog's value when closed.
+ * @example
+ * const choice = await modal({ body:'Pick one', buttons:[{title:'A',value:'a'},{title:'B',value:'b'}] });
+ */
+export function modal(options, defaults) {
+    return new Dialog(toOptions(options, defaults)).show();
+}
+
 // bind default options (e.g. a shadow root and/or lang) to all dialogs:
 // const m = scope({root: this.shadowRoot, lang:'de'}); m.alert('hi')
 export function scope(defaults){
@@ -156,11 +169,12 @@ export function scope(defaults){
         confirm: (text)          => confirm(text, defaults),
         prompt:  (text, initial) => prompt(text, initial, defaults),
         form:    (html)          => form(html, defaults),
+        modal:   (options)       => modal(options, defaults),
     };
 }
 
 
-// close dialog on backdrop-click if it has the backdropClose-class
+// close dialog on backdrop-click if it has the backdropClose-class / deprecated "closedby" is the future
 addEventListener('click', event=>{
     const el = event.composedPath()[0]; // composedPath: real target, also inside shadow DOM
     if (el.tagName !== 'DIALOG') return;
@@ -195,17 +209,20 @@ function lang() {
 }
 const text = {
     'Cancel':{
+        'ar':'إلغاء',
         'de':'Abbrechen',
-        'fr':'Annuler',
         'es':'Cancelar',
+        'fr':'Annuler',
         'it':'Annulla',
-        'pt':'Cancelar',
-        'ua':'Скасувати',
-        'ru':'Отмена',
         'ja':'キャンセル',
         'ko':'취소',
-        'zh':'取消',
         'nl':'Annuleren',
+        'pl':'Anuluj',
+        'pt':'Cancelar',
+        'ru':'Отмена',
+        'tr':'İptal',
+        'ua':'Скасувати',
+        'zh':'取消',
     }
 }
 

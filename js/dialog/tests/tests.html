@@ -68,6 +68,50 @@
             chai.expect(html).to.contain('Abbrechen');    // lang default applied
         });
     });
+
+    // clicks the n-th button of the just-opened dialog (submits the dialog-form, closing it)
+    function clickButton(n = 0, root = document) {
+        root.querySelectorAll('dialog.u2x-modal button')[n].click();
+    }
+
+    describe('modal', () => {
+        it('renders arbitrary buttons', () => {
+            dialog.modal({body:'pick', buttons:[{title:'A'},{title:'B'}]});
+            const {html} = pop();
+            chai.expect(html).to.contain('A');
+            chai.expect(html).to.contain('B');
+        });
+        it('resolves to the clicked button value', async () => {
+            const p = dialog.modal({body:'pick', buttons:[{title:'A',value:'a'},{title:'B',value:'b'}]});
+            clickButton(1);
+            chai.expect(await p).to.equal('b');
+        });
+        it('button action can override the value', async () => {
+            const p = dialog.modal({body:'x', buttons:[{title:'OK', value:'raw', action(){ this.value = 'overridden'; }}]});
+            clickButton(0);
+            chai.expect(await p).to.equal('overridden');
+        });
+        it('scope(defaults).modal opens in the bound root', () => {
+            const host = document.body.appendChild(document.createElement('div'));
+            const root = host.attachShadow({mode:'open'});
+            dialog.scope({root}).modal({body:'hi', buttons:[{title:'OK'}]});
+            chai.expect(pop(root).el.open).to.equal(true);
+        });
+    });
+
+    // guards the button-value default: it must not clobber values set by confirm/prompt/form
+    describe('confirm value (button-value regression)', () => {
+        it('OK resolves true', async () => {
+            const p = dialog.confirm('ok?');
+            clickButton(0);
+            chai.expect(await p).to.equal(true);
+        });
+        it('Cancel (no value, no action) keeps the initialized false', async () => {
+            const p = dialog.confirm('ok?');
+            clickButton(1);
+            chai.expect(await p).to.equal(false);
+        });
+    });
     </script>
     <script class="mocha-exec" type=module>
       mocha.run();

@@ -89,6 +89,23 @@
         console.log(result)
     });
     </script>
+    <br>
+
+    <button id=modalTest>modal(): arbitrary buttons → value</button>
+    <script>
+    modalTest.addEventListener('click', async ()=>{
+        const choice = await dialog.modal({
+            body: '<b>Delete this file?</b>',
+            buttons: [
+                {title:'Delete', value:'delete'},
+                {title:'Keep',   value:'keep'},
+                {title:'Cancel'}, // no value → resolves undefined
+            ],
+            audio: true,
+        });
+        dialog.alert('You chose: '+choice);
+    });
+    </script>
 
 </section>
 
