@@ -2,6 +2,7 @@ u2-buttongroup {
     display:inline-flex;
     white-space: nowrap;
     max-inline-size:100%;
+    max-inline-size:-moz-available;
     max-inline-size: -webkit-fill-available;
     max-inline-size: stretch;
     
