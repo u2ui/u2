@@ -49,7 +49,7 @@
 		border-width:0 0 1px 0;
 		border-top-width:0 !important;
 	}
-	video, audio, video, iframe {
+	video, audio, iframe {
 		inline-size: 100%;
 		inline-size:-webkit-fill-available;
 		inline-size:stretch;
