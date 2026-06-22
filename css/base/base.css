@@ -13,7 +13,6 @@
 	html {
 		interpolate-size: allow-keywords;
 		block-size: 100%;/* 100dvh? */
-		word-break:break-word;
 		overflow-wrap:break-word;
 		-webkit-hyphens: auto;/* safari < 17 */
 		hyphens: auto;
