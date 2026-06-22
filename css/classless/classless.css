@@ -44,7 +44,7 @@ h1,.h1 { font-size: calc(1rem * pow(1.24, 4)); }
 
 table {
     inline-size: 100%;/* -webkit-fill-available; not working in firefox https://jsfiddle.net/1hkp6dfg/21/ */
-    word-break: normal;
+    /* word-break: normal; needed? */
 }
 td,th {
     padding: calc(var(--gap) / 2);
