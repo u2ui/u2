@@ -1,8 +1,6 @@
-## Install
+# serviceWorker.js
 
-```js
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/js/serviceWorker/serviceWorker.min.js"
-```
+
 
 ## Install
 

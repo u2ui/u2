@@ -1,15 +1,11 @@
-## Install
+# AI Texter
 
-```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/ai-texter/ai-texter.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/ai-texter/ai-texter.min.js" type=module async></script>
-```
 
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/ai-texter/ai-texter.min.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x.x/el/ai-texter/ai-texter.min.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/ai-texter/ai-texter.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/ai-texter/ai-texter.js" type=module async></script>
 ```
 
 ## Demos
