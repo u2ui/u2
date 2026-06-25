@@ -81,8 +81,6 @@ export default class U2Tabs extends HTMLElement {
     }
 
     set selected(index) {
-        this._selected = index;
-        this._selectTab(index);
         this.setAttribute('selected', index);
     }
     _selectTab(idx = null) { // todo? merge into `set selected()`?
@@ -98,13 +96,9 @@ export default class U2Tabs extends HTMLElement {
     _update() {
         this.tabs = this._tabsSlot.assignedNodes({ flatten: true });
         this.panels = this._panelsSlot.assignedNodes({ flatten: true }).filter(el => el.nodeType === Node.ELEMENT_NODE);
-        for (let panel of this.panels.values()) {
-            panel.role = 'tabpanel';
-        }
-        for (let tab of this.tabs.values()) {
-            tab.role = 'tab';
-        }
-        this.selected = this.selected;
+        for (let panel of this.panels) panel.role = 'tabpanel';
+        for (let tab of this.tabs) tab.role = 'tab';
+        this._selectTab(this._selected);
     }
 
     connectedCallback() {
@@ -147,8 +141,7 @@ export default class U2Tabs extends HTMLElement {
                 return
         }
         e.preventDefault();
-        this.tabs[index] && this.tabs[index].click();
-
+        this.tabs[index]?.click();
     }
 
     _findFirstSelectedTab() {
@@ -163,7 +156,8 @@ export default class U2Tabs extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'selected') {
-            this.selected = parseInt(newValue);
+            this._selected = parseInt(newValue);
+            this._selectTab(this._selected);
         }
     }
 
