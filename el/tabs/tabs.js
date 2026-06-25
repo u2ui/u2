@@ -52,9 +52,16 @@ export default class U2Tabs extends HTMLElement {
         `;
         // slot tablist: when i add tabindex=-1, tabs are also no more keyboard focusable! (tested ch,ff) Why?
 
-        // Save refer to we can remove listeners later.
         this._onTitleClick = this._onTitleClick.bind(this);
         this._onKeyDown = this._onKeyDown.bind(this);
+        this._update = this._update.bind(this);
+
+        this._tabsSlot = shadowRoot.querySelector('#tabs');
+        this._panelsSlot = shadowRoot.querySelector('#panels');
+        this._tabsSlot.addEventListener('slotchange', this._update);
+        this._panelsSlot.addEventListener('slotchange', this._update);
+        this._tabsSlot.addEventListener('click', this._onTitleClick);
+        this._tabsSlot.addEventListener('keydown', this._onKeyDown);
 
         this.addEventListener('beforematch', e => {
             let el = e.target;
@@ -88,38 +95,22 @@ export default class U2Tabs extends HTMLElement {
         }
     }
 
-    connectedCallback() {
-        const tabsSlot = this.shadowRoot.querySelector('#tabs');
-        const panelsSlot = this.shadowRoot.querySelector('#panels');
-
-        for (let child of this.children) if (tagToTab[child.tagName]) child.slot = 'title';
-
-        const update = () => {
-            this.tabs = tabsSlot.assignedNodes({ flatten: true });
-            this.panels = panelsSlot.assignedNodes({ flatten: true }).filter(el => el.nodeType === Node.ELEMENT_NODE);
-            for (let panel of this.panels.values()) {
-                panel.role = 'tabpanel';
-            }
-            for (let tab of this.tabs.values()) {
-                tab.role = 'tab';
-            }
-            this.selected = this.selected;
+    _update() {
+        this.tabs = this._tabsSlot.assignedNodes({ flatten: true });
+        this.panels = this._panelsSlot.assignedNodes({ flatten: true }).filter(el => el.nodeType === Node.ELEMENT_NODE);
+        for (let panel of this.panels.values()) {
+            panel.role = 'tabpanel';
         }
-
-        update();
-        tabsSlot.addEventListener('slotchange', update);
-        panelsSlot.addEventListener('slotchange', update);
-
-        tabsSlot.addEventListener('click', this._onTitleClick);
-        tabsSlot.addEventListener('keydown', this._onKeyDown);
-
-        this.selected = this._findFirstSelectedTab() || 0;
+        for (let tab of this.tabs.values()) {
+            tab.role = 'tab';
+        }
+        this.selected = this.selected;
     }
 
-    disconnectedCallback() {
-        const tabsSlot = this.shadowRoot.querySelector('#tabs');
-        tabsSlot.removeEventListener('click', this._onTitleClick);
-        tabsSlot.removeEventListener('keydown', this._onKeyDown);
+    connectedCallback() {
+        for (let child of this.children) if (tagToTab[child.tagName]) child.slot = 'title';
+        this._update();
+        this.selected = this._findFirstSelectedTab() || 0;
     }
 
     _onTitleClick({ target }) {

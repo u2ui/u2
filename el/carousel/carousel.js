@@ -257,6 +257,7 @@ contain: layout style paint;  /* Neu ok? */
 		//this._updateItemCount(); // needed here?
 	}
 	disconnectedCallback() {
+		this.stop();
 		this.slider && this.slider.removeEventListener('slotchange', this._onSlotChange);
 	}
 }
