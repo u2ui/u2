@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>u2-table Observer Test</title>
+
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    <link href="../table.css" rel=stylesheet>
+</head>
+<body>
+
+<h1>u2-table Observer</h1>
+<p>Only changes to the table skeleton rebuild the columns. Content inside a cell — a lazily loaded
+icon, an image, a widget — must not, otherwise every arriving icon costs a full rebuild of a table
+that did not change its shape. A table with foot aggregates is the exception: those read cell
+values, so it keeps watching the cells.</p>
+
+<pre id=console></pre>
+
+<div id=host hidden></div>
+
+<script type=module>
+    import '../table.js';
+    import { getTableColumns } from '../table.js';
+
+    const out = document.getElementById('console');
+    const host = document.getElementById('host');
+    let failed = 0;
+    const assert = (condition, message) => {
+        if (!condition) failed++;
+        out.textContent += `${condition ? '✓ PASS' : '✗ FAIL'}: ${message}\n`;
+    };
+    const section = title => out.textContent += `\n${title}\n`;
+
+    // a MutationObserver callback is a microtask, so awaiting a few of them flushes it
+    const flush = async () => { for (let i = 0; i < 5; i++) await Promise.resolve(); };
+
+    const make = async (markup) => {
+        const el = document.createElement('u2-table');
+        el.innerHTML = `<table class=u2-table>${markup}</table>`;
+        host.appendChild(el);
+        await flush();
+        return el;
+    };
+
+    // #checkTable() starts with columns.refresh(), which drops the cached Column objects.
+    // A surviving identity therefore proves that no rebuild happened.
+    const rebuilds = async (el, change) => {
+        const probe = el.columns.item(0);
+        change();
+        await flush();
+        return el.columns.item(0) !== probe;
+    };
+
+    const titles = el => [...el.querySelectorAll('tbody td')].map(td => td.dataset.title).join('|');
+
+    const body = `<thead><tr><th data-sort-handler>Name<th data-sort-handler>Size<th data-sort-handler>Note
+        <tbody>
+            <tr id=r1><td data-value=b>b<td data-value=2>2<td><button><i class=ico>x</i></button>
+            <tr id=r2><td data-value=a>a<td data-value=1>1<td><button><i class=ico>x</i></button>`;
+
+
+    section('Column titles follow the skeleton');
+    {
+        const el = await make(body);
+        assert(titles(el) === 'Name|Size|Note|Name|Size|Note', 'every cell gets the title of its column');
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td data-value=c>c<td data-value=3>3<td>added';
+        assert(await rebuilds(el, () => el.querySelector('tbody').appendChild(tr)), 'an appended row rebuilds');
+        assert([...tr.cells].map(td => td.dataset.title).join('|') === 'Name|Size|Note', 'an appended row gets its titles');
+
+        assert(await rebuilds(el, () => el.querySelector('#r2').outerHTML = '<tr id=r2><td>a<td>1<td>new'), 'a replaced row rebuilds');
+        assert(titles(el).split('|').every(Boolean), 'a replaced row gets its titles');
+
+        const td = document.createElement('td');
+        assert(await rebuilds(el, () => el.querySelector('#r1').appendChild(td)), 'a cell added to a row rebuilds');
+
+        const tbody = document.createElement('tbody');
+        tbody.innerHTML = '<tr><td>z<td>9<td>fresh';
+        assert(await rebuilds(el, () => el.querySelector('table').appendChild(tbody)), 'a new tbody rebuilds');
+        assert([...tbody.querySelectorAll('td')].every(td => td.dataset.title), 'a new tbody gets its titles');
+
+        assert(await rebuilds(el, () => el.querySelector('#r1').remove()), 'a removed row rebuilds');
+        el.remove();
+    }
+
+
+    section('Content inside a cell does not');
+    {
+        const el = await make(body);
+        const cell = el.querySelector('#r1 td:last-child');
+
+        // exactly what <u2-ico> does once its svg arrives, nested one level deep
+        assert(!await rebuilds(el, () => cell.querySelector('.ico').innerHTML = '<svg></svg>'), 'a swapped element inside a cell does not rebuild');
+        assert(!await rebuilds(el, () => cell.querySelector('button').textContent = 'plain'), 'replaced text inside a cell does not rebuild');
+        assert(!await rebuilds(el, () => cell.setAttribute('title', 'x')), 'an attribute inside the table does not rebuild');
+        assert(titles(el) === 'Name|Size|Note|Name|Size|Note', 'the titles are still in place afterwards');
+
+        // the observer has to be alive after all that
+        assert(await rebuilds(el, () => el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><td>c<td>3<td>x')), 'a skeleton change right after still rebuilds');
+        el.remove();
+    }
+
+
+    section('Sorting');
+    {
+        const el = await make(body);
+        const names = () => [...el.querySelectorAll('tbody tr')].map(tr => tr.cells[0].textContent).join('');
+        const th = el.querySelector('thead th');
+
+        th.click();
+        await flush();
+        assert(names() === 'ab', 'ascending by text');
+        th.click();
+        await flush();
+        assert(names() === 'ba', 'descending by text');
+
+        el.querySelectorAll('thead th')[1].click();
+        await flush();
+        assert([...el.querySelectorAll('tbody tr')].map(tr => tr.cells[1].textContent).join('') === '12', 'ascending by number');
+        assert(titles(el) === 'Name|Size|Note|Name|Size|Note', 'sorting keeps the titles');
+        el.remove();
+    }
+
+
+    section('Foot aggregates keep watching the cells');
+    {
+        const el = await make(`<thead><tr><th>Name<th>Size
+            <tbody><tr id=a1><td>a<td>1<tr id=a2><td>b<td>2
+            <tfoot><tr><td data-count><td data-sum>`);
+        const sum = () => el.querySelector('[data-sum]').textContent;
+        assert(sum() === '3', 'the foot sums its column');
+        assert(el.querySelector('[data-count]').textContent === '2', 'the foot counts its column');
+
+        el.querySelector('#a1').cells[1].textContent = '10';
+        await flush();
+        assert(sum() === '12', 'the sum follows changed cell text');
+
+        el.querySelector('#a2').cells[1].innerHTML = '<b>5</b>';
+        await flush();
+        assert(sum() === '15', 'the sum follows changed cell markup');
+
+        el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><td>c<td>4');
+        await flush();
+        assert(sum() === '19', 'the sum follows an appended row');
+
+        el.querySelector('#a1').remove();
+        await flush();
+        assert(sum() === '9', 'the sum follows a removed row');
+        el.remove();
+    }
+
+
+    section('Column mapping survives colspan');
+    {
+        const el = await make(`<thead><tr><th>A<th>B<th>C
+            <tbody><tr><td colspan=2>wide<td>third`);
+        assert(titles(el) === 'A|C', 'a colspan cell belongs to the column it starts in');
+        assert(getTableColumns(el.querySelector('table')).length === 3, 'the table still has three columns');
+        el.remove();
+    }
+
+
+    out.textContent += `\n${failed ? `${failed} FAILED` : 'all passed'}\n`;
+    document.title = (failed ? `${failed} failed – ` : 'passed – ') + document.title;
+</script>
+
+</body>
+</html>

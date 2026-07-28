@@ -16,6 +16,7 @@ export default class U2Table extends HTMLElement {
         this.mutObs = new MutationObserver(mutations => {
             // console.log('check?', !this._isUpdating)
             if (this._isUpdating) return; // IGNORIEREN WÄHREND UPDATE
+            if (!this._watchCells && !mutations.some(m => isSkeleton(m.target))) return;
             this.columns.refresh();
             this.#checkTable();
         });
@@ -140,6 +141,8 @@ export default class U2Table extends HTMLElement {
         }
 
         const firstFootTr = this.querySelector(':scope > table > tfoot > tr');
+        // the foot aggregates read cell values, so such a table has to watch the cells as well
+        this._watchCells = !!firstFootTr?.querySelector('[data-sum], [data-avg], [data-count]');
         if (firstFootTr) {
             for (const td of firstFootTr.children) {
                 if (td.hasAttribute('data-sum')) {
@@ -165,6 +168,9 @@ export default class U2Table extends HTMLElement {
     }
 
 }
+
+/* Content inside a cell cannot move a column, so only changes to the table skeleton are worth a rebuild. */
+const isSkeleton = node => ['TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR'].includes(node.nodeName);
 
 /* Sort-listener that would also work for other tables, even globally. */
 function tableSortListener(e) {
