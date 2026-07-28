@@ -36,11 +36,11 @@ export default class U2Table extends HTMLElement {
         const firstHeadTr = this.querySelector(':scope > table > thead > tr');
         if (firstHeadTr) {
             firstHeadTr.addEventListener('click', tableSortListener);
-            for (const th of firstHeadTr.children) {
-                const title = th.innerText.trim();
-                const index = this.columns.indexOf(th);
-                for (const td of this.columns.item(index).cells) td.dataset.title = title;
-            }
+            const heads = [...firstHeadTr.children];
+            const titles = heads.map(th => th.innerText.trim()); // all reads first, a write in between costs the next read a reflow
+            heads.forEach((th, i) => {
+                for (const td of this.columns.item(this.columns.indexOf(th)).cells) td.dataset.title = titles[i];
+            });
         }
         for (const col of this.columns) {
             const colEl = col.colElement;
@@ -379,12 +379,10 @@ class Columns {
         return this._columns[i];
     }
 
-    // cellAt(rowIndex, colIndex) { // not used, but usefull
-    //     this._ensureMatrix(); 
-    //     const matrix = this._matrix;
-    //     if (rowIndex < 0 || rowIndex >= matrix.length || colIndex < 0) return null;
-    //     return matrix[rowIndex] ? matrix[rowIndex][colIndex] || null : null;
-    // }
+    cellAt(rowIndex, colIndex) {
+        this._ensureMatrix();
+        return this._matrix[rowIndex]?.[colIndex] ?? null;
+    }
 
     [Symbol.iterator]() {
         const length = this.length;
@@ -456,18 +454,9 @@ class Column {
         // Iteriere über die Zeilen dieser Gruppe
         for (const row of group.children) {
             if (row.tagName !== 'TR') continue;
-
-            for (const cell of row.children) {
-                // Wir nutzen die zentrale Logik der Columns-Klasse
-                // Das löst das Rowspan Problem automatisch
-                if (this.columns.indexOf(cell) === this.index) {
-                    cells.push(cell);
-                    // Wir brechen hier NICHT ab, da theoretisch durch colspan
-                    // eine Zelle relevant sein könnte, aber für eine *einzelne* Spalte 
-                    // gibt es pro Zeile meist nur eine Zelle (außer bei komplexen Verschachtelungen).
-                    // Bei Standard-Tabellen ist break ok, aber sicher ist sicher.
-                }
-            }
+            const cell = this.columns.cellAt(row.rowIndex, this.index);
+            // Die Matrix füllt auch die Slots, die ein colspan/rowspan von woanders her belegt
+            if (cell?.parentNode === row && this.columns.indexOf(cell) === this.index) cells.push(cell);
         }
         return cells;
     }
