@@ -126,6 +126,7 @@ export default class U2Accordion extends HTMLElement {
                 }
                 const title = item.querySelector('.title');
                 title.assign(node);
+                // todo: added again on every _build(); delegate on the shadow root instead
                 item.querySelector('.trigger').addEventListener("mousedown", e => {
                     if (e.detail === 2) e.preventDefault(); // Doppelklick
                 });

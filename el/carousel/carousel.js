@@ -278,6 +278,7 @@ U2Carousel.mode.scroll = {
 	init:function(){
 		this.slider.style.transform = ''; // if changed from mode=slide
 
+		// todo: init() runs on every mode change, so this stacks
 		this.slider.addEventListener('scroll',()=>{ // trigger on manual scroll
 			clearTimeout(this.scroll_sliding_timeout);
 			this.scroll_sliding_timeout = setTimeout(()=>{

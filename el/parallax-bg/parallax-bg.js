@@ -181,7 +181,7 @@ export default class U2ParallaxBg extends HTMLElement {
         return moved*(this.speed-1);
     }
 
-    positionizing = false;
+    positionizing = false; // todo: never set to true, so the guard below never holds
     positionize(){
         if (this.positionizing) return;
         requestAnimationFrame(()=>{

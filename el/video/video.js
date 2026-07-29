@@ -16,6 +16,9 @@ export default class U2Video extends HTMLElement {
         ];
 
     connectedCallback() {
+        // todo: on reconnect setupVideo() and setupKeyboardShortcuts() add their listeners
+        // a second time, because the light-dom <video> and the host survive; only the shadow
+        // dom is rebuilt by render()
         this.render();
         this.setupVideo();
         this.setupControls();
