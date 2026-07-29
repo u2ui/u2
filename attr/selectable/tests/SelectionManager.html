@@ -995,7 +995,60 @@ test('Click event uses composedPath', () => {
     span.click();
     
     assertEquals(items[1].ariaSelected, 'true', 'Parent option selected');
-    
+
+    sm.destroy();
+    lb.remove();
+});
+
+test('Keydown event uses composedPath', () => {
+    const lb = createListbox(3);
+    const sm = new SelectionManager(lb);
+    const items = sm.items();
+
+    const span = document.createElement('span');
+    items[1].appendChild(span);
+
+    span.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    assertEquals(document.activeElement, items[2], 'Moves on from the containing option');
+
+    // still relative to the option the event came from, not to the focused one
+    span.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    assertEquals(document.activeElement, items[0], 'Moves back from the containing option');
+
+    sm.destroy();
+    lb.remove();
+});
+
+test('Keydown finds the option through a shadow root', () => {
+    const lb = createListbox(3);
+    const sm = new SelectionManager(lb);
+    const items = sm.items();
+
+    const host = document.createElement('div');
+    items[1].appendChild(host);
+    const inner = document.createElement('span');
+    host.attachShadow({ mode: 'open' }).append(inner);
+
+    inner.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, composed: true }));
+
+    assertEquals(document.activeElement, items[2], 'Option found across the boundary');
+
+    sm.destroy();
+    lb.remove();
+});
+
+test('Space toggles the option the event came from', () => {
+    const lb = createListbox(3, true);
+    const sm = new SelectionManager(lb);
+    const items = sm.items();
+
+    const span = document.createElement('span');
+    items[1].appendChild(span);
+
+    span.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+
+    assertEquals(items[1].ariaSelected, 'true', 'Containing option toggled');
+
     sm.destroy();
     lb.remove();
 });
