@@ -77,7 +77,7 @@ function convertBytes(bytes, options) {
     }
 
     let i = bytes === 0 ? 0 : Math.floor(Math.log(Math.abs(bytes)) / Math.log(base));
-    i = Math.max(0, i);
+    i = Math.min(Math.max(0, i), compact.length - 1);
 
     let unit = 'B';
     if (i === 0) {

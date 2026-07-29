@@ -4,12 +4,12 @@ export default class U2Spot extends HTMLElement {
         this.targetSelector = this.getAttribute('target') || '*';
         this.activeSelector = this.getAttribute('active') || ':hover';
         this.fallbackSelector = this.getAttribute('fallback') || null;
-        this.parent = this.parentElement;
         this.currentTarget = null;
         this.resizeObserver = new ResizeObserver(() => this.updatePosition());
     }
 
     connectedCallback() {
+        this.parent = this.parentElement;
         ['mouseover', 'mouseout', 'focusin', 'focusout', 'click'].forEach(evt =>
             this.parent.addEventListener(evt, this)
         );
@@ -96,7 +96,7 @@ export default class U2Spot extends HTMLElement {
 
     disconnectedCallback() {
         ['mouseover', 'mouseout', 'focusin', 'focusout', 'click'].forEach(evt =>
-            this.parent.removeEventListener(evt, this, true)
+            this.parent.removeEventListener(evt, this)
         );
         this.resizeObserver?.disconnect();
         this.parent = null;

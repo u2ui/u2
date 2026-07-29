@@ -71,7 +71,7 @@ export default class U2Typewriter extends HTMLElement {
             this.pause();
             this.dispatchEvent(new CustomEvent('u2-typewriter-end', {bubbles:true}));
             if (this.hasAttribute('loop')) {
-                setTimeout(() => {
+                this.playInterval = setTimeout(() => {
                     this.reset();
                     this.play();
                 }, speed*12 + 1500);

@@ -3,8 +3,8 @@ import { SelectorObserver } from '../../js/SelectorObserver/SelectorObserver.js'
 let store = sessionStorage;
 const readStore = key => JSON.parse(store.getItem(key) || '{}');
 
-cookieStore && cookieStore.get("u2-cookiebanner")
-    .then(data => JSON.parse(data.value??'{}'))
+Promise.resolve(globalThis.cookieStore?.get("u2-cookiebanner")) // cookieStore is not everywhere available
+    .then(data => JSON.parse(data?.value??'{}'))
     .then(data=> {if (data.functional) store = localStorage; })
     .finally(() => elObserver.observe('[u2-store]'));
 

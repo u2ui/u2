@@ -35,11 +35,11 @@ export default class U2Textfit extends HTMLElement {
         //this.render = this.render.bind(this);
 
         this.addEventListener('input',this.render); // contenteditable
-        addEventListener('load',this.render); // e.g. font switch
         this._rObserver = new ResizeObserver(this.render);  // todo? render can in turn trigger the observer, should we intercept that?
     }
 
     connectedCallback() {
+        addEventListener('load',this.render); // e.g. font switch
         this.render();
         this._rObserver && this._rObserver.observe(this);
     }

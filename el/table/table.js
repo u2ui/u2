@@ -23,6 +23,9 @@ export default class U2Table extends HTMLElement {
         this.mutObs.observe(this, { childList: true, subtree: true, /* attributes: true, characterData: true*/});
         this.#checkTable();
     }
+    disconnectedCallback() {
+        this.mutObs.disconnect();
+    }
 
     #checkTable() {
         this.table = this.querySelector(':scope > table');

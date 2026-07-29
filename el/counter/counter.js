@@ -3,7 +3,7 @@ export default class U2Counter extends HTMLElement {
         super();
 
         this._start = 0;
-        this._end = Number(this.innerHTML.replace("'",''));
+        this._end = Number(this.innerHTML.replaceAll("'",''));
 
         this.animatedValue = 0;
 
@@ -47,6 +47,7 @@ export default class U2Counter extends HTMLElement {
     }
     disconnectedCallback() {
         this._observer.disconnect(this)
+        this._stop();
     }
     _animate(from, to) {
         const duration = 2000;

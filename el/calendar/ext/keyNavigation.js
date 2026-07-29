@@ -16,7 +16,7 @@ const calendarKeyDownFns = {
         calendar.prev();
         setTimeout(()=>{
             const nextTarget = grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
-            nextTarget.focus();
+            nextTarget ? nextTarget.focus() : grid.querySelector(':scope > :last-child').focus();
         }, 10);
     },
     'PageDown': (row, col, grid, calendar)=>{

@@ -380,9 +380,10 @@ class FileHandler extends TypeHandler {
             const tr = document.createElement('tr');
             tr.innerHTML = `
         <td width=9 class=img></td>
-        <td><div style="overflow:hidden;text-overflow:ellipsis;">${file.name}</div></td>
+        <td><div class=name style="overflow:hidden;text-overflow:ellipsis;"></div></td>
         <td width=9><u2-bytes>${file.size}</u2-bytes></td>
         <td width=9><button class=remove style="all:unset; padding-inline-start:.4em; cursor:pointer">✖</button></td>`;
+            tr.querySelector('.name').textContent = file.name;
 
             tr.querySelector('.remove').addEventListener('click', () => {
                 const list = new DataTransfer();

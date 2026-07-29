@@ -183,6 +183,7 @@ export default class U2Tree extends HTMLElement {
                         !this.items().length && this.removeAttribute('aria-expanded');
                     },100);
                 }).catch(data=>{
+                    this.ariaBusy = null; // allow retry
                     console.warn('todo: u2-tree: failed to load', data);
                 });
             }

@@ -61,7 +61,7 @@ const sure = {
     es: '¿Estás seguro?',
     it: 'Sei sicuro?',
     pt: 'Tem certeza?',
-    ua: 'Ви впевнені?',
+    uk: 'Ви впевнені?',
     ru: 'Вы уверены?',
     ja: '本気ですか？',
     ko: '확실합니까?',

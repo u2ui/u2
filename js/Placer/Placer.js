@@ -116,8 +116,8 @@ export class Placer {
     // follow:
     followElement(el){
         if (this.following === el) return;
+        if (!el) return this.unfollow();
         this.following = el;
-        if (!el) return;
         clearInterval(this.followInterval);
         this.followInterval = setInterval(this._followingAdjust,200);
         this._addAndRemoveListeners(true);

@@ -62,7 +62,7 @@ function cssLengthToPixels(length, element) {
     if (length === undefined) return undefined;
     length = length.trim();
     const value = parseFloat(length);
-    const unit = length.match(/\D+$/)[0] || '';
+    const unit = length.match(/\D+$/)?.[0] || '';
     switch (unit) {
         case '':
         case 'px':

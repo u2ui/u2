@@ -132,10 +132,10 @@ export default class U2Alert extends HTMLElement {
         stack.add(this);
 
         const hasActions = this.shadowRoot.querySelector('slot[name=action]')?.assignedElements().length > 0;
+        clearTimeout(this.hideTimeout);
         if (hasActions) {
             this.role = 'alertdialog';
         } else {
-            clearTimeout(this.hideTimeout);
             this.hideTimeout = setTimeout(() => this.hide(), duration);
         }
         return new Promise((resolve) => {

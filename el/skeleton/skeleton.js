@@ -66,6 +66,6 @@ function templateToHtml(template) {
 // img p
 // p
 // p
-// table(4,6)
+// table(4x6)
 // - button button
 // </u2-skeleton>

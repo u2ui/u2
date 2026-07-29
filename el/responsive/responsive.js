@@ -24,7 +24,7 @@ export default class U2Responsive extends HTMLElement {
     }
 
     get strategies() { 
-        return this.getAttribute('strategies')?.trim().split(/\s+/) 
+        return this.getAttribute('strategies')?.match(/\S+/g)
             || ['overflow-1','overflow-2','overflow-3','overflow-4','overflow-5','overflow-6']
     }
 
