@@ -10,7 +10,7 @@ const paraxBg = {
     },
     remove(element){
         pool.delete(element);
-        //pool.size === 0 && removeListeners(); // todo
+        pool.size === 0 && removeListeners();
     },
     positionize(){
         //requestAnimationFrame(()=>{
@@ -33,9 +33,11 @@ function setVPDimensions(){
 }
 setVPDimensions();
 
-const passive = {passive:true};
+let ctrl, resizeObserver;
 function addListeners(){
-	addEventListener('DOMContentLoaded', paraxBg.layout);
+    ctrl = new AbortController();
+    const passive = {passive:true, signal:ctrl.signal};
+	addEventListener('DOMContentLoaded', paraxBg.layout, passive);
 	addEventListener('load', ()=>{
         paraxBg.layout();
         paraxBg.positionize();
@@ -56,12 +58,16 @@ function addListeners(){
         paraxBg.positionize();
     },passive);
 
-    const rs = new ResizeObserver(entries => {
+    resizeObserver = new ResizeObserver(entries => {
         setVPDimensions();
         paraxBg.layout();
         paraxBg.positionize();
     })
-    rs.observe(document.body);
+    resizeObserver.observe(document.body);
+}
+function removeListeners(){
+    ctrl.abort();
+    resizeObserver.disconnect();
 }
 
 
@@ -74,7 +80,7 @@ export default class U2ParallaxBg extends HTMLElement {
         <style>
         :host {
             position:absolute;
-            inset:.-.4px;
+            inset: -.4px;
             overflow:clip;
         }
         .mover {
