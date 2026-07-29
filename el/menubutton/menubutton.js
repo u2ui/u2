@@ -1,10 +1,9 @@
 
 export default class U2Menubutton extends HTMLElement {
-    constructor() {
-        super();
-    }
     connectedCallback() {
         import('../../attr/focusgroup/focusgroup.js');
+        if (this._init) return; // listeners live on the element itself, so setup runs once, not per reconnect
+        this._init = true;
         setTimeout(() => {
 
             const menu = this.querySelector('menu');
@@ -21,42 +20,34 @@ export default class U2Menubutton extends HTMLElement {
 
             //button.popovertarget = menu;
 
-            if (!button._initialized) {
-                button.type = 'button';
-                button.ariaHasPopup = 'menu';
-                button.addEventListener('click', () => this.toggle());
-                button.addEventListener('keydown', (e) => { // keyup?
-                    if (e.key === 'ArrowDown') {
-                        this.open();
-                        nextFocusable(this.querySelector(':scope > menu')).focus();
-                        e.preventDefault();
-                    }
-                });
-                menu.addEventListener('toggle', e => {
-                    button.ariaExpanded = e.newState === 'open';
-                });
-            }
-            button._initialized = true;
+            button.type = 'button';
+            button.ariaHasPopup = 'menu';
+            button.addEventListener('click', () => this.toggle());
+            button.addEventListener('keydown', (e) => { // keyup?
+                if (e.key === 'ArrowDown') {
+                    this.open();
+                    nextFocusable(this.querySelector(':scope > menu')).focus();
+                    e.preventDefault();
+                }
+            });
+            menu.addEventListener('toggle', e => {
+                button.ariaExpanded = e.newState === 'open';
+            });
 
             this.addEventListener('focusout', (e) => { // popover makes this not?
                !this.contains(e.relatedTarget) && menu.hidePopover();
             });
 
-            // openby hover
-            let _openTimer;
+            const openby = (v) => this.getAttribute('openby')?.includes(v);
             this.addEventListener('mouseenter', () => {
-                if (this.getAttribute('openby')?.includes('hover')) {
-                    this._openTimer = setTimeout(() => this.open(), 140);
-                }
+                if (openby('hover')) this._openTimer = setTimeout(() => this.open(), 140);
             });
             this.addEventListener('mouseleave', () => {
                 clearTimeout(this._openTimer);
-                this.getAttribute('openby')?.includes('hover') && this.close();
+                openby('hover') && this.close();
             });
-
-            // openby focus
             this.addEventListener('focusin', () => {
-                this.getAttribute('openby')?.includes('focus') && this.open()
+                openby('focus') && this.open()
             });
 
             this.menu = menu;
