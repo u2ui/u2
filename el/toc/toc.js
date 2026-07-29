@@ -6,11 +6,17 @@ export default class U2Toc extends HTMLElement {
     }
 
     connectedCallback() {
+        this.abortCtrl = new AbortController();
+        const signal = this.abortCtrl.signal;
         requestAnimationFrame(() => this._build());
-        addEventListener('load', () => this._build());
+        addEventListener('load', () => this._build(), {signal});
         addEventListener('u2-url-change', ({detail})=>{
             !detail.sameDocument && setTimeout(()=>this._build(),20); // wait for navigator :(
-        });
+        }, {signal});
+    }
+
+    disconnectedCallback() {
+        this.abortCtrl.abort();
     }
 
     static observedAttributes = ['from', 'to', 'for'];
