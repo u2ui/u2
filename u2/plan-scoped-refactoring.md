@@ -18,26 +18,26 @@ Dazu müssen zwei Dinge zusammenkommen:
 
 - `el/{name}/{name}.js` definiert am Datei-Ende `customElements.define('u2-{name}', …)`
   als Side-Effect.
-- [`u2/auto.js`](u2/auto.js) beobachtet das DOM per `MutationObserver`, importiert bei
+- [`u2/auto.js`](auto.js) beobachtet das DOM per `MutationObserver`, importiert bei
   Gebrauch das passende Modul und verlässt sich darauf, dass **der Import** das Element
   global registriert.
 - **43 von 44** Element-Dateien sind bereits 1:1 `el/{name}/{name}.js` → `u2-{name}`
   und exportieren `export default class`.
 - Sonderfälle:
-  - [`el/calendar/calendar.js`](el/calendar/calendar.js) definiert **zwei** Elemente
+  - [`el/calendar/calendar.js`](../el/calendar/calendar.js) definiert **zwei** Elemente
     (`u2-calendar` + `u2-calendaritem`); `U2CalendarItem` ist aktuell **nicht** exportiert.
-  - [`el/system/styler.js`](el/system/styler.js) → `u2-system-styler` (Tag ≠ Ordnername,
+  - [`el/system/styler.js`](../el/system/styler.js) → `u2-system-styler` (Tag ≠ Ordnername,
     wird nicht über auto.js geladen).
 - Einige Elemente rendern **andere** u2-Elemente in ihr eigenes Shadow-DOM und
   verlassen sich auf den globalen Side-Effect, z.B.
-  [`el/accordion/accordion.js`](el/accordion/accordion.js) → `import('../ico/ico.js')`,
+  [`el/accordion/accordion.js`](../el/accordion/accordion.js) → `import('../ico/ico.js')`,
   ebenso `buttongroup`→`focusgroup`, `fields`→`responsive`, `rating`→`ico`.
 
 ## Zielarchitektur
 
 ### `U2Auto` — Factory statt globalem Modul-Side-Effect
 
-Der MutationObserver-Mechanismus aus [`u2/auto.js`](u2/auto.js) wird zu einer Klasse,
+Der MutationObserver-Mechanismus aus [`u2/auto.js`](auto.js) wird zu einer Klasse,
 die eine **Registry** und einen **Root** kapselt. Beim Erkennen eines Elements
 importiert sie das Modul und registriert es **selbst** aus den Exports — statt sich auf
 den Side-Effect zu verlassen.

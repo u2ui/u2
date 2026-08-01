@@ -1,10 +1,11 @@
 {
   "name": "u2ui",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "HTML Advanced: More Capabilities, Same Feel, Same Simplicity",
   "keywords": ["web-components","pattern-library","component-library","ui-toolkit","design-system"],
   "author": "Tobias Buschor",
   "license": "MIT",
+  "files": ["attr","class","css","el","js","theme","u2","!**/tests","!u2/old-stuff","!u2/experiments"],
   "repository": {
     "type": "git",
     "url": "https://github.com/u2ui/u2"

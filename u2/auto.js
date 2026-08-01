@@ -1,3 +1,5 @@
+// scoped registries: concept worked out in ./plan-scoped-refactoring.md
+
 const myUrl = new URL(import.meta.url);
 let debug = myUrl.searchParams.get('debug') != null;
 const root = new URL(myUrl.origin + myUrl.pathname + '/../../'); //console.log('%cuncomment localhost!','color:red;font-size:1.2em');
