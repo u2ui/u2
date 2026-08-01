@@ -1,4 +1,4 @@
-// deno run -A --unstable ./u2/tools/update.skill.js
+// deno run -A --no-lock ./u2/tools/update.skill.js
 
 import * as fs from 'https://deno.land/std@0.100.0/fs/mod.ts';
 
