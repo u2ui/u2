@@ -1,7 +1,5 @@
 # serviceWorker.js
 
-
-
 ## Install
 
 ```js

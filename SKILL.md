@@ -101,6 +101,7 @@ https://github.com/u2ui/u2
 - **SelectorObserver** - Watches elements matching a selector
 - **serviceWorker**
 - **shortcut** - Easy keyboard shortcuts
+- **Tour** - Simple guided tours for existing interfaces.
 
 **Naming:** `<u2-{name}>`, `.u2-{name}`, `[u2-{name}]`
 

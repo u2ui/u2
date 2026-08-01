@@ -8,20 +8,8 @@ Style `.u2TourInfo`, `.u2TourContent`, `.u2TourButtons`, `.u2TourBack`,
 
 ## Usage
 
-```js
-import { Tour } from '../Tour.js';
-
-const tour = new Tour([
-    {target:'#title', content:'This is the title.'},
-    {target:async () => { await openMenu(); return menu.querySelector('button'); }, content:'This button was loaded asynchronously.'},
-    {target:'#text', content:'And this is the description.'},
-]);
-
-start.onclick = () => tour.start();
-```
-
 ```html
-<button id=start>Start tour</button>
+<button id=start onclick="(new u2_Tour.Tour([{target:'#title', content:'This is the title.'}, {target:'#text', content:'And this is the description.'}]).start())">Start tour</button>
 <h1 id=title>Simple Tour</h1>
 <p id=text>A tour highlights existing elements.</p>
 ```
@@ -65,3 +53,4 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/Tour/Tour.j
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
+
