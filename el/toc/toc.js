@@ -1,5 +1,7 @@
 import '../../js/navigator/url-change-event.js';
 
+// possible todo: taking headingoffset into account https://w3c.github.io/hackathon-tpac-2024/submissions/bkardell.html
+
 export default class U2Toc extends HTMLElement {
     constructor() {
         super();
