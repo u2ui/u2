@@ -2,7 +2,8 @@
 let resentConfirmed = false;
 
 // submit
-// todo: test if it works inside shadow dom
+// idea: test if it works inside shadow dom
+// idea: Alt+click to skip confirmation? but how in the submit path?
 
 document.addEventListener('submit', e=>{
     if (resentConfirmed) return; // dont check again
