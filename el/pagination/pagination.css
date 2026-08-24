@@ -9,19 +9,19 @@ u2-pagination nav {
 
     & a {
         display: block;
-        padding: calc(var(--gap) / 2) var(--gap);
+        padding: calc(var(--gap, 1rem) / 2) var(--gap, 1rem);
         text-decoration: none;
         color: inherit;
         text-align: center;
     }
 
     & a:hover {
-        background: var(--color-light);
+        background: var(--color-light, color-mix(in srgb, CanvasText, Canvas 88%));
     }
 
     & a[aria-current="page"] {
         font-weight: bold;
-        background: var(--color);
+        background: var(--color, CanvasText);
         color: white;
     }
 }

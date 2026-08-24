@@ -7,7 +7,7 @@ u2-maintitlebar {
     width: env(titlebar-area-width, 100%);
     max-width:100%;
     background-color: var(--color, canvas);
-    color: var(--color-bg);
+    color: var(--color-bg, Canvas);
     z-index: 1000;
     font-size:min(14px, 1rem);
 

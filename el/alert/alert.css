@@ -6,7 +6,7 @@ u2-alert {
     display:block;
     padding: 1em;
     margin-block: 1em;
-    border: var(--line-width,1px) solid var(--color);
+    border: var(--line-width,1px) solid var(--color, currentColor);
     background-color: var(--color-bg, Canvas);
     width:100%;
     width:-webkit-fill-available;

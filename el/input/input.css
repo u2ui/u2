@@ -84,12 +84,12 @@ u2-input:where([type="stepper"]) {
 
 u2-input[type="file"] {
     html.u2DraggingFile & {
-        outline: .4rem solid var(--color-light, #0cf);
+        outline: .4rem solid var(--color-light, color-mix(in srgb, currentColor, transparent 60%));
         background-color:#ff6;
         outline-offset: .2rem;
     }
     &.u2DragOver.u2DragOver {
-        outline: .4rem solid var(--color, #0cf);
+        outline: .4rem solid var(--color, currentColor);
         outline-offset: .2rem;
     }
 }
