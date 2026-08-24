@@ -2,12 +2,14 @@
 in that root's own registry, css as adopted sheets. Unlike ./auto.js this touches nothing
 outside the root: no global stylesheets, no window.customElements, no localStorage, no ui.
 
-Sheets are parsed once and shared by every root that adopts them. Fetching them needs the
-same connect-src as ./u2.js already does for projects.json.
+In a shadow root the css is an adopted sheet, parsed once and shared by every other root;
+fetching it needs the same connect-src as ./u2.js already does for projects.json. In the
+document it stays a <link>, so the page keeps its say over u2's own rules.
 
 See ./plan-scoped-refactoring.md */
 
 import { repos } from './u2.js';
+import { importCss } from './utils.js';
 
 const base = new URL('../', import.meta.url).href; // this copy of u2 — another root may run another
 const scoped = 'customElementRegistry' in ShadowRoot.prototype;
@@ -36,12 +38,11 @@ export function attachShadow(host, options = {}) {
 }
 
 /** Watch a root and load the u2 parts its markup uses. Returns a function that stops watching.
-  * The registry is the root's own — define anywhere else and the root would not resolve it. */
-export function enhance(root, { registry = root.customElementRegistry ?? customElements } = {}) {
+  * The registry is the root's own — define anywhere else and the root would not resolve it.
+  * `onLoad(kind, url)` reports every file, for callers that keep a list of what a page needs. */
+export function enhance(root, { registry = root.customElementRegistry ?? customElements, onLoad } = {}) {
     const seen = new Set();
-    // adoptedStyleSheets lives on Document and ShadowRoot — enhance(document.documentElement)
-    // has to reach past the element to its document
-    const styles = root.adoptedStyleSheets ? root : root.getRootNode();
+    const isShadow = root instanceof ShadowRoot;
 
     // The repeat case must stay synchronous: a list of 50 identical elements calls this 50
     // times, and only the first may allocate. Nothing awaits it, so run() catches its own.
@@ -58,10 +59,20 @@ export function enhance(root, { registry = root.customElementRegistry ?? customE
 
         // css belongs in this root: a class or an attribute has no effect without it,
         // and element css styles the element from outside its own shadow
-        if (meta.css ?? (category !== 'attr')) styles.adoptedStyleSheets.push(await sheet(`${base}${id}/${name}.css`));
+        if (meta.css ?? (category !== 'attr')) {
+            const url = `${base}${id}/${name}.css`;
+            // A shadow root shares one parsed sheet with every other root. In the document a
+            // <link> keeps the cascade as it is — an adopted sheet would outrank the page's
+            // own stylesheets and break overrides. (Layers may make this moot one day.)
+            if (isShadow) root.adoptedStyleSheets.push(await sheet(url));
+            else importCss(url);
+            onLoad?.('css', url);
+        }
         if (!(meta.js ?? (category !== 'class'))) return;
 
-        const mod = await import(`${base}${id}/${name}.js`);
+        const jsUrl = `${base}${id}/${name}.js`;
+        const mod = await import(jsUrl);
+        onLoad?.('js', jsUrl);
         // attributes register nothing — their listeners sit on the document and cross shadow
         // boundaries on purpose, so they are not scoped by this root
         if (category !== 'el') return;

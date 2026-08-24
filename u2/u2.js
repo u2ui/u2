@@ -14,17 +14,17 @@ u2.el = function(elRepo, options){
 
 
 let cachedRepos = null;
-export async function repos(){
-    if (!cachedRepos) {
-        cachedRepos = {};
-        const data = await fetch(import.meta.url + '/../projects.json').then(res=>res.json());
-        for (const category in data) {
-            for (const repo in data[category]) {
-                cachedRepos[category+'/'+repo] = data[category][repo];
+/** The promise is the cache — caching the object handed a still-empty one to concurrent callers. */
+export function repos(){
+    return cachedRepos ??= fetch(import.meta.url + '/../projects.json')
+        .then(res => res.json())
+        .then(data => {
+            const flat = {};
+            for (const category in data) {
+                for (const repo in data[category]) flat[category+'/'+repo] = data[category][repo];
             }
-        }
-    }
-    return cachedRepos;
+            return flat;
+        });
 }
 
 

@@ -232,6 +232,19 @@ section('one class in several registries');
     }
 }
 
+section('onLoad reports what was loaded');
+{
+    const seen = [];
+    const host = document.createElement('div');
+    hosts.append(host);
+    const root = attachShadow(host);
+    enhance(root, { onLoad: (kind, url) => seen.push(kind + ' ' + url.split('/').pop()) });
+    root.innerHTML = '<u2-ico icon=edit>✎</u2-ico>';
+    await until(() => seen.length >= 2);
+    assert(seen.includes('css ico.css'), 'the css is reported');
+    assert(seen.includes('js ico.js'), 'the js is reported');
+}
+
 section('unknown parts do not throw');
 {
     const root = makeHost('<u2-nope></u2-nope>');

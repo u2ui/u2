@@ -16,19 +16,12 @@ if (debug) { // top level await safari >= 15.1
 }
 
 import {importCss} from './utils.js';
-import {repos} from './u2.js';
-
-const projects = await repos();
+import {enhance} from './enhance.js';
 
 let prio = 1;
 setTimeout(()=>prio = 2);
 setTimeout(()=>prio = 3, 2000);
 const needed = { js:{}, css:{} };
-function impJs(url){
-    if (!url) return;
-    needed.js[url] ??= prio;
-    return import(url);
-}
 function impCss(url, options={}){
     if (!url || url in needed.css) return;
     importCss(url, options).then(res=>{
@@ -64,49 +57,9 @@ impCss(rootUrl+'css/classless/more.css');
 ////////////////////////////////////////////////////////////////
 
 
-function newNode(node){
-    if (node.tagName.startsWith('U2-')) {
-        let name = node.tagName.substring(3).toLowerCase();
-        if (!customElements.get('u2-'+name)) {
-            loadProject('el', name);
-        }
-    }
-    for (const klass of node.classList) {
-        if (!klass.startsWith('u2-')) continue;
-        let name = klass.substring(3);
-        loadProject('class', name);
-    }
-    for (const attr of node.attributes) {
-        if (!attr.name.startsWith('u2-')) continue;
-        let name = attr.name.substring(3).replace(/-.*/,''); // example: u2-href-target => href
-        loadProject('attr', name);
-    }
-}
-
-function loadProject(category, name){
-    const id = category + '/' + name;
-    const meta = projects[id];
-    if (!meta) { console.warn('u2: project not found:', category+'/'+name); return; }
-    const hasJs = meta.js ?? (category==='el' || category==='attr');
-    const hasCss = meta.css ?? (category==='el' || category==='class');
-    hasCss &&  impCss(rootUrl + id + '/' + name + '.css');
-    hasJs && impJs(rootUrl + id + '/' + name + '.js');
-}
-
-function newNodeRoot(node){
-    if (!node.tagName) return;
-    newNode(node);
-    node.querySelectorAll('*').forEach(newNode);
-}
-var mo = new MutationObserver((entries)=>{
-    for (const entry of entries) {
-        for (const node of entry.addedNodes) newNodeRoot(node);
-    }
-});
-
+/** enhance() does the scanning and loading; this file only records it for the ui. */
 export function addShadowRoot(rootNode){
-    mo.observe(rootNode,{childList:true, subtree:true, characterData:false});
-    newNodeRoot(rootNode);
+    return enhance(rootNode, { onLoad: (kind, url) => needed[kind][url] ??= prio });
 }
 addShadowRoot(document.documentElement)
 
