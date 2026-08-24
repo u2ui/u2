@@ -17,8 +17,8 @@ export default class U2Element extends HTMLElement {
 
 /** Bring what a child needs into this element's shadow. Both start at once — the css is the
     part that shows, it must not wait for a module. Defaults follow the category: an el has
-    both, a class is css only, an attr is js only — `u2-skin` is the attr that styles, and it
-    stays an attr because it carries a value: useAttr('skin', {css:true}). */
+    both, a class is css only, an attr is js only — `u2-skin` is css and nothing else, and it
+    stays an attr because it carries a value: useAttr('skin', {css:true, js:false}). */
 function use(el, category, name, {css = category !== 'attr', js = category !== 'class'} = {}) {
     const path = `${base}${category}/${name}/${name}`;
     const warn = err => console.warn('u2: could not load', category + '/' + name, err);
