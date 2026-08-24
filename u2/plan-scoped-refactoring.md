@@ -131,6 +131,9 @@ sowohl U2Auto als auch der Datei-Side-Effect definieren können).
   - muss **vor** dem ersten scoped ShadowRoot geladen sein,
   - etwas Laufzeit-Overhead,
   - wenige Edge-Cases (`el.constructor`).
+- **Zu prüfen:** heisst die `attachShadow`-Option `registry` oder `customElementRegistry`?
+  Frühe Entwürfe und die Auslieferung weichen möglicherweise ab; betrifft `U2Auto` und
+  `attachU2Shadow` oben sowie die Feature-Detection.
 - Feature-Detection:
   ```js
   if (!('registry' in ShadowRoot.prototype))
@@ -140,11 +143,14 @@ sowohl U2Auto als auch der Datei-Side-Effect definieren können).
 
 ## CSS-Anmerkung
 
-Komponenten-CSS liegt bereits im jeweiligen Shadow der Elemente (z.B. accordion
-importiert `ico.css` in seinen eigenen ShadowRoot). Das globale `impCss` aus auto.js ist
-nur für classless/utilities/base zuständig. Für ein scoped Panel entscheidet man separat,
-ob und welche dieser globalen Stylesheets **in** das Panel-Shadow geladen werden — das ist
-unabhängig vom Element-Registry-Thema.
+Komponenten-CSS liegt teils im Shadow des Elements (accordion importiert `ico.css` in sein
+eigenes Shadow), teils stylt es das Element **von aussen**: `ico.css` setzt
+`u2-ico { --size }` und `u2-ico > svg { height }`. Solches CSS muss in den
+**konsumierenden** Root — ohne es hat `u2-ico` dort keine Grösse. `U2Auto` lädt Element-CSS
+deshalb in seinen Root, nicht ins Dokument.
+
+Das globale `impCss` (classless/utilities/base) bleibt davon unberührt; ob es zusätzlich ins
+Panel-Shadow soll, entscheidet man separat.
 
 ## Interne Element-Deps (der harte Teil)
 
@@ -201,7 +207,9 @@ Nach Phase 1: global unverändert, aber die gesamte Plumbing für scoped ist vor
 6. **Polyfill-Loader** + Feature-Detection einbauen.
 7. **`attachU2Shadow(host)`** exportieren.
 8. CMS-Panel: eigenes Shadow via `attachU2Shadow` erzeugen und dort die isolierte
-   u2-Instanz laufen lassen.
+   u2-Instanz laufen lassen. Scoped werden nur die `u2-*`-Elemente; die eigenen Elemente
+   des Konsumenten bleiben global — sie haben eindeutige Namen, existieren in einer
+   Version, und der Host muss von aussen auffindbar bleiben.
 
 ### Phase 3 — Isolation scharf schalten (der einzige echte Break)
 
