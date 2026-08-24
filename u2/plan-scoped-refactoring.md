@@ -1,336 +1,166 @@
-# Scoped-Refactoring: isolierte u2-Instanzen (z.B. CMS-Panel)
+# Scoped u2: mehrere u2-Versionen auf einer Seite
 
-## Ziel
+**Ziel:** Ein CMS-Panel (oder jedes andere eingebettete UI) läuft mit *seiner* u2-Version in
+*seinem* Shadow-Root, unabhängig davon, welche u2-Version die Kundenseite lädt. Grundlage sind
+Scoped Custom Element Registries — Chrome/Edge 146+, Safari 26+, Firefox noch nicht.
 
-Eine u2-Instanz **isoliert** in einem Shadow-DOM betreiben — konkreter Anwendungsfall: das CMS-Panel
-soll seine **eigene** u2-Version laden, ohne `window.customElements` zu verschmutzen
-oder mit der u2-Version der Host-Seite zu kollidieren.
+---
 
-Dazu müssen zwei Dinge zusammenkommen:
+## Stand (1.5.3)
 
-1. Element-Dateien registrieren sich **nicht mehr selbst global** (kein
-   `customElements.define(...)` als Import-Side-Effect).
-2. Registrierung läuft über eine **austauschbare Registry** — global
-   (`window.customElements`) oder scoped (`new CustomElementRegistry()`), gebunden
-   an einen ShadowRoot.
+**Funktioniert.** Das Panel kann u2-Elemente benutzen, ohne dass auf der Kundenseite etwas kaputt
+geht — auch wenn beide eine andere u2-Version fahren.
 
-## Ausgangslage
-
-- `el/{name}/{name}.js` definiert am Datei-Ende `customElements.define('u2-{name}', …)`
-  als Side-Effect.
-- [`u2/auto.js`](auto.js) beobachtet das DOM per `MutationObserver`, importiert bei
-  Gebrauch das passende Modul und verlässt sich darauf, dass **der Import** das Element
-  global registriert.
-- **43 von 44** Element-Dateien sind bereits 1:1 `el/{name}/{name}.js` → `u2-{name}`
-  und exportieren `export default class`.
-- Sonderfälle:
-  - [`el/calendar/calendar.js`](../el/calendar/calendar.js) definiert **zwei** Elemente
-    (`u2-calendar` + `u2-calendaritem`); `U2CalendarItem` ist aktuell **nicht** exportiert.
-  - [`el/system/styler.js`](../el/system/styler.js) → `u2-system-styler` (Tag ≠ Ordnername,
-    wird nicht über auto.js geladen).
-- Einige Elemente rendern **andere** u2-Elemente in ihr eigenes Shadow-DOM und
-  verlassen sich auf den globalen Side-Effect, z.B.
-  [`el/accordion/accordion.js`](../el/accordion/accordion.js) → `import('../ico/ico.js')`,
-  ebenso `buttongroup`→`focusgroup`, `fields`→`responsive`, `rating`→`ico`.
-
-## Zielarchitektur
-
-### `U2Auto` — Factory statt globalem Modul-Side-Effect
-
-Der MutationObserver-Mechanismus aus [`u2/auto.js`](auto.js) wird zu einer Klasse,
-die eine **Registry** und einen **Root** kapselt. Beim Erkennen eines Elements
-importiert sie das Modul und registriert es **selbst** aus den Exports — statt sich auf
-den Side-Effect zu verlassen.
-
-```js
-class U2Auto {
-  // registry defaults to the shadow's own registry, else the global one
-  constructor(root, registry = root.registry ?? customElements) {
-    this.root = root;
-    this.registry = registry;
-    this.mo = new MutationObserver(entries => {
-      for (const entry of entries)
-        for (const node of entry.addedNodes) this._newNodeRoot(node);
-    });
-    this.mo.observe(root, { childList: true, subtree: true });
-    this._newNodeRoot(root);
-  }
-
-  async _loadEl(name) {
-    const tag = 'u2-' + name;
-    if (this.registry.get(tag)) return;
-    const mod = await import(rootUrl + 'el/' + name + '/' + name + '.js');
-    if (!this.registry.get(tag)) this.registry.define(tag, mod.default);
-    for (const [t, cls] of Object.entries(mod.extraElements ?? {}))
-      if (!this.registry.get(t)) this.registry.define(t, cls);
-  }
-  // … _newNode / _newNodeRoot / class + attr handling wie bisher
-}
-```
-
-- **Global** (heutiges Verhalten): beim Laden von `auto.js` wird automatisch
-  `new U2Auto(document.documentElement)` erzeugt → Registry = `customElements`.
-- **Scoped**: `new U2Auto(shadowRoot, scopedRegistry)` → registriert **nur** in dieses
-  Shadow, `window.customElements` bleibt unberührt.
-
-### Warum die Registry ein Parameter bleibt (nicht lazy ableitbar)
-
-Eine scoped Registry wird **bei `attachShadow({ registry })` gebunden** und lässt sich
-danach nicht mehr an einen bestehenden ShadowRoot hängen. Wenn U2Auto den ShadowRoot
-bekommt, ist es zum *Erzeugen* der Registry längst zu spät.
-
-- **Zurücklesen** geht über den nativen Getter `ShadowRoot.prototype.registry` → daher
-  der Default `registry = root.registry ?? customElements`.
-- Aber der Aufrufer muss die Registry **vorher** erzeugt und beim `attachShadow`
-  mitgegeben haben. `el.shadowRoot ? new CustomElementRegistry() : customElements` wäre
-  **falsch**: die dort neu erzeugte Registry ist mit nichts verdrahtet.
-- Root-Typ-Check: `root instanceof ShadowRoot` (nicht `el.shadowRoot`, denn U2Auto
-  bekommt den Root selbst, nicht den Host).
-
-### Convenience-Helper zum Attachen
-
-Da Registry-Erzeugung und `attachShadow` zusammengehören:
-
-```js
-function attachU2Shadow(host, opts = {}) {
-  const registry = new CustomElementRegistry();
-  const shadow = host.attachShadow({ mode: 'open', ...opts, registry });
-  new U2Auto(shadow, registry);
-  return shadow;
-}
-```
-
-### `define()`-Helper — der zentrale Seam
-
-Statt roher `customElements.define(...)`-Aufrufe eine geführte, idempotente Funktion:
-
-```js
-// u2/define.js
-export function define(tag, cls, registry = customElements) {
-  if (!registry.get(tag)) registry.define(tag, cls);
-}
-```
-
-Der Guard macht Doppel-Registrierung harmlos (wichtig für die Übergangsphase, in der
-sowohl U2Auto als auch der Datei-Side-Effect definieren können).
-
-## Firefox / Scoped Custom Element Registries
-
-- Native `attachShadow({ registry })`, `new CustomElementRegistry()` und der Getter
-  `ShadowRoot.prototype.registry`: **Chrome/Safari ja, Firefox noch nicht.**
-- Lösung: der offizielle Polyfill
-  **`@webcomponents/scoped-custom-element-registry`**.
-- **Wichtig:** der Polyfill **behält den Tag-Namen** bei (`u2-foo` bleibt `u2-foo`).
-  Er renamed nicht, sondern patcht `attachShadow`, den `innerHTML`-Setter,
-  `createElement`, `importNode` etc. und wendet im jeweiligen Scope den richtigen
-  Konstruktor auf denselben Tag an.
-  → **CSS `u2-foo {}` matcht weiterhin**, Shadow-`<style>` sowieso.
-- Der „Name ändert sich / CSS bricht"-Fall gilt nur bei selbstgebautem Poor-man's-Scoping
-  (`u2-foo-v2` pro Scope) — das machen wir **nicht**.
-- Realkosten des Polyfills:
-  - muss **vor** dem ersten scoped ShadowRoot geladen sein,
-  - etwas Laufzeit-Overhead,
-  - wenige Edge-Cases (`el.constructor`).
-- **Namen (recherchiert, nicht `registry` — das war ein Entwurfsname):**
-  `host.attachShadow({ customElementRegistry })`, Rücklesen über
-  `root.customElementRegistry`, programmatisch
-  `document.createElement(tag, { customElementRegistry })`, nachträglich
-  `registry.initialize(root)`. Chrome/Edge 146+, Safari 26+, Firefox noch nicht.
-- Feature-Detection:
-  ```js
-  if (!('customElementRegistry' in ShadowRoot.prototype))
-    await import('.../scoped-custom-element-registry.min.js');
-  ```
-  Einmal am Anfang laden, danach funktioniert scoped überall gleich.
-
-## CSS-Anmerkung
-
-Komponenten-CSS liegt teils im Shadow des Elements (accordion importiert `ico.css` in sein
-eigenes Shadow), teils stylt es das Element **von aussen**: `ico.css` setzt
-`u2-ico { --size }` und `u2-ico > svg { height }`. Solches CSS muss in den
-**konsumierenden** Root — ohne es hat `u2-ico` dort keine Grösse. `U2Auto` lädt Element-CSS
-deshalb in seinen Root, nicht ins Dokument.
-
-Das globale `impCss` (classless/utilities/base) bleibt davon unberührt; ob es zusätzlich ins
-Panel-Shadow soll, entscheidet man separat.
-
-**Was in einen Root gehört und was nicht** — die Trennlinie verläuft nach Selektor-Reichweite,
-nicht nach Datei:
-
-| | |
+| Datei | Rolle |
 |---|---|
-| vererbend (Tokens, `line-height`, `hyphens`, `font-family`) | kommt durch die Grenze — **nicht** in `:host` setzen, das wäre ein Zurücksetzen |
-| Element-/Universalselektoren (`*{box-sizing}`, `input{font:inherit}`, `img{max-inline-size}`, `table`, `a`, `h1`) | hält an der Grenze — **nur dafür** adoptiert man ein Sheet |
-| Host-Kasten (`block-size`, `overflow-y`, `scrollbar-gutter`) | gehört gar nicht auf `:host` |
+| [`u2/enhance.js`](enhance.js) | scannt einen Root, lädt Elemente/Klassen/Attribute nach, registriert sie in **dessen** Registry. `attachShadow(host, opts)` als Convenience. Ein `MutationObserver` hält es aktuell — dieselbe Mechanik wie `auto.js`, nur ohne globale Nebenwirkungen. |
+| [`u2/Element.js`](Element.js) | Basisklasse. `attachShadow()` belegt `customElementRegistry` vor, `useEl`/`useClass`/`useAttr` holen Kinder samt CSS ins eigene Shadow. Hängt an nichts. |
+| [`u2/auto.js`](auto.js) | unverändert im Verhalten, benutzt intern `enhance` |
+| [`u2/tests/enhance.test.html`](tests/enhance.test.html) | Browser-Test, 35 grün, 1 bekannte Lücke |
 
-`input, textarea, select, button { font: inherit }` ist der wichtigste: es *stellt* Vererbung
-erst her, die UA-Styles brechen. Ohne diese Regel erbt ein Formularfeld im Root nichts.
+`enhance` bindet `css/norm/norm.css` und `css/base/base.css` automatisch ein. Elemente definieren
+sich weiterhin selbst global, aber mit Guard (`customElements.get(tag) || define(...)`) — deshalb
+wirft eine zweite u2-Version nicht mehr.
 
-Wer in einem Root wirklich neu beginnen will, setzt die Werte selbst — die Sheets tun es nicht
-für ihn.
+### Zwei Regeln, die daraus folgen
 
-## Interne Element-Deps (der harte Teil)
+**1. Wer ein u2-Element in sein eigenes Shadow rendert, erbt von `U2Element`.** Das ist keine
+Migration — von 41 Elementen tun das genau sechs: `alert`, `accordion`, `calendar`, `rating`
+(je `ico`), `input` (`ico`, `bytes`, `badge`) und `fields` (`responsive`). Die übrigen 35 öffnen
+entweder kein Shadow oder rendern nichts von u2 hinein.
 
-Elemente, die andere u2-Elemente in ihr **eigenes** Shadow rendern, dürfen sich nicht mehr
-auf den globalen Side-Effect verlassen. In einer scoped Registry ist `u2-ico` sonst nicht
-sichtbar.
+**2. Kind-CSS gehört in den Root, in dem das Kind steht.** u2-Elemente haben meist *kein* eigenes
+Shadow — `ico` schreibt sein SVG ins Light DOM, und `ico.css` stylt `u2-ico { … }` von aussen. Ein
+Kind kann sich nicht selbst stylen, der Vater muss die CSS holen. Das macht jetzt `use*()`.
 
-**Gemessen** ([u2/tests/enhance.test.html](tests/enhance.test.html), Chrome nativ):
+### Warum keine Deklaration am Element
 
-- Ein im scoped Root geparstes Element trägt die Registry: `el.customElementRegistry === outer`.
-- Aber `el.attachShadow({mode})` **ohne** die Option bekommt `window.customElements` — die
-  Vererbung passiert *nicht* automatisch. **Isolation komponiert nicht von selbst.**
-- Dieselbe Klasse darf in **mehreren** Registries definiert werden. Ein Element braucht darum
-  keine Singleton zu importieren, es folgt seinem Root.
+Ein `static hasCss` müsste erst per JS geladen werden, bevor die CSS überhaupt startet — es macht
+den wichtigeren Request garantiert langsamer. `projects.json` wäre ebenfalls erst ein Fetch (und ist
+Enhance-Territorium). Also beides parallel und bedingungslos; die Defaults kommen aus der Kategorie:
 
-Ein Element muss seine Registry deshalb aktiv weiterreichen, und zwar an beiden Stellen:
-
-```js
-const registry = this.customElementRegistry ?? customElements;
-this.attachShadow({ mode: 'open', customElementRegistry: registry });
-
-import U2Ico from '../ico/ico.js';
-registry.define('u2-ico', U2Ico);   // nicht global
-```
-
-Betroffen: `accordion`→`ico`, `alert`→`ico`, `calendar`→`ico`, `rating`→`ico`,
-`input`→`ico`+`bytes`, `fields`→`responsive`.
-
-> Ohne diesen Schritt ist die Isolation genau eine Ebene tief: das Panel-Root benutzt seine
-> Version, alles was ein Element in sein *eigenes* Shadow rendert, kommt aus der globalen —
-> also aus der Version der Host-Seite. `enhance` kann das nicht beheben, sein
-> MutationObserver endet an jeder Shadow-Grenze.
-
-## Migrationsplan (phasenweise)
-
-### Phase 1 — Additive Vorbereitung (non-breaking)
-
-Ziel: alles vorbereiten, ohne bestehendes Verhalten zu ändern.
-
-1. **`export default` überall garantieren** (fehlt nur in 3 Dateien).
-   Sekundär-Klassen mit exportieren:
-   ```js
-   // el/calendar/calendar.js
-   export const extraElements = { 'u2-calendaritem': U2CalendarItem };
-   ```
-2. **`u2/define.js`** anlegen (siehe oben).
-3. **Datei-Enden umstellen**: `customElements.define('u2-foo', U2Foo)` → `define('u2-foo', U2Foo)`.
-   Verhalten identisch (global), aber Registrierung läuft durch den Seam.
-   → Codemod über die 44 Dateien.
-4. **Interne Deps entkoppeln**: Side-Effect-Importe zwischen Elementen auf
-   `import Cls; define('u2-x', Cls)` umstellen. Dank Guard harmlos-redundant, aber schon
-   registry-agnostisch.
-5. **`U2Auto`-Klasse** einführen; `auto.js` erzeugt die globale Default-Instanz
-   (`new U2Auto(document.documentElement)`) und registriert aus den Exports statt aus dem
-   Side-Effect.
-
-Nach Phase 1: global unverändert, aber die gesamte Plumbing für scoped ist vorhanden.
-
-### Phase 2 — Scoped-Betrieb ermöglichen
-
-6. **Polyfill-Loader** + Feature-Detection einbauen.
-7. **`attachU2Shadow(host)`** exportieren.
-8. CMS-Panel: eigenes Shadow via `attachU2Shadow` erzeugen und dort die isolierte
-   u2-Instanz laufen lassen. Scoped werden nur die `u2-*`-Elemente; die eigenen Elemente
-   des Konsumenten bleiben global — sie haben eindeutige Namen, existieren in einer
-   Version, und der Host muss von aussen auffindbar bleiben.
-
-### Phase 3 — Isolation scharf schalten (der einzige echte Break)
-
-9. **Self-`define()` am Datei-Ende entfernen**, sodass ein direktes `import 'foo.js'`
-   nicht mehr registriert. Erst dann leakt nichts mehr global.
-   → Ein-Zeilen-Codemod pro Datei; auto.js/U2Auto definieren zu dem Zeitpunkt längst selbst.
-
-> **Ehrlicher Haken:** *volle* Isolation im Panel gibt es erst mit Phase 3. Solange die
-> Dateien sich selbst global definieren, leakt jedes im Panel geladene Element in
-> `window.customElements`. Phase 2 lässt sich aber komplett fertig testen; nur die
-> Leak-Freiheit kommt zuletzt.
-
-## Breaking Changes & Migrationsanweisungen
-
-Erst ab **Phase 3** relevant:
-
-1. **`import 'u2/el/foo/foo.js'` definiert das Element nicht mehr** — nur noch der Export
-   existiert. Grösster Bruch.
-   - *Migration:* entweder auto.js verwenden (keine Änderung nötig), oder manuell:
-     ```js
-     import U2Foo from 'u2/el/foo/foo.js';
-     customElements.define('u2-foo', U2Foo); // bzw. define(...) aus u2/define.js
-     ```
-2. **Inter-Element-Side-Effect-Importe** greifen nicht mehr (bereits in Phase 1 auf
-   explizites `define()` umgestellt → kein Bruch, wenn Phase 1 gemacht wurde).
-3. **`extraElements`** (calendaritem) muss explizit registriert werden (macht U2Auto).
-
-## Offen / später
-
-- **Attribute sind kein Registry-Problem.** Sie kollidieren nicht über Namen, sie
-  *installieren sich doppelt*, wenn zwei u2-Kopien laufen. Alle 10 hängen ihre Listener an
-  `document`, vier davon (`confirm`, `dropzone`, `draghandle`, `movable`) benutzen
-  `composedPath()` — sie arbeiten absichtlich über Shadow-Grenzen hinweg, und sie an einen
-  Scope zu binden würde sie kaputtmachen.
-  Zu klären ist deshalb nicht „wie scopen wir", sondern zweierlei: **einmal pro Dokument**
-  installieren, und **pro Modul** entscheiden, welche Wirkung wirklich subtree-lokal ist.
-
-## Erledigt in 1.5.2 — `U2Element`
-
-[`u2/Element.js`](Element.js): Basisklasse, die den Elementen die Registry-Arbeit abnimmt.
-`attachShadow()` belegt `customElementRegistry: this.customElementRegistry` vor — alle
-Aufrufstellen bleiben dadurch **wortgleich wie vorher**. `this.useEl(name)` importiert
-`el/<name>/<name>.js` und definiert die Klasse in die eigene Registry (`?? customElements`).
-Async ist unkritisch: ein Element upgraded auch, wenn es erst nach dem `innerHTML` definiert wird.
-
-Dazu `useClass(name)` und `useAttr(name)`. Alle drei holen ausserdem die **CSS ins eigene Shadow** —
-u2-Elemente haben meist kein eigenes Shadow (`ico` schreibt sein SVG ins Light DOM, `ico.css` stylt
-`u2-ico { … }` von aussen), CSS gehört deshalb immer dem Root, in dem das Kind steht. Der Vater
-musste sie bisher von Hand per `@import` holen, und `fields` vergass `responsive.css` dabei.
-
-**Keine Deklaration am Kind.** Ein `static hasCss` müsste erst per JS geladen werden, bevor die CSS
-überhaupt startet — es macht den wichtigeren Request garantiert langsamer. `projects.json` wäre
-ebenfalls erst ein Fetch (und ist Enhance-Territorium). Also beides parallel, bedingungslos, und die
-Defaults kommen aus der Kategorie — dieselben wie in `enhance`:
-
-| | js | css | Dateien |
+| | js | css | Dateien im Repo |
 |---|---|---|---|
 | `el` | ja | ja | js 41/41, css 37/41 |
 | `class` | **nein** | ja | js 0/8, css 8/8 |
 | `attr` | ja | **nein** | js 15/16, css 1/16 |
 
-Die Ausreisser gehören an die *Aufrufstelle*, nicht als Feld an alle 41 Elemente:
-`useAttr('skin', {css:true})`. `skin` bleibt dauerhaft ein Attribut, weil es einen Wert trägt —
-als Klasse ginge das erst mit einem Selektor wie `.u2-class-*`.
+Ausreisser gehören an die Aufrufstelle, nicht als Feld an alle 41 Elemente:
+`useAttr('skin', {css:true, js:false})`. `skin` bleibt dauerhaft ein Attribut, weil es einen Wert
+trägt — als Klasse ginge das erst mit einem Selektor wie `.u2-class-*`.
 
-**Reihenfolge:** adoptierte Sheets kommen *nach* den Tree-Styles, die Kind-CSS würde also die
-Overrides des Vaters schlagen. `use()` macht darum `unshift`, nicht `push` — sobald der `<style>`
-eines Vaters auch mal adoptiert wird, steht er hinter den Kindern, unabhängig davon, wann deren
-Sheet eintrifft. Solange der Vater ein Tree-`<style>` hat, muss er die Kind-Regeln
-**überspezifizieren**. Ein echter Fall bestand: `fields` überschrieb `u2-responsive {display:block}`
-mit `u2-responsive {display:grid}` — Gleichstand, jetzt `#container`.
+`v1.5.3` ist veröffentlicht; qino zeigt darauf — beide Pins,
+[`qino/deno.json`](../../qinojs/qino/deno.json) und `core/lib/util.ts`, ein Test wacht über den
+Gleichlauf. `deno check --all qino/` ist grün.
 
-`U2Element` ist keine Migration, sondern eine Regel: **wer ein u2-Element in sein eigenes Shadow
-rendert, erbt davon.** Das sind heute genau diese sechs — die übrigen 35 öffnen entweder kein
-Shadow oder rendern nichts von u2 hinein und brauchen die Basisklasse nicht.
+---
 
-| Modul | Kind |
-|---|---|
-| `alert`, `accordion`, `calendar`, `rating` | `ico` |
-| `input` | `ico`, `bytes` |
-| `fields` | `responsive` |
+## Offen
+
+### 1. Attribute — der eigentlich ungelöste Teil
+
+Elemente sind isoliert, Attribute nicht. Ein Attribut-Modul hängt beim Auswerten Listener ans
+`document`:
 
 ```js
-export default class U2Alert extends U2Element {
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});   // erbt die Registry
-        this.useEl('ico');                   // Klasse in die Registry + ico.css ins Shadow
-        this.useAttr('focusgroup');          // nur js
+document.addEventListener('click', e => { … e.composedPath()[0].closest('[u2-confirm]') … });
 ```
 
-Ausserhalb eines scoped Roots ist `this.customElementRegistry` `undefined`, die Option gilt als
-abwesend und `useEl()` fällt auf `customElements` zurück — Verhalten unverändert.
+Der Radius ist enger als es klingt: ein Attribut wirkt nur auf Elemente, die seinen Namen tragen.
+Hat die Kundenseite kein `u2-confirm`, merkt sie von der Panel-Nutzung nichts. Drei echte Risiken,
+nach Schwere:
 
-Nicht betroffen, bewusst: **Attribute** (`focusgroup`, `draghandle`, `dropzone`, …) sind kein
-Registry-Thema; `table` erzeugt sein `u2-ico` im **Light DOM**, wo `enhance` es ohnehin sieht;
-`input`s `u2-badge` ist eine *Klasse*, kein Tag; `tree`s `u2-ico` ist auskommentiert.
-`U2CalendarItem` erbt `U2Element` mit, obwohl sein Shadow heute keine Custom Elements enthält.
+**a) `draghandle` verändert die Kundenseite bedingungslos.** [`attr/draghandle/draghandle.js:1`](../attr/draghandle/draghandle.js)
+importiert statisch einen Fremd-Polyfill von `bernardo-castilho.github.io` — ein Drittanbieter-Script
+auf einer fremden Seite, plus CSP-Problem. Das CSS daneben ist harmlos, es hängt an
+`[u2-draghandle]`. **Im Panel bis auf Weiteres meiden.**
 
-- Scoped-Verkettung von Kind-Elementen in die Eltern-Registry (siehe „Interne Deps").
+**b) Doppelinstallation.** Lädt die Kundenseite dasselbe Attribut aus ihrer Version, hängen zwei
+Listener-Sätze am Dokument → doppelte Confirm-Dialoge, doppelte Drops. Der realistische Alltagsfall.
+
+**c) Version-Hijack.** Wer zuerst lädt, gewinnt — wie bei Elementen vor Phase 3.
+
+**Billiger Zwischenschritt (nicht breaking, ~16 Einzeiler):** ein Idempotenz-Guard pro Attribut, das
+Gegenstück zu `customElements.get()` — ein Symbol am `document`, die zweite Kopie installiert nicht.
+Erledigt (b) vollständig; aus „zwei kaputte Kopien" wird „eine funktionierende". (c) bleibt.
+
+**Richtige Lösung (1.6.0):** Attribute exportieren `install(root)` statt sich selbst zu installieren,
+`useAttr` installiert in den Root. **Der Haken:** fünf von ihnen — `confirm`, `dropzone`,
+`draghandle`, `movable`, `selectable` — benutzen `composedPath()` *absichtlich*, um über
+Shadow-Grenzen hinweg zu arbeiten. Für die ist „der Root" nicht die richtige Grenze. Das geht Modul
+für Modul und ist eine Design-, keine Fleissarbeit.
+
+**Nebenbefund, unabhängig davon:** manche Attribute funktionieren im Shadow-DOM *heute schon* nicht
+sauber. `dropzone` sucht seine Zonen per [`document.querySelectorAll('[u2-dropzone]')`](../attr/dropzone/dropzone.js#L17),
+was in einen Shadow-Root nicht hineinsieht — die Events kommen per `composedPath` an, die
+Buchhaltung nicht.
+
+### 2. Phase 3 — Selbstregistrierung entfernen (die letzte Lücke)
+
+Die eine verbleibende rote Zeile im Browser-Test: `el/ico/ico.js` registriert sich weiterhin in
+`window.customElements`.
+
+**Was es bringt:** Ladereihenfolge wird egal. Heute gilt: lädt das **Panel zuerst**, definiert es
+`u2-ico` aus seiner Version global; danach sieht das u2 der Kundenseite den Namen belegt,
+überspringt still — und **die Kundenseite bekommt die Panel-Version**. Kein Fehler, kein Hinweis.
+Umgekehrt (Kunde zuerst) ist alles korrekt.
+
+**Was es kostet:** nicht die 16 Repo-Seiten, die ein Element-JS direkt per Script-Tag laden
+(98 weitere gehen über `auto.js` und wären unberührt), sondern dass
+
+```html
+<script src="…/el/buttongroup/buttongroup.js" type=module async></script>
+```
+
+das **dokumentierte Installations-Snippet** ist — [`u2/tools/update.repos.json.js:159`](tools/update.repos.json.js#L159)
+generiert es in jedes README. Neu wäre:
+
+```html
+<link href="…/el/buttongroup/buttongroup.css" rel=stylesheet>
+<script type=module>
+import U2Buttongroup from '…/el/buttongroup/buttongroup.js';
+customElements.define('u2-buttongroup', U2Buttongroup);
+</script>
+```
+
+Das ist der geplante 1.6.0-Break: 41 Dateien, plus READMEs und SKILL.md neu generieren.
+
+### 3. CSS-Reihenfolge — zwei Wege, der zweite ist besser
+
+Adoptierte Sheets kommen **nach** den Tree-Styles. `use()` macht darum `unshift` statt `push` — der
+Kind-Sheet landet vorne, egal wann er eintrifft. Solange ein Vater sein CSS aber als Tree-`<style>`
+im `innerHTML` hat, gewinnt die Kind-CSS bei Gleichstand trotzdem.
+
+Ein echter Fall bestand: `fields` überschrieb `u2-responsive {display:block}` mit `display:grid`,
+Gleichstand — jetzt `#container`. Bei `alert` und `accordion` war die Eltern-Regel höher
+spezifiziert, dort war nichts zu tun.
+
+**Weg A — die sechs `<style>`-Blöcke adoptieren.** Dann bestimmt die Array-Reihenfolge
+`[kind, eltern]` das Ergebnis statt der Spezifität. Zweiter Gewinn: ein Sheet auf Modulebene wird
+einmal geparst statt einmal pro Instanz — heute parst ein `u2-alert` seinen Style-Block bei jeder
+Instanz neu. Mechanisch, sechs Dateien, jede optisch nachzuprüfen.
+
+**Weg B — Element-CSS in einen Layer legen.** `@layer u2.el { … }` in `ico.css` & Co. Ungelayerte
+Regeln schlagen gelayerte **immer**, unabhängig von Spezifität und Reihenfolge. Damit gewinnt jeder
+Vater automatisch, ohne `unshift`, ohne Umbau der sechs, ohne Spezifitäts-Nachrechnen — und
+Anwender-Overrides werden allgemein einfacher statt schwerer. Bestehende Overrides brechen nicht:
+sie sind heute ungelayert und werden dadurch stärker, nie schwächer.
+
+Der Haken, den es wirklich gibt: **die Layer-Reihenfolge muss einmal deklariert werden.** u2 hat
+schon `@layer normalize` in `base.css`/`norm.css`; kommt `u2.el` dazu, entscheidet die
+Erstbegegnung — und `enhance` adoptiert asynchron. Die Antwort ist billig: `enhance` adoptiert als
+allererstes ein Mini-Sheet mit `@layer u2.norm, u2.base, u2.el, u2.class;`. Danach ist die Ordnung
+in jedem Root festgelegt, egal in welcher Reihenfolge die Sheets eintreffen.
+
+Zweiter Haken, kleiner: `!important` kehrt die Layer-Reihenfolge um, und Anwender, deren *eigenes*
+CSS gelayert ist, konkurrieren dann nach Layer-Ordnung statt nach „ungelayert schlägt gelayert".
+Beides selten, beides dokumentierbar.
+
+**Weg B macht Weg A überflüssig** — bis auf den Parse-Gewinn, der ein eigener, unabhängiger
+Optimierungsschritt bleibt.
+
+### 4. Firefox
+
+Ohne Scoped Registries fällt `enhance` auf `customElements` zurück und alles verhält sich wie
+bisher — kein Fehler, aber auch keine Isolation. Fürs CMS-Panel bewusst als Voraussetzung gesetzt.
+Wenn Firefox nachzieht, ist nichts zu tun.
