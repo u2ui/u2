@@ -118,6 +118,15 @@ section('sheets are parsed once and shared');
     assert(sheetA && sheetA === sheetB, 'both roots adopt the same CSSStyleSheet object');
 }
 
+section('norm and base come along');
+{
+    const root = makeHost('');
+    const has = (frag) => root.adoptedStyleSheets.some(s => [...s.cssRules].some(r => r.cssText.includes(frag)));
+    await until(() => root.adoptedStyleSheets.length >= 2);
+    assert(has('box-sizing'), 'base.css is in the root — a root cannot inherit box-sizing');
+    assert(!has('--color-text:'), 'variables.css is not — tokens reach the root by inheritance');
+}
+
 section('markup added later');
 {
     const root = makeHost('');
@@ -237,12 +246,13 @@ section('onLoad reports what was loaded');
     const seen = [];
     const host = document.createElement('div');
     hosts.append(host);
-    const root = attachShadow(host);
+    const root = host.attachShadow({ mode: 'open' }); // native: enhance() runs once, below
     enhance(root, { onLoad: (kind, url) => seen.push(kind + ' ' + url.split('/').pop()) });
     root.innerHTML = '<u2-ico icon=edit>✎</u2-ico>';
-    await until(() => seen.length >= 2);
+    await until(() => seen.includes('js ico.js'));
     assert(seen.includes('css ico.css'), 'the css is reported');
     assert(seen.includes('js ico.js'), 'the js is reported');
+    assert(seen.includes('css base.css'), 'and the base.css that enhance brings itself');
 }
 
 section('unknown parts do not throw');

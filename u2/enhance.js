@@ -48,6 +48,22 @@ export function enhance(root, { registry = root.customElementRegistry ?? customE
     const seen = new Set();
     const isShadow = root instanceof ShadowRoot;
 
+    // Adoption order is the cascade, so the fetch starts at once but the push waits its turn.
+    let queue = Promise.resolve();
+    function addCss(url) {
+        if (!isShadow) return importCss(url); // in the document a <link> keeps the page's say
+        const loading = sheet(url);
+        queue = queue.then(async () => root.adoptedStyleSheets.push(await loading));
+    }
+
+    // norm and base are what a root cannot inherit: box-sizing, font:inherit on form controls,
+    // images that stay inside. Not variables.css — tokens reach a root by inheritance.
+    for (const css of ['css/norm/norm.css', 'css/base/base.css']) {
+        const url = base + css;
+        addCss(url);
+        onLoad?.('css', url);
+    }
+
     // The repeat case must stay synchronous: a list of 50 identical elements calls this 50
     // times, and only the first may allocate. Nothing awaits it, so run() catches its own.
     function load(category, name) {
@@ -68,8 +84,7 @@ export function enhance(root, { registry = root.customElementRegistry ?? customE
             // A shadow root shares one parsed sheet with every other root. In the document a
             // <link> keeps the cascade as it is — an adopted sheet would outrank the page's
             // own stylesheets and break overrides. (Layers may make this moot one day.)
-            if (isShadow) root.adoptedStyleSheets.push(await sheet(url));
-            else importCss(url);
+            addCss(url);
             onLoad?.('css', url);
         }
         if (!(meta.js ?? (category !== 'class'))) return;
