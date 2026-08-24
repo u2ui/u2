@@ -18,6 +18,10 @@ const scoped = 'customElementRegistry' in ShadowRoot.prototype;
 const versionRegistry = scoped ? new CustomElementRegistry() : undefined;
 const sheets = new Map(); // url -> Promise<CSSStyleSheet>, shared across roots
 
+// the manifest is wanted by every load, so fetch it on import and keep the resolved map
+let projects = null;
+repos().then(map => projects = map);
+
 function sheet(url) {
     if (!sheets.has(url)) {
         sheets.set(url, fetch(url).then(r => r.text()).then(css => {
@@ -54,7 +58,7 @@ export function enhance(root, { registry = root.customElementRegistry ?? customE
     }
 
     async function run(id, category, name) {
-        const meta = (await repos())[id];
+        const meta = (projects ?? await repos())[id];
         if (!meta) { console.warn('u2: project not found:', id); return; }
 
         // css belongs in this root: a class or an attribute has no effect without it,
@@ -94,14 +98,14 @@ export function enhance(root, { registry = root.customElementRegistry ?? customE
         const cls = el.className; // string on html elements, SVGAnimatedString on svg
         if (typeof cls === 'string' && cls.includes('u2-')) {
             const list = el.classList;
-            for (let i = 0; i < list.length; i++) {
+            for (let i = 0, n = list.length; i < n; i++) {
                 const c = list[i];
                 if (c.startsWith('u2-')) load('class', c.slice(3));
             }
         }
 
         const attrs = el.attributes;
-        for (let i = 0; i < attrs.length; i++) {
+        for (let i = 0, n = attrs.length; i < n; i++) {
             const name = attrs[i].name;
             if (name.startsWith('u2-')) load('attr', name.slice(3).replace(/-.*/, ''));
         }
@@ -110,13 +114,13 @@ export function enhance(root, { registry = root.customElementRegistry ?? customE
     function scan(node) {
         if (node.nodeType === 1) visit(node); // text and comment nodes carry nothing
         const els = node.querySelectorAll?.('*');
-        if (els) for (let i = 0; i < els.length; i++) visit(els[i]);
+        if (els) for (let i = 0, n = els.length; i < n; i++) visit(els[i]);
     }
 
     const observer = new MutationObserver(entries => {
-        for (let i = 0; i < entries.length; i++) {
+        for (let i = 0, n = entries.length; i < n; i++) {
             const added = entries[i].addedNodes;
-            for (let j = 0; j < added.length; j++) scan(added[j]);
+            for (let j = 0, m = added.length; j < m; j++) scan(added[j]);
         }
     });
     observer.observe(root, { childList: true, subtree: true });

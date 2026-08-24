@@ -1,7 +1,7 @@
 ///////////////////////////
 // cssImport
 
-const cssImported = [];
+const cssImported = Object.create(null); // keyed by url — an array here means dictionary mode
 export function importCss(url, options={}) {
     return new Promise((resolve, reject) => {
         const link = _importCss(url, options);

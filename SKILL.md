@@ -114,6 +114,10 @@ https://github.com/u2ui/u2
 
 ## CSS
 
+Everything under `css/` is **optional**. An element must work on its own — someone who wants
+only `u2-alert` is not forced into `base.css`. Element css therefore refers to the design
+tokens with a fallback (`var(--color, #333)`), never bare. Good defaults, no dependency.
+
 auto.js also loads: css/base/base.css, css/classless/variables.css, css/classless/classless.css
 
 Sets sensible defaults — do not re-implement these when base is loaded:
