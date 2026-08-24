@@ -77,4 +77,4 @@ export default class U2Textfit extends HTMLElement {
     }
 }
 
-customElements.define('u2-textfit', U2Textfit);
+customElements.get('u2-textfit') || customElements.define('u2-textfit', U2Textfit);

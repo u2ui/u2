@@ -163,4 +163,4 @@ export default class U2Drawer extends HTMLElement {
 }
 
 // Register custom element
-customElements.define('u2-drawer', U2Drawer);
+customElements.get('u2-drawer') || customElements.define('u2-drawer', U2Drawer);

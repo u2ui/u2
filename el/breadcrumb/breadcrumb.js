@@ -116,4 +116,4 @@ export default class U2Breadcrumb extends HTMLElement {
     }
 }
 
-customElements.define('u2-breadcrumb', U2Breadcrumb);
+customElements.get('u2-breadcrumb') || customElements.define('u2-breadcrumb', U2Breadcrumb);

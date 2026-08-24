@@ -55,7 +55,7 @@ function getCookie() {
   }
 }
 
-customElements.define('u2-cookiebanner', U2Cookiebanner);
+customElements.get('u2-cookiebanner') || customElements.define('u2-cookiebanner', U2Cookiebanner);
 
 
 

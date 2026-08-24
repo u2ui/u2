@@ -103,4 +103,4 @@ export default class U2Spot extends HTMLElement {
     }
 }
 
-customElements.define('u2-spot', U2Spot);
+customElements.get('u2-spot') || customElements.define('u2-spot', U2Spot);

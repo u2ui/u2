@@ -39,4 +39,4 @@ export default class U2Out extends HTMLElement {
 
 }
 
-customElements.define('u2-out', U2Out);
+customElements.get('u2-out') || customElements.define('u2-out', U2Out);

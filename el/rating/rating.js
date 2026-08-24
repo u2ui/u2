@@ -145,4 +145,4 @@ function translate(text) {
     return texts[text][lang] ?? texts[text].en;
 }
 
-customElements.define('u2-rating', U2Rating);
+customElements.get('u2-rating') || customElements.define('u2-rating', U2Rating);

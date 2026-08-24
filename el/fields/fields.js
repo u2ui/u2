@@ -130,4 +130,4 @@ export default class U2Fields extends HTMLElement {
 
 }
 
-customElements.define('u2-fields', U2Fields);
+customElements.get('u2-fields') || customElements.define('u2-fields', U2Fields);

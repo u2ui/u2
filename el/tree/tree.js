@@ -233,4 +233,4 @@ export default class U2Tree extends HTMLElement {
     }
 }
 
-customElements.define('u2-tree', U2Tree);
+customElements.get('u2-tree') || customElements.define('u2-tree', U2Tree);

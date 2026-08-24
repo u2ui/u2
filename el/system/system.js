@@ -68,7 +68,7 @@ export default class U2System extends HTMLElement {
 
 }
 
-customElements.define('u2-system', U2System);
+customElements.get('u2-system') || customElements.define('u2-system', U2System);
 
 addEventListener('keydown', (e) => {
     if (e.target.form !== undefined) return;

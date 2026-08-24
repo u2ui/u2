@@ -197,7 +197,7 @@ export default class U2Code extends HTMLElement {
 
 }
 
-customElements.define('u2-code', U2Code);
+customElements.get('u2-code') || customElements.define('u2-code', U2Code);
 
 
 function trimCode(value){

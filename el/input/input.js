@@ -665,7 +665,7 @@ export default class U2Input extends HTMLElement {
     $(selector) { return this.shadowRoot.querySelector(selector); }
 
 }
-customElements.define('u2-input', U2Input);
+customElements.get('u2-input') || customElements.define('u2-input', U2Input);
 
 // Globales File-Drag-Feedback
 document.addEventListener('dragenter', e => {

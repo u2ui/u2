@@ -21,7 +21,7 @@ export default class U2Skeleton extends HTMLElement {
     }
 }
 
-customElements.define('u2-skeleton', U2Skeleton);
+customElements.get('u2-skeleton') || customElements.define('u2-skeleton', U2Skeleton);
 
 
 

@@ -321,7 +321,7 @@ U2Carousel.mode.fade = {
 }
 
 
-customElements.define('u2-carousel', U2Carousel)
+customElements.get('u2-carousel') || customElements.define('u2-carousel', U2Carousel)
 
 
 // slide on target

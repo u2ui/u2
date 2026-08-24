@@ -58,7 +58,7 @@ export default class U2Number extends HTMLElement {
     }
 }
 
-customElements.define('u2-number', U2Number);
+customElements.get('u2-number') || customElements.define('u2-number', U2Number);
 
 function localesFromElement(el) {
     let langEl = el.closest('[lang]')||document.documentElement;

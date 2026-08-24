@@ -54,7 +54,7 @@ export default class U2Bytes extends HTMLElement {
     }
 }
 
-customElements.define('u2-bytes', U2Bytes);
+customElements.get('u2-bytes') || customElements.define('u2-bytes', U2Bytes);
 
 
 function localesFromElement(el) {

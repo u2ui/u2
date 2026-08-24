@@ -176,4 +176,4 @@ const ensureOption = (val, ...options) => {
     return options[0];
 }
 
-customElements.define('u2-time', U2Time);
+customElements.get('u2-time') || customElements.define('u2-time', U2Time);

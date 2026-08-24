@@ -100,7 +100,7 @@ export default class U2Typewriter extends HTMLElement {
     }
 
 }
-customElements.define('u2-typewriter', U2Typewriter);
+customElements.get('u2-typewriter') || customElements.define('u2-typewriter', U2Typewriter);
 
 
 // find the next Char in children or sibling of the node but not outside the root

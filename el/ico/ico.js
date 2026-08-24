@@ -160,4 +160,4 @@ async function loadCached(url) {
 }
 
 
-customElements.define('u2-ico', U2Ico);
+customElements.get('u2-ico') || customElements.define('u2-ico', U2Ico);

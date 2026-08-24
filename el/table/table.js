@@ -465,4 +465,4 @@ class Column {
     }
 }
 
-customElements.define('u2-table', U2Table);
+customElements.get('u2-table') || customElements.define('u2-table', U2Table);

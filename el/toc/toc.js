@@ -84,4 +84,4 @@ export default class U2Toc extends HTMLElement {
     }
 }
 
-customElements.define('u2-toc', U2Toc);
+customElements.get('u2-toc') || customElements.define('u2-toc', U2Toc);

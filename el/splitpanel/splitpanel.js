@@ -114,4 +114,4 @@ export default class U2Splitpanel extends HTMLElement {
     }
 }
 
-customElements.define('u2-splitpanel', U2Splitpanel);
+customElements.get('u2-splitpanel') || customElements.define('u2-splitpanel', U2Splitpanel);

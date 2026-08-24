@@ -44,7 +44,7 @@ export default class U2Rte extends HTMLElement {
     }
 }
 
-customElements.define('u2-rte', U2Rte);
+customElements.get('u2-rte') || customElements.define('u2-rte', U2Rte);
 
 
 // import Showdown from 'https://cdn.skypack.dev/showdown';

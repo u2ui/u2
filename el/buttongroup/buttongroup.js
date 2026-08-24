@@ -65,4 +65,4 @@ export default class U2Buttongroup extends HTMLElement {
     }
 
 }
-customElements.define('u2-buttongroup', U2Buttongroup);
+customElements.get('u2-buttongroup') || customElements.define('u2-buttongroup', U2Buttongroup);

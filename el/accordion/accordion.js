@@ -208,4 +208,4 @@ export default class U2Accordion extends HTMLElement {
     }
 }
 
-customElements.define('u2-accordion', U2Accordion);
+customElements.get('u2-accordion') || customElements.define('u2-accordion', U2Accordion);

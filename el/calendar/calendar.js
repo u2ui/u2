@@ -387,5 +387,5 @@ function getTimeFormatter(localeTag, options = { hour: '2-digit', minute: '2-dig
 }
 
 
-customElements.define('u2-calendar', U2Calendar);
-customElements.define('u2-calendaritem', U2CalendarItem);
+customElements.get('u2-calendar') || customElements.define('u2-calendar', U2Calendar);
+customElements.get('u2-calendaritem') || customElements.define('u2-calendaritem', U2CalendarItem);

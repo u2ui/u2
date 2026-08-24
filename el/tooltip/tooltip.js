@@ -67,7 +67,7 @@ export default class U2Tooltip extends HTMLElement {
     }
     static observedAttributes = ['position'];
 }
-customElements.define('u2-tooltip', U2Tooltip);
+customElements.get('u2-tooltip') || customElements.define('u2-tooltip', U2Tooltip);
 
 
 document.addEventListener('mouseenter',function(e){

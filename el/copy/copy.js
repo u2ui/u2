@@ -87,4 +87,4 @@ export default class U2Copy extends HTMLElement {
     }
 }
 
-customElements.define('u2-copy', U2Copy);
+customElements.get('u2-copy') || customElements.define('u2-copy', U2Copy);

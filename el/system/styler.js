@@ -572,7 +572,7 @@ class ColorSystemStyler extends HTMLElement {
     }
 }
 
-customElements.define('u2-system-styler', ColorSystemStyler);
+customElements.get('u2-system-styler') || customElements.define('u2-system-styler', ColorSystemStyler);
 
 
 

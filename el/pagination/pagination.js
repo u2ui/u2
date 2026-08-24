@@ -144,4 +144,4 @@ export default class U2Pagination extends HTMLElement {
     }
 }
 
-customElements.define('u2-pagination', U2Pagination);
+customElements.get('u2-pagination') || customElements.define('u2-pagination', U2Pagination);

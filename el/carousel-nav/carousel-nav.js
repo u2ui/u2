@@ -71,4 +71,4 @@ export default class U2CarouselNav extends HTMLElement {
 		})
 	}
 }
-customElements.define('u2-carousel-nav', U2CarouselNav)
+customElements.get('u2-carousel-nav') || customElements.define('u2-carousel-nav', U2CarouselNav)

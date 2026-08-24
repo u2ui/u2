@@ -93,4 +93,4 @@ function format(el, val){
     }).format(val);
 }
 
-customElements.define('u2-counter', U2Counter)
+customElements.get('u2-counter') || customElements.define('u2-counter', U2Counter)

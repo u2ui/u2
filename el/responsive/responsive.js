@@ -123,7 +123,7 @@ export default class U2Responsive extends HTMLElement {
     }
 }
 
-customElements.define('u2-responsive', U2Responsive);
+customElements.get('u2-responsive') || customElements.define('u2-responsive', U2Responsive);
 
 
 

@@ -194,4 +194,4 @@ export default class U2ParallaxBg extends HTMLElement {
     }
 }
 
-customElements.define('u2-parallax-bg', U2ParallaxBg)
+customElements.get('u2-parallax-bg') || customElements.define('u2-parallax-bg', U2ParallaxBg)

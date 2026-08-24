@@ -35,7 +35,7 @@ export default class U2Qrcode extends HTMLElement {
     }
 
 }
-customElements.define('u2-qrcode', U2Qrcode);
+customElements.get('u2-qrcode') || customElements.define('u2-qrcode', U2Qrcode);
 
 function toSvgString(qr) {
     const border = 0;

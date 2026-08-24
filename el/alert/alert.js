@@ -163,7 +163,7 @@ const variantData = {
     }
 };
 
-customElements.define('u2-alert', U2Alert);
+customElements.get('u2-alert') || customElements.define('u2-alert', U2Alert);
 
 function alert(message, variant, options={}) {
     const el = document.createElement('u2-alert');

@@ -185,4 +185,4 @@ function getHSLofElement(el) {
 }
 
 
-customElements.define('u2-chart', U2Chart);
+customElements.get('u2-chart') || customElements.define('u2-chart', U2Chart);

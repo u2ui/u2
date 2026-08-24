@@ -14,4 +14,4 @@ export default class U2Maintitlebar extends HTMLElement {
         navigator.windowControlsOverlay?.removeEventListener('geometrychange', this._check);
     }
 }
-customElements.define('u2-maintitlebar', U2Maintitlebar);
+customElements.get('u2-maintitlebar') || customElements.define('u2-maintitlebar', U2Maintitlebar);

@@ -73,7 +73,7 @@ export default class U2Menubutton extends HTMLElement {
         });
     }
 }
-customElements.define('u2-menubutton', U2Menubutton);
+customElements.get('u2-menubutton') || customElements.define('u2-menubutton', U2Menubutton);
 
 
 function nextFocusable(root) {

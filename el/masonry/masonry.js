@@ -44,7 +44,7 @@ export default class U2Masonry extends HTMLElement{
     }    
 }
 
-customElements.define('u2-masonry', U2Masonry);
+customElements.get('u2-masonry') || customElements.define('u2-masonry', U2Masonry);
 
 
 function sortByHeight(a, b){
