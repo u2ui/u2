@@ -9,7 +9,8 @@ document it stays a <link>, so the page keeps its say over u2's own rules.
 See ./plan-scoped-refactoring.md */
 
 import { repos } from './u2.js';
-import { importCss, sheet } from './utils.js';
+import { importCss } from './utils.js';
+import { sheet } from './Element.js';
 
 const base = new URL('../', import.meta.url).href; // this copy of u2 — another root may run another
 const scoped = 'customElementRegistry' in ShadowRoot.prototype;

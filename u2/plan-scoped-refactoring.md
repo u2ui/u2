@@ -263,9 +263,6 @@ Erst ab **Phase 3** relevant:
 
 ## Offen / später
 
-- **Die übrigen 36 Elemente auf `U2Element`.** Solange eines `extends HTMLElement` bleibt, fällt
-  sein Shadow auf `window.customElements` zurück, sobald es doch mal ein u2-Element rendert.
-  Mechanisch, aber 36 Dateien.
 - **Attribute sind kein Registry-Problem.** Sie kollidieren nicht über Namen, sie
   *installieren sich doppelt*, wenn zwei u2-Kopien laufen. Alle 10 hängen ihre Listener an
   `document`, vier davon (`confirm`, `dropzone`, `draghandle`, `movable`) benutzen
@@ -309,7 +306,9 @@ Sheet eintrifft. Solange der Vater ein Tree-`<style>` hat, muss er die Kind-Rege
 **überspezifizieren**. Ein echter Fall bestand: `fields` überschrieb `u2-responsive {display:block}`
 mit `u2-responsive {display:grid}` — Gleichstand, jetzt `#container`.
 
-Die sechs Module, die u2-Elemente in ihr *eigenes* Shadow rendern:
+`U2Element` ist keine Migration, sondern eine Regel: **wer ein u2-Element in sein eigenes Shadow
+rendert, erbt davon.** Das sind heute genau diese sechs — die übrigen 35 öffnen entweder kein
+Shadow oder rendern nichts von u2 hinein und brauchen die Basisklasse nicht.
 
 | Modul | Kind |
 |---|---|

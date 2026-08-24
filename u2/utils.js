@@ -60,19 +60,3 @@ function rootGetStyleWrapper(root) {
     return styleWrapper;
 }
 
-
-///////////////////////////
-// stylesheets
-
-const sheets = new Map();
-/** One parsed CSSStyleSheet per url, shared by every root that adopts it. */
-export function sheet(url) {
-    if (!sheets.has(url)) {
-        sheets.set(url, fetch(url).then(r => r.text()).then(css => {
-            const s = new CSSStyleSheet();
-            s.replaceSync(css); // u2 css has no relative url() and no @import
-            return s;
-        }));
-    }
-    return sheets.get(url);
-}

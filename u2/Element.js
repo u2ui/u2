@@ -1,5 +1,3 @@
-import { sheet } from './utils.js';
-
 const base = new URL('../', import.meta.url).href; // this copy of u2
 
 /** Base class for u2 elements — keeps a subtree on one u2 version.
@@ -34,4 +32,18 @@ function use(el, category, name, {css = category !== 'attr', js = category !== '
         const tag = 'u2-' + name;
         registry.get(tag) || registry.define(tag, mod.default);
     }, warn);
+}
+
+
+const sheets = new Map();
+/** One parsed CSSStyleSheet per url, shared by every root that adopts it — enhance uses it too. */
+export function sheet(url) {
+    if (!sheets.has(url)) {
+        sheets.set(url, fetch(url).then(r => r.text()).then(css => {
+            const s = new CSSStyleSheet();
+            s.replaceSync(css); // u2 css has no relative url() and no @import
+            return s;
+        }));
+    }
+    return sheets.get(url);
 }
