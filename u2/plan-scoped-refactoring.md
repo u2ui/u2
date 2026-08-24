@@ -154,6 +154,21 @@ deshalb in seinen Root, nicht ins Dokument.
 Das globale `impCss` (classless/utilities/base) bleibt davon unberührt; ob es zusätzlich ins
 Panel-Shadow soll, entscheidet man separat.
 
+**Was in einen Root gehört und was nicht** — die Trennlinie verläuft nach Selektor-Reichweite,
+nicht nach Datei:
+
+| | |
+|---|---|
+| vererbend (Tokens, `line-height`, `hyphens`, `font-family`) | kommt durch die Grenze — **nicht** in `:host` setzen, das wäre ein Zurücksetzen |
+| Element-/Universalselektoren (`*{box-sizing}`, `input{font:inherit}`, `img{max-inline-size}`, `table`, `a`, `h1`) | hält an der Grenze — **nur dafür** adoptiert man ein Sheet |
+| Host-Kasten (`block-size`, `overflow-y`, `scrollbar-gutter`) | gehört gar nicht auf `:host` |
+
+`input, textarea, select, button { font: inherit }` ist der wichtigste: es *stellt* Vererbung
+erst her, die UA-Styles brechen. Ohne diese Regel erbt ein Formularfeld im Root nichts.
+
+Wer in einem Root wirklich neu beginnen will, setzt die Werte selbst — die Sheets tun es nicht
+für ihn.
+
 ## Interne Element-Deps (der harte Teil)
 
 Elemente, die andere u2-Elemente in ihr **eigenes** Shadow rendern, dürfen sich nicht mehr

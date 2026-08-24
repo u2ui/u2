@@ -81,10 +81,6 @@ function generateSkillContent(repos) {
         ## CSS
 
         Everything under \`css/\` is **optional** — wanting only \`u2-alert\` does not drag in \`base.css\`.
-        An unresolvable \`var()\` falls back to the property's initial or inherited value, and that is
-        often already the right default: square corners, no shadow, \`currentColor\`, the page's
-        line-height. A fallback is written only where it would not be — a transparent background, no
-        padding — and then a system colour (\`Canvas\`, \`CanvasText\`).
 
         auto.js also loads: css/base/base.css, css/classless/variables.css, css/classless/classless.css
 
