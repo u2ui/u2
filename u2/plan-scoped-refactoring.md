@@ -131,12 +131,14 @@ sowohl U2Auto als auch der Datei-Side-Effect definieren können).
   - muss **vor** dem ersten scoped ShadowRoot geladen sein,
   - etwas Laufzeit-Overhead,
   - wenige Edge-Cases (`el.constructor`).
-- **Zu prüfen:** heisst die `attachShadow`-Option `registry` oder `customElementRegistry`?
-  Frühe Entwürfe und die Auslieferung weichen möglicherweise ab; betrifft `U2Auto` und
-  `attachU2Shadow` oben sowie die Feature-Detection.
+- **Namen (recherchiert, nicht `registry` — das war ein Entwurfsname):**
+  `host.attachShadow({ customElementRegistry })`, Rücklesen über
+  `root.customElementRegistry`, programmatisch
+  `document.createElement(tag, { customElementRegistry })`, nachträglich
+  `registry.initialize(root)`. Chrome/Edge 146+, Safari 26+, Firefox noch nicht.
 - Feature-Detection:
   ```js
-  if (!('registry' in ShadowRoot.prototype))
+  if (!('customElementRegistry' in ShadowRoot.prototype))
     await import('.../scoped-custom-element-registry.min.js');
   ```
   Einmal am Anfang laden, danach funktioniert scoped überall gleich.
@@ -158,24 +160,31 @@ Elemente, die andere u2-Elemente in ihr **eigenes** Shadow rendern, dürfen sich
 auf den globalen Side-Effect verlassen. In einer scoped Registry ist `u2-ico` sonst nicht
 sichtbar.
 
-**Umstellung** (registry-agnostisch, schon heute non-breaking):
+**Gemessen** ([u2/tests/enhance.test.html](tests/enhance.test.html), Chrome nativ):
+
+- Ein im scoped Root geparstes Element trägt die Registry: `el.customElementRegistry === outer`.
+- Aber `el.attachShadow({mode})` **ohne** die Option bekommt `window.customElements` — die
+  Vererbung passiert *nicht* automatisch. **Isolation komponiert nicht von selbst.**
+- Dieselbe Klasse darf in **mehreren** Registries definiert werden. Ein Element braucht darum
+  keine Singleton zu importieren, es folgt seinem Root.
+
+Ein Element muss seine Registry deshalb aktiv weiterreichen, und zwar an beiden Stellen:
 
 ```js
-// vorher (Side-Effect)
-import('../ico/ico.js');
+const registry = this.customElementRegistry ?? customElements;
+this.attachShadow({ mode: 'open', customElementRegistry: registry });
 
-// nachher (explizit + Guard)
 import U2Ico from '../ico/ico.js';
-define('u2-ico', U2Ico);
+registry.define('u2-ico', U2Ico);   // nicht global
 ```
 
-Betroffen u.a.: `accordion`→`ico`, `rating`→`ico`, `buttongroup`→`focusgroup`,
-`fields`→`responsive`.
+Betroffen: `accordion`→`ico`, `alert`→`ico`, `calendar`→`ico`, `rating`→`ico`,
+`input`→`ico`+`bytes`, `fields`→`responsive`.
 
-> Vollständig sauber wird das erst, wenn solche Kind-Elemente in **dieselbe** scoped
-> Registry registriert werden wie das Eltern-Shadow. Für die erste Ausbaustufe (globale
-> Nutzung) reicht die explizite `define()`-Umstellung; die scoped-Verkettung ist ein
-> Folge-Schritt.
+> Ohne diesen Schritt ist die Isolation genau eine Ebene tief: das Panel-Root benutzt seine
+> Version, alles was ein Element in sein *eigenes* Shadow rendert, kommt aus der globalen —
+> also aus der Version der Host-Seite. `enhance` kann das nicht beheben, sein
+> MutationObserver endet an jeder Shadow-Grenze.
 
 ## Migrationsplan (phasenweise)
 
@@ -239,6 +248,19 @@ Erst ab **Phase 3** relevant:
 
 ## Offen / später
 
-- **Scoped Attribute-Registry** (`u2-*`-Attribute isoliert): gleiche Factory-Idee wie
-  `U2Auto`, aber eigener Mechanismus. Bewusst **später**, um den Scope hier klein zu halten.
+- **`U2Element` als Basisklasse** (wenn sie kommt) nimmt den Elementen die Registry-Arbeit ab:
+  `attachShadow(options)` überschreiben und `customElementRegistry: this.customElementRegistry`
+  vorbelegen — dann bleiben alle Aufrufstellen wie heute. Dazu ein Einzeiler für Kind-Elemente,
+  etwa `this.registerElement('ico')`: importiert die Klasse, definiert sie in die eigene
+  Registry **und adoptiert `ico.css` ins eigene Shadow**. Beides steht heute von Hand in jedem
+  Modul, und `fields` vergisst die CSS von `responsive` bereits. Async ist unkritisch — ein
+  Element upgraded auch, wenn es erst nach dem `innerHTML` definiert wird.
+  Ein `createElement`-Helper lohnt nicht: `innerHTML` benutzt ohnehin die Registry des Shadows.
+- **Attribute sind kein Registry-Problem.** Sie kollidieren nicht über Namen, sie
+  *installieren sich doppelt*, wenn zwei u2-Kopien laufen. Alle 10 hängen ihre Listener an
+  `document`, vier davon (`confirm`, `dropzone`, `draghandle`, `movable`) benutzen
+  `composedPath()` — sie arbeiten absichtlich über Shadow-Grenzen hinweg, und sie an einen
+  Scope zu binden würde sie kaputtmachen.
+  Zu klären ist deshalb nicht „wie scopen wir", sondern zweierlei: **einmal pro Dokument**
+  installieren, und **pro Modul** entscheiden, welche Wirkung wirklich subtree-lokal ist.
 - Scoped-Verkettung von Kind-Elementen in die Eltern-Registry (siehe „Interne Deps").

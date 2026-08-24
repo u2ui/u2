@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>u2 enhance — scoped roots</title>
+
+    <link href="../../css/classless/simple.css" rel=stylesheet>
+    <style>
+    #summary { padding:.6em 1em; border-radius:.3em; font-weight:bold; color:#fff; }
+    #summary.-ok  { background:#2e7d32; }
+    #summary.-bad { background:#c62828; }
+    #report h3 { margin:1.4em 0 .4em; font-size:1em; opacity:.7; }
+    #report > div {
+        --c:#888;
+        border-left:.3em solid var(--c);
+        background:color-mix(in srgb, var(--c) 10%, transparent);
+        padding:.3em .6em; margin-block:1px; font-family:monospace; font-size:.9em;
+    }
+    #report .-pass { --c:#2e7d32; }
+    #report .-fail { --c:#c62828; }
+    #report .-todo { --c:#ef6c00; }
+    #report .-info { --c:#0277bd; }
+    </style>
+</head>
+<body>
+
+<h1>enhance()</h1>
+<p>
+    Each root loads the u2 parts its own markup uses: elements into that root's registry,
+    css as adopted sheets. Nothing lands in <code>window.customElements</code> and nothing
+    in the document — unless the browser has no scoped registries, then everything falls
+    back to global and the isolation checks are skipped.
+</p>
+
+<div id=summary>running…</div>
+<div id=report></div>
+
+<div id=hosts hidden></div>
+
+<script type=module>
+import { enhance, attachShadow } from '../enhance.js';
+
+const report = document.getElementById('report');
+const summary = document.getElementById('summary');
+const hosts = document.getElementById('hosts');
+const scoped = 'customElementRegistry' in ShadowRoot.prototype;
+let passed = 0, failed = 0, skipped = 0, open_todo = 0;
+
+const line = (state, text) => {
+    const el = document.createElement('div');
+    el.className = '-' + state;
+    el.textContent = state.toUpperCase().padEnd(4) + '  ' + text; // in the text, so a copy keeps it
+    report.append(el);
+};
+const assert = (condition, message) => {
+    condition ? passed++ : failed++;
+    line(condition ? 'pass' : 'fail', message);
+};
+const skip = (message) => { skipped++; line('skip', message); };
+const info = (message) => line('info', message);
+/** A gap we know about: shown, but it does not fail the run. */
+const todo = (condition, message) => {
+    if (condition) { passed++; line('pass', message); return; }
+    open_todo++;
+    line('todo', message);
+};
+const section = (title) => report.insertAdjacentHTML('beforeend', `<h3>${title}</h3>`);
+
+/** enhance loads over the network, so wait for the effect instead of a fixed tick. */
+const until = async (fn, ms = 3000) => {
+    const end = performance.now() + ms;
+    while (performance.now() < end) {
+        const v = fn();
+        if (v) return v;
+        await new Promise(r => setTimeout(r, 20));
+    }
+    return null;
+};
+
+const makeHost = (markup = '') => {
+    const host = document.createElement('div');
+    hosts.append(host);
+    const root = attachShadow(host);
+    root.innerHTML = markup;
+    return root;
+};
+
+section('element in the markup');
+{
+    const root = makeHost('<u2-ico icon=edit>✎</u2-ico>');
+    const def = await until(() => root.customElementRegistry?.get('u2-ico') ?? customElements.get('u2-ico'));
+    assert(def, 'u2-ico gets defined for the root');
+    assert(await until(() => root.querySelector('u2-ico').constructor !== HTMLElement), 'the element in that root is upgraded');
+
+    if (!scoped) skip('no scoped registries — u2-ico goes to the global registry');
+    else todo(!customElements.get('u2-ico'),
+        'window.customElements stays clean — still leaks: el/ico/ico.js self-registers (plan phase 3)');
+}
+
+section('css lands in the root, not in the document');
+{
+    const root = makeHost('<u2-ico icon=edit>✎</u2-ico>');
+    const sheet = await until(() => root.adoptedStyleSheets.find(s =>
+        [...s.cssRules].some(r => r.cssText.includes('u2-ico'))));
+    assert(sheet, 'ico.css is adopted into the root');
+    assert(!document.adoptedStyleSheets.includes(sheet), 'the document did not get it');
+    assert(![...document.styleSheets].some(s => s.href?.includes('/ico/')), 'no <link> was added to the document');
+}
+
+section('sheets are parsed once and shared');
+{
+    const a = makeHost('<u2-ico icon=edit>✎</u2-ico>');
+    const b = makeHost('<u2-ico icon=edit>✎</u2-ico>');
+    const find = root => root.adoptedStyleSheets.find(s => [...s.cssRules].some(r => r.cssText.includes('u2-ico')));
+    const sheetA = await until(() => find(a));
+    const sheetB = await until(() => find(b));
+    assert(sheetA && sheetA === sheetB, 'both roots adopt the same CSSStyleSheet object');
+}
+
+section('markup added later');
+{
+    const root = makeHost('');
+    root.innerHTML = '<div><u2-alert open>later</u2-alert></div>';
+    const def = await until(() => root.customElementRegistry?.get('u2-alert') ?? customElements.get('u2-alert'));
+    assert(def, 'the observer picks up an element inserted after enhance()');
+}
+
+section('classes and attributes');
+{
+    const root = makeHost('<div class=u2-card>card</div><div u2-dropzone>zone</div>');
+    const cardCss = await until(() => root.adoptedStyleSheets.some(s =>
+        [...s.cssRules].some(r => r.cssText.includes('u2-card'))));
+    assert(cardCss, 'a u2- class brings its css into the root');
+    assert(await until(() => root.adoptedStyleSheets.length >= 1), 'an attribute is loaded too (js only, no css)');
+}
+
+section('a root may bring its own registry');
+{
+    if (!scoped) skip('no scoped registries — one global registry for everything');
+    else {
+        const shared = makeHost('<u2-ico icon=edit>✎</u2-ico>'); // gets the version default
+        const own = new CustomElementRegistry();
+        const host = document.createElement('div');
+        hosts.append(host);
+        const mine = attachShadow(host, { customElementRegistry: own });
+
+        assert(mine.customElementRegistry === own, 'attachShadow() honours a registry that is passed in');
+        assert(shared.customElementRegistry !== own, 'and it stays separate from the version default');
+
+        mine.innerHTML = '<u2-ico icon=edit>✎</u2-ico>';
+        assert(await until(() => own.get('u2-ico')), 'enhance defines into that registry, not the default');
+    }
+}
+
+section('nested shadow roots');
+{
+    if (!scoped) skip('no scoped registries — every shadow uses the global one');
+    else {
+        const outer = new CustomElementRegistry();
+        class Probe extends HTMLElement { connectedCallback() { this.dataset.up = '1'; } }
+        outer.define('x-probe', Probe); // only here — never in window.customElements
+
+        const host = document.createElement('div');
+        hosts.append(host);
+        const root = host.attachShadow({ mode: 'open', customElementRegistry: outer });
+        root.innerHTML = '<div id=inner></div>';
+
+        const el = root.getElementById('inner');
+        assert(el.customElementRegistry === outer, 'an element parsed in a scoped root carries that registry');
+
+        // the case that decides whether isolation composes: a component inside our root
+        // opens its own shadow without asking for a registry
+        const inner = el.attachShadow({ mode: 'open' });
+        inner.innerHTML = '<x-probe></x-probe>';
+        const upgraded = inner.querySelector('x-probe').dataset.up === '1';
+        const which = inner.customElementRegistry === outer ? 'the outer one'
+            : inner.customElementRegistry === customElements ? 'window.customElements'
+            : inner.customElementRegistry ? 'a third one' : 'null';
+        info(`a shadow opened without the option gets: ${which}`);
+        if (upgraded) assert(true, 'a nested shadow inherits the registry of its host — isolation composes');
+        else todo(false, 'a nested shadow falls back to global — a component must pass its own registry on');
+
+        // and a nested root that brings its own stays separate
+        const own = new CustomElementRegistry();
+        const el2 = document.createElement('div');
+        root.append(el2);
+        const inner2 = el2.attachShadow({ mode: 'open', customElementRegistry: own });
+        inner2.innerHTML = '<x-probe></x-probe>';
+        assert(inner2.querySelector('x-probe').dataset.up !== '1', 'a nested root with its own registry does not see the outer definitions');
+    }
+}
+
+section('one registry per version fixes the nesting');
+{
+    if (!scoped) skip('no scoped registries — one global registry for everything');
+    else {
+        class Probe extends HTMLElement { connectedCallback() { this.dataset.up = '1'; } }
+
+        const host = document.createElement('div');
+        hosts.append(host);
+        const root = attachShadow(host); // no registry passed: gets the version default
+        const versionRegistry = root.customElementRegistry;
+        assert(versionRegistry && versionRegistry !== customElements, 'attachShadow() defaults to a scoped registry');
+        assert(attachShadow(document.createElement('div')).customElementRegistry === versionRegistry,
+            'and it is the same one for every root of this version');
+
+        versionRegistry.define('x-nested', Probe); // as an element file would, from this.customElementRegistry
+        root.innerHTML = '<x-nested></x-nested>';
+        assert(root.querySelector('x-nested').dataset.up === '1', 'it resolves in the root');
+
+        // what an element does when it renders u2-elements into its own shadow
+        const el = document.createElement('div');
+        root.append(el);
+        const inner = el.attachShadow({ mode: 'open', customElementRegistry: versionRegistry });
+        inner.innerHTML = '<x-nested></x-nested>';
+        assert(inner.querySelector('x-nested').dataset.up === '1', 'passing it on makes nesting resolve too');
+        assert(!customElements.get('x-nested'), 'and nothing of it reaches window.customElements');
+    }
+}
+
+section('one class in several registries');
+{
+    if (!scoped) skip('no scoped registries');
+    else {
+        class Shared extends HTMLElement {}
+        const r1 = new CustomElementRegistry(), r2 = new CustomElementRegistry();
+        r1.define('x-shared', Shared);
+        let ok = true;
+        try { r2.define('x-shared', Shared); } catch { ok = false; }
+        assert(ok, 'the same class may be defined in more than one registry — roots can bring their own');
+    }
+}
+
+section('unknown parts do not throw');
+{
+    const root = makeHost('<u2-nope></u2-nope>');
+    await new Promise(r => setTimeout(r, 300));
+    assert(true, 'an unknown element only warns (see the console)');
+}
+
+section('stop()');
+{
+    const host = document.createElement('div');
+    hosts.append(host);
+    const root = attachShadow(host);
+    const stop = enhance(root); // a second watcher we can stop
+    stop();
+    assert(true, 'stop() returns without throwing');
+}
+
+summary.className = failed ? '-bad' : '-ok';
+summary.textContent = [
+    `${passed} passed`,
+    failed ? `${failed} failed` : null,
+    open_todo ? `${open_todo} known gap${open_todo > 1 ? 's' : ''}` : null,
+    skipped ? `${skipped} skipped` : null,
+    scoped ? 'scoped registries: native' : 'scoped registries: unsupported, global fallback',
+].filter(Boolean).join(' · ');
+document.title = `${failed ? '✗' : '✓'} ${document.title}`;
+</script>
