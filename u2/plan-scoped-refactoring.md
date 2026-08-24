@@ -263,14 +263,9 @@ Erst ab **Phase 3** relevant:
 
 ## Offen / später
 
-- **`U2Element` als Basisklasse** (wenn sie kommt) nimmt den Elementen die Registry-Arbeit ab:
-  `attachShadow(options)` überschreiben und `customElementRegistry: this.customElementRegistry`
-  vorbelegen — dann bleiben alle Aufrufstellen wie heute. Dazu ein Einzeiler für Kind-Elemente,
-  etwa `this.registerElement('ico')`: importiert die Klasse, definiert sie in die eigene
-  Registry **und adoptiert `ico.css` ins eigene Shadow**. Beides steht heute von Hand in jedem
-  Modul, und `fields` vergisst die CSS von `responsive` bereits. Async ist unkritisch — ein
-  Element upgraded auch, wenn es erst nach dem `innerHTML` definiert wird.
-  Ein `createElement`-Helper lohnt nicht: `innerHTML` benutzt ohnehin die Registry des Shadows.
+- **Die übrigen 36 Elemente auf `U2Element`.** Solange eines `extends HTMLElement` bleibt, fällt
+  sein Shadow auf `window.customElements` zurück, sobald es doch mal ein u2-Element rendert.
+  Mechanisch, aber 36 Dateien.
 - **Attribute sind kein Registry-Problem.** Sie kollidieren nicht über Namen, sie
   *installieren sich doppelt*, wenn zwei u2-Kopien laufen. Alle 10 hängen ihre Listener an
   `document`, vier davon (`confirm`, `dropzone`, `draghandle`, `movable`) benutzen
@@ -278,4 +273,65 @@ Erst ab **Phase 3** relevant:
   Scope zu binden würde sie kaputtmachen.
   Zu klären ist deshalb nicht „wie scopen wir", sondern zweierlei: **einmal pro Dokument**
   installieren, und **pro Modul** entscheiden, welche Wirkung wirklich subtree-lokal ist.
+
+## Erledigt in 1.5.2 — `U2Element`
+
+[`u2/Element.js`](Element.js): Basisklasse, die den Elementen die Registry-Arbeit abnimmt.
+`attachShadow()` belegt `customElementRegistry: this.customElementRegistry` vor — alle
+Aufrufstellen bleiben dadurch **wortgleich wie vorher**. `this.useEl(name)` importiert
+`el/<name>/<name>.js` und definiert die Klasse in die eigene Registry (`?? customElements`).
+Async ist unkritisch: ein Element upgraded auch, wenn es erst nach dem `innerHTML` definiert wird.
+
+Dazu `useClass(name)` und `useAttr(name)`. Alle drei holen ausserdem die **CSS ins eigene Shadow** —
+u2-Elemente haben meist kein eigenes Shadow (`ico` schreibt sein SVG ins Light DOM, `ico.css` stylt
+`u2-ico { … }` von aussen), CSS gehört deshalb immer dem Root, in dem das Kind steht. Der Vater
+musste sie bisher von Hand per `@import` holen, und `fields` vergass `responsive.css` dabei.
+
+**Keine Deklaration am Kind.** Ein `static hasCss` müsste erst per JS geladen werden, bevor die CSS
+überhaupt startet — es macht den wichtigeren Request garantiert langsamer. `projects.json` wäre
+ebenfalls erst ein Fetch (und ist Enhance-Territorium). Also beides parallel, bedingungslos, und die
+Defaults kommen aus der Kategorie — dieselben wie in `enhance`:
+
+| | js | css | Dateien |
+|---|---|---|---|
+| `el` | ja | ja | js 41/41, css 37/41 |
+| `class` | **nein** | ja | js 0/8, css 8/8 |
+| `attr` | ja | **nein** | js 15/16, css 1/16 |
+
+Die Ausreisser gehören an die *Aufrufstelle*, nicht als Feld an alle 41 Elemente:
+`useAttr('skin', {css:true})`. `skin` bleibt dauerhaft ein Attribut, weil es einen Wert trägt —
+als Klasse ginge das erst mit einem Selektor wie `.u2-class-*`.
+
+**Reihenfolge:** adoptierte Sheets kommen *nach* den Tree-Styles, die Kind-CSS würde also die
+Overrides des Vaters schlagen. `use()` macht darum `unshift`, nicht `push` — sobald der `<style>`
+eines Vaters auch mal adoptiert wird, steht er hinter den Kindern, unabhängig davon, wann deren
+Sheet eintrifft. Solange der Vater ein Tree-`<style>` hat, muss er die Kind-Regeln
+**überspezifizieren**. Ein echter Fall bestand: `fields` überschrieb `u2-responsive {display:block}`
+mit `u2-responsive {display:grid}` — Gleichstand, jetzt `#container`.
+
+Die sechs Module, die u2-Elemente in ihr *eigenes* Shadow rendern:
+
+| Modul | Kind |
+|---|---|
+| `alert`, `accordion`, `calendar`, `rating` | `ico` |
+| `input` | `ico`, `bytes` |
+| `fields` | `responsive` |
+
+```js
+export default class U2Alert extends U2Element {
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});   // erbt die Registry
+        this.useEl('ico');                   // Klasse in die Registry + ico.css ins Shadow
+        this.useAttr('focusgroup');          // nur js
+```
+
+Ausserhalb eines scoped Roots ist `this.customElementRegistry` `undefined`, die Option gilt als
+abwesend und `useEl()` fällt auf `customElements` zurück — Verhalten unverändert.
+
+Nicht betroffen, bewusst: **Attribute** (`focusgroup`, `draghandle`, `dropzone`, …) sind kein
+Registry-Thema; `table` erzeugt sein `u2-ico` im **Light DOM**, wo `enhance` es ohnehin sieht;
+`input`s `u2-badge` ist eine *Klasse*, kein Tag; `tree`s `u2-ico` ist auskommentiert.
+`U2CalendarItem` erbt `U2Element` mit, obwohl sein Shadow heute keine Custom Elements enthält.
+
 - Scoped-Verkettung von Kind-Elementen in die Eltern-Registry (siehe „Interne Deps").

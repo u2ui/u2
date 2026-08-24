@@ -1,17 +1,15 @@
+import U2Element from '../../u2/Element.js';
 
-const icoCssUrl = import.meta.resolve('../../el/ico/ico.css');
 
-export default class U2Accordion extends HTMLElement {
+export default class U2Accordion extends U2Element {
 
     constructor() {
         super();
 
-        import('../ico/ico.js');
-
         let shadowRoot = this.attachShadow({ mode: 'open', slotAssignment: 'manual' });
+        this.useEl('ico');
         shadowRoot.innerHTML = `
         <style>
-        @import url('${icoCssUrl}');
         :host {
             display:block;
             gap:.5em;

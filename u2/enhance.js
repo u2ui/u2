@@ -9,29 +9,18 @@ document it stays a <link>, so the page keeps its say over u2's own rules.
 See ./plan-scoped-refactoring.md */
 
 import { repos } from './u2.js';
-import { importCss } from './utils.js';
+import { importCss, sheet } from './utils.js';
 
 const base = new URL('../', import.meta.url).href; // this copy of u2 — another root may run another
 const scoped = 'customElementRegistry' in ShadowRoot.prototype;
 // The default scope: module identity gives one per u2 version, so a caller who does not care
 // gets isolation for free. A caller who brings its own wins, and the elements follow the root.
 const versionRegistry = scoped ? new CustomElementRegistry() : undefined;
-const sheets = new Map(); // url -> Promise<CSSStyleSheet>, shared across roots
 
 // the manifest is wanted by every load, so fetch it on import and keep the resolved map
 let projects = null;
 repos().then(map => projects = map);
 
-function sheet(url) {
-    if (!sheets.has(url)) {
-        sheets.set(url, fetch(url).then(r => r.text()).then(css => {
-            const s = new CSSStyleSheet();
-            s.replaceSync(css); // u2 css has no relative url() and no @import
-            return s;
-        }));
-    }
-    return sheets.get(url);
-}
 
 /** Attach a shadow root that runs its own u2. Same signature as the native method. */
 export function attachShadow(host, options = {}) {

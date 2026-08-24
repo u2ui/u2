@@ -1,8 +1,9 @@
-export default class U2Fields extends HTMLElement {
+import U2Element from '../../u2/Element.js';
+export default class U2Fields extends U2Element {
     constructor() {
         super();
         this.attachShadow({ mode: 'open', slotAssignment: 'manual' });
-        import('../responsive/responsive.js');
+        this.useEl('responsive');
 
         this.shadowRoot.innerHTML = `
             <style>
@@ -11,7 +12,7 @@ export default class U2Fields extends HTMLElement {
                     margin-block:.5rem;
                     white-space:nowrap;
                 }
-                u2-responsive {
+                #container { /* out-specify responsive.css, which useEl now adopts */
                     display: grid;
                     align-items:baseline;
                     grid-template-columns: auto 1fr;

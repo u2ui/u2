@@ -1,3 +1,4 @@
+import U2Element from '../../u2/Element.js';
 // Type-Handler mit Lifecycle
 class TypeHandler {
     constructor(element, shadow) {
@@ -288,7 +289,6 @@ class FileHandler extends TypeHandler {
     }
     get css() {
         return `
-      @import url('${import.meta.resolve('../../class/badge/badge.css')}');
       :host { vertical-align: top; }
       #droparea {
         flex: 1 1 auto;
@@ -334,7 +334,8 @@ class FileHandler extends TypeHandler {
     }
 
     init() {
-        import('../bytes/bytes.js');
+        this.element.useEl('bytes');
+        this.element.useClass('badge');
 
         const browse = this.shadow.getElementById('browse');
 
@@ -433,15 +434,13 @@ const TYPE_REGISTRY = {
 };
 
 // Custom Element
-export default class U2Input extends HTMLElement {
+export default class U2Input extends U2Element {
     constructor() {
         super();
-        import('../ico/ico.js');
-
         const shadow = this.attachShadow({ mode: 'open', delegatesFocus: true });
+        this.useEl('ico');
         shadow.innerHTML = `
       <style>
-        @import url('${import.meta.resolve('../ico/ico.css')}');
         
         :host {
           display: inline-block;

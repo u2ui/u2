@@ -188,7 +188,7 @@ section('nested shadow roots');
             : inner.customElementRegistry ? 'a third one' : 'null';
         info(`a shadow opened without the option gets: ${which}`);
         if (upgraded) assert(true, 'a nested shadow inherits the registry of its host — isolation composes');
-        else todo(false, 'a nested shadow falls back to global — a component must pass its own registry on');
+        else info('a nested shadow falls back to global — a component must pass its own registry on (u2 elements do)');
 
         // and a nested root that brings its own stays separate
         const own = new CustomElementRegistry();
@@ -226,6 +226,50 @@ section('one registry per version fixes the nesting');
         assert(inner.querySelector('x-nested').dataset.up === '1', 'passing it on makes nesting resolve too');
         assert(!customElements.get('x-nested'), 'and nothing of it reaches window.customElements');
     }
+}
+
+section('U2Element.useClass / useEl bring css into the shadow');
+{
+    const { default: U2Element } = await import('../Element.js');
+    class Probe extends U2Element {
+        constructor() { super(); this.attachShadow({mode:'open'}); this.useClass('badge'); }
+    }
+    const root = makeHost();
+    (root.customElementRegistry ?? customElements).define('x-uses-class', Probe);
+    root.innerHTML = '<x-uses-class></x-uses-class>';
+    const el = root.querySelector('x-uses-class');
+    const sheets = await until(() => el.shadowRoot.adoptedStyleSheets.length ? el.shadowRoot.adoptedStyleSheets : null);
+    assert(sheets, 'useClass() adopts the class stylesheet');
+    assert([...sheets[0].cssRules].some(r => r.selectorText?.includes('u2-badge')), 'and it is the right one');
+}
+
+section('a real u2 element passes its registry on');
+{
+    const root = makeHost('<u2-alert variant=info>nested</u2-alert>');
+    const alert = root.querySelector('u2-alert');
+    await until(() => alert.shadowRoot);
+    assert(alert.shadowRoot, 'u2-alert opens its shadow');
+
+    if (!scoped) skip('no scoped registries — the inner u2-ico goes global');
+    else {
+        assert(alert.shadowRoot.customElementRegistry === root.customElementRegistry,
+            'the inner shadow inherits the registry of the root it lives in');
+        assert(await until(() => root.customElementRegistry.get('u2-ico')),
+            'and the child it needs is defined there');
+    }
+    assert(await until(() => alert.shadowRoot.querySelector('u2-ico')?.constructor !== HTMLElement),
+        'the nested u2-ico is upgraded');
+}
+
+section('an element outside any scoped root still works');
+{
+    // customElementRegistry is undefined there — the option must be treated as absent, not as an error
+    const host = document.createElement('div');
+    hosts.append(host);
+    const inner = host.attachShadow({ mode: 'open', customElementRegistry: undefined });
+    assert(inner, 'attachShadow() accepts customElementRegistry: undefined');
+    assert(inner.customElementRegistry === (scoped ? customElements : undefined),
+        'and falls back to the global registry');
 }
 
 section('one class in several registries');

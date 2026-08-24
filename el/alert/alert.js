@@ -1,8 +1,6 @@
-
-const icoCssUrl = import.meta.resolve('../../el/ico/ico.css');
+import U2Element from '../../u2/Element.js';
 
 const style = `
-@import url('${icoCssUrl}');
 :host(:not([dismissable]))::part(close) { display:none; } /* TODO: does not work in chrome */
 :host {
     --u2-ico-dir:var(--u2-ico-dir-material);
@@ -80,14 +78,13 @@ slot[name=icon] {
 /* slot[name=action]:empty-slot { display:none; } not possible */`;
 
 
-export default class U2Alert extends HTMLElement {
+export default class U2Alert extends U2Element {
     constructor() {
         super();
  
-        import('../../attr/focusgroup/focusgroup.js');
-        import('../ico/ico.js');
-
         this.attachShadow({mode: 'open'});
+        this.useEl('ico');
+        this.useAttr('focusgroup');
         this.shadowRoot.innerHTML = `
             <style>${style}</style>
             <div id=container>

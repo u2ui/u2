@@ -1,7 +1,6 @@
-const icoCssUrl = import.meta.resolve('../../el/ico/ico.css');
+import U2Element from '../../u2/Element.js';
 
 const style = `
-@import url('${icoCssUrl}');
 :host {
     --u2-ico-dir: var(--u2-ico-dir-material);
     --color-inactive:#ccc;
@@ -25,15 +24,14 @@ const style = `
 }
 `;
 
-export default class U2Rating extends HTMLElement {
+export default class U2Rating extends U2Element {
     static formAssociated = true;
     #value = null;
     constructor() {
         super();
 
-        import('../ico/ico.js');
-
         this.attachShadow({mode: 'open'});
+        this.useEl('ico');
         this.shadowRoot.innerHTML = `
             <style>${style}</style>
             <div id=stars></div>

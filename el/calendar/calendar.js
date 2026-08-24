@@ -1,5 +1,6 @@
+import U2Element from '../../u2/Element.js';
 
-export default class U2Calendar extends HTMLElement {
+export default class U2Calendar extends U2Element {
   static observedAttributes = ['view', 'date', 'lang'];
 
   constructor() {
@@ -8,12 +9,10 @@ export default class U2Calendar extends HTMLElement {
     this._currentDate = new Date();
     this._locale = null;
     this._weekStart = 0; // 0 = Sunday .. 6 = Saturday
-    import('../ico/ico.js');
-    const icoCssUrl = import.meta.resolve('../ico/ico.css');
+    this.useEl('ico');
 
     this.shadowRoot.innerHTML = `
       <style>
-        @import url('${icoCssUrl}');
         :host {
           display: flex;
           flex-direction: column;
@@ -295,7 +294,7 @@ export default class U2Calendar extends HTMLElement {
 
 
 
-class U2CalendarItem extends HTMLElement {
+class U2CalendarItem extends U2Element {
   static observedAttributes = ['start', 'end'];
 
   constructor() {
