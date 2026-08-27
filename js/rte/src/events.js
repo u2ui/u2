@@ -1,6 +1,5 @@
 import {$range} from './range.js';
 
-
 export let active = null; // the active contenteditable (even if the toolbar has focus)
 export let focused = null; // the focused contenteditable (not if the toolbar has focus)
 export let range = null; // the current selection range

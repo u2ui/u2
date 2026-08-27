@@ -1,5 +1,3 @@
-
-
 const selection = getSelection();
 const chainedFns = {setStart:1,setStartBefore:1,setStartAfter:1,setEnd:1,setEndAfter:1,selectNode:1,selectNodeContents:1,insertNode:1,collapse:1,deleteContents:1};
 

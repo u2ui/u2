@@ -1,5 +1,3 @@
-
-
 import {$range} from './range.js';
 import * as state from './events.js';
 
