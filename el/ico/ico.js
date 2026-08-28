@@ -61,13 +61,13 @@ export default class U2Ico extends HTMLElement {
             const name = this.getAttribute('icon');
             const path = dirTemplateToUrl(dir, name);
 
-            requestAnimationFrame(()=>{
-                this.setAttribute('state','loading')
-            });
-
             const pathStr = path.toString();
             if (this._lastLoading === pathStr) return; // prevent multiple requests
             this._lastLoading = pathStr;
+
+            requestAnimationFrame(()=>{
+                this.setAttribute('state','loading')
+            });
 
             loadSvgString(path).then(svg=>{
                 // if (path.origin !== location.origin) {} todo: sanitize svg
@@ -85,7 +85,7 @@ export default class U2Ico extends HTMLElement {
                         const height = parseFloat(svgEl.getAttribute('height')) ?? 24;
                         svgEl.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
                     }
-                    ['xmlns','xmlns:xlink','version','class','width','height'].forEach(attr=>svgEl.removeAttribute(attr)); // remove width, height ok?
+                    ['xmlns','xmlns:xlink','version','class'].forEach(attr=>svgEl.removeAttribute(attr));
                     svgEl.ariaHidden = true;
                     this.setAttribute('state','loaded');
                     this.dispatchEvent(new CustomEvent('u2-ico-loaded', {bubbles: true, composed: true}));
