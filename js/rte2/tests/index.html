@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width">
+<title>RTE2 tests</title>
+<style>
+    body { font: 1rem/1.4 system-ui; }
+    [data-result=passed] { color: green; }
+    [data-result=failed] { color: red; white-space: pre-wrap; }
+    [data-rte2-fixture] { position: fixed; inset-inline-start: -100vw; }
+</style>
+<h1>RTE2 tests</h1>
+<ol id=results></ol>
+<script type=module>
+    import '../config/tests/config.test.js';
+    import '../model/tests/content-model.test.js';
+    import '../model/html/tests/html-model.test.js';
+    import '../normalize/repair/tests/repair-planner.test.js';
+    import '../normalize/execute/tests/repair-executor.test.js';
+    import '../normalize/normalizer/tests/normalizer.test.js';
+    import '../playground/tests/playground.test.js';
+    import '../selection/tests/snapshot.test.js';
+    import '../selection/ownership/tests/ownership.test.js';
+    import '../selection/point/tests/point.test.js';
+    import '../selection/map/tests/point-map.test.js';
+    import '../selection/range/tests/edit-range.test.js';
+    import '../transaction/tests/transaction.test.js';
+    import '../surface/tests/surface.test.js';
+    import '../core/tests/core.test.js';
+    import './rte.test.js';
+    import {run} from './harness.js';
+
+    const execute = async () => {
+        const summary = await run(document.querySelector('#results'));
+        document.querySelector('h1').append(` — ${summary.passed}/${summary.total}`);
+    };
+    const start = () => setTimeout(execute);
+    document.readyState === 'complete'
+        ? start()
+        : addEventListener('load', start, {once: true});
+</script>

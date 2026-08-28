@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RTE2 normalization playground</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font: 15px/1.45 system-ui, sans-serif;
+      --border: color-mix(in srgb, CanvasText 24%, transparent);
+      --panel: color-mix(in srgb, CanvasText 5%, Canvas);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 1.25rem; }
+    h1 { margin-block: 0 1rem; }
+
+    .controls {
+      align-items: end;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      margin-block-end: 1rem;
+
+      & label { display: grid; gap: .25rem; }
+      & button, & input, & select { font: inherit; min-height: 2.25rem; }
+      & button { padding-inline: .8rem; }
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: minmax(20rem, 1.2fr) minmax(18rem, 1fr);
+
+      @media (width < 800px) { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      min-width: 0;
+      padding: 1rem;
+
+      & h2 { font-size: 1rem; margin-block: 0 .65rem; }
+      & textarea { inline-size: 100%; min-block-size: 8rem; resize: vertical; }
+      & pre {
+        margin: 0;
+        max-block-size: 24rem;
+        overflow: auto;
+        white-space: pre-wrap;
+      }
+    }
+
+    #stage { background: Canvas; padding: .75rem; }
+    #editor {
+      border: 2px solid color-mix(in srgb, Highlight 55%, var(--border));
+      min-block-size: 9rem;
+      outline: none;
+      padding: .75rem;
+
+      &:focus { border-color: Highlight; }
+      & [contenteditable] { outline: 1px dashed orange; }
+    }
+
+    #status { margin-block: .75rem 0; }
+    .wide { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  <h1>RTE2 normalization playground</h1>
+
+  <div class="controls">
+    <label>Scenario
+      <select id="scenario">
+        <option value="combined">Nested p/div regression</option>
+        <option value="inline">Inline root run</option>
+        <option value="generic">Generic text block</option>
+        <option value="blocks">Redundant block wrapper</option>
+        <option value="list">List with stray blocks</option>
+        <option value="lift">Meaningful invalid block</option>
+        <option value="nested">Nested editable boundary</option>
+      </select>
+    </label>
+    <label>Cleanup level (CSS)
+      <select id="level">
+        <option>none</option>
+        <option>minimal</option>
+        <option selected>structural</option>
+        <option>canonical</option>
+      </select>
+    </label>
+    <label>Default block (CSS)
+      <input id="block" value="auto" size="8">
+    </label>
+    <button id="load" type="button">Load scenario</button>
+    <button id="analyze" type="button">Analyze</button>
+    <button id="step" type="button">One step</button>
+    <button id="normalize" type="button">Normalize</button>
+    <button id="reset" type="button">Reset</button>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Editable DOM</h2>
+      <div id="stage"></div>
+      <p id="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <h2>DOM tree and selection</h2>
+      <pre id="tree"></pre>
+    </section>
+
+    <section class="panel">
+      <h2>Serialized inner HTML</h2>
+      <textarea id="html" spellcheck="false"></textarea>
+      <button id="apply-html" type="button">Parse and apply HTML</button>
+    </section>
+
+    <section class="panel">
+      <h2>Plans and executed actions</h2>
+      <pre id="log">Load a scenario, then analyze or normalize it.</pre>
+    </section>
+
+    <section class="panel wide">
+      <h2>Notes</h2>
+      <p>
+        Invalid nested structures are built with DOM methods because the HTML
+        parser repairs some of them immediately. “Parse and apply HTML” is
+        deliberately available to compare parser behavior with RTE2 behavior.
+        Place a selection inside the editor before stepping to observe mapped
+        range boundaries.
+      </p>
+    </section>
+  </div>
+
+  <script type="module">
+    import {config} from '../config/config.js';
+    import {htmlModel} from '../model/html/html-model.js';
+    import {Normalizer} from '../normalize/normalizer/normalizer.js';
+    import {RepairPlanner} from '../normalize/repair/repair-planner.js';
+    import {EditRange} from '../selection/range/edit-range.js';
+    import {isEditingBoundary} from '../selection/ownership/ownership.js';
+    import {Point} from '../selection/point/point.js';
+    import {SelectionSnapshot} from '../selection/snapshot.js';
+
+    const controls = {
+      scenario: document.querySelector('#scenario'),
+      level: document.querySelector('#level'),
+      block: document.querySelector('#block'),
+      load: document.querySelector('#load'),
+      analyze: document.querySelector('#analyze'),
+      step: document.querySelector('#step'),
+      normalize: document.querySelector('#normalize'),
+      reset: document.querySelector('#reset'),
+      html: document.querySelector('#html'),
+      applyHtml: document.querySelector('#apply-html'),
+      stage: document.querySelector('#stage'),
+      status: document.querySelector('#status'),
+      tree: document.querySelector('#tree'),
+      log: document.querySelector('#log'),
+    };
+    const scenarios = {
+      combined: {
+        tag: 'div',
+        block: 'auto',
+        build(host) {
+          const paragraph = document.createElement('p');
+          const nested = document.createElement('div');
+          const following = document.createElement('div');
+          nested.textContent = 'test';
+          following.textContent = 'hallo';
+          paragraph.append(nested, ' abc');
+          host.append(paragraph, following);
+        },
+      },
+      inline: {tag: 'div', block: 'auto', html: 'one <strong>two</strong> three'},
+      generic: {tag: 'section', block: 'auto', html: '<div>hello <em>world</em></div>'},
+      blocks: {tag: 'section', block: 'auto', html: '<div><p>one</p><p>two</p></div>'},
+      list: {tag: 'ul', block: 'auto', html: '<p>one</p><p>two</p>'},
+      lift: {
+        tag: 'div',
+        block: 'auto',
+        build(host) {
+          const paragraph = document.createElement('p');
+          const section = document.createElement('section');
+          section.className = 'meaningful';
+          section.textContent = 'block';
+          paragraph.append('before ', section, ' after');
+          host.append(paragraph);
+        },
+      },
+      nested: {tag: 'div', block: 'auto', html: '<div contenteditable><div>nested</div></div><div>outer</div>'},
+    };
+    let editor;
+    let observer;
+
+    controls.load.addEventListener('click', load);
+    controls.reset.addEventListener('click', load);
+    controls.analyze.addEventListener('click', analyze);
+    controls.step.addEventListener('click', () => execute('step'));
+    controls.normalize.addEventListener('click', () => execute('normalize'));
+    controls.applyHtml.addEventListener('click', () => {
+      editor.innerHTML = controls.html.value;
+      show('HTML parsed by the browser.');
+    });
+    document.addEventListener('selectionchange', refreshTree);
+
+    function load() {
+      const scenario = scenarios[controls.scenario.value];
+      observer?.disconnect();
+      editor = document.createElement(scenario.tag);
+      editor.id = 'editor';
+      editor.contentEditable = 'true';
+      controls.block.value = scenario.block;
+      controls.stage.replaceChildren(editor);
+      if (scenario.build) scenario.build(editor);
+      else editor.innerHTML = scenario.html;
+      observer = new MutationObserver(refresh);
+      observer.observe(editor, {subtree: true, childList: true, characterData: true, attributes: true});
+      controls.log.textContent = 'Scenario loaded.';
+      show(`Loaded ${controls.scenario.selectedOptions[0].text}.`);
+    }
+
+    function options() {
+      editor.style.setProperty('--u2-rte-block', controls.block.value.trim() || 'none');
+      editor.style.setProperty('--u2-rte-cleanup', controls.level.value);
+      const settings = config(editor);
+      return {
+        block: settings.block,
+        level: settings.cleanup,
+      };
+    }
+
+    function execute(method) {
+      const selection = trackedSelection();
+      try {
+        const result = new Normalizer(editor, options())[method]({points: selection.points});
+        selection.restore(result.map);
+        const actions = result.actions.map((action, index) => `${index + 1}. ${describeAction(action)}`);
+        const issues = result.issues.map(issue => `! reject ${path(issue.node)}`);
+        controls.log.textContent = [...actions, ...issues].join('\n') || 'No repair required.';
+        show(`${method === 'step' ? 'Step' : 'Normalization'}: ${result.actions.length} action(s), stable: ${result.stable}.`);
+      } catch (error) {
+        controls.log.textContent = error.stack || String(error);
+        show(`${error.name}: ${error.message}`);
+      }
+    }
+
+    function analyze() {
+      const planner = new RepairPlanner(editor, options());
+      const rows = [];
+      for (const parent of parentElements(editor)) {
+        for (const child of parent.childNodes) {
+          const plan = planner.plan(parent, child);
+          if (plan.type === 'keep') continue;
+          rows.push(`${path(child)} → ${describeAction(plan)}`);
+        }
+      }
+      controls.log.textContent = rows.join('\n') || 'No repair required.';
+      show(`${rows.length} non-keep plan(s).`);
+    }
+
+    function parentElements(scope) {
+      const result = [];
+      const visit = element => {
+        if (element !== scope && (isEditingBoundary(element) || htmlModel.atomic(element))) return;
+        for (const child of element.children) visit(child);
+        result.push(element);
+      };
+      visit(scope);
+      return result;
+    }
+
+    function trackedSelection() {
+      const snapshot = SelectionSnapshot.capture(getSelection(), editor);
+      if (!snapshot) return {points: [], restore() {}};
+      const range = snapshot.range();
+      const start = Point.fromRange(range, 'start');
+      const end = Point.fromRange(range, 'end');
+      return {
+        points: [start, end],
+        restore(map) {
+          try {
+            EditRange.fromPoints(map.get(start), map.get(end), editor).select(getSelection(), snapshot.backward);
+          } catch (error) {
+            controls.log.append(`\n! Selection restore failed: ${error.message}`);
+          }
+        },
+      };
+    }
+
+    function refresh() {
+      controls.html.value = editor.innerHTML;
+      refreshTree();
+    }
+
+    function refreshTree() {
+      if (!editor) return;
+      const lines = tree(editor);
+      const selection = getSelection();
+      if (selection.rangeCount && editor.contains(selection.anchorNode) && editor.contains(selection.focusNode)) {
+        lines.push('', `anchor: ${path(selection.anchorNode)} @ ${selection.anchorOffset}`);
+        lines.push(`focus:  ${path(selection.focusNode)} @ ${selection.focusOffset}`);
+      }
+      controls.tree.textContent = lines.join('\n');
+    }
+
+    function tree(node, depth = 0, lines = []) {
+      const pad = '  '.repeat(depth);
+      if (node.nodeType === Node.TEXT_NODE) {
+        lines.push(`${pad}#text ${JSON.stringify(node.data)}`);
+      } else {
+        const attrs = [...node.attributes].map(attribute => ` ${attribute.name}=${JSON.stringify(attribute.value)}`).join('');
+        lines.push(`${pad}<${node.localName}${attrs}>`);
+        for (const child of node.childNodes) tree(child, depth + 1, lines);
+      }
+      return lines;
+    }
+
+    function path(node) {
+      if (node === editor) return editor.localName;
+      const parts = [];
+      for (let current = node; current && current !== editor; current = current.parentNode) {
+        const parent = current.parentNode;
+        if (!parent) break;
+        const index = Array.prototype.indexOf.call(parent.childNodes, current);
+        parts.unshift(`${current.nodeType === Node.TEXT_NODE ? '#text' : current.localName}[${index}]`);
+      }
+      return `${editor.localName}/${parts.join('/')}`;
+    }
+
+    function describeAction(action) {
+      const details = [];
+      if (action.tag) details.push(`<${action.tag}>`);
+      if (action.count) details.push(`${action.count} nodes`);
+      if (action.breaks) details.push('preserve breaks');
+      if (action.target) details.push(`to ${path(action.target)}`);
+      return `${action.type}${details.length ? ` (${details.join(', ')})` : ''}`;
+    }
+
+    function show(message) {
+      controls.status.textContent = message;
+      refresh();
+    }
+
+    load();
+  </script>
+</body>
+</html>
