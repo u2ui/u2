@@ -3,7 +3,7 @@ u2-tooltip {
     /* relevant */
     opacity: 0;
     visibility:hidden;
-    position: absolute;
+    position: absolute; /* keep its document position while scrolling */
     left: -9999px;
     top: -9999px;
     z-index: 9999;

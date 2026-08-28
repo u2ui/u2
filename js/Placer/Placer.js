@@ -52,7 +52,8 @@ export class Placer {
 
         let position = getComputedStyle(this.el).getPropertyValue('position');
         if (position !== 'fixed') {
-            let root = offsetParent(this.el);
+            // Popovers use the top-layer containing block regardless of their DOM ancestry.
+            let root = this.el.popover ? null : offsetParent(this.el);
             if (root) {
                 // if (!root) root = document.documentElement; // make no sense
                 viewport = root.getBoundingClientRect();
