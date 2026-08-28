@@ -37,13 +37,23 @@ test('playground: one step maps and restores a live selection', () => withPlaygr
 test('playground: host-specific list defaults can be inspected and executed', () => withPlayground(document => {
     const scenario = document.querySelector('#scenario');
     scenario.value = 'list';
-    document.querySelector('#load').click();
+    scenario.dispatchEvent(new document.defaultView.Event('change'));
     document.querySelector('#normalize').click();
     const editor = document.querySelector('#editor');
     equal(editor.localName, 'ul');
     equal(editor.contentEditable, 'true');
     equal(editor.innerHTML, '<li><p>one</p></li><li><p>two</p></li>');
     equal(document.querySelector('#block').value, 'auto');
+}));
+
+test('playground: synthetic input runs through the installed input pipeline', () => withPlayground(document => {
+    const scenario = document.querySelector('#scenario');
+    scenario.value = 'generic';
+    scenario.dispatchEvent(new document.defaultView.Event('change'));
+    document.querySelector('#input-type').value = 'insertText';
+    document.querySelector('#dispatch-input').click();
+    equal(document.querySelector('#editor').innerHTML, '<p>hello <em>world</em></p>');
+    truthy(document.querySelector('#log').textContent.includes('convert'));
 }));
 
 async function withPlayground(run) {

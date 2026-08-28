@@ -1,8 +1,8 @@
-# Foundation test suite
+# Browser test suite
 
-`index.html` runs dependency-free browser tests for every production file in
-the initial RTE2 foundation. `harness.js` deliberately provides only test
-registration, assertions, fixture cleanup, and a machine-readable result.
+`index.html` runs dependency-free browser tests for every current production
+file. `harness.js` deliberately provides only test registration, assertions,
+fixture cleanup, and a machine-readable result.
 
 Open `index.html` through HTTP in each current target browser. Completion is
 reported through `document.documentElement.dataset.result` and
@@ -11,7 +11,8 @@ The runner starts after `window.load`, so cold module loading cannot suppress or
 reorder focus behavior under test.
 
 Browser behaviors that intentionally depend on DevTools or top-level window
-state have isolated pages in [`repros/`](./repros/README.md).
+state belong in isolated reproduction pages rather than the deterministic main
+suite. No such pages are currently part of RTE2.
 
 ## Coverage rules
 

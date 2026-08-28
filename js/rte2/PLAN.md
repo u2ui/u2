@@ -10,6 +10,18 @@ fixes, is first captured as black-box tests. RTE2 then preserves or deliberately
 improves it through smaller responsibilities; structural weaknesses in the old
 implementation are not mistaken for behavioral failures.
 
+## Resume work
+
+Phases 0–3 provide the core, selection/range primitives, content model, scoped
+normalization, playground, and post-native input pipeline. The next production
+responsibility is phase 4: define the mark algebra in tests and documentation,
+then implement range-based inline commands without `execCommand()`.
+
+The 106-test baseline was confirmed in current Chromium, Firefox, and WebKit.
+The current runner contains 146 tests after the input-pipeline work and still
+needs to be confirmed as one unchanged revision in all three engines. Treat the
+number shown by `/u2/js/rte2/tests/` as authoritative when tests are added.
+
 ## 0. Foundation
 
 Status: implemented. The 106-test foundation and policy suite passed in current
@@ -67,6 +79,11 @@ whole-tree cleanup are not carried forward.
 
 ## 3. Input pipeline
 
+Status: post-native event classification, CSS cleanup triggers, live target
+ranges, local normalization scope, composition deferral, nested-host isolation,
+selection mapping, and teardown are implemented. Sanitized external insertion
+and prevented structural commands are next.
+
 - Route `beforeinput`, `input`, composition, paste, drop, delete, and Enter by
   `inputType` and host policy.
 - Let native editing proceed only where its result is interoperable and covered
@@ -80,6 +97,9 @@ Tests use trusted browser input where automation allows it and direct event/
 command contracts for exhaustive edge cases.
 
 ## 4. Marks and inline commands
+
+Status: next. Specify the replaceable mark descriptor and its equivalence,
+conflict, merge, and removal rules before adding command implementations.
 
 - Implement apply, remove, and toggle over arbitrary ranges without
   `document.execCommand()`.

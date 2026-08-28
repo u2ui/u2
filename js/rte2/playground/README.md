@@ -15,6 +15,8 @@ nested editable isolation, and the original invalid `p/div` example.
 - Change cleanup level and default block through the production CSS custom
   properties; `auto` demonstrates semantic host defaults such as `li` for a
   `ul` editor.
+- Dispatch selected Input Events through the production `InputPipeline` and
+  control its `input paste drop command` triggers with `--u2-rte-clean-on`.
 - Edit content directly or parse serialized HTML through the browser.
 - Compare the live DOM tree with `innerHTML` serialization.
 - Display executed actions, unresolved repairs, and selection endpoints.
@@ -26,8 +28,8 @@ difference.
 
 `tests/playground.test.js` loads the complete page in a same-origin frame. It
 checks bootstrapping, pure analysis, one-step selection restoration, complete
-normalization, action reporting, and host-specific list defaults in every
-target browser.
+normalization, action reporting, host-specific list defaults, and synthetic
+input routing in every target browser.
 
 ## TODO
 
@@ -35,4 +37,4 @@ target browser.
 - Add scope selection and transaction dirty-scope visualization.
 - Show before/after range boundaries for every individual operation.
 - Export and import minimized custom scenarios as JSON.
-- Add command, paste, drop, and history panels when those modules exist.
+- Add clipboard/drop payload and history panels when those modules exist.

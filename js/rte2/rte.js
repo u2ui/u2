@@ -2,6 +2,7 @@ import {Rte} from './core/core.js';
 
 export {config, enabled, hostDefaults} from './config/config.js';
 export {Rte} from './core/core.js';
+export {InputPipeline, inputTrigger} from './input/input-pipeline.js';
 export {ContentModel} from './model/content-model.js';
 export {createHtmlModel, htmlModel} from './model/html/html-model.js';
 export {RepairPlanner} from './normalize/repair/repair-planner.js';

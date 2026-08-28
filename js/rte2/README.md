@@ -4,6 +4,21 @@ RTE2 is a modern, modular rich-text editing engine for current browsers. Its
 small core owns editor state, transactions, selections, and ranges; everything
 else plugs in as an independent module. A UI is only one possible consumer.
 
+## Start here
+
+Read this file for the design, then [`PLAN.md`](./PLAN.md) for implementation
+status and the README beside the responsibility being changed for its exact
+contract and TODOs. The current production path ends at the input pipeline;
+marks and inline commands are the next responsibility.
+
+Run the dependency-free browser suite at `/u2/js/rte2/tests/` and inspect
+normalization interactively at `/u2/js/rte2/playground/`. The runner displays
+its own test count and result. A result is cross-browser evidence only after
+that exact revision has run in current Chromium, Firefox, and WebKit.
+
+`../rte` is a read-only behavioral reference. Reuse proven behavior and CSS
+configuration ideas, but do not copy its architecture or modify its files.
+
 ## Intended features
 
 - Native `contenteditable`, `Selection`, `Range`, `beforeinput`, and Input
@@ -106,10 +121,10 @@ properties. This lets a stylesheet configure an editor family while each
 default for the host element. JavaScript configuration is reserved for values
 that CSS cannot express, such as functions and policy modules.
 
-Planned controls include UI mode and command sets, block and line-break
-behavior, allowed content, cleanup level and timing, paste/drop policy,
-selection presentation, and browser-policy overrides. Defaults must make an
-unconfigured editor useful and produce structurally valid HTML:
+Current controls cover UI mode, block and Enter behavior, and cleanup level and
+timing. Future modules will add command sets, allowed content, paste/drop
+policy, selection presentation, and browser-policy overrides. Defaults must
+make an unconfigured editor useful and produce structurally valid HTML:
 
 - `ul` and `ol` hosts create and retain `li` children;
 - paragraph-like and other inline-only hosts never gain block children;
@@ -169,9 +184,23 @@ A scope expands only when a repair crosses its boundary. Normalization must be
 idempotent, preserve meaningful content and selection, and never cross another
 editable host.
 
+## Input pipeline
+
+`InputPipeline` is installed per surface and treats native editing as a DOM
+mutation followed by explicit postcondition checks. It captures live
+`beforeinput` target ranges, classifies paste and drop separately, defers work
+during IME composition, normalizes the smallest useful block scope, and maps
+the current selection through every repair. CSS controls which of `input`,
+`paste`, `drop`, and `command` trigger cleanup. Nested editors remain isolated,
+and disconnecting a surface tears down its listeners.
+
+The pipeline deliberately does not read or trust clipboard and drag payloads.
+Future sanitizer adapters insert approved fragments before handing the affected
+range to this same normalization path.
+
 ## Documentation and tests
 
-Every source file will have:
+Every production source currently has:
 
 - its own focused documentation describing purpose, public contract,
   invariants, browser considerations, examples, and concrete TODOs;
@@ -187,9 +216,10 @@ normalizer, point mapping, and range code as production. It can inspect or step
 through invalid DOM structures that the HTML parser would repair before an
 editor could observe them.
 
-The suite combines fixture tests, command and event integration tests, real
-keyboard/clipboard/drop interactions, browser-regression cases, and generated
-DOM/range cases. Core invariants include valid host structure, idempotent
+The current suite combines fixture tests, direct event integration tests, and
+browser-regression cases. Later command, clipboard/drop, generated DOM/range,
+and history phases add trusted interactions and their exact invariants. Across
+all phases, core invariants include valid host structure, idempotent
 normalization, stable canonical output, equivalent results for forward and
 backward selections, preserved selection intent, complete cleanup, and exact
 transactional undo/redo.
@@ -199,7 +229,7 @@ transactional undo/redo.
 - Specify the native Sanitizer and DOMPurify adapter contract.
 - Specify mark algebra and replacement rules for tags, classes, attributes,
   styles, and custom range transforms.
-- Integrate scoped normalization into input and command transactions.
+- Integrate scoped normalization into the forthcoming command transactions.
 - Add generated normalization convergence and point-mapping cases.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.
 - Port only the proven ideas from `../rte`; keep its implementation untouched.
