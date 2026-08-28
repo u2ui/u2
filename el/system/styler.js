@@ -597,6 +597,7 @@ function parseCssLength(str) {
 }
 
 function unitToPx(value, unit, el){
+    if (!unit) return value;
     if (unit === 'px') return value;
     if (unit === 'cm') return value * 96 / 2.54;
     if (unit === 'mm') return value * 96 / 25.4;
@@ -627,6 +628,7 @@ function unitToPx(value, unit, el){
 }
 
 function pxToUnit(px, unit, el){
+    if (!unit) return px;
     if (unit === 'px')  return px;
     if (unit === 'cm')  return px * 2.54 / 96;
     if (unit === 'mm')  return px * 25.4 / 96;
