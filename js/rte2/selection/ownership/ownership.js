@@ -5,6 +5,10 @@ export function isEditableHost(element) {
     return value === '' || value === 'true' || value === 'plaintext-only';
 }
 
+export function isPlainTextHost(element) {
+    return editableValue(element) === 'plaintext-only';
+}
+
 export function isEditingBoundary(element) {
     return editableValue(element) !== null;
 }

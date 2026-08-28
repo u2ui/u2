@@ -16,9 +16,12 @@ export class EditRange {
     }
 
     static fromSelection(selection, root) {
-        if (!selection?.rangeCount) return null;
+        return selection?.rangeCount ? this.fromRange(selection.getRangeAt(0), root) : null;
+    }
+
+    static fromRange(range, root) {
         try {
-            return new this(root, selection.getRangeAt(0));
+            return new this(root, range);
         } catch (error) {
             if (error instanceof RangeError) return null;
             throw error;
@@ -165,15 +168,12 @@ export class EditRange {
                 return overlaps(start, end, node) ? filter.FILTER_ACCEPT : filter.FILTER_REJECT;
             },
         });
-        const blocks = [];
-        const seen = new Set();
+        const blocks = new Set();
         while (walker.nextNode()) {
             const block = closest(walker.currentNode, this.#root, match);
-            if (!block || seen.has(block)) continue;
-            seen.add(block);
-            blocks.push(block);
+            if (block) blocks.add(block);
         }
-        return blocks;
+        return [...blocks].sort(treeOrder);
     }
 
     roots() {
@@ -213,6 +213,10 @@ function closest(node, root, match) {
         element = element.parentElement;
     }
     return null;
+}
+
+function treeOrder(node, other) {
+    return node.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
 }
 
 function overlaps(start, end, node) {

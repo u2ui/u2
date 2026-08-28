@@ -8,8 +8,9 @@ else plugs in as an independent module. A UI is only one possible consumer.
 
 Read this file for the design, then [`PLAN.md`](./PLAN.md) for implementation
 status and the README beside the responsibility being changed for its exact
-contract and TODOs. The current production path ends at the input pipeline;
-marks and inline commands are the next responsibility.
+contract and TODOs. The current production path ends at the command layer:
+registered commands replace prevented native input, starting with Enter. Marks
+and inline commands are the next responsibility.
 
 Run the dependency-free browser suite at `/u2/js/rte2/tests/` and inspect
 normalization interactively at `/u2/js/rte2/playground/`. The runner displays
@@ -78,7 +79,7 @@ rte2/
 ├── surface/               State of one editable host
 ├── selection/             Selection and range primitives
 ├── transaction/           Atomic editing changes and dirty scopes
-├── command/               Formatting and structural commands
+├── command/               Registered commands, edit context, Enter behavior
 ├── input/                 beforeinput, paste, drop, and composition
 ├── ui/                    Roaming and static UI adapters
 ├── browser/               Feature-detected engine policies
@@ -148,8 +149,11 @@ elements as indivisible. Equivalent adjacent wrappers are merged; empty,
 redundant, and conflicting wrappers are removed. Formatting must not leave DOM
 shape dependent on the direction in which the selection was made.
 
-Commands expose execution, availability, and active/mixed state independently
-of any UI. Undo and redo operate on complete editor transactions rather than
+Commands are registered per surface, expose execution and availability
+independently of any UI, and declare which native `inputType` they replace. The
+input pipeline prevents exactly those native behaviors and runs the command
+inside one transaction. Active and mixed state joins this contract with the mark
+algebra. Undo and redo operate on complete editor transactions rather than
 individual incidental DOM mutations.
 
 ## Normalization
@@ -216,8 +220,8 @@ normalizer, point mapping, and range code as production. It can inspect or step
 through invalid DOM structures that the HTML parser would repair before an
 editor could observe them.
 
-The current suite combines fixture tests, direct event integration tests, and
-browser-regression cases. Later command, clipboard/drop, generated DOM/range,
+The current suite combines fixture tests, direct event integration tests,
+seeded generated cases, and browser-regression cases. Later command, clipboard/drop, generated DOM/range,
 and history phases add trusted interactions and their exact invariants. Across
 all phases, core invariants include valid host structure, idempotent
 normalization, stable canonical output, equivalent results for forward and
@@ -230,6 +234,5 @@ transactional undo/redo.
 - Specify mark algebra and replacement rules for tags, classes, attributes,
   styles, and custom range transforms.
 - Integrate scoped normalization into the forthcoming command transactions.
-- Add generated normalization convergence and point-mapping cases.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.
 - Port only the proven ideas from `../rte`; keep its implementation untouched.

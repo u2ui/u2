@@ -13,14 +13,17 @@ implementation are not mistaken for behavioral failures.
 ## Resume work
 
 Phases 0–3 provide the core, selection/range primitives, content model, scoped
-normalization, playground, and post-native input pipeline. The next production
-responsibility is phase 4: define the mark algebra in tests and documentation,
-then implement range-based inline commands without `execCommand()`.
+normalization, playground, and input pipeline. The command layer, the prevented
+input path, and Enter now close the phase-3 gap between configuration and
+behavior. The next production responsibility is phase 4: define the mark algebra
+in tests and documentation, then implement range-based inline commands without
+`execCommand()`.
 
 The 106-test baseline was confirmed in current Chromium, Firefox, and WebKit.
-The current runner contains 146 tests after the input-pipeline work and still
-needs to be confirmed as one unchanged revision in all three engines. Treat the
-number shown by `/u2/js/rte2/tests/` as authoritative when tests are added.
+The current runner contains 191 tests. This revision passes all of them in
+Chromium 152 and Firefox 154; WebKit still has to confirm the same revision.
+Treat the number shown by `/u2/js/rte2/tests/` as authoritative when tests are
+added.
 
 ## 0. Foundation
 
@@ -44,7 +47,9 @@ Exit criteria:
 
 Status: ownership, live points, range splitting, text/block traversal,
 containment, and explicit operation mapping are implemented. The browser
-baseline passed in all target engines; generated operation sequences are next.
+baseline passed in all target engines. Generated cases cover range traversal and
+the content-preserving point-map operations; `remove`, `replace`, and `move`
+still need an oracle of their own.
 
 - Define logical DOM points with affinity at text, element, and atomic bounds.
 - Map points through split, wrap, unwrap, replace, move, merge, and remove.
@@ -59,8 +64,8 @@ atomic nodes, nested hosts, and generated forward/backward ranges.
 
 Status: the immutable policy engine, standards-oriented HTML rules, pure repair
 planning, mapped repair execution, scoped fixed-point normalization, and a
-visual playground are implemented. The expanded browser suite awaits its
-cross-engine run.
+visual playground are implemented. Generated cases assert convergence,
+idempotence, preserved text, and valid output across levels and host tags.
 
 - Model permitted parents/children from HTML content categories plus editor
   policy overrides.
@@ -81,8 +86,9 @@ whole-tree cleanup are not carried forward.
 
 Status: post-native event classification, CSS cleanup triggers, live target
 ranges, local normalization scope, composition deferral, nested-host isolation,
-selection mapping, and teardown are implemented. Sanitized external insertion
-and prevented structural commands are next.
+selection mapping, teardown, and command routing for prevented native input are
+implemented. Sanitized external insertion is next; deletion types stay native
+until commands can delete a range.
 
 - Route `beforeinput`, `input`, composition, paste, drop, delete, and Enter by
   `inputType` and host policy.
@@ -115,6 +121,10 @@ Tests combine partial text, multiple blocks, nested marks, overlapping removal,
 backward selections, atomic content, repeated toggles, and exact undo.
 
 ## 5. Structural commands
+
+Status: started. The command registry, the `Edit` execution context, the
+`PointMap.split()` primitive, and the Enter/line-break commands are
+implemented; everything below is open.
 
 - Paragraph and heading conversion, line/block split and merge.
 - Ordered/unordered lists with indent, outdent, split, and lift.

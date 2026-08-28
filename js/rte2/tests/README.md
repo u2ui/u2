@@ -14,6 +14,13 @@ Browser behaviors that intentionally depend on DevTools or top-level window
 state belong in isolated reproduction pages rather than the deterministic main
 suite. No such pages are currently part of RTE2.
 
+`generated.test.js` adds seeded cross-module cases: it builds random editable
+content from a fixed seed and asserts the invariants that no single fixture can
+state — normalization converges, keeps visible text and stays idempotent, mapped
+points keep their surrounding text through content-preserving operations, and
+edit-range traversal agrees with its native range. Change a seed to explore
+further; keep a case it uncovers as a named regression test.
+
 ## Coverage rules
 
 - Every production file has a dedicated `*.test.js` beside its responsibility.
@@ -30,5 +37,4 @@ suite. No such pages are currently part of RTE2.
 
 - Run the suite automatically in current Chromium, Firefox, and WebKit.
 - Add trusted keyboard, clipboard, drag/drop, and IME automation helpers.
-- Add seeded DOM/range generation with reproducible failing cases.
 - Record coverage by responsibility without introducing a build requirement.

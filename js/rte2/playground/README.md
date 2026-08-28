@@ -17,6 +17,8 @@ nested editable isolation, and the original invalid `p/div` example.
   `ul` editor.
 - Dispatch selected Input Events through the production `InputPipeline` and
   control its `input paste drop command` triggers with `--u2-rte-clean-on`.
+- Observe the prevented-input path: `insertParagraph` and `insertLineBreak` run
+  the registered `enter` and `lineBreak` commands instead of native editing.
 - Edit content directly or parse serialized HTML through the browser.
 - Compare the live DOM tree with `innerHTML` serialization.
 - Display executed actions, unresolved repairs, and selection endpoints.

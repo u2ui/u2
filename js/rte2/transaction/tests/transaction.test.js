@@ -32,7 +32,7 @@ test('transaction: emits ordered local and DOM lifecycle events', () => withFixt
         surface.addEventListener('u2-rte-change', () => events.push('surface-change'));
         surface.element.addEventListener('u2-rte-change', () => events.push('dom-change'));
         surface.transact(() => events.push('change'));
-        equal(events, ['surface-before', 'dom-before', 'change', 'surface-change', 'dom-change']);
+        equal(events, ['dom-before', 'surface-before', 'change', 'dom-change', 'surface-change']);
         core.destroy();
     }
 ));

@@ -1,4 +1,4 @@
-import {belongsTo, editingHost, isEditableHost, isEditingBoundary, selectionOf} from '../ownership.js';
+import {belongsTo, editingHost, isEditableHost, isEditingBoundary, isPlainTextHost, selectionOf} from '../ownership.js';
 import {equal, same, test, truthy, withFixture} from '../../../tests/harness.js';
 
 test('ownership: inherited editable content belongs to its explicit host', () => withFixture(
@@ -48,5 +48,16 @@ test('ownership: only standard contenteditable values create boundaries', () => 
 test('ownership: resolves the document selection for a document host', () => withFixture(
     '<div contenteditable>text</div>', root => {
         same(selectionOf(root.firstElementChild), getSelection());
+    }
+));
+
+test('ownership: plain-text hosts are recognized as editable but not structural', () => withFixture(
+    '<div id=rich contenteditable></div><div id=plain contenteditable=plaintext-only></div>', root => {
+        const rich = root.querySelector('#rich');
+        const plain = root.querySelector('#plain');
+        truthy(isEditableHost(plain));
+        truthy(isPlainTextHost(plain));
+        equal(isPlainTextHost(rich), false);
+        equal(isPlainTextHost(root), false);
     }
 ));

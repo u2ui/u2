@@ -74,21 +74,20 @@ export class RepairPlanner {
 
     #rootPlan(child) {
         const wrapper = this.#element(this.#block);
+        if (!wrapper || !this.#model.allows(this.#root, wrapper)) return null;
         if (ignorable(child)) {
             const previous = child.previousSibling;
             return child.nodeType === Node.TEXT_NODE
                 && previous
                 && !ignorable(previous)
                 && !this.#model.block(previous)
-                && wrapper
                 && this.#model.allows(wrapper, child)
                     ? action('wrap', {tag: wrapper.localName})
                     : REMOVE;
         }
-        if (!wrapper || !this.#model.allows(this.#root, wrapper)) return null;
         if (child.nodeType === Node.ELEMENT_NODE && this.#generic.has(child.localName) && neutral(child)) {
             const children = [...child.childNodes];
-            if (children.every(node => this.#model.allows(wrapper, node))) {
+            if (child.localName !== wrapper.localName && children.every(node => this.#model.allows(wrapper, node))) {
                 return action('convert', {tag: wrapper.localName});
             }
             const content = children.filter(node => !ignorable(node));

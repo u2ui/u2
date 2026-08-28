@@ -1,5 +1,8 @@
 import {Rte} from './core/core.js';
 
+export {Commands} from './command/commands.js';
+export {Edit} from './command/edit.js';
+export {enter, lineBreak} from './command/enter.js';
 export {config, enabled, hostDefaults} from './config/config.js';
 export {Rte} from './core/core.js';
 export {InputPipeline, inputTrigger} from './input/input-pipeline.js';

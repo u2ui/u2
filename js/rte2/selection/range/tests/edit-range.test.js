@@ -139,6 +139,32 @@ test('edit range: block traversal handles invalid nesting without hiding direct 
     }
 ));
 
+test('edit range: fromRange keeps foreign boundaries out instead of throwing', () => withFixture(
+    '<div id=host contenteditable><p>one</p><div contenteditable><p id=nested>two</p></div></div><p id=outside>three</p>', root => {
+        const host = root.querySelector('#host');
+        const inside = document.createRange();
+        inside.selectNodeContents(host.firstElementChild);
+        equal(EditRange.fromRange(inside, host).text, 'one');
+        const outside = document.createRange();
+        outside.selectNodeContents(root.querySelector('#outside'));
+        equal(EditRange.fromRange(outside, host), null);
+        const nested = document.createRange();
+        nested.selectNodeContents(root.querySelector('#nested'));
+        equal(EditRange.fromRange(nested, host), null, 'A nested editable owns its own ranges');
+        throws(() => EditRange.fromRange(inside, root), TypeError);
+    }
+));
+
+test('edit range: block traversal keeps ancestors before their nested blocks', () => withFixture(
+    '<div contenteditable><blockquote id=quote><p id=inner>one</p>two</blockquote></div>', root => {
+        const host = root.firstElementChild;
+        const native = document.createRange();
+        native.selectNodeContents(host);
+        const blocks = new EditRange(host, native).blocks(element => ['BLOCKQUOTE', 'P'].includes(element.tagName));
+        equal(blocks.map(element => element.id), ['quote', 'inner']);
+    }
+));
+
 test('edit range: block traversal skips nested editable hosts', () => withFixture(`
     <div id=outer contenteditable><p id=one>one</p><div contenteditable><p id=hidden>hidden</p></div><p id=two>two</p></div>
 `, root => {

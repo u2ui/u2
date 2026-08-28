@@ -6,7 +6,8 @@ input handling, normalization, and history will all observe the same unit.
 ## Contract
 
 - A transaction runs synchronously and at most once.
-- The surface's saved selection is restored before change hooks execute.
+- A live selection inside the surface is captured before change hooks execute;
+  only a selection the surface does not own is replaced by its saved snapshot.
 - `u2-rte-beforechange` is cancelable on both the surface object and DOM host.
 - `touch(node)` records affected nodes and rejects nodes outside the surface.
 - Nested operations share the surface's current transaction.

@@ -59,11 +59,13 @@ export class Surface extends EventTarget {
         return this;
     }
 
+    // The DOM host is notified first: modules listening on the surface act on
+    // an event, so observers would otherwise see the consequence before it.
     emit(type, detail = {}, options = {}) {
         const init = {detail: {surface: this, ...detail}, cancelable: options.cancelable};
         const Event = this.#element.ownerDocument.defaultView.CustomEvent;
-        const local = this.dispatchEvent(new Event(type, init));
         const dom = this.#element.dispatchEvent(new Event(type, {...init, bubbles: true, composed: true}));
+        const local = this.dispatchEvent(new Event(type, init));
         return local && dom;
     }
 

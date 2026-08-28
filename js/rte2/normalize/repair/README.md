@@ -25,6 +25,9 @@ immutable action without changing nodes, selections, or transaction state.
 - The configured root block wraps direct phrasing content, converts neutral
   generic blocks containing phrasing content, and removes redundant generic
   wrappers around complete blocks.
+- Root shaping requires a root block the root itself permits, and a generic
+  block that already is the root block is never converted into itself. Both
+  keep root repairs convergent instead of undoing each other.
 - Parent rules may provide `defaultChild` for structures such as lists, table
   sections, and rows.
 - Attributes make a wrapper meaningful. Such an element is lifted when a safe

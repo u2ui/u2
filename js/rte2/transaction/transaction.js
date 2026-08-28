@@ -28,8 +28,10 @@ export class Transaction {
 
     run(change) {
         if (this.#state !== 'new') throw new DOMException('A transaction can run only once', 'InvalidStateError');
-        this.#surface.restore();
-        this.#selectionBefore = this.#surface.capture() || this.#surface.selection;
+        // A live selection inside the surface is newer than the saved one; only
+        // a selection the surface does not own is replaced by its snapshot.
+        if (!this.#surface.capture()) this.#surface.restore();
+        this.#selectionBefore = this.#surface.selection;
         if (!this.#surface.emit('u2-rte-beforechange', {transaction: this}, {cancelable: true})) {
             this.#state = 'canceled';
             return;

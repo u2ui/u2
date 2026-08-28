@@ -65,3 +65,21 @@ test('config: block none supports inline-only custom hosts', () => withFixture(
         equal(config(root.firstElementChild).block, null);
     }
 ));
+
+test('config: only usable tag names become the default block', () => withFixture(`
+    <div id=cased contenteditable style="--u2-rte-block: DIV"></div>
+    <div id=custom contenteditable style="--u2-rte-block: x-block"></div>
+    <ul id=quoted contenteditable style='--u2-rte-block: "p"'></ul>
+    <ul id=list contenteditable style="--u2-rte-block: p div"></ul>
+`, root => {
+    equal(config(root.querySelector('#cased')).block, 'div');
+    equal(config(root.querySelector('#custom')).block, 'x-block');
+    equal(config(root.querySelector('#quoted')).block, 'li', 'A quoted value must not reach createElement()');
+    equal(config(root.querySelector('#list')).block, 'li', 'A value list must not reach createElement()');
+}));
+
+test('config: cleanup triggers accept space and comma separated lists', () => withFixture(
+    '<div contenteditable style="--u2-rte-clean-on: paste, drop"></div>', root => {
+        equal(config(root.firstElementChild).cleanOn, ['paste', 'drop']);
+    }
+));

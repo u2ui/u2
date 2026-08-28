@@ -9,6 +9,8 @@
   value, `true`, and `plaintext-only`.
 - `isEditingBoundary(element)` additionally recognizes `false` as an explicit
   isolation boundary.
+- `isPlainTextHost(element)` reports `plaintext-only`, where structural editing
+  commands must not replace the browser's plain-text behavior.
 - `belongsTo(node, host)` requires DOM containment and that exact nearest host.
 - A nested editable therefore never leaks selection or mutations to its parent.
 - `selectionOf(host)` uses the host's tree selection when available and falls

@@ -1,4 +1,6 @@
 import {InputPipeline, inputTrigger} from '../input-pipeline.js';
+import {Commands} from '../../command/commands.js';
+import {enter} from '../../command/enter.js';
 import {Rte} from '../../core/core.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../tests/harness.js';
 
@@ -34,6 +36,26 @@ test('input pipeline: ordinary input normalizes the affected invalid block and p
         equal(paragraph.innerHTML, 'test<br> after');
         equal(host.lastElementChild.outerHTML, '<p>untouched</p>');
         equal(document.getSelection().toString(), 'es');
+    }
+));
+
+test('input pipeline: a collapsed caret survives a repair inserted at its own boundary', () => withPipeline(
+    '<div contenteditable style="--u2-rte-clean-on: input"><p id=paragraph>x</p></div>',
+    ({document, host}) => {
+        const paragraph = host.firstElementChild;
+        const block = document.createElement('div');
+        block.textContent = 'test';
+        paragraph.append(block);
+        const caret = document.createRange();
+        caret.setStart(paragraph, 1);
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(caret);
+        host.dispatchEvent(input(document, 'insertText'));
+        equal(paragraph.innerHTML, 'x<br>test');
+        const selection = document.getSelection();
+        truthy(selection.isCollapsed, 'The caret did not stay collapsed');
+        same(selection.anchorNode, paragraph, 'The caret left its repaired block');
+        equal(selection.anchorOffset, 2);
     }
 ));
 
@@ -133,6 +155,85 @@ test('input pipeline: explicit command cleanup carries transaction metadata', ()
     }
 ));
 
+test('input pipeline: a routed input type is prevented and replaced by its command', () => withPipeline(
+    '<div contenteditable style="--u2-rte-clean-on: input command"><p>onetwo</p></div>',
+    ({document, host}) => {
+        const changes = [];
+        const cleanups = [];
+        const order = [];
+        for (const type of ['u2-rte-command', 'u2-rte-normalize', 'u2-rte-change']) {
+            host.addEventListener(type, event => order.push(event.type));
+        }
+        host.addEventListener('u2-rte-change', event => changes.push(event.detail.transaction));
+        host.addEventListener('u2-rte-normalize', event => cleanups.push(event.detail.trigger));
+        caret(document, host.firstElementChild.firstChild, 3);
+        const event = input(document, 'insertParagraph', 'beforeinput');
+        host.dispatchEvent(event);
+        truthy(event.defaultPrevented, 'The native paragraph split was not prevented');
+        equal(host.innerHTML, '<p>one</p><p>two</p>');
+        equal(document.getSelection().anchorOffset, 0);
+        same(document.getSelection().anchorNode, host.lastElementChild.firstChild);
+        equal(cleanups, ['command']);
+        equal(changes.length, 1, 'A command and its cleanup share one transaction');
+        equal(order, ['u2-rte-command', 'u2-rte-normalize', 'u2-rte-change'], 'Observers see cause before effect');
+    }, {enter}
+));
+
+test('input pipeline: unknown input types and uncancelable events stay native', () => withPipeline(
+    '<div contenteditable><p>onetwo</p></div>', ({document, host}) => {
+        caret(document, host.firstElementChild.firstChild, 3);
+        const unknown = input(document, 'insertText', 'beforeinput');
+        host.dispatchEvent(unknown);
+        equal(unknown.defaultPrevented, false, 'Only registered input types are replaced');
+        const uncancelable = new document.defaultView.InputEvent('beforeinput', {bubbles: true, inputType: 'insertParagraph'});
+        host.dispatchEvent(uncancelable);
+        equal(host.innerHTML, '<p>onetwo</p>', 'An event that cannot be prevented must stay native');
+    }, {enter}
+));
+
+test('input pipeline: without a command registry every input stays native', () => withPipeline(
+    '<div contenteditable><p>onetwo</p></div>', ({document, host}) => {
+        caret(document, host.firstElementChild.firstChild, 3);
+        const event = input(document, 'insertParagraph', 'beforeinput');
+        host.dispatchEvent(event);
+        equal(event.defaultPrevented, false);
+        equal(host.innerHTML, '<p>onetwo</p>');
+    }
+));
+
+test('input pipeline: unavailable commands and plain-text hosts keep native behavior', () => withPipeline(
+    '<div contenteditable=plaintext-only><p>onetwo</p></div>', ({document, host}) => {
+        caret(document, host.firstElementChild.firstChild, 3);
+        const plain = input(document, 'insertParagraph', 'beforeinput');
+        host.dispatchEvent(plain);
+        equal(plain.defaultPrevented, false, 'Plain-text hosts keep the browser behavior');
+        equal(host.innerHTML, '<p>onetwo</p>');
+    }, {enter}
+));
+
+test('input pipeline: a selection is left to native deletion instead of a command', () => withPipeline(
+    '<div contenteditable><p>onetwo</p></div>', ({document, host}) => {
+        const text = host.firstElementChild.firstChild;
+        document.getSelection().setBaseAndExtent(text, 1, text, 4);
+        const event = input(document, 'insertParagraph', 'beforeinput');
+        host.dispatchEvent(event);
+        equal(event.defaultPrevented, false);
+        equal(host.innerHTML, '<p>onetwo</p>');
+    }, {enter}
+));
+
+test('input pipeline: composition is never interrupted by a command', () => withPipeline(
+    '<div contenteditable><p>onetwo</p></div>', ({document, host}) => {
+        caret(document, host.firstElementChild.firstChild, 3);
+        host.dispatchEvent(new document.defaultView.CompositionEvent('compositionstart', {bubbles: true}));
+        const event = input(document, 'insertParagraph', 'beforeinput');
+        host.dispatchEvent(event);
+        equal(event.defaultPrevented, false);
+        equal(host.innerHTML, '<p>onetwo</p>');
+        host.dispatchEvent(new document.defaultView.CompositionEvent('compositionend', {bubbles: true}));
+    }, {enter}
+));
+
 test('input pipeline: destroy removes all native event behavior', () => withPipeline(
     '<div contenteditable><div>text</div></div>', ({document, host, pipeline}) => {
         pipeline.destroy();
@@ -149,14 +250,15 @@ test('input pipeline: surface disconnection tears the module down', () => withPi
     }
 ));
 
-function withPipeline(html, run) {
+function withPipeline(html, run, commands = null) {
     return withFixture(html, async root => {
         const host = root.firstElementChild;
         const core = new Rte(document, {auto: false});
         const surface = core.add(host);
-        const pipeline = new InputPipeline(surface);
+        const registry = commands && new Commands(surface, {commands});
+        const pipeline = new InputPipeline(surface, {commands: registry || null});
         try {
-            return await run({document, host, core, surface, pipeline});
+            return await run({document, host, core, surface, pipeline, commands: registry});
         } finally {
             pipeline.destroy();
             core.destroy();
@@ -164,8 +266,15 @@ function withPipeline(html, run) {
     });
 }
 
+function caret(document, node, offset) {
+    const range = document.createRange();
+    range.setStart(node, offset);
+    document.getSelection().removeAllRanges();
+    document.getSelection().addRange(range);
+}
+
 function input(document, inputType, type = 'input', range = null, isComposing = false) {
-    const event = new document.defaultView.InputEvent(type, {bubbles: true, inputType, isComposing});
+    const event = new document.defaultView.InputEvent(type, {bubbles: true, cancelable: type === 'beforeinput', inputType, isComposing});
     if (range) Object.defineProperty(event, 'getTargetRanges', {value: () => [range]});
     return event;
 }

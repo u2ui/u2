@@ -6,6 +6,7 @@ const INLINE_HOSTS = new Set([
 const CLEANUP = new Set(['none', 'minimal', 'structural', 'canonical']);
 const ENTER = new Set(['break', 'block', 'item', 'row', 'cell']);
 const UI = new Set(['none', 'roaming', 'static']);
+const TAG = /^[a-z][a-z\d-]*$/;
 const FALSE = new Set(['0', 'false', 'none', 'off']);
 const DEFAULT_CLEAN_ON = Object.freeze(['input', 'paste', 'drop', 'command']);
 const DEFAULTS = Object.freeze({
@@ -35,13 +36,12 @@ export function hostDefaults(host) {
 export function config(host) {
     const style = getComputedStyle(host);
     const defaults = hostDefaults(host);
-    const block = value(style, 'block');
     const cleanOn = value(style, 'clean-on');
     return Object.freeze({
-        block: block === 'none' ? null : block || defaults.block,
+        block: tag(style, 'block', defaults.block),
         enter: choice(style, 'enter', ENTER, defaults.enter),
         cleanup: choice(style, 'cleanup', CLEANUP, 'structural'),
-        cleanOn: Object.freeze(cleanOn ? cleanOn.split(/\s+/).filter(Boolean) : [...DEFAULT_CLEAN_ON]),
+        cleanOn: Object.freeze(cleanOn ? cleanOn.split(/[\s,]+/).filter(Boolean) : [...DEFAULT_CLEAN_ON]),
         ui: choice(style, 'ui', UI, 'roaming'),
     });
 }
@@ -49,6 +49,12 @@ export function config(host) {
 function value(style, name) {
     const value = style.getPropertyValue(`--u2-rte-${name}`).trim();
     return value === 'auto' ? '' : value;
+}
+
+function tag(style, name, fallback) {
+    const result = value(style, name).toLowerCase();
+    if (result === 'none') return null;
+    return TAG.test(result) ? result : fallback;
 }
 
 function choice(style, name, choices, fallback) {

@@ -132,6 +132,7 @@
         <select id="input-type">
           <option>insertText</option>
           <option>insertParagraph</option>
+          <option>insertLineBreak</option>
           <option>deleteContentBackward</option>
           <option>insertFromPaste</option>
           <option>insertFromDrop</option>
@@ -171,14 +172,17 @@
         parser repairs some of them immediately. “Parse and apply HTML” is
         deliberately available to compare parser behavior with RTE2 behavior.
         Place a selection inside the editor before stepping to observe mapped
-        range boundaries. Synthetic input runs cleanup policies but does not
-        imitate the browser's preceding native DOM mutation; edit or apply HTML
-        first.
+        range boundaries. Dispatch sends a cancelable <code>beforeinput</code>
+        and, unless a command replaced it, the following <code>input</code>.
+        Input types without a command run cleanup policies only; they do not
+        imitate the browser's native DOM mutation, so edit or apply HTML first.
       </p>
     </details>
   </div>
 
   <script type="module">
+    import {Commands} from '../command/commands.js';
+    import {enter, lineBreak} from '../command/enter.js';
     import {config} from '../config/config.js';
     import {Rte} from '../core/core.js';
     import {InputPipeline} from '../input/input-pipeline.js';
@@ -244,7 +248,9 @@
     let editor;
     let observer;
     let surface;
+    let commands;
     let pipeline;
+    let command;
 
     controls.scenario.addEventListener('change', load);
     controls.reset.addEventListener('click', load);
@@ -271,8 +277,10 @@
       if (scenario.build) scenario.build(editor);
       else editor.innerHTML = scenario.html;
       surface = core.add(editor);
-      pipeline = new InputPipeline(surface);
+      commands = new Commands(surface, {commands: {enter, lineBreak}});
+      pipeline = new InputPipeline(surface, {commands});
       editor.addEventListener('u2-rte-normalize', inputNormalized);
+      editor.addEventListener('u2-rte-command', event => command = event.detail.name);
       observer = new MutationObserver(refresh);
       observer.observe(editor, {subtree: true, childList: true, characterData: true, attributes: true});
       controls.log.textContent = 'Scenario loaded.';
@@ -305,9 +313,14 @@
 
     function dispatchInput() {
       options();
-      controls.status.textContent = `Dispatched ${controls.inputType.value}; cleanup disabled for this trigger.`;
-      editor.dispatchEvent(new InputEvent('input', {bubbles: true, inputType: controls.inputType.value}));
+      const inputType = controls.inputType.value;
+      command = null;
+      controls.status.textContent = `Dispatched ${inputType}; no cleanup ran for this trigger.`;
+      const before = new InputEvent('beforeinput', {bubbles: true, cancelable: true, inputType});
+      editor.dispatchEvent(before);
+      if (!before.defaultPrevented) editor.dispatchEvent(new InputEvent('input', {bubbles: true, inputType}));
       refresh();
+      if (command) controls.status.textContent = `${inputType} ran command ${command}.`;
     }
 
     function inputNormalized(event) {
@@ -351,12 +364,12 @@
       if (!snapshot) return {points: [], restore() {}};
       const range = snapshot.range();
       const start = Point.fromRange(range, 'start');
-      const end = Point.fromRange(range, 'end');
+      const points = range.collapsed ? [start] : [start, Point.fromRange(range, 'end')];
       return {
-        points: [start, end],
+        points,
         restore(map) {
           try {
-            EditRange.fromPoints(map.get(start), map.get(end), editor).select(getSelection(), snapshot.backward);
+            EditRange.fromPoints(map.get(points[0]), map.get(points.at(-1)), editor).select(getSelection(), snapshot.backward);
           } catch (error) {
             controls.log.append(`\n! Selection restore failed: ${error.message}`);
           }

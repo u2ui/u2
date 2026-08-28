@@ -101,7 +101,7 @@ test('normalizer: list roots group stray flow content into list items', () => wi
 ));
 
 test('normalizer: mapped range endpoints survive combined repairs', () => withFixture(
-    '<div><p id=paragraph></p><div>hallo</div></div>', root => {
+    '<div contenteditable><p id=paragraph></p><div>hallo</div></div>', root => {
         const host = root.firstElementChild;
         const paragraph = root.querySelector('#paragraph');
         const block = document.createElement('div');
@@ -167,5 +167,24 @@ test('normalizer: a stable second run performs no actions', () => withFixture(
 test('normalizer: operation limits expose non-converging or oversized work', () => withFixture(
     '<div><div>one</div><div>two</div></div>', root => {
         throws(() => new Normalizer(root.firstElementChild, {block: 'p', limit: 1}).normalize(), RangeError);
+    }
+));
+
+test('normalizer: a root block that is also a generic wrapper reaches a fixed point', () => withFixture(
+    '<div>hello<div>world</div><div><p>block</p></div></div>', root => {
+        const host = root.firstElementChild;
+        const result = new Normalizer(host, {block: 'div'}).normalize();
+        equal(host.innerHTML, '<div>hello</div><div>world</div><p>block</p>');
+        truthy(result.stable);
+    }
+));
+
+test('normalizer: an inline-only host keeps phrasing content and its separating whitespace', () => withFixture(
+    '<p><em>one</em> <em>two</em></p>', root => {
+        const host = root.firstElementChild;
+        const result = new Normalizer(host, {block: 'p'}).normalize();
+        equal(host.innerHTML, '<em>one</em> <em>two</em>');
+        equal(result.changed, false);
+        truthy(result.stable);
     }
 ));

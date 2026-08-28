@@ -76,7 +76,7 @@ test('surface: activation events reach the object and DOM host once', () => with
         surface.addEventListener('u2-rte-activate', () => events.push('surface'));
         surface.element.addEventListener('u2-rte-activate', () => events.push('dom'));
         surface.activate().activate();
-        equal(events, ['surface', 'dom']);
+        equal(events, ['dom', 'surface']);
         truthy(surface.active);
         core.destroy();
     }
@@ -94,6 +94,20 @@ test('surface: disconnect is idempotent and prevents transactions', () => withFi
         equal(surface.connected, false);
         const error = throws(() => surface.transact(() => {}), DOMException);
         equal(error.name, 'InvalidStateError');
+        core.destroy();
+    }
+));
+
+test('surface: the DOM host is notified before the modules that react to an event', () => withFixture(
+    '<div contenteditable></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const surface = core.add(host);
+        const seen = [];
+        surface.addEventListener('u2-rte-change', () => seen.push('module'));
+        host.addEventListener('u2-rte-change', () => seen.push('host'));
+        surface.transact(() => {});
+        equal(seen, ['host', 'module']);
         core.destroy();
     }
 ));

@@ -61,6 +61,41 @@ export class PointMap {
         return right;
     }
 
+    split(container, node, offset) {
+        if (container?.nodeType !== Node.ELEMENT_NODE) throw new TypeError('A split container must be an element');
+        if (node !== container && !container.contains(node)) throw new RangeError('A split boundary must belong to its container');
+        let parent = node;
+        let index = offset;
+        if (node.nodeType === Node.TEXT_NODE) {
+            if (!Number.isInteger(offset) || offset < 0 || offset > node.length) throw new RangeError('Invalid text split offset');
+            if (offset > 0 && offset < node.length) this.splitText(node, offset);
+            parent = node.parentNode;
+            index = indexOf(node) + (offset > 0 ? 1 : 0);
+            if (offset === node.length) this.#follow(node, offset, parent, index);
+        } else {
+            assertBoundary(node, offset);
+        }
+        while (parent !== container) {
+            const tail = parent.cloneNode(false);
+            tail.removeAttribute('id');
+            const grand = parent.parentNode;
+            const at = indexOf(parent) + 1;
+            this.insert(grand, at, tail);
+            // Both halves replace one element. Nothing belongs between them, and
+            // everything from the boundary onward belongs to the trailing half.
+            const trailing = [];
+            for (const point of this.#points.values()) {
+                if (point.node === grand && point.offset === at) point.offset++;
+                else if (point.node === parent && follows(point, index)) trailing.push([point, point.offset - index]);
+            }
+            while (parent.childNodes[index]) this.move(parent.childNodes[index], tail, tail.childNodes.length);
+            for (const [point, offset] of trailing) relocate(point, tail, offset);
+            parent = grand;
+            index = at;
+        }
+        return index;
+    }
+
     wrap(nodes, wrapper) {
         nodes = [...nodes];
         if (!nodes.length) throw new RangeError('At least one node is required to wrap');
@@ -165,6 +200,14 @@ export class PointMap {
         return node;
     }
 
+    // A boundary expressed against a text node is the same boundary as the one
+    // after it in its parent; forward affinity has to see it that way.
+    #follow(node, offset, target, index) {
+        for (const point of this.#points.values()) {
+            if (point.node === node && point.offset === offset && point.affinity === 'forward') relocate(point, target, index);
+        }
+    }
+
     mergeText(left, right) {
         if (left?.nodeType !== Node.TEXT_NODE || right?.nodeType !== Node.TEXT_NODE) {
             throw new TypeError('Only text nodes can be merged');
@@ -216,6 +259,10 @@ function assertDetached(node, parent) {
     if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) throw new TypeError('DocumentFragment insertion is not supported yet');
     if (node.parentNode) throw new RangeError('Inserted nodes must be detached');
     if (node === parent || node.contains(parent)) throw new RangeError('A node cannot contain itself');
+}
+
+function follows(point, index) {
+    return point.offset > index || point.offset === index && point.affinity === 'forward';
 }
 
 function inside(point, node) {

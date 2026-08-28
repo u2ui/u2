@@ -225,3 +225,57 @@ test('point map: removal relocates descendants and following boundaries', () => 
         throws(() => map.remove(bold), RangeError);
     }
 ));
+
+test('point map: split lifts a boundary up to its container', () => withFixture(
+    '<div><p id=block>one<em>two</em>three</p></div>', root => {
+        const container = root.firstElementChild;
+        const block = root.querySelector('#block');
+        const emphasis = block.querySelector('em');
+        const caret = new Point(emphasis.firstChild, 1, 'forward');
+        const before = new Point(block.firstChild, 3, 'backward');
+        const map = new PointMap([caret, before]);
+        equal(map.split(container, emphasis.firstChild, 1), 1);
+        equal(container.innerHTML, '<p id="block">one<em>t</em></p><p><em>wo</em>three</p>');
+        const tail = container.lastElementChild;
+        same(map.get(caret).node, tail.firstElementChild.firstChild);
+        equal(map.get(caret).offset, 0);
+        same(map.get(before).node, block.firstChild);
+        equal(map.get(before).offset, 3);
+    }
+));
+
+test('point map: split accepts element and text boundaries at both edges', () => withFixture(
+    '<div><p>one</p></div>', root => {
+        const container = root.firstElementChild;
+        const block = container.firstElementChild;
+        const map = new PointMap();
+        equal(map.split(container, block.firstChild, 0), 1);
+        equal(container.innerHTML, '<p></p><p>one</p>');
+        equal(map.split(container, container.lastElementChild, 1), 2);
+        equal(container.innerHTML, '<p></p><p>one</p><p></p>');
+        equal(map.split(container, container, 1), 1);
+        equal(container.innerHTML, '<p></p><p>one</p><p></p>');
+    }
+));
+
+test('point map: split rejects foreign containers and invalid boundaries', () => withFixture(
+    '<div><p>one</p></div><section></section>', root => {
+        const container = root.firstElementChild;
+        const foreign = root.lastElementChild;
+        const text = container.firstElementChild.firstChild;
+        const map = new PointMap();
+        throws(() => map.split(text, text, 0), TypeError);
+        throws(() => map.split(foreign, text, 0), RangeError);
+        throws(() => map.split(container, text, 9), RangeError);
+        throws(() => map.split(container, container.firstElementChild, 5), RangeError);
+    }
+));
+
+test('point map: split never duplicates an id', () => withFixture(
+    '<div><p id=block>one two</p></div>', root => {
+        const container = root.firstElementChild;
+        const block = root.querySelector('#block');
+        new PointMap().split(container, block.firstChild, 3);
+        equal(container.innerHTML, '<p id="block">one</p><p> two</p>');
+    }
+));

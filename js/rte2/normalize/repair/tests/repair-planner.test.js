@@ -138,3 +138,20 @@ test('repair planner: unknown lossless repairs are rejected', () => withFixture(
         equal(new RepairPlanner(host, {block: null}).plan(host, horizontalRule), {type: 'reject'});
     }
 ));
+
+test('repair planner: a root block equal to the generic wrapper is not converted into itself', () => withFixture(
+    '<div><div>text</div><div><p>block</p></div></div>', root => {
+        const host = root.firstElementChild;
+        const planner = new RepairPlanner(host, {block: 'div'});
+        equal(planner.plan(host, host.firstElementChild), {type: 'keep'});
+        equal(planner.plan(host, host.lastElementChild), {type: 'unwrap', breaks: false});
+    }
+));
+
+test('repair planner: a root that cannot hold its block plans no root shaping', () => withFixture(
+    '<p><em>one</em> <em>two</em></p>', root => {
+        const host = root.firstElementChild;
+        const planner = new RepairPlanner(host, {block: 'p'});
+        for (const child of host.childNodes) equal(planner.plan(host, child), {type: 'keep'});
+    }
+));

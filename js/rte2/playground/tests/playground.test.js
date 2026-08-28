@@ -56,6 +56,22 @@ test('playground: synthetic input runs through the installed input pipeline', ()
     truthy(document.querySelector('#log').textContent.includes('convert'));
 }));
 
+test('playground: a prevented input type runs its registered command', () => withPlayground(document => {
+    const scenario = document.querySelector('#scenario');
+    scenario.value = 'blocks';
+    scenario.dispatchEvent(new document.defaultView.Event('change'));
+    const editor = document.querySelector('#editor');
+    const range = document.createRange();
+    range.setStart(editor.querySelector('p').firstChild, 1);
+    document.getSelection().removeAllRanges();
+    document.getSelection().addRange(range);
+    document.querySelector('#input-type').value = 'insertParagraph';
+    document.querySelector('#dispatch-input').click();
+    equal(editor.innerHTML, '<div><p>o</p><p>ne</p><p>two</p></div>',
+        'Cleanup after a command stays in the scope the command touched');
+    truthy(document.querySelector('#status').textContent.includes('command enter'));
+}));
+
 async function withPlayground(run) {
     const frame = document.createElement('iframe');
     frame.src = '../playground/';

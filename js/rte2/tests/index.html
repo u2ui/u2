@@ -12,6 +12,9 @@
 <h1>RTE2 tests</h1>
 <ol id=results></ol>
 <script type=module>
+    import '../command/tests/commands.test.js';
+    import '../command/tests/edit.test.js';
+    import '../command/tests/enter.test.js';
     import '../config/tests/config.test.js';
     import '../input/tests/input-pipeline.test.js';
     import '../model/tests/content-model.test.js';
@@ -28,6 +31,7 @@
     import '../transaction/tests/transaction.test.js';
     import '../surface/tests/surface.test.js';
     import '../core/tests/core.test.js';
+    import './generated.test.js';
     import './rte.test.js';
     import {run} from './harness.js';
 
