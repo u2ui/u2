@@ -12,25 +12,28 @@
 <h1>RTE2 tests</h1>
 <ol id=results></ol>
 <script type=module>
-    import '../command/tests/commands.test.js';
-    import '../command/tests/edit.test.js';
-    import '../command/tests/enter.test.js';
-    import '../config/tests/config.test.js';
-    import '../input/tests/input-pipeline.test.js';
-    import '../model/tests/content-model.test.js';
-    import '../model/html/tests/html-model.test.js';
-    import '../normalize/repair/tests/repair-planner.test.js';
-    import '../normalize/execute/tests/repair-executor.test.js';
-    import '../normalize/normalizer/tests/normalizer.test.js';
+    import '../src/command/tests/commands.test.js';
+    import '../src/command/tests/edit.test.js';
+    import '../src/command/tests/enter.test.js';
+    import '../src/command/tests/mark.test.js';
+    import '../src/config/tests/config.test.js';
+    import '../src/input/tests/input-pipeline.test.js';
+    import '../src/mark/tests/dom-adapter.test.js';
+    import '../src/mark/tests/mark.test.js';
+    import '../src/model/tests/content-model.test.js';
+    import '../src/model/html/tests/html-model.test.js';
+    import '../src/normalize/repair/tests/repair-planner.test.js';
+    import '../src/normalize/execute/tests/repair-executor.test.js';
+    import '../src/normalize/normalizer/tests/normalizer.test.js';
     import '../playground/tests/playground.test.js';
-    import '../selection/tests/snapshot.test.js';
-    import '../selection/ownership/tests/ownership.test.js';
-    import '../selection/point/tests/point.test.js';
-    import '../selection/map/tests/point-map.test.js';
-    import '../selection/range/tests/edit-range.test.js';
-    import '../transaction/tests/transaction.test.js';
-    import '../surface/tests/surface.test.js';
-    import '../core/tests/core.test.js';
+    import '../src/selection/tests/snapshot.test.js';
+    import '../src/selection/ownership/tests/ownership.test.js';
+    import '../src/selection/point/tests/point.test.js';
+    import '../src/selection/map/tests/point-map.test.js';
+    import '../src/selection/range/tests/edit-range.test.js';
+    import '../src/transaction/tests/transaction.test.js';
+    import '../src/surface/tests/surface.test.js';
+    import '../src/core/tests/core.test.js';
     import './generated.test.js';
     import './rte.test.js';
     import {run} from './harness.js';

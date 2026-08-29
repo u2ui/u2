@@ -14,16 +14,20 @@ implementation are not mistaken for behavioral failures.
 
 Phases 0–3 provide the core, selection/range primitives, content model, scoped
 normalization, playground, and input pipeline. The command layer, the prevented
-input path, and Enter now close the phase-3 gap between configuration and
-behavior. The next production responsibility is phase 4: define the mark algebra
-in tests and documentation, then implement range-based inline commands without
-`execCommand()`.
+input path, and Enter close the phase-3 gap between configuration and behavior.
+Phase 4 has started with immutable mark types, serializable values, equivalence,
+directional conflicts, deterministic sets, removal, and replaceable DOM
+adapters. Generic non-collapsed range commands now apply and remove one mark,
+including reusable inline elements and neutral-span cleanup, without
+`execCommand()`. Selection and caret state plus toggle are implemented;
+conflicts between complete mark sets and collapsed input are next.
 
-The 106-test baseline was confirmed in current Chromium, Firefox, and WebKit.
-The current runner contains 191 tests. This revision passes all of them in
-Chromium 152 and Firefox 154; WebKit still has to confirm the same revision.
-Treat the number shown by `/u2/js/rte2/tests/` as authoritative when tests are
-added.
+The 201-test mark-algebra baseline was confirmed in current Chromium, Firefox,
+and WebKit. The 224-test runner passed in Chromium 152 and Firefox 154; the
+225-test runner also passed in WebKitGTK through GNOME Web. The current 227-test
+runner passes in Chromium 152; the other engines still have to confirm native
+text-data routing and mapped text insertion. Treat the number shown by
+`/u2/js/rte2/tests/` as authoritative.
 
 ## 0. Foundation
 
@@ -86,9 +90,9 @@ whole-tree cleanup are not carried forward.
 
 Status: post-native event classification, CSS cleanup triggers, live target
 ranges, local normalization scope, composition deferral, nested-host isolation,
-selection mapping, teardown, and command routing for prevented native input are
-implemented. Sanitized external insertion is next; deletion types stay native
-until commands can delete a range.
+selection mapping, disposal, and command routing with native text data for
+prevented input are implemented. Sanitized external insertion is next; deletion
+types stay native until commands can delete a range.
 
 - Route `beforeinput`, `input`, composition, paste, drop, delete, and Enter by
   `inputType` and host policy.
@@ -104,14 +108,22 @@ command contracts for exhaustive edge cases.
 
 ## 4. Marks and inline commands
 
-Status: next. Specify the replaceable mark descriptor and its equivalence,
-conflict, merge, and removal rules before adding command implementations.
+Status: started. Mark values define equivalence, directional exclusion,
+canonical ordering, and removal. Replaceable adapters parse existing elements
+and render canonical wrappers for semantic tags, classes, attributes, styles,
+and custom policies. Generic commands apply and remove one configured mark over
+arbitrary non-collapsed ranges, preserve selection direction, reuse suitable
+inline elements, join adjacent canonical wrappers, clean up neutral spans, and
+derive selection or structural caret state for toggle. Complete mark-set
+conflicts, collapsed input, nested merging, and concrete formatting commands
+remain open. Native text data now reaches commands unchanged, and mapped text
+insertion is available as the mutation primitive for pending marks.
 
-- Implement apply, remove, and toggle over arbitrary ranges without
+- Apply, remove, and toggle over arbitrary ranges without
   `document.execCommand()`.
 - Support semantic elements, class tokens, attributes, style declarations, and
   custom mark adapters through one algebra.
-- Represent mixed state and pending collapsed marks.
+- Extend implemented caret state with pending collapsed marks.
 - Split boundaries minimally; merge equivalent siblings; eliminate redundant,
   conflicting, or empty wrappers.
 - Implement bold, italic, underline, strike, code, link, and remove-format as

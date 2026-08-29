@@ -1,12 +1,13 @@
-# Normalization playground
+# RTE2 playground
 
 `index.html` is a dependency-free visual client of the real `RepairPlanner`,
-`Normalizer`, `PointMap`, and range classes. It contains no alternative editor
-or normalization implementation.
+`Normalizer`, `PointMap`, range classes, command registry, and mark commands. It
+contains no alternative editor or normalization implementation.
 
 Open `/u2/js/rte2/playground/` through the local HTTP server. Included scenarios
 cover inline runs, generic blocks, redundant wrappers, lists, lift-and-split,
-nested editable isolation, and the original invalid `p/div` example.
+nested editable isolation, CSS-class marks, and the original invalid `p/div`
+example.
 
 ## Capabilities
 
@@ -19,6 +20,10 @@ nested editable isolation, and the original invalid `p/div` example.
   control its `input paste drop command` triggers with `--u2-rte-clean-on`.
 - Observe the prevented-input path: `insertParagraph` and `insertLineBreak` run
   the registered `enter` and `lineBreak` commands instead of native editing.
+- Apply, remove, or toggle the `.x` mark over a live selection. The toggle
+  exposes active, mixed, and caret state; the dedicated scenario makes wrapper
+  creation, reuse of an existing inline element, and cleanup of a neutral
+  `span` visible in the DOM tree and serialized HTML.
 - Edit content directly or parse serialized HTML through the browser.
 - Compare the live DOM tree with `innerHTML` serialization.
 - Display executed actions, unresolved repairs, and selection endpoints.
@@ -31,7 +36,8 @@ difference.
 `tests/playground.test.js` loads the complete page in a same-origin frame. It
 checks bootstrapping, pure analysis, one-step selection restoration, complete
 normalization, action reporting, host-specific list defaults, and synthetic
-input routing in every target browser.
+input routing. It also drives the class-mark controls and checks their exact DOM
+result in every target browser.
 
 ## TODO
 

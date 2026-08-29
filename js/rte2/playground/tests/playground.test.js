@@ -72,6 +72,42 @@ test('playground: a prevented input type runs its registered command', () => wit
     truthy(document.querySelector('#status').textContent.includes('command enter'));
 }));
 
+test('playground: class-mark controls reuse inline elements and remove neutral spans', () => withPlayground(document => {
+    const scenario = document.querySelector('#scenario');
+    scenario.value = 'marks';
+    scenario.dispatchEvent(new document.defaultView.Event('change'));
+    const editor = document.querySelector('#editor');
+    equal(document.querySelector('#mark-toggle').ariaPressed, 'false');
+    document.querySelector('#mark-apply').click();
+    equal(editor.innerHTML, '<li>he<span class="x">llo</span></li><li><b class="x">dear</b> world</li>');
+    truthy(document.querySelector('#status').textContent.includes('Applied .x'));
+    const toggle = document.querySelector('#mark-toggle');
+    equal(toggle.ariaPressed, 'true');
+    const marked = editor.querySelector('span').firstChild;
+    document.getSelection().collapse(marked, 1);
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    equal(toggle.ariaPressed, 'true', 'A caret inside the mark keeps its active state');
+    truthy(toggle.disabled, 'Toggle stays unavailable until pending marks exist');
+    document.getSelection().setBaseAndExtent(marked, 0, editor.querySelector('b').firstChild, 4);
+    document.querySelector('#mark-remove').click();
+    equal(editor.innerHTML, '<li>hello</li><li><b>dear</b> world</li>');
+    truthy(document.querySelector('#status').textContent.includes('Removed .x'));
+}));
+
+test('playground: class-mark toggle reflects and changes selection state', () => withPlayground(document => {
+    const scenario = document.querySelector('#scenario');
+    scenario.value = 'marks';
+    scenario.dispatchEvent(new document.defaultView.Event('change'));
+    const editor = document.querySelector('#editor');
+    const toggle = document.querySelector('#mark-toggle');
+    toggle.click();
+    equal(editor.innerHTML, '<li>he<span class="x">llo</span></li><li><b class="x">dear</b> world</li>');
+    equal(toggle.ariaPressed, 'true');
+    toggle.click();
+    equal(editor.innerHTML, '<li>hello</li><li><b>dear</b> world</li>');
+    equal(toggle.ariaPressed, 'false');
+}));
+
 async function withPlayground(run) {
     const frame = document.createElement('iframe');
     frame.src = '../playground/';

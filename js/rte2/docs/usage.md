@@ -92,7 +92,8 @@ change or a media query can change editing behavior without re-registering.
 .title { --u2-rte: true; --u2-rte-block: none; }
 ```
 
-See [`../config/README.md`](../config/README.md) for the exact resolution rules.
+See [`../src/config/README.md`](../src/config/README.md) for the exact resolution
+rules.
 
 ## Commands
 
@@ -139,7 +140,42 @@ selection. Every mutation that goes through `edit.map` keeps tracked points
 alive, which is why the command can select a position that only exists after the
 change. Adding `inputTypes: ['insertHorizontalRule']` would also let the input
 pipeline replace that native input type with this command.
-[`../command/README.md`](../command/README.md) documents the full contract.
+[`../src/command/README.md`](../src/command/README.md) documents the full
+contract.
+
+### Applying a CSS class
+
+Marks separate formatting meaning from its HTML representation. This adapter
+uses a `span` for bare text but may reuse any fully selected inline element:
+
+```js
+import {MarkAdapter, MarkType, applyMark, removeMark, toggleMark} from './rte.js';
+
+const x = new MarkType('x');
+const xHtml = new MarkAdapter(x, {
+    selector: '.x',
+    tag: 'span',
+    reuse: true,
+    write: element => element.classList.add('x'),
+    clear: element => element.classList.remove('x'),
+});
+
+commands.add('applyX', applyMark(xHtml));
+commands.add('removeX', removeMark(xHtml));
+commands.add('toggleX', toggleMark(xHtml));
+```
+
+Applying `x` to selected bare text creates `<span class="x">`. A completely
+selected `<b>` or `<a>` receives the class directly; partially selected content
+gets the canonical `span`. Removing `x` preserves semantic elements and other
+attributes. Only a `span` left without attributes is unwrapped. Applying also
+joins adjacent canonical `<span class="x">` wrappers.
+
+`commands.state('toggleX')` returns `true` when all selected editable text has
+the mark, `false` when none has it, and `'mixed'` when only part has it. Toggle
+removes an active mark and applies it to inactive or mixed selections. At a
+caret, state reports whether the caret's DOM position is structurally inside
+the mark; the command remains disabled there until pending marks are available.
 
 ## Events
 
@@ -158,7 +194,7 @@ observes an event before the modules reacting to it.
 | `u2-rte-normalize` | surface | cleanup ran, with its actions and unresolved issues |
 | `u2-rte-change` | surface | the transaction committed |
 | `u2-rte-error` | surface | the transaction failed; the error is rethrown |
-| `u2-rte-disconnect`, `u2-rte-destroy` | surface, core | teardown |
+| `u2-rte-disconnect`, `u2-rte-dispose` | surface, core | teardown |
 
 **Listen to `u2-rte-change` for "the content changed".** It arrives once per
 transaction, after every command and cleanup step inside it. `u2-rte-command`
@@ -202,12 +238,13 @@ does not read clipboard payloads yet.
 ## Teardown
 
 ```js
-core.delete(surface);   // or surface.destroy()
-core.destroy();         // removes listeners and disconnects every surface
+core.delete(surface);   // or surface.dispose()
+core.dispose();         // removes listeners and disconnects every surface
 ```
 
-Disconnecting a surface destroys its input pipeline; a registry needs no
-cleanup. After teardown the element is inert and keeps its content.
+`Rte`, `Surface`, and `InputPipeline` also implement `[Symbol.dispose]()` for
+`using`. Disconnecting a surface disposes its input pipeline; a registry needs
+no cleanup. After teardown the element is inert and keeps its content.
 
 ## Nested editors
 
@@ -229,14 +266,17 @@ Being explicit is cheaper than surprising you:
 - **No undo/redo.** Editor mutations do not go through the browser's editing
   commands, so the native undo stack no longer matches the document after the
   first repair. A history module owns this and does not exist yet.
-- **No marks.** Bold, italic, links, and remove-format are the next
-  responsibility; there are no inline commands yet.
+- **No ready-made formatting command set yet.** Generic range commands can
+  apply, remove, query, and toggle one configured mark. Bold, italic, links,
+  remove-format, and pending marks at a caret are not yet shipped.
 - **No deletion or list commands.** Backspace, Delete, and Enter in an empty
   list item keep their native behavior and are repaired afterwards.
 - **No sanitizing and no serializer**, as described above.
 - **No UI.** `--u2-rte-ui` is reserved; toolbars are yours to build on
-  `enabled()`, `run()`, and the events above.
-- **Verified in Chromium and Firefox.** WebKit is a target but the current
-  revision has not been confirmed there.
+  `enabled()`, `state()`, `run()`, and the events above.
+- **The current 227-test runner is verified in Chromium 152.** WebKitGTK through
+  GNOME Web confirmed the 225-test revision and Firefox 154 the 224-test
+  revision; native text-data routing and mapped text insertion still need both
+  engines, while Firefox also needs the caret-state case.
 
 [`../PLAN.md`](../PLAN.md) tracks what lands next.

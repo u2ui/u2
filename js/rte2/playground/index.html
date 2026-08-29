@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RTE2 normalization playground</title>
+  <title>RTE2 playground</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -76,6 +76,21 @@
 
       &:focus { border-color: Highlight; }
       & [contenteditable] { outline: 1px dashed orange; }
+      & .x {
+        background: color-mix(in srgb, #ffbf00 36%, transparent);
+        border-radius: .2em;
+        box-decoration-break: clone;
+        padding-inline: .12em;
+      }
+    }
+
+    #mark-toggle {
+      border-color: color-mix(in srgb, #ffbf00 70%, var(--border));
+
+      &[aria-pressed="true"] { background: color-mix(in srgb, #ffbf00 36%, ButtonFace); }
+      &[aria-pressed="mixed"] {
+        background: linear-gradient(135deg, color-mix(in srgb, #ffbf00 36%, ButtonFace) 50%, ButtonFace 50%);
+      }
     }
 
     #status { margin-block: .4rem 0; }
@@ -85,7 +100,7 @@
   </style>
 </head>
 <body>
-  <h1>RTE2 normalization playground</h1>
+  <h1>RTE2 playground</h1>
 
   <div class="controls">
     <fieldset>
@@ -99,6 +114,7 @@
           <option value="list">List with stray blocks</option>
           <option value="lift">Meaningful invalid block</option>
           <option value="nested">Nested editable boundary</option>
+          <option value="marks">CSS class across inline elements</option>
         </select>
       </label>
       <button id="reset" type="button">Reset</button>
@@ -140,6 +156,12 @@
       </label>
       <button id="dispatch-input" type="button">Dispatch</button>
     </fieldset>
+    <fieldset>
+      <legend>Class mark</legend>
+      <button id="mark-toggle" type="button" aria-pressed="false">Toggle .x</button>
+      <button id="mark-apply" type="button">Apply .x</button>
+      <button id="mark-remove" type="button">Remove .x</button>
+    </fieldset>
   </div>
 
   <div class="grid">
@@ -176,23 +198,29 @@
         and, unless a command replaced it, the following <code>input</code>.
         Input types without a command run cleanup policies only; they do not
         imitate the browser's native DOM mutation, so edit or apply HTML first.
+        The class-mark buttons run the production range commands. A fully
+        selected inline element is reused; otherwise the command creates a
+        <code>&lt;span class="x"&gt;</code> around the selected text.
       </p>
     </details>
   </div>
 
   <script type="module">
-    import {Commands} from '../command/commands.js';
-    import {enter, lineBreak} from '../command/enter.js';
-    import {config} from '../config/config.js';
-    import {Rte} from '../core/core.js';
-    import {InputPipeline} from '../input/input-pipeline.js';
-    import {htmlModel} from '../model/html/html-model.js';
-    import {Normalizer} from '../normalize/normalizer/normalizer.js';
-    import {RepairPlanner} from '../normalize/repair/repair-planner.js';
-    import {EditRange} from '../selection/range/edit-range.js';
-    import {isEditingBoundary} from '../selection/ownership/ownership.js';
-    import {Point} from '../selection/point/point.js';
-    import {SelectionSnapshot} from '../selection/snapshot.js';
+    import {Commands} from '../src/command/commands.js';
+    import {enter, lineBreak} from '../src/command/enter.js';
+    import {applyMark, removeMark, toggleMark} from '../src/command/mark.js';
+    import {config} from '../src/config/config.js';
+    import {Rte} from '../src/core/core.js';
+    import {InputPipeline} from '../src/input/input-pipeline.js';
+    import {MarkAdapter} from '../src/mark/dom-adapter.js';
+    import {MarkType} from '../src/mark/mark.js';
+    import {htmlModel} from '../src/model/html/html-model.js';
+    import {Normalizer} from '../src/normalize/normalizer/normalizer.js';
+    import {RepairPlanner} from '../src/normalize/repair/repair-planner.js';
+    import {EditRange} from '../src/selection/range/edit-range.js';
+    import {isEditingBoundary} from '../src/selection/ownership/ownership.js';
+    import {Point} from '../src/selection/point/point.js';
+    import {SelectionSnapshot} from '../src/selection/snapshot.js';
 
     const controls = {
       scenario: document.querySelector('#scenario'),
@@ -204,6 +232,9 @@
       normalize: document.querySelector('#normalize'),
       inputType: document.querySelector('#input-type'),
       dispatchInput: document.querySelector('#dispatch-input'),
+      markToggle: document.querySelector('#mark-toggle'),
+      markApply: document.querySelector('#mark-apply'),
+      markRemove: document.querySelector('#mark-remove'),
       reset: document.querySelector('#reset'),
       html: document.querySelector('#html'),
       applyHtml: document.querySelector('#apply-html'),
@@ -213,6 +244,14 @@
       log: document.querySelector('#log'),
     };
     const core = new Rte(document, {auto: false});
+    const classMark = new MarkType('x');
+    const classHtml = new MarkAdapter(classMark, {
+      selector: '.x',
+      tag: 'span',
+      reuse: true,
+      write: element => element.classList.add('x'),
+      clear: element => element.classList.remove('x'),
+    });
     const scenarios = {
       combined: {
         tag: 'div',
@@ -244,6 +283,14 @@
         },
       },
       nested: {tag: 'div', block: 'auto', html: '<div contenteditable><div>nested</div></div><div>outer</div>'},
+      marks: {
+        tag: 'ul',
+        block: 'auto',
+        html: '<li>hello</li><li><b>dear</b> world</li>',
+        select(host) {
+          getSelection().setBaseAndExtent(host.children[0].firstChild, 2, host.querySelector('b').firstChild, 4);
+        },
+      },
     };
     let editor;
     let observer;
@@ -258,6 +305,12 @@
     controls.step.addEventListener('click', () => execute('step'));
     controls.normalize.addEventListener('click', () => execute('normalize'));
     controls.dispatchInput.addEventListener('click', dispatchInput);
+    for (const button of [controls.markToggle, controls.markApply, controls.markRemove]) {
+      button.addEventListener('mousedown', event => event.preventDefault());
+    }
+    controls.markToggle.addEventListener('click', () => runMark('toggleX'));
+    controls.markApply.addEventListener('click', () => runMark('applyX'));
+    controls.markRemove.addEventListener('click', () => runMark('removeX'));
     controls.applyHtml.addEventListener('click', () => {
       editor.innerHTML = controls.html.value;
       show('HTML parsed by the browser.');
@@ -267,8 +320,8 @@
     function load() {
       const scenario = scenarios[controls.scenario.value];
       observer?.disconnect();
-      pipeline?.destroy();
-      surface?.destroy();
+      pipeline?.dispose();
+      surface?.dispose();
       editor = document.createElement(scenario.tag);
       editor.id = 'editor';
       editor.contentEditable = 'true';
@@ -277,12 +330,19 @@
       if (scenario.build) scenario.build(editor);
       else editor.innerHTML = scenario.html;
       surface = core.add(editor);
-      commands = new Commands(surface, {commands: {enter, lineBreak}});
+      commands = new Commands(surface, {commands: {
+        enter,
+        lineBreak,
+        toggleX: toggleMark(classHtml),
+        applyX: applyMark(classHtml),
+        removeX: removeMark(classHtml),
+      }});
       pipeline = new InputPipeline(surface, {commands});
       editor.addEventListener('u2-rte-normalize', inputNormalized);
       editor.addEventListener('u2-rte-command', event => command = event.detail.name);
       observer = new MutationObserver(refresh);
       observer.observe(editor, {subtree: true, childList: true, characterData: true, attributes: true});
+      scenario.select?.(editor);
       controls.log.textContent = 'Scenario loaded.';
       show(`Loaded ${controls.scenario.selectedOptions[0].text}.`);
     }
@@ -321,6 +381,18 @@
       if (!before.defaultPrevented) editor.dispatchEvent(new InputEvent('input', {bubbles: true, inputType}));
       refresh();
       if (command) controls.status.textContent = `${inputType} ran command ${command}.`;
+    }
+
+    function runMark(name) {
+      options();
+      const changed = commands.run(name);
+      if (changed === undefined) {
+        show('Select text inside the editor first.');
+        return;
+      }
+      controls.log.textContent = `${name}: ${changed.length} element(s) changed.`;
+      const action = {applyX: 'Applied', removeX: 'Removed', toggleX: 'Toggled'}[name];
+      show(`${action} .x on the selected text.`);
     }
 
     function inputNormalized(event) {
@@ -391,6 +463,9 @@
         lines.push(`focus:  ${path(selection.focusNode)} @ ${selection.focusOffset}`);
       }
       controls.tree.textContent = lines.join('\n');
+      const state = commands?.state('toggleX');
+      controls.markToggle.disabled = !commands?.enabled('toggleX');
+      controls.markToggle.ariaPressed = state === null ? 'false' : String(state);
     }
 
     function tree(node, depth = 0, lines = []) {

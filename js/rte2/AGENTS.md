@@ -2,6 +2,14 @@
 
 These instructions apply to this directory and all descendants.
 
+## Project status — important
+
+RTE2 is new and not used in production or by downstream consumers yet. There
+is no backward-compatibility obligation. Prefer the clean final API and remove
+superseded names or designs instead of adding aliases, deprecations, shims, or
+legacy layers. Existing behavior still needs tests, but compatibility with an
+earlier RTE2 draft is not a reason to keep a weaker design.
+
 ## Start here
 
 - Read [`README.md`](./README.md) for the architecture and requirements.

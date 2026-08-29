@@ -1,8 +1,8 @@
-import {EditRange} from '../selection/range/edit-range.js';
-import {Normalizer} from '../normalize/normalizer/normalizer.js';
-import {Point} from '../selection/point/point.js';
-import {PointMap} from '../selection/map/point-map.js';
-import {htmlModel} from '../model/html/html-model.js';
+import {EditRange} from '../src/selection/range/edit-range.js';
+import {Normalizer} from '../src/normalize/normalizer/normalizer.js';
+import {Point} from '../src/selection/point/point.js';
+import {PointMap} from '../src/selection/map/point-map.js';
+import {htmlModel} from '../src/model/html/html-model.js';
 import {equal, test, truthy, withFixture} from './harness.js';
 
 const TAGS = [

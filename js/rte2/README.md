@@ -8,9 +8,13 @@ else plugs in as an independent module. A UI is only one possible consumer.
 
 Read this file for the design, then [`PLAN.md`](./PLAN.md) for implementation
 status and the README beside the responsibility being changed for its exact
-contract and TODOs. The current production path ends at the command layer:
-registered commands replace prevented native input, starting with Enter. Marks
-and inline commands are the next responsibility.
+contract and TODOs. The current production path includes the representation of
+text formatting after the command layer: registered commands replace prevented
+native input, starting with Enter, while marks describe formatting such as bold,
+links, and colors, how those values coexist, and how HTML represents them.
+Generic commands now apply and remove one configured mark over a selected
+range, derive active/mixed state, and toggle it; pending caret marks and
+ready-made formatting commands come next.
 
 Run the dependency-free browser suite at `/u2/js/rte2/tests/` and inspect
 normalization interactively at `/u2/js/rte2/playground/`. The runner displays
@@ -64,26 +68,28 @@ consumer observes one coherent change.
 
 ## Structure
 
-Each responsibility owns its implementation, tests, and README. A responsibility
-may grow into further nested modules without turning the root into a collection
-of unrelated helpers.
+Production responsibilities live under `src/`. Each one keeps its implementation,
+tests, and README together so its local contract remains visible beside the
+code. The root contains only the public entry point and project-wide clients,
+tests, and documentation.
 
 ```text
 rte2/
-├── rte.js                 Public API and default document core
-├── config/                CSS configuration and semantic host defaults
-├── core/                  Shared root lifecycle and surface registry
-├── model/                 Replaceable HTML content rules and categories
-├── normalize/             Pure repair planning and scoped DOM normalization
-├── playground/            Visual planner and normalization inspection
-├── surface/               State of one editable host
-├── selection/             Selection and range primitives
-├── transaction/           Atomic editing changes and dirty scopes
-├── command/               Registered commands, edit context, Enter behavior
-├── input/                 beforeinput, paste, drop, and composition
-├── ui/                    Roaming and static UI adapters
-├── browser/               Feature-detected engine policies
-└── tests/                 Cross-module and cross-browser suites
+├── rte.js                 Stable public API and default document core
+├── src/                   Production responsibilities
+│   ├── command/           Registry, edit context, Enter, and range marks
+│   ├── config/            CSS configuration and semantic host defaults
+│   ├── core/              Shared root lifecycle and surface registry
+│   ├── input/             beforeinput, paste, drop, and composition
+│   ├── mark/              Formatting values and HTML adapters
+│   ├── model/             Replaceable HTML content rules and categories
+│   ├── normalize/         Repair planning, execution, and normalization
+│   ├── selection/         Selection, range, ownership, and point mapping
+│   ├── surface/           State of one editable host
+│   └── transaction/       Atomic editing changes and dirty scopes
+├── docs/                  Project-wide guides
+├── playground/            Visual normalization, input, and mark inspection
+└── tests/                 Shared harness and cross-module browser cases
 ```
 
 Later layers depend on these public contracts, never on private
@@ -141,19 +147,22 @@ executed inside transactions. They inspect the current selection, split only
 the necessary boundaries, transform the covered content, restore selection,
 and normalize the affected scope.
 
-A common mark operation applies, removes, or toggles a semantic element,
-classes, attributes, style declarations, or a custom transformation over a
-range. It works across partially selected text and multiple blocks, handles
-collapsed selections as pending input state, and treats configured atomic
-elements as indivisible. Equivalent adjacent wrappers are merged; empty,
-redundant, and conflicting wrappers are removed. Formatting must not leave DOM
-shape dependent on the direction in which the selection was made.
+A mark operation applies or removes a semantic element, class, attribute, style
+declaration, or custom representation over a range. The algebra gives every
+mark a policy type, serializable value, deterministic order, and directional
+exclusions. The implemented generic range commands split selected boundaries,
+reuse suitable inline elements when the adapter allows it, preserve selection
+direction, and treat configured atomic elements and nested editors as
+boundaries. They derive selection and structural caret state and toggle a mark
+without `execCommand()`. Collapsed pending marks, mark-set conflicts, and
+merging compatible wrappers across nested structures remain open. Adjacent
+canonical wrappers of the mark being applied are already joined.
 
 Commands are registered per surface, expose execution and availability
 independently of any UI, and declare which native `inputType` they replace. The
 input pipeline prevents exactly those native behaviors and runs the command
-inside one transaction. Active and mixed state joins this contract with the mark
-algebra. Undo and redo operate on complete editor transactions rather than
+inside one transaction. Active and mixed mark state use the same command
+contract. Undo and redo operate on complete editor transactions rather than
 individual incidental DOM mutations.
 
 ## Normalization
@@ -196,7 +205,9 @@ mutation followed by explicit postcondition checks. It captures live
 during IME composition, normalizes the smallest useful block scope, and maps
 the current selection through every repair. CSS controls which of `input`,
 `paste`, `drop`, and `command` trigger cleanup. Nested editors remain isolated,
-and disconnecting a surface tears down its listeners.
+and disconnecting a surface tears down its listeners. Prevented native input
+passes its `inputType`, text data, and target range unchanged to the replacing
+command.
 
 The pipeline deliberately does not read or trust clipboard and drag payloads.
 Future sanitizer adapters insert approved fragments before handing the affected
@@ -216,9 +227,9 @@ against real browser editing behavior; DOM emulation alone is not considered
 sufficient for selection and input semantics.
 
 The dependency-free visual playground at `playground/` runs the same planner,
-normalizer, point mapping, and range code as production. It can inspect or step
-through invalid DOM structures that the HTML parser would repair before an
-editor could observe them.
+normalizer, point mapping, range, input, and mark-command code as production. It
+can inspect invalid DOM structures and visualize class-mark application and
+removal on a live selection.
 
 The current suite combines fixture tests, direct event integration tests,
 seeded generated cases, and browser-regression cases. Later command, clipboard/drop, generated DOM/range,
@@ -231,8 +242,8 @@ transactional undo/redo.
 ## TODO
 
 - Specify the native Sanitizer and DOMPurify adapter contract.
-- Specify mark algebra and replacement rules for tags, classes, attributes,
-  styles, and custom range transforms.
-- Integrate scoped normalization into the forthcoming command transactions.
+- Extend range marks with pending caret state, mark-set conflicts, and nested
+  wrapper merge.
+- Add ready-made semantic mark adapters only after those generic rules settle.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.
 - Port only the proven ideas from `../rte`; keep its implementation untouched.
