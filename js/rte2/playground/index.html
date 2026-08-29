@@ -93,6 +93,40 @@
       }
     }
 
+    #toolbar {
+      align-items: center;
+      backdrop-filter: blur(.5rem);
+      background: color-mix(in srgb, Canvas 88%, transparent);
+      border: 1px solid color-mix(in srgb, Highlight 55%, var(--border));
+      border-radius: .55rem;
+      box-shadow: 0 .35rem 1.2rem #0004;
+      display: flex;
+      gap: .2rem;
+      padding: .25rem;
+      position: fixed;
+      z-index: 10;
+
+      &[hidden] { display: none; }
+      & button {
+        align-items: center;
+        background: transparent;
+        border: 0;
+        border-radius: .35rem;
+        display: inline-flex;
+        font: inherit;
+        gap: .25rem;
+        min-block-size: 2rem;
+        padding-inline: .55rem;
+      }
+      & button:hover:not(:disabled) { background: color-mix(in srgb, Highlight 16%, transparent); }
+      & button:disabled { opacity: .38; }
+      & button[aria-pressed="true"] { background: color-mix(in srgb, #ffbf00 36%, transparent); }
+      & button[aria-pressed="mixed"] {
+        background: linear-gradient(135deg, color-mix(in srgb, #ffbf00 36%, transparent) 50%, transparent 50%);
+      }
+      & .symbol { font-size: 1.15em; font-weight: 700; }
+    }
+
     #status { margin-block: .4rem 0; }
     details { font-size: .9em; }
     details > summary { cursor: pointer; }
@@ -156,12 +190,21 @@
       </label>
       <button id="dispatch-input" type="button">Dispatch</button>
     </fieldset>
-    <fieldset>
-      <legend>Class mark</legend>
-      <button id="mark-toggle" type="button" aria-pressed="false">Toggle .x</button>
-      <button id="mark-apply" type="button">Apply .x</button>
-      <button id="mark-remove" type="button">Remove .x</button>
-    </fieldset>
+  </div>
+
+  <div id="toolbar" aria-label="Selection formatting">
+    <button id="bold-toggle" type="button" data-command="bold" data-state data-shortcut="b" aria-label="Bold">
+      <span class="symbol" aria-hidden="true">B</span>
+    </button>
+    <button id="mark-toggle" type="button" data-command="toggleX" data-state data-shortcut="x" aria-label="Toggle .x mark">
+      <span class="symbol" aria-hidden="true">x</span> Toggle
+    </button>
+    <button id="mark-apply" type="button" data-command="applyX" aria-label="Apply .x mark">
+      <span class="symbol" aria-hidden="true">+</span> Apply
+    </button>
+    <button id="mark-remove" type="button" data-command="removeX" aria-label="Remove .x mark">
+      <span class="symbol" aria-hidden="true">−</span> Remove
+    </button>
   </div>
 
   <div class="grid">
@@ -198,9 +241,10 @@
         and, unless a command replaced it, the following <code>input</code>.
         Input types without a command run cleanup policies only; they do not
         imitate the browser's native DOM mutation, so edit or apply HTML first.
-        The class-mark buttons run the production range commands. A fully
-        selected inline element is reused; otherwise the command creates a
-        <code>&lt;span class="x"&gt;</code> around the selected text.
+        Bold recognizes both <code>&lt;strong&gt;</code> and <code>&lt;b&gt;</code>,
+        creates canonical <code>&lt;strong&gt;</code>, and unwraps either form on
+        removal. The class-mark buttons reuse a fully selected inline element;
+        otherwise they create a <code>&lt;span class="x"&gt;</code>.
       </p>
     </details>
   </div>
@@ -208,10 +252,12 @@
   <script type="module">
     import {Commands} from '../src/command/commands.js';
     import {enter, lineBreak} from '../src/command/enter.js';
-    import {applyMark, removeMark, toggleMark} from '../src/command/mark.js';
+    import {applyMark, removeMark} from '../src/command/mark.js';
+    import {PendingMarks} from '../src/command/pending-marks.js';
     import {config} from '../src/config/config.js';
     import {Rte} from '../src/core/core.js';
     import {InputPipeline} from '../src/input/input-pipeline.js';
+    import {boldHtml} from '../src/mark/bold.js';
     import {MarkAdapter} from '../src/mark/dom-adapter.js';
     import {MarkType} from '../src/mark/mark.js';
     import {htmlModel} from '../src/model/html/html-model.js';
@@ -221,6 +267,7 @@
     import {isEditingBoundary} from '../src/selection/ownership/ownership.js';
     import {Point} from '../src/selection/point/point.js';
     import {SelectionSnapshot} from '../src/selection/snapshot.js';
+    import {Toolbar} from '../src/ui/toolbar.js';
 
     const controls = {
       scenario: document.querySelector('#scenario'),
@@ -232,9 +279,7 @@
       normalize: document.querySelector('#normalize'),
       inputType: document.querySelector('#input-type'),
       dispatchInput: document.querySelector('#dispatch-input'),
-      markToggle: document.querySelector('#mark-toggle'),
-      markApply: document.querySelector('#mark-apply'),
-      markRemove: document.querySelector('#mark-remove'),
+      toolbar: document.querySelector('#toolbar'),
       reset: document.querySelector('#reset'),
       html: document.querySelector('#html'),
       applyHtml: document.querySelector('#apply-html'),
@@ -298,6 +343,11 @@
     let commands;
     let pipeline;
     let command;
+    let commandMessage;
+    const toolbar = new Toolbar(core, controls.toolbar, {
+      commands: target => target === surface ? commands : null,
+      place: placeToolbar,
+    });
 
     controls.scenario.addEventListener('change', load);
     controls.reset.addEventListener('click', load);
@@ -305,12 +355,9 @@
     controls.step.addEventListener('click', () => execute('step'));
     controls.normalize.addEventListener('click', () => execute('normalize'));
     controls.dispatchInput.addEventListener('click', dispatchInput);
-    for (const button of [controls.markToggle, controls.markApply, controls.markRemove]) {
-      button.addEventListener('mousedown', event => event.preventDefault());
+    for (const control of [controls.level, controls.block, controls.cleanOn]) {
+      control.addEventListener('input', () => editor && options());
     }
-    controls.markToggle.addEventListener('click', () => runMark('toggleX'));
-    controls.markApply.addEventListener('click', () => runMark('applyX'));
-    controls.markRemove.addEventListener('click', () => runMark('removeX'));
     controls.applyHtml.addEventListener('click', () => {
       editor.innerHTML = controls.html.value;
       show('HTML parsed by the browser.');
@@ -329,20 +376,27 @@
       controls.stage.replaceChildren(editor);
       if (scenario.build) scenario.build(editor);
       else editor.innerHTML = scenario.html;
+      options();
       surface = core.add(editor);
+      const pending = new PendingMarks(surface);
       commands = new Commands(surface, {commands: {
         enter,
         lineBreak,
-        toggleX: toggleMark(classHtml),
+        insertText: pending.insertText,
+        bold: pending.toggle(boldHtml),
+        toggleX: pending.toggle(classHtml),
         applyX: applyMark(classHtml),
         removeX: removeMark(classHtml),
       }});
       pipeline = new InputPipeline(surface, {commands});
       editor.addEventListener('u2-rte-normalize', inputNormalized);
-      editor.addEventListener('u2-rte-command', event => command = event.detail.name);
+      editor.addEventListener('u2-rte-command', commandExecuted);
+      editor.addEventListener('u2-rte-change', changeExecuted);
       observer = new MutationObserver(refresh);
       observer.observe(editor, {subtree: true, childList: true, characterData: true, attributes: true});
       scenario.select?.(editor);
+      if (scenario.select) core.sync();
+      toolbar.refresh();
       controls.log.textContent = 'Scenario loaded.';
       show(`Loaded ${controls.scenario.selectedOptions[0].text}.`);
     }
@@ -383,16 +437,33 @@
       if (command) controls.status.textContent = `${inputType} ran command ${command}.`;
     }
 
-    function runMark(name) {
-      options();
-      const changed = commands.run(name);
-      if (changed === undefined) {
-        show('Select text inside the editor first.');
-        return;
-      }
-      controls.log.textContent = `${name}: ${changed.length} element(s) changed.`;
-      const action = {applyX: 'Applied', removeX: 'Removed', toggleX: 'Toggled'}[name];
-      show(`${action} .x on the selected text.`);
+    function commandExecuted(event) {
+      const name = command = event.detail.name;
+      const action = {applyX: 'Applied', removeX: 'Removed', toggleX: 'Toggled', bold: 'Toggled bold'}[name];
+      if (!action) return;
+      const changed = event.detail.result;
+      controls.log.textContent = `${name}: ${Array.isArray(changed) ? changed.length : 0} element(s) changed.`;
+      commandMessage = name === 'bold' ? `${action} on the selected text.` : `${action} .x on the selected text.`;
+    }
+
+    function changeExecuted() {
+      if (!commandMessage) return;
+      const message = commandMessage;
+      commandMessage = null;
+      show(message);
+    }
+
+    function placeToolbar(element, target) {
+      const range = target.selection?.range();
+      const anchor = range?.getBoundingClientRect();
+      if (!anchor) return;
+      const box = element.getBoundingClientRect();
+      const gap = 8;
+      const left = Math.max(gap, Math.min(innerWidth - box.width - gap, anchor.left + anchor.width / 2 - box.width / 2));
+      const above = anchor.top - box.height - gap;
+      const top = above >= gap ? above : Math.min(innerHeight - box.height - gap, anchor.bottom + gap);
+      element.style.left = `${left}px`;
+      element.style.top = `${top}px`;
     }
 
     function inputNormalized(event) {
@@ -463,9 +534,6 @@
         lines.push(`focus:  ${path(selection.focusNode)} @ ${selection.focusOffset}`);
       }
       controls.tree.textContent = lines.join('\n');
-      const state = commands?.state('toggleX');
-      controls.markToggle.disabled = !commands?.enabled('toggleX');
-      controls.markToggle.ariaPressed = state === null ? 'false' : String(state);
     }
 
     function tree(node, depth = 0, lines = []) {

@@ -2,6 +2,7 @@ import {applyMark, removeMark, toggleMark} from '../mark.js';
 import {Commands} from '../commands.js';
 import {MarkAdapter} from '../../mark/dom-adapter.js';
 import {MarkType} from '../../mark/mark.js';
+import {boldHtml} from '../../mark/bold.js';
 import {Rte} from '../../core/core.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
@@ -84,7 +85,7 @@ test('mark command: state follows the caret structural context without enabling 
         const atomic = host.querySelector('button');
         select(marked.firstChild, 1, marked.firstChild, 1);
         equal(commands.state('toggleX'), true);
-        equal(commands.enabled('toggleX'), false, 'Pending marks are not implemented yet');
+        equal(commands.enabled('toggleX'), false, 'Base mark commands do not own caret input');
         select(plain, 1, plain, 1);
         equal(commands.state('toggleX'), false);
         select(marked.parentNode, 1, marked.parentNode, 1);
@@ -151,6 +152,41 @@ test('mark command: partial removal isolates the selected marked content', () =>
         equal(host.innerHTML, '<p><span class="x">h</span>ell<span class="x">o</span></p>');
         equal(getSelection().toString(), 'ell');
         same(getSelection().anchorNode, host.firstElementChild.childNodes[1]);
+    }
+));
+
+test('mark command: semantic removal unwraps aliases and preserves unrelated attributes', () => withFixture(
+    '<div contenteditable><p><strong>one</strong><b class=x data-id=2>two</b></p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const surface = core.add(host);
+        const commands = new Commands(surface, {commands: {removeBold: removeMark(boldHtml)}});
+        try {
+            selectContents(host.firstElementChild);
+            commands.run('removeBold');
+            equal(host.innerHTML, '<p>one<span class="x" data-id="2">two</span></p>');
+            equal(getSelection().toString(), 'onetwo');
+        } finally {
+            core.dispose();
+        }
+    }
+));
+
+test('mark command: partial semantic removal keeps the unselected aliases', () => withFixture(
+    '<div contenteditable><p><b>hello</b></p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const surface = core.add(host);
+        const commands = new Commands(surface, {commands: {removeBold: removeMark(boldHtml)}});
+        try {
+            const text = host.querySelector('b').firstChild;
+            select(text, 1, text, 4);
+            commands.run('removeBold');
+            equal(host.innerHTML, '<p><b>h</b>ell<b>o</b></p>');
+            equal(getSelection().toString(), 'ell');
+        } finally {
+            core.dispose();
+        }
     }
 ));
 

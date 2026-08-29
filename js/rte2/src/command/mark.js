@@ -127,8 +127,17 @@ function remove(edit, adapter, mark, range) {
     for (const element of matches.reverse()) {
         const parent = element.parentNode;
         const unwrap = adapter.clear(element, mark);
-        unwrap ? edit.map.unwrap(element) : edit.transaction.touch(element);
-        if (unwrap) edit.transaction.touch(parent);
+        if (unwrap && element.attributes.length && element.localName !== 'span') {
+            const replacement = edit.document.createElement('span');
+            for (const attribute of element.attributes) replacement.setAttribute(attribute.name, attribute.value);
+            edit.map.replaceWrapper(element, replacement);
+            edit.transaction.touch(replacement).touch(parent);
+        } else if (unwrap && !element.attributes.length) {
+            edit.map.unwrap(element);
+            edit.transaction.touch(parent);
+        } else {
+            edit.transaction.touch(element);
+        }
         changed.push(element);
     }
     return changed;

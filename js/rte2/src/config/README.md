@@ -25,10 +25,13 @@ Current properties:
 | `--u2-rte-cleanup` | `none`, `minimal`, `structural`, `canonical` | `structural` |
 | `--u2-rte-clean-on` | space- or comma-separated triggers | `input paste drop command` |
 | `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming` |
+| `--u2-rte-toolbar` | command names separated by spaces or commas | every represented command |
 
 `--u2-rte-enter` is consumed by the `enter` command: `break` inserts a line
-break, every other value names the element Enter splits. See
-[`../command/README.md`](../command/README.md).
+break, every other value names the element Enter splits. `--u2-rte-ui: none`
+hides a roaming `Toolbar`; `static` is reserved for the future static binding.
+See [`../command/README.md`](../command/README.md) and
+[`../ui/README.md`](../ui/README.md).
 
 Functions, command implementations, and policy objects are intentionally not
 encoded as CSS strings. They enter through module registration.

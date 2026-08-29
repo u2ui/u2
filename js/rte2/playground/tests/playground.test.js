@@ -77,6 +77,9 @@ test('playground: class-mark controls reuse inline elements and remove neutral s
     scenario.value = 'marks';
     scenario.dispatchEvent(new document.defaultView.Event('change'));
     const editor = document.querySelector('#editor');
+    const toolbar = document.querySelector('#toolbar');
+    equal(toolbar.hidden, false);
+    equal(toolbar.getAttribute('role'), 'toolbar');
     equal(document.querySelector('#mark-toggle').ariaPressed, 'false');
     document.querySelector('#mark-apply').click();
     equal(editor.innerHTML, '<li>he<span class="x">llo</span></li><li><b class="x">dear</b> world</li>');
@@ -87,8 +90,9 @@ test('playground: class-mark controls reuse inline elements and remove neutral s
     document.getSelection().collapse(marked, 1);
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
     equal(toggle.ariaPressed, 'true', 'A caret inside the mark keeps its active state');
-    truthy(toggle.disabled, 'Toggle stays unavailable until pending marks exist');
+    equal(toggle.disabled, false, 'Pending marks make caret toggle available');
     document.getSelection().setBaseAndExtent(marked, 0, editor.querySelector('b').firstChild, 4);
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
     document.querySelector('#mark-remove').click();
     equal(editor.innerHTML, '<li>hello</li><li><b>dear</b> world</li>');
     truthy(document.querySelector('#status').textContent.includes('Removed .x'));
@@ -106,6 +110,69 @@ test('playground: class-mark toggle reflects and changes selection state', () =>
     toggle.click();
     equal(editor.innerHTML, '<li>hello</li><li><b>dear</b> world</li>');
     equal(toggle.ariaPressed, 'false');
+}));
+
+test('playground: bold uses semantic aliases, canonical HTML, and semantic removal', () => withPlayground(document => {
+    const scenario = document.querySelector('#scenario');
+    scenario.value = 'marks';
+    scenario.dispatchEvent(new document.defaultView.Event('change'));
+    const editor = document.querySelector('#editor');
+    const toggle = document.querySelector('#bold-toggle');
+    equal(toggle.ariaPressed, 'mixed');
+    toggle.click();
+    equal(editor.innerHTML, '<li>he<strong>llo</strong></li><li><b>dear</b> world</li>');
+    equal(toggle.ariaPressed, 'true');
+    toggle.click();
+    equal(editor.innerHTML, '<li>hello</li><li>dear world</li>');
+    equal(toggle.ariaPressed, 'false');
+}));
+
+test('playground: bold shortcut formats the next text input at a caret', () => withPlayground(document => {
+    const scenario = document.querySelector('#scenario');
+    scenario.value = 'marks';
+    scenario.dispatchEvent(new document.defaultView.Event('change'));
+    const editor = document.querySelector('#editor');
+    document.getSelection().collapse(editor.children[0].firstChild, 2);
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    const shortcut = new document.defaultView.KeyboardEvent('keydown', {
+        bubbles: true,
+        cancelable: true,
+        ctrlKey: true,
+        key: 'b',
+    });
+    editor.dispatchEvent(shortcut);
+    truthy(shortcut.defaultPrevented);
+    const input = new document.defaultView.InputEvent('beforeinput', {
+        bubbles: true,
+        cancelable: true,
+        inputType: 'insertText',
+        data: 'B',
+    });
+    editor.dispatchEvent(input);
+    truthy(input.defaultPrevented);
+    equal(editor.innerHTML, '<li>he<strong>B</strong>llo</li><li><b>dear</b> world</li>');
+}));
+
+test('playground: caret toggle formats the next text input', () => withPlayground(document => {
+    const scenario = document.querySelector('#scenario');
+    scenario.value = 'marks';
+    scenario.dispatchEvent(new document.defaultView.Event('change'));
+    const editor = document.querySelector('#editor');
+    const text = editor.children[0].firstChild;
+    document.getSelection().collapse(text, 2);
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    const toggle = document.querySelector('#mark-toggle');
+    equal(toggle.disabled, false);
+    toggle.click();
+    const event = new document.defaultView.InputEvent('beforeinput', {
+        bubbles: true,
+        cancelable: true,
+        inputType: 'insertText',
+        data: 'x',
+    });
+    editor.dispatchEvent(event);
+    truthy(event.defaultPrevented);
+    equal(editor.innerHTML, '<li>he<span class="x">x</span>llo</li><li><b>dear</b> world</li>');
 }));
 
 async function withPlayground(run) {

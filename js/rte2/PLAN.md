@@ -19,15 +19,17 @@ Phase 4 has started with immutable mark types, serializable values, equivalence,
 directional conflicts, deterministic sets, removal, and replaceable DOM
 adapters. Generic non-collapsed range commands now apply and remove one mark,
 including reusable inline elements and neutral-span cleanup, without
-`execCommand()`. Selection and caret state plus toggle are implemented;
-conflicts between complete mark sets and collapsed input are next.
+`execCommand()`. Selection and caret state, toggle, and pending ordinary text
+input are implemented. Adapters can explicitly remove semantic wrappers while
+preserving unrelated attributes, and the ready-made bold adapter exercises the
+whole path; complete mark sets and composition input are next.
 
 The 201-test mark-algebra baseline was confirmed in current Chromium, Firefox,
-and WebKit. The 224-test runner passed in Chromium 152 and Firefox 154; the
-225-test runner also passed in WebKitGTK through GNOME Web. The current 227-test
-runner passes in Chromium 152; the other engines still have to confirm native
-text-data routing and mapped text insertion. Treat the number shown by
-`/u2/js/rte2/tests/` as authoritative.
+and WebKit. The 233-test pending-mark baseline passes in current Chromium,
+Firefox, and WebKitGTK through GNOME Web. The current 249-test runner adds empty
+list exit, the roaming toolbar, semantic wrapper removal, and ready-made bold;
+it passes in Chromium. Firefox and WebKit still have to confirm that revision.
+Treat the number shown by `/u2/js/rte2/tests/` as authoritative.
 
 ## 0. Foundation
 
@@ -115,19 +117,21 @@ and custom policies. Generic commands apply and remove one configured mark over
 arbitrary non-collapsed ranges, preserve selection direction, reuse suitable
 inline elements, join adjacent canonical wrappers, clean up neutral spans, and
 derive selection or structural caret state for toggle. Complete mark-set
-conflicts, collapsed input, nested merging, and concrete formatting commands
-remain open. Native text data now reaches commands unchanged, and mapped text
-insertion is available as the mutation primitive for pending marks.
+conflicts, composition input, nested merging, and formatting other than bold
+remain open. `PendingMarks` stores caret overrides per surface without another
+listener and routes only the next ordinary `insertText` through mapped input.
+The ready-made bold adapter recognizes `<strong>` and `<b>`, renders canonical
+`<strong>`, and explicitly removes its semantic wrapper.
 
 - Apply, remove, and toggle over arbitrary ranges without
   `document.execCommand()`.
 - Support semantic elements, class tokens, attributes, style declarations, and
   custom mark adapters through one algebra.
-- Extend implemented caret state with pending collapsed marks.
+- Extend pending collapsed marks through composition without interrupting IME.
 - Split boundaries minimally; merge equivalent siblings; eliminate redundant,
   conflicting, or empty wrappers.
-- Implement bold, italic, underline, strike, code, link, and remove-format as
-  ordinary registered commands.
+- Implement italic, underline, strike, code, link, and remove-format like the
+  existing bold adapter as ordinary registered commands.
 
 Tests combine partial text, multiple blocks, nested marks, overlapping removal,
 backward selections, atomic content, repeated toggles, and exact undo.
@@ -135,8 +139,9 @@ backward selections, atomic content, repeated toggles, and exact undo.
 ## 5. Structural commands
 
 Status: started. The command registry, the `Edit` execution context, the
-`PointMap.split()` primitive, and the Enter/line-break commands are
-implemented; everything below is open.
+`PointMap.split()` primitive, and the Enter/line-break commands are implemented.
+Enter also exits an empty item from a nested list without crossing its surface;
+the remaining structural commands are open.
 
 - Paragraph and heading conversion, line/block split and merge.
 - Ordered/unordered lists with indent, outdent, split, and lift.
@@ -162,13 +167,25 @@ implemented; everything below is open.
 
 ## 8. UI adapters
 
+Status: started. The optional roaming `Toolbar` binds application-owned markup
+to the active surface's resolved command registry, reflects availability and
+boolean/mixed state, keeps saved selections across UI focus, supports simple
+Ctrl/Command shortcuts, and delegates placement and presentation.
+
+The intended simple entry is a separate batteries-included `editor.js` client:
+one side-effect import plus `--u2-rte` and `--u2-rte-toolbar` should lazily wire
+standard commands, input handling, and one shared default toolbar. The explicit
+`rte.js` API remains the composable engine layer.
+
 - Publish command availability and active/mixed state as observable editor
   state.
-- Implement a roaming UI that follows the active surface.
+- Extend roaming controls beyond pressed buttons to values, menus, and selects.
 - Implement static UIs bound to one surface; allow several UIs and command
   subsets to coexist.
-- Keep focus without losing or accidentally moving the saved editor selection.
-- Configure serializable UI behavior and command sets through CSS variables.
+- Verify reusable placement policy across carets, ranges, writing modes, and
+  viewport edges.
+- Add the zero-setup `editor.js` client and a registration point for optional
+  capability modules without adding work to consumers of `rte.js`.
 
 ## 9. Browser policies and release gate
 

@@ -78,6 +78,17 @@ test('mark adapter: values can describe HTML attributes', () => withFixture(
     }
 ));
 
+test('mark adapter: clear may explicitly request wrapper removal', () => {
+    const bold = new MarkType('bold');
+    const adapter = new MarkAdapter(bold, {
+        selector: 'strong, b',
+        tag: 'strong',
+        clear: () => true,
+    });
+    const element = document.createElement('b');
+    truthy(adapter.clear(element, bold.create()));
+});
+
 test('mark adapter: values can describe style declarations', () => withFixture(
     '<span style="color: red"></span><span></span>', root => {
         const color = new MarkType('color');

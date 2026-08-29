@@ -13,8 +13,9 @@ text formatting after the command layer: registered commands replace prevented
 native input, starting with Enter, while marks describe formatting such as bold,
 links, and colors, how those values coexist, and how HTML represents them.
 Generic commands now apply and remove one configured mark over a selected
-range, derive active/mixed state, and toggle it; pending caret marks and
-ready-made formatting commands come next.
+range, derive active/mixed state, and toggle it. Pending caret marks carry an
+explicit override through the next ordinary text input. The first ready-made
+semantic bold adapter composes the same generic path; composition comes next.
 
 Run the dependency-free browser suite at `/u2/js/rte2/tests/` and inspect
 normalization interactively at `/u2/js/rte2/playground/`. The runner displays
@@ -86,7 +87,8 @@ rte2/
 │   ├── normalize/         Repair planning, execution, and normalization
 │   ├── selection/         Selection, range, ownership, and point mapping
 │   ├── surface/           State of one editable host
-│   └── transaction/       Atomic editing changes and dirty scopes
+│   ├── transaction/       Atomic editing changes and dirty scopes
+│   └── ui/                Optional command-toolbar bindings
 ├── docs/                  Project-wide guides
 ├── playground/            Visual normalization, input, and mark inspection
 └── tests/                 Shared harness and cross-module browser cases
@@ -105,7 +107,9 @@ documents, isolated tests, or deliberately independent environments, but are
 not the default architecture.
 
 UI modules consume core and surface state without becoming part of either. A
-roaming UI follows the active surface. A static UI binds to one surface. Several
+`Toolbar` now binds application-owned command controls to the active surface,
+keeps its saved selection across UI focus, and leaves markup, styling, icons,
+and placement replaceable. A future static UI binds to one surface. Several
 roaming and static UIs may coexist and expose different subsets of the same
 commands.
 
@@ -128,8 +132,8 @@ properties. This lets a stylesheet configure an editor family while each
 default for the host element. JavaScript configuration is reserved for values
 that CSS cannot express, such as functions and policy modules.
 
-Current controls cover UI mode, block and Enter behavior, and cleanup level and
-timing. Future modules will add command sets, allowed content, paste/drop
+Current controls cover UI mode and toolbar items, block and Enter behavior, and
+cleanup level and timing. Future modules will add allowed content, paste/drop
 policy, selection presentation, and browser-policy overrides. Defaults must
 make an unconfigured editor useful and produce structurally valid HTML:
 
@@ -154,9 +158,13 @@ exclusions. The implemented generic range commands split selected boundaries,
 reuse suitable inline elements when the adapter allows it, preserve selection
 direction, and treat configured atomic elements and nested editors as
 boundaries. They derive selection and structural caret state and toggle a mark
-without `execCommand()`. Collapsed pending marks, mark-set conflicts, and
-merging compatible wrappers across nested structures remain open. Adjacent
-canonical wrappers of the mark being applied are already joined.
+without `execCommand()`. Pending marks replace only the next ordinary text
+input and otherwise add no listener or routing work. Composition pending marks,
+mark-set conflicts, and merging compatible wrappers across nested structures
+remain open. Adjacent canonical wrappers of the mark being applied are already
+joined. The shipped bold policy recognizes `<strong>` and `<b>`, creates
+canonical `<strong>`, and removes semantic aliases without dropping unrelated
+attributes.
 
 Commands are registered per surface, expose execution and availability
 independently of any UI, and declare which native `inputType` they replace. The
@@ -228,8 +236,8 @@ sufficient for selection and input semantics.
 
 The dependency-free visual playground at `playground/` runs the same planner,
 normalizer, point mapping, range, input, and mark-command code as production. It
-can inspect invalid DOM structures and visualize class-mark application and
-removal on a live selection.
+can inspect invalid DOM structures and visualize class and bold mark behavior,
+pending caret input, and the roaming toolbar on a live selection.
 
 The current suite combines fixture tests, direct event integration tests,
 seeded generated cases, and browser-regression cases. Later command, clipboard/drop, generated DOM/range,
@@ -242,8 +250,10 @@ transactional undo/redo.
 ## TODO
 
 - Specify the native Sanitizer and DOMPurify adapter contract.
-- Extend range marks with pending caret state, mark-set conflicts, and nested
-  wrapper merge.
-- Add ready-made semantic mark adapters only after those generic rules settle.
+- Extend range marks with composition-aware pending state, mark-set conflicts,
+  and nested wrapper merge.
+- Add italic, underline, strike, code, and link adapters after bold has settled.
+- Add a batteries-included `editor.js` client: one side-effect import plus CSS
+  opts surfaces into standard commands, input handling, and one shared toolbar.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.
 - Port only the proven ideas from `../rte`; keep its implementation untouched.

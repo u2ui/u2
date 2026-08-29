@@ -20,12 +20,11 @@ the current transaction while the core owns document-level routing.
   it to `using`, and `disconnect()` is idempotent.
 - No mutable state is stored globally or shared accidentally between surfaces.
 
-The surface will later own its schema, normalization policy, history, pending
-collapsed marks, and composition state through modules rather than new globals.
+The surface gains schema, normalization, pending marks, history, and composition
+state through modules rather than new globals.
 
 ## TODO
 
 - Add typed module state slots without central registration boilerplate.
-- Define pending mark state for collapsed selections.
 - Coordinate IME composition and native input with transaction grouping.
 - Decide how disabled/read-only transitions affect saved selections and UIs.

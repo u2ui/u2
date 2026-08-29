@@ -58,6 +58,89 @@ test('enter: the host policy decides which element is split', () => withFixture(
     core.dispose();
 }));
 
+test('enter: an empty item exits and splits a nested list', () => withCommands(
+    '<div contenteditable><ul id=items class=list><li>one</li><li><p><br></p></li><li>two</li></ul></div>',
+    ({commands, host}) => {
+        const empty = host.querySelector('p');
+        caret(empty, 0);
+        const block = commands.run('enter');
+        equal(host.innerHTML,
+            '<ul id="items" class="list"><li>one</li></ul><p><br></p><ul class="list"><li>two</li></ul>');
+        same(block, host.children[1]);
+        same(getSelection().anchorNode, block);
+        equal(getSelection().anchorOffset, 0);
+    }
+));
+
+test('enter: exiting the first item keeps the list identity with its content', () => withCommands(
+    '<div contenteditable><ol id=items class=list><li><br></li><li>two</li></ol></div>',
+    ({commands, host}) => {
+        caret(host.querySelector('li'), 0);
+        commands.run('enter');
+        equal(host.innerHTML, '<p><br></p><ol id="items" class="list" start="2"><li>two</li></ol>');
+    }
+));
+
+test('enter: split ordered lists continue their original numbering', () => withFixture(`
+    <div id=normal contenteditable><ol start=5><li>one</li><li><br></li><li>two</li></ol></div>
+    <div id=reversed contenteditable><ol reversed start=10><li>one</li><li><br></li><li>two</li></ol></div>
+    <div id=value contenteditable><ol><li>one</li><li value=20><br></li><li>two</li></ol></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    for (const [id, start] of [['normal', '7'], ['reversed', '8'], ['value', '21']]) {
+        const host = root.querySelector(`#${id}`);
+        const commands = new Commands(core.add(host), {commands: {enter}});
+        caret(host.querySelectorAll('li')[1], 0);
+        commands.run('enter');
+        equal(host.querySelectorAll('ol')[1].getAttribute('start'), start, `${id} lost its continuation`);
+    }
+    core.dispose();
+}));
+
+test('enter: exiting edge items removes empty list halves', () => withFixture(`
+    <div id=last contenteditable><ol id=items><li>one</li><li><span> <br></span></li></ol></div>
+    <div id=only contenteditable><ul><li><br></li></ul></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const last = root.querySelector('#last');
+    const lastCommands = new Commands(core.add(last), {commands: {enter}});
+    caret(last.querySelector('span'), 1);
+    lastCommands.run('enter');
+    equal(last.innerHTML, '<ol id="items"><li>one</li></ol><p><br></p>');
+
+    const only = root.querySelector('#only');
+    const onlyCommands = new Commands(core.add(only), {commands: {enter}});
+    caret(only.querySelector('li'), 0);
+    onlyCommands.run('enter');
+    equal(only.innerHTML, '<p><br></p>');
+    core.dispose();
+}));
+
+test('enter: explicit break policy and meaningful atomic content do not exit a list', () => withFixture(`
+    <div id=break contenteditable style="--u2-rte-enter:break"><ul><li><br></li></ul></div>
+    <div id=atomic contenteditable><ul><li><img alt=""></li></ul></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    for (const id of ['break', 'atomic']) {
+        const host = root.querySelector(`#${id}`);
+        const commands = new Commands(core.add(host), {commands: {enter}});
+        caret(host.querySelector('li'), 0);
+        commands.run('enter');
+        equal(host.firstElementChild.localName, 'ul', `${id} unexpectedly left its list`);
+    }
+    equal(root.querySelector('#break').innerHTML, '<ul><li><br><br></li></ul>');
+    equal(root.querySelector('#atomic').innerHTML, '<ul><li><br><img alt=""></li></ul>');
+    core.dispose();
+}));
+
+test('enter: a list surface keeps an empty item inside its editing boundary', () => withCommands(
+    '<ul contenteditable><li><br></li></ul>', ({commands, host}) => {
+        caret(host.firstElementChild, 0);
+        commands.run('enter');
+        equal(host.innerHTML, '<li><br></li><li><br></li>');
+    }
+));
+
 test('enter: an inline-only host and a host without blocks insert a break', () => withFixture(`
     <p id=inline contenteditable>onetwo</p>
     <div id=none contenteditable style="--u2-rte-block: none">onetwo</div>

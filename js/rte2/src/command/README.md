@@ -7,7 +7,8 @@ keyboard, an Input Event, or a toolbar.
 `commands.js` stores the commands available in one editor. `edit.js` gives a
 running command the selected content and the tools needed to change it safely.
 `enter.js` contains Enter and line break. `mark.js` creates generic commands for
-applying, removing, querying, and toggling text formatting over a selection.
+applying, removing, querying, and toggling text formatting; `pending-marks.js`
+extends them across the next ordinary text input at a caret.
 
 ## Command contract
 
@@ -80,6 +81,14 @@ leaves a `<br>` in a block the split emptied — an empty block has no caret
 position of its own. A break at the end of its block gets the same treatment for
 the same reason.
 
+In `block` or `item` mode, Enter in an empty item exits a list nested inside the
+surface. A middle item splits the list around the new default block; an edge
+item removes only its empty half. The original list node and its `id` stay with
+the surviving content, and split ordered lists continue their original
+numbering, including `start`, `reversed`, and item `value`. A list that is itself
+the editing surface cannot be exited, because commands never create content
+outside their surface.
+
 ## Range marks
 
 `applyMark(adapter, value)`, `removeMark(adapter, value)`, and
@@ -95,14 +104,16 @@ inactive and mixed selections receive the mark throughout.
 At a caret, state is `true` when its actual DOM position is inside a matching
 inline wrapper and `false` otherwise. A boundary immediately outside that
 wrapper stays outside; an empty matching wrapper still provides active context.
-Mark commands remain disabled at a caret until pending marks are implemented.
+Base mark commands stay disabled at a caret. `PendingMarks.toggle()` adds caret
+availability and stores only the difference from that structural state.
 
 Application policy stays in the `MarkAdapter`. When its `reuse` policy accepts
 a fully selected phrasing element, applying a class decorates that element
 directly. Partially selected or bare text uses the adapter's canonical wrapper.
 Blocks, atomic content, the editing host, and nested editable hosts are never
-reused or crossed. Removal clears only the requested mark; semantic elements
-and unrelated attributes remain. An attributeless `span` is unwrapped.
+reused or crossed. Removal clears only the requested mark. An attributeless
+`span` is unwrapped automatically; an adapter may also request removal of its
+semantic wrapper. Unrelated attributes then survive on a neutral `span`.
 
 Applying also joins adjacent canonical wrappers from the same adapter. Thus
 `<span class="x">first</span><span class="x">second</span>` becomes one wrapper.
@@ -124,6 +135,34 @@ commands.add('removeX', removeMark(xHtml));
 commands.add('toggleX', toggleMark(xHtml));
 ```
 
+For caret input, bind one lightweight `PendingMarks` instance to the surface.
+Its toggle delegates range selections to the normal command and stores a caret
+override only when needed. Its `insertText` command replaces native input only
+while that override is current:
+
+```js
+const pending = new PendingMarks(surface);
+commands.add('toggleX', pending.toggle(xHtml));
+commands.add('insertText', pending.insertText);
+```
+
+Moving the selection invalidates the override through the surface's existing
+selection snapshot; no additional listener or observer is installed. After one
+explicit insertion the resulting DOM carries the state, so following input is
+native again. Plain-text surfaces and atomic content are excluded.
+
+The ready-made bold policy composes these pieces without a special command:
+
+```js
+import {boldHtml} from './rte.js';
+
+commands.add('bold', pending.toggle(boldHtml));
+```
+
+It accepts existing `<strong>` and `<b>`, creates `<strong>`, removes either
+semantic wrapper, and works through the same range and pending-input paths as a
+custom mark.
+
 ## Invariants
 
 - Commands run inside exactly one transaction and report their dirty nodes.
@@ -135,11 +174,10 @@ commands.add('toggleX', toggleMark(xHtml));
 ## TODO
 
 - Delete a selection first, then split, instead of leaving it native.
-- Exit a list when Enter is pressed in an empty item, and merge blocks on
-  backward deletion at a block start.
+- Merge blocks on backward deletion at a block start.
 - Create the host's default block when Enter is pressed in content that has not
   been wrapped into one yet.
 - Let content policy provide the line separator instead of assuming `<br>`.
-- Add pending marks at a collapsed caret and apply them during text input.
+- Carry pending marks through composition input without interrupting IME.
 - Merge compatible mark wrappers across nested equivalent structures.
 - Publish availability and active state as observable state for UI adapters.

@@ -13,8 +13,9 @@ shared questions that every formatting command has:
 - In which stable order are several marks kept?
 
 `dom-adapter.js` decides whether a mark is represented by `<strong>`, a class,
-an attribute, a style, or something custom. The range commands then apply or
-remove that representation on selected text.
+an attribute, a style, or something custom. `bold.js` provides the first ready
+semantic mark: it reads `<strong>` and `<b>` and writes `<strong>`. The range
+commands apply or remove those representations on selected text.
 
 ## Public contract
 
@@ -81,8 +82,10 @@ boldHtml.render(bold.create(), document);     // an empty <strong>
 value or `undefined` when a selected element does not represent the mark.
 `tag` plus `write(element, value)` creates the canonical wrapper. `write` can
 also decorate a reusable existing element. `clear(element, value)` removes only
-this mark and leaves its other classes or attributes alone. A custom
-`render(document, value)` may replace `tag` for custom elements or other
+this mark and leaves its other classes or attributes alone. Returning `true`
+additionally asks the command to remove the representation wrapper. A bare
+wrapper is unwrapped; remaining attributes are retained on a neutral `span`. A
+custom `render(document, value)` may replace `tag` for custom elements or other
 application policies.
 
 The same contract handles semantic elements, classes, HTML attributes, and CSS
@@ -111,6 +114,20 @@ With that adapter, selecting `llo` in `hello` creates
 `<b class="x">dear</b>`. Removal keeps the `<b>` and only unwraps a `span` when
 clearing the mark leaves it without attributes.
 
+## Ready-made bold
+
+```js
+import {bold, boldHtml} from './rte.js';
+
+boldHtml.parse(document.querySelector('b')); // bold.create()
+boldHtml.render(bold.create(), document);     // <strong>
+```
+
+`bold` is the immutable `MarkType`; `boldHtml` is its replaceable default HTML
+adapter. New bold text uses `<strong>`, while both `<strong>` and `<b>` count as
+active and can be removed. Removing a bare alias unwraps it. If the element also
+has unrelated attributes, those survive on a neutral `span`.
+
 Applying a mark joins adjacent canonical wrappers produced by that adapter, so
 two neighboring `<span class="x">` elements become one. A wrapper carrying
 additional classes, attributes, or tag semantics is preserved: the adapter
@@ -123,6 +140,10 @@ editable hosts are ignored because the same commands cannot format their
 contents. Toggle removes a fully active mark and applies it across inactive or
 mixed selections.
 
+`PendingMarks` can extend those commands at a caret. It stores only an explicit
+override for one surface and replaces the next `insertText`; afterward the DOM
+it created carries the mark and native input resumes.
+
 ## Invariants
 
 - Type identity decides equality and removal. Type names deliberately connect
@@ -133,6 +154,8 @@ mixed selections.
 - Exclusion is directional policy; conflict reporting is symmetric.
 - The algebra contains no editor, document, selection, or module-global mutable
   state. DOM mutation belongs to the adapter and range commands.
+- Ready-made types and adapters are immutable shared defaults; applications may
+  replace them with their own policy.
 
 ## Browser considerations
 
@@ -146,4 +169,4 @@ backward selections, atomic elements, nested editors, reuse, and cleanup.
 - Merge compatible wrappers across nested equivalent structures.
 - Apply and remove complete, conflicting mark sets rather than one concrete mark
   at a time.
-- Define pending marks for collapsed selections and composition input.
+- Carry pending marks through composition input.

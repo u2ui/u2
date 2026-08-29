@@ -3,11 +3,14 @@ import {Point} from '../selection/point/point.js';
 // The host policy names the element Enter splits; `block` follows the
 // configured default block, the structural values name their own unit.
 const UNITS = Object.freeze({item: ['li'], row: ['tr'], cell: ['td', 'th']});
+const LISTS = Object.freeze(['ul', 'ol', 'menu']);
 
 export const enter = {
     inputTypes: ['insertParagraph'],
     enabled: editable,
     run(edit) {
+        const exited = exitList(edit);
+        if (exited) return exited;
         const unit = structure(edit);
         return unit ? split(edit, unit) : insertBreak(edit);
     },
@@ -38,6 +41,61 @@ function structure(edit) {
         if (tags.includes(element.localName) && edit.model.allows(element.parentElement, element)) return element;
     }
     return null;
+}
+
+function exitList(edit) {
+    const {enter: mode, block: tag} = edit.config;
+    if (!tag || mode !== 'block' && mode !== 'item') return null;
+    let item = closest(edit.range.start.node);
+    while (item && item !== edit.element && item.localName !== 'li') item = item.parentElement;
+    if (!item || item === edit.element || !empty(item, edit.model, item)) return null;
+    const list = item.parentElement;
+    if (!LISTS.includes(list?.localName) || list === edit.element) return null;
+    const parent = list.parentElement;
+    const block = edit.document.createElement(tag);
+    if (!edit.model.allows(parent, block)) return null;
+
+    const start = continuation(list, item);
+    const offset = [...list.childNodes].indexOf(item);
+    edit.map.remove(item);
+    const at = edit.map.split(parent, list, offset);
+    const tail = parent.childNodes[at];
+    let trailing = tail;
+    edit.map.insert(parent, at, block);
+    edit.map.insert(block, 0, edit.document.createElement('br'));
+    if (!list.children.length) {
+        if (tail.children.length) {
+            while (tail.firstChild) edit.map.move(tail.firstChild, list, list.childNodes.length);
+            edit.map.remove(tail);
+            edit.map.move(list, parent, [...parent.childNodes].indexOf(block) + 1);
+            trailing = list;
+        } else {
+            edit.map.remove(list);
+            edit.map.remove(tail);
+            trailing = null;
+        }
+    } else if (!tail.children.length) {
+        edit.map.remove(tail);
+        trailing = null;
+    }
+    if (start !== null && trailing) trailing.setAttribute('start', start);
+    edit.transaction.touch(parent);
+    edit.select(new Point(block, 0, 'forward'));
+    return block;
+}
+
+function continuation(list, item) {
+    if (list.localName !== 'ol') return null;
+    const items = [...list.children].filter(child => child.localName === 'li');
+    const target = items.indexOf(item) + 1;
+    if (!target || target >= items.length || items[target].hasAttribute('value')) return null;
+    let value = list.hasAttribute('start') ? list.start : list.reversed ? items.length : 1;
+    const step = list.reversed ? -1 : 1;
+    for (let index = 0; index < target; index++) {
+        if (items[index].hasAttribute('value')) value = items[index].value;
+        value += step;
+    }
+    return String(value);
 }
 
 function split(edit, unit) {
@@ -101,6 +159,14 @@ function blank(model, node) {
     if (node.nodeType !== Node.ELEMENT_NODE) return true;
     if (model.atomic(node) || node.textContent.trim()) return false;
     return ![...node.querySelectorAll('*')].some(element => model.atomic(element));
+}
+
+function empty(node, model, root) {
+    if (node.nodeType === Node.TEXT_NODE) return !node.data.trim();
+    if (node.nodeType !== Node.ELEMENT_NODE) return true;
+    if (node.localName === 'br') return true;
+    if (node !== root && (node.hasAttribute('contenteditable') || model.atomic(node))) return false;
+    return [...node.childNodes].every(child => empty(child, model, root));
 }
 
 function closest(node) {

@@ -23,7 +23,15 @@ example.
 - Apply, remove, or toggle the `.x` mark over a live selection. The toggle
   exposes active, mixed, and caret state; the dedicated scenario makes wrapper
   creation, reuse of an existing inline element, and cleanup of a neutral
-  `span` visible in the DOM tree and serialized HTML.
+  `span` visible in the DOM tree and serialized HTML. At a caret, toggling also
+  formats the next ordinary text input through `PendingMarks`.
+- Toggle the ready-made bold mark by button or Ctrl/Command+B. The scenario
+  exposes `<b>` alias recognition, canonical `<strong>` output, semantic
+  removal, and pending bold input at a caret.
+- Exercise the production roaming `Toolbar`: it follows the active surface,
+  reflects command availability and mark state, preserves the selection during
+  pointer or keyboard interaction, and is positioned near the live range by a
+  playground-only placement callback.
 - Edit content directly or parse serialized HTML through the browser.
 - Compare the live DOM tree with `innerHTML` serialization.
 - Display executed actions, unresolved repairs, and selection endpoints.
@@ -35,9 +43,9 @@ difference.
 
 `tests/playground.test.js` loads the complete page in a same-origin frame. It
 checks bootstrapping, pure analysis, one-step selection restoration, complete
-normalization, action reporting, host-specific list defaults, and synthetic
-input routing. It also drives the class-mark controls and checks their exact DOM
-result in every target browser.
+normalization, action reporting, host-specific list defaults, synthetic input
+routing, and the roaming toolbar. It also drives the class-mark controls and
+checks their exact DOM result in every target browser.
 
 ## TODO
 

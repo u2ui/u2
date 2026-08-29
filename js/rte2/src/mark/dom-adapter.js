@@ -70,11 +70,11 @@ export class MarkAdapter {
         this.#assertMark(mark);
         assertElement(element);
         if (!this.#clear) throw new TypeError('This mark adapter cannot remove its formatting');
-        this.#clear(element, mark.value);
+        const unwrap = this.#clear(element, mark.value) === true;
         for (const name of ['class', 'style']) {
             if (!element.getAttribute(name)?.trim()) element.removeAttribute(name);
         }
-        return element.localName === 'span' && !element.attributes.length;
+        return unwrap || element.localName === 'span' && !element.attributes.length;
     }
 
     render(mark, document) {

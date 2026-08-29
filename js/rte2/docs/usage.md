@@ -80,7 +80,7 @@ what differs. `auto` means "use the semantic default for this tag".
 | `--u2-rte-enter` | `break`, `block`, `item`, `row`, `cell`, `auto` | derived from the host |
 | `--u2-rte-cleanup` | `none`, `minimal`, `structural`, `canonical` | `structural` |
 | `--u2-rte-clean-on` | any of `input paste drop command` | all four |
-| `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming`, reserved for UI modules |
+| `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming` |
 
 The host element decides the defaults: a `<ul contenteditable>` creates list
 items, a `<p contenteditable>` stays inline and Enter inserts a line break, a
@@ -149,7 +149,7 @@ Marks separate formatting meaning from its HTML representation. This adapter
 uses a `span` for bare text but may reuse any fully selected inline element:
 
 ```js
-import {MarkAdapter, MarkType, applyMark, removeMark, toggleMark} from './rte.js';
+import {MarkAdapter, MarkType, PendingMarks, applyMark, removeMark} from './rte.js';
 
 const x = new MarkType('x');
 const xHtml = new MarkAdapter(x, {
@@ -162,7 +162,9 @@ const xHtml = new MarkAdapter(x, {
 
 commands.add('applyX', applyMark(xHtml));
 commands.add('removeX', removeMark(xHtml));
-commands.add('toggleX', toggleMark(xHtml));
+const pending = new PendingMarks(surface);
+commands.add('toggleX', pending.toggle(xHtml));
+commands.add('insertText', pending.insertText);
 ```
 
 Applying `x` to selected bare text creates `<span class="x">`. A completely
@@ -175,7 +177,60 @@ joins adjacent canonical `<span class="x">` wrappers.
 the mark, `false` when none has it, and `'mixed'` when only part has it. Toggle
 removes an active mark and applies it to inactive or mixed selections. At a
 caret, state reports whether the caret's DOM position is structurally inside
-the mark; the command remains disabled there until pending marks are available.
+the mark. Toggling there changes the next ordinary text input, then returns to
+native input. Moving the selection cancels that pending override without an
+additional listener.
+
+### Bold
+
+Bold is the first ready-made semantic adapter. It accepts existing `<strong>`
+and `<b>`, creates canonical `<strong>`, and removes either wrapper:
+
+```js
+import {boldHtml} from './rte.js';
+
+commands.add('bold', pending.toggle(boldHtml));
+```
+
+Use the same `PendingMarks` instance as the other caret marks and register its
+`insertText` command only once. Removing bold unwraps a bare semantic element;
+unrelated attributes survive on a neutral `span`.
+
+## Roaming toolbar
+
+`Toolbar` binds application-owned markup to the command registry of the active
+surface. It creates no buttons, icons, styles, or editor commands:
+
+```html
+<div id="toolbar" aria-label="Formatting">
+    <button type="button" data-command="bold" data-state data-shortcut="b">Bold</button>
+    <button type="button" data-command="toggleX" data-state data-shortcut="x">Highlight</button>
+    <button type="button" data-command="removeX">Remove</button>
+</div>
+```
+
+```js
+import {Toolbar} from './rte.js';
+
+const commandsBySurface = new WeakMap();
+core.addEventListener('u2-rte-add', ({detail}) => {
+    const commands = createCommands(detail.surface);
+    commandsBySurface.set(detail.surface, commands);
+    new InputPipeline(detail.surface, {commands});
+});
+
+const toolbar = new Toolbar(core, document.querySelector('#toolbar'), {
+    commands: surface => commandsBySurface.get(surface),
+    place: (element, surface) => placeNear(element, surface.selection),
+});
+```
+
+The optional `place` callback owns geometry, keeping anchor positioning and
+popover policy replaceable. Toggle items opt into `aria-pressed` reflection with
+`data-state`; action buttons omit it. `data-shortcut="x"` binds Ctrl+X or
+Command+X while keyboard input belongs to the active surface. An inherited
+`--u2-rte-toolbar: toggleX removeX` property selects the items for one editor.
+`--u2-rte-ui: none` hides the roaming toolbar.
 
 ## Events
 
@@ -267,16 +322,18 @@ Being explicit is cheaper than surprising you:
   commands, so the native undo stack no longer matches the document after the
   first repair. A history module owns this and does not exist yet.
 - **No ready-made formatting command set yet.** Generic range commands can
-  apply, remove, query, and toggle one configured mark. Bold, italic, links,
-  remove-format, and pending marks at a caret are not yet shipped.
-- **No deletion or list commands.** Backspace, Delete, and Enter in an empty
-  list item keep their native behavior and are repaired afterwards.
+  apply, remove, query, and toggle one configured mark, including pending marks
+  at a caret. Bold, italic, links, and remove-format are not yet shipped.
+- **No deletion or general list commands.** Backspace, Delete, list creation,
+  indent, and outdent remain native. Enter can split an item and exit an empty
+  list item.
 - **No sanitizing and no serializer**, as described above.
-- **No UI.** `--u2-rte-ui` is reserved; toolbars are yours to build on
-  `enabled()`, `state()`, `run()`, and the events above.
-- **The current 227-test runner is verified in Chromium 152.** WebKitGTK through
-  GNOME Web confirmed the 225-test revision and Firefox 154 the 224-test
-  revision; native text-data routing and mapped text insertion still need both
-  engines, while Firefox also needs the caret-state case.
+- **No ready-made toolbar contents or theme.** The roaming binder is shipped,
+  while markup, icons, labels, styles, positioning, and command sets remain
+  application policy. Static bindings and menu/select state are still open.
+- **The 233-test pending-mark baseline is verified in Chromium, Firefox, and
+  WebKitGTK through GNOME Web.** The current 243-test runner adds empty-list
+  exit and the roaming toolbar and is verified in Chromium; Firefox and WebKit
+  still need that revision.
 
 [`../PLAN.md`](../PLAN.md) tracks what lands next.

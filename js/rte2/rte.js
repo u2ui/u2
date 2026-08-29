@@ -4,9 +4,11 @@ export {Commands} from './src/command/commands.js';
 export {Edit} from './src/command/edit.js';
 export {enter, lineBreak} from './src/command/enter.js';
 export {applyMark, removeMark, toggleMark} from './src/command/mark.js';
+export {PendingMarks} from './src/command/pending-marks.js';
 export {config, enabled, hostDefaults} from './src/config/config.js';
 export {Rte} from './src/core/core.js';
 export {InputPipeline, inputTrigger} from './src/input/input-pipeline.js';
+export {bold, boldHtml} from './src/mark/bold.js';
 export {MarkAdapter} from './src/mark/dom-adapter.js';
 export {Mark, MarkType} from './src/mark/mark.js';
 export {ContentModel} from './src/model/content-model.js';
@@ -20,5 +22,6 @@ export {SelectionSnapshot} from './src/selection/snapshot.js';
 export {Point} from './src/selection/point/point.js';
 export {Surface} from './src/surface/surface.js';
 export {Transaction} from './src/transaction/transaction.js';
+export {Toolbar} from './src/ui/toolbar.js';
 
 export const rte = new Rte(document);
