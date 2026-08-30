@@ -138,6 +138,64 @@ test('delete backward: content policy controls custom blocks and rejects invalid
     }
 ));
 
+test('delete: backspace removes an atomic block before the caret', () => withFixture(
+    '<div contenteditable><p>one</p><hr><p>two</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = registry(core, host);
+        const text = host.lastElementChild.firstChild;
+        caret(text, 0);
+        equal(commands.enabled('deleteBackward'), true);
+        commands.run('deleteBackward');
+        equal(host.innerHTML, '<p>one</p><p>two</p>');
+        same(getSelection().focusNode, text, 'The caret stays where it was');
+        equal(getSelection().focusOffset, 0);
+        core.dispose();
+    }
+));
+
+test('delete: forward delete removes an atomic block after the caret', () => withFixture(
+    '<div contenteditable><p>one</p><hr><p>two</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = registry(core, host);
+        caret(host.firstElementChild.firstChild, 3);
+        equal(commands.enabled('deleteForward'), true);
+        commands.run('deleteForward');
+        equal(host.innerHTML, '<p>one</p><p>two</p>');
+        // The paragraphs are only joined by a second press.
+        commands.run('deleteForward');
+        equal(host.innerHTML, '<p>onetwo</p>');
+        core.dispose();
+    }
+));
+
+test('delete: an atomic block is removed before an unrelated merge is considered', () => withFixture(
+    '<div contenteditable><ul><li>one</li></ul><hr><p>two</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = registry(core, host);
+        caret(host.lastElementChild.firstChild, 0);
+        commands.run('deleteBackward');
+        equal(host.innerHTML, '<ul><li>one</li></ul><p>two</p>');
+        equal(commands.enabled('deleteBackward'), false, 'A list and a paragraph do not merge');
+        core.dispose();
+    }
+));
+
+test('delete: an atomic block at the very edge of the host is removable', () => withFixture(
+    '<div contenteditable><hr><p>one</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = registry(core, host);
+        caret(host.lastElementChild.firstChild, 0);
+        commands.run('deleteBackward');
+        equal(host.innerHTML, '<p>one</p>');
+        equal(commands.enabled('deleteBackward'), false);
+        core.dispose();
+    }
+));
+
 function registry(core, host, model) {
     return new Commands(core.add(host), {model, commands: {deleteBackward, deleteForward}});
 }

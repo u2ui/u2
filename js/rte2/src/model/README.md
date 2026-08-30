@@ -49,6 +49,10 @@ The generic engine does not hardcode HTML rules.
 - Element validity is not HTML sanitizing. Attributes, URL schemes, and hostile
   input require a sanitizer policy before insertion.
 
+`defaultChild(node)` names the element a container fills itself with — `li` for
+a list, `tr` for a table section. Structural commands use it instead of naming
+tags, so the same command serves any configured list-like structure.
+
 ## TODO
 
 - Add contextual constraints that depend on sibling order and required child

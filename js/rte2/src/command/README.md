@@ -137,6 +137,12 @@ mergeable; applications can opt any custom block in or out through their model.
 Whitespace and comments between two otherwise adjacent blocks are neutral and
 removed as part of the same mapped merge; meaningful text is never skipped.
 
+An atomic block on the other side of the boundary is not merged: it holds
+nothing to join, so it is removed and the caret stays where it already was. A
+horizontal rule between two paragraphs therefore disappears on the first press
+and the paragraphs merge on the second, which is what makes an inserted rule
+removable at all — the browser's own deletion leaves it in place.
+
 ## Range marks
 
 `applyMark(adapter, value)`, `removeMark(adapter, value)`, and
@@ -248,6 +254,28 @@ input paths as custom marks. Their adapters recognize semantic aliases and emit
 one canonical tag. Link values use `{href, target?, rel?, title?}`; URL policy
 belongs to the application supplying that command value.
 
+## Value marks
+
+`valueMark(adapter)` is one command for a mark whose value is content rather
+than a fixed choice. `edit.value` carries it, and a null value removes whatever
+mark of that type is there, so a single control creates, changes, and removes a
+link without a command per URL:
+
+```js
+commands.add('link', valueMark(linkHtml));
+commands.run('link', {value: {href: '/docs', target: '_blank'}});
+commands.run('link', {value: {href: '/other'}});
+commands.run('link');
+```
+
+`state(edit)` returns the mark's value, `'mixed'` when the range carries several
+values or is only partly marked, and null when it carries none.
+
+A caret carries no range to mark, but it does sit on one: at a caret inside a
+mark the command acts on that whole mark. That is what makes editing an existing
+link's value possible without selecting its text first, and it applies to any
+value mark, not just links.
+
 ## Block styles
 
 `BlockStyles` defines one closed group of mutually exclusive text-block
@@ -288,6 +316,64 @@ rule if the fallback cannot prove its block content valid. State is the active
 style name, `'mixed'`, or `null` when the selection contains no styleable block.
 One value-bearing command avoids traversing the same selected blocks once for
 every represented style.
+
+## Lists
+
+`Lists` defines one closed group of list container elements. Item elements are
+never named: they come from the model's `defaultChild`, so the same commands
+serve any configured list-like structure.
+
+```js
+const lists = new Lists(['ul', 'ol']);
+
+commands.add('bullets', lists.toggle('ul'));
+commands.add('numbers', lists.toggle('ol'));
+commands.add('indent', lists.indent);
+commands.add('outdent', lists.outdent);
+```
+
+`toggle(tag)` has one boolean state and three behaviors, decided by what the
+selection already is:
+
+- Plain blocks become items of a new list. The host's configured default block
+  becomes the item itself, so a paragraph turns into `<li>text</li>`; every
+  other block keeps its own element inside one, so a heading turns into
+  `<li><h2>…</h2></li>`.
+- Items of another kind convert their container, preserving its attributes.
+- Items of the same kind are lifted back out. An item contributes its own
+  blocks when the target accepts all of them, and otherwise becomes the host's
+  configured text block.
+
+Selecting part of a list splits it, so only the selected run changes. A
+resulting list that meets a list of its own kind becomes one list, so applying
+to a paragraph below an existing list extends that list instead of starting a
+second one.
+
+`indent` moves a run of items into a nested list inside the previous item,
+reusing one that is already there. `outdent` raises a run into the list that
+owns its parent item, splitting that item so content after the nested list
+stays behind, and lifts the run out of the list entirely at the top level.
+Both claim the `formatIndent` and `formatOutdent` input types.
+
+Every step is checked against the content model first, so a host that does not
+allow the container, the item, or the text block keeps its control disabled
+instead of producing invalid structure.
+
+## Inserted elements
+
+`insertNode(create, inputTypes)` inserts one prepared element at the caret. The
+content model decides where it belongs: the caret's block is split only as far
+as the nearest container that accepts the element, so a block-level rule
+separates paragraphs while an inline element stays inside its text. An empty
+half left by the split receives a filler break so it keeps a caret position.
+
+```js
+commands.add('rule', insertNode(document => document.createElement('hr'),
+    ['insertHorizontalRule']));
+```
+
+A non-collapsed selection is not deleted first, so the browser keeps its native
+behavior there until deletion is an ordinary mapped command.
 
 ## Unstyle
 
@@ -346,6 +432,12 @@ error.
   been wrapped into one yet.
 - Let content policy provide the line separator instead of assuming `<br>`.
 - Merge compatible mark wrappers across nested equivalent structures.
+- Decide whether changing a value mark should keep the attributes its adapter
+  does not name, instead of writing the given value exactly.
 - Publish availability and active state as observable state for UI adapters.
 - Decide whether block styles should support an application-defined fallback
   for loose text before normalization has created a text block.
+- Preserve `start` and `value` numbering when a split or lift divides an
+  ordered list, the way Enter's list exit already does.
+- Decide whether lifting an item should keep a nested list at its own level or
+  raise it with its parent.

@@ -83,19 +83,23 @@ rte2/
 ├── blocks.js              Optional block-style module and public entry
 ├── breaks.js              Optional visible-line-break extension and entry
 ├── editor.js              Prototype one-import convention client
+├── link.js                Optional contextual link editor module and entry
 ├── rte.js                 Stable public API and default document core
+├── source.js              Optional HTML source view module and entry
 ├── unstyle.js             Optional staged remove-format module and entry
 ├── src/                   Production responsibilities
 │   ├── browser/           Isolated native browser policies and fallbacks
-│   ├── client/            Lazy batteries-included editor wiring
-│   ├── command/           Registry, Enter/delete, block styles, and range marks
+│   ├── client/            Lazy batteries-included editor wiring and defaults
+│   ├── command/           Registry, Enter/delete, structure, and range marks
 │   ├── config/            CSS configuration and semantic host defaults
 │   ├── core/              Shared root lifecycle and surface registry
+│   ├── history/           Snapshot undo and redo for one surface
 │   ├── input/             beforeinput, paste, drop, and composition
 │   ├── mark/              Formatting values and HTML adapters
 │   ├── model/             Replaceable HTML content rules and categories
 │   ├── normalize/         Repair planning, execution, and normalization
 │   ├── sanitize/          External HTML, attribute, and URL security policy
+│   ├── source/            Surface content as readable and writable HTML text
 │   ├── selection/         Selection, range, ownership, and point mapping
 │   ├── surface/           State of one editable host
 │   ├── transaction/       Atomic editing changes and dirty scopes
@@ -132,6 +136,12 @@ commands, controls, and owned resources across current and future surfaces
 through the client without changing the engine. It intentionally keeps provisional default
 UI questions out of `rte.js`; explicit consumers continue to construct only the
 modules they need.
+
+The convention client's own defaults arrive as three ordinary modules using
+that same contract: `history` for undo and redo, `marks` for the ready inline
+marks, and `structure` for lists, their nesting levels, and a separator. They
+hold no privileged position and can be removed like any other module; every
+control they contribute is gated by `--u2-rte-toolbar`.
 
 The first substantial optional command module is `blocks.js`. It contributes a
 command-valued Block style select for Paragraph, H1, H2, and H3. Applications

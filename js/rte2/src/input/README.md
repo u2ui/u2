@@ -27,6 +27,10 @@ to `using`. Disconnecting the surface also disposes them automatically.
   boundary. A key is prevented only when its registered structural command is
   available; character deletion, selections, modified keys, and other
   unavailable cases remain native.
+- Ctrl/Command+Z, Ctrl/Command+Shift+Z, and Ctrl/Command+Y are checked at
+  `keydown` for the same reason: an engine stops reporting `historyUndo` and
+  `historyRedo` once its own undo stack no longer matches content the editor
+  replaced. Without a registered history command both keys stay native.
 - `u2-rte-command` with a transaction triggers the same cleanup as native
   input, so an editing command executed from a toolbar is normalized like one
   executed from the keyboard. View-only commands report a null transaction and

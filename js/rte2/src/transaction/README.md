@@ -6,7 +6,7 @@ Enter command and the structural cleanup it triggers should be observed as one
 change rather than unrelated DOM mutations.
 
 `transaction.js` provides this synchronous boundary for commands, input
-handling, normalization, events, and future history.
+handling, normalization, events, and history.
 
 ## Contract
 
@@ -20,7 +20,8 @@ handling, normalization, events, and future history.
   `u2-rte-change`; a thrown error emits `u2-rte-error` and is rethrown.
 - `selectionBefore` and `selectionAfter` expose read-only snapshots.
 - Transactions report state but do not pretend to roll back arbitrary DOM
-  mutations. Reversible steps belong to the future history layer.
+  mutations. Undo is provided by the state-based history layer, which uses the
+  `trigger` option to decide what belongs to one step.
 
 Synchronous execution is intentional: selection, `beforeinput`, browser undo,
 and DOM mutation order become ambiguous across an asynchronous gap.
@@ -28,6 +29,7 @@ and DOM mutation order become ambiguous across an asynchronous gap.
 ## TODO
 
 - Reduce touched nodes into minimal dirty scopes for normalization.
-- Record reversible DOM operations for deterministic undo and redo.
+- Record reversible DOM operations so history can store diffs instead of
+  whole content states.
 - Add transaction metadata compatible with Input Events `inputType` values.
 - Define composition transaction grouping without delaying DOM ownership.

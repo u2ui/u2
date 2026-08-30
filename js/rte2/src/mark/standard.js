@@ -23,6 +23,32 @@ export const linkHtml = new MarkAdapter(link, {
     clear: clearLink,
 });
 
+// One closed group of content classes as a single mark. Its value is the class
+// name, so a value command drives it and the group stays mutually exclusive; an
+// application that needs independent axes builds a second adapter.
+export function classMark(names, {type = new MarkType('class'), tag = 'span'} = {}) {
+    const known = [...new Set(names)];
+    if (!known.length || known.some(name => typeof name !== 'string' || !name.trim())) {
+        throw new TypeError('A class mark requires class names');
+    }
+    return new MarkAdapter(type, {
+        selector: known.map(name => `.${CSS.escape(name)}`).join(','),
+        tag,
+        reuse: true,
+        read: element => known.find(name => element.classList.contains(name)),
+        write: (element, value) => {
+            if (!known.includes(value)) throw new RangeError(`Unknown class mark: ${value}`);
+            for (const name of known) element.classList.remove(name);
+            element.classList.add(value);
+        },
+        clear(element) {
+            for (const name of known) element.classList.remove(name);
+            if (!element.classList.length) element.removeAttribute('class');
+            return true;
+        },
+    });
+}
+
 function element(type, selector, tag) {
     return new MarkAdapter(type, {selector, tag, clear: () => true});
 }

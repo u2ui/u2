@@ -131,6 +131,7 @@ export class Toolbar {
             const listen = {signal: this.#surfaceController.signal};
             surface.addEventListener('u2-rte-selectionchange', this.#refresh, listen);
             surface.addEventListener('u2-rte-change', this.#refresh, listen);
+            surface.addEventListener('u2-rte-history', this.#refresh, listen);
             surface.addEventListener('u2-rte-disconnect', this.#disconnect, listen);
         }
         this.refresh();

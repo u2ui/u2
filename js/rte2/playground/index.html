@@ -239,13 +239,16 @@
 
     <section class="panel wide">
       <h2>One-import editor prototype</h2>
-      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:block bold unstyle breaks; --u2-rte-show-breaks:true">
-        <p>Select text for Bold, choose its block style, or press Enter inside this list:</p>
-        <ul><li>List item</li></ul>
+      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block bold italic underline strike code link unlink bullets numbers outdent indent rule unstyle breaks source; --u2-rte-show-breaks:true">
+        <p>Select text to format it, choose its block style, or press Enter inside this list:</p>
+        <ul><li>List item</li><li>Put the caret here and press the indent control</li></ul>
+        <p>Turn these paragraphs into a list, then lift them out again.</p>
+        <p>Select this text and link it, or put the caret in <a href="/existing">this link</a> to edit it.</p>
         <p><span class="pasted" style="color:#b30"><strong>Select this paste-like formatting</strong></span> and click T× repeatedly.</p>
         <p>The faint arrow after this line is a visible break.<br>It is not part of the editable HTML.</p>
       </div>
-      <p><small>This surface is wired by <code>editor.js</code>, optional <code>blocks.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>, and CSS variables.</small></p>
+      <p><small id="history-state">History: focus the surface to start recording.</small></p>
+      <p><small>This surface is wired by <code>editor.js</code>, optional <code>blocks.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>/<code>link.js</code>/<code>source.js</code>, and CSS variables.</small></p>
     </section>
 
     <details class="panel wide">
@@ -263,6 +266,23 @@
         and, unless a command replaced it, the following <code>input</code>.
         Input types without a command run cleanup policies only; they do not
         imitate the browser's native DOM mutation, so edit or apply HTML first.
+        The prototype toolbar lists every ready control, so the order in
+        <code>--u2-rte-toolbar</code> is the order shown. Undo and redo also
+        work from Ctrl/Command+Z and +Y; the readout under the surface reports
+        how many entries the history holds and where it stands, which makes the
+        grouping visible: continuous typing coalesces, while each command,
+        paste, and drop is its own step. List controls consult the content
+        model, so they disable themselves in a host that does not allow them.
+        The <code>&lt;/&gt;</code> control opens the HTML source of this surface
+        in a modal dialog, positioned at the caret. Applying it parses the text
+        through the sanitizer, never through <code>innerHTML</code>, and lands
+        as one undo step. Its text area is wrapped in <code>&lt;u2-code&gt;</code>,
+        so the source is syntax highlighted once that element has loaded.
+        The link control opens a contextual form at the selection: a caret
+        inside a link edits that whole link, a selection creates one. Its
+        address is a plain text field, so relative paths, fragments, and
+        application schemes are accepted and the sanitizer decides what
+        survives.
         Bold recognizes both <code>&lt;strong&gt;</code> and <code>&lt;b&gt;</code>,
         creates canonical <code>&lt;strong&gt;</code>, and unwraps either form on
         removal. The class-mark buttons reuse a fully selected inline element;
@@ -272,8 +292,10 @@
   </div>
 
   <script type="module">
-    import '../editor.js';
+    import {editor as conventionEditor} from '../editor.js';
     import '../blocks.js';
+    import '../link.js';
+    import '../source.js';
     import '../breaks.js';
     import '../unstyle.js';
     import {rangeRect} from '../src/browser/range-rect.js';
@@ -641,7 +663,28 @@
       refresh();
     }
 
+    /* The convention prototype reports its own history so grouping is visible. */
+    const prototype = document.querySelector('#editor-prototype');
+    const historyState = document.querySelector('#history-state');
+
+    function showHistory() {
+      const surface = conventionEditor.core.get(prototype);
+      const history = surface && conventionEditor.history(surface);
+      if (!history) {
+        historyState.textContent = 'History: focus the surface to start recording.';
+        return;
+      }
+      const moves = [history.canUndo && 'undo', history.canRedo && 'redo'].filter(Boolean);
+      historyState.textContent = `History: ${history.length} entries, at ${history.index + 1}`
+        + `. Available: ${moves.join(' and ') || 'nothing yet'}.`;
+    }
+
+    prototype.addEventListener('u2-rte-history', showHistory);
+    prototype.addEventListener('u2-rte-selectionchange', showHistory);
+    prototype.addEventListener('focusin', showHistory);
+
     load();
+    showHistory();
   </script>
 </body>
 </html>

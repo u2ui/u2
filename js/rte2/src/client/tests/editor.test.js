@@ -288,7 +288,7 @@ test('editor client: module validation and conflicts leave registries unchanged'
         attach: () => ({}),
     }), TypeError);
     equal(client.commands(first).has('temporary'), false, 'A failed attachment must roll back its commands');
-    throws(() => client.add({name: 'bold', commands() { return {}; }}), RangeError);
+    throws(() => client.add({name: 'marks', commands() { return {}; }}), RangeError);
     throws(() => client.add({
         name: 'input-conflict',
         commands: () => ({paragraph: {inputTypes: ['insertParagraph'], run() {}}}),

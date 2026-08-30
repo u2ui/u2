@@ -33,6 +33,11 @@ further; keep a case it uncovers as a named regression test.
   whether the test tab owns top-level browser focus. Trusted focus, keyboard,
   clipboard, and drag interactions belong to the automation suites.
 
+Dialogs and popovers queue their `close` and dismissal events on the DOM
+manipulation task source, which is not ordered against timers. A test waits for
+that event itself; a `setTimeout` after `close()` is a timing guess that fails
+under load in some engines.
+
 ## TODO
 
 - Run the suite automatically in current Chromium, Firefox, and WebKit.

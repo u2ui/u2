@@ -13,20 +13,85 @@ import './editor.js';
 [contenteditable] {
     --u2-rte: true;
     --u2-rte-elements: @article;
-    --u2-rte-toolbar: bold;
+    --u2-rte-toolbar: undo redo bold italic bullets numbers rule;
 }
 ```
 
 That one side-effect import lazily installs Enter, line break, structural
-Backspace, normalization, pending text marks, bold, and one shared roaming
-toolbar when an opted-in rich-text host first receives focus. It does not scan
-the DOM or create toolbar markup before then. `contenteditable="plaintext-only"`
-remains native.
+Backspace, normalization, pending text marks, undo and redo, the standard
+inline marks, list and separator commands, and one shared roaming toolbar when
+an opted-in rich-text host first receives focus. It does not scan the DOM or
+create toolbar markup before then. `contenteditable="plaintext-only"` remains
+native.
 
-This entry is intentionally a prototype. Only `bold` has a ready control;
-unknown toolbar names such as `code` remain hidden until a module provides both
-its command and control. Final default UI ownership and complete viewport/
-writing-mode placement are still being designed from this working path. See
+Ready control names are `undo`, `redo`, `bold`, `italic`, `underline`,
+`strike`, `code`, `bullets`, `numbers`, `indent`, `outdent`, and `rule`, plus
+`block`, `unstyle`, `breaks`, `link`, `unlink`, and `source` from the optional
+root modules.
+`--u2-rte-toolbar` chooses and orders them; the commands and their shortcuts
+work whether or not a control is listed. List and separator controls consult
+the content model, so `--u2-rte-elements` disables what a host does not allow.
+
+Undo and redo work from Ctrl/Command+Z, Ctrl/Command+Shift+Z, and Ctrl/Command+Y
+whether or not their controls are listed. History records every change of the
+host's content, including edits an application makes itself, and groups
+continuous typing into steps. See
+[`../src/history/README.md`](../src/history/README.md).
+
+## Links
+
+```js
+import './link.js';
+```
+
+```css
+[contenteditable] { --u2-rte-toolbar: bold link unlink; }
+```
+
+`link` opens a form at the selection. A selection becomes a link; a caret inside
+one edits that whole link, so its address can be changed without selecting its
+text. `unlink` removes a link without opening anything. Relative paths,
+fragments, and application schemes are accepted — the sanitizer decides which
+protocols survive, not the form.
+
+The command behind it is `valueMark(linkHtml)`, an ordinary command any UI can
+drive:
+
+```js
+commands.run('link', {value: {href: '/docs', target: '_blank'}});
+commands.run('link');
+```
+
+## Editing the HTML directly
+
+```js
+import './source.js';
+```
+
+```css
+[contenteditable] { --u2-rte-toolbar: bold source; }
+```
+
+The `source` control opens the surface's HTML in a modal dialog, scrolled and
+selected where the caret is. Applying parses the text through the configured
+sanitizer — never through `innerHTML` — narrowed by `--u2-rte-elements`, and
+lands as one undo step. Formatting only breaks lines where whitespace cannot be
+significant, so reading and applying unchanged text is a round trip.
+
+The text area is wrapped in `<u2-code>`, so the source is syntax highlighted
+where that element is defined and a plain text area where it is not. This entry
+loads it from `u2/el/code` on first use; nothing else in RTE2 depends on it.
+
+`new Source(surface)` is the same responsibility without any UI: `read()`
+returns `{html, start, end}` and `write(html)` replaces the content. The
+composable `sourceView(options)` builds the dialog module without a highlighter
+unless one is passed as `highlight`. See
+[`../src/source/README.md`](../src/source/README.md).
+
+This entry is intentionally a prototype. Unknown toolbar names remain hidden
+until a module provides both a command and a control. Final default UI
+ownership and complete viewport/writing-mode placement are still being designed
+from this working path. See
 [`../src/client/README.md`](../src/client/README.md) for its exact boundaries.
 
 An optional command module can extend the imported singleton without scanning

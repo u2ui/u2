@@ -1,3 +1,4 @@
+import {Edit} from './edit.js';
 import {MarkAdapter} from '../mark/dom-adapter.js';
 import {Mark, markSet} from '../mark/mark.js';
 import {EditRange} from '../selection/range/edit-range.js';
@@ -27,6 +28,68 @@ export function toggleMark(adapter, value) {
             return (markState(edit, adapter, mark) === true ? remove : apply).run(edit);
         },
     };
+}
+
+// One command for a mark whose value is decided per execution: `edit.value`
+// carries it, and a null value removes whatever mark of that type is there.
+// A link needs this — its value is content, not a fixed choice — so a single
+// control can create, change, and remove one without a command per URL.
+export function valueMark(adapter) {
+    return {
+        enabled(edit) {
+            const scope = whole(edit, adapter);
+            if (scope.value == null) return current(scope, adapter).length > 0;
+            return selected(scope) && canApply(scope, adapter, concrete(adapter, scope.value));
+        },
+        state(edit) {
+            const marks = current(edit, adapter);
+            if (!marks.length) return null;
+            if (marks.length > 1) return 'mixed';
+            return markState(edit, adapter, marks[0]) === true ? marks[0].value : 'mixed';
+        },
+        run(edit) {
+            const scope = whole(edit, adapter);
+            if (scope.value == null) {
+                return change(scope, current(scope, adapter).map(mark => [adapter, mark]));
+            }
+            return applyCommand(adapter, concrete(adapter, scope.value)).run(scope);
+        },
+    };
+}
+
+// A caret carries no range to mark, but it does sit on one: a value command at
+// a caret inside a mark acts on that whole mark, which is what makes editing an
+// existing link's value possible without selecting it first.
+function whole(edit, adapter) {
+    if (!edit.range?.collapsed) return edit;
+    const element = carrier(edit, adapter);
+    if (!element) return edit;
+    const range = edit.document.createRange();
+    range.selectNodeContents(element);
+    return new Edit(edit.surface, edit.transaction, {
+        model: edit.model,
+        range,
+        value: edit.value,
+        inputType: edit.inputType,
+        data: edit.data,
+    });
+}
+
+function carrier(edit, adapter) {
+    for (let element = parentElement(edit.range.start.node);
+        element && element !== edit.element; element = element.parentElement) {
+        if (boundary(element) || edit.model.block(element)) return null;
+        if (adapter.parse(element)) return element;
+    }
+    return null;
+}
+
+// The marks of one type the edit actually sits on, at a caret or across a range.
+function current(edit, adapter) {
+    if (!edit.range) return [];
+    return edit.range.collapsed
+        ? [...marksAt(edit, [adapter], edit.range.start.node)]
+        : marksIn(edit, adapter);
 }
 
 export function setMarks(adapters) {

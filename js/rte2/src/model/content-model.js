@@ -44,6 +44,12 @@ export class ContentModel {
         return this.rule(node).textBlock;
     }
 
+    // The element a container fills itself with: `li` for a list, `tr` for a
+    // table section. Structural commands use it instead of naming tags.
+    defaultChild(node) {
+        return this.rule(node).defaultChild;
+    }
+
     mergeable(node) {
         const current = this.rule(node);
         return current.mergeable ?? current.textBlock;

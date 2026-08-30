@@ -6,14 +6,19 @@ export {BlockStyles} from './src/command/block-style.js';
 export {deleteBackward, deleteForward} from './src/command/delete.js';
 export {Edit} from './src/command/edit.js';
 export {enter, lineBreak} from './src/command/enter.js';
+export {blank, blockEdge, emptyBlock, fill} from './src/command/block-boundary.js';
 export {insertFragment} from './src/command/fragment.js';
-export {applyMark, removeMark, setMarks, toggleMark} from './src/command/mark.js';
+export {insertNode} from './src/command/insert.js';
+export {Lists} from './src/command/list.js';
+export {applyMark, removeMark, setMarks, toggleMark, valueMark} from './src/command/mark.js';
 export {PendingMarks} from './src/command/pending-marks.js';
 export {unstyleCommand} from './src/command/unstyle.js';
 export {config, elementPresets, enabled, hostDefaults} from './src/config/config.js';
 export {Rte} from './src/core/core.js';
+export {History} from './src/history/history.js';
 export {ExternalInput} from './src/input/external-input.js';
 export {InputPipeline, inputRange, inputTrigger} from './src/input/input-pipeline.js';
+export {classMark} from './src/mark/standard.js';
 export {
     bold, boldHtml,
     code, codeHtml,
@@ -35,6 +40,7 @@ export {SelectionSnapshot} from './src/selection/snapshot.js';
 export {Point} from './src/selection/point/point.js';
 export {NativeSanitizer} from './src/sanitize/native.js';
 export {SanitizePolicy, sanitizeDefaults, sanitizePolicy} from './src/sanitize/policy.js';
+export {Source} from './src/source/source.js';
 export {Surface} from './src/surface/surface.js';
 export {Transaction} from './src/transaction/transaction.js';
 export {Toolbar} from './src/ui/toolbar.js';

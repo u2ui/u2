@@ -44,8 +44,16 @@ replacement, fail-closed rich paste/drop composition, and mapped post-native
 presentation cleanup and composition-aware pending marks raise the verified
 runner to 369 tests. Complete mark-set coverage raises the current runner to
 375 tests. Nested canonical mark coverage raises the current runner to 379
-tests. Standard HTML mark coverage raises the current runner to 381 tests;
-cross-browser verification of that revision is pending.
+tests. Standard HTML mark coverage raises the current runner to 381 tests.
+State-based history — baseline entries, transaction-grouped recording, path
+addressed selection restoration, coalescing, branch and limit handling, and its
+commands — raises the current runner to 398 tests. Lists, their nesting levels,
+model-placed element insertion, and the standard mark and structure convention
+modules raise the current runner to 427 tests. Atomic-block deletion,
+selection-owned history commands, and the HTML source responsibility with its
+dialog module raise the current runner to 452 tests. Value marks and the
+contextual link editor raise the current runner to 470 tests, confirmed in
+Chrome 152 and Firefox 154. WebKit verification of that revision is pending.
 Treat the number shown by `/u2/js/rte2/tests/` as authoritative.
 
 ## 0. Foundation
@@ -180,21 +188,44 @@ representation inside an empty block identically.
 `BlockStyles` converts one or several known text-block wrappers, preserves
 selection and unrelated attributes, reports mixed state, and supports custom
 selector/tag/write/clear definitions without treating layout blocks as text
-styles. The remaining structural commands are open.
+styles.
+`Lists` owns one closed group of container elements and takes item elements from
+the model's `defaultChild`, so no command names `li`. `toggle(tag)` converts
+blocks into items, converts an existing list of another kind, and lifts items
+back out; a partly selected list is split so only the selected run changes, and
+a result that meets a list of its own kind joins it. `indent` and `outdent` move
+a run between nesting levels and claim `formatIndent` and `formatOutdent`.
+`insertNode(create, inputTypes)` inserts one prepared element where the content
+model accepts it, splitting the caret's block only that far, and covers the
+horizontal rule.
 
-- Extend paragraph and heading conversion to loose pre-normalization text;
-  selected-range deletion remains open.
-- Ordered/unordered lists with indent, outdent, split, and lift.
-- Horizontal rules, blockquotes, links, tables, and configurable atomic nodes.
-- Structural commands consult the content model rather than embedding host-tag
-  exceptions in UI actions.
+- Extend paragraph and heading conversion to loose pre-normalization text.
+- Blockquotes, links, tables, and configurable atomic nodes.
+- Preserve ordered-list numbering across a split or lift.
+- Delete a non-collapsed selection before splitting or inserting, instead of
+  leaving that case native.
 
 ## 6. History
 
-- Record transaction operations and selection before/after states.
-- Group typing and composition deliberately; never group unrelated commands.
-- Implement deterministic undo/redo independent of deprecated command APIs.
-- Define how external DOM mutations invalidate or enter history.
+Status: implemented as a state model. `History` records one entry per change of
+one surface, storing the content as a cloned fragment with a path-addressed
+selection that survives content replacement. A `MutationObserver` covers every
+origin, so native typing, commands, paste, drop, and unrelated application
+scripts all enter history without the engine owning their mutations.
+Transactions supply the grouping boundaries: the `input` trigger coalesces into
+one entry per interval, every other trigger records a discrete step before and
+after itself. `undo`/`redo` are ordinary commands claiming `historyUndo` and
+`historyRedo`; the input pipeline routes Ctrl/Command+Z and +Y from `keydown`
+because a browser stops reporting those input types once its own stack no longer
+matches replaced content. The convention client installs one history per
+rich-text surface and contributes both toolbar controls.
+
+- Store diffs instead of whole content states once transactions record
+  reversible operations, keeping the state model for unowned mutations.
+- Group composition deliberately rather than relying on its mutations alone.
+- Expose the coalescing interval and an off switch as `--u2-rte-history`.
+- Decide whether the entry limit should be measured in bytes rather than
+  entries, and verify the cost on large documents.
 
 ## 7. Sanitizing and serialization
 
@@ -204,7 +235,8 @@ first `NativeSanitizer` adapter parses into a detached fragment exclusively
 through `Element.setHTML()`, intersects surface elements without broadening the
 security policy, and fails explicitly when that safe sink is unavailable. It
 has no unsafe fallback. Native paste/drop needs no parser fallback because its
-payload stays browser-owned. Contextual parsing and serialization remain open.
+payload stays browser-owned. `Source` now serializes a surface and parses source text back through the same
+policy. A canonical serializer and contextual parsing remain open.
 The independent immutable `Unstyle` policy supplies ordered presentation
 levels to both the selection command and safely parsed external fragments, so
 paste/drop will not grow a second formatting-cleanup list.
@@ -278,13 +310,25 @@ absent, work for current and future surfaces, and release everything through
    generated content on `<br>`, so the prototype uses one scheduled top-layer
    overlay without a mutation observer. Firefox and WebKit still need visual
    confirmation.
-2. **HTML source editor.** Revisit the useful selection-preserving ideas in
-   `../rte`, but use a top-layer dialog and the canonical serializer. Applying
-   source must pass through the configured sanitizer before normalization; it
-   must never assign untrusted source directly to `innerHTML`.
-3. **Link editor.** Build on the mark/value command contract and a contextual
-   UI for text, target, and `rel`. Its URL protocol and attribute policy belongs
-   to the sanitizer, not to toolbar code.
+2. **HTML source editor — implemented.** `Source` serializes a surface by
+   walking its DOM and reports where the selection lands in that text, so the
+   view opens at the caret without inserting marker nodes. Formatting breaks a
+   level into lines only where whitespace cannot be significant, and writing
+   removes exactly those breaks again, so a read/write round trip is lossless.
+   Writing always parses through the sanitizer and never assigns `innerHTML`.
+   `source.js` adds the top-layer dialog, whose text area is wrapped in
+   `<u2-code>` so the source is highlighted where that element is defined and
+   plain where it is not; the engine itself gains no dependency. Mapping the
+   dialog's own selection back into the DOM and a canonical serializer remain
+   open.
+3. **Link editor — implemented.** `valueMark(adapter)` generalizes the value
+   half: one command creates, changes, and removes a mark whose value is
+   content, and at a caret it acts on the whole mark it sits on, so an existing
+   link's address can be changed without selecting its text. `link.js` adds the
+   contextual form and an `unlink` control. Its address field is plain text
+   because native url validation rejects relative paths, fragments, and
+   application schemes; protocol and attribute policy stays with the sanitizer.
+   Editing the link text itself remains open.
 4. **Table tools.** Use a contextual overlay for row/column insertion,
    deletion, and cell movement. Structural changes remain ordinary mapped
    commands and later become ordinary history entries.

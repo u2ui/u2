@@ -22,6 +22,23 @@ when focus reaches it; the client then installs its standard command registry
 and input pipeline. A default roaming toolbar is allocated only when the first
 rich-text surface becomes active. `plaintext-only` hosts stay completely native.
 
+The optional `link.js` entry adds a contextual link editor. Its `link` command
+is an ordinary `valueMark`, so any other UI can drive the same create, change,
+and remove path; the module supplies one form, anchored at the selection, plus
+an `unlink` control that needs no form. Escape leaves the form without acting
+and puts the caret back where it was opened. The address is a plain text field on
+purpose: native url validation rejects relative paths, fragments, and
+application schemes and would silently block the form, while which protocols are
+acceptable is the sanitizer's decision.
+
+The optional `source.js` entry adds a modal HTML source view. Its dialog wraps
+its text area in `<u2-code>`: where that element is defined it takes the area
+over and highlights it, and where it is not the area renders on its own.
+Highlighting is therefore an enhancement, never a dependency — `sourceView()`
+alone imports nothing, and the root entry passes a `highlight` loader that pulls
+`u2/el/code` before the first open. Closing without applying restores the caret
+the view was opened on.
+
 ## Prototype contract
 
 `new Editor(core)` currently installs these defaults per rich-text surface:
@@ -31,8 +48,23 @@ rich-text surface becomes active. `plaintext-only` hosts stay completely native.
   while ordinary character deletion stays native;
 - one `PendingMarks` instance;
 - `insertText` routing and post-composition formatting while a pending mark exists;
-- ready-made `bold`, including Ctrl/Command+B;
+- one `History` instance with `undo` and `redo`, including Ctrl/Command+Z,
+  Ctrl/Command+Shift+Z, and Ctrl/Command+Y;
+- the ready-made inline marks `bold`, `italic`, `underline`, `strike`, and
+  `code`, with Ctrl/Command+B, +I, and +U;
+- the block structure commands `bullets`, `numbers`, `indent`, `outdent`, and
+  `rule`;
 - one `InputPipeline` using the normal host configuration.
+
+`commands(surface)` and `history(surface)` expose the per-surface registry and
+history to an application.
+
+Those defaults arrive as three ordinary modules — `history`, `marks`, and
+`structure` — registered before any surface exists. They use exactly the module
+contract below and can be removed with `editor.delete('structure')`, so nothing
+about them is privileged. Every control they contribute is gated by
+`--u2-rte-toolbar`, so a host that lists only `bold` shows only Bold while the
+commands and their keyboard shortcuts stay available.
 
 `add(module)` installs an optional extension into already registered and future
 rich-text surfaces. A module has one client-wide name and may provide a command
@@ -56,9 +88,10 @@ editor.add(highlight);
 ```
 
 The factory returns a plain object whose keys are command names and whose values
-follow the normal `Commands` contract. `surface` is the target surface and
+follow the normal `Commands` contract. `surface` is the target surface,
 `pending` is its shared `PendingMarks` instance, so formatting modules compose
-with the one `insertText` route rather than installing competing pipelines.
+with the one `insertText` route rather than installing competing pipelines, and
+`history` is its `History`.
 `toolbar` is optional; its controls require non-empty `command`, `label`, and
 `text`, with optional `state` and `shortcut`.
 

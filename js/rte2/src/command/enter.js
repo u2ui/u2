@@ -1,5 +1,5 @@
 import {Point} from '../selection/point/point.js';
-import {blockEdge, emptyBlock} from './block-boundary.js';
+import {blank, blockEdge, emptyBlock, fill} from './block-boundary.js';
 
 // The host policy names the element Enter splits; `block` follows the
 // configured default block, the structural values name their own unit.
@@ -155,14 +155,6 @@ function insertBreak(edit) {
     return separator;
 }
 
-// An empty block has no caret position of its own until it holds a break.
-function fill(edit, element) {
-    if (!blank(edit.model, element)) return null;
-    const filler = edit.document.createElement('br');
-    edit.map.insert(element, element.childNodes.length, filler);
-    return filler;
-}
-
 function following(edit, node) {
     const limit = block(edit, node);
     for (let current = node; current && current !== limit; current = current.parentElement) {
@@ -178,13 +170,6 @@ function block(edit, node) {
         if (edit.model.block(element)) return element;
     }
     return edit.element;
-}
-
-function blank(model, node) {
-    if (node.nodeType === Node.TEXT_NODE) return !node.data.trim();
-    if (node.nodeType !== Node.ELEMENT_NODE) return true;
-    if (model.atomic(node) || node.textContent.trim()) return false;
-    return ![...node.querySelectorAll('*')].some(element => model.atomic(element));
 }
 
 function closest(node) {

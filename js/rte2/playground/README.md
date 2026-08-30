@@ -27,6 +27,15 @@ example.
   creation, reuse of an existing inline element, and cleanup of a neutral
   `span` visible in the DOM tree and serialized HTML. At a caret, toggling also
   formats the next ordinary text input through `PendingMarks`.
+- Exercise the convention prototype's full ready toolbar: undo and redo, the
+  standard inline marks, bulleted and numbered lists with their nesting levels,
+  and a separator. The readout under that surface reports how many history
+  entries exist and where it stands, which makes grouping visible — continuous
+  typing coalesces into one entry, while each command is its own step.
+- Create a link from a selection or edit an existing one from a caret through
+  the contextual form, and remove one with the unlink control.
+- Open the surface's HTML in the modal source dialog, syntax highlighted through
+  `<u2-code>`, edit it, and apply it as one undo step.
 - Toggle the ready-made bold mark by button or Ctrl/Command+B. The scenario
   exposes `<b>` alias recognition, canonical `<strong>` output, semantic
   removal, and pending bold input at a caret.

@@ -22,3 +22,20 @@ export function blockEdge(unit, point, edge) {
     }
     return offset === (edge === 'start' ? 0 : unit.childNodes.length);
 }
+
+// Emptiness for structural editing: a filler br already occupies its block, so
+// unlike `emptyBlock` it counts as content and must not be doubled.
+export function blank(model, node) {
+    if (node.nodeType === Node.TEXT_NODE) return !node.data.trim();
+    if (node.nodeType !== Node.ELEMENT_NODE) return true;
+    if (model.atomic(node) || node.textContent.trim()) return false;
+    return ![...node.querySelectorAll('*')].some(element => model.atomic(element));
+}
+
+// An empty block has no caret position of its own until it holds a break.
+export function fill(edit, element) {
+    if (!blank(edit.model, element)) return null;
+    const filler = edit.document.createElement('br');
+    edit.map.insert(element, element.childNodes.length, filler);
+    return filler;
+}

@@ -2,9 +2,11 @@ import {rangeRect} from '../browser/range-rect.js';
 import {Commands} from '../command/commands.js';
 import {deleteBackward, deleteForward} from '../command/delete.js';
 import {enter, lineBreak} from '../command/enter.js';
+import {History} from '../history/history.js';
 import {PendingMarks} from '../command/pending-marks.js';
 import {InputPipeline} from '../input/input-pipeline.js';
-import {boldHtml} from '../mark/standard.js';
+import {marks} from './marks.js';
+import {structure} from './structure.js';
 import {isPlainTextHost} from '../selection/ownership/ownership.js';
 import {Toolbar} from '../ui/toolbar.js';
 
@@ -54,16 +56,14 @@ const STYLE = `
 [data-u2-rte-editor-toolbar] select:disabled { opacity: .4; }
 `;
 
-const BOLD = Object.freeze({
-    name: 'bold',
-    commands: ({pending}) => ({bold: pending.toggle(boldHtml)}),
-    toolbar: Object.freeze([Object.freeze({
-        command: 'bold',
-        label: 'Bold',
-        text: 'B',
-        state: true,
-        shortcut: 'b',
-    })]),
+const HISTORY = Object.freeze({
+    name: 'history',
+    commands: ({history}) => history.commands,
+    // No control shortcut: the input pipeline owns Ctrl/Command+Z and +Y.
+    toolbar: Object.freeze([
+        Object.freeze({command: 'undo', label: 'Undo', text: '\u21B6'}),
+        Object.freeze({command: 'redo', label: 'Redo', text: '\u21B7'}),
+    ]),
 });
 
 const CLIENT = Symbol.for('u2.rte2.editor');
@@ -80,6 +80,7 @@ export class Editor {
     #sources = new WeakMap();
     #toolbar = null;
     #element = null;
+    #dynamic = new Map();
     #style = null;
     #controller;
     #connected = true;
@@ -98,7 +99,7 @@ export class Editor {
             core.addEventListener('u2-rte-add', this.#add, listen);
             core.addEventListener('u2-rte-activechange', this.#activeChange, listen);
             core.addEventListener('u2-rte-dispose', this.#coreDispose, listen);
-            this.add(BOLD);
+            for (const module of [HISTORY, marks, structure]) this.add(module);
             for (const surface of core.surfaces) this.#setup(surface);
             this.refresh();
         } catch (error) {
@@ -113,6 +114,10 @@ export class Editor {
 
     commands(surface) {
         return this.#records.get(surface)?.commands || null;
+    }
+
+    history(surface) {
+        return this.#records.get(surface)?.history || null;
     }
 
     add(source) {
@@ -165,7 +170,9 @@ export class Editor {
         this.#sources.delete(module.source);
         if (this.#element) {
             for (const item of [...this.#element.children]) {
-                if (item.dataset.u2RteModule === name) item.remove();
+                if (item.dataset.u2RteModule !== name) continue;
+                this.#dynamic.delete(item);
+                item.remove();
             }
         }
         this.refresh();
@@ -176,6 +183,11 @@ export class Editor {
         if (!this.#connected) return false;
         const surface = this.#core.active;
         if (this.#records.has(surface) && surface.config.ui === 'roaming') this.#ensureToolbar();
+        // A control whose choices come from the host's configuration is filled
+        // for the surface that is about to be shown, not once at registration.
+        for (const [select, choices] of this.#dynamic) {
+            options(select, this.#records.has(surface) ? choices(surface) : []);
+        }
         return this.#toolbar?.refresh() || false;
     }
 
@@ -186,6 +198,7 @@ export class Editor {
         this.#toolbar?.dispose();
         this.#element?.remove();
         this.#style?.remove();
+        this.#dynamic.clear();
         this.#toolbar = null;
         this.#element = null;
         this.#style = null;
@@ -203,6 +216,7 @@ export class Editor {
     #setup(surface) {
         if (this.#records.has(surface) || isPlainTextHost(surface.element)) return null;
         const pending = new PendingMarks(surface);
+        const history = new History(surface);
         const commands = new Commands(surface, {commands: {
             deleteBackward,
             deleteForward,
@@ -211,7 +225,7 @@ export class Editor {
             insertText: pending.insertText,
         }});
         const controller = new this.#document.defaultView.AbortController();
-        const record = {surface, pending, commands, pipeline: null, controller, modules: new Map()};
+        const record = {surface, pending, history, commands, pipeline: null, controller, modules: new Map()};
         try {
             for (const module of this.#modules.values()) this.#install(record, module);
             record.pipeline = new InputPipeline(surface, {commands});
@@ -220,6 +234,7 @@ export class Editor {
         } catch (error) {
             for (const name of [...record.modules.keys()].reverse()) this.#uninstall(record, name);
             record.pipeline?.dispose();
+            history.dispose();
             pending.dispose();
             controller.abort();
             throw error;
@@ -233,6 +248,7 @@ export class Editor {
         record.controller.abort();
         for (const name of [...record.modules.keys()].reverse()) this.#uninstall(record, name);
         record.pipeline?.dispose();
+        record.history.dispose();
         record.pending.dispose();
         this.#records.delete(surface);
         return true;
@@ -243,6 +259,7 @@ export class Editor {
             editor: this,
             surface: record.surface,
             pending: record.pending,
+            history: record.history,
             commands: record.commands,
         });
         const result = module.commands ? module.commands(context) : {};
@@ -325,12 +342,8 @@ export class Editor {
                 placeholder.value = '';
                 placeholder.disabled = true;
                 select.append(placeholder);
-                for (const value of control.options) {
-                    const option = this.#document.createElement('option');
-                    option.textContent = value.label;
-                    option.value = value.value;
-                    select.append(option);
-                }
+                if (typeof control.options === 'function') this.#dynamic.set(select, control.options);
+                else options(select, control.options);
                 this.#element.append(select);
                 continue;
             }
@@ -380,10 +393,13 @@ function validModule(module) {
                     throw new TypeError(`An editor toolbar select requires ${property}`);
                 }
             }
+            if (typeof control.options === 'function') {
+                return Object.freeze({...control, type});
+            }
             if (!Array.isArray(control.options) || !control.options.length) {
                 throw new TypeError('An editor toolbar select requires options');
             }
-            const options = control.options.map(option => {
+            const choices = control.options.map(option => {
                 if (!option || typeof option !== 'object') {
                     throw new TypeError('An editor toolbar option must be an object');
                 }
@@ -394,7 +410,7 @@ function validModule(module) {
                 }
                 return Object.freeze({...option});
             });
-            return Object.freeze({...control, type, options: Object.freeze(options)});
+            return Object.freeze({...control, type, options: Object.freeze(choices)});
         }
         if (type !== 'button') throw new TypeError(`Unknown editor toolbar control: ${type}`);
         for (const property of ['command', 'label', 'text']) {
@@ -429,6 +445,23 @@ function lifecycle(value, label) {
         throw new TypeError(`${label} must return an object with dispose()`);
     }
     return value;
+}
+
+// Rewrites a select's choices, keeping its disabled placeholder and leaving the
+// element alone when nothing changed.
+function options(select, choices) {
+    const current = [...select.options].slice(1);
+    if (current.length === choices.length
+        && current.every((option, index) => option.value === choices[index].value
+            && option.textContent === choices[index].label)) return false;
+    for (const option of current) option.remove();
+    for (const choice of choices) {
+        const option = select.ownerDocument.createElement('option');
+        option.textContent = choice.label;
+        option.value = choice.value;
+        select.append(option);
+    }
+    return true;
 }
 
 function place(element, surface) {

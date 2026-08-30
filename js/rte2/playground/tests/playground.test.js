@@ -113,7 +113,8 @@ test('playground: the one-import prototype lazily handles Enter inside a list', 
     });
     editor.dispatchEvent(input);
     truthy(input.defaultPrevented);
-    equal(editor.querySelector('ul').innerHTML, '<li>List</li><li> item</li>');
+    equal(editor.querySelector('ul').firstElementChild.outerHTML, '<li>List</li>');
+    equal(editor.querySelector('ul').children[1].outerHTML, '<li> item</li>');
     truthy(document.querySelector('[data-u2-rte-editor-toolbar]'));
 }));
 
@@ -286,6 +287,42 @@ test('playground: caret toggle formats the next text input', () => withPlaygroun
     editor.dispatchEvent(event);
     truthy(event.defaultPrevented);
     equal(editor.innerHTML, '<li>he<span class="x">x</span>llo</li><li><b>dear</b> world</li>');
+}));
+
+test('playground: the prototype toolbar offers the structure controls', () => withPlayground(document => {
+    const editor = document.querySelector('#editor-prototype');
+    const paragraph = [...editor.querySelectorAll('p')].find(node => node.textContent.startsWith('Turn these'));
+    document.getSelection().collapse(paragraph.firstChild, 1);
+    editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    const toolbar = document.querySelector('[data-u2-rte-editor-toolbar]');
+    for (const name of ['undo', 'redo', 'italic', 'bullets', 'numbers', 'indent', 'outdent', 'rule', 'source', 'editLink']) {
+        truthy(toolbar.querySelector(`[data-command=${name}]`), `The prototype offers ${name}`);
+    }
+    const bullets = toolbar.querySelector('[data-command=bullets]');
+    equal(bullets.disabled, false);
+    equal(bullets.getAttribute('aria-pressed'), 'false');
+    bullets.click();
+    // The new item joins the list directly above it instead of starting a
+    // second list of the same kind.
+    equal(editor.querySelectorAll('ul').length, 1);
+    equal(editor.querySelector('ul').lastElementChild.textContent,
+        'Turn these paragraphs into a list, then lift them out again.');
+    equal(bullets.getAttribute('aria-pressed'), 'true');
+}));
+
+test('playground: the prototype reports its history state', () => withPlayground(document => {
+    const editor = document.querySelector('#editor-prototype');
+    const readout = document.querySelector('#history-state');
+    equal(readout.textContent, 'History: focus the surface to start recording.');
+    const paragraph = editor.querySelector('p');
+    document.getSelection().collapse(paragraph.firstChild, 1);
+    editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    truthy(readout.textContent.includes('1 entries, at 1'), readout.textContent);
+    document.querySelector('[data-u2-rte-editor-toolbar] [data-command=rule]').click();
+    truthy(readout.textContent.includes('at 2'), readout.textContent);
+    truthy(readout.textContent.includes('undo'), readout.textContent);
 }));
 
 async function withPlayground(run) {

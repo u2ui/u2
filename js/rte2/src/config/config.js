@@ -7,6 +7,7 @@ const CLEANUP = new Set(['none', 'minimal', 'structural', 'canonical']);
 const ENTER = new Set(['break', 'block', 'item', 'row', 'cell']);
 const UI = new Set(['none', 'roaming', 'static']);
 const TAG = /^[a-z][a-z\d-]*$/;
+const CLASS = /^-?[_a-zA-Z][\w-]*$/;
 const FALSE = new Set(['0', 'false', 'none', 'off']);
 const DEFAULT_CLEAN_ON = Object.freeze(['input', 'paste', 'drop', 'command']);
 const EMPTY_ELEMENTS = Object.freeze([]);
@@ -49,6 +50,7 @@ export function config(host) {
         cleanup: choice(style, 'cleanup', CLEANUP, 'structural'),
         cleanOn: Object.freeze(cleanOn ? cleanOn.split(/[\s,]+/).filter(Boolean) : [...DEFAULT_CLEAN_ON]),
         elements: allowedElements(style),
+        classes: classNames(style),
         importUnstyle: value(style, 'import-unstyle') || 'styles',
         ui: choice(style, 'ui', UI, 'roaming'),
     });
@@ -68,6 +70,16 @@ function tag(style, name, fallback) {
 function choice(style, name, choices, fallback) {
     const result = value(style, name);
     return choices.has(result) ? result : fallback;
+}
+
+// The class names this host treats as content. One declaration serves the style
+// control, the sanitizer, and presentation cleanup, so a class the host knows is
+// never offered without being allowed, or cleaned away as foreign.
+function classNames(style) {
+    const result = value(style, 'classes');
+    if (!result) return EMPTY_ELEMENTS;
+    const names = result.split(/[\s,]+/).filter(Boolean);
+    return names.every(name => CLASS.test(name)) ? Object.freeze([...new Set(names)]) : EMPTY_ELEMENTS;
 }
 
 function allowedElements(style) {

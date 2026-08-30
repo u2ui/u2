@@ -1,8 +1,8 @@
-import {applyMark, removeMark, setMarks, toggleMark} from '../mark.js';
+import {applyMark, removeMark, setMarks, toggleMark, valueMark} from '../mark.js';
 import {Commands} from '../commands.js';
 import {MarkAdapter} from '../../mark/dom-adapter.js';
 import {MarkType} from '../../mark/mark.js';
-import {boldHtml} from '../../mark/standard.js';
+import {boldHtml, linkHtml} from '../../mark/standard.js';
 import {Rte} from '../../core/core.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
@@ -388,6 +388,76 @@ test('mark command: validates adapters and needs a non-collapsed range', () => w
         equal(commands.enabled('removeX'), false);
     }
 ));
+
+test('value mark: creates, changes, and removes one mark by value', () => withValues(
+    '<div contenteditable><p>one two</p></div>', ({commands, host}) => {
+        const text = host.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        equal(commands.state('link'), null);
+        equal(commands.enabled('link'), false, 'There is nothing to remove yet');
+        equal(commands.enabled('link', {value: {href: '/a'}}), true);
+        commands.run('link', {value: {href: '/a'}});
+        equal(host.innerHTML, '<p><a href="/a">one</a> two</p>');
+        equal(commands.state('link'), {href: '/a'});
+        commands.run('link', {value: {href: '/b', title: 't'}});
+        equal(host.innerHTML, '<p><a href="/b" title="t">one</a> two</p>');
+        commands.run('link');
+        equal(host.innerHTML, '<p>one two</p>');
+    }
+));
+
+test('value mark: a caret inside a mark acts on the whole mark', () => withValues(
+    '<div contenteditable><p><a href="/a">one</a> two</p></div>', ({commands, host}) => {
+        getSelection().collapse(host.querySelector('a').firstChild, 1);
+        equal(commands.state('link'), {href: '/a'});
+        equal(commands.enabled('link'), true);
+        commands.run('link', {value: {href: '/b'}});
+        equal(host.innerHTML, '<p><a href="/b">one</a> two</p>');
+        commands.run('link');
+        equal(host.innerHTML, '<p>one two</p>');
+    }
+));
+
+test('value mark: a caret outside any mark has nothing to act on', () => withValues(
+    '<div contenteditable><p>one two</p></div>', ({commands, host}) => {
+        getSelection().collapse(host.querySelector('p').firstChild, 1);
+        equal(commands.state('link'), null);
+        equal(commands.enabled('link'), false);
+        equal(commands.enabled('link', {value: {href: '/a'}}), false, 'A caret marks no text');
+    }
+));
+
+test('value mark: differing values across a selection report mixed', () => withValues(
+    '<div contenteditable><p><a href="/a">one</a> <a href="/b">two</a></p></div>', ({commands, host}) => {
+        const first = host.querySelector('a').firstChild;
+        const last = host.querySelectorAll('a')[1].firstChild;
+        getSelection().setBaseAndExtent(first, 0, last, 3);
+        equal(commands.state('link'), 'mixed');
+        commands.run('link');
+        equal(host.innerHTML, '<p>one two</p>', 'Removing takes every mark in the range');
+    }
+));
+
+test('value mark: a partly marked selection reports mixed', () => withValues(
+    '<div contenteditable><p><a href="/a">one</a> two</p></div>', ({commands, host}) => {
+        const link = host.querySelector('a').firstChild;
+        getSelection().setBaseAndExtent(link, 0, host.querySelector('p').lastChild, 4);
+        equal(commands.state('link'), 'mixed');
+    }
+));
+
+function withValues(html, run) {
+    return withFixture(html, root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.firstElementChild);
+        const commands = new Commands(surface, {commands: {link: valueMark(linkHtml)}});
+        try {
+            return run({commands, core, host: root.firstElementChild, surface});
+        } finally {
+            core.dispose();
+        }
+    });
+}
 
 function withMarks(html, run) {
     return withFixture(html, root => {

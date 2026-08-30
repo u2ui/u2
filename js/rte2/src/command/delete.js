@@ -1,8 +1,9 @@
 import {Point} from '../selection/point/point.js';
 import {blockEdge, emptyBlock} from './block-boundary.js';
 
-// Collapsed deletion owns only the boundary between compatible mergeable
-// blocks. Character and range deletion remain native.
+// Collapsed deletion owns two boundaries: the one between compatible mergeable
+// blocks, and the one beside an atomic block, which has no content to merge and
+// is removed instead. Character and range deletion remain native.
 export const deleteBackward = deletion('backward', 'deleteContentBackward');
 export const deleteForward = deletion('forward', 'deleteContentForward');
 
@@ -11,10 +12,27 @@ function deletion(direction, inputType) {
         inputTypes: [inputType],
         enabled: edit => !!boundary(edit, direction),
         run(edit) {
-            const pair = boundary(edit, direction);
-            return pair ? merge(edit, pair.left, pair.right, pair.between) : undefined;
+            const found = boundary(edit, direction);
+            if (!found) return undefined;
+            return found.atomic
+                ? discard(edit, found.atomic, found.between)
+                : merge(edit, found.left, found.right, found.between);
         },
     };
+}
+
+// An atomic block is indivisible and holds nothing to join: deleting across its
+// boundary removes it and leaves the caret where it already was.
+function discard(edit, node, between) {
+    const parent = node.parentElement;
+    const start = edit.range.start;
+    const caret = new Point(start.node, start.offset, 'forward');
+    edit.map.add(caret);
+    for (const skipped of between) edit.map.remove(skipped);
+    edit.map.remove(node);
+    edit.transaction.touch(parent);
+    edit.select(edit.map.get(caret));
+    return node;
 }
 
 function merge(edit, left, right, between) {
@@ -49,6 +67,7 @@ function boundary(edit, direction) {
     for (let current = closest(point.node); current && current !== edit.element; current = current.parentElement) {
         if (!edit.model.mergeable(current) || !atEdge(current, point, edge, edit.model)) continue;
         const adjacent = neighbor(current, direction, edit.model);
+        if (atomicBlock(edit.model, adjacent.node)) return {atomic: adjacent.node, between: adjacent.between};
         const [left, right] = direction === 'backward' ? [adjacent.node, current] : [current, adjacent.node];
         if (compatible(edit.model, left, right)) return {left, right, between: adjacent.between};
     }
@@ -64,6 +83,10 @@ function neighbor(current, direction, model) {
         node = node[property];
     }
     return {node, between};
+}
+
+function atomicBlock(model, node) {
+    return node?.nodeType === Node.ELEMENT_NODE && model.block(node) && model.atomic(node);
 }
 
 function compatible(model, left, right) {

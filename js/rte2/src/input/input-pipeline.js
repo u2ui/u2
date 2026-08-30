@@ -144,8 +144,8 @@ export class InputPipeline {
     };
 
     #keyDown = event => {
-        if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey || !this.#owns(event)) return;
-        const inputType = DELETE_KEYS.get(event.key);
+        if (event.altKey || !this.#owns(event)) return;
+        const inputType = keyInput(event);
         if (!inputType) return;
         this.#surface.capture();
         this.#route(event, {
@@ -260,6 +260,17 @@ export class InputPipeline {
         const target = event.composedPath()[0];
         return target === this.#root || editingHost(target) === this.#root;
     }
+}
+
+// History keys are routed from keydown because a browser stops reporting
+// `historyUndo` once its own undo stack no longer matches the edited content.
+function keyInput(event) {
+    if (event.ctrlKey || event.metaKey) {
+        const key = event.key.toLowerCase();
+        if (key === 'z') return event.shiftKey ? 'historyRedo' : 'historyUndo';
+        return key === 'y' && !event.shiftKey ? 'historyRedo' : null;
+    }
+    return event.shiftKey ? null : DELETE_KEYS.get(event.key) || null;
 }
 
 export function inputTrigger(inputType = '') {
