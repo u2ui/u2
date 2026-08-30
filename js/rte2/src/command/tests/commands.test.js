@@ -171,3 +171,39 @@ function withSurface(html, run) {
         }
     });
 }
+
+test('commands: shortcuts are parsed, canonical, and reversible', () => withFixture(
+    '<div contenteditable><p>one</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.firstElementChild);
+        const commands = new Commands(surface);
+        commands.add('bold', {shortcut: 'shift+ctrl+B', run() {}});
+        commands.add('redo', {shortcut: 'ctrl+y ctrl+shift+z', run() {}});
+        equal([...commands.keys.keys()], ['ctrl+shift+b', 'ctrl+y', 'ctrl+shift+z']);
+        equal(commands.shortcut(key({ctrlKey: true, shiftKey: true, key: 'B'})), 'bold');
+        equal(commands.shortcut(key({metaKey: true, key: 'y'})), 'redo', 'Command counts as Ctrl');
+        equal(commands.shortcut(key({ctrlKey: true, key: 'b'})), null, 'A missing modifier is a different chord');
+        commands.delete('redo');
+        equal([...commands.keys.keys()], ['ctrl+shift+b']);
+        throws(() => commands.add('bad', {shortcut: 'ctrl+', run() {}}), TypeError);
+        throws(() => commands.add('bad', {shortcut: 'meta+b', run() {}}), TypeError);
+        throws(() => commands.add('bad', {shortcut: '', run() {}}), TypeError);
+        equal(commands.has('bad'), false, 'A rejected shortcut leaves no command behind');
+        core.dispose();
+    }
+));
+
+test('commands: a shifted digit is the same chord on every layout', () => withFixture(
+    '<div contenteditable><p>one</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.firstElementChild);
+        const commands = new Commands(surface, {commands: {bullets: {shortcut: 'ctrl+shift+8', run() {}}}});
+        equal(commands.shortcut(key({ctrlKey: true, shiftKey: true, key: '(', code: 'Digit8'})), 'bullets');
+        equal(commands.shortcut(key({ctrlKey: true, shiftKey: true, key: '8', code: 'Digit8'})), 'bullets');
+        core.dispose();
+    }
+));
+
+function key(init) {
+    return new KeyboardEvent('keydown', init);
+}

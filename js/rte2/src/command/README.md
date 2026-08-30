@@ -382,12 +382,24 @@ behavior there until deletion is an ordinary mapped command.
 
 ## Unstyle
 
-`unstyleCommand(policy)` adapts the presentation policy in
+`unstyleCommand(policy, {blocks})` adapts the presentation policy in
 [`../unstyle/`](../unstyle/README.md) to a non-collapsed editor selection. It
 reports the first level that can change the selection and applies exactly that
-level. Therefore repeated clicks become deliberately stronger only after the
-previous level is already a no-op: classes, then inline styles, selected
-presentation attributes, then configured formatting wrappers.
+level, so repeated presses become deliberately stronger only after the previous
+level is already a no-op.
+
+The command appends one rung of its own to the policy's ladder. `blocks` reduces
+every selected structure to the host's default block: each outermost block
+becomes one default block per unit of content it holds, so lists, tables,
+quotes, and headings all collapse the same way without a single tag being named.
+Atomic blocks are content and stay. It lives here rather than in the policy
+because it needs the content model and mapped mutation, and because the policy
+also runs on detached paste fragments where there is no structure to reduce.
+Pass `{blocks: false}` for an action that only ever removes presentation.
+
+Together the rungs mean the action is unavailable only when the selection is
+already plain text in default blocks — someone who presses it wants something to
+happen, and until then there is always something left to remove.
 
 Inline boundaries are split only where needed, every mutation uses the point
 map, and forward/backward selection intent survives. A block attribute changes
@@ -422,6 +434,10 @@ error.
 
 ## Invariants
 
+- A command may declare a `shortcut`: one or more chords separated by spaces,
+  each `[modifier+]*key` with `ctrl` matching Control or Command. The registry
+  indexes them like input types, so keys belong to commands rather than to a
+  toolbar and work whether or not a control is on screen.
 - Commands run inside exactly one transaction and report their dirty nodes.
 - A command never crosses its editing host and never splits the host itself.
 - The resulting selection is set by the command, not guessed by the caller.

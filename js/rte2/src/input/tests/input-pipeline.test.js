@@ -435,3 +435,35 @@ function select(document, node, start, end) {
     document.getSelection().removeAllRanges();
     document.getSelection().addRange(range);
 }
+
+test('input pipeline: a command shortcut runs whether or not a control exists', () => withPipeline(
+    '<div contenteditable><p>one two</p></div>', ({host, commands, surface}) => {
+        let runs = 0;
+        commands.add('mark', {shortcut: 'ctrl+shift+x', run() { runs++; }});
+        const text = host.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.capture();
+        const event = new KeyboardEvent('keydown', {
+            bubbles: true, cancelable: true, ctrlKey: true, shiftKey: true, key: 'X',
+        });
+        host.dispatchEvent(event);
+        truthy(event.defaultPrevented);
+        equal(runs, 1);
+    },
+    {}
+));
+
+test('input pipeline: an unavailable shortcut leaves the key its native meaning', () => withPipeline(
+    '<div contenteditable><p>one two</p></div>', ({host, commands, surface}) => {
+        let runs = 0;
+        commands.add('nest', {shortcut: 'tab', enabled: () => false, run() { runs++; }});
+        const text = host.querySelector('p').firstChild;
+        getSelection().collapse(text, 1);
+        surface.capture();
+        const event = new KeyboardEvent('keydown', {bubbles: true, cancelable: true, key: 'Tab'});
+        host.dispatchEvent(event);
+        equal(event.defaultPrevented, false, 'Tab still moves focus outside a list');
+        equal(runs, 0);
+    },
+    {}
+));

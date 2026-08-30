@@ -32,8 +32,8 @@ export class History {
         this.#limit = limit;
         this.#coalesce = coalesce;
         this.#commands = Object.freeze({
-            undo: step('historyUndo', () => this.canUndo, () => this.undo()),
-            redo: step('historyRedo', () => this.canRedo, () => this.redo()),
+            undo: step('historyUndo', 'ctrl+z', () => this.canUndo, () => this.undo()),
+            redo: step('historyRedo', 'ctrl+y ctrl+shift+z', () => this.canRedo, () => this.redo()),
         });
         const root = surface.element;
         const view = root.ownerDocument.defaultView;
@@ -230,9 +230,10 @@ export class History {
 // Like every other command, a history step acts only where the surface owns the
 // selection. An editor the user has left must not change under a shortcut, and
 // a toolbar that still holds a saved selection passes it as the edit range.
-function step(inputType, available, run) {
+function step(inputType, shortcut, available, run) {
     return {
         inputTypes: [inputType],
+        shortcut,
         transaction: false,
         enabled: edit => !!edit.range && available(),
         run,

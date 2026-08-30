@@ -55,8 +55,20 @@ dialog module raise the current runner to 452 tests. Value marks and the
 contextual link editor raise the current runner to 470 tests. The CSS-declared
 content classes shared by the style control, the sanitizer, and presentation
 cleanup raise the current runner to 486 tests. One shared placement policy and
-its coverage raise it to 490 tests, confirmed in Chrome 152 and Firefox 154.
+its coverage raise it to 490 tests. The full remove-format ladder and
+registry-owned shortcuts raise it to 500 tests, confirmed in Chrome 152 and
+Firefox 154.
 WebKit verification of that revision is pending.
+
+Remove-format now runs a ladder that does not stop at the application's own
+presentation: six presentation rungs in `Unstyle` (styles, presentational
+attributes, foreign classes, formatting wrappers, declared content classes, and
+the remaining semantic inline elements) plus a seventh `blocks` rung in the
+command that reduces lists, tables, quotes, and headings to the host's default
+block. The action is unavailable only when the selection is already plain text.
+Keyboard shortcuts moved from toolbar controls to the command registry, so a key
+works whether or not a control is on screen, and `Tab`/`Shift+Tab` reach the
+list-nesting commands only inside a list.
 
 A review pass consolidated four duplicated concepts into single definitions
 (`isEditingBoundary`, `elementOf`, `indexOf`, `narrow`), removed a duplicated

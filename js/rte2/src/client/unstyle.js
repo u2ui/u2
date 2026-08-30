@@ -7,6 +7,7 @@ export function unstyles(levels = defaultUnstyleLevels, {
     command = 'unstyle',
     label = 'Remove formatting',
     text = 'T×',
+    shortcut = 'ctrl+\\',
 } = {}) {
     for (const [property, value] of Object.entries({name, control, command, label, text})) {
         if (typeof value !== 'string' || !value.trim()) {
@@ -14,7 +15,7 @@ export function unstyles(levels = defaultUnstyleLevels, {
         }
     }
     const policy = new Unstyle(levels);
-    const commands = Object.freeze({[command]: unstyleCommand(policy)});
+    const commands = Object.freeze({[command]: {...unstyleCommand(policy), shortcut}});
     return Object.freeze({
         name: name.trim(),
         commands: () => commands,
@@ -23,6 +24,7 @@ export function unstyles(levels = defaultUnstyleLevels, {
             command: command.trim(),
             label: label.trim(),
             text: text.trim(),
+            shortcut,
         })]),
     });
 }

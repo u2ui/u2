@@ -13,7 +13,8 @@ test('unstyle policy: validates and freezes ordered levels', () => {
         {name: 'same', attributes: ['class']},
         {name: 'same', attributes: ['style']},
     ]), RangeError);
-    equal(defaultUnstyle.levels.map(level => level.name), ['classes', 'styles', 'attributes', 'formatting']);
+    equal(defaultUnstyle.levels.map(level => level.name),
+        ['styles', 'attributes', 'classes', 'formatting', 'contentClasses', 'inline']);
     equal(defaultUnstyleLevels, defaultUnstyle.levels);
     truthy(Object.isFrozen(defaultUnstyle));
     truthy(Object.isFrozen(defaultUnstyle.levels));
@@ -26,10 +27,10 @@ test('unstyle policy: detached cleanup applies every level through the requested
     const source = root.querySelector('#source');
     const fragment = document.createDocumentFragment();
     fragment.append(...source.childNodes);
-    const changed = defaultUnstyle.clean(fragment, {through: 'styles'});
-    equal(fragment.firstElementChild.outerHTML, '<p align="center"><strong>text</strong></p>');
+    const changed = defaultUnstyle.clean(fragment, {through: 'classes'});
+    equal(fragment.firstElementChild.outerHTML, '<p><strong>text</strong></p>');
     equal(changed.length, 2);
-    defaultUnstyle.clean(fragment, {through: 'formatting'});
+    defaultUnstyle.clean(fragment, {through: 'inline'});
     equal(fragment.firstElementChild.outerHTML, '<p>text</p>');
 }));
 
@@ -55,7 +56,7 @@ test('unstyle policy: live cleanup maps unwrapped boundaries and touches its tra
         const map = new PointMap([point]);
         const touched = [];
         const transaction = {touch(node) { touched.push(node); return this; }};
-        defaultUnstyle.clean(span, {through: 'styles', map, transaction});
+        defaultUnstyle.clean(span, {through: 'classes', map, transaction});
         equal(section.innerHTML, 'text');
         same(map.get(point).node, section);
         equal(map.get(point).offset, 1);
@@ -86,7 +87,7 @@ test('unstyle: declared content classes survive the class level', () => {
     const root = document.createElement('div');
     root.innerHTML = '<p class="lead pasted" style="color:red">a</p><span class="pasted">b</span>';
     defaultUnstyle.clean(root, {through: 'classes', keep: ['lead']});
-    equal(root.innerHTML, '<p class="lead" style="color:red">a</p>b');
+    equal(root.innerHTML, '<p class="lead">a</p>b');
 });
 
 test('unstyle: without a keep list the class attribute goes entirely', () => {

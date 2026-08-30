@@ -170,7 +170,7 @@ test('playground: optional Unstyle advances through visible formatting levels', 
     truthy(button);
     equal(button.disabled, false);
     button.click();
-    equal(span.outerHTML, '<span style="color:#b30"><strong>Select this paste-like formatting</strong></span>');
+    equal(span.outerHTML, '<span class="pasted"><strong>Select this paste-like formatting</strong></span>');
     button.click();
     equal(paragraph.innerHTML, '<strong>Select this paste-like formatting</strong> and click T× repeatedly.');
     button.click();

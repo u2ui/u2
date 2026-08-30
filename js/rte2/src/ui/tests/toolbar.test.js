@@ -66,9 +66,9 @@ test('toolbar: follows the active surface and reflects command availability and 
     core.dispose();
 }));
 
-test('toolbar: preserves a saved selection for pointer and keyboard commands', () => withFixture(`
+test('toolbar: preserves a saved selection across pointer focus', () => withFixture(`
     <div contenteditable>text</div>
-    <div id=toolbar><button data-command=toggle data-state data-shortcut=b></button></div>
+    <div id=toolbar><button data-command=toggle data-state></button></div>
 `, root => {
     const core = new Rte(document, {auto: false});
     const surface = core.add(root.firstElementChild);
@@ -99,11 +99,6 @@ test('toolbar: preserves a saved selection for pointer and keyboard commands', (
     equal(runs, 1);
     same(getSelection().anchorNode, surface.element.firstChild);
     equal(getSelection().anchorOffset, 2);
-
-    const shortcut = new KeyboardEvent('keydown', {bubbles: true, cancelable: true, ctrlKey: true, key: 'b'});
-    surface.element.dispatchEvent(shortcut);
-    truthy(shortcut.defaultPrevented);
-    equal(runs, 2);
     toolbar.dispose();
     core.dispose();
 }));
@@ -271,3 +266,25 @@ test('toolbar: a command-value select reflects one or mixed command states', () 
 function focus(type, relatedTarget = null) {
     return new FocusEvent(type, {bubbles: true, composed: true, relatedTarget});
 }
+
+test('toolbar: pointing at a control that cannot run keeps the toolbar open', () => withFixture(`
+    <div contenteditable>text</div>
+    <div id=toolbar><button data-command=toggle></button></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    const commands = new Commands(surface, {commands: {toggle: {enabled: () => false, run() {}}}});
+    const element = root.querySelector('#toolbar');
+    const toolbar = new Toolbar(core, element, {commands: () => commands});
+    getSelection().setBaseAndExtent(surface.element.firstChild, 0, surface.element.firstChild, 4);
+    core.sync();
+    const button = element.firstElementChild;
+    truthy(button.disabled, 'The control has nothing to run');
+    equal(element.hidden, false);
+    const down = new Event('pointerdown', {bubbles: true, cancelable: true});
+    button.dispatchEvent(down);
+    truthy(down.defaultPrevented, 'The selection stays where it is, so the toolbar stays open');
+    equal(element.hidden, false);
+    toolbar.dispose();
+    core.dispose();
+}));

@@ -4,7 +4,7 @@ import {Rte} from '../../core/core.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
 test('external input client module: installs rich import for current and future surfaces', () => withFixture(`
-    <div contenteditable style="--u2-rte-import-unstyle:styles"><p>one</p></div>
+    <div contenteditable style="--u2-rte-import-unstyle:classes"><p>one</p></div>
     <div contenteditable><p>two</p></div>
 `, root => {
     const core = new Rte(document, {auto: false});
@@ -34,7 +34,7 @@ test('external input client module: installs rich import for current and future 
 
     const second = core.add(root.lastElementChild);
     truthy(client.commands(second).has('insertFragment'));
-    equal(importLevel({surface: second}), 'styles');
+    equal(importLevel({surface: second}), 'classes');
     truthy(client.delete(module));
     equal(client.commands(first).has('insertFragment'), false);
     equal(client.commands(second).has('insertFragment'), false);

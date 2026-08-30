@@ -30,7 +30,6 @@ export class Toolbar {
         element.addEventListener('pointerdown', this.#pointerDown, listen);
         element.addEventListener('click', this.#click, listen);
         element.addEventListener('change', this.#change, listen);
-        core.root.addEventListener('keydown', this.#keyDown, listen);
         core.root.addEventListener('focusin', this.#focusIn, {...listen, capture: true});
         core.root.addEventListener('focusout', this.#focusOut, {...listen, capture: true});
         if (!element.hasAttribute('role')) element.setAttribute('role', 'toolbar');
@@ -177,8 +176,13 @@ export class Toolbar {
         display(this.#element, false);
     };
 
+    // The toolbar is chrome: pointing at it must never move the editor's
+    // selection, not even at a control that currently has nothing to run.
+    // Fields keep their own pointer behaviour so they can be opened and typed in.
     #pointerDown = event => {
-        if (this.#item(event.target)) event.preventDefault();
+        const target = event.composedPath()[0];
+        if (target?.closest?.('select, input, textarea')) return;
+        event.preventDefault();
     };
 
     #click = event => {
@@ -200,16 +204,6 @@ export class Toolbar {
         this.#run(command, {value: name});
     };
 
-    #keyDown = event => {
-        if ((!event.ctrlKey && !event.metaKey) || event.altKey || event.shiftKey || !this.#surface) return;
-        const target = event.composedPath()[0];
-        if (target !== this.#surface.element && !this.#surface.element.contains(target)) return;
-        const key = event.key.toLowerCase();
-        const item = [...this.#items()].find(item => item.dataset.shortcut?.toLowerCase() === key && this.#item(item));
-        if (!item) return;
-        event.preventDefault();
-        this.#run(item.dataset.command.trim());
-    };
 
     #ownsFocus(node) {
         if (!node || !this.#surface) return false;

@@ -36,6 +36,7 @@ test('unstyle client module: identity and labels are configurable', () => {
         command: 'clearStyle',
         label: 'Clean',
         text: 'C',
+        shortcut: 'ctrl+\\',
     });
     throws(() => unstyles(defaultUnstyleLevels, {name: ''}), TypeError);
     throws(() => unstyles(defaultUnstyleLevels, {text: null}), TypeError);

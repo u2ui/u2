@@ -18,18 +18,87 @@ test('unstyle command: repeated runs advance only after the prior level is a no-
 `, ({commands, host}) => {
     const text = host.querySelector('strong').firstChild;
     getSelection().setBaseAndExtent(text, 0, text, 4);
-    equal(commands.state('unstyle'), 'classes');
-    equal(commands.run('unstyle').level, 'classes');
-    equal(host.innerHTML, '<p><span style="color:red" align="center"><strong>text</strong></span></p>');
     equal(commands.state('unstyle'), 'styles');
     equal(commands.run('unstyle').level, 'styles');
-    equal(host.innerHTML, '<p><span align="center"><strong>text</strong></span></p>');
+    equal(host.innerHTML, '<p><span class="x" align="center"><strong>text</strong></span></p>');
+    equal(commands.state('unstyle'), 'attributes');
     equal(commands.run('unstyle').level, 'attributes');
+    equal(host.innerHTML, '<p><span class="x"><strong>text</strong></span></p>');
+    equal(commands.run('unstyle').level, 'classes');
     equal(host.innerHTML, '<p><strong>text</strong></p>');
-    equal(commands.run('unstyle').level, 'formatting');
+    equal(commands.run('unstyle').level, 'inline');
     equal(host.innerHTML, '<p>text</p>');
-    equal(commands.enabled('unstyle'), false);
+    equal(commands.enabled('unstyle'), false, 'Plain text in a default block is the end of the ladder');
 }));
+
+test('unstyle command: the ladder ends by reducing structure to default blocks', () => withUnstyle(
+    '<div contenteditable><ul><li>one</li><li>two<em>!</em></li></ul></div>', ({commands, host}) => {
+        const range = document.createRange();
+        range.selectNodeContents(host);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+        equal(commands.state('unstyle'), 'inline');
+        commands.run('unstyle');
+        equal(host.innerHTML, '<ul><li>one</li><li>two!</li></ul>');
+        equal(commands.state('unstyle'), 'blocks');
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p>one</p><p>two!</p>');
+        equal(commands.enabled('unstyle'), false);
+    }
+));
+
+test('unstyle command: headings, quotes, and tables reduce the same way', () => withUnstyle(
+    '<div contenteditable><h2>title</h2><blockquote><p>quote</p></blockquote>'
+    + '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></div>',
+    ({commands, host}) => {
+        const range = document.createRange();
+        range.selectNodeContents(host);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+        equal(commands.state('unstyle'), 'blocks');
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p>title</p><p>quote</p><p>a</p><p>b</p>');
+        equal(commands.enabled('unstyle'), false);
+    }
+));
+
+test('unstyle command: a block keeps its own content beside a nested structure', () => withUnstyle(
+    '<div contenteditable><ul><li>text<ul><li>nested</li></ul></li></ul></div>', ({commands, host}) => {
+        const range = document.createRange();
+        range.selectNodeContents(host);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p>text</p><p>nested</p>');
+    }
+));
+
+test('unstyle command: atomic blocks are content and stay', () => withUnstyle(
+    '<div contenteditable><h2>title</h2><hr></div>', ({commands, host}) => {
+        const range = document.createRange();
+        range.selectNodeContents(host);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p>title</p><hr>');
+    }
+));
+
+test('unstyle command: the structural rung can be left out', () => withFixture(
+    '<div contenteditable><h2>title</h2></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const surface = core.add(host);
+        const commands = new Commands(surface, {commands: {unstyle: unstyleCommand(defaultUnstyle, {blocks: false})}});
+        const range = document.createRange();
+        range.selectNodeContents(host);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+        equal(commands.enabled('unstyle'), false);
+        equal(host.innerHTML, '<h2>title</h2>');
+        core.dispose();
+    }
+));
 
 test('unstyle command: partial cleanup isolates only selected inline content', () => withUnstyle(
     '<div contenteditable><p><span class=x>hello</span></p></div>', ({commands, host}) => {
@@ -108,8 +177,10 @@ test('unstyle command: the host\'s declared content classes survive', () => with
         equal(commands.state('unstyle'), 'classes');
         commands.run('unstyle');
         equal(host.innerHTML, '<p><span class="lead">one</span> two</p>');
-        equal(commands.state('unstyle'), null,
-            'The wrapper carrying a declared class is content, not formatting');
+        equal(commands.state('unstyle'), 'contentClasses',
+            'The ladder continues into the application\'s own presentation');
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p>one two</p>', 'and takes the declared class with its wrapper');
     }
 ));
 

@@ -346,9 +346,7 @@ export class Editor {
             if (control.shortcut) item.dataset.shortcut = control.shortcut;
             if (control.state) item.setAttribute('data-state', '');
             item.setAttribute('aria-label', control.label);
-            item.title = control.shortcut
-                ? `${control.label} (Ctrl/Command+${control.shortcut.toUpperCase()})`
-                : control.label;
+            item.title = control.shortcut ? `${control.label} (${keyLabel(control.shortcut)})` : control.label;
             item.textContent = control.text;
             this.#element.append(item);
         }
@@ -436,6 +434,14 @@ function lifecycle(value, label) {
         throw new TypeError(`${label} must return an object with dispose()`);
     }
     return value;
+}
+
+// `ctrl+shift+8` reads as `Ctrl+Shift+8`. Ctrl stands for Command on Apple
+// keyboards, which is what the registry matches.
+function keyLabel(shortcut) {
+    return shortcut.split(' ')[0].split('+')
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('+');
 }
 
 // Rewrites a select's choices, keeping its disabled placeholder and leaving the

@@ -146,7 +146,13 @@ export class InputPipeline {
     };
 
     #keyDown = event => {
-        if (event.altKey || !this.#owns(event)) return;
+        if (!this.#owns(event)) return;
+        const shortcut = this.#commands?.shortcut(event);
+        if (shortcut) {
+            this.#surface.capture();
+            if (this.#invoke(event, shortcut, {range: selectionRange(this.#surface)})) return;
+        }
+        if (event.altKey) return;
         const inputType = keyInput(event);
         if (!inputType) return;
         this.#surface.capture();
@@ -219,10 +225,16 @@ export class InputPipeline {
         data: event.data,
         range: inputRange(event, this.#surface),
     }) {
-        if (!this.#commands || !event.cancelable || event.defaultPrevented
-            || this.#composing || event.isComposing || isPlainTextHost(this.#root)) return false;
-        const name = this.#commands.input(detail.inputType);
-        if (!name) return false;
+        const name = this.#commands?.input(detail.inputType);
+        return !!name && this.#invoke(event, name, detail);
+    }
+
+    // A command replaces the native event only where it is actually available;
+    // otherwise the key keeps its own meaning, which is what lets Tab go on
+    // moving focus outside a list.
+    #invoke(event, name, detail) {
+        if (!event.cancelable || event.defaultPrevented || this.#composing
+            || event.isComposing || isPlainTextHost(this.#root)) return false;
         if (!this.#commands.enabled(name, detail)) return false;
         event.preventDefault();
         this.#clearPending();
@@ -264,15 +276,9 @@ export class InputPipeline {
     }
 }
 
-// History keys are routed from keydown because a browser stops reporting
-// `historyUndo` once its own undo stack no longer matches the edited content.
 function keyInput(event) {
-    if (event.ctrlKey || event.metaKey) {
-        const key = event.key.toLowerCase();
-        if (key === 'z') return event.shiftKey ? 'historyRedo' : 'historyUndo';
-        return key === 'y' && !event.shiftKey ? 'historyRedo' : null;
-    }
-    return event.shiftKey ? null : DELETE_KEYS.get(event.key) || null;
+    if (event.ctrlKey || event.metaKey || event.shiftKey) return null;
+    return DELETE_KEYS.get(event.key) || null;
 }
 
 export function inputTrigger(inputType = '') {

@@ -38,6 +38,34 @@ host's content, including edits an application makes itself, and groups
 continuous typing into steps. See
 [`../src/history/README.md`](../src/history/README.md).
 
+## Keyboard shortcuts
+
+A command declares its own key, so it works whether or not a control for it is
+listed in `--u2-rte-toolbar`:
+
+| keys | command |
+|---|---|
+| `Ctrl+B` `Ctrl+I` `Ctrl+U` | bold, italic, underline |
+| `Ctrl+Shift+X` `Ctrl+E` | strikethrough, code |
+| `Ctrl+K` | link |
+| `Ctrl+Shift+8` `Ctrl+Shift+7` | bulleted list, numbered list |
+| `Tab` `Shift+Tab` | one list level in, one out |
+| `Ctrl+\` | remove formatting |
+| `Ctrl+Z` `Ctrl+Y` `Ctrl+Shift+Z` | undo, redo |
+
+`Ctrl` matches Command on Apple keyboards. A key only takes effect where its
+command is available, so `Tab` outside a list still moves focus.
+
+Custom commands declare theirs the same way, as one or more chords separated by
+spaces:
+
+```js
+commands.add('highlight', {shortcut: 'ctrl+shift+h', run: edit => …});
+```
+
+A digit is matched by its physical key, so `ctrl+shift+8` is the same chord on
+every keyboard layout.
+
 ## Content classes
 
 ```js

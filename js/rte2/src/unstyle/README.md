@@ -60,6 +60,30 @@ the security boundary.
 - Cleanup preserves text and child order while unwrapping elements.
 - Security, presentation cleanup, and structural validity remain separate.
 
+## The ladder
+
+The levels are ordered from least to most destructive and do not stop at the
+application's own presentation. Someone who keeps pressing wants more removed,
+so the ladder runs out of rungs only when the selection is plain:
+
+| # | level | removes |
+|---|---|---|
+| 1 | `styles` | the `style` attribute |
+| 2 | `attributes` | `align`, `bgcolor`, `width` and the other presentational attributes |
+| 3 | `classes` | classes the host has **not** declared as content |
+| 4 | `formatting` | `b`, `font`, `i`, `s`, `span`, `strike`, `u` — unwrapped |
+| 5 | `contentClasses` | the declared classes too, and the wrappers carrying them |
+| 6 | `inline` | the remaining semantic inline elements, links included |
+
+Rungs 1–4 are scoped `foreign`: they spare the declared classes. Rung 5 is where
+the application's own presentation goes, so rung 6 no longer needs to protect
+anything.
+
+A seventh rung, `blocks`, reduces structure to the host's default block. It
+needs the content model and mapped mutation and therefore lives in
+[`../command/`](../command/README.md), not here: this policy also runs on
+detached paste fragments, where there is no surface and no structure to reduce.
+
 ## Declared content classes
 
 `clean(root, {keep})` names the classes the host treats as content. The class

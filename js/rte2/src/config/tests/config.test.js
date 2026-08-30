@@ -32,7 +32,7 @@ test('config: semantic defaults form a complete immutable snapshot', () => withF
         equal(result.cleanup, 'structural');
         equal(result.cleanOn, ['input', 'paste', 'drop', 'command']);
         equal(result.elements, null);
-        equal(result.importUnstyle, 'styles');
+        equal(result.importUnstyle, 'classes');
         equal(result.ui, 'roaming');
         truthy(Object.isFrozen(result));
         truthy(Object.isFrozen(result.cleanOn));

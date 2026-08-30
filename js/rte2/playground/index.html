@@ -288,6 +288,12 @@
         address is a plain text field, so relative paths, fragments, and
         application schemes are accepted and the sanitizer decides what
         survives.
+        Remove formatting walks a ladder that never runs out: foreign styles,
+        presentational attributes and classes, then the declared content
+        classes, the remaining semantic inline elements, and finally the
+        structure itself — lists, tables, quotes and headings all reduce to
+        plain blocks. Every control's key works whether or not it is listed in
+        <code>--u2-rte-toolbar</code>; hover a control to see its shortcut.
         The style list offers exactly the names in
         <code>--u2-rte-classes</code>. That one declaration is also what the
         sanitizer keeps from pasted HTML and what remove-format leaves alone, so
@@ -446,8 +452,8 @@
         enter,
         lineBreak,
         insertText: pending.insertText,
-        bold: pending.toggle(boldHtml),
-        toggleX: pending.toggle(classHtml),
+        bold: {...pending.toggle(boldHtml), shortcut: 'ctrl+b'},
+        toggleX: {...pending.toggle(classHtml), shortcut: 'ctrl+x'},
         applyX: applyMark(classHtml),
         removeX: removeMark(classHtml),
       }});

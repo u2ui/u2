@@ -51,7 +51,9 @@ export function config(host) {
         cleanOn: Object.freeze(cleanOn ? cleanOn.split(/[\s,]+/).filter(Boolean) : [...DEFAULT_CLEAN_ON]),
         elements: allowedElements(style),
         classes: classNames(style),
-        importUnstyle: value(style, 'import-unstyle') || 'styles',
+        // Foreign presentation through the class rung: pasted markup keeps no
+        // styles, no presentational attributes, and no undeclared classes.
+        importUnstyle: value(style, 'import-unstyle') || 'classes',
         ui: choice(style, 'ui', UI, 'roaming'),
     });
 }

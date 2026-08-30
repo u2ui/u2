@@ -68,6 +68,7 @@ export function linkEditor({fields = ['href', 'target', 'title']} = {}) {
                 // Opening the form changes nothing, so it needs no transaction.
                 // Creating a link needs text; editing one works at a caret.
                 editLink: {
+                    shortcut: 'ctrl+k',
                     transaction: false,
                     enabled: edit => !!edit.range && (!edit.range.collapsed || !!link.state(edit)),
                     state: edit => link.state(edit) !== null,
@@ -94,7 +95,7 @@ export function linkEditor({fields = ['href', 'target', 'title']} = {}) {
             }};
         },
         toolbar: Object.freeze([
-            Object.freeze({command: 'editLink', name: 'link', label: 'Link', text: '🔗', state: true}),
+            Object.freeze({command: 'editLink', name: 'link', label: 'Link', text: '↗', state: true, shortcut: 'ctrl+k'}),
             Object.freeze({command: 'unlink', name: 'unlink', label: 'Remove link', text: '⊗'}),
         ]),
     });

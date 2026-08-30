@@ -60,7 +60,7 @@ test('external input: sanitizes, optionally unstyles, and inserts rich paste at 
         unstyle: defaultUnstyle,
         through(value) {
             context = value;
-            return 'styles';
+            return 'classes';
         },
     });
 });

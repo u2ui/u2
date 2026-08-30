@@ -129,6 +129,15 @@ link form aligns to its start and prefers below.
 A select with no usable choice hides like a button whose command is unavailable:
 a control that cannot be used is not shown.
 
+Pointing anywhere at the toolbar never moves the editor's selection, including
+at a control that currently has nothing to run — otherwise clicking a disabled
+button would blur the surface and dismiss the toolbar. Fields keep their own
+pointer behaviour so they can be opened and typed in.
+
+Keys are not the toolbar's concern: a command declares its own shortcut and the
+input pipeline resolves it, so a key works whether or not a control for it is on
+screen. `data-shortcut` remains as the hint shown in a control's title.
+
 ## TODO
 
 - Add a static-surface binding using the same item state rules.
