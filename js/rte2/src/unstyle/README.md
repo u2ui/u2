@@ -1,8 +1,9 @@
 # Unstyle policy
 
 `unstyle.js` describes presentation cleanup independently of where the HTML
-came from. The same immutable policy can power the selected-content command or
-clean a detached paste/drop fragment after security sanitizing.
+came from. The same immutable policy can power the selected-content command,
+clean a detached fragment after security sanitizing, or clean only the element
+roots added by native paste/drop.
 
 ## Contract
 
@@ -22,10 +23,14 @@ and `formatting`. Removing the last attribute from a `span` also unwraps that
 neutral wrapper. Links, code, revision elements, lists, and tables are not
 dismantled by the default formatting level.
 
-`clean(root, {through})` applies every level up to and including `through` to a
-DOM `Element` or `DocumentFragment`. The strength is mandatory: external input
-must not become more destructive merely because an earlier level found
-nothing.
+`clean(root, {through, map, transaction, preserve})` applies every level up to and
+including `through` to a DOM `Element` or `DocumentFragment`. `map` and
+`transaction` are optional for detached fragments and preserve points plus
+dirty ownership when cleanup runs on live editor content. `preserve` may be a
+set of elements whose own presentation must remain unchanged even when a new
+ancestor is cleaned. Their newly added descendants remain eligible. The
+strength is mandatory: external input must not become more destructive merely
+because an earlier level found nothing.
 
 ```js
 const fragment = sanitizer.sanitize(externalHtml);
@@ -33,13 +38,14 @@ defaultUnstyle.clean(fragment, {through: 'styles'});
 // Insert the detached fragment through an editor transaction afterwards.
 ```
 
-`ExternalInput` performs exactly this composition for rich paste/drop data.
-Its `through` option is explicit and may resolve a different named level per
-surface or input type.
+`InputPipeline` uses the mapped live form only on element roots observed during
+one native paste/drop. `ExternalInput` uses the detached form after explicitly
+sanitizing rich data. Its `through` option may resolve a different named level
+per surface or input type.
 
 This order is deliberate:
 
-1. a security sanitizer safely parses and removes executable content;
+1. the browser inserts natively, or a security sanitizer safely parses external HTML;
 2. Unstyle removes unwanted presentation according to application policy;
 3. structural normalization repairs the fragment in its editing context.
 

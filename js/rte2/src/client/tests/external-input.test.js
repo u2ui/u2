@@ -34,7 +34,7 @@ test('external input client module: installs rich import for current and future 
 
     const second = core.add(root.lastElementChild);
     truthy(client.commands(second).has('insertFragment'));
-    equal(importLevel({surface: second}), 'none');
+    equal(importLevel({surface: second}), 'styles');
     truthy(client.delete(module));
     equal(client.commands(first).has('insertFragment'), false);
     equal(client.commands(second).has('insertFragment'), false);

@@ -1,9 +1,11 @@
 import {htmlModel} from '../model/html/html-model.js';
 import {Normalizer} from '../normalize/normalizer/normalizer.js';
+import {PointMap} from '../selection/map/point-map.js';
 import {EditRange} from '../selection/range/edit-range.js';
 import {editingHost, isPlainTextHost} from '../selection/ownership/ownership.js';
 import {Point} from '../selection/point/point.js';
 import {SelectionSnapshot} from '../selection/snapshot.js';
+import {defaultUnstyle} from '../unstyle/unstyle.js';
 
 const TRIGGERS = new Set(['input', 'paste', 'drop', 'command']);
 const PASTE = new Set(['insertFromPaste', 'insertFromPasteAsQuotation']);
@@ -17,6 +19,7 @@ export class InputPipeline {
     #root;
     #model;
     #commands;
+    #unstyle;
     #controller;
     #pending = null;
     #source = null;
@@ -24,7 +27,7 @@ export class InputPipeline {
     #composing = false;
     #connected = true;
 
-    constructor(surface, {model = htmlModel, commands = null} = {}) {
+    constructor(surface, {model = htmlModel, commands = null, unstyle = defaultUnstyle} = {}) {
         const root = surface?.element;
         if (root?.nodeType !== Node.ELEMENT_NODE || typeof surface?.transact !== 'function') {
             throw new TypeError('An input pipeline requires an editor surface');
@@ -36,10 +39,14 @@ export class InputPipeline {
         if (commands !== null && (typeof commands?.input !== 'function' || typeof commands?.run !== 'function')) {
             throw new TypeError('An input pipeline requires a command registry');
         }
+        if (unstyle !== null && typeof unstyle?.clean !== 'function') {
+            throw new TypeError('An input pipeline requires an Unstyle policy or null');
+        }
         this.#surface = surface;
         this.#root = root;
         this.#model = model;
         this.#commands = commands;
+        this.#unstyle = unstyle;
         this.#controller = new root.ownerDocument.defaultView.AbortController();
         const listen = {signal: this.#controller.signal};
         root.addEventListener('beforeinput', this.#beforeInput, listen);
@@ -59,7 +66,7 @@ export class InputPipeline {
     get connected() { return this.#connected; }
     get composing() { return this.#composing; }
 
-    normalize(trigger = 'command', {scope = null, range = null, inputType = ''} = {}) {
+    normalize(trigger = 'command', {scope = null, range = null, inputType = '', imported = null} = {}) {
         if (!this.#connected) throw new DOMException('The input pipeline is disconnected', 'InvalidStateError');
         if (!TRIGGERS.has(trigger)) throw new TypeError('Unknown normalization trigger');
         const settings = this.#surface.config;
@@ -71,14 +78,33 @@ export class InputPipeline {
             block: settings.block,
             level: settings.cleanup,
         });
-        scope ||= normalizationScope(range || selectionRange(this.#surface), this.#root, normalizer);
         const snapshot = this.#surface.capture();
-        const points = snapshot ? rangePoints(snapshot.range()) : [];
+        const initial = snapshot ? rangePoints(snapshot.range()) : [];
         const result = this.#surface.transact(transaction => {
-            const result = normalizer.normalize({scope, points, transaction});
-            if (snapshot) EditRange.fromPoints(result.map.get(points[0]), result.map.get(points.at(-1)), this.#root)
+            let points = initial;
+            const unstyled = [];
+            if (this.#unstyle && settings.importUnstyle !== 'none' && imported?.roots.length) {
+                const map = new PointMap(points);
+                for (const root of imported.roots) {
+                    unstyled.push(...this.#unstyle.clean(root, {
+                        through: settings.importUnstyle,
+                        map,
+                        transaction,
+                        preserve: imported.preserve,
+                    }));
+                }
+                points = points.map(point => map.get(point));
+            }
+            const activeRange = points.length
+                ? EditRange.fromPoints(points[0], points.at(-1), this.#root).range()
+                : range || selectionRange(this.#surface);
+            scope ||= normalizationScope(activeRange, this.#root, normalizer);
+            const normalized = normalizer.normalize({scope, points, transaction});
+            if (snapshot) EditRange.fromPoints(normalized.map.get(points[0]), normalized.map.get(points.at(-1)), this.#root)
                 .select(this.#surface.core.selection, snapshot.backward);
-            return result;
+            return unstyled.length
+                ? Object.freeze({...normalized, unstyled: Object.freeze(unstyled)})
+                : normalized;
         }, {trigger, inputType});
         if (result) this.#surface.emit('u2-rte-normalize', {trigger, inputType, result});
         return result || null;
@@ -87,7 +113,7 @@ export class InputPipeline {
     dispose() {
         if (!this.#connected) return;
         this.#controller.abort();
-        this.#pending = null;
+        this.#clearPending();
         this.#source = null;
         this.#deferred = null;
         this.#composing = false;
@@ -108,10 +134,11 @@ export class InputPipeline {
             range: inputRange(event, this.#surface),
             trigger: this.#source || inputTrigger(event.inputType),
         };
+        this.#observe(pending);
         this.#pending = pending;
         this.#source = null;
         queueMicrotask(() => {
-            if (this.#pending === pending) this.#pending = null;
+            if (this.#pending === pending) this.#clearPending();
         });
     };
 
@@ -129,13 +156,15 @@ export class InputPipeline {
 
     #input = event => {
         if (!this.#owns(event)) return;
-        const inputType = event.inputType || this.#pending?.inputType || '';
+        const pending = this.#pending;
+        const inputType = event.inputType || pending?.inputType || '';
         const job = {
             inputType,
-            range: this.#pending?.range || inputRange(event, this.#surface),
-            trigger: this.#pending?.trigger || this.#source || inputTrigger(inputType),
+            range: pending?.range || inputRange(event, this.#surface),
+            trigger: pending?.trigger || this.#source || inputTrigger(inputType),
+            imported: takeImports(pending, this.#root),
         };
-        this.#pending = null;
+        this.#clearPending();
         this.#source = null;
         if (this.#composing || event.isComposing) {
             this.#deferred = job;
@@ -193,7 +222,7 @@ export class InputPipeline {
         if (!name) return false;
         if (!this.#commands.enabled(name, detail)) return false;
         event.preventDefault();
-        this.#pending = null;
+        this.#clearPending();
         this.#source = null;
         this.#commands.run(name, detail);
         return true;
@@ -204,6 +233,26 @@ export class InputPipeline {
         queueMicrotask(() => {
             if (this.#source === trigger) this.#source = null;
         });
+    }
+
+    #observe(pending) {
+        const settings = this.#surface.config;
+        if (!this.#unstyle || settings.importUnstyle === 'none'
+            || !settings.cleanOn.includes(pending.trigger) || !['paste', 'drop'].includes(pending.trigger)) return;
+        const records = [];
+        const Observer = this.#root.ownerDocument.defaultView.MutationObserver;
+        const observer = new Observer(next => records.push(...next));
+        observer.observe(this.#root, {childList: true, subtree: true});
+        pending.import = {
+            observer,
+            records,
+            preserve: new Set(this.#root.querySelectorAll('*')),
+        };
+    }
+
+    #clearPending() {
+        this.#pending?.import?.observer.disconnect();
+        this.#pending = null;
     }
 
     #owns(event) {
@@ -248,6 +297,24 @@ function selectionRange(surface) {
 function rangePoints(range) {
     const start = Point.fromRange(range, 'start');
     return range.collapsed ? [start] : [start, Point.fromRange(range, 'end')];
+}
+
+function takeImports(pending, root) {
+    if (!pending?.import) return null;
+    const {observer, records, preserve} = pending.import;
+    records.push(...observer.takeRecords());
+    const roots = importRoots(records.flatMap(record => [...record.addedNodes]), root, preserve);
+    return roots.length ? {roots, preserve} : null;
+}
+
+function importRoots(nodes, root, preserve) {
+    const elements = new Set();
+    for (const node of nodes) {
+        if (node.nodeType !== Node.ELEMENT_NODE || !root.contains(node)) continue;
+        if (!preserve.has(node)) elements.add(node);
+        for (const child of node.querySelectorAll('*')) if (!preserve.has(child)) elements.add(child);
+    }
+    return [...elements].filter(node => ![...elements].some(parent => parent !== node && parent.contains(node)));
 }
 
 function configuredModel(model, elements) {

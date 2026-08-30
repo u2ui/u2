@@ -173,8 +173,9 @@ external fragments; the toolbar contains no paste-specific logic.
 ### Optional rich external input
 
 `externalInputs(options)` adapts the low-level `ExternalInput` boundary to the
-convention client's normal extension lifecycle. A sanitizer is mandatory and
-is never selected implicitly:
+convention client's normal extension lifecycle. It is needed only when an
+application chooses to read and replace rich HTML before native insertion. A
+sanitizer is mandatory and is never selected implicitly:
 
 ```js
 import {editor, externalInputs} from '../../editor.js';
@@ -199,11 +200,11 @@ Custom `Unstyle` policies may use their own level names. Pass `unstyle: null`
 to disable this stage, or pass `through` as a fixed name or resolver function
 to replace CSS resolution. The security sanitizer still always runs.
 
-`editor.js` exports the factory but does not install it by default. The native
-safe sink is not available in every target engine yet, and silently choosing
-an unsafe parser or disabling paste would be worse than requiring an explicit
-adapter. Applications can provide a DOMPurify-backed adapter through the same
-`sanitize()` contract.
+`editor.js` exports the factory but does not install it by default. Its ordinary
+input pipeline leaves paste/drop insertion to the browser, removes classes and
+inline styles from only the added elements, and then normalizes their structure.
+That path needs no HTML parser. Applications importing arbitrary HTML strings
+may still provide any safe adapter through the same `sanitize()` contract.
 
 `dispose()` removes every installed input pipeline, listener, toolbar node, and
 style node without disposing the supplied core. It is idempotent and is also

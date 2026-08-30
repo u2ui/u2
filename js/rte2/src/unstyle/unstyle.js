@@ -21,15 +21,22 @@ export class Unstyle {
         Object.freeze(this);
     }
 
-    clean(root, {through} = {}) {
+    clean(root, {through, map = null, transaction = null, preserve = null} = {}) {
         if (!root?.querySelectorAll) throw new TypeError('Unstyle cleanup requires a DOM root');
+        if (map !== null && typeof map?.unwrap !== 'function') throw new TypeError('Unstyle cleanup requires a point map');
+        if (transaction !== null && typeof transaction?.touch !== 'function') {
+            throw new TypeError('Unstyle cleanup requires a transaction');
+        }
+        if (preserve !== null && typeof preserve?.has !== 'function') {
+            throw new TypeError('Unstyle cleanup requires a preserved element set');
+        }
         const end = this.levels.findIndex(level => level.name === through);
         if (end < 0) throw new RangeError(`Unknown unstyle level: ${through}`);
         const changed = [];
+        const elements = descendants(root).filter(element => !preserve?.has(element));
         for (const level of this.levels.slice(0, end + 1)) {
-            const elements = descendants(root).filter(element => matches(level, element));
-            for (const element of elements.reverse()) {
-                clear(level, element);
+            for (const element of elements.filter(element => matches(level, element)).reverse()) {
+                clear(level, element, map, transaction);
                 if (!changed.includes(element)) changed.push(element);
             }
         }
@@ -44,10 +51,13 @@ export function matches(level, element) {
         || level.attributes.some(name => element.hasAttribute(name));
 }
 
-function clear(level, element) {
+function clear(level, element, map, transaction) {
+    const parent = element.parentNode;
     for (const name of level.attributes) element.removeAttribute(name);
-    if (level.elements.includes(element.localName)
-        || element.localName === 'span' && !element.attributes.length) element.replaceWith(...element.childNodes);
+    const unwrap = !!parent && (level.elements.includes(element.localName)
+        || element.localName === 'span' && !element.attributes.length);
+    if (unwrap) map ? map.unwrap(element) : element.replaceWith(...element.childNodes);
+    if (transaction && parent) transaction.touch(unwrap ? parent : element).touch(parent);
 }
 
 function descendants(root) {

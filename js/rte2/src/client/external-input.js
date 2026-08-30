@@ -43,6 +43,5 @@ export function externalInputs({
 }
 
 export function importLevel({surface}) {
-    return surface.element.ownerDocument.defaultView.getComputedStyle(surface.element)
-        .getPropertyValue('--u2-rte-import-unstyle').trim() || 'none';
+    return surface.config.importUnstyle;
 }

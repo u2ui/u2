@@ -32,6 +32,7 @@ test('config: semantic defaults form a complete immutable snapshot', () => withF
         equal(result.cleanup, 'structural');
         equal(result.cleanOn, ['input', 'paste', 'drop', 'command']);
         equal(result.elements, null);
+        equal(result.importUnstyle, 'styles');
         equal(result.ui, 'roaming');
         truthy(Object.isFrozen(result));
         truthy(Object.isFrozen(result.cleanOn));
@@ -50,7 +51,7 @@ test('config: element policies accept presets and explicit narrowing', () => wit
 }));
 
 test('config: custom properties override host defaults and inherit', () => withFixture(`
-    <section style="--u2-rte-block: section; --u2-rte-enter: break; --u2-rte-cleanup: minimal; --u2-rte-clean-on: paste drop; --u2-rte-ui: static">
+    <section style="--u2-rte-block: section; --u2-rte-enter: break; --u2-rte-cleanup: minimal; --u2-rte-clean-on: paste drop; --u2-rte-import-unstyle: none; --u2-rte-ui: static">
         <div contenteditable></div>
     </section>
 `, root => {
@@ -59,6 +60,7 @@ test('config: custom properties override host defaults and inherit', () => withF
     equal(result.enter, 'break');
     equal(result.cleanup, 'minimal');
     equal(result.cleanOn, ['paste', 'drop']);
+    equal(result.importUnstyle, 'none');
     equal(result.ui, 'static');
 }));
 

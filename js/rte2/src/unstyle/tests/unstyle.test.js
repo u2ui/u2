@@ -1,5 +1,7 @@
 import {Unstyle, defaultUnstyle, defaultUnstyleLevels} from '../unstyle.js';
-import {equal, test, throws, truthy, withFixture} from '../../../tests/harness.js';
+import {PointMap} from '../../selection/map/point-map.js';
+import {Point} from '../../selection/point/point.js';
+import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
 test('unstyle policy: validates and freezes ordered levels', () => {
     throws(() => new Unstyle([]), TypeError);
@@ -45,8 +47,37 @@ test('unstyle policy: custom levels work on an element root', () => withFixture(
     }
 ));
 
+test('unstyle policy: live cleanup maps unwrapped boundaries and touches its transaction', () => withFixture(
+    '<section><span class=foreign>text</span></section>', root => {
+        const section = root.firstElementChild;
+        const span = section.firstElementChild;
+        const point = new Point(span, 1);
+        const map = new PointMap([point]);
+        const touched = [];
+        const transaction = {touch(node) { touched.push(node); return this; }};
+        defaultUnstyle.clean(span, {through: 'styles', map, transaction});
+        equal(section.innerHTML, 'text');
+        same(map.get(point).node, section);
+        equal(map.get(point).offset, 1);
+        truthy(touched.includes(section));
+    }
+));
+
+test('unstyle policy: preserved elements keep their own presentation inside cleaned roots', () => withFixture(
+    '<section><span class=foreign><em class=kept style="color:red">old</em><b class=foreign>new</b></span></section>',
+    root => {
+        const section = root.firstElementChild;
+        const existing = section.querySelector('em');
+        defaultUnstyle.clean(section, {through: 'formatting', preserve: new Set([existing])});
+        equal(section.innerHTML, '<em class="kept" style="color:red">old</em>new');
+    }
+));
+
 test('unstyle policy: cleanup requires an explicit known strength and a DOM root', () => {
     throws(() => defaultUnstyle.clean(null, {through: 'classes'}), TypeError);
     throws(() => defaultUnstyle.clean(document.createDocumentFragment()), RangeError);
     throws(() => defaultUnstyle.clean(document.createDocumentFragment(), {through: 'unknown'}), RangeError);
+    throws(() => defaultUnstyle.clean(document.createDocumentFragment(), {through: 'styles', map: {}}), TypeError);
+    throws(() => defaultUnstyle.clean(document.createDocumentFragment(), {through: 'styles', transaction: {}}), TypeError);
+    throws(() => defaultUnstyle.clean(document.createDocumentFragment(), {through: 'styles', preserve: {}}), TypeError);
 });

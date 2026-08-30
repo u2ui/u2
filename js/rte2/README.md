@@ -48,9 +48,10 @@ configuration ideas, but do not copy its architecture or modify its files.
 - One shared core per selection context coordinates any number of editable
   surfaces without duplicating document-level listeners or state machinery.
 - Pluggable HTML policy aligned with the native HTML Sanitizer API. The native
-  adapter is implemented; a DOMPurify adapter remains planned where that API is
-  unavailable. Applications may narrow elements and attributes without
-  coupling security sanitizing to structural editor normalization.
+  adapter is implemented for applications that explicitly parse HTML strings.
+  Ordinary paste/drop remains browser-native and needs no fallback parser.
+  Applications may narrow elements and attributes without coupling security
+  sanitizing to structural editor normalization.
 - Deterministic tests for browser input, selection direction, range boundaries,
   DOM mutations, undo/redo, clipboard data, focus changes, and known engine
   differences.
@@ -150,17 +151,17 @@ External HTML processing has three distinct stages:
 
 1. Security sanitizing accepts external HTML through safe, context-aware sinks.
    The implemented native adapter uses `Element.setHTML()` and fails explicitly
-   when that safe sink is absent. A DOMPurify adapter with equivalent editor
-   policy remains planned for other engines.
+   when that safe sink is absent. This stage is needed only when RTE2 explicitly
+   parses an HTML string rather than leaving insertion to the browser.
 2. Optional Unstyle cleanup removes configured classes, styles, presentation
    attributes, and formatting wrappers without making security decisions.
 3. Structural normalization enforces the application's editable HTML model,
    such as allowed blocks, nesting, attributes, and canonical markup.
 
-`ExternalInput` now composes these stages for rich `insertFromPaste` and
-`insertFromDrop` events and passes the browser's target range to the mapped
-`insertFragment` command. Plain text stays native. Neither policy is hardwired
-into the core; both remain replaceable.
+The normal input path leaves paste/drop insertion native, records only elements
+added during that input, removes their configured presentation, and then
+normalizes their structure. `ExternalInput` optionally composes all three stages
+before insertion and passes the browser's target range to `insertFragment`.
 
 ## Configuration and defaults
 
@@ -233,8 +234,8 @@ Work is limited through dirty scopes:
 
 - typing normalizes the smallest affected inline or block neighborhood after
   the input transaction;
-- rich paste/drop sanitizes before insertion, then normalizes the mapped
-  insertion neighborhood through the normal command pipeline;
+- native paste/drop unstyles only observed added roots, then normalizes the
+  insertion neighborhood; explicitly parsed rich input sanitizes first;
 - commands normalize their touched nodes and necessary ancestors;
 - external DOM mutations queue only their affected subtrees;
 - blur, serialization, or an explicit cleanup command may request canonical
@@ -257,11 +258,15 @@ passes its `inputType`, text data, and target range unchanged to the replacing
 command.
 
 The pipeline deliberately does not read or trust clipboard and drag payloads.
+For native paste/drop it observes newly added element roots, maps presentation
+cleanup through the current selection, and then performs normal structural
+cleanup. Classes and inline styles are removed by default; existing destination
+content is untouched.
 The optional `ExternalInput` boundary owns rich HTML first, uses a selected
 sanitizer and optional Unstyle policy, then invokes the mapped
 `insertFragment` command. Sanitizer failures keep native insertion prevented
-and are reported as input-phase errors. A non-native safe sanitizer adapter and
-contextual plain-text/quotation import remain open.
+and are reported as input-phase errors. Contextual plain-text/quotation import
+remains open.
 
 ## Documentation and tests
 
@@ -291,8 +296,7 @@ transactional undo/redo.
 
 ## TODO
 
-- Add the DOMPurify-compatible adapter and contextual plain-text/quotation
-  import.
+- Add contextual plain-text/quotation import.
 - Extend range marks with composition-aware pending state, mark-set conflicts,
   and nested wrapper merge.
 - Add italic, underline, strike, code, and link adapters after bold has settled.

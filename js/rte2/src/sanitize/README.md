@@ -45,8 +45,9 @@ surface are unwrapped; the sanitizer policy can never be broadened.
 The native HTML Sanitizer API is not available in every target engine yet.
 `NativeSanitizer.supported(document)` exposes that capability. `sanitize()`
 throws `NotSupportedError` when the safe sink is absent; it deliberately has no
-`innerHTML` fallback. A future DOMPurify adapter will implement the same policy
-for those engines.
+`innerHTML` fallback. RTE2's normal paste/drop path therefore remains native in
+those engines and performs presentation plus structural cleanup afterwards; it
+does not need to parse the clipboard HTML string.
 
 The returned fragment remains untrusted if it is serialized back to a string.
 Consumers should insert the fragment through the editor transaction path, not
@@ -63,7 +64,6 @@ rich paste/drop events and direct HTML imports.
 
 ## TODO
 
-- Add the DOMPurify-compatible adapter without changing the policy contract.
 - Add contextual parsing for table and list insertion sites.
 - Add optional class, inline-style, and richer image URL policies.
 - Cover mutation-XSS and pasted office markup with shared adapter fixtures.

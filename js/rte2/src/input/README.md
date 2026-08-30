@@ -34,6 +34,13 @@ to `using`. Disconnecting the surface also disposes them automatically.
 - `insertFromPaste` and `insertFromDrop` are separate `paste` and `drop`
   triggers. Other input types use `input`; explicit editor commands use
   `command`.
+- Native paste/drop payloads remain browser-owned. Between their matching
+  `beforeinput` and `input`, the pipeline records only newly added element roots,
+  applies the configured `Unstyle` level to those roots with point mapping, and
+  then structurally normalizes the affected neighborhood. Elements present
+  before the input retain their presentation even when the browser moves them
+  below a newly inserted wrapper. The default level is `styles`; `none` disables
+  presentation cleanup.
 - `--u2-rte-clean-on` decides which triggers run. Cleanup level and semantic
   default block are resolved from the surface CSS configuration for every run.
 - Scope starts at the affected block. If that block has an invalid relationship
@@ -51,6 +58,11 @@ to `using`. Disconnecting the surface also disposes them automatically.
   owned live `Range`; missing target ranges fall back to the owned selection.
 
 ## Rich external input
+
+The native path above needs no HTML parser or sanitizer adapter because RTE2
+never reads the payload or reinserts its string. `ExternalInput` is a separate,
+optional pre-native path for applications that deliberately want to process a
+rich HTML string themselves.
 
 `ExternalInput` composes one selected sanitizer, an optional `Unstyle` policy,
 and a registered mapped insertion command:

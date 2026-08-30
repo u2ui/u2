@@ -25,6 +25,7 @@ Current properties:
 | `--u2-rte-cleanup` | `none`, `minimal`, `structural`, `canonical` | `structural` |
 | `--u2-rte-clean-on` | space- or comma-separated triggers | `input paste drop command` |
 | `--u2-rte-elements` | tag list, `@basic`, `@article`, `@document`, `all` | `all` |
+| `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `styles` |
 | `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming` |
 | `--u2-rte-toolbar` | control names separated by spaces or commas | every represented control |
 | `--u2-rte-toolbar-when` | `always`, `selection` | `always` |
@@ -56,6 +57,11 @@ An unknown preset or malformed list resolves to an empty allowlist rather than
 silently broadening content. `all` retains the complete supplied content model.
 The list controls elements only; it is deliberately not an attribute or URL
 sanitizer.
+
+`--u2-rte-import-unstyle` controls presentation cleanup for native paste and
+drop. The default removes classes and inline styles only from elements added by
+that input; `none` keeps native presentation. A custom `Unstyle` policy may
+provide other level names.
 
 ## TODO
 

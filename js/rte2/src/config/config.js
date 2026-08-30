@@ -49,6 +49,7 @@ export function config(host) {
         cleanup: choice(style, 'cleanup', CLEANUP, 'structural'),
         cleanOn: Object.freeze(cleanOn ? cleanOn.split(/[\s,]+/).filter(Boolean) : [...DEFAULT_CLEAN_ON]),
         elements: allowedElements(style),
+        importUnstyle: value(style, 'import-unstyle') || 'styles',
         ui: choice(style, 'ui', UI, 'roaming'),
     });
 }

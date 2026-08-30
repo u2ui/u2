@@ -26,7 +26,8 @@ whole path; complete mark sets and composition input are next.
 
 The 201-test mark-algebra baseline was confirmed in current Chromium, Firefox,
 and WebKit. The 233-test pending-mark baseline passes in current Chromium,
-Firefox, and WebKitGTK through GNOME Web. The current runner adds empty list
+Firefox, and WebKitGTK through GNOME Web. The 361-test baseline was confirmed in
+Chromium, Firefox, and WebKit. The current runner adds empty list
 exit, context-aware nested-list Enter, mixed generic-block repair, the roaming
 toolbar, semantic wrapper removal, ready-made bold, the convention client with
 optional command modules and block-style values, heading-aware Enter,
@@ -35,9 +36,10 @@ dismissal, collapsed range geometry, and one shared structural element policy
 for normalization, commands, and toolbar choices. The current lifecycle and
 visible-break extension, sanitizing policy/native adapter, selection-only
 toolbar mode, staged Unstyle policy/command, mapped context-aware fragment
-replacement, and fail-closed rich paste/drop composition raise the runner to
-361 tests.
-This revision passes in Chromium; Firefox and WebKit still have to confirm it.
+replacement, fail-closed rich paste/drop composition, and mapped post-native
+presentation cleanup raise the runner to 364 tests.
+This revision passes in Chromium 152; Firefox and WebKit still have to confirm
+the three new tests.
 Treat the number shown by `/u2/js/rte2/tests/` as authoritative.
 
 ## 0. Foundation
@@ -106,6 +108,10 @@ prevented input, and replacement by an already prepared DOM fragment are
 implemented. `ExternalInput` consumes rich paste/drop `dataTransfer` and the
 native target range, applies the selected sanitizer and optional Unstyle
 policy, and invokes mapped fragment insertion while failures stay fail-closed.
+Without an explicitly selected sanitizer, native paste/drop remains
+browser-owned; the pipeline removes classes and styles only from observed added
+roots before structural normalization while preserving elements that predate
+the input.
 Collapsed backward and forward deletion at a
 mergeable block boundary are routed explicitly; ordinary character and
 selected-range key deletion remain native. Contextual plain-text and quotation
@@ -187,24 +193,23 @@ per-element attribute, URL-protocol, comment, and data-attribute contract. The
 first `NativeSanitizer` adapter parses into a detached fragment exclusively
 through `Element.setHTML()`, intersects surface elements without broadening the
 security policy, and fails explicitly when that safe sink is unavailable. It
-has no unsafe fallback. Contextual parsing, the DOMPurify-compatible adapter,
-and serialization remain open.
+has no unsafe fallback. Native paste/drop needs no parser fallback because its
+payload stays browser-owned. Contextual parsing and serialization remain open.
 The independent immutable `Unstyle` policy supplies ordered presentation
 levels to both the selection command and safely parsed external fragments, so
 paste/drop will not grow a second formatting-cleanup list.
 `insertFragment` now replaces a selection with such a prepared fragment through
 mapped removal and insertion. Its content-model lifting handles inline, block,
 list, and nested-link contexts without browser editing commands.
-`ExternalInput` composes the three responsibilities for rich paste/drop
-without embedding a sanitizer or Unstyle level in the input pipeline. A safe
-non-native sanitizer adapter is still required before this can become a
-cross-engine convention-client default.
+`ExternalInput` composes the three responsibilities for applications that
+explicitly replace rich paste/drop. The default cross-engine path instead
+cleans the browser's inserted DOM without reading its HTML payload.
 
 - Resolve the surface's structural element policy once and use it as the upper
   bound for cleanup, command availability, paste/drop sanitizing, and toolbar
   choices. A sanitizer may narrow that policy but never broaden it.
-- Implement a native HTML Sanitizer API adapter and a DOMPurify-compatible
-  adapter behind one policy contract.
+- Keep additional sanitizer adapters application-supplied behind the same
+  policy contract unless a general engine use case requires one.
 - Define allowed global/per-element attributes, URL protocols, class/data
   policy, inline-style policy, and comments separately from allowed elements.
 - Keep security sanitizing separate from structural normalization.

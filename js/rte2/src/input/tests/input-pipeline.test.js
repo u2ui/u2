@@ -36,6 +36,7 @@ test('input pipeline: validates surfaces, models, triggers, and teardown', () =>
     '<div contenteditable>text</div>', ({host, pipeline, surface}) => {
         throws(() => new InputPipeline({element: host}), TypeError);
         throws(() => new InputPipeline(surface, {model: {}}), TypeError);
+        throws(() => new InputPipeline(surface, {unstyle: {}}), TypeError);
         throws(() => pipeline.normalize('blur'), TypeError);
         pipeline[Symbol.dispose]();
         equal(pipeline.connected, false);
@@ -118,6 +119,49 @@ test('input pipeline: CSS triggers distinguish typing, paste, and drop', () => w
         host.innerHTML = '<div>two</div>';
         host.dispatchEvent(input(document, 'insertFromDrop'));
         equal(host.innerHTML, '<p>two</p>');
+    }
+));
+
+test('input pipeline: native paste unstyles only added content before structural cleanup', () => withPipeline(
+    '<div contenteditable><p><strong class=kept style="color:red">before</strong><em class=kept style="color:blue">after</em></p></div>',
+    ({document, host}) => {
+        const paragraph = host.firstElementChild;
+        const existing = paragraph.lastElementChild;
+        const target = document.createRange();
+        target.setStart(paragraph, 1);
+        host.dispatchEvent(input(document, 'insertFromPaste', 'beforeinput', target));
+
+        const block = document.createElement('div');
+        block.className = 'foreign';
+        block.style.marginLeft = '40px';
+        const span = document.createElement('span');
+        span.className = 'office';
+        span.style.fontFamily = 'serif';
+        span.textContent = 'paste';
+        block.append(span, existing);
+        paragraph.append(block);
+        caret(document, span.firstChild, 5);
+        host.dispatchEvent(input(document, 'insertFromPaste'));
+
+        equal(host.innerHTML, '<p><strong class="kept" style="color:red">before</strong><br>paste<em class="kept" style="color:blue">after</em></p>');
+        same(document.getSelection().anchorNode, paragraph.childNodes[2]);
+        equal(document.getSelection().anchorOffset, 5);
+    }
+));
+
+test('input pipeline: native import cleanup may be disabled per surface', () => withPipeline(
+    '<div contenteditable style="--u2-rte-import-unstyle:none"><p>before</p></div>',
+    ({document, host}) => {
+        const paragraph = host.firstElementChild;
+        host.dispatchEvent(input(document, 'insertFromDrop', 'beforeinput'));
+        const span = document.createElement('span');
+        span.className = 'kept';
+        span.style.color = 'red';
+        span.textContent = 'drop';
+        paragraph.append(span);
+        caret(document, span.firstChild, 4);
+        host.dispatchEvent(input(document, 'insertFromDrop'));
+        equal(host.innerHTML, '<p>before<span class="kept" style="color: red;">drop</span></p>');
     }
 ));
 

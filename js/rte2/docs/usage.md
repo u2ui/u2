@@ -158,6 +158,11 @@ then ordinary formatting wrappers. A partially selected inline wrapper is
 split so surrounding content retains its formatting; a partially selected
 block is left alone.
 
+Native paste and drop reuse the same policy automatically. By default they
+remove classes and inline styles only from elements added by that input, then
+run structural normalization. Existing content around the insertion is not
+unstyled. Set `--u2-rte-import-unstyle:none` to retain native presentation.
+
 The policy is also reusable for foreign HTML after security sanitizing:
 
 ```js
@@ -269,7 +274,7 @@ what differs. `auto` means "use the semantic default for this tag".
 | `--u2-rte-toolbar` | control names separated by spaces or commas | every represented control |
 | `--u2-rte-toolbar-when` | `always`, `selection` | `always` |
 | `--u2-rte-show-breaks` | truthy or false-like token | hidden |
-| `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `none` |
+| `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `styles` |
 
 The host element decides the defaults: a `<ul contenteditable>` creates list
 items, a `<p contenteditable>` stays inline and Enter inserts a line break, a
@@ -527,21 +532,21 @@ Being explicit is cheaper than surprising you:
   mergeable block boundary are explicit; ordinary character deletion stays
   native. Selected-range deletion, list creation, indent, and outdent remain open.
   Enter can split an item and exit an empty list item.
-- **No cross-engine ready-made paste/drop module and no serializer.** The rich
-  external-input composition exists, but the native safe sink is not available
-  in every target engine. A DOMPurify-compatible adapter and contextual
-  plain-text/quotation import remain open.
+- **No contextual plain-text/quotation importer and no serializer.** Rich
+  paste/drop remains browser-native across engines and receives mapped
+  presentation plus structural cleanup afterwards. The optional pre-native
+  HTML-string path still requires an explicitly supplied safe sanitizer.
 - **The convention toolbar is only a prototype.** `editor.js` provides one
   styled Bold control plus optional block-style and visible-break extensions;
   the standalone roaming binder still leaves markup, theme, placement, and
   command sets to the application. Static bindings and menu state are open.
-- **The 233-test pending-mark baseline is verified in Chromium, Firefox, and
-  WebKitGTK through GNOME Web.** The current runner adds later list,
+- **The 361-test baseline is verified in Chromium, Firefox, and WebKit.** The
+  current runner adds later list,
   mark, toolbar, normalization, convention-client, optional-module, block-style,
   heading Enter, structural deletion, range geometry, element policy, extension
   lifecycle, top-layer toolbar, visible-break, sanitizing-policy, selection-only
-  toolbar, Unstyle, and mapped fragment-replacement behavior. The current
-  361-test revision is
-  verified in Chromium; Firefox and WebKit still need that exact revision.
+  toolbar, Unstyle, mapped fragment replacement, and post-native import cleanup.
+  The current 364-test revision is verified in Chromium 152; Firefox and WebKit
+  still need the three new cases.
 
 [`../PLAN.md`](../PLAN.md) tracks what lands next.
