@@ -46,7 +46,8 @@ own object under the same name, or register commands the engine never ships.
   returns `undefined` without touching the DOM.
 - `detail` is passed to the `Edit`; `range` targets a specific range instead of
   the current selection, `inputType` and `data` retain the native input cause
-  and text payload, and `value` carries a string chosen by a value control.
+  and text payload, and `value` carries the command-specific value. The registry
+  deliberately does not constrain that value; its owning command validates it.
 
 ## Edit
 
@@ -59,7 +60,7 @@ own object under the same name, or register commands the engine never ships.
 - `transaction` is `null` while availability is checked and a live transaction
   during `run()`.
 - `inputType` is the native operation name, `data` is its inserted text payload,
-  `value` is a toolbar/menu choice, and `fragment` is a prepared
+  `value` is an optional command-specific scalar or structure, and `fragment` is a prepared
   `DocumentFragment` or `null`. Commands never need to recover payloads from
   the DOM.
 - `config`, `model`, `element`, and `document` expose the host context so
@@ -167,6 +168,16 @@ Applying also joins adjacent canonical wrappers from the same adapter. Thus
 Elements that merely carry the mark in addition to other semantics, such as
 `<b class="x">`, or have unrelated attributes are not merged.
 
+The same mapped cleanup removes redundant nested copies and reaches a fixed
+point after a merge exposes new siblings. A complete mark set additionally
+orders exact canonical single-child wrappers by mark rank before merging them.
+It never rotates an augmented wrapper, crosses atomic or nested editable
+content, or creates a relationship rejected by the content model.
+
+Applying a different value of an excluding type first removes that mark from
+the selected part. A partial red span therefore becomes red/blue/red instead of
+nesting conflicting wrappers.
+
 ```js
 const x = new MarkType('x');
 const xHtml = new MarkAdapter(x, {
@@ -182,6 +193,24 @@ commands.add('removeX', removeMark(xHtml));
 commands.add('toggleX', toggleMark(xHtml));
 ```
 
+For one exact multi-mark operation, `setMarks(adapters)` creates a value-bearing
+command:
+
+```js
+const marks = setMarks([boldHtml, colorHtml, linkHtml]);
+commands.add('marks', marks);
+commands.run('marks', {value: [bold.create(), color.create('blue')]});
+```
+
+The adapter list is the closed universe for that command. It requires one
+removable adapter per type, removes configured marks absent from the target,
+resolves target conflicts through `markSet()`, and applies the canonical result
+in one mapped transaction. Equivalent nested runs settle into the same wrapper
+order and merge where their canonical structure permits it. Formatting from
+unlisted adapters is preserved.
+`state()` returns the current canonical array, `'mixed'`, or `null`; at a caret
+it reports structural context while the command remains disabled.
+
 For caret input, bind one lightweight `PendingMarks` instance to the surface.
 Its toggle delegates range selections to the normal command and stores a caret
 override only when needed. Its `insertText` command replaces native input only
@@ -194,21 +223,30 @@ commands.add('insertText', pending.insertText);
 ```
 
 Moving the selection invalidates the override through the surface's existing
-selection snapshot; no additional listener or observer is installed. After one
-explicit insertion the resulting DOM carries the state, so following input is
-native again. Plain-text surfaces and atomic content are excluded.
+selection snapshot; no selection listener or observer is installed. Ordinary
+text is inserted explicitly once, after which the resulting DOM carries the
+state and native input resumes. IME composition always stays native: a live
+start point follows its mutations, and the final composed range receives the
+pending overrides only after `compositionend`. Canceled composition retains the
+override. Plain-text surfaces, atomic content, and nested editors are excluded.
 
-The ready-made bold policy composes these pieces without a special command:
+`PendingMarks.dispose()` removes its composition listeners and clears transient
+state. Surface disconnection does this automatically.
+
+The standard HTML policies compose these pieces without special commands:
 
 ```js
-import {boldHtml} from './rte.js';
+import {boldHtml, italicHtml, linkHtml} from './rte.js';
 
 commands.add('bold', pending.toggle(boldHtml));
+commands.add('italic', pending.toggle(italicHtml));
+commands.add('link', pending.toggle(linkHtml, {href: '/docs'}));
 ```
 
-It accepts existing `<strong>` and `<b>`, creates `<strong>`, removes either
-semantic wrapper, and works through the same range and pending-input paths as a
-custom mark.
+Bold, italic, underline, strike, code, and link use the same range and pending
+input paths as custom marks. Their adapters recognize semantic aliases and emit
+one canonical tag. Link values use `{href, target?, rel?, title?}`; URL policy
+belongs to the application supplying that command value.
 
 ## Block styles
 
@@ -307,7 +345,6 @@ error.
 - Create the host's default block when Enter is pressed in content that has not
   been wrapped into one yet.
 - Let content policy provide the line separator instead of assuming `<br>`.
-- Carry pending marks through composition input without interrupting IME.
 - Merge compatible mark wrappers across nested equivalent structures.
 - Publish availability and active state as observable state for UI adapters.
 - Decide whether block styles should support an application-defined fallback

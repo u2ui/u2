@@ -30,7 +30,7 @@ rich-text surface becomes active. `plaintext-only` hosts stay completely native.
 - `deleteBackward` and `deleteForward` for content-model-approved block joins
   while ordinary character deletion stays native;
 - one `PendingMarks` instance;
-- `insertText` routing while a pending mark exists;
+- `insertText` routing and post-composition formatting while a pending mark exists;
 - ready-made `bold`, including Ctrl/Command+B;
 - one `InputPipeline` using the normal host configuration.
 

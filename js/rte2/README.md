@@ -13,9 +13,11 @@ text formatting after the command layer: registered commands replace prevented
 native input, starting with Enter, while marks describe formatting such as bold,
 links, and colors, how those values coexist, and how HTML represents them.
 Generic commands now apply and remove one configured mark over a selected
-range, derive active/mixed state, and toggle it. Pending caret marks carry an
-explicit override through the next ordinary text input. The first ready-made
-semantic bold adapter composes the same generic path; composition comes next.
+range, derive active/mixed state, toggle it, and set an exact canonical mark set
+within a caller-supplied adapter universe. Pending caret marks carry an explicit
+override through the next ordinary text input or native IME composition.
+Ready-made HTML adapters for bold, italic, underline, strike, code, and links
+compose the same generic path.
 
 Run the dependency-free browser suite at `/u2/js/rte2/tests/` and inspect
 normalization interactively at `/u2/js/rte2/playground/`. The runner displays
@@ -198,13 +200,16 @@ exclusions. The implemented generic range commands split selected boundaries,
 reuse suitable inline elements when the adapter allows it, preserve selection
 direction, and treat configured atomic elements and nested editors as
 boundaries. They derive selection and structural caret state and toggle a mark
-without `execCommand()`. Pending marks replace only the next ordinary text
-input and otherwise add no listener or routing work. Composition pending marks,
-mark-set conflicts, and merging compatible wrappers across nested structures
-remain open. Adjacent canonical wrappers of the mark being applied are already
-joined. The shipped bold policy recognizes `<strong>` and `<b>`, creates
-canonical `<strong>`, and removes semantic aliases without dropping unrelated
-attributes.
+without `execCommand()`. Pending marks replace the next ordinary text input.
+During IME composition they leave every native mutation untouched, track its
+live start, and apply the override only after `compositionend`. Selection
+movement still needs no additional listener. Exact mark-set commands resolve
+exclusions, remove configured values absent from their target, and apply the
+canonical result in one mapped operation. Canonical wrappers are ordered by the
+same stable mark rank; redundant nesting and newly exposed equivalent siblings
+are merged to a fixed point without crossing meaningful or atomic boundaries.
+The shipped standard policies recognize semantic aliases, emit one canonical
+tag, and remove their representation without dropping unrelated attributes.
 
 Commands are registered per surface, expose execution and availability
 independently of any UI, and declare which native `inputType` they replace. The
@@ -297,9 +302,7 @@ transactional undo/redo.
 ## TODO
 
 - Add contextual plain-text/quotation import.
-- Extend range marks with composition-aware pending state, mark-set conflicts,
-  and nested wrapper merge.
-- Add italic, underline, strike, code, and link adapters after bold has settled.
+- Define a link-control module only after its URL-entry and validation contract.
 - Exercise the new synchronous extension lifecycle with another contextual UI
   before adding dependency, ordering, or asynchronous setup concepts.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.

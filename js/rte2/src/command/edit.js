@@ -26,7 +26,6 @@ export class Edit {
     } = {}) {
         if (surface?.element?.nodeType !== Node.ELEMENT_NODE) throw new TypeError('An edit requires an editor surface');
         if (data !== null && typeof data !== 'string') throw new TypeError('Edit input data must be a string or null');
-        if (value !== null && typeof value !== 'string') throw new TypeError('Edit command value must be a string or null');
         if (fragment !== null && fragment?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
             throw new TypeError('Edit fragment must be a DocumentFragment or null');
         }

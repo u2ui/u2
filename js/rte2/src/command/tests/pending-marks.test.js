@@ -33,6 +33,82 @@ test('pending marks: inactive override splits inherited formatting around input'
     }
 ));
 
+test('pending marks: native composition receives an active caret override after IME ends', () => withPending(
+    '<div contenteditable><p>text</p></div>', async ({commands, document, host}) => {
+        const text = host.querySelector('p').firstChild;
+        caret(document, text, 2);
+        commands.run('toggleX');
+        host.dispatchEvent(composition(document, 'compositionstart'));
+        const before = compositionInput(document, 'beforeinput', 'あ');
+        host.dispatchEvent(before);
+        equal(before.defaultPrevented, false, 'Native composition must not be prevented');
+        text.insertData(2, 'あ');
+        caret(document, text, 3);
+        host.dispatchEvent(compositionInput(document, 'input', 'あ'));
+        host.dispatchEvent(composition(document, 'compositionend', 'あ'));
+        await Promise.resolve();
+        equal(host.innerHTML, '<p>te<span class="x">あ</span>xt</p>');
+        equal(document.getSelection().isCollapsed, true);
+        equal(commands.state('toggleX'), true);
+    }
+));
+
+test('pending marks: native composition receives an inactive override after IME ends', () => withPending(
+    '<div contenteditable><p><span class=x>text</span></p></div>', async ({commands, document, host}) => {
+        const text = host.querySelector('span').firstChild;
+        caret(document, text, 2);
+        commands.run('toggleX');
+        host.dispatchEvent(composition(document, 'compositionstart'));
+        host.dispatchEvent(compositionInput(document, 'beforeinput', 'あ'));
+        text.insertData(2, 'あ');
+        caret(document, text, 3);
+        host.dispatchEvent(compositionInput(document, 'input', 'あ'));
+        host.dispatchEvent(composition(document, 'compositionend', 'あ'));
+        await Promise.resolve();
+        equal(host.innerHTML, '<p><span class="x">te</span>あ<span class="x">xt</span></p>');
+        equal(commands.state('toggleX'), false);
+    }
+));
+
+test('pending marks: a final post-composition input supplies the finished native text', () => withPending(
+    '<div contenteditable><p>text</p></div>', async ({commands, document, host}) => {
+        const text = host.querySelector('p').firstChild;
+        caret(document, text, 2);
+        commands.run('toggleX');
+        host.dispatchEvent(composition(document, 'compositionstart'));
+        host.dispatchEvent(compositionInput(document, 'beforeinput', 'a'));
+        text.insertData(2, 'a');
+        caret(document, text, 3);
+        host.dispatchEvent(compositionInput(document, 'input', 'a'));
+        host.dispatchEvent(composition(document, 'compositionend', 'a'));
+        const composed = host.querySelector('.x').firstChild;
+        composed.replaceData(0, 1, 'ä');
+        caret(document, composed, 1);
+        host.dispatchEvent(new document.defaultView.InputEvent('input', {
+            bubbles: true,
+            inputType: 'insertText',
+            data: 'ä',
+        }));
+        await Promise.resolve();
+        equal(host.innerHTML, '<p>te<span class="x">ä</span>xt</p>');
+        equal(document.getSelection().isCollapsed, true);
+    }
+));
+
+test('pending marks: canceled composition keeps the caret override for ordinary input', () => withPending(
+    '<div contenteditable><p>text</p></div>', ({commands, document, host}) => {
+        const text = host.querySelector('p').firstChild;
+        caret(document, text, 2);
+        commands.run('toggleX');
+        host.dispatchEvent(composition(document, 'compositionstart'));
+        host.dispatchEvent(composition(document, 'compositionend'));
+        const event = beforeInput(document, 'x');
+        host.dispatchEvent(event);
+        truthy(event.defaultPrevented);
+        equal(host.innerHTML, '<p>te<span class="x">x</span>xt</p>');
+    }
+));
+
 test('pending marks: moving the caret invalidates pending input without listeners', () => withPending(
     '<div contenteditable><p>one two</p></div>', ({commands, document, host, surface}) => {
         const text = host.querySelector('p').firstChild;
@@ -82,6 +158,7 @@ test('pending marks: stay bound to one rich-text surface', () => withFixture(
         equal(commands.enabled('toggle'), false);
         throws(() => toggle.run({surface: two}), RangeError);
         core.dispose();
+        equal(pending.connected, false);
     }
 ));
 
@@ -125,5 +202,19 @@ function beforeInput(document, data) {
         cancelable: true,
         inputType: 'insertText',
         data,
+    });
+}
+
+function composition(document, type, data = '') {
+    return new document.defaultView.CompositionEvent(type, {bubbles: true, data});
+}
+
+function compositionInput(document, type, data) {
+    return new document.defaultView.InputEvent(type, {
+        bubbles: true,
+        cancelable: type === 'beforeinput',
+        inputType: 'insertCompositionText',
+        data,
+        isComposing: true,
     });
 }

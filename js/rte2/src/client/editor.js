@@ -4,7 +4,7 @@ import {deleteBackward, deleteForward} from '../command/delete.js';
 import {enter, lineBreak} from '../command/enter.js';
 import {PendingMarks} from '../command/pending-marks.js';
 import {InputPipeline} from '../input/input-pipeline.js';
-import {boldHtml} from '../mark/bold.js';
+import {boldHtml} from '../mark/standard.js';
 import {isPlainTextHost} from '../selection/ownership/ownership.js';
 import {Toolbar} from '../ui/toolbar.js';
 
@@ -220,6 +220,7 @@ export class Editor {
         } catch (error) {
             for (const name of [...record.modules.keys()].reverse()) this.#uninstall(record, name);
             record.pipeline?.dispose();
+            pending.dispose();
             controller.abort();
             throw error;
         }
@@ -232,7 +233,7 @@ export class Editor {
         record.controller.abort();
         for (const name of [...record.modules.keys()].reverse()) this.#uninstall(record, name);
         record.pipeline?.dispose();
-        record.pending.clear();
+        record.pending.dispose();
         this.#records.delete(surface);
         return true;
     }

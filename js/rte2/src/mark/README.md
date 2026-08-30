@@ -13,9 +13,9 @@ shared questions that every formatting command has:
 - In which stable order are several marks kept?
 
 `dom-adapter.js` decides whether a mark is represented by `<strong>`, a class,
-an attribute, a style, or something custom. `bold.js` provides the first ready
-semantic mark: it reads `<strong>` and `<b>` and writes `<strong>`. The range
-commands apply or remove those representations on selected text.
+an attribute, a style, or something custom. `standard.js` provides the compact
+default HTML policies for bold, italic, underline, strike, code, and links. The
+range commands apply or remove those representations on selected text.
 
 ## Public contract
 
@@ -44,6 +44,11 @@ formatting at one text position.
   changes nothing. A new mark removes types it excludes; an existing mark may
   block it through a one-way exclusion.
 - `remove(marks)` removes only that exact type and value.
+
+`markSet(marks)` folds a complete array through those same rules and returns its
+frozen canonical set. Equivalent values collapse, one-way exclusions always
+favor the excluding type, and the later value wins when two marks exclude each
+other.
 
 Values may contain strings, finite numbers, booleans, `null`, arrays, and plain
 objects. Objects are copied with sorted keys and all copied containers are
@@ -114,24 +119,50 @@ With that adapter, selecting `llo` in `hello` creates
 `<b class="x">dear</b>`. Removal keeps the `<b>` and only unwraps a `span` when
 clearing the mark leaves it without attributes.
 
-## Ready-made bold
+## Standard HTML marks
 
 ```js
-import {bold, boldHtml} from './rte.js';
+import {bold, boldHtml, italicHtml, link, linkHtml} from './rte.js';
 
 boldHtml.parse(document.querySelector('b')); // bold.create()
 boldHtml.render(bold.create(), document);     // <strong>
+italicHtml.render(italicHtml.type.create(), document); // <em>
+linkHtml.render(link.create({href: '/docs'}), document); // <a href="/docs">
 ```
 
-`bold` is the immutable `MarkType`; `boldHtml` is its replaceable default HTML
-adapter. New bold text uses `<strong>`, while both `<strong>` and `<b>` count as
-active and can be removed. Removing a bare alias unwraps it. If the element also
-has unrelated attributes, those survive on a neutral `span`.
+Each exported type has one replaceable default adapter:
+
+| Type | Accepted HTML | Canonical HTML |
+| --- | --- | --- |
+| `bold` | `strong`, `b` | `strong` |
+| `italic` | `em`, `i` | `em` |
+| `underline` | `u` | `u` |
+| `strike` | `s`, `strike` | `s` |
+| `code` | `code` | `code` |
+| `link` | `a[href]` | `a` |
+
+Boolean marks use the default value `true`. A link uses
+`{href, target?, rel?, title?}` with string values; other keys are rejected so
+distinct mark values cannot silently render as the same HTML. The adapter does
+not impose a URL-scheme policy. Applications must validate command input, while
+external HTML remains the sanitizer's responsibility.
+
+Removing a bare semantic alias unwraps it. Unrelated attributes survive on a
+neutral `span`; replacing part of an attributed link therefore neither loses
+those attributes nor nests anchors.
 
 Applying a mark joins adjacent canonical wrappers produced by that adapter, so
 two neighboring `<span class="x">` elements become one. A wrapper carrying
 additional classes, attributes, or tag semantics is preserved: the adapter
 cannot assume that those mean the same thing as its mark.
+
+Canonical wrappers are also normalized across nested runs. Redundant nested
+copies are removed. A complete set orders single-child canonical wrappers by
+the set's stable rank, then repeatedly joins siblings exposed by that ordering.
+For example, opposite `bold/color` nesting on neighboring runs becomes one
+`bold` wrapper containing one `color` wrapper. Reordering happens only when the
+content model accepts both resulting relationships. A wrapper with additional
+attributes is meaningful and remains a boundary.
 
 Range commands expose `true`, `false`, or `'mixed'` state for selected editable
 text. At a caret they report whether its structural DOM position is inside the
@@ -140,9 +171,24 @@ editable hosts are ignored because the same commands cannot format their
 contents. Toggle removes a fully active mark and applies it across inactive or
 mixed selections.
 
+`setMarks(adapters)` creates one value-bearing command for a closed adapter
+universe. Running it with `{value: marks}` replaces exactly those configured
+marks over the selection: absent values are removed, supplied values are
+canonicalized with `markSet()`, and the resulting set is applied in stable rank
+order within one mapped operation. Marks owned by unlisted adapters remain
+untouched. Every configured adapter needs a clear policy, and one adapter owns
+each type.
+
+Its state is the current canonical mark array, `'mixed'` when selected text has
+different sets, or `null` when no editable text contributes. At a caret it
+returns the structural array but, like the individual range commands, stays
+disabled.
+
 `PendingMarks` can extend those commands at a caret. It stores only an explicit
 override for one surface and replaces the next `insertText`; afterward the DOM
-it created carries the mark and native input resumes.
+it created carries the mark and native input resumes. IME input remains native
+throughout composition; the composed range receives the same override only
+after `compositionend`.
 
 ## Invariants
 
@@ -152,6 +198,9 @@ it created carries the mark and native input resumes.
   no-op.
 - Equivalent non-conflicting inputs produce the same canonical set order.
 - Exclusion is directional policy; conflict reporting is symmetric.
+- Complete sets resolve policy conflicts before mutating the DOM.
+- Canonical DOM order follows canonical set order without crossing meaningful,
+  atomic, or nested-editable boundaries.
 - The algebra contains no editor, document, selection, or module-global mutable
   state. DOM mutation belongs to the adapter and range commands.
 - Ready-made types and adapters are immutable shared defaults; applications may
@@ -166,7 +215,5 @@ backward selections, atomic elements, nested editors, reuse, and cleanup.
 
 ## TODO
 
-- Merge compatible wrappers across nested equivalent structures.
-- Apply and remove complete, conflicting mark sets rather than one concrete mark
-  at a time.
-- Carry pending marks through composition input.
+- Add a default link-control module only after URL entry, validation, and UI
+  ownership have an explicit application-facing contract.

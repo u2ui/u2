@@ -1,8 +1,8 @@
-import {applyMark, removeMark, toggleMark} from '../mark.js';
+import {applyMark, removeMark, setMarks, toggleMark} from '../mark.js';
 import {Commands} from '../commands.js';
 import {MarkAdapter} from '../../mark/dom-adapter.js';
 import {MarkType} from '../../mark/mark.js';
-import {boldHtml} from '../../mark/bold.js';
+import {boldHtml} from '../../mark/standard.js';
 import {Rte} from '../../core/core.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
@@ -147,6 +147,62 @@ test('mark command: merging stays specific to the adapter canonical wrapper', ()
     }
 ));
 
+test('mark command: applying removes redundant nested canonical wrappers', () => withFixture(
+    '<div contenteditable><p><strong>one<strong>two</strong>three</strong></p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = new Commands(core.add(host), {commands: {bold: applyMark(boldHtml)}});
+        try {
+            selectContents(host.firstElementChild);
+            commands.run('bold');
+            equal(host.innerHTML, '<p><strong>onetwothree</strong></p>');
+            equal(host.querySelector('strong').childNodes.length, 1);
+            equal(getSelection().toString(), 'onetwothree');
+        } finally {
+            core.dispose();
+        }
+    }
+));
+
+test('mark command: nested canonicalization stays outside atomic content', () => withFixture(
+    '<div contenteditable><p><button><strong><strong>atomic</strong></strong></button><strong><strong>text</strong></strong></p></div>',
+    root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = new Commands(core.add(host), {commands: {bold: applyMark(boldHtml)}});
+        try {
+            selectContents(host.firstElementChild);
+            commands.run('bold');
+            equal(host.innerHTML, '<p><button><strong><strong>atomic</strong></strong></button><strong>text</strong></p>');
+        } finally {
+            core.dispose();
+        }
+    }
+));
+
+test('mark set command: canonical order exposes and merges equivalent nested runs', () => withMarkSet(
+    '<div contenteditable><p><span data-color=blue><strong>one</strong></span><strong><span data-color=blue>two</span></strong></p></div>',
+    ({bold, color, commands, host}) => {
+        const first = host.querySelector('span strong').firstChild;
+        const last = host.querySelector('strong > span').firstChild;
+        select(last, last.length, first, 0);
+        commands.run('set', {value: [color.create('blue'), bold.create()]});
+        equal(host.innerHTML, '<p><strong><span data-color="blue">onetwo</span></strong></p>');
+        equal(getSelection().toString(), 'onetwo');
+        truthy(backward(getSelection()));
+    }
+));
+
+test('mark set command: canonical ordering preserves meaningful wrapper boundaries', () => withMarkSet(
+    '<div contenteditable><p><span class=keep data-color=blue><strong>one</strong></span><strong><span data-color=blue>two</span></strong></p></div>',
+    ({bold, color, commands, host}) => {
+        selectContents(host.firstElementChild);
+        commands.run('set', {value: [bold.create(), color.create('blue')]});
+        equal(host.innerHTML, '<p><span class="keep" data-color="blue"><strong>one</strong></span><strong><span data-color="blue">two</span></strong></p>');
+        equal(getSelection().toString(), 'onetwo');
+    }
+));
+
 test('mark command: removal unwraps only a neutral span', () => withMarks(`
     <div contenteditable><p><span class="x y">one</span><span class=x data-id=1>two</span><b class=x>three</b><span class=x>four</span></p></div>
 `, ({commands, host}) => {
@@ -165,6 +221,109 @@ test('mark command: partial removal isolates the selected marked content', () =>
         equal(host.innerHTML, '<p><span class="x">h</span>ell<span class="x">o</span></p>');
         equal(getSelection().toString(), 'ell');
         same(getSelection().anchorNode, host.firstElementChild.childNodes[1]);
+    }
+));
+
+test('mark command: applying a conflicting value replaces only the selected part', () => withFixture(
+    '<div contenteditable><p><span data-color=red>hello</span></p></div>', root => {
+        const color = new MarkType('color');
+        const adapter = colorAdapter(color);
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = new Commands(core.add(host), {commands: {blue: applyMark(adapter, 'blue')}});
+        try {
+            const text = host.querySelector('span').firstChild;
+            select(text, 1, text, 4);
+            commands.run('blue');
+            equal(host.innerHTML, '<p><span data-color="red">h</span><span data-color="blue">ell</span><span data-color="red">o</span></p>');
+            equal(getSelection().toString(), 'ell');
+        } finally {
+            core.dispose();
+        }
+    }
+));
+
+test('mark set command: replaces the configured set atomically and reports its state', () => withMarkSet(
+    '<div contenteditable><p><strong>one <span data-color=red>two</span></strong> plain</p></div>',
+    ({bold, color, commands, host}) => {
+        const first = host.querySelector('strong').firstChild;
+        const last = host.querySelector('p').lastChild;
+        select(last, last.length, first, 0);
+        equal(commands.state('set'), 'mixed');
+        commands.run('set', {value: [color.create('red'), bold.create(), color.create('blue')]});
+        equal(host.innerHTML, '<p><strong><span data-color="blue">one two plain</span></strong></p>');
+        equal(commands.state('set').map(mark => [mark.type.name, mark.value]), [
+            ['bold', true],
+            ['color', 'blue'],
+        ]);
+        truthy(backward(getSelection()));
+        commands.run('set', {value: [color.create('blue')]});
+        equal(host.innerHTML, '<p><span data-color="blue">one two plain</span></p>');
+        commands.run('set', {value: []});
+        equal(host.innerHTML, '<p>one two plain</p>');
+        equal(commands.state('set'), []);
+    }
+));
+
+test('mark set command: state follows complete sets at selections and carets', () => withMarkSet(
+    '<div contenteditable><p><strong><span data-color=blue>one</span></strong><span data-color=blue>two</span></p></div>',
+    ({commands, host}) => {
+        const one = host.querySelector('strong span').firstChild;
+        const two = host.querySelector('p > span').firstChild;
+        select(one, 0, one, 3);
+        equal(commands.state('set').map(mark => mark.type.name), ['bold', 'color']);
+        select(one, 0, two, 3);
+        equal(commands.state('set'), 'mixed');
+        select(two, 1, two, 1);
+        equal(commands.state('set').map(mark => [mark.type.name, mark.value]), [['color', 'blue']]);
+        equal(commands.enabled('set', {value: []}), false, 'A set command does not own caret input');
+    }
+));
+
+test('mark set command: type exclusions remove conflicting DOM marks', () => withFixture(
+    '<div contenteditable><p><strong>text</strong></p></div>', root => {
+        const ink = new MarkType('ink', {excludes: ['bold']});
+        const adapter = new MarkAdapter(ink, {
+            selector: '[data-ink]',
+            tag: 'span',
+            read: element => element.getAttribute('data-ink'),
+            write: (element, value) => element.setAttribute('data-ink', value),
+            clear: element => element.removeAttribute('data-ink'),
+        });
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = new Commands(core.add(host), {commands: {set: setMarks([boldHtml, adapter])}});
+        try {
+            selectContents(host.firstElementChild);
+            commands.run('set', {value: [boldHtml.type.create(), ink.create('black')]});
+            equal(host.innerHTML, '<p><span data-ink="black">text</span></p>');
+            equal(commands.state('set').map(mark => mark.type.name), ['ink']);
+        } finally {
+            core.dispose();
+        }
+    }
+));
+
+test('mark set command: validates its closed adapter universe and target values', () => withFixture(
+    '<div contenteditable>text</div>', root => {
+        const color = new MarkType('color');
+        const adapter = colorAdapter(color);
+        const noClear = new MarkAdapter(new MarkType('readonly'), {selector: 'i', tag: 'i'});
+        throws(() => setMarks(), TypeError);
+        throws(() => setMarks([]), TypeError);
+        throws(() => setMarks([null]), TypeError);
+        throws(() => setMarks([noClear]), TypeError);
+        throws(() => setMarks([adapter, adapter]), RangeError);
+        const core = new Rte(document, {auto: false});
+        const commands = new Commands(core.add(root.firstElementChild), {commands: {set: setMarks([adapter])}});
+        try {
+            selectContents(root.firstElementChild);
+            equal(commands.enabled('set'), false);
+            equal(commands.enabled('set', {value: {}}), false);
+            equal(commands.enabled('set', {value: [new MarkType('other').create()]}), false);
+        } finally {
+            core.dispose();
+        }
     }
 ));
 
@@ -253,6 +412,32 @@ function withMarks(html, run) {
         } finally {
             core.dispose();
         }
+    });
+}
+
+function withMarkSet(html, run) {
+    return withFixture(html, root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const bold = boldHtml.type;
+        const color = new MarkType('color', {rank: 60});
+        const adapter = colorAdapter(color);
+        const commands = new Commands(core.add(host), {commands: {set: setMarks([boldHtml, adapter])}});
+        try {
+            return run({adapter, bold, color, commands, core, host});
+        } finally {
+            core.dispose();
+        }
+    });
+}
+
+function colorAdapter(type) {
+    return new MarkAdapter(type, {
+        selector: '[data-color]',
+        tag: 'span',
+        read: element => element.getAttribute('data-color'),
+        write: (element, value) => element.setAttribute('data-color', value),
+        clear: element => element.removeAttribute('data-color'),
     });
 }
 

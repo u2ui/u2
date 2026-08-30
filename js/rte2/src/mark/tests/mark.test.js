@@ -1,4 +1,4 @@
-import {Mark, MarkType} from '../mark.js';
+import {Mark, MarkType, markSet} from '../mark.js';
 import {equal, same, test, throws, truthy} from '../../../tests/harness.js';
 
 test('marks: validate and expose immutable type policy', () => {
@@ -109,4 +109,25 @@ test('marks: exact and type-wide removal preserve unrelated marks', () => {
     throws(() => red.add(null), TypeError);
     throws(() => red.remove([{}]), TypeError);
     throws(() => color.remove([{}]), TypeError);
+});
+
+test('marks: complete sets resolve conflicts and keep canonical order', () => {
+    const bold = new MarkType('bold', {rank: 10});
+    const color = new MarkType('color');
+    const code = new MarkType('code', {excludes: []});
+    const link = new MarkType('link', {excludes: ['code']});
+    const red = color.create('red');
+    const blue = color.create('blue');
+    const set = markSet([red, code.create(), bold.create(), blue, link.create(), bold.create()]);
+    equal(set.map(mark => [mark.type.name, mark.value]), [
+        ['bold', true],
+        ['color', 'blue'],
+        ['link', true],
+    ]);
+    truthy(Object.isFrozen(set));
+    equal(markSet([link.create(), code.create()]).map(mark => mark.type.name), ['link'],
+        'A directional exclusion must win independently of input order');
+    truthy(Object.isFrozen(markSet([])));
+    throws(() => markSet(null), TypeError);
+    throws(() => markSet([{}]), TypeError);
 });

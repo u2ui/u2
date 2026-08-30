@@ -343,7 +343,7 @@ Marks separate formatting meaning from its HTML representation. This adapter
 uses a `span` for bare text but may reuse any fully selected inline element:
 
 ```js
-import {MarkAdapter, MarkType, PendingMarks, applyMark, removeMark} from './rte.js';
+import {MarkAdapter, MarkType, PendingMarks, applyMark, removeMark, setMarks} from './rte.js';
 
 const x = new MarkType('x');
 const xHtml = new MarkAdapter(x, {
@@ -371,24 +371,49 @@ joins adjacent canonical `<span class="x">` wrappers.
 the mark, `false` when none has it, and `'mixed'` when only part has it. Toggle
 removes an active mark and applies it to inactive or mixed selections. At a
 caret, state reports whether the caret's DOM position is structurally inside
-the mark. Toggling there changes the next ordinary text input, then returns to
-native input. Moving the selection cancels that pending override without an
-additional listener.
+the mark. Toggling there changes the next ordinary text input or completed IME
+composition, then returns to native input. Composition itself is never
+prevented or rewritten. Moving the selection cancels that pending override
+without an additional selection listener.
 
-### Bold
-
-Bold is the first ready-made semantic adapter. It accepts existing `<strong>`
-and `<b>`, creates canonical `<strong>`, and removes either wrapper:
+When an operation owns a complete formatting state, register one closed
+adapter universe and pass its target marks as the command value:
 
 ```js
-import {boldHtml} from './rte.js';
-
-commands.add('bold', pending.toggle(boldHtml));
+commands.add('marks', setMarks([boldHtml, colorHtml]));
+commands.run('marks', {value: [bold.create(), color.create('blue')]});
 ```
 
-Use the same `PendingMarks` instance as the other caret marks and register its
-`insertText` command only once. Removing bold unwraps a bare semantic element;
-unrelated attributes survive on a neutral `span`.
+This removes configured marks absent from the target, resolves exclusions, and
+applies the canonical set atomically. Exact canonical wrappers are ordered by
+mark rank, redundant nesting is removed, and equivalent nested runs merge to a
+fixed point. Additional attributes, atomic content, nested editors, and
+unlisted adapters remain untouched. `commands.state('marks')` returns the
+current mark array, `'mixed'`, or `null`.
+
+### Standard HTML marks
+
+Bold, italic, underline, strike, code, and link ship as ordinary mark types with
+replaceable default HTML adapters:
+
+```js
+import {
+    boldHtml, codeHtml, italicHtml, linkHtml, strikeHtml, underlineHtml,
+} from './rte.js';
+
+commands.add('bold', pending.toggle(boldHtml));
+commands.add('italic', pending.toggle(italicHtml));
+commands.add('code', pending.toggle(codeHtml));
+commands.add('link', pending.toggle(linkHtml, {href: '/docs'}));
+```
+
+Use the same `PendingMarks` instance and register its `insertText` command only
+once. Boolean adapters recognize `strong`/`b`, `em`/`i`, `u`, `s`/`strike`, and
+`code`, then emit `strong`, `em`, `u`, `s`, and `code`. Links recognize
+`a[href]` and use `{href, target?, rel?, title?}`. The adapter validates this
+shape but deliberately leaves URL schemes to the application; pasted HTML goes
+through the separate sanitizer policy. Removing a bare semantic element unwraps
+it, while unrelated attributes survive on a neutral `span`.
 
 ## Roaming toolbar
 
@@ -524,10 +549,10 @@ Being explicit is cheaper than surprising you:
 - **No undo/redo.** Editor mutations do not go through the browser's editing
   commands, so the native undo stack no longer matches the document after the
   first repair. A history module owns this and does not exist yet.
-- **No complete ready-made formatting set yet.** Generic range commands can
-  apply, remove, query, and toggle one configured mark, including pending marks
-  at a caret. Bold and optional staged Unstyle are shipped; italic, code, and
-  links are not.
+- **No ready-made link-entry UI yet.** The standard mark types and HTML adapters
+  are available, but the convention client intentionally exposes only Bold.
+  Applications decide how URLs are entered and validated before registering a
+  link command or control.
 - **No complete deletion or general list commands.** Backspace and Delete at a
   mergeable block boundary are explicit; ordinary character deletion stays
   native. Selected-range deletion, list creation, indent, and outdent remain open.
@@ -540,13 +565,15 @@ Being explicit is cheaper than surprising you:
   styled Bold control plus optional block-style and visible-break extensions;
   the standalone roaming binder still leaves markup, theme, placement, and
   command sets to the application. Static bindings and menu state are open.
-- **The 361-test baseline is verified in Chromium, Firefox, and WebKit.** The
-  current runner adds later list,
+- **The verified 379-test baseline covers Chromium 152, Firefox 154, and
+  WebKitGTK 2.52.5.** It adds
+  later list,
   mark, toolbar, normalization, convention-client, optional-module, block-style,
   heading Enter, structural deletion, range geometry, element policy, extension
   lifecycle, top-layer toolbar, visible-break, sanitizing-policy, selection-only
-  toolbar, Unstyle, mapped fragment replacement, and post-native import cleanup.
-  The current 364-test revision is verified in Chromium 152; Firefox and WebKit
-  still need the three new cases.
+  toolbar, Unstyle, mapped fragment replacement, post-native import cleanup,
+  and composition-aware pending marks.
+  Standard HTML mark coverage raises the current runner to 381 tests;
+  cross-browser verification of that revision is pending.
 
 [`../PLAN.md`](../PLAN.md) tracks what lands next.

@@ -21,8 +21,12 @@ adapters. Generic non-collapsed range commands now apply and remove one mark,
 including reusable inline elements and neutral-span cleanup, without
 `execCommand()`. Selection and caret state, toggle, and pending ordinary text
 input are implemented. Adapters can explicitly remove semantic wrappers while
-preserving unrelated attributes, and the ready-made bold adapter exercises the
-whole path; complete mark sets and composition input are next.
+preserving unrelated attributes, and the standard HTML adapters for bold,
+italic, underline, strike, code, and links exercise the whole path. Pending
+overrides now carry through native IME composition without
+intercepting its mutations. Complete mark sets now resolve exclusions, remove
+configured values absent from an exact target, and apply their canonical result
+inside one mapped operation.
 
 The 201-test mark-algebra baseline was confirmed in current Chromium, Firefox,
 and WebKit. The 233-test pending-mark baseline passes in current Chromium,
@@ -37,9 +41,11 @@ for normalization, commands, and toolbar choices. The current lifecycle and
 visible-break extension, sanitizing policy/native adapter, selection-only
 toolbar mode, staged Unstyle policy/command, mapped context-aware fragment
 replacement, fail-closed rich paste/drop composition, and mapped post-native
-presentation cleanup raise the runner to 364 tests.
-This revision passes in Chromium 152; Firefox and WebKit still have to confirm
-the three new tests.
+presentation cleanup and composition-aware pending marks raise the verified
+runner to 369 tests. Complete mark-set coverage raises the current runner to
+375 tests. Nested canonical mark coverage raises the current runner to 379
+tests. Standard HTML mark coverage raises the current runner to 381 tests;
+cross-browser verification of that revision is pending.
 Treat the number shown by `/u2/js/rte2/tests/` as authoritative.
 
 ## 0. Foundation
@@ -137,23 +143,27 @@ and render canonical wrappers for semantic tags, classes, attributes, styles,
 and custom policies. Generic commands apply and remove one configured mark over
 arbitrary non-collapsed ranges, preserve selection direction, reuse suitable
 inline elements, join adjacent canonical wrappers, clean up neutral spans, and
-derive selection or structural caret state for toggle. Complete mark-set
-conflicts, composition input, nested merging, and formatting other than bold
-remain open. `PendingMarks` stores caret overrides per surface without another
-listener and routes only the next ordinary `insertText` through mapped input.
-The ready-made bold adapter recognizes `<strong>` and `<b>`, renders canonical
-`<strong>`, and explicitly removes its semantic wrapper.
+derive selection or structural caret state for toggle. A closed adapter
+universe can now report and set exact canonical mark sets while resolving type
+conflicts in the same transaction. Redundant nesting is removed, canonical
+single-child wrappers follow mark rank, and newly exposed siblings merge to a
+fixed point without crossing meaningful or atomic boundaries. Formatting other
+than the standard HTML policies remains application-defined.
+`PendingMarks` routes ordinary `insertText` through mapped input and applies the
+same caret overrides to a live native composition range only after IME ends.
+The ready-made adapters cover bold, italic, underline, strike, code, and links.
+They render one canonical tag, remove their semantic wrappers explicitly, and
+preserve unrelated attributes. Links use a small structured value without
+coupling URL policy to mark representation.
 
 - Apply, remove, and toggle over arbitrary ranges without
   `document.execCommand()`.
 - Support semantic elements, class tokens, attributes, style declarations, and
   custom mark adapters through one algebra.
-- Extend pending collapsed marks through composition without interrupting IME.
 - Split boundaries minimally; merge equivalent siblings; eliminate redundant,
   conflicting, or empty wrappers.
-- Implement italic, underline, strike, code, and link like the existing bold
-  adapter as ordinary registered commands. Staged remove-format is implemented
-  separately as Unstyle because it spans multiple mark representations.
+- Keep staged remove-format separate as Unstyle because it spans multiple mark
+  representations. A future link-control module owns URL entry and validation.
 
 Tests combine partial text, multiple blocks, nested marks, overlapping removal,
 backward selections, atomic content, repeated toggles, and exact undo.

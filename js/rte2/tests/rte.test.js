@@ -24,6 +24,8 @@ import {
     applyMark,
     bold,
     boldHtml,
+    code,
+    codeHtml,
     deleteBackward,
     deleteForward,
     elementPresets,
@@ -31,10 +33,20 @@ import {
     inputRange,
     inputTrigger,
     insertFragment,
+    italic,
+    italicHtml,
+    link,
+    linkHtml,
+    markSet,
     rangeRect,
     removeMark,
     rte,
+    setMarks,
+    strike,
+    strikeHtml,
     toggleMark,
+    underline,
+    underlineHtml,
     unstyleCommand,
 } from '../rte.js';
 import {same, test, truthy} from './harness.js';
@@ -60,6 +72,8 @@ test('public API: exports the foundation and one default document core', () => {
     truthy(applyMark);
     truthy(bold);
     truthy(boldHtml);
+    truthy(code);
+    truthy(codeHtml);
     truthy(deleteBackward);
     truthy(deleteForward);
     truthy(elementPresets.article);
@@ -68,9 +82,19 @@ test('public API: exports the foundation and one default document core', () => {
     truthy(inputRange);
     truthy(inputTrigger);
     truthy(insertFragment);
+    truthy(italic);
+    truthy(italicHtml);
+    truthy(link);
+    truthy(linkHtml);
+    truthy(markSet);
     truthy(rangeRect);
     truthy(removeMark);
+    truthy(setMarks);
+    truthy(strike);
+    truthy(strikeHtml);
     truthy(toggleMark);
+    truthy(underline);
+    truthy(underlineHtml);
     truthy(Unstyle);
     truthy(unstyleCommand);
     truthy(RepairPlanner);

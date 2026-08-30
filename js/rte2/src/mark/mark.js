@@ -1,4 +1,12 @@
 const DEFAULT = Symbol('default mark value');
+const EMPTY = Object.freeze([]);
+
+export function markSet(marks) {
+    assertSet(marks);
+    let set = EMPTY;
+    for (const mark of marks) set = mark.add(set);
+    return set;
+}
 
 export class MarkType {
     #name;

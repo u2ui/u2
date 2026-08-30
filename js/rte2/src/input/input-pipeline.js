@@ -129,6 +129,7 @@ export class InputPipeline {
         this.#surface.capture();
         if (event.defaultPrevented) return;
         if (this.#route(event)) return;
+        this.#clearPending();
         const pending = {
             inputType: event.inputType || '',
             range: inputRange(event, this.#surface),
@@ -314,7 +315,8 @@ function importRoots(nodes, root, preserve) {
         if (!preserve.has(node)) elements.add(node);
         for (const child of node.querySelectorAll('*')) if (!preserve.has(child)) elements.add(child);
     }
-    return [...elements].filter(node => ![...elements].some(parent => parent !== node && parent.contains(node)));
+    const added = [...elements];
+    return added.filter(node => !added.some(parent => parent !== node && parent.contains(node)));
 }
 
 function configuredModel(model, elements) {

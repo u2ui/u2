@@ -1,5 +1,5 @@
 import {MarkAdapter} from '../mark/dom-adapter.js';
-import {Mark} from '../mark/mark.js';
+import {Mark, markSet} from '../mark/mark.js';
 import {EditRange} from '../selection/range/edit-range.js';
 import {Point} from '../selection/point/point.js';
 
@@ -29,21 +29,42 @@ export function toggleMark(adapter, value) {
     };
 }
 
+export function setMarks(adapters) {
+    const known = adapterSet(adapters);
+    return {
+        enabled(edit) {
+            const target = targetSet(edit.value, known);
+            return selected(edit) && !!target && target.every(mark => {
+                const adapter = known.get(mark.type);
+                return markState(edit, adapter, mark) === true || canApply(edit, adapter, mark);
+            });
+        },
+        state: edit => setState(edit, [...known.values()]),
+        run(edit) {
+            const target = targetSet(edit.value, known);
+            if (!target) return [];
+            const removals = [];
+            for (const adapter of known.values()) {
+                const kept = target.filter(mark => mark.type === adapter.type);
+                for (const mark of marksIn(edit, adapter)) {
+                    if (!kept.some(item => item.equals(mark))) removals.push([adapter, mark]);
+                }
+            }
+            return change(edit, removals, target.map(mark => [known.get(mark.type), mark]));
+        },
+    };
+}
+
 function applyCommand(adapter, mark) {
     return {
         enabled: edit => selected(edit)
             && (markState(edit, adapter, mark) === true || canApply(edit, adapter, mark)),
         state: edit => markState(edit, adapter, mark),
         run(edit) {
-            const state = prepare(edit);
-            const changed = new Set(apply(edit, adapter, mark, state.range));
-            state.range = mappedRange(edit, state);
-            for (const [left, right] of merge(edit, adapter, mark, state.range)) {
-                changed.delete(right);
-                changed.add(left);
-            }
-            restore(edit, state);
-            return [...changed];
+            const removals = marksIn(edit, adapter)
+                .filter(current => !current.equals(mark) && current.conflicts(mark))
+                .map(current => [adapter, current]);
+            return change(edit, removals, [[adapter, mark]]);
         },
     };
 }
@@ -53,15 +74,48 @@ function removeCommand(adapter, mark) {
     return {
         enabled: edit => selected(edit) && markState(edit, adapter, mark) !== false,
         state: edit => markState(edit, adapter, mark),
-        run(edit) {
-            const state = prepare(edit);
-            isolate(edit, adapter, mark, state);
-            state.range = mappedRange(edit, state);
-            const changed = remove(edit, adapter, mark, state.range);
-            restore(edit, state);
-            return changed;
-        },
+        run: edit => change(edit, [[adapter, mark]]),
     };
+}
+
+function change(edit, removals = [], applications = []) {
+    const state = prepare(edit);
+    const changed = new Set();
+    for (const [adapter, mark] of removals) {
+        isolate(edit, adapter, mark, state);
+        state.range = mappedRange(edit, state);
+        for (const element of remove(edit, adapter, mark, state.range)) changed.add(element);
+        state.range = mappedRange(edit, state);
+    }
+    for (const [adapter, mark] of applications) {
+        for (const element of apply(edit, adapter, mark, state.range)) changed.add(element);
+        state.range = mappedRange(edit, state);
+    }
+    canonicalize(edit, applications, state, changed);
+    restore(edit, state);
+    return [...changed];
+}
+
+function canonicalize(edit, applications, state, changed) {
+    const entries = applications.map(([adapter, mark], order) => ({
+        adapter,
+        mark,
+        order,
+        pattern: adapter.render(mark, edit.document),
+    }));
+    while (entries.length) {
+        state.range = mappedRange(edit, state);
+        if (dedupe(edit, entries, state.range, changed) || reorder(edit, entries, state.range, changed)) continue;
+        let merged = false;
+        for (const {adapter, mark, pattern} of entries) {
+            for (const [left, right] of merge(edit, adapter, mark, pattern, state.range)) {
+                changed.delete(right);
+                changed.add(left);
+                merged = true;
+            }
+        }
+        if (!merged) break;
+    }
 }
 
 function selected(edit) {
@@ -75,11 +129,27 @@ function canApply(edit, adapter, mark) {
         if (!node.data || blocked(edit, node) || has(edit, adapter, mark, node)) continue;
         for (let element = node.parentElement; element && element !== edit.element; element = element.parentElement) {
             if (edit.model.block(element) || boundary(element)) break;
+            const current = adapter.parse(element);
+            if (current && current.conflicts(mark) && allowsAfterClear(edit, adapter, current, element, wrapper)) return true;
             if (covered(edit.range, element) && reusable(edit, adapter, element)) return true;
         }
         if (edit.model.allows(node.parentNode, wrapper)) return true;
     }
     return false;
+}
+
+function allowsAfterClear(edit, adapter, mark, element, wrapper) {
+    if (!adapter.removable) return false;
+    const cleared = element.cloneNode(false);
+    const unwrap = adapter.clear(cleared, mark);
+    let parent = cleared;
+    if (unwrap && cleared.attributes.length && cleared.localName !== 'span') {
+        parent = edit.document.createElement('span');
+        for (const attribute of cleared.attributes) parent.setAttribute(attribute.name, attribute.value);
+    } else if (unwrap && !cleared.attributes.length) {
+        parent = element.parentNode;
+    }
+    return edit.model.allows(parent, wrapper);
 }
 
 function markState(edit, adapter, mark) {
@@ -96,6 +166,50 @@ function markState(edit, adapter, mark) {
         if (active && inactive) return 'mixed';
     }
     return active;
+}
+
+function setState(edit, adapters) {
+    if (!edit.range) return null;
+    if (edit.range.collapsed) return marksAt(edit, adapters, edit.range.start.node);
+    let state = null;
+    for (const node of edit.range.textNodes()) {
+        if (!node.data || blocked(edit, node)) continue;
+        const marks = marksAt(edit, adapters, node);
+        if (state && !sameSet(state, marks)) return 'mixed';
+        state = marks;
+    }
+    return state;
+}
+
+function marksAt(edit, adapters, node) {
+    if (blocked(edit, node)) return markSet([]);
+    const elements = [];
+    for (let element = parentElement(node); element && element !== edit.element; element = element.parentElement) {
+        if (boundary(element) || edit.model.block(element)) break;
+        elements.push(element);
+    }
+    const marks = [];
+    for (const element of elements.reverse()) {
+        for (const adapter of adapters) {
+            const mark = adapter.parse(element);
+            if (mark) marks.push(mark);
+        }
+    }
+    return markSet(marks);
+}
+
+function marksIn(edit, adapter) {
+    const marks = [];
+    if (!edit.range) return marks;
+    for (const node of edit.range.textNodes()) {
+        if (!node.data || blocked(edit, node)) continue;
+        for (let element = node.parentElement; element && element !== edit.element; element = element.parentElement) {
+            if (boundary(element) || edit.model.block(element)) break;
+            const mark = adapter.parse(element);
+            if (mark && !marks.some(item => item.equals(mark))) marks.push(mark);
+        }
+    }
+    return marks;
 }
 
 function apply(edit, adapter, mark, range) {
@@ -115,6 +229,10 @@ function apply(edit, adapter, mark, range) {
             if (node.nodeType !== Node.ELEMENT_NODE || boundary(node) || edit.model.atomic(node)) continue;
             if (covered(range, node) && reusable(edit, adapter, node)) {
                 const current = adapter.parse(node);
+                if (current && !current.conflicts(mark)) {
+                    visit(node);
+                    continue;
+                }
                 if (!current?.equals(mark)) {
                     if (current?.type === mark.type && adapter.removable) adapter.clear(node, current);
                     adapter.apply(node, mark);
@@ -161,8 +279,7 @@ function remove(edit, adapter, mark, range) {
     return changed;
 }
 
-function merge(edit, adapter, mark, range) {
-    const pattern = adapter.render(mark, edit.document);
+function merge(edit, adapter, mark, pattern, range) {
     const changed = [];
     const visit = parent => {
         for (const child of [...parent.children]) {
@@ -183,6 +300,78 @@ function merge(edit, adapter, mark, range) {
     };
     visit(edit.element);
     return changed;
+}
+
+function dedupe(edit, entries, range, changed) {
+    for (const element of elements(edit)) {
+        if (!range.intersects(element) || boundary(element) || edit.model.atomic(element)) continue;
+        const entry = representation(entries, element);
+        if (!entry || !marked(edit, entry.adapter, entry.mark, element.parentNode)) continue;
+        const parent = element.parentNode;
+        edit.map.unwrap(element);
+        joinText(edit, parent);
+        edit.transaction.touch(parent);
+        changed.delete(element);
+        changed.add(parent);
+        return true;
+    }
+    return false;
+}
+
+function reorder(edit, entries, range, changed) {
+    for (const parent of elements(edit)) {
+        if (!range.intersects(parent) || boundary(parent) || edit.model.atomic(parent)) continue;
+        if (parent.childNodes.length !== 1 || parent.firstChild.nodeType !== Node.ELEMENT_NODE) continue;
+        const child = parent.firstChild;
+        const outer = representation(entries, parent);
+        const inner = representation(entries, child);
+        if (!outer || !inner || outer.order <= inner.order || !swappable(edit, parent, child)) continue;
+        const grand = parent.parentNode;
+        edit.map.unwrap(parent);
+        edit.map.wrap([...child.childNodes], parent);
+        edit.transaction.touch(grand).touch(child).touch(parent);
+        changed.add(child).add(parent);
+        return true;
+    }
+    return false;
+}
+
+function representation(entries, element) {
+    let found = null;
+    for (const entry of entries) {
+        if (!canonical(entry.adapter, entry.mark, entry.pattern, element)) continue;
+        if (found) return null;
+        found = entry;
+    }
+    return found;
+}
+
+function swappable(edit, parent, child) {
+    return inline(edit, parent)
+        && inline(edit, child)
+        && edit.model.allows(parent.parentNode, child)
+        && edit.model.allows(child, parent)
+        && [...child.childNodes].every(node => edit.model.allows(parent, node));
+}
+
+function elements(edit) {
+    const found = [];
+    const visit = parent => {
+        for (const child of parent.children) {
+            found.push(child);
+            if (!boundary(child) && !edit.model.atomic(child)) visit(child);
+        }
+    };
+    visit(edit.element);
+    return found;
+}
+
+function joinText(edit, parent) {
+    for (let node = parent.firstChild; node;) {
+        const next = node.nextSibling;
+        if (node.nodeType === Node.TEXT_NODE && next?.nodeType === Node.TEXT_NODE) edit.map.mergeText(node, next);
+        else node = next;
+    }
 }
 
 function canonical(adapter, mark, pattern, element) {
@@ -305,6 +494,27 @@ function concrete(adapter, value) {
     const mark = value instanceof Mark ? value : adapter.type.create(value);
     if (mark.type !== adapter.type) throw new TypeError('A mark command requires the adapter\'s mark type');
     return mark;
+}
+
+function adapterSet(adapters) {
+    if (!Array.isArray(adapters) || !adapters.length) throw new TypeError('A mark set command requires adapters');
+    const known = new Map();
+    for (const adapter of adapters) {
+        if (!(adapter instanceof MarkAdapter)) throw new TypeError('A mark set command requires mark adapters');
+        if (!adapter.removable) throw new TypeError('A mark set adapter requires a clear policy');
+        if (known.has(adapter.type)) throw new RangeError('A mark set command requires one adapter per mark type');
+        known.set(adapter.type, adapter);
+    }
+    return known;
+}
+
+function targetSet(value, adapters) {
+    if (!Array.isArray(value) || value.some(mark => !(mark instanceof Mark) || !adapters.has(mark.type))) return null;
+    return markSet(value);
+}
+
+function sameSet(left, right) {
+    return left.length === right.length && left.every((mark, index) => mark.equals(right[index]));
 }
 
 function boundary(element) {

@@ -1,6 +1,6 @@
 import {Edit} from './edit.js';
 import {applyMark, removeMark, toggleMark} from './mark.js';
-import {isPlainTextHost} from '../selection/ownership/ownership.js';
+import {editingHost, isPlainTextHost} from '../selection/ownership/ownership.js';
 import {Mark} from '../mark/mark.js';
 import {Point} from '../selection/point/point.js';
 
@@ -12,6 +12,8 @@ export class PendingMarks {
     #selection = null;
     #entries = new Map();
     #insertText;
+    #composition = null;
+    #controller;
 
     constructor(surface) {
         if (surface?.element?.nodeType !== Node.ELEMENT_NODE || typeof surface?.capture !== 'function') {
@@ -23,10 +25,17 @@ export class PendingMarks {
             enabled: edit => this.#current(edit) && typeof edit.data === 'string' && !!edit.data,
             run: edit => this.#insert(edit),
         };
+        const root = surface.element;
+        this.#controller = new root.ownerDocument.defaultView.AbortController();
+        const listen = {signal: this.#controller.signal};
+        root.addEventListener('compositionstart', this.#compositionStart, listen);
+        root.addEventListener('compositionend', this.#compositionEnd, listen);
+        surface.addEventListener('u2-rte-disconnect', () => this.dispose(), listen);
     }
 
     get surface() { return this.#surface; }
     get insertText() { return this.#insertText; }
+    get connected() { return !this.#controller.signal.aborted; }
 
     toggle(adapter, value) {
         const hasValue = arguments.length > 1;
@@ -51,7 +60,7 @@ export class PendingMarks {
                 const active = (this.#entry(edit, key)?.active ?? base) !== true;
                 this.#prepare(edit);
                 if (active === base) this.#entries.delete(key);
-                else this.#entries.set(key, {active, apply, remove, adapter, mark});
+                else this.#entries.set(key, {active, apply, remove, adapter, mark, model: edit.model});
                 return active;
             },
         };
@@ -60,6 +69,17 @@ export class PendingMarks {
     clear() {
         this.#selection = null;
         this.#entries.clear();
+        this.#composition = null;
+    }
+
+    dispose() {
+        if (!this.connected) return;
+        this.#controller.abort();
+        this.clear();
+    }
+
+    [Symbol.dispose]() {
+        this.dispose();
     }
 
     #insert(edit) {
@@ -99,11 +119,69 @@ export class PendingMarks {
     }
 
     #owns(edit) {
-        return edit?.surface === this.#surface && !isPlainTextHost(this.#surface.element);
+        return this.connected && edit?.surface === this.#surface && !isPlainTextHost(this.#surface.element);
     }
 
     #assert(edit) {
         if (!this.#owns(edit)) throw new RangeError('Pending marks belong to one rich-text surface');
+    }
+
+    #compositionStart = event => {
+        if (!this.#ownsEvent(event)) return;
+        const edit = new Edit(this.#surface);
+        const entries = [...this.#entries.values()];
+        if (!edit.range?.collapsed || this.#selection !== this.#surface.selection || !entries.length) return;
+        this.#composition = {
+            start: edit.range.start.withAffinity('backward'),
+            entries,
+        };
+    };
+
+    #compositionEnd = event => {
+        if (!this.#ownsEvent(event) || !this.#composition) return;
+        const {start, entries} = this.#composition;
+        this.#composition = null;
+        const current = new Edit(this.#surface).range;
+        if (!current?.collapsed || !start.within(this.#surface.element)) {
+            this.clear();
+            return;
+        }
+        const end = current.end.withAffinity('forward');
+        if (start.compare(end) === 0) {
+            this.#selection = this.#surface.capture();
+            return;
+        }
+        if (start.compare(end) > 0) {
+            this.clear();
+            return;
+        }
+        const range = start.range();
+        range.setEnd(end.node, end.offset);
+        if (!range.toString()) {
+            this.clear();
+            return;
+        }
+        this.clear();
+        this.#surface.transact(transaction => {
+            let active = range;
+            for (const entry of entries) {
+                const edit = new Edit(this.#surface, transaction, {
+                    model: entry.model,
+                    range: active,
+                    inputType: 'insertCompositionText',
+                    data: typeof event.data === 'string' ? event.data : null,
+                });
+                (entry.active ? entry.apply : entry.remove).run(edit);
+                active = this.#surface.core.selection.getRangeAt(0).cloneRange();
+            }
+            const edit = new Edit(this.#surface, transaction, {range: active});
+            edit.select(edit.range.end);
+        }, {trigger: 'input', inputType: 'insertCompositionText', composition: true});
+    };
+
+    #ownsEvent(event) {
+        const target = event.composedPath()[0];
+        return target === this.#surface.element || editingHost(target) === this.#surface.element;
     }
 }
 

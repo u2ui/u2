@@ -7,16 +7,23 @@ export {deleteBackward, deleteForward} from './src/command/delete.js';
 export {Edit} from './src/command/edit.js';
 export {enter, lineBreak} from './src/command/enter.js';
 export {insertFragment} from './src/command/fragment.js';
-export {applyMark, removeMark, toggleMark} from './src/command/mark.js';
+export {applyMark, removeMark, setMarks, toggleMark} from './src/command/mark.js';
 export {PendingMarks} from './src/command/pending-marks.js';
 export {unstyleCommand} from './src/command/unstyle.js';
 export {config, elementPresets, enabled, hostDefaults} from './src/config/config.js';
 export {Rte} from './src/core/core.js';
 export {ExternalInput} from './src/input/external-input.js';
 export {InputPipeline, inputRange, inputTrigger} from './src/input/input-pipeline.js';
-export {bold, boldHtml} from './src/mark/bold.js';
+export {
+    bold, boldHtml,
+    code, codeHtml,
+    italic, italicHtml,
+    link, linkHtml,
+    strike, strikeHtml,
+    underline, underlineHtml,
+} from './src/mark/standard.js';
 export {MarkAdapter} from './src/mark/dom-adapter.js';
-export {Mark, MarkType} from './src/mark/mark.js';
+export {Mark, MarkType, markSet} from './src/mark/mark.js';
 export {ContentModel} from './src/model/content-model.js';
 export {createHtmlModel, htmlModel} from './src/model/html/html-model.js';
 export {RepairPlanner} from './src/normalize/repair/repair-planner.js';
