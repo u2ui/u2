@@ -1,5 +1,5 @@
 import {EditRange} from '../selection/range/edit-range.js';
-import {Point} from '../selection/point/point.js';
+import {Point, indexOf} from '../selection/point/point.js';
 
 // Inserts only an already prepared DOM fragment. Parsing, security sanitizing,
 // presentation cleanup, and clipboard access remain outside this command.
@@ -74,6 +74,3 @@ function childBoundary(point) {
     return {parent, offset: index + (point.offset === point.node.length ? 1 : 0)};
 }
 
-function indexOf(node) {
-    return Array.prototype.indexOf.call(node.parentNode.childNodes, node);
-}

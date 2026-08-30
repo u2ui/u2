@@ -1,6 +1,7 @@
 import {EditRange} from '../selection/range/edit-range.js';
+import {elementOf, isEditingBoundary} from '../selection/ownership/ownership.js';
 import {Point} from '../selection/point/point.js';
-import {Unstyle, defaultUnstyle} from '../unstyle/unstyle.js';
+import {Unstyle, declared, defaultUnstyle, removable, strip} from '../unstyle/unstyle.js';
 
 export function unstyleCommand(policy = defaultUnstyle) {
     if (!(policy instanceof Unstyle)) throw new TypeError('An unstyle command requires a policy');
@@ -33,7 +34,7 @@ function targets(edit, level, range, preview = false) {
     const result = [];
     const visit = parent => {
         for (const element of parent.children) {
-            if (boundary(element) || !range.intersects(element)) continue;
+            if (isEditingBoundary(element) || !range.intersects(element)) continue;
             if (!edit.model.atomic(element)) visit(element);
             if (!applicable(edit, level, element)) continue;
             if (covered(range, element) || preview && inline(edit, element)) result.push(element);
@@ -45,7 +46,7 @@ function targets(edit, level, range, preview = false) {
 
 function clear(edit, level, element) {
     const parent = element.parentNode;
-    for (const name of level.attributes) element.removeAttribute(name);
+    strip(level, element, kept(edit));
     const unwrap = level.elements.includes(element.localName)
         || element.localName === 'span' && !element.attributes.length;
     if (unwrap && inline(edit, element)) edit.map.unwrap(element);
@@ -78,16 +79,24 @@ function isolate(edit, level, point) {
 
 function matchingWrapper(edit, level, node) {
     let found = null;
-    for (let element = parentElement(node); element && element !== edit.element; element = element.parentElement) {
-        if (boundary(element) || !inline(edit, element)) break;
+    for (let element = elementOf(node); element && element !== edit.element; element = element.parentElement) {
+        if (isEditingBoundary(element) || !inline(edit, element)) break;
         if (applicable(edit, level, element)) found = element;
     }
     return found;
 }
 
 function applicable(edit, level, element) {
-    return level.attributes.some(name => element.hasAttribute(name))
-        || level.elements.includes(element.localName) && inline(edit, element);
+    const keep = kept(edit);
+    return level.attributes.some(name => removable(name, element, keep))
+        || level.elements.includes(element.localName) && !declared(element, keep) && inline(edit, element);
+}
+
+// The host's content classes survive a remove-format action, exactly as they
+// survive paste cleanup.
+function kept(edit) {
+    const names = edit.config.classes;
+    return names.length ? new Set(names) : null;
 }
 
 function covered(range, element) {
@@ -100,7 +109,7 @@ function covered(range, element) {
 }
 
 function inline(edit, element) {
-    return element !== edit.element && !boundary(element)
+    return element !== edit.element && !isEditingBoundary(element)
         && !edit.model.block(element) && !edit.model.atomic(element);
 }
 
@@ -125,10 +134,3 @@ function atEdge(point, element, edge) {
     return offset === (edge === 'start' ? 0 : element.childNodes.length);
 }
 
-function boundary(element) {
-    return element.hasAttribute('contenteditable');
-}
-
-function parentElement(node) {
-    return node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
-}

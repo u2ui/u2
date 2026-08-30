@@ -1,3 +1,4 @@
+import {elementOf} from '../selection/ownership/ownership.js';
 import {Point} from '../selection/point/point.js';
 import {blank, blockEdge, emptyBlock, fill} from './block-boundary.js';
 
@@ -28,7 +29,7 @@ export const lineBreak = {
 // native behavior in those cases.
 function editable(edit) {
     if (!edit.range?.collapsed) return false;
-    for (let element = closest(edit.range.start.node); element && element !== edit.element; element = element.parentElement) {
+    for (let element = elementOf(edit.range.start.node); element && element !== edit.element; element = element.parentElement) {
         if (edit.model.atomic(element)) return false;
     }
     return true;
@@ -51,7 +52,7 @@ function ancestor(edit, match) {
         const tags = match;
         match = element => tags.includes(element.localName);
     }
-    for (let element = closest(edit.range.start.node); element && element !== edit.element; element = element.parentElement) {
+    for (let element = elementOf(edit.range.start.node); element && element !== edit.element; element = element.parentElement) {
         if (match(element) && edit.model.allows(element.parentElement, element)) return element;
     }
     return null;
@@ -60,7 +61,7 @@ function ancestor(edit, match) {
 function exitList(edit) {
     const {enter: mode, block: tag} = edit.config;
     if (!tag || mode !== 'block' && mode !== 'item') return null;
-    let item = closest(edit.range.start.node);
+    let item = elementOf(edit.range.start.node);
     while (item && item !== edit.element && item.localName !== 'li') item = item.parentElement;
     if (!item || item === edit.element || !emptyBlock(item, edit.model)) return null;
     const list = item.parentElement;
@@ -143,7 +144,7 @@ function insertBreak(edit) {
     const start = edit.range.start;
     const caret = new Point(start.node, start.offset, 'forward');
     edit.map.add(caret);
-    const parent = closest(start.node);
+    const parent = elementOf(start.node);
     const index = edit.map.split(parent, start.node, start.offset);
     const separator = edit.document.createElement('br');
     edit.map.insert(parent, index, separator);
@@ -172,6 +173,3 @@ function block(edit, node) {
     return edit.element;
 }
 
-function closest(node) {
-    return node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
-}

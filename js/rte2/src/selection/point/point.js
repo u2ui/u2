@@ -76,6 +76,8 @@ function boundaryLength(node) {
     return typeof node.length === 'number' ? node.length : node.childNodes.length;
 }
 
-function indexOf(node) {
+// A node's child index in its parent. Child boundaries are expressed with it
+// throughout the engine, so it lives beside the point that names them.
+export function indexOf(node) {
     return Array.prototype.indexOf.call(node.parentNode.childNodes, node);
 }

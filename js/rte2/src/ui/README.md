@@ -118,6 +118,17 @@ per option or surface.
 - Markup, labels, localization, icons, layout, and placement are application
   policy and add no engine-side resources when no toolbar is constructed.
 
+## Placement
+
+`place(element, surface, {align, prefer})` is the one placement policy for every
+contextual UI. It anchors on the surface's saved selection through `rangeRect`,
+keeps the element inside the viewport, and falls to the other side when the
+preferred one does not fit. The roaming toolbar centres above the selection; the
+link form aligns to its start and prefers below.
+
+A select with no usable choice hides like a button whose command is unavailable:
+a control that cannot be used is not shown.
+
 ## TODO
 
 - Add a static-surface binding using the same item state rules.

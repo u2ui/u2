@@ -1,4 +1,4 @@
-import {Point} from '../point/point.js';
+import {Point, indexOf} from '../point/point.js';
 
 export class PointMap {
     #points = new Map();
@@ -305,6 +305,3 @@ function relocate(point, node, offset) {
     point.offset = offset;
 }
 
-function indexOf(node) {
-    return Array.prototype.indexOf.call(node.parentNode.childNodes, node);
-}

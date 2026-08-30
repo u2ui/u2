@@ -32,6 +32,8 @@ example.
   and a separator. The readout under that surface reports how many history
   entries exist and where it stands, which makes grouping visible — continuous
   typing coalesces into one entry, while each command is its own step.
+- Give a selection one of the host's declared content classes and watch the same
+  declaration drive the sanitizer and remove-format.
 - Create a link from a selection or edit an existing one from a caret through
   the contextual form, and remove one with the unlink control.
 - Open the surface's HTML in the modal source dialog, syntax highlighted through

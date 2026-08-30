@@ -69,6 +69,7 @@ export class ExternalInput {
             document: this.#root.ownerDocument,
             base: this.#root.ownerDocument.baseURI,
             elements: this.#surface.config.elements,
+            classes: this.#surface.config.classes.length ? this.#surface.config.classes : null,
         });
         if (fragment?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
             throw new TypeError('A sanitizer must return a DocumentFragment');
@@ -76,7 +77,9 @@ export class ExternalInput {
         const through = typeof this.#through === 'function'
             ? this.#through(Object.freeze({surface: this.#surface, inputType}))
             : this.#through;
-        if (through !== null && through !== 'none') this.#unstyle.clean(fragment, {through});
+        if (through !== null && through !== 'none') {
+            this.#unstyle.clean(fragment, {through, keep: this.#surface.config.classes});
+        }
         if (!fragment.childNodes.length) return [];
         return this.#commands.run(this.#command, {fragment, range, inputType});
     }

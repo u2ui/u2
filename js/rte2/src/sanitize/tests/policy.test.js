@@ -59,3 +59,19 @@ test('sanitize policy: malformed policies fail closed during construction', () =
     throws(() => new SanitizePolicy({protocols: {a: {href: ['java script']}}}), TypeError);
     throws(() => new SanitizePolicy({comments: 'false'}), TypeError);
 });
+
+test('sanitize policy: clean narrows classes to the declared content names', () => {
+    const policy = new SanitizePolicy();
+    const root = document.createElement('div');
+    root.innerHTML = '<p class="lead foreign">a</p><p class="foreign">b</p><p class="lead">c</p>';
+    policy.clean(root, {classes: ['lead']});
+    equal(root.innerHTML, '<p class="lead">a</p><p>b</p><p class="lead">c</p>');
+});
+
+test('sanitize policy: clean leaves classes alone when none are declared', () => {
+    const policy = new SanitizePolicy();
+    const root = document.createElement('div');
+    root.innerHTML = '<p class="anything else">a</p>';
+    policy.clean(root);
+    equal(root.innerHTML, '<p class="anything else">a</p>');
+});

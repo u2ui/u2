@@ -62,6 +62,14 @@ rich paste/drop events and direct HTML imports.
 - Sanitizing creates no editor state, listeners, or markers.
 - Policies do not mutate after construction.
 
+## Declared content classes
+
+`clean(root, {classes})` narrows the class attribute to the given names without
+touching the security policy. An application declares its content classes once
+through `--u2-rte-classes`; external HTML then cannot smuggle in classes the
+host does not know, and the same list drives the style control and presentation
+cleanup.
+
 ## TODO
 
 - Add contextual parsing for table and list insertion sites.

@@ -22,6 +22,13 @@ when focus reaches it; the client then installs its standard command registry
 and input pipeline. A default roaming toolbar is allocated only when the first
 rich-text surface becomes active. `plaintext-only` hosts stay completely native.
 
+The optional `classes.js` entry adds a content-class control. Its choices come
+from the host's `--u2-rte-classes`, so its toolbar select is filled per surface
+rather than at registration: a module control may declare `options` as a
+function of the surface, and the client refills that select before the toolbar
+is shown. The same declaration is what the sanitizer keeps and what
+presentation cleanup leaves alone.
+
 The optional `link.js` entry adds a contextual link editor. Its `link` command
 is an ordinary `valueMark`, so any other UI can drive the same create, change,
 and remove path; the module supplies one form, anchored at the selection, plus
@@ -60,7 +67,7 @@ the view was opened on.
 history to an application.
 
 Those defaults arrive as three ordinary modules — `history`, `marks`, and
-`structure` — registered before any surface exists. They use exactly the module
+`structure`, one file each — registered before any surface exists. They use exactly the module
 contract below and can be removed with `editor.delete('structure')`, so nothing
 about them is privileged. Every control they contribute is gated by
 `--u2-rte-toolbar`, so a host that lists only `bold` shows only Bold while the

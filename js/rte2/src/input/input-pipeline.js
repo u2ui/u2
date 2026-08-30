@@ -1,4 +1,5 @@
 import {htmlModel} from '../model/html/html-model.js';
+import {narrow} from '../command/edit.js';
 import {Normalizer} from '../normalize/normalizer/normalizer.js';
 import {PointMap} from '../selection/map/point-map.js';
 import {EditRange} from '../selection/range/edit-range.js';
@@ -72,7 +73,7 @@ export class InputPipeline {
         const settings = this.#surface.config;
         if (!settings.cleanOn.includes(trigger)) return null;
 
-        const model = this.#commands?.model || configuredModel(this.#model, settings.elements);
+        const model = this.#commands?.model || narrow(this.#model, settings.elements);
         const normalizer = new Normalizer(this.#root, {
             model,
             block: settings.block,
@@ -91,6 +92,7 @@ export class InputPipeline {
                         map,
                         transaction,
                         preserve: imported.preserve,
+                        keep: settings.classes,
                     }));
                 }
                 points = points.map(point => map.get(point));
@@ -330,6 +332,3 @@ function importRoots(nodes, root, preserve) {
     return added.filter(node => !added.some(parent => parent !== node && parent.contains(node)));
 }
 
-function configuredModel(model, elements) {
-    return elements === null || typeof model.withElements !== 'function' ? model : model.withElements(elements);
-}

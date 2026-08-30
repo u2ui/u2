@@ -1,5 +1,5 @@
 import {linkHtml} from '../mark/standard.js';
-import {rangeRect} from '../browser/range-rect.js';
+import {place} from '../ui/place.js';
 import {valueMark} from '../command/mark.js';
 
 const STYLE = `
@@ -108,7 +108,7 @@ function open(state, view) {
     const value = view.commands.state('link');
     fill(state, value && value !== 'mixed' ? value : null);
     show(form, true);
-    place(form, view.surface);
+    place(form, view.surface, {align: 'start', prefer: 'below'});
     form.querySelector('[name=href]')?.focus();
     return form;
 }
@@ -146,7 +146,7 @@ function close(state, surface = null) {
 function reposition(state, surface) {
     if (state.active?.surface !== surface) return;
     if (!surface.connected) return close(state, surface);
-    place(state.form, surface);
+    place(state.form, surface, {align: 'start', prefer: 'below'});
 }
 
 // A caret inside a link edits the whole link; a selection marks exactly itself.
@@ -256,16 +256,3 @@ function show(form, visible) {
     form.hidden = true;
 }
 
-function place(element, surface) {
-    const range = surface.selection?.range();
-    if (!range) return;
-    const anchor = rangeRect(range, {root: surface.element});
-    const view = element.ownerDocument.defaultView;
-    const box = element.getBoundingClientRect();
-    const gap = 8;
-    element.style.left = `${Math.max(gap, Math.min(view.innerWidth - box.width - gap, anchor.left))}px`;
-    const below = anchor.bottom + gap;
-    element.style.top = `${below + box.height + gap < view.innerHeight
-        ? below
-        : Math.max(gap, anchor.top - box.height - gap)}px`;
-}

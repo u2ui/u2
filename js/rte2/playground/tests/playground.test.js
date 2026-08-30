@@ -311,6 +311,18 @@ test('playground: the prototype toolbar offers the structure controls', () => wi
     equal(bullets.getAttribute('aria-pressed'), 'true');
 }));
 
+test('playground: the style list is filled from the host declaration', () => withPlayground(document => {
+    const editor = document.querySelector('#editor-prototype');
+    const paragraph = [...editor.querySelectorAll('p')].find(node => node.textContent.startsWith('Select a few'));
+    const text = paragraph.firstChild;
+    document.getSelection().setBaseAndExtent(text, 0, text, 6);
+    editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    const select = document.querySelector('[data-u2-rte-editor-toolbar] [data-control=style]');
+    equal([...select.options].slice(1).map(option => option.value), ['lead', 'caption', 'brandColor']);
+    equal(select.hidden, false);
+}));
+
 test('playground: the prototype reports its history state', () => withPlayground(document => {
     const editor = document.querySelector('#editor-prototype');
     const readout = document.querySelector('#history-state');

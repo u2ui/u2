@@ -52,8 +52,20 @@ model-placed element insertion, and the standard mark and structure convention
 modules raise the current runner to 427 tests. Atomic-block deletion,
 selection-owned history commands, and the HTML source responsibility with its
 dialog module raise the current runner to 452 tests. Value marks and the
-contextual link editor raise the current runner to 470 tests, confirmed in
-Chrome 152 and Firefox 154. WebKit verification of that revision is pending.
+contextual link editor raise the current runner to 470 tests. The CSS-declared
+content classes shared by the style control, the sanitizer, and presentation
+cleanup raise the current runner to 486 tests. One shared placement policy and
+its coverage raise it to 490 tests, confirmed in Chrome 152 and Firefox 154.
+WebKit verification of that revision is pending.
+
+A review pass consolidated four duplicated concepts into single definitions
+(`isEditingBoundary`, `elementOf`, `indexOf`, `narrow`), removed a duplicated
+availability check and a second placement policy, and made `edit.model` resolve
+lazily. Measured in Chrome 152: an availability check that does not consult the
+content model dropped from 10.0 to 1.8 µs, the list scan from 31.4 to 21.0 µs,
+and one toolbar refresh from 490 to 437 µs. A lazy `config()` was measured and
+rejected: building eight accessor descriptors costs more than parsing the values
+eagerly.
 Treat the number shown by `/u2/js/rte2/tests/` as authoritative.
 
 ## 0. Foundation
@@ -250,6 +262,12 @@ cleans the browser's inserted DOM without reading its HTML payload.
 - Resolve the surface's structural element policy once and use it as the upper
   bound for cleanup, command availability, paste/drop sanitizing, and toolbar
   choices. A sanitizer may narrow that policy but never broaden it.
+`--u2-rte-classes` declares the class names a host treats as content. It is one
+declaration with three consumers: the style control offers exactly those names,
+`SanitizePolicy.clean({classes})` keeps only those from external HTML, and
+`Unstyle` narrows the class attribute to them and leaves a wrapper carrying one,
+because a declared class is content rather than presentation.
+
 - Keep additional sanitizer adapters application-supplied behind the same
   policy contract unless a general engine use case requires one.
 - Define allowed global/per-element attributes, URL protocols, class/data
@@ -288,7 +306,11 @@ level changes only selected content; levels and labels are replaceable.
 - Publish command availability and active/mixed state as observable editor
   state.
 - Extend roaming controls beyond pressed buttons and command-valued selects to
-  menus and application-owned custom controls.
+  menus and application-owned custom controls. A select's `options` may already
+  be a function of the surface, so a control's choices can come from the host's
+  configuration; the client refills it before the toolbar is shown.
+- A select with no usable choice hides like a button whose command is
+  unavailable.
 - Implement static UIs bound to one surface; allow several UIs and command
   subsets to coexist.
 - Verify reusable placement policy across carets, ranges, writing modes, and

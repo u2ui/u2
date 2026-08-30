@@ -63,6 +63,12 @@ drop. The default removes classes and inline styles only from elements added by
 that input; `none` keeps native presentation. A custom `Unstyle` policy may
 provide other level names.
 
+`--u2-rte-classes` lists the class names the host treats as content. It is one
+declaration with three consumers: the style control offers exactly those names,
+the sanitizer keeps only those from external HTML, and presentation cleanup
+leaves them and their wrappers alone. A host that declares none behaves exactly
+as before.
+
 ## TODO
 
 - Add named sanitize-policy references when applications need CSS selection

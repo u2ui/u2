@@ -100,6 +100,19 @@ test('unstyle command: nested editable content stays isolated', () => withUnstyl
     equal(host.innerHTML, '<p>outer<span contenteditable=""><b class="x">inner</b></span></p>');
 }));
 
+test('unstyle command: the host\'s declared content classes survive', () => withUnstyle(
+    '<div contenteditable style="--u2-rte-classes: lead"><p><span class="lead pasted">one</span> two</p></div>',
+    ({commands, host}) => {
+        const span = host.querySelector('span');
+        getSelection().setBaseAndExtent(span.firstChild, 0, host.querySelector('p').lastChild, 4);
+        equal(commands.state('unstyle'), 'classes');
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p><span class="lead">one</span> two</p>');
+        equal(commands.state('unstyle'), null,
+            'The wrapper carrying a declared class is content, not formatting');
+    }
+));
+
 function withUnstyle(html, run) {
     return withFixture(html, root => {
         const core = new Rte(document, {auto: false});

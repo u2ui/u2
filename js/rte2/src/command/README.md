@@ -68,6 +68,11 @@ own object under the same name, or register commands the engine never ships.
 - `Commands.model` narrows its base model through the surface's current
   `--u2-rte-elements` policy. Availability and execution therefore make the
   same structural decision as cleanup.
+- `edit.model` resolves that narrowing on first use. Reading the host
+  configuration is the expensive part and most availability checks never
+  consult the model, so a toolbar refresh does not pay for every control that
+  does not care. `narrow(model, elements)` is the one place applying the
+  policy; the input pipeline and the source view use it too.
 
 ## Enter
 

@@ -117,6 +117,13 @@ test('source: writing sanitizes and narrows to the host elements', () => withSou
     }
 ));
 
+test('source: writing narrows classes to the host declaration', () => withSource(
+    '<div contenteditable style="--u2-rte-classes: lead"><p>one</p></div>', ({source, host}) => {
+        source.write('<p class="lead foreign">a</p>');
+        equal(host.innerHTML, '<p class="lead">a</p>');
+    }
+));
+
 test('source: writing is one transaction on the surface', () => withSource(
     '<div contenteditable><p>one</p></div>', ({source, surface}) => {
         const seen = [];

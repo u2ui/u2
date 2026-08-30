@@ -81,3 +81,31 @@ test('unstyle policy: cleanup requires an explicit known strength and a DOM root
     throws(() => defaultUnstyle.clean(document.createDocumentFragment(), {through: 'styles', transaction: {}}), TypeError);
     throws(() => defaultUnstyle.clean(document.createDocumentFragment(), {through: 'styles', preserve: {}}), TypeError);
 });
+
+test('unstyle: declared content classes survive the class level', () => {
+    const root = document.createElement('div');
+    root.innerHTML = '<p class="lead pasted" style="color:red">a</p><span class="pasted">b</span>';
+    defaultUnstyle.clean(root, {through: 'classes', keep: ['lead']});
+    equal(root.innerHTML, '<p class="lead" style="color:red">a</p>b');
+});
+
+test('unstyle: without a keep list the class attribute goes entirely', () => {
+    const root = document.createElement('div');
+    root.innerHTML = '<p class="lead pasted">a</p>';
+    defaultUnstyle.clean(root, {through: 'classes'});
+    equal(root.innerHTML, '<p>a</p>');
+});
+
+test('unstyle: an element carrying only declared classes is left alone', () => {
+    const root = document.createElement('div');
+    root.innerHTML = '<span class="lead">a</span>';
+    equal(defaultUnstyle.clean(root, {through: 'classes', keep: ['lead']}).length, 0);
+    equal(root.innerHTML, '<span class="lead">a</span>');
+});
+
+test('unstyle: a wrapper carrying a declared class survives formatting removal', () => {
+    const root = document.createElement('div');
+    root.innerHTML = '<span class="lead">a</span><span class="pasted">b</span><b>c</b>';
+    defaultUnstyle.clean(root, {through: 'formatting', keep: ['lead']});
+    equal(root.innerHTML, '<span class="lead">a</span>bc');
+});

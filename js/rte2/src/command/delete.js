@@ -1,3 +1,4 @@
+import {elementOf} from '../selection/ownership/ownership.js';
 import {Point} from '../selection/point/point.js';
 import {blockEdge, emptyBlock} from './block-boundary.js';
 
@@ -64,7 +65,7 @@ function boundary(edit, direction) {
     const point = edit.range?.collapsed && edit.range.start;
     if (!point || insideAtomic(edit, point.node)) return null;
     const edge = direction === 'backward' ? 'start' : 'end';
-    for (let current = closest(point.node); current && current !== edit.element; current = current.parentElement) {
+    for (let current = elementOf(point.node); current && current !== edit.element; current = current.parentElement) {
         if (!edit.model.mergeable(current) || !atEdge(current, point, edge, edit.model)) continue;
         const adjacent = neighbor(current, direction, edit.model);
         if (atomicBlock(edit.model, adjacent.node)) return {atomic: adjacent.node, between: adjacent.between};
@@ -103,12 +104,9 @@ function atEdge(unit, point, edge, model) {
 }
 
 function insideAtomic(edit, node) {
-    for (let element = closest(node); element && element !== edit.element; element = element.parentElement) {
+    for (let element = elementOf(node); element && element !== edit.element; element = element.parentElement) {
         if (edit.model.atomic(element)) return true;
     }
     return false;
 }
 
-function closest(node) {
-    return node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
-}

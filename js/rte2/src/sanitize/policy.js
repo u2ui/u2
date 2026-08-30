@@ -64,12 +64,18 @@ export class SanitizePolicy {
         return protocol !== null && protocols.includes(protocol);
     }
 
-    clean(root, {base} = {}) {
+    // `classes` narrows the class attribute to known names without touching the
+    // security policy: an application declares its content classes once and
+    // foreign ones do not survive external input.
+    clean(root, {base, classes = null} = {}) {
+        const known = classes === null ? null : new Set(classes);
         for (const element of descendants(root)) {
             for (const attribute of [...element.attributes]) {
                 if (!this.allowsAttribute(element, attribute.name)
                     || !this.allowsUrl(element, attribute.name, attribute.value, base)) {
                     element.removeAttributeNode(attribute);
+                } else if (known && attribute.name.toLowerCase() === 'class') {
+                    keepClasses(element, known);
                 }
             }
         }
@@ -128,6 +134,13 @@ function urlProtocol(value, base) {
     } catch {
         return null;
     }
+}
+
+function keepClasses(element, known) {
+    const kept = [...element.classList].filter(name => known.has(name));
+    if (kept.length === element.classList.length) return;
+    if (kept.length) element.setAttribute('class', kept.join(' '));
+    else element.removeAttribute('class');
 }
 
 function descendants(root) {

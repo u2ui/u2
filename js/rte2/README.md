@@ -81,6 +81,7 @@ tests, and documentation.
 ```text
 rte2/
 ├── blocks.js              Optional block-style module and public entry
+├── classes.js             Optional content-class control module and entry
 ├── breaks.js              Optional visible-line-break extension and entry
 ├── editor.js              Prototype one-import convention client
 ├── link.js                Optional contextual link editor module and entry
@@ -104,7 +105,7 @@ rte2/
 │   ├── surface/           State of one editable host
 │   ├── transaction/       Atomic editing changes and dirty scopes
 │   ├── unstyle/           Shared selection and external presentation policy
-│   └── ui/                Optional command-toolbar bindings
+│   └── ui/                Optional command-toolbar bindings and placement
 ├── docs/                  Project-wide guides
 ├── playground/            Visual normalization, input, and mark inspection
 └── tests/                 Shared harness and cross-module browser cases

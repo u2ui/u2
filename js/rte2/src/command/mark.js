@@ -1,5 +1,6 @@
 import {Edit} from './edit.js';
 import {MarkAdapter} from '../mark/dom-adapter.js';
+import {elementOf, isEditingBoundary} from '../selection/ownership/ownership.js';
 import {Mark, markSet} from '../mark/mark.js';
 import {EditRange} from '../selection/range/edit-range.js';
 import {Point} from '../selection/point/point.js';
@@ -76,9 +77,9 @@ function whole(edit, adapter) {
 }
 
 function carrier(edit, adapter) {
-    for (let element = parentElement(edit.range.start.node);
+    for (let element = elementOf(edit.range.start.node);
         element && element !== edit.element; element = element.parentElement) {
-        if (boundary(element) || edit.model.block(element)) return null;
+        if (isEditingBoundary(element) || edit.model.block(element)) return null;
         if (adapter.parse(element)) return element;
     }
     return null;
@@ -191,7 +192,7 @@ function canApply(edit, adapter, mark) {
     for (const node of edit.range.textNodes()) {
         if (!node.data || blocked(edit, node) || has(edit, adapter, mark, node)) continue;
         for (let element = node.parentElement; element && element !== edit.element; element = element.parentElement) {
-            if (edit.model.block(element) || boundary(element)) break;
+            if (edit.model.block(element) || isEditingBoundary(element)) break;
             const current = adapter.parse(element);
             if (current && current.conflicts(mark) && allowsAfterClear(edit, adapter, current, element, wrapper)) return true;
             if (covered(edit.range, element) && reusable(edit, adapter, element)) return true;
@@ -247,8 +248,8 @@ function setState(edit, adapters) {
 function marksAt(edit, adapters, node) {
     if (blocked(edit, node)) return markSet([]);
     const elements = [];
-    for (let element = parentElement(node); element && element !== edit.element; element = element.parentElement) {
-        if (boundary(element) || edit.model.block(element)) break;
+    for (let element = elementOf(node); element && element !== edit.element; element = element.parentElement) {
+        if (isEditingBoundary(element) || edit.model.block(element)) break;
         elements.push(element);
     }
     const marks = [];
@@ -267,7 +268,7 @@ function marksIn(edit, adapter) {
     for (const node of edit.range.textNodes()) {
         if (!node.data || blocked(edit, node)) continue;
         for (let element = node.parentElement; element && element !== edit.element; element = element.parentElement) {
-            if (boundary(element) || edit.model.block(element)) break;
+            if (isEditingBoundary(element) || edit.model.block(element)) break;
             const mark = adapter.parse(element);
             if (mark && !marks.some(item => item.equals(mark))) marks.push(mark);
         }
@@ -289,7 +290,7 @@ function apply(edit, adapter, mark, range) {
                 changed.push(wrapper);
                 continue;
             }
-            if (node.nodeType !== Node.ELEMENT_NODE || boundary(node) || edit.model.atomic(node)) continue;
+            if (node.nodeType !== Node.ELEMENT_NODE || isEditingBoundary(node) || edit.model.atomic(node)) continue;
             if (covered(range, node) && reusable(edit, adapter, node)) {
                 const current = adapter.parse(node);
                 if (current && !current.conflicts(mark)) {
@@ -315,7 +316,7 @@ function remove(edit, adapter, mark, range) {
     const matches = [];
     const visit = parent => {
         for (const node of parent.children) {
-            if (boundary(node) || !range.intersects(node)) continue;
+            if (isEditingBoundary(node) || !range.intersects(node)) continue;
             const current = adapter.parse(node);
             if (current?.equals(mark) && covered(range, node) && inline(edit, node)) matches.push(node);
             visit(node);
@@ -346,7 +347,7 @@ function merge(edit, adapter, mark, pattern, range) {
     const changed = [];
     const visit = parent => {
         for (const child of [...parent.children]) {
-            if (!boundary(child) && !edit.model.atomic(child) && range.intersects(child)) visit(child);
+            if (!isEditingBoundary(child) && !edit.model.atomic(child) && range.intersects(child)) visit(child);
         }
         for (let left = parent.firstChild; left;) {
             const right = left.nextSibling;
@@ -367,7 +368,7 @@ function merge(edit, adapter, mark, pattern, range) {
 
 function dedupe(edit, entries, range, changed) {
     for (const element of elements(edit)) {
-        if (!range.intersects(element) || boundary(element) || edit.model.atomic(element)) continue;
+        if (!range.intersects(element) || isEditingBoundary(element) || edit.model.atomic(element)) continue;
         const entry = representation(entries, element);
         if (!entry || !marked(edit, entry.adapter, entry.mark, element.parentNode)) continue;
         const parent = element.parentNode;
@@ -383,7 +384,7 @@ function dedupe(edit, entries, range, changed) {
 
 function reorder(edit, entries, range, changed) {
     for (const parent of elements(edit)) {
-        if (!range.intersects(parent) || boundary(parent) || edit.model.atomic(parent)) continue;
+        if (!range.intersects(parent) || isEditingBoundary(parent) || edit.model.atomic(parent)) continue;
         if (parent.childNodes.length !== 1 || parent.firstChild.nodeType !== Node.ELEMENT_NODE) continue;
         const child = parent.firstChild;
         const outer = representation(entries, parent);
@@ -422,7 +423,7 @@ function elements(edit) {
     const visit = parent => {
         for (const child of parent.children) {
             found.push(child);
-            if (!boundary(child) && !edit.model.atomic(child)) visit(child);
+            if (!isEditingBoundary(child) && !edit.model.atomic(child)) visit(child);
         }
     };
     visit(edit.element);
@@ -483,24 +484,24 @@ function splitMark(edit, adapter, mark, point) {
 
 function marked(edit, adapter, mark, node) {
     let found = null;
-    for (let element = parentElement(node); element && element !== edit.element; element = element.parentElement) {
-        if (boundary(element) || edit.model.block(element)) break;
+    for (let element = elementOf(node); element && element !== edit.element; element = element.parentElement) {
+        if (isEditingBoundary(element) || edit.model.block(element)) break;
         if (adapter.parse(element)?.equals(mark)) found = element;
     }
     return found;
 }
 
 function has(edit, adapter, mark, node) {
-    for (let element = parentElement(node); element && element !== edit.element; element = element.parentElement) {
-        if (boundary(element) || edit.model.block(element)) return false;
+    for (let element = elementOf(node); element && element !== edit.element; element = element.parentElement) {
+        if (isEditingBoundary(element) || edit.model.block(element)) return false;
         if (adapter.parse(element)?.equals(mark)) return true;
     }
     return false;
 }
 
 function blocked(edit, node) {
-    for (let element = parentElement(node); element && element !== edit.element; element = element.parentElement) {
-        if (boundary(element) || edit.model.atomic(element)) return true;
+    for (let element = elementOf(node); element && element !== edit.element; element = element.parentElement) {
+        if (isEditingBoundary(element) || edit.model.atomic(element)) return true;
     }
     return false;
 }
@@ -511,7 +512,7 @@ function reusable(edit, adapter, element) {
 
 function inline(edit, element) {
     return element !== edit.element
-        && !boundary(element)
+        && !isEditingBoundary(element)
         && (typeof edit.model.allowed !== 'function' || edit.model.allowed(element))
         && edit.model.is(element, 'phrasing')
         && !edit.model.block(element)
@@ -580,10 +581,3 @@ function sameSet(left, right) {
     return left.length === right.length && left.every((mark, index) => mark.equals(right[index]));
 }
 
-function boundary(element) {
-    return element.hasAttribute('contenteditable');
-}
-
-function parentElement(node) {
-    return node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
-}

@@ -21,7 +21,10 @@ export class NativeSanitizer {
             throw new DOMException('Element.setHTML() is not available', 'NotSupportedError');
         }
         template.setHTML(html, {sanitizer: config(this.policy, options.elements)});
-        return this.policy.clean(template.content, {base: options.base ?? document.baseURI});
+        return this.policy.clean(template.content, {
+            base: options.base ?? document.baseURI,
+            classes: options.classes ?? null,
+        });
     }
 }
 

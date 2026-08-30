@@ -37,9 +37,12 @@ function styleCommand(adapters, surface) {
         if (!adapters.has(key)) adapters.set(key, valueMark(classMark(names)));
         return adapters.get(key);
     };
+    // The group is closed, so a value outside it is simply unavailable rather
+    // than an error the adapter has to raise.
+    const known = edit => edit.value == null || surface.config.classes.includes(edit.value);
     return {
-        enabled: edit => !!resolve()?.enabled(edit),
+        enabled: edit => known(edit) && !!resolve()?.enabled(edit),
         state: edit => resolve()?.state(edit) ?? null,
-        run: edit => resolve()?.run(edit),
+        run: edit => known(edit) ? resolve()?.run(edit) : undefined,
     };
 }

@@ -1,4 +1,5 @@
 import {htmlModel} from '../model/html/html-model.js';
+import {narrow} from '../command/edit.js';
 import {NativeSanitizer} from '../sanitize/native.js';
 import {SelectionSnapshot} from '../selection/snapshot.js';
 
@@ -58,9 +59,11 @@ export class Source {
     write(html) {
         if (typeof html !== 'string') throw new TypeError('Source must be written as a string');
         const root = this.#surface.element;
+        const settings = this.#surface.config;
         const fragment = this.#sanitizer.sanitize(html, {
             document: root.ownerDocument,
-            elements: this.#surface.config.elements ?? undefined,
+            elements: settings.elements ?? undefined,
+            classes: settings.classes.length ? settings.classes : null,
         });
         // The breaks between blocks are what reading added for legibility; they
         // are not content and must not return as text nodes.
@@ -78,8 +81,7 @@ export class Source {
     }
 
     #model() {
-        const elements = this.#surface.config.elements;
-        return elements === null ? htmlModel : htmlModel.withElements(elements);
+        return narrow(htmlModel, this.#surface.config.elements);
     }
 }
 

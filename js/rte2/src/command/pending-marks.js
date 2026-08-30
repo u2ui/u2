@@ -1,6 +1,6 @@
 import {Edit} from './edit.js';
 import {applyMark, removeMark, toggleMark} from './mark.js';
-import {editingHost, isPlainTextHost} from '../selection/ownership/ownership.js';
+import {editingHost, elementOf, isEditingBoundary, isPlainTextHost} from '../selection/ownership/ownership.js';
 import {Mark} from '../mark/mark.js';
 import {Point} from '../selection/point/point.js';
 
@@ -205,8 +205,8 @@ function insert(edit, data) {
 
 function markable(edit, adapter, mark, removing) {
     if (!edit.range?.collapsed) return false;
-    for (let element = parentElement(edit.range.start.node); element && element !== edit.element; element = element.parentElement) {
-        if (element.hasAttribute('contenteditable') || edit.model.atomic(element)) return false;
+    for (let element = elementOf(edit.range.start.node); element && element !== edit.element; element = element.parentElement) {
+        if (isEditingBoundary(element) || edit.model.atomic(element)) return false;
     }
     if (removing) return true;
     const node = edit.range.start.node;
@@ -214,6 +214,3 @@ function markable(edit, adapter, mark, removing) {
     return edit.model.allows(parent, adapter.render(mark, edit.document));
 }
 
-function parentElement(node) {
-    return node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
-}

@@ -25,6 +25,12 @@ Live ranges are the first preservation strategy. Editor-owned transformations
 that replace endpoints use `map/point-map.js` to map logical points explicitly
 rather than inserting temporary DOM markers.
 
+`elementOf(node)` and `isEditingBoundary(element)` are the single definitions of
+"the element context of a node" and "this element starts a new editing host".
+Every traversal in the engine uses them, so an invalid `contenteditable` value is
+a boundary nowhere rather than in some traversals only. `indexOf(node)` names a
+child boundary and lives beside `Point`.
+
 ## TODO
 
 - Integrate point mapping with canonical normalization transactions.

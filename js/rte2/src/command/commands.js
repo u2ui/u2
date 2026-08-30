@@ -1,4 +1,4 @@
-import {Edit} from './edit.js';
+import {Edit, narrow} from './edit.js';
 import {htmlModel} from '../model/html/html-model.js';
 
 // Named editor commands for one surface. A command is a plain object with
@@ -24,10 +24,7 @@ export class Commands {
 
     get surface() { return this.#surface; }
     get model() {
-        const elements = this.#surface.config.elements;
-        return elements === null || typeof this.#model.withElements !== 'function'
-            ? this.#model
-            : this.#model.withElements(elements);
+        return narrow(this.#model, this.#surface.config.elements);
     }
     get names() { return [...this.#commands.keys()]; }
 
@@ -81,10 +78,9 @@ export class Commands {
     run(name, detail = {}) {
         const command = this.#commands.get(name);
         if (!command) throw new RangeError(`Unknown command: ${name}`);
-        if (!this.#allows(command, this.#edit(null, detail))) return;
+        const edit = this.#edit(null, detail);
+        if (!this.#allows(command, edit)) return;
         if (command.transaction === false) {
-            const edit = this.#edit(null, detail);
-            if (!this.#allows(command, edit)) return;
             const result = command.run(edit);
             this.#surface.emit('u2-rte-command', {name, inputType: edit.inputType, transaction: null, result});
             return result;
@@ -100,8 +96,10 @@ export class Commands {
         }, {trigger: 'command', command: name, inputType: detail.inputType || ''});
     }
 
+    // The base model is handed over unnarrowed: `Edit` resolves it only if the
+    // command actually consults it.
     #edit(transaction, detail) {
-        return new Edit(this.#surface, transaction, {model: this.model, ...detail});
+        return new Edit(this.#surface, transaction, {model: this.#model, ...detail});
     }
 
     #allows(command, edit) {

@@ -1,4 +1,4 @@
-import {belongsTo, selectionOf} from '../ownership/ownership.js';
+import {belongsTo, elementOf, isEditingBoundary, selectionOf} from '../ownership/ownership.js';
 import {Point} from '../point/point.js';
 
 export class EditRange {
@@ -134,9 +134,7 @@ export class EditRange {
         const filter = document.defaultView.NodeFilter;
         const walker = document.createTreeWalker(this.#root, filter.SHOW_ELEMENT | filter.SHOW_TEXT, {
             acceptNode: node => {
-                if (node !== this.#root && node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('contenteditable')) {
-                    return filter.FILTER_REJECT;
-                }
+                if (node !== this.#root && isEditingBoundary(node)) return filter.FILTER_REJECT;
                 if (node.nodeType !== Node.TEXT_NODE) return filter.FILTER_SKIP;
                 return selectedText(this.#range, node) ? filter.FILTER_ACCEPT : filter.FILTER_REJECT;
             },
@@ -158,9 +156,7 @@ export class EditRange {
         const end = Point.fromRange(this.#range, 'end');
         const walker = document.createTreeWalker(this.#root, filter.SHOW_ELEMENT | filter.SHOW_TEXT, {
             acceptNode: node => {
-                if (node !== this.#root && node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('contenteditable')) {
-                    return filter.FILTER_REJECT;
-                }
+                if (node !== this.#root && isEditingBoundary(node)) return filter.FILTER_REJECT;
                 if (node.childNodes.length) return filter.FILTER_SKIP;
                 if (node.nodeType === Node.TEXT_NODE) {
                     return selectedText(this.#range, node) ? filter.FILTER_ACCEPT : filter.FILTER_REJECT;
@@ -181,7 +177,7 @@ export class EditRange {
         const nodes = [];
         const visit = parent => {
             for (const node of parent.childNodes) {
-                if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('contenteditable')) continue;
+                if (isEditingBoundary(node)) continue;
                 if (!this.intersects(node)) continue;
                 if (this.contains(node)) nodes.push(node);
                 else if (node.childNodes.length) visit(node);
@@ -207,7 +203,7 @@ function selectedText(range, node) {
 }
 
 function closest(node, root, match) {
-    let element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+    let element = elementOf(node);
     while (element && element !== root) {
         if (match(element)) return element;
         element = element.parentElement;

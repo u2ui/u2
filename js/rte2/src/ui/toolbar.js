@@ -85,11 +85,13 @@ export class Toolbar {
                 option.disabled = !enabled;
                 if (enabled) choices++;
             }
-            const enabled = show && choices > 0;
-            const value = show ? commands.state(command, detail) : null;
-            select.hidden = !show;
-            select.disabled = !enabled;
-            select.setAttribute('aria-disabled', String(!enabled));
+            // A select with nothing to choose is not a control: it hides like a
+            // button whose command is unavailable.
+            const usable = show && choices > 0;
+            const value = usable ? commands.state(command, detail) : null;
+            select.hidden = !usable;
+            select.disabled = !usable;
+            select.setAttribute('aria-disabled', String(!usable));
             const selected = [...select.options].find(option => option.value === value && !option.disabled);
             select.value = selected && value !== 'mixed' ? value : '';
             if (!select.hidden) visible++;

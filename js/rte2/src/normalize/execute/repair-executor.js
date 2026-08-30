@@ -1,3 +1,4 @@
+import {indexOf} from '../../selection/point/point.js';
 import {PointMap} from '../../selection/map/point-map.js';
 
 const PASSIVE = new Set(['keep', 'boundary', 'reject']);
@@ -126,6 +127,3 @@ function isBreak(node) {
     return node?.nodeType === Node.ELEMENT_NODE && node.localName === 'br';
 }
 
-function indexOf(node) {
-    return Array.prototype.indexOf.call(node.parentNode.childNodes, node);
-}

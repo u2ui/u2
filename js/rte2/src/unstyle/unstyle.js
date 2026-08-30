@@ -21,7 +21,7 @@ export class Unstyle {
         Object.freeze(this);
     }
 
-    clean(root, {through, map = null, transaction = null, preserve = null} = {}) {
+    clean(root, {through, map = null, transaction = null, preserve = null, keep = null} = {}) {
         if (!root?.querySelectorAll) throw new TypeError('Unstyle cleanup requires a DOM root');
         if (map !== null && typeof map?.unwrap !== 'function') throw new TypeError('Unstyle cleanup requires a point map');
         if (transaction !== null && typeof transaction?.touch !== 'function') {
@@ -30,13 +30,14 @@ export class Unstyle {
         if (preserve !== null && typeof preserve?.has !== 'function') {
             throw new TypeError('Unstyle cleanup requires a preserved element set');
         }
+        const kept = keep === null ? null : new Set(keep);
         const end = this.levels.findIndex(level => level.name === through);
         if (end < 0) throw new RangeError(`Unknown unstyle level: ${through}`);
         const changed = [];
         const elements = descendants(root).filter(element => !preserve?.has(element));
         for (const level of this.levels.slice(0, end + 1)) {
-            for (const element of elements.filter(element => matches(level, element)).reverse()) {
-                clear(level, element, map, transaction);
+            for (const element of elements.filter(element => matches(level, element, kept)).reverse()) {
+                clear(level, element, map, transaction, kept);
                 if (!changed.includes(element)) changed.push(element);
             }
         }
@@ -46,14 +47,43 @@ export class Unstyle {
 
 export const defaultUnstyle = new Unstyle();
 
-export function matches(level, element) {
-    return level.elements.includes(element.localName)
-        || level.attributes.some(name => element.hasAttribute(name));
+// `kept` names classes the host treats as content, so removing presentation does
+// not remove meaning the application declared.
+export function matches(level, element, kept = null) {
+    return level.elements.includes(element.localName) && !declared(element, kept)
+        || level.attributes.some(name => removable(name, element, kept));
 }
 
-function clear(level, element, map, transaction) {
+// An element carrying a declared content class is content itself: the class
+// applies to that wrapper, so removing presentation must not unwrap it.
+export function declared(element, kept = null) {
+    return !!kept?.size && [...element.classList].some(name => kept.has(name));
+}
+
+// Whether a level would actually take something off this element.
+export function removable(name, element, kept = null) {
+    if (!element.hasAttribute(name)) return false;
+    if (name !== 'class' || !kept?.size) return true;
+    return [...element.classList].some(value => !kept.has(value));
+}
+
+// Takes a level's attributes off one element, narrowing `class` to the names
+// the host declared as content instead of dropping it whole.
+export function strip(level, element, kept = null) {
+    for (const name of level.attributes) {
+        if (name === 'class' && kept?.size) {
+            const rest = [...element.classList].filter(value => kept.has(value));
+            if (rest.length) element.setAttribute('class', rest.join(' '));
+            else element.removeAttribute('class');
+            continue;
+        }
+        element.removeAttribute(name);
+    }
+}
+
+function clear(level, element, map, transaction, kept = null) {
     const parent = element.parentNode;
-    for (const name of level.attributes) element.removeAttribute(name);
+    strip(level, element, kept);
     const unwrap = !!parent && (level.elements.includes(element.localName)
         || element.localName === 'span' && !element.attributes.length);
     if (unwrap) map ? map.unwrap(element) : element.replaceWith(...element.childNodes);

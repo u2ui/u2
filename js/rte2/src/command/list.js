@@ -1,4 +1,4 @@
-import {Point} from '../selection/point/point.js';
+import {Point, indexOf} from '../selection/point/point.js';
 import {emptyBlock} from './block-boundary.js';
 
 const TAG = /^[a-z][a-z\d-]*$/;
@@ -20,13 +20,13 @@ export class Lists {
         this.#tags = Object.freeze([...new Set(tags.map(tag => tag.trim().toLowerCase()))]);
         this.#indent = {
             inputTypes: ['formatIndent'],
-            enabled: edit => this.#runs(edit).some(run => !!this.#previous(edit, run[0])),
-            run: edit => this.#change(edit, run => this.#nest(edit, run)),
+            enabled: edit => runs(this.#units(edit)).some(run => !!this.#previous(edit, run[0])),
+            run: edit => this.#change(edit, runs(this.#units(edit)), run => this.#nest(edit, run)),
         };
         this.#outdent = {
             inputTypes: ['formatOutdent'],
-            enabled: edit => this.#runs(edit).some(run => this.#raisable(edit, run)),
-            run: edit => this.#change(edit, run => this.#raise(edit, run)),
+            enabled: edit => runs(this.#units(edit)).some(run => this.#raisable(edit, run)),
+            run: edit => this.#change(edit, runs(this.#units(edit)), run => this.#raise(edit, run)),
         };
     }
 
@@ -43,26 +43,29 @@ export class Lists {
             enabled: edit => this.#enabled(edit, container),
             state: edit => this.#state(edit, container),
             run: edit => {
+                const units = this.#units(edit);
                 // The branch is decided once: changing the first run would
                 // otherwise report a different state to the second.
-                const lift = this.#state(edit, container) === true;
-                return this.#change(edit, run => lift
+                const lift = this.#state(edit, container, units) === true;
+                return this.#change(edit, runs(units), run => lift
                     ? this.#lift(edit, run)
                     : this.#apply(edit, run, container));
             },
         };
     }
 
+    // The block scan is the expensive part of every query, so it is done once
+    // and handed on rather than repeated by each step.
     #enabled(edit, container) {
-        const runs = this.#runs(edit);
-        if (!runs.length) return false;
-        return this.#state(edit, container) === true
-            ? runs.every(run => this.#liftable(edit, run))
-            : runs.some(run => this.#appliable(edit, run, container));
+        const units = this.#units(edit);
+        const groups = runs(units);
+        if (!groups.length) return false;
+        return this.#state(edit, container, units) === true
+            ? groups.every(run => this.#liftable(edit, run))
+            : groups.some(run => this.#appliable(edit, run, container));
     }
 
-    #state(edit, container) {
-        const units = this.#units(edit);
+    #state(edit, container, units = this.#units(edit)) {
         if (!units.length) return null;
         let value = null;
         for (const unit of units) {
@@ -129,26 +132,14 @@ export class Lists {
         return !!edit.model.defaultChild(container) && edit.model.allows(run[0].parentNode, replacement);
     }
 
-    // Contiguous sibling units share one list, so they are changed together.
-    #runs(edit) {
-        const runs = [];
-        for (const unit of this.#units(edit)) {
-            const last = runs.at(-1);
-            if (last && last.at(-1).nextElementSibling === unit) last.push(unit);
-            else runs.push([unit]);
-        }
-        return runs;
-    }
-
-    #change(edit, change) {
-        const runs = this.#runs(edit);
-        if (!runs.length) return [];
+    #change(edit, groups, change) {
+        if (!groups.length) return [];
         const start = new Point(edit.range.start.node, edit.range.start.offset, 'forward');
         const end = new Point(edit.range.end.node, edit.range.end.offset, 'backward');
         const backward = !!edit.surface.selection?.backward;
         edit.map.add(start).add(end);
         const changed = [];
-        for (const run of runs) changed.push(...change(run));
+        for (const run of groups) changed.push(...change(run));
         edit.select(edit.map.get(start), edit.map.get(end), backward);
         return changed;
     }
@@ -273,8 +264,15 @@ export class Lists {
     }
 }
 
-function indexOf(node) {
-    return Array.prototype.indexOf.call(node.parentNode.childNodes, node);
+// Contiguous sibling units share one list, so they are changed together.
+function runs(units) {
+    const groups = [];
+    for (const unit of units) {
+        const last = groups.at(-1);
+        if (last && last.at(-1).nextElementSibling === unit) last.push(unit);
+        else groups.push([unit]);
+    }
+    return groups;
 }
 
 // The item's own blocks, when every one of them may live in `parent` directly.

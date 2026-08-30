@@ -9,6 +9,7 @@ export class Edit {
     #surface;
     #transaction;
     #model;
+    #narrowed = null;
     #inputType;
     #data;
     #value;
@@ -45,7 +46,13 @@ export class Edit {
     get element() { return this.#surface.element; }
     get config() { return this.#surface.config; }
     get transaction() { return this.#transaction; }
-    get model() { return this.#model; }
+    // Narrowing the model reads the host configuration, and most availability
+    // checks never consult it. Resolving it on first use keeps a toolbar
+    // refresh from paying for every control that does not care.
+    get model() {
+        this.#narrowed ??= narrow(this.#model, this.#surface.config.elements);
+        return this.#narrowed;
+    }
     get map() { return this.#map; }
     get inputType() { return this.#inputType; }
     get data() { return this.#data; }
@@ -58,4 +65,8 @@ export class Edit {
         const range = EditRange.fromPoints(start, end, this.element);
         return range.select(this.#surface.core.selection, backward) ? range : null;
     }
+}
+
+export function narrow(model, elements) {
+    return elements === null || typeof model.withElements !== 'function' ? model : model.withElements(elements);
 }

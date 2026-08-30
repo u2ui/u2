@@ -26,8 +26,8 @@ native.
 
 Ready control names are `undo`, `redo`, `bold`, `italic`, `underline`,
 `strike`, `code`, `bullets`, `numbers`, `indent`, `outdent`, and `rule`, plus
-`block`, `unstyle`, `breaks`, `link`, `unlink`, and `source` from the optional
-root modules.
+`block`, `style`, `unstyle`, `breaks`, `link`, `unlink`, and `source` from the
+optional root modules.
 `--u2-rte-toolbar` chooses and orders them; the commands and their shortcuts
 work whether or not a control is listed. List and separator controls consult
 the content model, so `--u2-rte-elements` disables what a host does not allow.
@@ -37,6 +37,33 @@ whether or not their controls are listed. History records every change of the
 host's content, including edits an application makes itself, and groups
 continuous typing into steps. See
 [`../src/history/README.md`](../src/history/README.md).
+
+## Content classes
+
+```js
+import './classes.js';
+```
+
+```css
+[contenteditable] {
+    --u2-rte-classes: lead, caption, brandColor;
+    --u2-rte-toolbar: style bold;
+}
+```
+
+The style list offers exactly the declared names, per host. The group is one
+mark type and therefore mutually exclusive; an application that needs
+independent axes registers a second module with its own adapter.
+
+That one declaration is the single source of truth for those names:
+
+- the control offers them,
+- the sanitizer keeps them and drops every other class from external HTML,
+- remove-format and paste cleanup leave them alone, including the wrapper that
+  carries one, because a declared class is content rather than presentation.
+
+A host that declares none keeps the control hidden and its class handling
+unchanged.
 
 ## Links
 
@@ -336,6 +363,7 @@ what differs. `auto` means "use the semantic default for this tag".
 | `--u2-rte-clean-on` | any of `input paste drop command` | all four |
 | `--u2-rte-elements` | tag list, `@basic`, `@article`, `@document`, `all` | `all` |
 | `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming` |
+| `--u2-rte-classes` | content class names separated by spaces or commas | none |
 | `--u2-rte-toolbar` | control names separated by spaces or commas | every represented control |
 | `--u2-rte-toolbar-when` | `always`, `selection` | `always` |
 | `--u2-rte-show-breaks` | truthy or false-like token | hidden |

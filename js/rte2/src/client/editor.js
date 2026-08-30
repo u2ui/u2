@@ -1,13 +1,14 @@
-import {rangeRect} from '../browser/range-rect.js';
 import {Commands} from '../command/commands.js';
 import {deleteBackward, deleteForward} from '../command/delete.js';
 import {enter, lineBreak} from '../command/enter.js';
 import {History} from '../history/history.js';
 import {PendingMarks} from '../command/pending-marks.js';
 import {InputPipeline} from '../input/input-pipeline.js';
+import {history as historyModule} from './history.js';
 import {marks} from './marks.js';
 import {structure} from './structure.js';
 import {isPlainTextHost} from '../selection/ownership/ownership.js';
+import {place} from '../ui/place.js';
 import {Toolbar} from '../ui/toolbar.js';
 
 const STYLE = `
@@ -56,16 +57,6 @@ const STYLE = `
 [data-u2-rte-editor-toolbar] select:disabled { opacity: .4; }
 `;
 
-const HISTORY = Object.freeze({
-    name: 'history',
-    commands: ({history}) => history.commands,
-    // No control shortcut: the input pipeline owns Ctrl/Command+Z and +Y.
-    toolbar: Object.freeze([
-        Object.freeze({command: 'undo', label: 'Undo', text: '\u21B6'}),
-        Object.freeze({command: 'redo', label: 'Redo', text: '\u21B7'}),
-    ]),
-});
-
 const CLIENT = Symbol.for('u2.rte2.editor');
 
 // Minimal convention client for the default editor stack. It exposes the
@@ -99,7 +90,7 @@ export class Editor {
             core.addEventListener('u2-rte-add', this.#add, listen);
             core.addEventListener('u2-rte-activechange', this.#activeChange, listen);
             core.addEventListener('u2-rte-dispose', this.#coreDispose, listen);
-            for (const module of [HISTORY, marks, structure]) this.add(module);
+            for (const module of [historyModule, marks, structure]) this.add(module);
             for (const surface of core.surfaces) this.#setup(surface);
             this.refresh();
         } catch (error) {
@@ -322,7 +313,7 @@ export class Editor {
         for (const module of this.#modules.values()) this.#append(module);
         this.#toolbar = new Toolbar(this.#core, element, {
             commands: surface => this.commands(surface),
-            place: place,
+            place,
         });
         return this.#toolbar;
     }
@@ -464,17 +455,3 @@ function options(select, choices) {
     return true;
 }
 
-function place(element, surface) {
-    const range = surface.selection?.range();
-    if (!range) return;
-    const anchor = rangeRect(range, {root: surface.element});
-    const view = element.ownerDocument.defaultView;
-    const box = element.getBoundingClientRect();
-    const gap = 8;
-    const left = Math.max(gap, Math.min(view.innerWidth - box.width - gap,
-        anchor.left + anchor.width / 2 - box.width / 2));
-    const above = anchor.top - box.height - gap;
-    const top = above >= gap ? above : Math.min(view.innerHeight - box.height - gap, anchor.bottom + gap);
-    element.style.left = `${left}px`;
-    element.style.top = `${top}px`;
-}

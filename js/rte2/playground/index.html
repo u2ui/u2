@@ -82,6 +82,10 @@
 
       &:focus { border-color: Highlight; }
       & [contenteditable] { outline: 1px dashed orange; }
+      /* The demo content classes need a visible effect to be inspectable. */
+      & .lead { font-size: 1.15em; }
+      & .caption { font-size: .85em; opacity: .7; }
+      & .brandColor { color: color-mix(in srgb, Highlight 70%, CanvasText); }
       & .x {
         background: color-mix(in srgb, #ffbf00 36%, transparent);
         border-radius: .2em;
@@ -239,16 +243,17 @@
 
     <section class="panel wide">
       <h2>One-import editor prototype</h2>
-      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block bold italic underline strike code link unlink bullets numbers outdent indent rule unstyle breaks source; --u2-rte-show-breaks:true">
+      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code link unlink bullets numbers outdent indent rule unstyle breaks source; --u2-rte-classes:lead, caption, brandColor; --u2-rte-show-breaks:true">
         <p>Select text to format it, choose its block style, or press Enter inside this list:</p>
         <ul><li>List item</li><li>Put the caret here and press the indent control</li></ul>
         <p>Turn these paragraphs into a list, then lift them out again.</p>
         <p>Select this text and link it, or put the caret in <a href="/existing">this link</a> to edit it.</p>
+        <p>Select a few words and give them a <span class=brandColor>content class</span> from the style list.</p>
         <p><span class="pasted" style="color:#b30"><strong>Select this paste-like formatting</strong></span> and click T× repeatedly.</p>
         <p>The faint arrow after this line is a visible break.<br>It is not part of the editable HTML.</p>
       </div>
       <p><small id="history-state">History: focus the surface to start recording.</small></p>
-      <p><small>This surface is wired by <code>editor.js</code>, optional <code>blocks.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>/<code>link.js</code>/<code>source.js</code>, and CSS variables.</small></p>
+      <p><small>This surface is wired by <code>editor.js</code>, optional <code>blocks.js</code>/<code>classes.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>/<code>link.js</code>/<code>source.js</code>, and CSS variables.</small></p>
     </section>
 
     <details class="panel wide">
@@ -283,6 +288,11 @@
         address is a plain text field, so relative paths, fragments, and
         application schemes are accepted and the sanitizer decides what
         survives.
+        The style list offers exactly the names in
+        <code>--u2-rte-classes</code>. That one declaration is also what the
+        sanitizer keeps from pasted HTML and what remove-format leaves alone, so
+        a class the host knows is never offered without being allowed, and never
+        cleaned away as foreign.
         Bold recognizes both <code>&lt;strong&gt;</code> and <code>&lt;b&gt;</code>,
         creates canonical <code>&lt;strong&gt;</code>, and unwraps either form on
         removal. The class-mark buttons reuse a fully selected inline element;
@@ -294,6 +304,7 @@
   <script type="module">
     import {editor as conventionEditor} from '../editor.js';
     import '../blocks.js';
+    import '../classes.js';
     import '../link.js';
     import '../source.js';
     import '../breaks.js';

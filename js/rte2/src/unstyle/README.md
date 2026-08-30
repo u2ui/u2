@@ -60,6 +60,14 @@ the security boundary.
 - Cleanup preserves text and child order while unwrapping elements.
 - Security, presentation cleanup, and structural validity remain separate.
 
+## Declared content classes
+
+`clean(root, {keep})` names the classes the host treats as content. The class
+level then narrows the attribute to those names instead of removing it, and the
+formatting level leaves a wrapper that carries one, because the class applies to
+that wrapper. `removable()`, `strip()`, and `declared()` are exported so the
+selection command applies the identical rule from `--u2-rte-classes`.
+
 ## TODO
 
 - Add separately configured structural levels for converting headings, lists,

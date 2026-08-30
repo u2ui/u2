@@ -1,10 +1,12 @@
+import {isEditingBoundary} from '../selection/ownership/ownership.js';
+
 // Editor emptiness differs from textContent emptiness: a filler br is empty,
 // while atomic content and nested editing boundaries are meaningful.
 export function emptyBlock(node, model, root = node) {
     if (node.nodeType === Node.TEXT_NODE) return !node.data.trim();
     if (node.nodeType !== Node.ELEMENT_NODE) return true;
     if (node.localName === 'br') return true;
-    if (node !== root && (node.hasAttribute('contenteditable') || model.atomic(node))) return false;
+    if (node !== root && (isEditingBoundary(node) || model.atomic(node))) return false;
     return [...node.childNodes].every(child => emptyBlock(child, model, root));
 }
 

@@ -13,8 +13,14 @@ export function isEditingBoundary(element) {
     return editableValue(element) !== null;
 }
 
+// The element context of a node: itself when it is one, otherwise its parent.
+// Traversals start here so text and element boundaries behave identically.
+export function elementOf(node) {
+    return node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement || null;
+}
+
 export function editingHost(node) {
-    for (let element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement; element; element = element.parentElement) {
+    for (let element = elementOf(node); element; element = element.parentElement) {
         if (editableValue(element) !== null) return element;
     }
     return null;
