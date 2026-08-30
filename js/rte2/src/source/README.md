@@ -50,6 +50,9 @@ round trip.
 
 ## TODO
 
+- Let non-interactive consumers replace content without changing selection or
+  focus. Initializing a form adapter must not move the caret into its surface;
+  the current `write()` always restores a selection at the start.
 - Map the dialog's own selection back into the DOM after a write, the way
   reading maps the other direction.
 - Serialize through a canonical serializer once one exists, so attribute order

@@ -1,14 +1,30 @@
 const NAME = /^[a-z][a-z\d-]*$/;
 const ATTRIBUTE = /^[a-z][a-z\d_.:-]*$/;
 
+const SCOPES = new Set(['foreign', 'all']);
+
+// The ladder is ordered from least to most destructive, and it does not stop at
+// the application's own presentation: someone who keeps pressing wants more
+// removed, so the last rungs take the declared content classes and finally the
+// semantic inline elements as well.
+//
+// The first four rungs are scoped to `foreign`: they spare the classes the host
+// declared as content, and the wrappers carrying them.
 export const defaultUnstyleLevels = Object.freeze([
-    level('classes', {attributes: ['class']}),
-    level('styles', {attributes: ['style']}),
-    level('attributes', {attributes: [
+    level('styles', {attributes: ['style'], scope: 'foreign'}),
+    level('attributes', {scope: 'foreign', attributes: [
         'align', 'bgcolor', 'border', 'cellpadding', 'cellspacing', 'color',
         'face', 'height', 'size', 'valign', 'width',
     ]}),
-    level('formatting', {elements: ['b', 'em', 'font', 'i', 's', 'span', 'strike', 'strong', 'u']}),
+    level('classes', {attributes: ['class'], scope: 'foreign'}),
+    level('formatting', {scope: 'foreign',
+        elements: ['b', 'font', 'i', 's', 'span', 'strike', 'u']}),
+    level('contentClasses', {attributes: ['class']}),
+    level('inline', {elements: [
+        'a', 'abbr', 'bdi', 'bdo', 'cite', 'code', 'data', 'del', 'dfn', 'em',
+        'ins', 'kbd', 'mark', 'q', 'ruby', 'samp', 'small', 'strong', 'sub',
+        'sup', 'time', 'var',
+    ]}),
 ]);
 
 export class Unstyle {
@@ -30,12 +46,13 @@ export class Unstyle {
         if (preserve !== null && typeof preserve?.has !== 'function') {
             throw new TypeError('Unstyle cleanup requires a preserved element set');
         }
-        const kept = keep === null ? null : new Set(keep);
+        const declaredClasses = keep === null ? null : new Set(keep);
         const end = this.levels.findIndex(level => level.name === through);
         if (end < 0) throw new RangeError(`Unknown unstyle level: ${through}`);
         const changed = [];
         const elements = descendants(root).filter(element => !preserve?.has(element));
         for (const level of this.levels.slice(0, end + 1)) {
+            const kept = keepFor(level, declaredClasses);
             for (const element of elements.filter(element => matches(level, element, kept)).reverse()) {
                 clear(level, element, map, transaction, kept);
                 if (!changed.includes(element)) changed.push(element);
@@ -46,6 +63,12 @@ export class Unstyle {
 }
 
 export const defaultUnstyle = new Unstyle();
+
+// Only a level scoped to foreign presentation spares the declared classes; the
+// rungs below that scope are where the application's own presentation goes.
+export function keepFor(level, declaredClasses) {
+    return level.scope === 'foreign' ? declaredClasses : null;
+}
 
 // `kept` names classes the host treats as content, so removing presentation does
 // not remove meaning the application declared.
@@ -100,7 +123,9 @@ function level(name, options = {}) {
     const attributes = names(options.attributes || [], ATTRIBUTE, 'attribute');
     const elements = names(options.elements || [], NAME, 'element');
     if (!attributes.length && !elements.length) throw new TypeError('An unstyle level requires attributes or elements');
-    return Object.freeze({name: name.trim(), attributes, elements});
+    const scope = options.scope ?? 'all';
+    if (!SCOPES.has(scope)) throw new TypeError(`Unknown unstyle scope: ${scope}`);
+    return Object.freeze({name: name.trim(), attributes, elements, scope});
 }
 
 function names(values, pattern, label) {

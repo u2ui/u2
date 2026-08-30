@@ -1,0 +1,48 @@
+{
+    "schemaVersion": "1.0.0",
+    "readme": "README.md",
+    "modules": [{
+        "kind": "javascript-module",
+        "path": "rte2.js",
+        "declarations": [{
+            "kind": "class",
+            "description": "Progressively enhances a textarea with the RTE2 rich-text editor",
+            "name": "U2Rte2",
+            "members": [{
+                "kind": "field",
+                "name": "value",
+                "description": "The serialized textarea value"
+            }],
+            "events": [{
+                "name": "input",
+                "description": "Fired from the textarea after the editor value changes"
+            },{
+                "name": "change",
+                "description": "Fired from the textarea when focus leaves a changed editor"
+            }],
+            "attributes": [{
+                "name": "language",
+                "description": "Serialization language",
+                "u2-type": "string",
+                "u2Examples": ["html", "markdown"]
+            }],
+            "cssProperties": [{
+                "name": "--u2-rte-toolbar",
+                "description": "Space separated list of toolbar commands",
+                "syntax": "*"
+            },{
+                "name": "--u2-rte",
+                "description": "Marks regions as rich-text editable",
+                "syntax": "*"
+            }],
+            "superclass": { "name": "HTMLElement" },
+            "tagName": "u2-rte2",
+            "customElement": true
+        }],
+        "exports": [{
+            "kind": "custom-element-definition",
+            "name": "u2-rte2",
+            "declaration": { "name": "U2Rte2", "module": "rte2.js" }
+        }]
+    }]
+}
