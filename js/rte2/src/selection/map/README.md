@@ -16,9 +16,14 @@ follows the content before or after the change. It needs no marker nodes.
 - `backward` affinity follows preceding content and `forward` affinity follows
   following content at insertion, split, wrap, and move boundaries.
 - Operations mutate the DOM and its mapped boundaries as one synchronous step.
-- `insert`, `insertText`, `splitText`, `wrap`, `unwrap`, `split`, `replace`,
-  `replaceWrapper`, `move`, `mergeText`, and `remove` reject ambiguous or
-  structurally invalid inputs.
+- `insert`, `insertFragment`, `insertText`, `splitText`, `wrap`, `unwrap`,
+  `split`, `replace`, `replaceWrapper`, `move`, `mergeText`, and `remove`
+  reject ambiguous or structurally invalid inputs.
+- `insertFragment` consumes a detached fragment as one multi-node insertion.
+  Parent boundaries shift by the inserted child count; boundaries expressed on
+  the fragment become equivalent parent boundaries among the inserted nodes.
+  Native insertion adopts nodes from a template or another document while
+  preserving their identity and mapped descendant points.
 - `insertText` uses DOM UTF-16 offsets and affinity at the insertion point:
   backward stays before the inserted text, forward follows it.
 - `split` raises one boundary to a child boundary of an ancestor container by
@@ -41,11 +46,8 @@ belong to the content model and transaction layers.
 
 ## TODO
 
-- Add multi-node and `DocumentFragment` insertion once fragment commands need
-  it.
 - Map ranges directly without introducing a dependency from this layer to
   `EditRange`.
-- Define adoption behavior for nodes originating in another document.
 - Extend the generated cases to `remove`, `replace`, and `move`, whose result
   cannot be checked against the surrounding text.
 - Compare longer operation sequences with a marker-based oracle.

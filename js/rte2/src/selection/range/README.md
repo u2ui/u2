@@ -34,4 +34,5 @@ primitives inside transactions and explicitly mark resulting dirty scopes.
 - Connect block predicates to the surface content model.
 - Add atomic-node coercion from content policy.
 - Add contextual fragment insertion without unsafe HTML sinks.
-- Add caret geometry as an isolated, browser-policy-backed responsibility.
+- Extend the isolated browser `rangeRect()` policy with writing-mode and Shadow
+  DOM verification before adding geometry to command-level ranges.

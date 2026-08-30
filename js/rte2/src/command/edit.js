@@ -11,17 +11,32 @@ export class Edit {
     #model;
     #inputType;
     #data;
+    #value;
+    #fragment;
     #range;
     #map = new PointMap();
 
-    constructor(surface, transaction = null, {model = htmlModel, range = null, inputType = '', data = null} = {}) {
+    constructor(surface, transaction = null, {
+        model = htmlModel,
+        range = null,
+        inputType = '',
+        data = null,
+        value = null,
+        fragment = null,
+    } = {}) {
         if (surface?.element?.nodeType !== Node.ELEMENT_NODE) throw new TypeError('An edit requires an editor surface');
         if (data !== null && typeof data !== 'string') throw new TypeError('Edit input data must be a string or null');
+        if (value !== null && typeof value !== 'string') throw new TypeError('Edit command value must be a string or null');
+        if (fragment !== null && fragment?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
+            throw new TypeError('Edit fragment must be a DocumentFragment or null');
+        }
         this.#surface = surface;
         this.#transaction = transaction;
         this.#model = model;
         this.#inputType = inputType;
         this.#data = data;
+        this.#value = value;
+        this.#fragment = fragment;
         this.#range = range
             ? EditRange.fromRange(range, surface.element)
             : EditRange.fromSelection(surface.core.selection, surface.element);
@@ -35,6 +50,8 @@ export class Edit {
     get map() { return this.#map; }
     get inputType() { return this.#inputType; }
     get data() { return this.#data; }
+    get value() { return this.#value; }
+    get fragment() { return this.#fragment; }
     get range() { return this.#range; }
     get document() { return this.#surface.element.ownerDocument; }
 

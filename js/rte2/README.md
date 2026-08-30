@@ -47,10 +47,10 @@ configuration ideas, but do not copy its architecture or modify its files.
   inline-only hosts stay inline, and generic block hosts create paragraphs.
 - One shared core per selection context coordinates any number of editable
   surfaces without duplicating document-level listeners or state machinery.
-- Pluggable HTML policy aligned with the native HTML Sanitizer API, with a
-  DOMPurify adapter where the native API is unavailable. Applications may
-  narrow elements and attributes without coupling security sanitizing to
-  structural editor normalization.
+- Pluggable HTML policy aligned with the native HTML Sanitizer API. The native
+  adapter is implemented; a DOMPurify adapter remains planned where that API is
+  unavailable. Applications may narrow elements and attributes without
+  coupling security sanitizing to structural editor normalization.
 - Deterministic tests for browser input, selection direction, range boundaries,
   DOM mutations, undo/redo, clipboard data, focus changes, and known engine
   differences.
@@ -59,7 +59,8 @@ configuration ideas, but do not copy its architecture or modify its files.
 
 A module declares only the capabilities it contributes and receives an editor
 context during setup. It may register commands, event handlers, transforms,
-normalizers, state derivations, or browser policies and must return its cleanup.
+normalizers, state derivations, or browser policies. Resources are returned as
+objects with one idempotent `dispose()` method.
 Module order and conflicts are explicit; no module reaches into another
 module's private state.
 
@@ -76,18 +77,26 @@ tests, and documentation.
 
 ```text
 rte2/
+├── blocks.js              Optional block-style module and public entry
+├── breaks.js              Optional visible-line-break extension and entry
+├── editor.js              Prototype one-import convention client
 ├── rte.js                 Stable public API and default document core
+├── unstyle.js             Optional staged remove-format module and entry
 ├── src/                   Production responsibilities
-│   ├── command/           Registry, edit context, Enter, and range marks
+│   ├── browser/           Isolated native browser policies and fallbacks
+│   ├── client/            Lazy batteries-included editor wiring
+│   ├── command/           Registry, Enter/delete, block styles, and range marks
 │   ├── config/            CSS configuration and semantic host defaults
 │   ├── core/              Shared root lifecycle and surface registry
 │   ├── input/             beforeinput, paste, drop, and composition
 │   ├── mark/              Formatting values and HTML adapters
 │   ├── model/             Replaceable HTML content rules and categories
 │   ├── normalize/         Repair planning, execution, and normalization
+│   ├── sanitize/          External HTML, attribute, and URL security policy
 │   ├── selection/         Selection, range, ownership, and point mapping
 │   ├── surface/           State of one editable host
 │   ├── transaction/       Atomic editing changes and dirty scopes
+│   ├── unstyle/           Shared selection and external presentation policy
 │   └── ui/                Optional command-toolbar bindings
 ├── docs/                  Project-wide guides
 ├── playground/            Visual normalization, input, and mark inspection
@@ -113,16 +122,45 @@ and placement replaceable. A future static UI binds to one surface. Several
 roaming and static UIs may coexist and expose different subsets of the same
 commands.
 
-HTML policy has two distinct stages:
+The separate prototype `editor.js` is the convenience layer: importing it once
+and opting hosts in with `--u2-rte` lazily adds the standard Enter/input path,
+Bold, and one shared default toolbar. Optional extensions can add and remove
+commands, controls, and owned resources across current and future surfaces
+through the client without changing the engine. It intentionally keeps provisional default
+UI questions out of `rte.js`; explicit consumers continue to construct only the
+modules they need.
+
+The first substantial optional command module is `blocks.js`. It contributes a
+command-valued Block style select for Paragraph, H1, H2, and H3. Applications
+can replace its closed style group with their own selectors, target tags, and
+attribute writers without allowing the command to reinterpret arbitrary layout
+blocks.
+
+The first lifecycle extension is `breaks.js`. It provides a CSS-defaulted,
+optional toolbar toggle for presentation-only line-break marks. Its one
+top-layer overlay never enters editable HTML and exercises editor-wide setup,
+per-surface attachment, ShadowRoot style ownership, view-only commands, and
+complete disposal.
+
+The optional `unstyle.js` module adds a selection-only, staged remove-format
+action. Its immutable policy is not tied to UI: the same ordered levels can
+remove presentation cumulatively from a safely parsed paste/drop fragment.
+
+External HTML processing has three distinct stages:
 
 1. Security sanitizing accepts external HTML through safe, context-aware sinks.
-   It prefers native `Element.setHTML()` and `Sanitizer` support and can use a
-   DOMPurify adapter with equivalent editor policy.
-2. Structural normalization enforces the application's editable HTML model,
+   The implemented native adapter uses `Element.setHTML()` and fails explicitly
+   when that safe sink is absent. A DOMPurify adapter with equivalent editor
+   policy remains planned for other engines.
+2. Optional Unstyle cleanup removes configured classes, styles, presentation
+   attributes, and formatting wrappers without making security decisions.
+3. Structural normalization enforces the application's editable HTML model,
    such as allowed blocks, nesting, attributes, and canonical markup.
 
-Neither stage is hardwired into the core; both are replaceable policies with
-safe defaults.
+`ExternalInput` now composes these stages for rich `insertFromPaste` and
+`insertFromDrop` events and passes the browser's target range to the mapped
+`insertFragment` command. Plain text stays native. Neither policy is hardwired
+into the core; both remain replaceable.
 
 ## Configuration and defaults
 
@@ -132,9 +170,10 @@ properties. This lets a stylesheet configure an editor family while each
 default for the host element. JavaScript configuration is reserved for values
 that CSS cannot express, such as functions and policy modules.
 
-Current controls cover UI mode and toolbar items, block and Enter behavior, and
-cleanup level and timing. Future modules will add allowed content, paste/drop
-policy, selection presentation, and browser-policy overrides. Defaults must
+Current controls cover UI mode and toolbar items, allowed elements, block and
+Enter behavior, cleanup level and timing, optional visible line breaks, and an
+optional external-import Unstyle level. Future modules will add contextual
+plain-text import, selection presentation, and browser-policy overrides. Defaults must
 make an unconfigured editor useful and produce structurally valid HTML:
 
 - `ul` and `ol` hosts create and retain `li` children;
@@ -194,8 +233,8 @@ Work is limited through dirty scopes:
 
 - typing normalizes the smallest affected inline or block neighborhood after
   the input transaction;
-- paste and drop sanitize before insertion, then normalize the inserted
-  fragment and its insertion block;
+- rich paste/drop sanitizes before insertion, then normalizes the mapped
+  insertion neighborhood through the normal command pipeline;
 - commands normalize their touched nodes and necessary ancestors;
 - external DOM mutations queue only their affected subtrees;
 - blur, serialization, or an explicit cleanup command may request canonical
@@ -218,8 +257,11 @@ passes its `inputType`, text data, and target range unchanged to the replacing
 command.
 
 The pipeline deliberately does not read or trust clipboard and drag payloads.
-Future sanitizer adapters insert approved fragments before handing the affected
-range to this same normalization path.
+The optional `ExternalInput` boundary owns rich HTML first, uses a selected
+sanitizer and optional Unstyle policy, then invokes the mapped
+`insertFragment` command. Sanitizer failures keep native insertion prevented
+and are reported as input-phase errors. A non-native safe sanitizer adapter and
+contextual plain-text/quotation import remain open.
 
 ## Documentation and tests
 
@@ -249,11 +291,12 @@ transactional undo/redo.
 
 ## TODO
 
-- Specify the native Sanitizer and DOMPurify adapter contract.
+- Add the DOMPurify-compatible adapter and contextual plain-text/quotation
+  import.
 - Extend range marks with composition-aware pending state, mark-set conflicts,
   and nested wrapper merge.
 - Add italic, underline, strike, code, and link adapters after bold has settled.
-- Add a batteries-included `editor.js` client: one side-effect import plus CSS
-  opts surfaces into standard commands, input handling, and one shared toolbar.
+- Exercise the new synchronous extension lifecycle with another contextual UI
+  before adding dependency, ordering, or asynchronous setup concepts.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.
 - Port only the proven ideas from `../rte`; keep its implementation untouched.

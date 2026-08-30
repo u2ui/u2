@@ -14,13 +14,21 @@ export class Commands {
 
     constructor(surface, {model = htmlModel, commands = {}} = {}) {
         if (typeof surface?.transact !== 'function') throw new TypeError('A command registry requires an editor surface');
+        if (typeof model?.allows !== 'function' || typeof model?.allowed !== 'function') {
+            throw new TypeError('A command registry requires a content model');
+        }
         this.#surface = surface;
         this.#model = model;
         for (const [name, command] of Object.entries(commands)) this.add(name, command);
     }
 
     get surface() { return this.#surface; }
-    get model() { return this.#model; }
+    get model() {
+        const elements = this.#surface.config.elements;
+        return elements === null || typeof this.#model.withElements !== 'function'
+            ? this.#model
+            : this.#model.withElements(elements);
+    }
     get names() { return [...this.#commands.keys()]; }
 
     add(name, command) {
@@ -31,6 +39,9 @@ export class Commands {
         }
         if (command.state !== undefined && typeof command.state !== 'function') {
             throw new TypeError('Command state must be a function');
+        }
+        if (command.transaction !== undefined && typeof command.transaction !== 'boolean') {
+            throw new TypeError('Command transaction flag must be boolean');
         }
         this.delete(name);
         this.#commands.set(name, command);
@@ -71,19 +82,26 @@ export class Commands {
         const command = this.#commands.get(name);
         if (!command) throw new RangeError(`Unknown command: ${name}`);
         if (!this.#allows(command, this.#edit(null, detail))) return;
+        if (command.transaction === false) {
+            const edit = this.#edit(null, detail);
+            if (!this.#allows(command, edit)) return;
+            const result = command.run(edit);
+            this.#surface.emit('u2-rte-command', {name, inputType: edit.inputType, transaction: null, result});
+            return result;
+        }
         return this.#surface.transact(transaction => {
             const edit = this.#edit(transaction, detail);
             // The transaction restores the saved selection, so availability is
             // decided again against the state the command actually sees.
             if (!this.#allows(command, edit)) return;
             const result = command.run(edit);
-            this.#surface.emit('u2-rte-command', {name, inputType: edit.inputType, result});
+            this.#surface.emit('u2-rte-command', {name, inputType: edit.inputType, transaction: edit.transaction, result});
             return result;
         }, {trigger: 'command', command: name, inputType: detail.inputType || ''});
     }
 
     #edit(transaction, detail) {
-        return new Edit(this.#surface, transaction, {model: this.#model, ...detail});
+        return new Edit(this.#surface, transaction, {model: this.model, ...detail});
     }
 
     #allows(command, edit) {

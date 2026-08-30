@@ -67,8 +67,14 @@
       }
     }
 
+    #tree {
+      & [data-position="anchor"] { color: #16833b; }
+      & [data-position="focus"] { color: #1672c4; }
+      & [data-position] { font-weight: 900; }
+    }
+
     #stage { background: Canvas; padding: .5rem; }
-    #editor {
+    #editor, #editor-prototype {
       border: 2px solid color-mix(in srgb, Highlight 55%, var(--border));
       min-block-size: 6rem;
       outline: none;
@@ -184,6 +190,7 @@
           <option>insertParagraph</option>
           <option>insertLineBreak</option>
           <option>deleteContentBackward</option>
+          <option>deleteContentForward</option>
           <option>insertFromPaste</option>
           <option>insertFromDrop</option>
         </select>
@@ -192,7 +199,7 @@
     </fieldset>
   </div>
 
-  <div id="toolbar" aria-label="Selection formatting">
+  <div id="toolbar" aria-label="Explicit editor formatting">
     <button id="bold-toggle" type="button" data-command="bold" data-state data-shortcut="b" aria-label="Bold">
       <span class="symbol" aria-hidden="true">B</span>
     </button>
@@ -209,7 +216,7 @@
 
   <div class="grid">
     <section class="panel">
-      <h2>Editable DOM</h2>
+      <h2>Editable DOM — explicit integration</h2>
       <div id="stage"></div>
       <p id="status" aria-live="polite"></p>
     </section>
@@ -230,9 +237,24 @@
       <pre id="log">Load a scenario, then analyze or normalize it.</pre>
     </section>
 
+    <section class="panel wide">
+      <h2>One-import editor prototype</h2>
+      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:block bold unstyle breaks; --u2-rte-show-breaks:true">
+        <p>Select text for Bold, choose its block style, or press Enter inside this list:</p>
+        <ul><li>List item</li></ul>
+        <p><span class="pasted" style="color:#b30"><strong>Select this paste-like formatting</strong></span> and click T× repeatedly.</p>
+        <p>The faint arrow after this line is a visible break.<br>It is not part of the editable HTML.</p>
+      </div>
+      <p><small>This surface is wired by <code>editor.js</code>, optional <code>blocks.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>, and CSS variables.</small></p>
+    </section>
+
     <details class="panel wide">
       <summary>Notes</summary>
       <p>
+        The first surface is the explicit integration: its commands and toolbar
+        markup are listed in this page for inspection, while their behavior
+        comes from the production modules. The lower prototype is the
+        convention integration and wires itself from one import plus CSS.
         Invalid nested structures are built with DOM methods because the HTML
         parser repairs some of them immediately. “Parse and apply HTML” is
         deliberately available to compare parser behavior with RTE2 behavior.
@@ -250,7 +272,13 @@
   </div>
 
   <script type="module">
+    import '../editor.js';
+    import '../blocks.js';
+    import '../breaks.js';
+    import '../unstyle.js';
+    import {rangeRect} from '../src/browser/range-rect.js';
     import {Commands} from '../src/command/commands.js';
+    import {deleteBackward, deleteForward} from '../src/command/delete.js';
     import {enter, lineBreak} from '../src/command/enter.js';
     import {applyMark, removeMark} from '../src/command/mark.js';
     import {PendingMarks} from '../src/command/pending-marks.js';
@@ -380,6 +408,8 @@
       surface = core.add(editor);
       const pending = new PendingMarks(surface);
       commands = new Commands(surface, {commands: {
+        deleteBackward,
+        deleteForward,
         enter,
         lineBreak,
         insertText: pending.insertText,
@@ -455,8 +485,8 @@
 
     function placeToolbar(element, target) {
       const range = target.selection?.range();
-      const anchor = range?.getBoundingClientRect();
-      if (!anchor) return;
+      if (!range) return;
+      const anchor = rangeRect(range, {root: target.element});
       const box = element.getBoundingClientRect();
       const gap = 8;
       const left = Math.max(gap, Math.min(innerWidth - box.width - gap, anchor.left + anchor.width / 2 - box.width / 2));
@@ -527,25 +557,62 @@
 
     function refreshTree() {
       if (!editor) return;
-      const lines = tree(editor);
       const selection = getSelection();
-      if (selection.rangeCount && editor.contains(selection.anchorNode) && editor.contains(selection.focusNode)) {
-        lines.push('', `anchor: ${path(selection.anchorNode)} @ ${selection.anchorOffset}`);
-        lines.push(`focus:  ${path(selection.focusNode)} @ ${selection.focusOffset}`);
+      const owned = selection.rangeCount && editor.contains(selection.anchorNode) && editor.contains(selection.focusNode);
+      const positions = owned ? [
+        {name: 'anchor', node: selection.anchorNode, offset: selection.anchorOffset},
+        {name: 'focus', node: selection.focusNode, offset: selection.focusOffset},
+      ] : [];
+      const output = document.createDocumentFragment();
+      tree(editor, positions, 0, output);
+      if (owned) {
+        line(output, '');
+        line(output, `anchor: ${path(selection.anchorNode)} @ ${selection.anchorOffset}`);
+        line(output, `focus:  ${path(selection.focusNode)} @ ${selection.focusOffset}`);
       }
-      controls.tree.textContent = lines.join('\n');
+      controls.tree.replaceChildren(output);
     }
 
-    function tree(node, depth = 0, lines = []) {
+    function tree(node, positions, depth, output) {
       const pad = '  '.repeat(depth);
       if (node.nodeType === Node.TEXT_NODE) {
-        lines.push(`${pad}#text ${JSON.stringify(node.data)}`);
-      } else {
+        const points = positions.filter(point => point.node === node).sort((a, b) => a.offset - b.offset);
+        const parts = [`${pad}#text "`];
+        let offset = 0;
+        for (const point of points) {
+          parts.push(escaped(node.data.slice(offset, point.offset)), marker(point));
+          offset = point.offset;
+        }
+        parts.push(`${escaped(node.data.slice(offset))}"`);
+        line(output, ...parts);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
         const attrs = [...node.attributes].map(attribute => ` ${attribute.name}=${JSON.stringify(attribute.value)}`).join('');
-        lines.push(`${pad}<${node.localName}${attrs}>`);
-        for (const child of node.childNodes) tree(child, depth + 1, lines);
+        line(output, `${pad}<${node.localName}${attrs}>`);
+        for (let offset = 0; offset <= node.childNodes.length; offset++) {
+          const points = positions.filter(point => point.node === node && point.offset === offset);
+          if (points.length) line(output, '  '.repeat(depth + 1), ...points.map(marker));
+          if (node.childNodes[offset]) tree(node.childNodes[offset], positions, depth + 1, output);
+        }
+      } else {
+        line(output, `${pad}${node.nodeName}`);
       }
-      return lines;
+    }
+
+    function marker({name, offset}) {
+      const element = document.createElement('span');
+      element.dataset.position = name;
+      element.title = `${name} @ ${offset}`;
+      element.textContent = '┃';
+      return element;
+    }
+
+    function escaped(value) {
+      return JSON.stringify(value).slice(1, -1);
+    }
+
+    function line(output, ...parts) {
+      if (output.childNodes.length) output.append('\n');
+      output.append(...parts);
     }
 
     function path(node) {

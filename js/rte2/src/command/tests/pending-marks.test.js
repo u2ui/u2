@@ -61,6 +61,15 @@ test('pending marks: toggling twice returns to native input', () => withPending(
     }
 ));
 
+test('pending marks: a disallowed wrapper is unavailable at the caret', () => withPending(
+    '<div contenteditable style="--u2-rte-elements:p br"><p>text</p></div>', ({commands, document, host}) => {
+        caret(document, host.querySelector('p').firstChild, 2);
+        equal(commands.enabled('toggleX'), false);
+        equal(commands.run('toggleX'), undefined);
+        equal(host.innerHTML, '<p>text</p>');
+    }
+));
+
 test('pending marks: stay bound to one rich-text surface', () => withFixture(
     '<div contenteditable>one</div><div contenteditable=plaintext-only>two</div>', root => {
         const core = new Rte(document, {auto: false});

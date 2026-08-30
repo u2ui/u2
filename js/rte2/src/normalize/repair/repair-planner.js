@@ -17,7 +17,8 @@ export class RepairPlanner {
 
     constructor(root, {model = htmlModel, block = null, level = 'structural', generic = ['div']} = {}) {
         if (root?.nodeType !== Node.ELEMENT_NODE) throw new TypeError('A repair planner requires an element root');
-        if (typeof model?.allows !== 'function' || typeof model?.rule !== 'function' || typeof model?.block !== 'function') {
+        if (typeof model?.allows !== 'function' || typeof model?.allowed !== 'function'
+            || typeof model?.rule !== 'function' || typeof model?.block !== 'function') {
             throw new TypeError('A repair planner requires a content model');
         }
         if (block !== null && (typeof block !== 'string' || !block.trim())) {
@@ -51,6 +52,9 @@ export class RepairPlanner {
         }
         if (this.#model.allows(parent, child)) return KEEP;
         if (ignorable(child)) return REMOVE;
+        if (child.nodeType === Node.ELEMENT_NODE && !this.#model.allowed(child)) {
+            return this.#model.atomic(child) ? REMOVE : action('unwrap', {breaks: this.#model.block(child)});
+        }
 
         const wrapper = this.#wrapper(parent);
         if (wrapper && this.#model.allows(parent, wrapper) && this.#model.allows(wrapper, child)) {
@@ -85,13 +89,20 @@ export class RepairPlanner {
                     ? action('wrap', {tag: wrapper.localName})
                     : REMOVE;
         }
+        if (child.nodeType === Node.ELEMENT_NODE && !this.#model.allowed(child) && this.#model.block(child)) {
+            const children = [...child.childNodes];
+            if (children.every(node => this.#model.allows(wrapper, node))) {
+                return action('convert', {tag: wrapper.localName});
+            }
+        }
         if (child.nodeType === Node.ELEMENT_NODE && this.#generic.has(child.localName) && neutral(child)) {
             const children = [...child.childNodes];
             if (child.localName !== wrapper.localName && children.every(node => this.#model.allows(wrapper, node))) {
                 return action('convert', {tag: wrapper.localName});
             }
             const content = children.filter(node => !ignorable(node));
-            if (content.length && content.every(node => this.#model.block(node) && this.#model.allows(this.#root, node))) {
+            if (content.some(node => this.#model.block(node))
+                && content.every(node => this.#model.allows(this.#root, node))) {
                 return action('unwrap', {breaks: false});
             }
         }

@@ -1,6 +1,7 @@
 import {Edit} from './edit.js';
 import {applyMark, removeMark, toggleMark} from './mark.js';
 import {isPlainTextHost} from '../selection/ownership/ownership.js';
+import {Mark} from '../mark/mark.js';
 import {Point} from '../selection/point/point.js';
 
 // Pending mark overrides for one surface. They remain valid only while the
@@ -28,12 +29,16 @@ export class PendingMarks {
     get insertText() { return this.#insertText; }
 
     toggle(adapter, value) {
-        const toggle = arguments.length > 1 ? toggleMark(adapter, value) : toggleMark(adapter);
-        const apply = arguments.length > 1 ? applyMark(adapter, value) : applyMark(adapter);
-        const remove = arguments.length > 1 ? removeMark(adapter, value) : removeMark(adapter);
+        const hasValue = arguments.length > 1;
+        const toggle = hasValue ? toggleMark(adapter, value) : toggleMark(adapter);
+        const apply = hasValue ? applyMark(adapter, value) : applyMark(adapter);
+        const remove = hasValue ? removeMark(adapter, value) : removeMark(adapter);
+        const mark = value instanceof Mark ? value : adapter.type.create(hasValue ? value : true);
         const key = {};
         return {
-            enabled: edit => this.#owns(edit) && (!!edit.range && (!edit.range.collapsed || markable(edit))),
+            enabled: edit => this.#owns(edit) && (!!edit.range && (edit.range.collapsed
+                ? markable(edit, adapter, mark, toggle.state(edit) === true)
+                : toggle.enabled(edit))),
             state: edit => this.#entry(edit, key)?.active ?? toggle.state(edit),
             run: edit => {
                 this.#assert(edit);
@@ -41,12 +46,12 @@ export class PendingMarks {
                     this.clear();
                     return toggle.run(edit);
                 }
-                if (!markable(edit)) return;
+                if (!markable(edit, adapter, mark, toggle.state(edit) === true)) return;
                 const base = toggle.state(edit);
                 const active = (this.#entry(edit, key)?.active ?? base) !== true;
                 this.#prepare(edit);
                 if (active === base) this.#entries.delete(key);
-                else this.#entries.set(key, {active, apply, remove});
+                else this.#entries.set(key, {active, apply, remove, adapter, mark});
                 return active;
             },
         };
@@ -84,7 +89,7 @@ export class PendingMarks {
     #current(edit) {
         return this.#owns(edit)
             && edit.range?.collapsed
-            && markable(edit)
+            && [...this.#entries.values()].every(entry => markable(edit, entry.adapter, entry.mark, !entry.active))
             && this.#selection === this.#surface.selection
             && this.#entries.size > 0;
     }
@@ -120,12 +125,15 @@ function insert(edit, data) {
     return text;
 }
 
-function markable(edit) {
+function markable(edit, adapter, mark, removing) {
     if (!edit.range?.collapsed) return false;
     for (let element = parentElement(edit.range.start.node); element && element !== edit.element; element = element.parentElement) {
         if (element.hasAttribute('contenteditable') || edit.model.atomic(element)) return false;
     }
-    return true;
+    if (removing) return true;
+    const node = edit.range.start.node;
+    const parent = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+    return edit.model.allows(parent, adapter.render(mark, edit.document));
 }
 
 function parentElement(node) {

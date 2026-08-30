@@ -18,7 +18,10 @@ export function toggleMark(adapter, value) {
     const apply = applyCommand(adapter, mark);
     const remove = removeCommand(adapter, mark);
     return {
-        enabled,
+        enabled: edit => {
+            if (!selected(edit)) return false;
+            return markState(edit, adapter, mark) === true || canApply(edit, adapter, mark);
+        },
         state: apply.state,
         run(edit) {
             return (markState(edit, adapter, mark) === true ? remove : apply).run(edit);
@@ -28,7 +31,8 @@ export function toggleMark(adapter, value) {
 
 function applyCommand(adapter, mark) {
     return {
-        enabled,
+        enabled: edit => selected(edit)
+            && (markState(edit, adapter, mark) === true || canApply(edit, adapter, mark)),
         state: edit => markState(edit, adapter, mark),
         run(edit) {
             const state = prepare(edit);
@@ -47,7 +51,7 @@ function applyCommand(adapter, mark) {
 function removeCommand(adapter, mark) {
     if (!adapter.removable) throw new TypeError('Removing a mark requires a clear policy');
     return {
-        enabled,
+        enabled: edit => selected(edit) && markState(edit, adapter, mark) !== false,
         state: edit => markState(edit, adapter, mark),
         run(edit) {
             const state = prepare(edit);
@@ -60,8 +64,22 @@ function removeCommand(adapter, mark) {
     };
 }
 
-function enabled(edit) {
+function selected(edit) {
     return !!edit.range && !edit.range.collapsed;
+}
+
+function canApply(edit, adapter, mark) {
+    if (!selected(edit)) return false;
+    const wrapper = adapter.render(mark, edit.document);
+    for (const node of edit.range.textNodes()) {
+        if (!node.data || blocked(edit, node) || has(edit, adapter, mark, node)) continue;
+        for (let element = node.parentElement; element && element !== edit.element; element = element.parentElement) {
+            if (edit.model.block(element) || boundary(element)) break;
+            if (covered(edit.range, element) && reusable(edit, adapter, element)) return true;
+        }
+        if (edit.model.allows(node.parentNode, wrapper)) return true;
+    }
+    return false;
 }
 
 function markState(edit, adapter, mark) {
@@ -242,6 +260,7 @@ function reusable(edit, adapter, element) {
 function inline(edit, element) {
     return element !== edit.element
         && !boundary(element)
+        && (typeof edit.model.allowed !== 'function' || edit.model.allowed(element))
         && edit.model.is(element, 'phrasing')
         && !edit.model.block(element)
         && !edit.model.atomic(element);

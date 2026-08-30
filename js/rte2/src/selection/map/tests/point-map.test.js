@@ -37,6 +37,46 @@ test('point map: insertion resolves equal boundaries by affinity', () => withFix
     }
 ));
 
+test('point map: fragment insertion maps parent and fragment boundaries as one operation', () => withFixture(
+    '<div><i>before</i><i>after</i></div>', root => {
+        const host = root.firstElementChild;
+        const fragment = document.createDocumentFragment();
+        const bold = document.createElement('b');
+        bold.textContent = 'bold';
+        const text = document.createTextNode('text');
+        fragment.append(bold, text);
+        const before = new Point(host, 1, 'backward');
+        const after = new Point(host, 1, 'forward');
+        const fragmentStart = new Point(fragment, 0);
+        const fragmentMiddle = new Point(fragment, 1);
+        const fragmentEnd = new Point(fragment, 2);
+        const content = new Point(bold.firstChild, 2);
+        const map = new PointMap([before, after, fragmentStart, fragmentMiddle, fragmentEnd, content]);
+        const inserted = map.insertFragment(host, 1, fragment);
+        equal(host.innerHTML, '<i>before</i><b>bold</b>text<i>after</i>');
+        equal(fragment.childNodes.length, 0);
+        equal(inserted, [bold, text]);
+        equal(map.get(before).offset, 1);
+        equal(map.get(after).offset, 3);
+        same(map.get(fragmentStart).node, host);
+        equal(map.get(fragmentStart).offset, 1);
+        equal(map.get(fragmentMiddle).offset, 2);
+        equal(map.get(fragmentEnd).offset, 3);
+        same(map.get(content).node, bold.firstChild);
+        equal(map.get(content).offset, 2);
+        throws(() => map.insertFragment(host, 0, bold), TypeError);
+        throws(() => map.insertFragment(host, 20, document.createDocumentFragment()), RangeError);
+
+        const foreignDocument = document.implementation.createHTMLDocument();
+        const foreign = foreignDocument.createDocumentFragment();
+        const mark = foreignDocument.createElement('mark');
+        foreign.append(mark);
+        map.insertFragment(host, 0, foreign);
+        same(mark.ownerDocument, document);
+        same(host.firstElementChild, mark);
+    }
+));
+
 test('point map: text insertion maps offsets and equal-boundary affinity', () => withFixture(
     '<div>abcd</div>', root => {
         const text = root.firstElementChild.firstChild;

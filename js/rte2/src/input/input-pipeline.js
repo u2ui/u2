@@ -7,6 +7,10 @@ import {SelectionSnapshot} from '../selection/snapshot.js';
 
 const TRIGGERS = new Set(['input', 'paste', 'drop', 'command']);
 const PASTE = new Set(['insertFromPaste', 'insertFromPasteAsQuotation']);
+const DELETE_KEYS = new Map([
+    ['Backspace', 'deleteContentBackward'],
+    ['Delete', 'deleteContentForward'],
+]);
 
 export class InputPipeline {
     #surface;
@@ -25,7 +29,8 @@ export class InputPipeline {
         if (root?.nodeType !== Node.ELEMENT_NODE || typeof surface?.transact !== 'function') {
             throw new TypeError('An input pipeline requires an editor surface');
         }
-        if (typeof model?.block !== 'function' || typeof model?.allows !== 'function') {
+        if (typeof model?.block !== 'function' || typeof model?.allows !== 'function'
+            || typeof model?.allowed !== 'function') {
             throw new TypeError('An input pipeline requires a content model');
         }
         if (commands !== null && (typeof commands?.input !== 'function' || typeof commands?.run !== 'function')) {
@@ -38,6 +43,7 @@ export class InputPipeline {
         this.#controller = new root.ownerDocument.defaultView.AbortController();
         const listen = {signal: this.#controller.signal};
         root.addEventListener('beforeinput', this.#beforeInput, listen);
+        root.addEventListener('keydown', this.#keyDown, listen);
         root.addEventListener('input', this.#input, listen);
         root.addEventListener('compositionstart', this.#compositionStart, listen);
         root.addEventListener('compositionend', this.#compositionEnd, listen);
@@ -59,8 +65,9 @@ export class InputPipeline {
         const settings = this.#surface.config;
         if (!settings.cleanOn.includes(trigger)) return null;
 
+        const model = this.#commands?.model || configuredModel(this.#model, settings.elements);
         const normalizer = new Normalizer(this.#root, {
-            model: this.#model,
+            model,
             block: settings.block,
             level: settings.cleanup,
         });
@@ -94,10 +101,11 @@ export class InputPipeline {
     #beforeInput = event => {
         if (!this.#owns(event)) return;
         this.#surface.capture();
+        if (event.defaultPrevented) return;
         if (this.#route(event)) return;
         const pending = {
             inputType: event.inputType || '',
-            range: eventRange(event, this.#surface),
+            range: inputRange(event, this.#surface),
             trigger: this.#source || inputTrigger(event.inputType),
         };
         this.#pending = pending;
@@ -107,12 +115,24 @@ export class InputPipeline {
         });
     };
 
+    #keyDown = event => {
+        if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey || !this.#owns(event)) return;
+        const inputType = DELETE_KEYS.get(event.key);
+        if (!inputType) return;
+        this.#surface.capture();
+        this.#route(event, {
+            inputType,
+            data: null,
+            range: selectionRange(this.#surface),
+        });
+    };
+
     #input = event => {
         if (!this.#owns(event)) return;
         const inputType = event.inputType || this.#pending?.inputType || '';
         const job = {
             inputType,
-            range: this.#pending?.range || eventRange(event, this.#surface),
+            range: this.#pending?.range || inputRange(event, this.#surface),
             trigger: this.#pending?.trigger || this.#source || inputTrigger(inputType),
         };
         this.#pending = null;
@@ -151,6 +171,7 @@ export class InputPipeline {
     };
 
     #command = event => {
+        if (!event.detail.transaction) return;
         this.normalize('command', {inputType: event.detail.inputType || ''});
     };
 
@@ -161,11 +182,15 @@ export class InputPipeline {
     // Native editing that cannot be interoperable is prevented and replaced by
     // the registered command. Everything else keeps its native behavior and is
     // repaired afterwards.
-    #route(event) {
-        if (!this.#commands || !event.cancelable || this.#composing || isPlainTextHost(this.#root)) return false;
-        const name = this.#commands.input(event.inputType);
+    #route(event, detail = {
+        inputType: event.inputType,
+        data: event.data,
+        range: inputRange(event, this.#surface),
+    }) {
+        if (!this.#commands || !event.cancelable || event.defaultPrevented
+            || this.#composing || event.isComposing || isPlainTextHost(this.#root)) return false;
+        const name = this.#commands.input(detail.inputType);
         if (!name) return false;
-        const detail = {inputType: event.inputType, data: event.data, range: eventRange(event, this.#surface)};
         if (!this.#commands.enabled(name, detail)) return false;
         event.preventDefault();
         this.#pending = null;
@@ -203,7 +228,7 @@ function normalizationScope(range, root, normalizer) {
     return normalizer.planner.plan(parent, element).type === 'keep' ? element : parent;
 }
 
-function eventRange(event, surface) {
+export function inputRange(event, surface) {
     const target = event.getTargetRanges?.()[0];
     if (!target) return selectionRange(surface);
     try {
@@ -223,4 +248,8 @@ function selectionRange(surface) {
 function rangePoints(range) {
     const start = Point.fromRange(range, 'start');
     return range.collapsed ? [start] : [start, Point.fromRange(range, 'end')];
+}
+
+function configuredModel(model, elements) {
+    return elements === null || typeof model.withElements !== 'function' ? model : model.withElements(elements);
 }

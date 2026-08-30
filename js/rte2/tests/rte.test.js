@@ -1,10 +1,13 @@
 import {
+    BlockStyles,
     ContentModel,
     EditRange,
+    ExternalInput,
     InputPipeline,
     Mark,
     MarkAdapter,
     MarkType,
+    NativeSanitizer,
     Point,
     PointMap,
     PendingMarks,
@@ -13,21 +16,31 @@ import {
     RepairPlanner,
     Rte,
     SelectionSnapshot,
+    SanitizePolicy,
     Surface,
     Toolbar,
     Transaction,
+    Unstyle,
     applyMark,
     bold,
     boldHtml,
+    deleteBackward,
+    deleteForward,
+    elementPresets,
     htmlModel,
+    inputRange,
     inputTrigger,
+    insertFragment,
+    rangeRect,
     removeMark,
     rte,
     toggleMark,
+    unstyleCommand,
 } from '../rte.js';
 import {same, test, truthy} from './harness.js';
 
 test('public API: exports the foundation and one default document core', () => {
+    truthy(BlockStyles);
     truthy(Rte);
     truthy(Surface);
     truthy(Toolbar);
@@ -35,20 +48,31 @@ test('public API: exports the foundation and one default document core', () => {
     truthy(PointMap);
     truthy(PendingMarks);
     truthy(EditRange);
+    truthy(ExternalInput);
     truthy(InputPipeline);
     truthy(Mark);
     truthy(MarkAdapter);
     truthy(MarkType);
+    truthy(NativeSanitizer);
     truthy(SelectionSnapshot);
+    truthy(SanitizePolicy);
     truthy(Transaction);
     truthy(applyMark);
     truthy(bold);
     truthy(boldHtml);
+    truthy(deleteBackward);
+    truthy(deleteForward);
+    truthy(elementPresets.article);
     truthy(ContentModel);
     truthy(htmlModel);
+    truthy(inputRange);
     truthy(inputTrigger);
+    truthy(insertFragment);
+    truthy(rangeRect);
     truthy(removeMark);
     truthy(toggleMark);
+    truthy(Unstyle);
+    truthy(unstyleCommand);
     truthy(RepairPlanner);
     truthy(RepairExecutor);
     truthy(Normalizer);

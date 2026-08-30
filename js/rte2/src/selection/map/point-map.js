@@ -41,6 +41,25 @@ export class PointMap {
         return node;
     }
 
+    insertFragment(parent, offset, fragment) {
+        assertBoundary(parent, offset);
+        if (fragment?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
+            throw new TypeError('Fragment insertion requires a DocumentFragment');
+        }
+        const nodes = [...fragment.childNodes];
+        const reference = parent.childNodes[offset] || null;
+        parent.insertBefore(fragment, reference);
+        for (const point of this.#points.values()) {
+            if (point.node === fragment) {
+                relocate(point, parent, offset + point.offset);
+            } else if (point.node === parent
+                && (point.offset > offset || point.offset === offset && point.affinity === 'forward')) {
+                point.offset += nodes.length;
+            }
+        }
+        return nodes;
+    }
+
     insertText(node, offset, data) {
         if (node?.nodeType !== Node.TEXT_NODE) throw new TypeError('Text can only be inserted into a text node');
         if (!Number.isInteger(offset) || offset < 0 || offset > node.length) throw new RangeError('Invalid text insertion offset');

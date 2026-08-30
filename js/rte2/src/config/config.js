@@ -9,6 +9,12 @@ const UI = new Set(['none', 'roaming', 'static']);
 const TAG = /^[a-z][a-z\d-]*$/;
 const FALSE = new Set(['0', 'false', 'none', 'off']);
 const DEFAULT_CLEAN_ON = Object.freeze(['input', 'paste', 'drop', 'command']);
+const EMPTY_ELEMENTS = Object.freeze([]);
+export const elementPresets = Object.freeze({
+    basic: elements('p ul ol li a strong b em i code br'),
+    article: elements('p h1 h2 h3 h4 h5 h6 blockquote pre ul ol li hr a strong b em i u s del ins code kbd mark q small sub sup span br'),
+    document: elements('p h1 h2 h3 h4 h5 h6 blockquote pre ul ol li dl dt dd hr figure figcaption img table caption thead tbody tfoot tr th td a strong b em i u s del ins code kbd mark q small sub sup span br'),
+});
 const DEFAULTS = Object.freeze({
     block: Object.freeze({block: 'p', enter: 'block'}),
     inline: Object.freeze({block: null, enter: 'break'}),
@@ -42,6 +48,7 @@ export function config(host) {
         enter: choice(style, 'enter', ENTER, defaults.enter),
         cleanup: choice(style, 'cleanup', CLEANUP, 'structural'),
         cleanOn: Object.freeze(cleanOn ? cleanOn.split(/[\s,]+/).filter(Boolean) : [...DEFAULT_CLEAN_ON]),
+        elements: allowedElements(style),
         ui: choice(style, 'ui', UI, 'roaming'),
     });
 }
@@ -60,4 +67,16 @@ function tag(style, name, fallback) {
 function choice(style, name, choices, fallback) {
     const result = value(style, name);
     return choices.has(result) ? result : fallback;
+}
+
+function allowedElements(style) {
+    const result = value(style, 'elements').toLowerCase();
+    if (!result || result === 'all') return null;
+    if (result.startsWith('@')) return elementPresets[result.slice(1)] || EMPTY_ELEMENTS;
+    const names = result.split(/[\s,]+/).filter(Boolean);
+    return names.length && names.every(name => TAG.test(name)) ? Object.freeze([...new Set(names)]) : EMPTY_ELEMENTS;
+}
+
+function elements(value) {
+    return Object.freeze(value.split(/\s+/));
 }

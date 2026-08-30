@@ -26,8 +26,10 @@ without changing nodes, selections, or transaction state.
 - `none` never plans changes. `minimal` repairs invalid relationships only.
   `structural` and `canonical` additionally shape direct root content.
 - The configured root block wraps direct phrasing content, converts neutral
-  generic blocks containing phrasing content, and removes redundant generic
-  wrappers around complete blocks.
+  generic blocks containing phrasing content, and removes neutral generic
+  wrappers around root blocks mixed with content that can be shaped at the
+  root. A nested `<div>` followed by text can therefore become two sibling
+  paragraphs through repeated small repairs.
 - Root shaping requires a root block the root itself permits, and a generic
   block that already is the root block is never converted into itself. Both
   keep root repairs convergent instead of undoing each other.

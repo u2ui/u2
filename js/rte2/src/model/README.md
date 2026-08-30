@@ -16,10 +16,18 @@ The generic engine does not hardcode HTML rules.
 - `exclude`: child tags or categories forbidden below this element, including
   through transparent descendants.
 - `block`, `atomic`, and `void`: editor semantics used by traversal and repair.
+- `textBlock`: a paragraph-like block that Enter may split, such as a heading;
+  it implies `block`.
+- `mergeable`: a block whose content Backspace may join into a compatible
+  preceding sibling. It defaults to `true` for text blocks and remains an
+  explicit policy for structural blocks such as list items.
 - `defaultChild`: structural wrapper used when direct content needs repair.
 - `transparent`: inherit the nearest concrete ancestor's child model.
 - `allow(parent, child, model)`: an optional dynamic decision. Returning
   `undefined` falls back to `children`.
+- `elements`: an optional final allowlist for output element names. Parent
+  rules remain available as context even when the editing host itself is not
+  output content.
 
 ## Contract
 
@@ -31,8 +39,15 @@ The generic engine does not hardcode HTML rules.
   intentionally insufficient.
 - `extend()` creates an isolated model, shallowly merging named rule overrides
   and allowing a rule to be removed with `null`.
+- `allowed(node)` answers the element allowlist independently of its current
+  parent; text is still decided by the parent's `children` rule.
+- `withElements(names)` returns and reuses an immutable narrowed model. This is
+  the inexpensive bridge from a surface's CSS element policy to cleanup and
+  commands.
 - The model describes validity only. It never mutates DOM, chooses a repair,
   crosses editing hosts, or reads browser-computed styles.
+- Element validity is not HTML sanitizing. Attributes, URL schemes, and hostile
+  input require a sanitizer policy before insertion.
 
 ## TODO
 

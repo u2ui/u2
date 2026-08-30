@@ -14,7 +14,7 @@ for (const name of PHRASING) RULES[name] = content(['flow', 'phrasing'], ['@phra
 for (const name of FLOW_BLOCKS) RULES[name] = content(['flow'], ['@flow'], {block: true});
 
 for (const name of words('h1 h2 h3 h4 h5 h6 p pre')) {
-    RULES[name] = content(['flow'], ['@phrasing'], {block: true});
+    RULES[name] = content(['flow'], ['@phrasing'], {textBlock: true});
 }
 
 Object.assign(RULES, {
@@ -39,7 +39,7 @@ Object.assign(RULES, {
     ul: content(['flow'], ['li'], {block: true, defaultChild: 'li'}),
     ol: content(['flow'], ['li'], {block: true, defaultChild: 'li'}),
     menu: content(['flow'], ['li'], {block: true, defaultChild: 'li'}),
-    li: content([], ['@flow'], {block: true}),
+    li: content([], ['@flow'], {block: true, mergeable: true}),
     dl: content(['flow'], ['dt', 'dd', 'div'], {block: true}),
     dt: content([], ['@flow'], {block: true}),
     dd: content([], ['@flow'], {block: true}),

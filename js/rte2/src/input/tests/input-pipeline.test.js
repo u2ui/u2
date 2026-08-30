@@ -1,5 +1,6 @@
-import {InputPipeline, inputTrigger} from '../input-pipeline.js';
+import {InputPipeline, inputRange, inputTrigger} from '../input-pipeline.js';
 import {Commands} from '../../command/commands.js';
+import {deleteBackward, deleteForward} from '../../command/delete.js';
 import {enter} from '../../command/enter.js';
 import {Rte} from '../../core/core.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
@@ -11,6 +12,25 @@ test('input pipeline: classifies native input sources', () => {
     equal(inputTrigger('insertFromPasteAsQuotation'), 'paste');
     equal(inputTrigger('insertFromDrop'), 'drop');
 });
+
+test('input pipeline: exposes a safe native target-range conversion', () => withPipeline(
+    '<div contenteditable><p>text</p></div>', ({document, host, surface}) => {
+        const text = host.firstElementChild.firstChild;
+        caret(document, text, 1);
+        const target = document.createRange();
+        target.setStart(text, 2);
+        target.setEnd(text, 3);
+        const converted = inputRange({getTargetRanges: () => [target]}, surface);
+        same(converted.startContainer, text);
+        equal(converted.startOffset, 2);
+        equal(converted.endOffset, 3);
+
+        const outside = document.createRange();
+        outside.selectNodeContents(document.body);
+        equal(inputRange({getTargetRanges: () => [outside]}, surface), null);
+        equal(inputRange({}, surface).startOffset, 1, 'Missing native targets use the owned selection');
+    }
+));
 
 test('input pipeline: validates surfaces, models, triggers, and teardown', () => withPipeline(
     '<div contenteditable>text</div>', ({host, pipeline, surface}) => {
@@ -37,6 +57,17 @@ test('input pipeline: ordinary input normalizes the affected invalid block and p
         equal(paragraph.innerHTML, 'test<br> after');
         equal(host.lastElementChild.outerHTML, '<p>untouched</p>');
         equal(document.getSelection().toString(), 'es');
+    }
+));
+
+test('input pipeline: CSS element policy drives post-input cleanup', () => withPipeline(
+    '<div contenteditable style="--u2-rte-clean-on:input; --u2-rte-elements:p strong br"><h2>Title</h2></div>',
+    ({document, host}) => {
+        caret(document, host.firstElementChild.firstChild, 3);
+        host.dispatchEvent(input(document, 'insertText'));
+        equal(host.innerHTML, '<p>Title</p>');
+        same(document.getSelection().anchorNode, host.firstElementChild.firstChild);
+        equal(document.getSelection().anchorOffset, 3);
     }
 ));
 
@@ -156,6 +187,18 @@ test('input pipeline: explicit command cleanup carries transaction metadata', ()
     }
 ));
 
+test('input pipeline: view commands do not trigger structural cleanup', () => withPipeline(
+    '<div contenteditable style="--u2-rte-clean-on:command"><div>text</div></div>',
+    ({document, host, commands}) => {
+        let changes = 0;
+        host.addEventListener('u2-rte-change', () => changes++);
+        caret(document, host.firstElementChild.firstChild, 2);
+        equal(commands.run('view'), 'shown');
+        equal(host.innerHTML, '<div>text</div>');
+        equal(changes, 0);
+    }, {view: {transaction: false, run: () => 'shown'}}
+));
+
 test('input pipeline: a routed input type is prevented and replaced by its command', () => withPipeline(
     '<div contenteditable style="--u2-rte-clean-on: input command"><p>onetwo</p></div>',
     ({document, host}) => {
@@ -178,6 +221,31 @@ test('input pipeline: a routed input type is prevented and replaced by its comma
         equal(changes.length, 1, 'A command and its cleanup share one transaction');
         equal(order, ['u2-rte-command', 'u2-rte-normalize', 'u2-rte-change'], 'Observers see cause before effect');
     }, {enter}
+));
+
+test('input pipeline: structural deletion keys route before unreliable native input', () => withPipeline(
+    '<div contenteditable><ul id=back><li><br></li><li><br></li></ul><ul id=forward><li><br></li><li><br></li></ul></div>',
+    ({document, host}) => {
+        const back = host.querySelector('#back');
+        caret(document, back.lastElementChild, 1);
+        const event = key(document, 'Backspace');
+        host.dispatchEvent(event);
+        truthy(event.defaultPrevented);
+        equal(back.innerHTML, '<li><br></li>');
+        same(document.getSelection().anchorNode, back.firstElementChild);
+        equal(document.getSelection().anchorOffset, 0);
+
+        const native = key(document, 'Backspace');
+        host.dispatchEvent(native);
+        equal(native.defaultPrevented, false, 'Backspace without a structural command stays native');
+
+        const forward = host.querySelector('#forward');
+        caret(document, forward.firstElementChild, 0);
+        const deletion = key(document, 'Delete');
+        host.dispatchEvent(deletion);
+        truthy(deletion.defaultPrevented);
+        equal(forward.innerHTML, '<li><br></li>');
+    }, {deleteBackward, deleteForward}
 ));
 
 test('input pipeline: routed commands receive native text data unchanged', () => {
@@ -204,6 +272,17 @@ test('input pipeline: unknown input types and uncancelable events stay native', 
         const uncancelable = new document.defaultView.InputEvent('beforeinput', {bubbles: true, inputType: 'insertParagraph'});
         host.dispatchEvent(uncancelable);
         equal(host.innerHTML, '<p>onetwo</p>', 'An event that cannot be prevented must stay native');
+    }, {enter}
+));
+
+test('input pipeline: an already prevented event is never routed again', () => withPipeline(
+    '<div contenteditable><p>onetwo</p></div>', ({document, host}) => {
+        caret(document, host.firstElementChild.firstChild, 3);
+        const event = input(document, 'insertParagraph', 'beforeinput');
+        event.preventDefault();
+        host.dispatchEvent(event);
+        truthy(event.defaultPrevented);
+        equal(host.innerHTML, '<p>onetwo</p>');
     }, {enter}
 ));
 
@@ -299,6 +378,10 @@ function input(document, inputType, type = 'input', range = null, isComposing = 
     });
     if (range) Object.defineProperty(event, 'getTargetRanges', {value: () => [range]});
     return event;
+}
+
+function key(document, value) {
+    return new document.defaultView.KeyboardEvent('keydown', {bubbles: true, cancelable: true, key: value});
 }
 
 function select(document, node, start, end) {

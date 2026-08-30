@@ -12,12 +12,24 @@
 <h1>RTE2 tests</h1>
 <ol id=results></ol>
 <script type=module>
+    import '../src/browser/tests/range-rect.test.js';
+    import '../src/client/tests/editor.test.js';
+    import '../src/client/tests/external-input.test.js';
+    import '../src/client/tests/blocks.test.js';
+    import '../src/client/tests/breaks.test.js';
+    import '../src/client/tests/unstyle.test.js';
     import '../src/command/tests/commands.test.js';
+    import '../src/command/tests/block-boundary.test.js';
+    import '../src/command/tests/block-style.test.js';
+    import '../src/command/tests/delete.test.js';
     import '../src/command/tests/edit.test.js';
     import '../src/command/tests/enter.test.js';
+    import '../src/command/tests/fragment.test.js';
     import '../src/command/tests/mark.test.js';
     import '../src/command/tests/pending-marks.test.js';
+    import '../src/command/tests/unstyle.test.js';
     import '../src/config/tests/config.test.js';
+    import '../src/input/tests/external-input.test.js';
     import '../src/input/tests/input-pipeline.test.js';
     import '../src/mark/tests/bold.test.js';
     import '../src/mark/tests/dom-adapter.test.js';
@@ -33,11 +45,18 @@
     import '../src/selection/point/tests/point.test.js';
     import '../src/selection/map/tests/point-map.test.js';
     import '../src/selection/range/tests/edit-range.test.js';
+    import '../src/sanitize/tests/policy.test.js';
+    import '../src/sanitize/tests/native.test.js';
     import '../src/transaction/tests/transaction.test.js';
+    import '../src/unstyle/tests/unstyle.test.js';
     import '../src/surface/tests/surface.test.js';
     import '../src/core/tests/core.test.js';
     import '../src/ui/tests/toolbar.test.js';
+    import './editor.test.js';
+    import './blocks.test.js';
+    import './breaks.test.js';
     import './generated.test.js';
+    import './unstyle.test.js';
     import './rte.test.js';
     import {run} from './harness.js';
 

@@ -65,6 +65,14 @@ test('repair planner: redundant generic wrappers around blocks unwrap', () => wi
     }
 ));
 
+test('repair planner: a neutral generic wrapper around mixed root content unwraps', () => withFixture(
+    '<section><div><div>one</div>two</div></section>', root => {
+        const host = root.firstElementChild;
+        equal(new RepairPlanner(host, {block: 'p'}).plan(host, host.firstElementChild),
+            {type: 'unwrap', breaks: false});
+    }
+));
+
 test('repair planner: meaningful generic wrappers remain intact when valid', () => withFixture(
     '<section><div class=layout>hello</div></section>', root => {
         const host = root.firstElementChild;

@@ -21,8 +21,8 @@ test('toolbar: validates its core, element, command resolver, and placement', ()
 
 test('toolbar: follows the active surface and reflects command availability and state', () => withFixture(`
     <div id=one contenteditable></div>
-    <div id=two contenteditable style="--u2-rte-toolbar: action"></div>
-    <div id=toolbar><button data-command=toggle data-state></button><button data-command=action></button><button data-command=unknown></button></div>
+    <div id=two contenteditable style="--u2-rte-toolbar: aliased"></div>
+    <div id=toolbar><button data-command=toggle data-state></button><button data-command=action data-control=aliased></button><button data-command=unknown></button></div>
 `, root => {
     const core = new Rte(document, {auto: false});
     const one = core.add(root.querySelector('#one'));
@@ -132,3 +132,142 @@ test('toolbar: hiding, disconnect, and disposal leave no active bindings', () =>
     element.firstElementChild.click();
     equal(runs, 0);
 }));
+
+test('toolbar: focusout hides it until focus returns to the surface or toolbar', () => withFixture(`
+    <div contenteditable>text</div>
+    <button id=outside>Outside</button>
+    <div id=toolbar><button data-command=action></button></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    const commands = new Commands(surface, {commands: {action: {enabled: () => true, run() {}}}});
+    const element = root.querySelector('#toolbar');
+    const button = element.firstElementChild;
+    const outside = root.querySelector('#outside');
+    const toolbar = new Toolbar(core, element, {commands: () => commands});
+    core.activate(surface);
+    equal(element.hidden, false);
+
+    surface.element.dispatchEvent(focus('focusout', outside));
+    truthy(element.hidden);
+    surface.emit('u2-rte-selectionchange');
+    truthy(element.hidden, 'A late selection event must not reopen a dismissed toolbar');
+    surface.element.dispatchEvent(focus('focusin'));
+    equal(element.hidden, false);
+
+    surface.element.dispatchEvent(focus('focusout', button));
+    equal(element.hidden, false, 'Moving into the toolbar keeps the editing session open');
+    button.dispatchEvent(focus('focusout', outside));
+    truthy(element.hidden);
+    button.dispatchEvent(focus('focusin'));
+    equal(element.hidden, false);
+    toolbar.dispose();
+    core.dispose();
+}));
+
+test('toolbar: selection-only mode hides collapsed and missing selections', () => withFixture(`
+    <div contenteditable style="--u2-rte-toolbar-when:selection">text</div>
+    <div id=toolbar><button data-command=action></button></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    const commands = new Commands(surface, {commands: {action: {enabled: () => true, run() {}}}});
+    const element = root.querySelector('#toolbar');
+    const toolbar = new Toolbar(core, element, {commands: () => commands});
+    core.activate(surface);
+    truthy(element.hidden, 'No saved range must not open a selection-only toolbar');
+
+    const text = surface.element.firstChild;
+    getSelection().collapse(text, 2);
+    core.sync();
+    truthy(element.hidden, 'A caret is not a selected range');
+    getSelection().setBaseAndExtent(text, 1, text, 3);
+    core.sync();
+    equal(element.hidden, false);
+
+    getSelection().collapse(text, 2);
+    core.sync();
+    truthy(element.hidden);
+    surface.element.style.setProperty('--u2-rte-toolbar-when', 'always');
+    equal(toolbar.refresh(), true);
+    equal(element.hidden, false);
+    toolbar.dispose();
+    core.dispose();
+}));
+
+test('toolbar: an application popover follows visibility in the top layer', () => withFixture(`
+    <div contenteditable>text</div>
+    <div id=toolbar popover=manual><button data-command=action></button></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    const commands = new Commands(surface, {commands: {action: {enabled: () => true, run() {}}}});
+    const element = root.querySelector('#toolbar');
+    const toolbar = new Toolbar(core, element, {commands: () => commands});
+    core.activate(surface);
+    truthy(element.matches(':popover-open'));
+    surface.element.style.setProperty('--u2-rte-ui', 'none');
+    equal(toolbar.refresh(), false);
+    equal(element.matches(':popover-open'), false);
+    surface.element.style.setProperty('--u2-rte-ui', 'roaming');
+    truthy(toolbar.refresh());
+    truthy(element.matches(':popover-open'));
+    toolbar.dispose();
+    equal(element.matches(':popover-open'), false);
+    core.dispose();
+}));
+
+test('toolbar: a command-value select reflects one or mixed command states', () => withFixture(`
+    <div contenteditable style="--u2-rte-toolbar:block">text</div>
+    <div id=toolbar>
+        <select data-command-value=blockStyle data-control=block aria-label="Block style">
+            <option value="">Block style</option>
+            <option value="paragraph">Paragraph</option>
+            <option value="h1">Heading 1</option>
+        </select>
+    </div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    let current = 'paragraph';
+    let runs = 0;
+    const commands = new Commands(surface, {commands: {blockStyle: {
+        enabled: () => true,
+        state: () => current,
+        run: edit => { current = edit.value; runs++; },
+    }}});
+    const toolbar = new Toolbar(core, root.querySelector('#toolbar'), {commands: () => commands});
+    getSelection().collapse(surface.element.firstChild, 1);
+    core.sync();
+    const select = root.querySelector('select');
+    const paragraph = select.querySelector('[value=paragraph]');
+    const heading = select.querySelector('[value=h1]');
+    equal(select.hidden, false);
+    equal(paragraph.hidden, false);
+    equal(heading.hidden, false);
+    equal(select.value, 'paragraph');
+    select.value = 'h1';
+    select.dispatchEvent(new Event('change', {bubbles: true}));
+    equal(runs, 1);
+    equal(select.value, 'h1');
+
+    commands.get('blockStyle').enabled = edit => edit.value !== 'h1';
+    toolbar.refresh();
+    equal(paragraph.hidden, false);
+    truthy(heading.hidden);
+    truthy(heading.disabled);
+    equal(select.value, '', 'An unsupported current value falls back to the placeholder');
+    select.value = 'h1';
+    select.dispatchEvent(new Event('change', {bubbles: true}));
+    equal(runs, 1, 'A programmatic selection cannot bypass option availability');
+
+    commands.get('blockStyle').state = () => 'mixed';
+    toolbar.refresh();
+    equal(select.value, '');
+    toolbar.dispose();
+    core.dispose();
+}));
+
+function focus(type, relatedTarget = null) {
+    return new FocusEvent(type, {bubbles: true, composed: true, relatedTarget});
+}

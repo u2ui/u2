@@ -1,4 +1,5 @@
 import {Point} from '../selection/point/point.js';
+import {blockEdge, emptyBlock} from './block-boundary.js';
 
 // The host policy names the element Enter splits; `block` follows the
 // configured default block, the structural values name their own unit.
@@ -36,9 +37,22 @@ function editable(edit) {
 function structure(edit) {
     const {enter: mode, block: tag} = edit.config;
     if (mode === 'break') return null;
-    const tags = UNITS[mode] || (tag ? [tag] : []);
+    if (mode === 'block') {
+        const item = ancestor(edit, ['li']);
+        if (item && LISTS.includes(item.parentElement?.localName)) return item;
+        const textBlock = ancestor(edit, element => edit.model.textBlock(element));
+        if (textBlock) return textBlock;
+    }
+    return ancestor(edit, UNITS[mode] || (tag ? [tag] : []));
+}
+
+function ancestor(edit, match) {
+    if (Array.isArray(match)) {
+        const tags = match;
+        match = element => tags.includes(element.localName);
+    }
     for (let element = closest(edit.range.start.node); element && element !== edit.element; element = element.parentElement) {
-        if (tags.includes(element.localName) && edit.model.allows(element.parentElement, element)) return element;
+        if (match(element) && edit.model.allows(element.parentElement, element)) return element;
     }
     return null;
 }
@@ -48,7 +62,7 @@ function exitList(edit) {
     if (!tag || mode !== 'block' && mode !== 'item') return null;
     let item = closest(edit.range.start.node);
     while (item && item !== edit.element && item.localName !== 'li') item = item.parentElement;
-    if (!item || item === edit.element || !empty(item, edit.model, item)) return null;
+    if (!item || item === edit.element || !emptyBlock(item, edit.model)) return null;
     const list = item.parentElement;
     if (!LISTS.includes(list?.localName) || list === edit.element) return null;
     const parent = list.parentElement;
@@ -100,10 +114,14 @@ function continuation(list, item) {
 
 function split(edit, unit) {
     const start = edit.range.start;
+    const defaultBlock = continuationBlock(edit, unit, start);
     const caret = new Point(start.node, start.offset, 'forward');
     edit.map.add(caret);
     const parent = unit.parentElement;
-    const tail = parent.childNodes[edit.map.split(parent, start.node, start.offset)];
+    let tail = parent.childNodes[edit.map.split(parent, start.node, start.offset)];
+    if (defaultBlock && [...tail.childNodes].every(child => edit.model.allows(defaultBlock, child))) {
+        tail = edit.map.replaceWrapper(tail, defaultBlock);
+    }
     const position = edit.map.get(caret);
     fill(edit, unit);
     fill(edit, tail);
@@ -111,6 +129,14 @@ function split(edit, unit) {
     edit.transaction.touch(tail);
     edit.select(position);
     return tail;
+}
+
+function continuationBlock(edit, unit, point) {
+    const tag = edit.config.block;
+    if (!tag || !edit.model.textBlock(unit) || unit.localName === tag || !blockEdge(unit, point, 'end')) return null;
+    const block = edit.document.createElement(tag);
+    if (!edit.model.allows(unit.parentElement, block)) return null;
+    return block;
 }
 
 function insertBreak(edit) {
@@ -159,14 +185,6 @@ function blank(model, node) {
     if (node.nodeType !== Node.ELEMENT_NODE) return true;
     if (model.atomic(node) || node.textContent.trim()) return false;
     return ![...node.querySelectorAll('*')].some(element => model.atomic(element));
-}
-
-function empty(node, model, root) {
-    if (node.nodeType === Node.TEXT_NODE) return !node.data.trim();
-    if (node.nodeType !== Node.ELEMENT_NODE) return true;
-    if (node.localName === 'br') return true;
-    if (node !== root && (node.hasAttribute('contenteditable') || model.atomic(node))) return false;
-    return [...node.childNodes].every(child => empty(child, model, root));
 }
 
 function closest(node) {

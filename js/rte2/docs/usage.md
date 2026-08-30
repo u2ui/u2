@@ -1,16 +1,200 @@
 # Using RTE2
 
-RTE2 is plain ESM with no build step and no dependencies. Import from
-[`../rte.js`](../rte.js) and everything else follows from three objects: a
-**core** per document, a **surface** per editable element, and the modules you
-install on a surface.
+RTE2 is plain ESM with no build step and no dependencies. Choose the prototype
+convention client for a minimal editor or `rte.js` for explicit composition.
 
-Nothing installs itself. The core registers editable elements and tracks the
-selection; input handling and commands are modules you add, because an
-application that only wants selection state should not pay for editing
-behavior. This page shows the wiring that turns that into a working editor.
+## Minimal prototype
 
-## A working editor
+```js
+import './editor.js';
+```
+
+```css
+[contenteditable] {
+    --u2-rte: true;
+    --u2-rte-elements: @article;
+    --u2-rte-toolbar: bold;
+}
+```
+
+That one side-effect import lazily installs Enter, line break, structural
+Backspace, normalization, pending text marks, bold, and one shared roaming
+toolbar when an opted-in rich-text host first receives focus. It does not scan
+the DOM or create toolbar markup before then. `contenteditable="plaintext-only"`
+remains native.
+
+This entry is intentionally a prototype. Only `bold` has a ready control;
+unknown toolbar names such as `code` remain hidden until a module provides both
+its command and control. Final default UI ownership and complete viewport/
+writing-mode placement are still being designed from this working path. See
+[`../src/client/README.md`](../src/client/README.md) for its exact boundaries.
+
+An optional command module can extend the imported singleton without scanning
+or rebuilding existing editors:
+
+```js
+import {editor} from './editor.js';
+import {formatModule} from './my-format-module.js';
+
+editor.add(formatModule);
+```
+
+The module's command factory runs once for every existing and future rich-text
+surface and may use that surface's shared pending-mark state. Optional
+`setup()` and `attach()` hooks own editor-wide and per-surface resources; each
+returns at most one object with `dispose()`. Removing the extension with
+`editor.delete(formatModule)` removes its commands, controls, and resources
+everywhere.
+
+### Allowed content
+
+The element policy is shared by cleanup and commands:
+
+```css
+.article-editor {
+    --u2-rte-elements: @article;
+}
+
+.short-answer {
+    --u2-rte-elements: p strong em a br;
+}
+```
+
+Built-in `@basic`, `@article`, and `@document` presets are starting points.
+Commands cannot create an element outside the resolved policy. Value controls
+such as the block-style select hide individual targets that are not allowed at
+the current selection; `--u2-rte-toolbar` still chooses and orders the remaining
+controls.
+
+This element list is only the structural half of an input policy. A sanitizer
+must additionally decide permitted attributes, URL protocols, and values. For
+example, allowing `a` structurally does not by itself make an arbitrary `href`
+safe.
+
+### Optional block styles
+
+Add the ready Paragraph/H1/H2/H3 selector with one optional import:
+
+```js
+import './editor.js';
+import './blocks.js';
+```
+
+```css
+[contenteditable] {
+    --u2-rte: true;
+    --u2-rte-toolbar: block bold;
+}
+```
+
+`blocks.js` imports `editor.js` itself, so the first import may be omitted when
+block styles are always present. The separate form makes the base and optional
+layers visible.
+
+Applications replace the default module to add class-based or custom block
+styles:
+
+```js
+import {editor} from './editor.js';
+import {blockStyles, blocks, defaultBlockStyles} from './blocks.js';
+
+editor.delete(blocks);
+editor.add(blockStyles([...defaultBlockStyles, {
+    name: 'lead',
+    label: 'Lead',
+    selector: 'p.lead',
+    tag: 'p',
+    write: element => element.classList.add('lead'),
+    clear: element => element.classList.remove('lead'),
+}]));
+```
+
+Unrelated block attributes survive conversion. A selection spanning different
+styles shows a mixed/empty value; choosing one applies it to every styleable
+text block. Lists, layout containers, table structure, and nested editors are
+not mistaken for paragraphs.
+
+### Optional visible line breaks
+
+`breaks.js` makes otherwise invisible `<br>` elements inspectable without
+putting marker nodes into editable HTML:
+
+```js
+import './breaks.js';
+```
+
+```css
+[contenteditable] {
+    --u2-rte: true;
+    --u2-rte-show-breaks: true;
+    --u2-rte-toolbar: bold breaks;
+}
+```
+
+Remove `breaks` from `--u2-rte-toolbar` when line breaks should remain visible
+without a toggle. Remove or set `--u2-rte-show-breaks: false` to start hidden.
+The marker overlay belongs to the extension, uses the root's top layer where
+Popover is available, and disappears completely when no surface displays it.
+Toggling is view state: it emits no `u2-rte-change` and cannot enter history.
+
+### Optional Unstyle
+
+Add the staged remove-format action with one import:
+
+```js
+import './unstyle.js';
+```
+
+```css
+[contenteditable] {
+    --u2-rte: true;
+    --u2-rte-toolbar: bold unstyle;
+}
+```
+
+It acts only on a non-collapsed selection. Repeated clicks remove the first
+remaining configured level: classes, inline styles, presentation attributes,
+then ordinary formatting wrappers. A partially selected inline wrapper is
+split so surrounding content retains its formatting; a partially selected
+block is left alone.
+
+The policy is also reusable for foreign HTML after security sanitizing:
+
+```js
+import {NativeSanitizer, defaultUnstyle} from './rte.js';
+
+const fragment = new NativeSanitizer().sanitize(externalHtml);
+defaultUnstyle.clean(fragment, {through: 'styles'});
+```
+
+The explicit rich paste/drop adapter composes these same stages:
+
+```js
+import {
+    Commands, ExternalInput, NativeSanitizer, defaultUnstyle, insertFragment,
+} from './rte.js';
+
+const commands = new Commands(surface, {commands: {insertFragment}});
+const external = new ExternalInput(surface, {
+    commands,
+    sanitizer: new NativeSanitizer(),
+    unstyle: defaultUnstyle,
+    through: ({inputType}) => inputType === 'insertFromPaste' ? 'styles' : 'classes',
+});
+```
+
+It takes over only rich `text/html`; plain-text and quotation insertion remain
+native. Keep `external` for as long as the surface is used and call
+`external.dispose()` during manual teardown. Surface disconnection also
+disposes it.
+
+## Explicit engine setup
+
+Import from [`../rte.js`](../rte.js) when the application owns module wiring.
+The API follows three objects: a **core** per document, a **surface** per
+editable element, and the modules installed on a surface. The core alone does
+not install input handling, commands, or UI, so applications pay only for the
+behavior they construct.
 
 ```css
 .editor { --u2-rte: true; }
@@ -31,7 +215,7 @@ core.addEventListener('u2-rte-add', ({detail}) => {
 <article class="editor" contenteditable>Hello world</article>
 ```
 
-That is the whole setup. Focusing an element that opted in through `--u2-rte`
+Focusing an element that opted in through `--u2-rte`
 registers a surface, `u2-rte-add` installs the modules on it, and from then on:
 
 - typing repairs the affected block (loose text becomes a paragraph, invalid
@@ -80,7 +264,12 @@ what differs. `auto` means "use the semantic default for this tag".
 | `--u2-rte-enter` | `break`, `block`, `item`, `row`, `cell`, `auto` | derived from the host |
 | `--u2-rte-cleanup` | `none`, `minimal`, `structural`, `canonical` | `structural` |
 | `--u2-rte-clean-on` | any of `input paste drop command` | all four |
+| `--u2-rte-elements` | tag list, `@basic`, `@article`, `@document`, `all` | `all` |
 | `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming` |
+| `--u2-rte-toolbar` | control names separated by spaces or commas | every represented control |
+| `--u2-rte-toolbar-when` | `always`, `selection` | `always` |
+| `--u2-rte-show-breaks` | truthy or false-like token | hidden |
+| `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `none` |
 
 The host element decides the defaults: a `<ul contenteditable>` creates list
 items, a `<p contenteditable>` stays inline and Enter inserts a line break, a
@@ -210,7 +399,7 @@ surface. It creates no buttons, icons, styles, or editor commands:
 ```
 
 ```js
-import {Toolbar} from './rte.js';
+import {Toolbar, rangeRect} from './rte.js';
 
 const commandsBySurface = new WeakMap();
 core.addEventListener('u2-rte-add', ({detail}) => {
@@ -221,16 +410,24 @@ core.addEventListener('u2-rte-add', ({detail}) => {
 
 const toolbar = new Toolbar(core, document.querySelector('#toolbar'), {
     commands: surface => commandsBySurface.get(surface),
-    place: (element, surface) => placeNear(element, surface.selection),
+    place: (element, surface) => placeNear(element,
+        rangeRect(surface.selection.range(), {root: surface.element})),
 });
 ```
 
-The optional `place` callback owns geometry, keeping anchor positioning and
-popover policy replaceable. Toggle items opt into `aria-pressed` reflection with
+The optional `place` callback owns geometry, keeping anchor positioning
+replaceable. An application toolbar with `popover="manual"` is opened and
+closed in the browser top layer by the binder; an ordinary element remains an
+ordinary element. Toggle items opt into `aria-pressed` reflection with
 `data-state`; action buttons omit it. `data-shortcut="x"` binds Ctrl+X or
 Command+X while keyboard input belongs to the active surface. An inherited
 `--u2-rte-toolbar: toggleX removeX` property selects the items for one editor.
-`--u2-rte-ui: none` hides the roaming toolbar.
+`--u2-rte-ui: none` hides the roaming toolbar. Moving focus between the surface
+and toolbar keeps it open; leaving both hides it. `rangeRect()` preserves a
+usable native range rectangle and derives an empty collapsed one from adjacent
+rendered content without mutating DOM or selection.
+Set `--u2-rte-toolbar-when: selection` to show it only while the saved editor
+selection is non-collapsed; the default also shows it at a caret.
 
 ## Events
 
@@ -245,16 +442,17 @@ observes an event before the modules reacting to it.
 | `u2-rte-activate`, `u2-rte-deactivate` | surface | this surface became active |
 | `u2-rte-selectionchange` | surface | a new selection snapshot was captured |
 | `u2-rte-beforechange` | surface | cancelable, before a transaction runs |
-| `u2-rte-command` | surface | a command executed, inside its transaction |
+| `u2-rte-command` | surface | a command executed; `transaction` is null for a view action |
 | `u2-rte-normalize` | surface | cleanup ran, with its actions and unresolved issues |
 | `u2-rte-change` | surface | the transaction committed |
-| `u2-rte-error` | surface | the transaction failed; the error is rethrown |
+| `u2-rte-error` | surface | a transaction or fail-closed external input failed; direct calls rethrow |
 | `u2-rte-disconnect`, `u2-rte-dispose` | surface, core | teardown |
 
 **Listen to `u2-rte-change` for "the content changed".** It arrives once per
 transaction, after every command and cleanup step inside it. `u2-rte-command`
 and `u2-rte-normalize` report steps within a transaction and are meant for
-diagnostics and modules.
+diagnostics and modules. View commands such as visible line breaks emit only
+`u2-rte-command` because they do not change content.
 
 ```js
 element.addEventListener('u2-rte-change', event => {
@@ -284,11 +482,11 @@ pipeline.normalize('command');
 and the point map it used; it does nothing when `--u2-rte-clean-on` excludes the
 trigger.
 
-**RTE2 has no sanitizing stage.** Structural normalization enforces a content
-model, not a security policy: it never inspects attributes, so event handlers
-and URLs pass through untouched. Sanitize untrusted HTML yourself before it
-reaches the editor, and treat pasted content as untrusted as well — the pipeline
-does not read clipboard payloads yet.
+RTE2 now has an immutable security policy and a native `Element.setHTML()`
+adapter, but the input pipeline does not consume clipboard or drag payloads
+yet. Structural normalization still is not sanitizing: external HTML must pass
+through a supported security adapter before insertion. Firefox/WebKit need the
+planned non-native adapter rather than an unsafe parsing fallback.
 
 ## Teardown
 
@@ -321,19 +519,29 @@ Being explicit is cheaper than surprising you:
 - **No undo/redo.** Editor mutations do not go through the browser's editing
   commands, so the native undo stack no longer matches the document after the
   first repair. A history module owns this and does not exist yet.
-- **No ready-made formatting command set yet.** Generic range commands can
+- **No complete ready-made formatting set yet.** Generic range commands can
   apply, remove, query, and toggle one configured mark, including pending marks
-  at a caret. Bold, italic, links, and remove-format are not yet shipped.
-- **No deletion or general list commands.** Backspace, Delete, list creation,
-  indent, and outdent remain native. Enter can split an item and exit an empty
-  list item.
-- **No sanitizing and no serializer**, as described above.
-- **No ready-made toolbar contents or theme.** The roaming binder is shipped,
-  while markup, icons, labels, styles, positioning, and command sets remain
-  application policy. Static bindings and menu/select state are still open.
+  at a caret. Bold and optional staged Unstyle are shipped; italic, code, and
+  links are not.
+- **No complete deletion or general list commands.** Backspace and Delete at a
+  mergeable block boundary are explicit; ordinary character deletion stays
+  native. Selected-range deletion, list creation, indent, and outdent remain open.
+  Enter can split an item and exit an empty list item.
+- **No cross-engine ready-made paste/drop module and no serializer.** The rich
+  external-input composition exists, but the native safe sink is not available
+  in every target engine. A DOMPurify-compatible adapter and contextual
+  plain-text/quotation import remain open.
+- **The convention toolbar is only a prototype.** `editor.js` provides one
+  styled Bold control plus optional block-style and visible-break extensions;
+  the standalone roaming binder still leaves markup, theme, placement, and
+  command sets to the application. Static bindings and menu state are open.
 - **The 233-test pending-mark baseline is verified in Chromium, Firefox, and
-  WebKitGTK through GNOME Web.** The current 243-test runner adds empty-list
-  exit and the roaming toolbar and is verified in Chromium; Firefox and WebKit
-  still need that revision.
+  WebKitGTK through GNOME Web.** The current runner adds later list,
+  mark, toolbar, normalization, convention-client, optional-module, block-style,
+  heading Enter, structural deletion, range geometry, element policy, extension
+  lifecycle, top-layer toolbar, visible-break, sanitizing-policy, selection-only
+  toolbar, Unstyle, and mapped fragment-replacement behavior. The current
+  361-test revision is
+  verified in Chromium; Firefox and WebKit still need that exact revision.
 
 [`../PLAN.md`](../PLAN.md) tracks what lands next.

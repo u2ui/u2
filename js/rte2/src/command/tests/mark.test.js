@@ -59,6 +59,19 @@ test('mark command: applying an existing mark is a no-op', () => withMarks(
     }
 ));
 
+test('mark command: element policy disables wrappers it cannot create', () => withFixture(
+    '<div contenteditable style="--u2-rte-elements:p br"><p>text</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = new Commands(core.add(host), {commands: {bold: toggleMark(boldHtml)}});
+        selectContents(host.querySelector('p'));
+        equal(commands.enabled('bold'), false);
+        equal(commands.run('bold'), undefined);
+        equal(host.innerHTML, '<p>text</p>');
+        core.dispose();
+    }
+));
+
 test('mark command: state distinguishes active, mixed, and inactive selections', () => withMarks(
     '<div contenteditable><p><span class=x>one</span><b class=x>two</b>three<button class=x>atomic</button></p></div>',
     ({commands, host}) => {

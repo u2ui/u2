@@ -11,6 +11,11 @@ may extend or replace them; commands and normalizers do not hardcode the rules.
 
 - Flow containers accept flow content; paragraph and heading-like blocks accept
   phrasing content.
+- Paragraphs, headings, and preformatted blocks are marked as splittable text
+  blocks. Structural blocks such as lists, items, tables, and layout `div`s are
+  not.
+- Text blocks and list items are mergeable at their leading boundary. Layout
+  containers and table structure are not mergeable by default.
 - Lists accept list items, definition lists accept their term/description
   structures, and table sections accept their native structural children.
   Structural children are not misclassified as general flow content.

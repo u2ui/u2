@@ -11,6 +11,12 @@ test('html model: generic blocks accept flow while paragraphs accept phrasing', 
         equal(htmlModel.allows(paragraph, document.createElement('div')), false);
         truthy(htmlModel.block(paragraph));
         truthy(htmlModel.block(div));
+        truthy(htmlModel.textBlock(paragraph));
+        truthy(htmlModel.textBlock(document.createElement('h1')));
+        equal(htmlModel.textBlock(div), false);
+        truthy(htmlModel.mergeable(paragraph));
+        truthy(htmlModel.mergeable(document.createElement('li')));
+        equal(htmlModel.mergeable(div), false);
     }
 ));
 

@@ -23,6 +23,10 @@ earlier RTE2 draft is not a reason to keep a weaker design.
 - Keep changes focused, compact, readable, and internally consistent.
 - Prefer a small general solution to a collection of special cases. RTE2 is a
   generic engine and must support use cases that were not anticipated.
+- Treat reported examples as regression cases for a general rule. Do not ship
+  tag-, class-, fixture-, or browser-specific behavior when the underlying
+  concept can be expressed by configuration, the content model, or a reusable
+  primitive.
 - KISS and YAGNI apply, but every contract must remain composable, replaceable,
   and extensible.
 - Shipped defaults are useful starting points, never fixed policy. Applications

@@ -9,7 +9,8 @@ test('edit: validates its surface and exposes the host context', () => withSurfa
         throws(() => new Edit(null), TypeError);
         throws(() => new Edit({element: {}}), TypeError);
         const model = createHtmlModel({rules: {p: {children: []}}});
-        const edit = new Edit(surface, null, {model, inputType: 'insertText', data: 'x'});
+        const fragment = document.createDocumentFragment();
+        const edit = new Edit(surface, null, {model, inputType: 'insertText', data: 'x', value: 'h1', fragment});
         same(edit.surface, surface);
         same(edit.element, host);
         same(edit.document, document);
@@ -18,9 +19,17 @@ test('edit: validates its surface and exposes the host context', () => withSurfa
         equal(edit.config.block, 'div');
         equal(edit.inputType, 'insertText');
         equal(edit.data, 'x');
+        equal(edit.value, 'h1');
+        same(edit.fragment, fragment);
         truthy(edit.map);
         equal(new Edit(surface).data, null);
+        equal(new Edit(surface).value, null);
+        equal(new Edit(surface).fragment, null);
         throws(() => new Edit(surface, null, {data: 1}), TypeError);
+        throws(() => new Edit(surface, null, {value: 1}), TypeError);
+        throws(() => new Edit(surface, null, {fragment: document.createElement('p')}), TypeError);
+        const foreign = document.implementation.createHTMLDocument().createDocumentFragment();
+        same(new Edit(surface, null, {fragment: foreign}).fragment, foreign);
     }
 ));
 

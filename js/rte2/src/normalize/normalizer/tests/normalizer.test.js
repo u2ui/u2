@@ -1,4 +1,5 @@
 import {Normalizer} from '../normalizer.js';
+import {createHtmlModel} from '../../../model/html/html-model.js';
 import {EditRange} from '../../../selection/range/edit-range.js';
 import {Point} from '../../../selection/point/point.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../../tests/harness.js';
@@ -74,6 +75,14 @@ test('normalizer: generic text blocks convert to the configured root block', () 
 
 test('normalizer: redundant generic wrappers around blocks disappear', () => withFixture(
     '<section><div><p>one</p><p>two</p></div></section>', root => {
+        const host = root.firstElementChild;
+        new Normalizer(host, {block: 'p'}).normalize();
+        equal(host.innerHTML, '<p>one</p><p>two</p>');
+    }
+));
+
+test('normalizer: nested generic blocks and trailing text become sibling root blocks', () => withFixture(
+    '<div><div><div>one</div>two</div></div>', root => {
         const host = root.firstElementChild;
         new Normalizer(host, {block: 'p'}).normalize();
         equal(host.innerHTML, '<p>one</p><p>two</p>');
@@ -185,6 +194,16 @@ test('normalizer: an inline-only host keeps phrasing content and its separating 
         const result = new Normalizer(host, {block: 'p'}).normalize();
         equal(host.innerHTML, '<em>one</em> <em>two</em>');
         equal(result.changed, false);
+        truthy(result.stable);
+    }
+));
+
+test('normalizer: an element policy converts blocks, unwraps inline wrappers, and removes atoms', () => withFixture(
+    '<div><h2>Title</h2><p>one <em class=drop>two</em><img alt=drop></p><script>alert(1)</script></div>', root => {
+        const host = root.firstElementChild;
+        const model = createHtmlModel({elements: ['p', 'strong', 'br']});
+        const result = new Normalizer(host, {block: 'p', model}).normalize();
+        equal(host.innerHTML, '<p>Title</p><p>one two</p>');
         truthy(result.stable);
     }
 ));

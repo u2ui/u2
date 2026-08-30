@@ -1,11 +1,11 @@
 import {ContentModel} from '../content-model.js';
-import {equal, test, throws, truthy, withFixture} from '../../../tests/harness.js';
+import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
 const model = new ContentModel({
     fallback: {groups: ['flow'], children: ['@flow']},
     rules: {
         box: {groups: ['flow'], children: ['@flow'], block: true, defaultChild: 'line'},
-        line: {groups: ['flow'], children: ['@phrasing']},
+        line: {groups: ['flow'], children: ['@phrasing'], textBlock: true},
         mark: {groups: ['flow', 'phrasing'], children: ['@phrasing']},
         'x-link': {groups: ['flow', 'phrasing'], transparent: true, exclude: ['x-link']},
         atom: {groups: ['flow', 'phrasing'], atomic: true},
@@ -19,6 +19,11 @@ test('content model: classifies tags, elements, text, and unknown nodes', () => 
         truthy(model.is(box, 'flow'));
         truthy(model.is(box, 'FLOW'));
         truthy(model.block('BOX'));
+        truthy(model.textBlock('line'));
+        truthy(model.block('line'), 'Text blocks are blocks by definition');
+        truthy(model.mergeable('line'), 'Text blocks are mergeable by default');
+        equal(model.textBlock(box), false);
+        equal(model.mergeable(box), false);
         equal(model.rule(box).defaultChild, 'line');
         truthy(model.is(box.firstElementChild.firstChild, 'phrasing'));
         truthy(model.is(box.querySelector('unknown'), 'flow'));
@@ -101,6 +106,26 @@ test('content model: extension is isolated and merges individual rules', () => w
         truthy(model.allows(box, box.lastElementChild));
         truthy(extended.is(box.lastElementChild, 'flow'));
         truthy(model.is(box.lastElementChild, 'phrasing'));
+        truthy(model.extend({rules: {box: {textBlock: true}}}).mergeable(box),
+            'Text-block defaults must survive rule extension');
+        equal(model.extend({rules: {line: {textBlock: false}}}).mergeable('line'), false);
+    }
+));
+
+test('content model: an element allowlist narrows structure without losing parent rules', () => withFixture(
+    '<box><line>text</line><mark>other</mark></box>', root => {
+        const box = root.firstElementChild;
+        const narrowed = model.extend({elements: ['line']});
+        equal(narrowed.elements, ['line']);
+        truthy(Object.isFrozen(narrowed.elements));
+        truthy(narrowed.allowed('line'));
+        equal(narrowed.allowed(box.lastElementChild), false);
+        truthy(narrowed.allowed(box.firstElementChild.firstChild), 'Text remains governed by the parent rule');
+        truthy(narrowed.allows(box, box.firstElementChild), 'The host may provide context without being output content');
+        equal(narrowed.allows(box, box.lastElementChild), false);
+        truthy(model.allowed(box.lastElementChild));
+        truthy(narrowed.extend({elements: null}).allows(box, box.lastElementChild));
+        same(model.withElements(['line']), model.withElements(['line']), 'Equivalent configured models are reused');
     }
 ));
 
@@ -110,5 +135,7 @@ test('content model: validates rule names and list values', () => {
     throws(() => new ContentModel({rules: {box: {children: [1]}}}), TypeError);
     throws(() => new ContentModel({rules: {box: {allow: true}}}), TypeError);
     throws(() => new ContentModel({fallback: null}), TypeError);
+    throws(() => new ContentModel({elements: 'box'}), TypeError);
+    throws(() => new ContentModel({elements: ['']}), TypeError);
     throws(() => model.is('box', ''), TypeError);
 });

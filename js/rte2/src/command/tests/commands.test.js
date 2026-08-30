@@ -7,14 +7,28 @@ const noop = {run: () => 'done'};
 test('commands: validate their surface, names, and command shape', () => withSurface(
     '<div contenteditable>text</div>', ({surface}) => {
         throws(() => new Commands(null), TypeError);
+        throws(() => new Commands(surface, {model: {}}), TypeError);
         const commands = new Commands(surface);
         throws(() => commands.add('', noop), TypeError);
         throws(() => commands.add('broken', {}), TypeError);
         throws(() => commands.add('broken', {run: () => {}, enabled: true}), TypeError);
         throws(() => commands.add('broken', {run: () => {}, state: true}), TypeError);
+        throws(() => commands.add('broken', {run: () => {}, transaction: 'no'}), TypeError);
         throws(() => commands.run('missing'), RangeError);
         equal(commands.get('missing'), null);
         equal(commands.has('missing'), false);
+    }
+));
+
+test('commands: CSS element policy narrows the current model on demand', () => withSurface(
+    '<div contenteditable style="--u2-rte-elements:p"><p>text</p></div>', ({surface}) => {
+        const commands = new Commands(surface);
+        equal(commands.model.allowed('p'), true);
+        equal(commands.model.allowed('h1'), false);
+        const first = commands.model;
+        same(commands.model, first);
+        surface.element.style.setProperty('--u2-rte-elements', 'p h1');
+        equal(commands.model.allowed('h1'), true);
     }
 ));
 
@@ -85,8 +99,30 @@ test('commands: run wraps one transaction, reports metadata, and returns the res
         equal(events[0][1].name, 'mark');
         equal(events[0][1].inputType, 'formatBold');
         equal(events[0][1].result, 'marked');
+        same(events[0][1].transaction, seen.transaction);
         equal(events[1][1].trigger, 'command');
         equal(events[1][1].command, 'mark');
+    }
+));
+
+test('commands: view actions can run without an editing transaction', () => withSurface(
+    '<div contenteditable>text</div>', ({surface, host}) => {
+        const events = [];
+        host.addEventListener('u2-rte-command', event => events.push([event.type, event.detail.transaction]));
+        host.addEventListener('u2-rte-beforechange', event => events.push(event.type));
+        host.addEventListener('u2-rte-change', event => events.push(event.type));
+        let edit;
+        const commands = new Commands(surface, {commands: {view: {
+            transaction: false,
+            run(value) {
+                edit = value;
+                return 'visible';
+            },
+        }}});
+        getSelection().selectAllChildren(host);
+        equal(commands.run('view'), 'visible');
+        equal(edit.transaction, null);
+        equal(events, [['u2-rte-command', null]]);
     }
 ));
 

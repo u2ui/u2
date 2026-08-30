@@ -1,5 +1,5 @@
-import {config, enabled, hostDefaults} from '../config.js';
-import {equal, test, truthy, withFixture} from '../../../tests/harness.js';
+import {config, elementPresets, enabled, hostDefaults} from '../config.js';
+import {equal, same, test, truthy, withFixture} from '../../../tests/harness.js';
 
 test('config: RTE is opt-in and accepts common false values', () => withFixture(`
     <div id=off contenteditable></div>
@@ -31,11 +31,23 @@ test('config: semantic defaults form a complete immutable snapshot', () => withF
         equal(result.enter, 'item');
         equal(result.cleanup, 'structural');
         equal(result.cleanOn, ['input', 'paste', 'drop', 'command']);
+        equal(result.elements, null);
         equal(result.ui, 'roaming');
         truthy(Object.isFrozen(result));
         truthy(Object.isFrozen(result.cleanOn));
     }
 ));
+
+test('config: element policies accept presets and explicit narrowing', () => withFixture(`
+    <div id=preset contenteditable style="--u2-rte-elements:@article"></div>
+    <div id=custom contenteditable style="--u2-rte-elements:p, h1 x-card"></div>
+    <div id=invalid contenteditable style="--u2-rte-elements:@missing"></div>
+`, root => {
+    same(config(root.querySelector('#preset')).elements, elementPresets.article);
+    equal(config(root.querySelector('#custom')).elements, ['p', 'h1', 'x-card']);
+    equal(config(root.querySelector('#invalid')).elements, [], 'An invalid policy must not broaden allowed content');
+    truthy(Object.isFrozen(elementPresets.article));
+}));
 
 test('config: custom properties override host defaults and inherit', () => withFixture(`
     <section style="--u2-rte-block: section; --u2-rte-enter: break; --u2-rte-cleanup: minimal; --u2-rte-clean-on: paste drop; --u2-rte-ui: static">

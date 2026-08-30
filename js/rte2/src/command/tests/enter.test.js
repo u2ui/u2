@@ -1,6 +1,7 @@
 import {Commands} from '../commands.js';
 import {enter, lineBreak} from '../enter.js';
 import {Rte} from '../../core/core.js';
+import {createHtmlModel} from '../../model/html/html-model.js';
 import {equal, same, test, truthy, withFixture} from '../../../tests/harness.js';
 
 test('enter: splits its block and moves the caret into the new one', () => withCommands(
@@ -38,6 +39,41 @@ test('enter: splitting keeps the inline context on both sides', () => withComman
     }
 ));
 
+test('enter: splits a heading in place and leaves both halves as headings', () => withCommands(
+    '<div contenteditable><h1>onetwo</h1></div>', ({commands, host}) => {
+        caret(host.firstElementChild.firstChild, 3);
+        commands.run('enter');
+        equal(host.innerHTML, '<h1>one</h1><h1>two</h1>');
+        same(getSelection().anchorNode, host.lastElementChild.firstChild);
+        equal(getSelection().anchorOffset, 0);
+    }
+));
+
+test('enter: leaving the end of a heading creates the default block', () => withCommands(
+    '<div contenteditable><h1 id=title class=hero>title</h1></div>', ({commands, host}) => {
+        caret(host.firstElementChild.firstChild, 5);
+        const created = commands.run('enter');
+        equal(host.innerHTML, '<h1 id="title" class="hero">title</h1><p><br></p>');
+        same(created, host.lastElementChild);
+        same(getSelection().anchorNode, created);
+        equal(getSelection().anchorOffset, 0);
+    }
+));
+
+test('enter: a default continuation must accept the cloned inline context', () => withFixture(
+    '<div contenteditable><h1><span>title</span></h1></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const model = createHtmlModel({rules: {p: {children: ['#text']}}});
+        const commands = new Commands(core.add(host), {model, commands: {enter}});
+        caret(host.querySelector('span').firstChild, 5);
+        commands.run('enter');
+        equal(host.lastElementChild.localName, 'h1');
+        equal(host.lastElementChild.innerHTML, '<span></span><br>');
+        core.dispose();
+    }
+));
+
 test('enter: the host policy decides which element is split', () => withFixture(`
     <ul id=list contenteditable><li><p>onetwo</p></li></ul>
     <div id=wrapped contenteditable><div class=layout><p>onetwo</p></div></div>
@@ -57,6 +93,23 @@ test('enter: the host policy decides which element is split', () => withFixture(
     }
     core.dispose();
 }));
+
+test('enter: a list item remains the structural unit inside a generic editor', () => withCommands(
+    '<div contenteditable><ul id=direct><li>onetwo</li><li>three</li></ul><ul id=wrapped><li><p>fourfive</p></li></ul></div>',
+    ({commands, host}) => {
+        const direct = host.querySelector('#direct');
+        caret(direct.querySelector('li').firstChild, 3);
+        commands.run('enter');
+        equal(direct.innerHTML, '<li>one</li><li>two</li><li>three</li>');
+        same(getSelection().anchorNode, direct.querySelectorAll('li')[1].firstChild);
+        equal(getSelection().anchorOffset, 0);
+
+        const wrapped = host.querySelector('#wrapped');
+        caret(wrapped.querySelector('p').firstChild, 4);
+        commands.run('enter');
+        equal(wrapped.innerHTML, '<li><p>four</p></li><li><p>five</p></li>');
+    }
+));
 
 test('enter: an empty item exits and splits a nested list', () => withCommands(
     '<div contenteditable><ul id=items class=list><li>one</li><li><p><br></p></li><li>two</li></ul></div>',
@@ -129,7 +182,7 @@ test('enter: explicit break policy and meaningful atomic content do not exit a l
         equal(host.firstElementChild.localName, 'ul', `${id} unexpectedly left its list`);
     }
     equal(root.querySelector('#break').innerHTML, '<ul><li><br><br></li></ul>');
-    equal(root.querySelector('#atomic').innerHTML, '<ul><li><br><img alt=""></li></ul>');
+    equal(root.querySelector('#atomic').innerHTML, '<ul><li><br></li><li><img alt=""></li></ul>');
     core.dispose();
 }));
 
