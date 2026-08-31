@@ -1,4 +1,5 @@
 # RTE
+A modular rich-text editing engine for current browsers
 
 RTE is a modern, modular rich-text editing engine for current browsers. Its
 small core owns editor state, transactions, selections, and ranges; everything

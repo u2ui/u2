@@ -68,7 +68,8 @@ https://github.com/u2ui/u2
 - **qrcode** - QR-Code element
 - **rating** - Rating element, form associated
 - **responsive** - A Container, where you can define strategies, that are applied through CSS states. `<u2-responsive strategies="hideOptional">`
-- **rte** - "Rich" Rich Text Editor (alpha)
+- **rte** - Progressively enhances one native textarea with the RTE rich-text editor
+- **rte0** - "Rich" Rich Text Editor (alpha)
 - **skeleton** - Display a skeleton of the element. This is useful for showing the user where the element will be rendered before the actual content is loaded.
 - **splitpanel** - A container that can be split horizontally or vertically. Parts are resizable by dragging the dividers.
 - **spot** - Visual indicator tracking elements by selector
@@ -99,7 +100,8 @@ https://github.com/u2ui/u2
 - **navigator**
 - **Placer** - Positions elements relative to a target, auto-adjusting on move or resize.
 - **PointerObserver** - Observe mouse and touches
-- **rte** - Easily Make Elements Editable with Intuitive Controls
+- **rte** - A modular rich-text editing engine for current browsers
+- **rte0** - Easily Make Elements Editable with Intuitive Controls
 - **SelectorObserver** - Watches elements matching a selector
 - **serviceWorker**
 - **shortcut** - Easy keyboard shortcuts

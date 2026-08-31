@@ -286,7 +286,7 @@
     },
     "rte": {
       "name": "rte",
-      "description": "",
+      "description": "Progressively enhances one native textarea with the RTE rich-text editor",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -602,7 +602,7 @@
     },
     "rte": {
       "name": "rte",
-      "description": "",
+      "description": "A modular rich-text editing engine for current browsers",
       "beta": false,
       "deprecated": false,
       "css": false,
