@@ -4,6 +4,14 @@
 `Normalizer`, `PointMap`, range classes, command registry, and mark commands. It
 contains no alternative editor or normalization implementation.
 
+`hosts.html` is a focused live matrix for comparing the convention client
+across block, text, interactive, list, table, and custom editing hosts. It also
+covers links in both nesting directions, non-modal dialogs, declarative
+`show-modal` dialogs, plain-text editing, empty hosts, and non-editable islands.
+It reports registration, resolved host defaults, selection, serialized content,
+and recent native events without turning the observations into cross-browser
+assertions.
+
 Open `/u2/js/rte/playground/` through the local HTTP server. Included scenarios
 cover inline runs, generic blocks, redundant wrappers, lists, lift-and-split,
 nested editable isolation, CSS-class marks, and the original invalid `p/div`

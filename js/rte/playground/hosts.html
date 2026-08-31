@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang=en>
+<head>
+  <meta charset=utf-8>
+  <meta name=viewport content="width=device-width, initial-scale=1">
+  <title>RTE host matrix</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font: 14px/1.4 system-ui, sans-serif;
+      --border: color-mix(in srgb, CanvasText 25%, transparent);
+      --panel: color-mix(in srgb, CanvasText 5%, Canvas);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0 auto; max-inline-size: 90rem; padding: 1rem; }
+    h1 { font-size: 1.35rem; margin-block: 0 .25rem; }
+    h2 { font-size: 1.1rem; margin-block: .35rem 0; }
+    h3 { font-size: 1rem; margin-block: 0 .65rem; }
+    p { margin-block: .35rem .8rem; }
+    code, pre { font: .85rem/1.4 ui-monospace, monospace; }
+
+    .matrix {
+      display: grid;
+      gap: .8rem;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    }
+    .group { grid-column: 1 / -1; }
+    .case, .inspector {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: .4rem;
+      min-inline-size: 0;
+      padding: .8rem;
+    }
+    .case[data-active=true] { border-color: Highlight; }
+    .case > output {
+      display: block;
+      margin-block-start: .65rem;
+      overflow-wrap: anywhere;
+    }
+    .shell { margin: 0; padding-inline-start: 1.5rem; }
+    .shell-table { border-collapse: collapse; inline-size: 100%; }
+    .shell-table :is(th, td) { border: 1px solid var(--border); padding: .35rem; }
+
+    .rte-host {
+      --u2-rte: true;
+      border: 2px solid color-mix(in srgb, Highlight 48%, var(--border));
+      min-block-size: 2.8rem;
+      outline: 0;
+      padding: .45rem;
+
+      &:focus { border-color: Highlight; }
+    }
+    ul.rte-host { padding-inline-start: 2rem; }
+    li.rte-host { display: list-item; }
+    x-editor.rte-host { display: block; }
+    table.rte-host { border-collapse: collapse; inline-size: 100%; }
+    table.rte-host :is(th, td) { border: 1px solid var(--border); padding: .35rem; }
+    dialog.rte-host[open]:not([data-modal]) { inline-size: 100%; margin: 0; position: static; }
+    dialog.rte-host[data-modal] { inline-size: min(30rem, calc(100% - 2rem)); }
+    dialog.rte-host::backdrop { background: #0008; }
+    button.rte-host { color: inherit; font: inherit; inline-size: 100%; text-align: start; }
+    a.rte-host, a > .rte-host { display: inline-block; min-inline-size: 10rem; }
+    [contenteditable=false] { border: 1px dashed var(--border); padding: .2rem; }
+
+    .inspector { margin-block-start: .8rem; }
+    .inspector header { align-items: center; display: flex; gap: .8rem; justify-content: space-between; }
+    .inspector h2 { font-size: 1rem; margin: 0; }
+    .inspector h3 { font-size: .9rem; font-weight: 500; margin: 0; }
+    .inspector button { font: inherit; }
+    .readout {
+      display: grid;
+      gap: .8rem;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+      margin-block-start: .7rem;
+    }
+    pre {
+      background: Canvas;
+      border: 1px solid var(--border);
+      margin: .25rem 0 0;
+      min-block-size: 5rem;
+      overflow: auto;
+      padding: .5rem;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <nav><a href=index.html>Normalization playground</a></nav>
+  <h1>RTE host matrix</h1>
+  <p>
+    Focus and edit every surface, especially with Enter and Backspace. These
+    are representative content models rather than a whitelist of supported
+    tags. Link activation and element-specific browser behavior remain native.
+  </p>
+
+  <main class=matrix>
+    <h2 class=group>Block containers</h2>
+
+    <section class=case>
+      <h3><code>&lt;div contenteditable&gt;</code></h3>
+      <div class=rte-host contenteditable data-name=div>Editable generic block</div>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;article contenteditable&gt;</code></h3>
+      <article class=rte-host contenteditable data-name=article>Editable article</article>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;blockquote contenteditable&gt;</code></h3>
+      <blockquote class=rte-host contenteditable data-name=blockquote>Editable quotation</blockquote>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;figure contenteditable&gt;</code></h3>
+      <figure class=rte-host contenteditable data-name=figure>Editable figure content</figure>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;figcaption contenteditable&gt;</code></h3>
+      <figure>
+        <figcaption class=rte-host contenteditable data-name=figcaption>Editable caption</figcaption>
+      </figure>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;details contenteditable&gt;</code></h3>
+      <details class=rte-host contenteditable data-name=details open>
+        <summary>Editable summary in host</summary>
+        Editable details content
+      </details>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;x-editor contenteditable&gt;</code></h3>
+      <x-editor class=rte-host contenteditable data-name=custom>Editable custom element</x-editor>
+      <output></output>
+    </section>
+
+    <h2 class=group>Text and interactive hosts</h2>
+
+    <section class=case>
+      <h3><code>&lt;p contenteditable&gt;</code></h3>
+      <p class=rte-host contenteditable data-name=paragraph>Editable paragraph host</p>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;h2 contenteditable&gt;</code></h3>
+      <h2 class=rte-host contenteditable data-name=heading>Editable heading host</h2>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;pre contenteditable&gt;</code></h3>
+      <pre class=rte-host contenteditable data-name=pre>Editable preformatted host</pre>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;span contenteditable&gt;</code></h3>
+      <span class=rte-host contenteditable data-name=span>Editable inline host</span>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;code contenteditable&gt;</code></h3>
+      <code class=rte-host contenteditable data-name=code>Editable code host</code>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;label contenteditable&gt;</code></h3>
+      <label class=rte-host contenteditable data-name=label>Editable label host</label>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;output contenteditable&gt;</code></h3>
+      <p><output class=rte-host contenteditable data-name=output>Editable output host</output></p>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;summary contenteditable&gt;</code></h3>
+      <details open>
+        <summary class=rte-host contenteditable data-name=summary>Editable summary host</summary>
+        Non-editable details content
+      </details>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;button contenteditable&gt;</code></h3>
+      <button class=rte-host contenteditable data-name=button type=button>Editable button</button>
+      <output></output>
+    </section>
+
+    <section class=case id=links>
+      <h3><code>&lt;a contenteditable&gt;</code></h3>
+      <a class=rte-host contenteditable data-name=link href=#links>Editable link host</a>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;a&gt; &lt;span contenteditable&gt;</code></h3>
+      <a href=#links>
+        Before <span class=rte-host contenteditable data-name=inside-link>editable host</span> after
+      </a>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;div contenteditable&gt; &lt;a&gt;</code></h3>
+      <div class=rte-host contenteditable data-name=around-link>
+        Editable host around <a href=#links>a link</a>
+      </div>
+      <output></output>
+    </section>
+
+    <h2 class=group>Lists</h2>
+
+    <section class=case>
+      <h3><code>&lt;ul contenteditable&gt;</code></h3>
+      <ul class=rte-host contenteditable data-name=ul>
+        <li>First item
+        <li>Second item
+      </ul>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;ol contenteditable&gt;</code></h3>
+      <ol class=rte-host contenteditable data-name=ol>
+        <li>First item
+        <li>Second item
+      </ol>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;li contenteditable&gt;</code></h3>
+      <ul class=shell>
+        <li class=rte-host contenteditable data-name=li>Editable list item
+      </ul>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;dl contenteditable&gt;</code></h3>
+      <dl class=rte-host contenteditable data-name=description-list>
+        <dt>Term
+        <dd>Description
+      </dl>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;dt contenteditable&gt;</code></h3>
+      <dl>
+        <dt class=rte-host contenteditable data-name=term>Editable term
+        <dd>Description
+      </dl>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;dd contenteditable&gt;</code></h3>
+      <dl>
+        <dt>Term
+        <dd class=rte-host contenteditable data-name=description>Editable description
+      </dl>
+      <output></output>
+    </section>
+
+    <h2 class=group>Tables</h2>
+
+    <section class=case>
+      <h3><code>&lt;table contenteditable&gt;</code></h3>
+      <table class=rte-host contenteditable data-name=table>
+        <tbody>
+          <tr><th>One<th>Two
+          <tr><td>Alpha<td>Beta
+        </tbody>
+      </table>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;thead contenteditable&gt;</code></h3>
+      <table class=shell-table>
+        <thead class=rte-host contenteditable data-name=thead><tr><th>Editable head<th>Second cell
+        <tbody><tr><td>Body<td>Body
+      </table>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;tbody contenteditable&gt;</code></h3>
+      <table class=shell-table>
+        <tbody class=rte-host contenteditable data-name=tbody><tr><td>Editable body<td>Second cell
+      </table>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;tfoot contenteditable&gt;</code></h3>
+      <table class=shell-table>
+        <tbody><tr><td>Body<td>Body
+        <tfoot class=rte-host contenteditable data-name=tfoot><tr><td>Editable foot<td>Second cell
+      </table>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;tr contenteditable&gt;</code></h3>
+      <table class=shell-table>
+        <tbody><tr class=rte-host contenteditable data-name=row><td>Editable row<td>Second cell
+      </table>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;th contenteditable&gt;</code></h3>
+      <table class=shell-table>
+        <tbody><tr><th class=rte-host contenteditable data-name=header-cell>Editable header cell<th>Peer
+      </table>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;td contenteditable&gt;</code></h3>
+      <table class=shell-table>
+        <tbody><tr><td class=rte-host contenteditable data-name=cell>Editable cell<td>Peer
+      </table>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;caption contenteditable&gt;</code></h3>
+      <table class=shell-table>
+        <caption class=rte-host contenteditable data-name=caption>Editable table caption</caption>
+        <tbody><tr><td>Body<td>Body
+      </table>
+      <output></output>
+    </section>
+
+    <h2 class=group>Dialogs and editing boundaries</h2>
+
+    <section class=case>
+      <h3><code>&lt;dialog open contenteditable&gt;</code></h3>
+      <dialog class=rte-host contenteditable data-name=dialog open>Editable non-modal dialog</dialog>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>command="show-modal"</code></h3>
+      <button commandfor=modal-host command=show-modal type=button>Show modal editor</button>
+      <dialog class=rte-host contenteditable data-name=modal-dialog data-modal id=modal-host tabindex=-1>
+        <p>Edit this modal dialog.</p>
+        <button commandfor=modal-host command=close contenteditable=false type=button>Close</button>
+      </dialog>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>contenteditable="plaintext-only"</code></h3>
+      <div class=rte-host contenteditable=plaintext-only data-name=plain-text>Native plain-text host</div>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>contenteditable="false"</code> island</h3>
+      <div class=rte-host contenteditable data-name=false-island>
+        Editable before <span contenteditable=false>fixed island</span> editable after
+      </div>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3>Empty editing host</h3>
+      <div class=rte-host contenteditable data-name=empty></div>
+      <output></output>
+    </section>
+  </main>
+
+  <section class=inspector>
+    <header>
+      <h2>Live inspector</h2>
+      <button id=clear type=button>Clear events</button>
+    </header>
+    <div class=readout>
+      <section><h3>Active surface</h3><pre id=active>None — focus a surface.</pre></section>
+      <section><h3>Selection</h3><pre id=selection>None</pre></section>
+      <section><h3>HTML</h3><pre id=html>None</pre></section>
+      <section><h3>Recent events</h3><pre id=events>None</pre></section>
+    </div>
+  </section>
+
+  <script type=module>
+    import {config, rte} from '../rte.js';
+
+    const hosts = [...document.querySelectorAll('.rte-host')];
+    const events = [];
+    const active = document.querySelector('#active');
+    const selection = document.querySelector('#selection');
+    const html = document.querySelector('#html');
+    const eventLog = document.querySelector('#events');
+
+    const name = host => host?.dataset.name || 'none';
+    const node = value => {
+      if (!value) return 'none';
+      if (value.nodeType === Node.TEXT_NODE) {
+        const text = value.data.replace(/\s+/g, ' ').trim();
+        return `#text "${text.slice(0, 32)}"`;
+      }
+      return `<${value.localName}>`;
+    };
+
+    function render() {
+      for (const host of hosts) {
+        const surface = rte.get(host);
+        const settings = config(host);
+        const state = surface?.active ? 'active' : surface ? 'registered' : 'focus to register';
+        const mode = host.getAttribute('contenteditable') === 'plaintext-only' ? ' · plain text' : '';
+        host.closest('.case').dataset.active = surface?.active || false;
+        host.closest('.case').querySelector(':scope > output').textContent =
+          `${state}${mode} · block ${settings.block || 'none'} · Enter ${settings.enter}`;
+      }
+
+      const host = rte.active?.element;
+      if (!host) {
+        active.textContent = 'None — focus a surface.';
+        selection.textContent = 'None';
+        html.textContent = 'None';
+      } else {
+        const settings = rte.active.config;
+        active.textContent = `${name(host)}\nblock: ${settings.block || 'none'}\nEnter: ${settings.enter}`;
+        html.textContent = host.innerHTML;
+        const range = getSelection();
+        selection.textContent = range?.rangeCount
+          ? `anchor: ${node(range.anchorNode)} @ ${range.anchorOffset}\nfocus:  ${node(range.focusNode)} @ ${range.focusOffset}\ncollapsed: ${range.isCollapsed}`
+          : 'None';
+      }
+      eventLog.textContent = events.length ? events.join('\n') : 'None';
+    }
+
+    function record(event) {
+      const host = event.composedPath().find(item => item?.matches?.('.rte-host'));
+      if (!host) return;
+      const detail = event.inputType || event.key || '';
+      events.push(`${name(host)} · ${event.type}${detail ? ` · ${detail}` : ''}`);
+      events.splice(0, Math.max(0, events.length - 16));
+      queueMicrotask(render);
+    }
+
+    for (const type of ['focusin', 'focusout', 'beforeinput', 'input', 'keydown', 'click', 'cancel', 'close']) {
+      document.addEventListener(type, record, true);
+    }
+    rte.addEventListener('u2-rte-add', event => {
+      events.push(`${name(event.detail.surface.element)} · registered`);
+      render();
+    });
+    rte.addEventListener('u2-rte-activechange', render);
+    document.addEventListener('selectionchange', render);
+    document.querySelector('#clear').addEventListener('click', () => {
+      events.length = 0;
+      render();
+    });
+    render();
+  </script>
+</body>
+</html>
