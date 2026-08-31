@@ -22,7 +22,14 @@ export class Chrome {
         const style = document.createElement('style');
         // The host is inert ground: only what a piece of UI places inside it
         // takes the pointer.
-        style.textContent = ':host { all: initial; pointer-events: none; position: fixed; inset: 0; }';
+        //
+        // Important, because a normal declaration in a shadow tree loses to the
+        // outer document for the host element: a page rule as ordinary as
+        // `[popover] { border: solid }` would otherwise draw a frame around the
+        // whole editor. Important declarations reverse that order, so this is
+        // what makes the host unreachable rather than merely encapsulated.
+        style.textContent = ':host { all: initial !important; pointer-events: none !important;'
+            + ' position: fixed !important; inset: 0 !important; }';
         this.#root.append(style);
         (isDocument ? document.body || document.documentElement : root).append(this.#host);
         if (typeof this.#host.showPopover === 'function') {
@@ -37,7 +44,7 @@ export class Chrome {
 
     // Registers one stylesheet under a key, once, however often it is offered.
     style(key, css) {
-        if (this.#styles.has(key)) return this;
+        if (!this.#connected || this.#styles.has(key)) return this;
         this.#styles.add(key);
         const style = this.#host.ownerDocument.createElement('style');
         style.dataset.u2RteStyle = key;

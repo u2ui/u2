@@ -43,8 +43,9 @@ document selection into it and an engine follows that with focus, so the field
 being typed into gets focus back with its caret intact — otherwise the second
 character would land in the editor. It belongs to the link it was
 opened on, not to wherever the caret goes next: a selection that leaves that
-link closes the form instead of dragging it along. Escape leaves without acting
-and puts the caret back. The address is a plain text field on
+link closes the form instead of dragging it along. Enter and Escape both leave
+and put the caret back: with every edit already applied, one has nothing left to
+confirm and the other nothing to undo. The address is a plain text field on
 purpose: native url validation rejects relative paths, fragments, and
 application schemes and would silently block the form, while which protocols are
 acceptable is the sanitizer's decision.

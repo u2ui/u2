@@ -411,19 +411,21 @@ still a row.
 
 ## Inserted elements
 
-`insertNode(create, inputTypes)` inserts one prepared element at the caret. The
-content model decides where it belongs: the caret's block is split only as far
-as the nearest container that accepts the element, so a block-level rule
-separates paragraphs while an inline element stays inside its text. An empty
-half left by the split receives a filler break so it keeps a caret position.
+`insertNode(create, inputTypes)` inserts one prepared element at the selection.
+The content model decides where it belongs: the block is split only as far as
+the nearest container that accepts the element, so a block-level rule separates
+paragraphs while an inline element stays inside its text. An empty half left by
+the split receives a filler break so it keeps a caret position.
 
 ```js
 commands.add('rule', insertNode(document => document.createElement('hr'),
     ['insertHorizontalRule']));
 ```
 
-A non-collapsed selection is not deleted first, so the browser keeps its native
-behavior there until deletion is an ordinary mapped command.
+A non-collapsed selection is not deleted first: the element lands where the
+selection starts and the selected content stays after it. Insertion may not
+depend on a caret, or a toolbar shown only for a selection would never offer it.
+The same holds for `insertTable`.
 
 ## Unstyle
 
