@@ -34,10 +34,18 @@ const LABELS = {href: 'Address', target: 'New tab', title: 'Title', rel: 'Rel'};
 // link is one path that any other UI can drive; this module only supplies one.
 // Which protocols and attributes are acceptable is the sanitizer's policy, not
 // this form's: it writes what the link adapter understands and nothing else.
-export function linkEditor({fields = ['href', 'target', 'title']} = {}) {
+//
+// What an address means, though, is the application's: `normalize` gets the
+// finished value whenever a field is left, and may complete a bare domain, turn
+// an address into a scheme of its own, or decide `rel` and `target` from it.
+// `suggest` is asked what a new link should point at, given the text it is being
+// put on. Both default to leaving everything alone.
+export function linkEditor({fields = ['href', 'target', 'title'], normalize = value => value, suggest = null} = {}) {
     if (!Array.isArray(fields) || !fields.length || fields.some(name => !LABELS[name])) {
         throw new TypeError(`A link editor field must be one of ${Object.keys(LABELS).join(', ')}`);
     }
+    if (typeof normalize !== 'function') throw new TypeError('A link normalizer must be a function');
+    if (suggest !== null && typeof suggest !== 'function') throw new TypeError('A link suggestion must be a function');
     const editors = new WeakMap();
     return Object.freeze({
         name: 'link',
@@ -47,6 +55,8 @@ export function linkEditor({fields = ['href', 'target', 'title']} = {}) {
                 chrome,
                 document: root.nodeType === Node.DOCUMENT_NODE ? root : root.ownerDocument,
                 fields: [...fields],
+                normalize,
+                suggest,
                 views: new Map(),
                 form: null,
                 active: null,
@@ -110,13 +120,36 @@ export const link = linkEditor();
 function open(state, view) {
     const form = build(state);
     const surface = view.surface;
-    state.active = {view, surface, element: marked(surface, at(surface)), selection: surface.selection};
+    const active = {view, surface, element: marked(surface, at(surface)), selection: surface.selection};
+    state.active = active;
     const value = view.commands.state('link');
     fill(state, value && value !== 'mixed' ? value : null);
     show(form, true);
     place(form, surface, {align: 'start', prefer: 'below'});
     form.querySelector('[name=href]')?.focus();
+    if (!active.element && state.suggest) propose(state, active);
     return form;
+}
+
+// A new link may be asked what it should point at. The answer can take a round
+// trip, so it counts only while the form is still open on the same link and the
+// address is still the empty one it was asked about.
+async function propose(state, active) {
+    const suggested = await state.suggest(target(active.surface)?.toString() || '', active.surface);
+    if (state.active !== active || read(state)) return null;
+    if (!suggested?.href) return null;
+    fill(state, suggested);
+    return write(state, suggested);
+}
+
+// What the fields say, as the application reads it. Normalizing while a field is
+// being typed into would rewrite half-typed addresses, so it happens when one is
+// left behind.
+function commit(state, field = null) {
+    const typed = read(state);
+    const value = state.normalize(typed, state.active?.surface) ?? null;
+    if (value !== typed) fill(state, value);
+    return write(state, value, field);
 }
 
 // Every edit is applied as it is made. Marking the run as ongoing input keeps
@@ -215,6 +248,7 @@ function build(state) {
     // No Apply and no Remove: what the fields say is what the link is, as it is
     // typed, and an emptied address says there is no link.
     form.addEventListener('input', event => write(state, read(state), event.target));
+    form.addEventListener('change', event => commit(state, event.target));
     form.addEventListener('submit', event => {
         event.preventDefault();
         cancel(state);
@@ -226,6 +260,7 @@ function build(state) {
     form.addEventListener('keydown', event => {
         if (event.key !== 'Escape' && event.key !== 'Enter') return;
         event.preventDefault();
+        if (event.key === 'Enter') commit(state);
         cancel(state);
     });
     state.chrome.root.append(form);

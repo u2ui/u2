@@ -147,6 +147,55 @@ test('link editor: enter leaves with the typed link and the caret back', () => w
     }
 ));
 
+test('link editor: validates its hooks', () => {
+    throws(() => linkEditor({normalize: 'yes'}), TypeError);
+    throws(() => linkEditor({suggest: 'yes'}), TypeError);
+});
+
+// Normalizing per keystroke would rewrite half-typed addresses, so it waits for
+// the field to be left behind.
+test('link editor: an address is normalized when its field is left', () => withLink(
+    ({client, surface, form}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        type(form(), 'href', 'example.com');
+        equal(surface.element.querySelector('a').getAttribute('href'), 'example.com');
+        leave(form(), 'href');
+        equal(form().querySelector('[name=href]').value, 'https://example.com');
+        equal(surface.element.innerHTML,
+            '<p><a href="https://example.com" title="site">one</a> two</p>');
+    },
+    {normalize: value => value && {...value, href: `https://${value.href}`, title: 'site'}}
+));
+
+test('link editor: a new link is offered an address for its text', () => withLink(
+    async ({client, surface, form}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        await new Promise(resolve => setTimeout(resolve));
+        equal(form().querySelector('[name=href]').value, '/one');
+        equal(surface.element.innerHTML, '<p><a href="/one">one</a> two</p>');
+    },
+    {suggest: selected => Promise.resolve({href: `/${selected}`})}
+));
+
+test('link editor: an existing link is never re-proposed', () => withLink(
+    async ({client, surface, form}) => {
+        surface.element.innerHTML = '<p><a href="/old">one</a> two</p>';
+        getSelection().collapse(surface.element.querySelector('a').firstChild, 1);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        await new Promise(resolve => setTimeout(resolve));
+        equal(form().querySelector('[name=href]').value, '/old');
+        equal(surface.element.innerHTML, '<p><a href="/old">one</a> two</p>');
+    },
+    {suggest: () => Promise.resolve({href: '/proposed'})}
+));
+
 test('link editor: the form closes and is released with the module', () => withLink(
     ({client, surface, form, document: owner}) => {
         surface.element.innerHTML = '<p><a href="/old">one</a></p>';
@@ -218,20 +267,29 @@ function type(form, name, value) {
     field.dispatchEvent(new Event('input', {bubbles: true}));
 }
 
-function withLink(run) {
+function leave(form, name) {
+    form.querySelector(`[name=${name}]`).dispatchEvent(new Event('change', {bubbles: true}));
+}
+
+function withLink(run, options) {
     return withFixture(
         '<div contenteditable style="--u2-rte-toolbar:link unlink"><p>one two</p></div>',
         root => {
             const core = new Rte(document, {auto: false});
             const client = new Editor(core);
-            try {
-                client.add(linkEditor());
-                const surface = core.add(root.firstElementChild);
-                const form = () => client.chrome.root.querySelector('[data-u2-rte-link]');
-                return run({client, core, surface, form, document});
-            } finally {
+            const done = () => {
                 client.dispose();
                 core.dispose();
+            };
+            try {
+                client.add(linkEditor(options));
+                const surface = core.add(root.firstElementChild);
+                const form = () => client.chrome.root.querySelector('[data-u2-rte-link]');
+                const result = run({client, core, surface, form, document});
+                return result?.then ? result.finally(done) : (done(), result);
+            } catch (error) {
+                done();
+                throw error;
             }
         }
     );

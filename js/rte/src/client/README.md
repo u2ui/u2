@@ -50,6 +50,16 @@ purpose: native url validation rejects relative paths, fragments, and
 application schemes and would silently block the form, while which protocols are
 acceptable is the sanitizer's decision.
 
+What an address means is the application's decision, and `linkEditor()` takes
+two hooks for it. `normalize(value, surface)` receives the finished value
+whenever a field is left behind — not per keystroke, which would rewrite
+half-typed addresses — and may complete a bare domain, map an address into a
+scheme of its own, or derive `rel` and `target` from it; what it returns is what
+gets written and shown. `suggest(text, surface)` is asked, possibly
+asynchronously, what a *new* link should point at, given the text it is being put
+on; its answer is used only while the form is still open on the same link and
+the address is still empty.
+
 Everything this client draws goes into one `Chrome`: its toolbar, the contextual
 handles, the link form, the source dialog. A module receives it as `chrome` in
 its setup context and puts its UI in `chrome.root`, so no module owns a layer, a
