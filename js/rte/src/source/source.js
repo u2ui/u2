@@ -2,6 +2,7 @@ import {htmlModel} from '../model/html/html-model.js';
 import {narrow} from '../command/edit.js';
 import {NativeSanitizer} from '../sanitize/native.js';
 import {SelectionSnapshot} from '../selection/snapshot.js';
+import {replaceContent} from '../surface/content.js';
 
 const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
 
@@ -44,7 +45,7 @@ export class Source {
             {node: range.startContainer, offset: range.startOffset},
             {node: range.endContainer, offset: range.endOffset},
         ] : [];
-        const writer = new Writer(this.#model(), this.#indent, marks);
+        const writer = new Writer(this.#model(), this.#indent, marks, node => this.#surface.core.retains(node));
         writer.children(root, 0);
         // The outermost separated level wraps the whole document; that first and
         // last break are framing, not content.
@@ -70,7 +71,7 @@ export class Source {
         prune(fragment, this.#model());
         const nodes = [...fragment.childNodes];
         this.#surface.transact(transaction => {
-            root.replaceChildren(fragment);
+            replaceContent(this.#surface, fragment);
             transaction.touch(root);
             const range = root.ownerDocument.createRange();
             range.setStart(root, 0);
@@ -92,21 +93,24 @@ class Writer {
     #model;
     #indent;
     #marks;
+    #skip;
     text = '';
     offsets;
 
-    constructor(model, indent, marks) {
+    constructor(model, indent, marks, skip) {
         this.#model = model;
         this.#indent = indent;
         this.#marks = marks;
+        this.#skip = skip;
         this.offsets = marks.map(() => null);
     }
 
     children(parent, depth) {
-        const lines = separated(parent, this.#model);
+        const lines = separated(parent, this.#model, this.#skip);
         const nodes = [...parent.childNodes];
         for (const [index, child] of nodes.entries()) {
             this.#at(parent, index);
+            if (this.#skip(child)) continue;
             if (lines && blank(child)) continue;
             if (lines) this.#line(depth);
             this.node(child, depth);
@@ -153,8 +157,8 @@ class Writer {
 
 // A level is broken into lines only where nothing on it can be affected by
 // added whitespace: block elements, comments, and whitespace already there.
-function separated(parent, model) {
-    const nodes = [...parent.childNodes];
+function separated(parent, model, skip = () => false) {
+    const nodes = [...parent.childNodes].filter(node => !skip(node));
     return nodes.some(node => standalone(node, model))
         && nodes.every(node => blank(node) || standalone(node, model));
 }

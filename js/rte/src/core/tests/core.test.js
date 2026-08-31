@@ -42,6 +42,28 @@ test('core: focusing a false nested boundary deactivates its outer surface', () 
     }
 ));
 
+test('core: retained UI keeps the active surface across focus', () => withFixture(
+    '<div id=outer contenteditable>text</div><div id=ui contenteditable=false><button>control</button></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.querySelector('#outer'));
+        const ui = root.querySelector('#ui');
+        const button = ui.firstElementChild;
+        same(core.retain(ui), ui);
+        truthy(core.retains(button));
+        core.activate(surface);
+        button.dispatchEvent(new FocusEvent('focusin', {bubbles: true, composed: true}));
+        same(core.active, surface);
+        truthy(core.release(ui));
+        equal(core.release(ui), false);
+        button.dispatchEvent(new FocusEvent('focusin', {bubbles: true, composed: true}));
+        equal(core.active, null);
+        throws(() => core.retain(null), TypeError);
+        const foreign = document.implementation.createHTMLDocument().createElement('div');
+        throws(() => core.retain(foreign), RangeError);
+        core.dispose();
+    }
+));
+
 test('core: CSS opt-in registers lazily from focus events', () => withFixture(`
     <div id=enabled contenteditable style="--u2-rte:true">one</div>
     <div id=disabled contenteditable>two</div>

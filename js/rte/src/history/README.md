@@ -37,6 +37,9 @@ at all.
 - `u2-rte-history` reports every entry and every move on the surface.
 - `dispose()` stops observing and releases every entry. A disconnected surface
   disposes its history.
+- Core-retained UI mutations are not edits. Snapshots omit those subtrees and
+  undo/redo preserves them, including when shared chrome is temporarily mounted
+  directly in a top-layer editing host.
 
 ## Grouping
 

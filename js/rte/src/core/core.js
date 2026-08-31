@@ -8,6 +8,7 @@ export class Rte extends EventTarget {
     #options;
     #surfaces = new Set();
     #elements = new WeakMap();
+    #retained = new Set();
     #active = null;
     #controller;
 
@@ -31,6 +32,29 @@ export class Rte extends EventTarget {
     get active() { return this.#active; }
     get surfaces() { return [...this.#surfaces]; }
     get selection() { return this.#root.getSelection?.() || this.#document.getSelection(); }
+
+    // Retained UI may receive focus without deactivating the current surface.
+    // When it temporarily has to live inside a top-layer editing host, content
+    // readers also use this boundary to leave it out of the document.
+    retain(element) {
+        if (element?.nodeType !== Node.ELEMENT_NODE) throw new TypeError('Retained UI must be an element');
+        if (element.ownerDocument !== this.#document) throw new RangeError('Retained UI must belong to the core document');
+        this.#retained.add(element);
+        return element;
+    }
+
+    release(element) {
+        return this.#retained.delete(element);
+    }
+
+    retains(node) {
+        for (let current = node; current;) {
+            if (this.#retained.has(current)) return true;
+            const root = current.getRootNode?.();
+            current = current.parentNode || root?.host || null;
+        }
+        return false;
+    }
 
     add(element, options) {
         if (!isEditableHost(element)) {
@@ -92,6 +116,7 @@ export class Rte extends EventTarget {
         if (this.#controller.signal.aborted) return;
         this.#controller.abort();
         for (const surface of [...this.#surfaces]) this.delete(surface);
+        this.#retained.clear();
         this.#emit('u2-rte-dispose');
     }
 
@@ -100,6 +125,7 @@ export class Rte extends EventTarget {
     }
 
     #focus = event => {
+        if (event.composedPath().some(node => this.#retained.has(node))) return;
         const editable = event.composedPath().find(node =>
             node?.nodeType === Node.ELEMENT_NODE && isEditingBoundary(node)
         );

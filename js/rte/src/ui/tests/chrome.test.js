@@ -28,6 +28,73 @@ test('chrome: joins a shadow root it is given', () => {
     }
 });
 
+test('chrome: follows a modal target and returns home when it closes', async () => {
+    if (typeof HTMLDialogElement === 'undefined') return;
+    const dialog = document.body.appendChild(document.createElement('dialog'));
+    dialog.contentEditable = 'true';
+    dialog.append('text');
+    const chrome = new Chrome(document);
+    const button = chrome.root.appendChild(document.createElement('button'));
+    try {
+        chrome.follow(dialog);
+        same(chrome.element.parentNode, document.body);
+        await changed(dialog, () => dialog.showModal());
+        same(chrome.element.parentNode, dialog, 'Modal inertness requires a flat-tree descendant');
+        equal(chrome.element.contentEditable, 'false');
+        button.focus();
+        same(chrome.root.activeElement, button, 'The remounted chrome remains interactive');
+        const closed = new Promise(resolve => dialog.addEventListener('close', resolve, {once: true}));
+        await changed(dialog, () => dialog.close());
+        await closed;
+        same(chrome.element.parentNode, document.body);
+    } finally {
+        chrome.dispose();
+        dialog.close();
+        dialog.remove();
+    }
+});
+
+test('chrome: follows an open popover and returns when it hides', async () => {
+    const popover = document.body.appendChild(document.createElement('div'));
+    if (typeof popover.showPopover !== 'function') {
+        popover.remove();
+        return;
+    }
+    popover.popover = 'manual';
+    popover.contentEditable = 'true';
+    popover.append('text');
+    const chrome = new Chrome(document);
+    try {
+        chrome.follow(popover);
+        await toggle(popover, () => popover.showPopover());
+        same(chrome.element.parentNode, popover);
+        truthy(chrome.element.matches(':popover-open'));
+        await toggle(popover, () => popover.hidePopover());
+        same(chrome.element.parentNode, document.body);
+        truthy(chrome.element.matches(':popover-open'), 'The chrome restores its own top-layer entry');
+    } finally {
+        chrome.dispose();
+        if (popover.matches(':popover-open')) popover.hidePopover();
+        popover.remove();
+    }
+});
+
+test('chrome: follows fullscreen changes through the same boundary rule', () => withChrome(chrome => {
+    const target = document.body.appendChild(document.createElement('div'));
+    const matches = target.matches.bind(target);
+    try {
+        chrome.follow(target);
+        target.matches = selector => selector === ':fullscreen' || matches(selector);
+        document.dispatchEvent(new Event('fullscreenchange'));
+        same(chrome.element.parentNode, target);
+        target.matches = matches;
+        document.dispatchEvent(new Event('fullscreenchange'));
+        same(chrome.element.parentNode, document.body);
+    } finally {
+        target.remove();
+    }
+}));
+
 // The page cannot be trusted to leave the editor alone: a rule as ordinary as
 // `[popover] { border: solid }` in a reset stylesheet applies to the host, and
 // a normal declaration in a shadow tree would lose to it.
@@ -80,4 +147,22 @@ function withChrome(run) {
     } finally {
         chrome.dispose();
     }
+}
+
+function toggle(element, change) {
+    const changed = new Promise(resolve => element.addEventListener('toggle', resolve, {once: true}));
+    change();
+    return changed;
+}
+
+function changed(element, change) {
+    const mutation = new Promise(resolve => {
+        const observer = new MutationObserver(() => {
+            observer.disconnect();
+            resolve();
+        });
+        observer.observe(element, {attributes: true, attributeFilter: ['open']});
+    });
+    change();
+    return mutation;
 }

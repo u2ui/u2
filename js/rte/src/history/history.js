@@ -1,4 +1,5 @@
 import {SelectionSnapshot} from '../selection/snapshot.js';
+import {contentChildren, replaceContent} from '../surface/content.js';
 
 // Snapshot history for one surface. RTE leaves ordinary typing and deletion to
 // the browser, so history cannot be an operation log: it observes every mutation
@@ -117,7 +118,7 @@ export class History {
     #capture() {
         const element = this.#surface.element;
         const fragment = element.ownerDocument.createDocumentFragment();
-        for (const node of element.childNodes) fragment.append(node.cloneNode(true));
+        for (const node of contentChildren(this.#surface)) fragment.append(node.cloneNode(true));
         return {fragment, selection: this.#selection()};
     }
 
@@ -125,7 +126,7 @@ export class History {
         this.#applying = true;
         try {
             const clone = entry.fragment.cloneNode(true);
-            this.#surface.element.replaceChildren(...clone.childNodes);
+            replaceContent(this.#surface, ...clone.childNodes);
             this.#restore(entry.selection);
         } finally {
             // Restoring is not an edit: its own records never enter history.
@@ -149,16 +150,16 @@ export class History {
         const snapshot = SelectionSnapshot.capture(this.#surface.core.selection, root) || this.#surface.selection;
         if (!snapshot?.valid()) return null;
         const range = snapshot.range();
-        const start = address(root, range.startContainer, range.startOffset);
+        const start = address(this.#surface, root, range.startContainer, range.startOffset);
         if (!start) return null;
-        const end = range.collapsed ? start : address(root, range.endContainer, range.endOffset);
+        const end = range.collapsed ? start : address(this.#surface, root, range.endContainer, range.endOffset);
         return end ? {start, end, backward: snapshot.backward} : null;
     }
 
     #restore(saved) {
         const root = this.#surface.element;
-        const start = saved && locate(root, saved.start);
-        const end = saved && locate(root, saved.end);
+        const start = saved && locate(this.#surface, root, saved.start);
+        const end = saved && locate(this.#surface, root, saved.end);
         if (!start || !end) return false;
         const range = root.ownerDocument.createRange();
         range.setStart(start.node, start.offset);
@@ -175,7 +176,14 @@ export class History {
     // an entry restores children only, so its own attributes must not record.
     #edited(records) {
         const root = this.#surface.element;
-        return records.some(record => record.type !== 'attributes' || record.target !== root);
+        const core = this.#surface.core;
+        return records.some(record => {
+            if (core.retains(record.target)) return false;
+            if (record.type === 'attributes') return record.target !== root;
+            if (record.type !== 'childList') return true;
+            const changed = [...record.addedNodes, ...record.removedNodes];
+            return !changed.length || changed.some(node => !core.retains(node));
+        });
     }
 
     // Continuous input keeps one open interval instead of restarting it, so a
@@ -246,22 +254,30 @@ function coalesced(event) {
 
 // A selection address survives content replacement because it names positions
 // by child index instead of by node identity.
-function address(root, node, offset) {
+function address(surface, root, node, offset) {
     const path = [];
     for (let current = node; current !== root; current = current.parentNode) {
         const parent = current?.parentNode;
         if (!parent) return null;
-        path.unshift(Array.prototype.indexOf.call(parent.childNodes, current));
+        const index = contentChildren(surface, parent).indexOf(current);
+        if (index < 0) return null;
+        path.unshift(index);
     }
-    return {path, offset};
+    return {path, offset: contentOffset(surface, node, offset)};
 }
 
-function locate(root, {path, offset}) {
+function locate(surface, root, {path, offset}) {
     let node = root;
     for (const index of path) {
-        node = node.childNodes[index];
+        node = contentChildren(surface, node)[index];
         if (!node) return null;
     }
-    const length = typeof node.length === 'number' ? node.length : node.childNodes.length;
+    const length = typeof node.length === 'number' ? node.length : contentChildren(surface, node).length;
     return {node, offset: Math.min(offset, length)};
+}
+
+function contentOffset(surface, node, offset) {
+    if (typeof node.length === 'number') return offset;
+    const before = [...node.childNodes].slice(0, offset);
+    return before.filter(child => !surface.core.retains(child)).length;
 }

@@ -27,6 +27,27 @@ test('history: starts with one baseline entry and records only real changes', ()
     }
 ));
 
+test('history: retained top-layer UI is not content and survives restoration', () => withSurface(
+    '<div contenteditable><p>one</p></div>', ({core, surface, host}) => {
+        const history = new History(surface);
+        const ui = document.createElement('div');
+        ui.contentEditable = 'false';
+        core.retain(ui);
+        host.append(ui);
+        equal(history.record(), false, 'Mounting editor UI is not an edit');
+        host.firstElementChild.textContent = 'two';
+        truthy(history.record());
+        truthy(history.undo());
+        equal(host.firstElementChild.textContent, 'one');
+        same(ui.parentNode, host);
+        same(host.lastChild, ui);
+        truthy(history.redo());
+        equal(host.firstElementChild.textContent, 'two');
+        same(ui.parentNode, host);
+        history.dispose();
+    }
+));
+
 test('history: undo and redo restore content and selection', () => withSurface(
     '<div contenteditable><p>one</p></div>', ({surface, host}) => {
         const history = new History(surface);

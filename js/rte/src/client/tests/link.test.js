@@ -150,6 +150,7 @@ test('link editor: enter leaves with the typed link and the caret back', () => w
 test('link editor: validates its hooks', () => {
     throws(() => linkEditor({normalize: 'yes'}), TypeError);
     throws(() => linkEditor({suggest: 'yes'}), TypeError);
+    throws(() => linkEditor({complete: 'yes'}), TypeError);
 });
 
 // Normalizing per keystroke would rewrite half-typed addresses, so it waits for
@@ -194,6 +195,77 @@ test('link editor: an existing link is never re-proposed', () => withLink(
         equal(surface.element.innerHTML, '<p><a href="/old">one</a> two</p>');
     },
     {suggest: () => Promise.resolve({href: '/proposed'})}
+));
+
+// A datalist cannot show markup, and a completion list that only offers bare
+// addresses is not worth the round trip.
+test('link editor: the address field offers rich entries and takes one', () => withLink(
+    async ({client, surface, form}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        const field = form().querySelector('[name=href]');
+        const list = form().querySelector('ul');
+        equal(list.hidden, true, 'Nothing typed, nothing to offer');
+        type(form(), 'href', 'ab');
+        await new Promise(resolve => setTimeout(resolve, 250));
+        equal(list.hidden, false);
+        equal(field.getAttribute('aria-expanded'), 'true');
+        equal([...list.children].map(li => li.dataset.value).join(' '), '/ab-1 /ab-2');
+        equal(list.firstElementChild.querySelector('b').textContent, 'Ab one', 'Entry markup survives');
+        equal(list.firstElementChild.getAttribute('aria-selected'), 'true', 'The first entry is current');
+        list.children[1].click();
+        equal(field.value, '/ab-2');
+        equal(list.hidden, true, 'Taking an entry closes the list');
+        equal(surface.element.innerHTML, '<p><a href="/ab-2">one</a> two</p>');
+    },
+    {complete: text => Promise.resolve([
+        {value: `/${text}-1`, html: '<b>Ab one</b><i>parent</i>'},
+        {value: `/${text}-2`, html: '<b>Ab two</b>'},
+    ])}
+));
+
+test('link editor: the keyboard moves through the list and takes an entry', () => withLink(
+    async ({client, surface, form}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        type(form(), 'href', 'ab');
+        await new Promise(resolve => setTimeout(resolve, 250));
+        const list = form().querySelector('ul');
+        key(form(), 'ArrowDown');
+        equal(list.children[1].getAttribute('aria-selected'), 'true');
+        key(form(), 'ArrowDown');
+        equal(list.firstElementChild.getAttribute('aria-selected'), 'true', 'Moving past the end wraps around');
+        key(form(), 'Escape');
+        equal(list.hidden, true, 'Escape closes the list, not the form');
+        equal(form().hidden, false);
+        type(form(), 'href', 'cd');
+        await new Promise(resolve => setTimeout(resolve, 250));
+        key(form(), 'Enter');
+        equal(form().querySelector('[name=href]').value, '/cd-1');
+        equal(surface.element.innerHTML, '<p><a href="/cd-1">one</a> two</p>');
+    },
+    {complete: text => Promise.resolve([{value: `/${text}-1`}, {value: `/${text}-2`}])}
+));
+
+// A slow answer to a word that has since changed would offer the wrong pages.
+test('link editor: a late completion for an older word is dropped', () => withLink(
+    async ({client, surface, form}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        type(form(), 'href', 'a');
+        await new Promise(resolve => setTimeout(resolve, 200));
+        type(form(), 'href', 'ab');
+        await new Promise(resolve => setTimeout(resolve, 400));
+        equal([...form().querySelectorAll('li')].map(li => li.dataset.value).join(' '), '/ab');
+    },
+    {complete: text => new Promise(resolve =>
+        setTimeout(() => resolve([{value: `/${text}`}]), text === 'a' ? 300 : 10))}
 ));
 
 test('link editor: the form closes and is released with the module', () => withLink(
@@ -265,6 +337,10 @@ function type(form, name, value) {
     const field = form.querySelector(`[name=${name}]`);
     field.value = value;
     field.dispatchEvent(new Event('input', {bubbles: true}));
+}
+
+function key(form, name) {
+    form.dispatchEvent(new KeyboardEvent('keydown', {key: name, bubbles: true, cancelable: true}));
 }
 
 function leave(form, name) {

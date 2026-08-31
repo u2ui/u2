@@ -8,7 +8,13 @@
 export class Chrome {
     #host;
     #root;
+    #home;
+    #context;
+    #document;
+    #target = null;
     #styles = new Set();
+    #controller;
+    #observer;
     #connected = true;
 
     constructor(root, {name = 'chrome'} = {}) {
@@ -16,8 +22,11 @@ export class Chrome {
         const isShadow = root?.nodeType === Node.DOCUMENT_FRAGMENT_NODE;
         if (!isDocument && !isShadow) throw new TypeError('Editor chrome requires a document or shadow root');
         const document = isDocument ? root : root.ownerDocument;
+        this.#context = root;
+        this.#document = document;
         this.#host = document.createElement('div');
         this.#host.dataset.u2RteChrome = name;
+        this.#host.contentEditable = 'false';
         this.#root = this.#host.attachShadow({mode: 'open'});
         const style = document.createElement('style');
         // The host is inert ground: only what a piece of UI places inside it
@@ -31,16 +40,45 @@ export class Chrome {
         style.textContent = ':host { all: initial !important; pointer-events: none !important;'
             + ' position: fixed !important; inset: 0 !important; }';
         this.#root.append(style);
-        (isDocument ? document.body || document.documentElement : root).append(this.#host);
+        this.#home = isDocument ? document.body || document.documentElement : root;
+        this.#home.append(this.#host);
         if (typeof this.#host.showPopover === 'function') {
             this.#host.popover = 'manual';
             this.#host.showPopover();
         }
+        this.#controller = new document.defaultView.AbortController();
+        const listen = {capture: true, signal: this.#controller.signal};
+        for (const type of ['toggle', 'fullscreenchange']) {
+            document.addEventListener(type, this.#topLayerChange, listen);
+            if (!isDocument) root.addEventListener(type, this.#topLayerChange, listen);
+        }
+        // Dialogs expose their open state synchronously as an attribute, but
+        // current engines do not all dispatch their newer toggle event yet.
+        this.#observer = new document.defaultView.MutationObserver(this.#topLayerChange);
     }
 
     get element() { return this.#host; }
     get root() { return this.#root; }
+    get target() { return this.#target; }
     get connected() { return this.#connected; }
+
+    // Follows the target only across native top-layer boundaries. In ordinary
+    // content the chrome stays in its original document or shadow root.
+    follow(target = null) {
+        if (target !== null && target?.nodeType !== Node.ELEMENT_NODE) {
+            throw new TypeError('Editor chrome can follow only an element or null');
+        }
+        if (target && (target.ownerDocument !== this.#document || target.getRootNode() !== this.#context)) {
+            throw new RangeError('Editor chrome target must belong to its root');
+        }
+        this.#target = target;
+        this.#observer.disconnect();
+        for (let element = target; element?.nodeType === Node.ELEMENT_NODE; element = composedParent(element)) {
+            this.#observer.observe(element, {attributes: true, attributeFilter: ['open']});
+        }
+        this.#place();
+        return this;
+    }
 
     // Registers one stylesheet under a key, once, however often it is offered.
     style(key, css) {
@@ -55,15 +93,55 @@ export class Chrome {
 
     dispose() {
         if (!this.#connected) return;
+        this.#controller.abort();
+        this.#observer.disconnect();
         this.#host.remove();
         // Emptying the root as well: a detached shadow tree still answers
         // queries, and a disposed editor must have nothing left to find.
         this.#root.replaceChildren();
         this.#styles.clear();
+        this.#target = null;
         this.#connected = false;
     }
 
     [Symbol.dispose]() {
         this.dispose();
     }
+
+    #place() {
+        if (!this.#connected) return false;
+        const parent = topLayer(this.#target) || this.#home;
+        if (parent === this.#host.parentNode) {
+            if (typeof this.#host.showPopover === 'function' && !this.#host.matches(':popover-open')) {
+                this.#host.showPopover();
+            }
+            return false;
+        }
+        if (this.#host.matches(':popover-open')) this.#host.hidePopover();
+        parent.append(this.#host);
+        if (typeof this.#host.showPopover === 'function') this.#host.showPopover();
+        return true;
+    }
+
+    #topLayerChange = () => this.#place();
+}
+
+// The closest boundary is the one that owns the target's current top-layer
+// context. Walking through shadow hosts keeps the rule identical for document
+// and ShadowRoot editors.
+export function topLayer(target) {
+    for (let element = target; element?.nodeType === Node.ELEMENT_NODE; element = composedParent(element)) {
+        for (const selector of [':fullscreen', ':modal', ':popover-open']) {
+            try {
+                if (element.matches(selector)) return element;
+            } catch {
+                // Unsupported top-layer states simply cannot be active.
+            }
+        }
+    }
+    return null;
+}
+
+function composedParent(element) {
+    return element.parentElement || element.getRootNode()?.host || null;
 }

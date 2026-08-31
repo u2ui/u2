@@ -17,6 +17,9 @@ UI and belongs to a client module.
   runs as one transaction with the `source` command trigger, so it becomes one
   undo step, and it leaves the caret at the start of the new content.
 - Writing rejects anything but a string.
+- Core-retained UI is omitted from HTML and survives replacement. A direct
+  modal, popover, or fullscreen editing host therefore never exposes its
+  temporarily nested editor chrome as source content.
 
 ## Reading
 

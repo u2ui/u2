@@ -24,6 +24,19 @@ const STYLE = `
     justify-content: space-between;
 }
 [data-u2-rte-link] input[type=text] { min-inline-size: 14rem; }
+[data-u2-rte-link] ul {
+    background: Canvas;
+    border: 1px solid color-mix(in srgb, CanvasText 40%, transparent);
+    cursor: default;
+    list-style: none;
+    margin: 0;
+    max-block-size: 40vh;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 0;
+}
+[data-u2-rte-link] li { padding: .1rem .3rem; }
+[data-u2-rte-link] li[aria-selected=true] { background: Highlight; color: HighlightText; }
 `;
 
 const LABELS = {href: 'Address', target: 'New tab', title: 'Title', rel: 'Rel'};
@@ -39,13 +52,21 @@ const LABELS = {href: 'Address', target: 'New tab', title: 'Title', rel: 'Rel'};
 // finished value whenever a field is left, and may complete a bare domain, turn
 // an address into a scheme of its own, or decide `rel` and `target` from it.
 // `suggest` is asked what a new link should point at, given the text it is being
-// put on. Both default to leaving everything alone.
-export function linkEditor({fields = ['href', 'target', 'title'], normalize = value => value, suggest = null} = {}) {
+// put on, and `complete` what addresses go with what is being typed. All three
+// default to leaving everything alone.
+export function linkEditor({
+    fields = ['href', 'target', 'title'],
+    normalize = value => value,
+    suggest = null,
+    complete = null,
+} = {}) {
     if (!Array.isArray(fields) || !fields.length || fields.some(name => !LABELS[name])) {
         throw new TypeError(`A link editor field must be one of ${Object.keys(LABELS).join(', ')}`);
     }
     if (typeof normalize !== 'function') throw new TypeError('A link normalizer must be a function');
-    if (suggest !== null && typeof suggest !== 'function') throw new TypeError('A link suggestion must be a function');
+    for (const [property, value] of Object.entries({suggest, complete})) {
+        if (value !== null && typeof value !== 'function') throw new TypeError(`A link ${property} must be a function`);
+    }
     const editors = new WeakMap();
     return Object.freeze({
         name: 'link',
@@ -57,6 +78,8 @@ export function linkEditor({fields = ['href', 'target', 'title'], normalize = va
                 fields: [...fields],
                 normalize,
                 suggest,
+                complete,
+                completing: null,
                 views: new Map(),
                 form: null,
                 active: null,
@@ -142,6 +165,107 @@ async function propose(state, active) {
     return write(state, suggested);
 }
 
+// Addresses that go with what is being typed. One question is in flight at a time
+// and a late answer to an older word is dropped, so what the list offers always
+// belongs to what the field says.
+//
+// The list is the form's own rather than a native datalist: an entry may bring
+// markup — a title over its path, a thumbnail — which a datalist cannot show. That
+// markup comes from the application but is written with `setHTML()`, so the
+// platform sanitizes it like any other imported html.
+function offer(state, text) {
+    const list = state.form?.querySelector('ul');
+    if (!list) return null;
+    clearTimeout(state.completing);
+    if (!text.trim()) return options(state, []);
+    state.completing = setTimeout(async () => {
+        const found = await state.complete(text, state.active?.surface) || [];
+        if (state.form.querySelector('[name=href]').value !== text) return;
+        options(state, found);
+    }, 150);
+    return null;
+}
+
+function options(state, entries) {
+    const list = state.form.querySelector('ul');
+    list.replaceChildren(...entries.map(entry => {
+        const option = state.document.createElement('li');
+        option.role = 'option';
+        option.dataset.value = entry.value ?? entry;
+        const markup = typeof entry === 'object' ? entry.html : null;
+        if (markup && option.setHTML) option.setHTML(markup);
+        else option.textContent = entry.label ?? entry.value ?? entry;
+        return option;
+    }));
+    list.hidden = !entries.length;
+    state.form.querySelector('[name=href]').ariaExpanded = String(!list.hidden);
+    return mark(state, list.firstElementChild);
+}
+
+// One entry is current, and the field says which: a list nobody can point at with
+// the keyboard is only half a control.
+function mark(state, option) {
+    const list = state.form.querySelector('ul');
+    for (const item of list.children) item.ariaSelected = String(item === option);
+    state.form.querySelector('[name=href]').setAttribute('aria-activedescendant', option ? id(option) : '');
+    option?.scrollIntoView({block: 'nearest'});
+    return option || null;
+}
+
+function id(option) {
+    option.id ||= `u2-rte-link-option-${[...option.parentNode.children].indexOf(option)}`;
+    return option.id;
+}
+
+function chosen(state) {
+    return state.form?.querySelector('li[aria-selected=true]') || null;
+}
+
+// Taking an entry is typing it: the field says what was chosen and the link
+// follows, exactly as if it had been typed out.
+function take(state, option) {
+    if (!option) return null;
+    const field = state.form.querySelector('[name=href]');
+    field.value = option.dataset.value;
+    options(state, []);
+    field.focus();
+    return commit(state, field);
+}
+
+function completions(state, form) {
+    const list = state.document.createElement('ul');
+    list.role = 'listbox';
+    list.hidden = true;
+    list.id = 'u2-rte-link-completions';
+    list.addEventListener('mousedown', event => event.preventDefault()); // keep the field's focus
+    list.addEventListener('click', event => take(state, event.target.closest('li')));
+    list.addEventListener('mouseover', event => {
+        const option = event.target.closest('li');
+        if (option) mark(state, option);
+    });
+    const field = form.querySelector('[name=href]');
+    field.role = 'combobox';
+    field.ariaExpanded = 'false';
+    field.ariaAutoComplete = 'list';
+    field.setAttribute('aria-controls', list.id);
+    return list;
+}
+
+// While the list is open it owns the keys that move and choose in it.
+function listKey(state, event) {
+    const list = state.form.querySelector('ul');
+    if (!list || list.hidden) return false;
+    const current = chosen(state);
+    const step = {ArrowDown: 'nextElementSibling', ArrowUp: 'previousElementSibling'}[event.key];
+    if (step) {
+        mark(state, current?.[step] || (event.key === 'ArrowDown' ? list.firstElementChild : list.lastElementChild));
+        return true;
+    }
+    if (event.key === 'Enter' && current) return !!take(state, current);
+    if (event.key === 'Escape') return !!options(state, []) || true;
+    return false;
+}
+
 // What the fields say, as the application reads it. Normalizing while a field is
 // being typed into would rewrite half-typed addresses, so it happens when one is
 // left behind.
@@ -194,6 +318,8 @@ function cancel(state) {
 
 function close(state, surface = null) {
     if (!state.active || surface && state.active.surface !== surface) return;
+    clearTimeout(state.completing);
+    if (state.form?.querySelector('ul')) options(state, []);
     state.active = null;
     if (state.form) show(state.form, false);
     return null;
@@ -245,9 +371,13 @@ function build(state) {
     form.hidden = true;
     form.setAttribute('aria-label', 'Link');
     for (const name of state.fields) form.append(field(state.document, name));
+    if (state.complete) form.append(completions(state, form));
     // No Apply and no Remove: what the fields say is what the link is, as it is
     // typed, and an emptied address says there is no link.
-    form.addEventListener('input', event => write(state, read(state), event.target));
+    form.addEventListener('input', event => {
+        if (state.complete && event.target.name === 'href') offer(state, event.target.value);
+        write(state, read(state), event.target);
+    });
     form.addEventListener('change', event => commit(state, event.target));
     form.addEventListener('submit', event => {
         event.preventDefault();
@@ -258,6 +388,7 @@ function build(state) {
     // every edit already applied Enter has nothing left to confirm and Escape
     // nothing to undo: both leave and put the caret back.
     form.addEventListener('keydown', event => {
+        if (state.complete && listKey(state, event)) return event.preventDefault();
         if (event.key !== 'Escape' && event.key !== 'Enter') return;
         event.preventDefault();
         if (event.key === 'Enter') commit(state);

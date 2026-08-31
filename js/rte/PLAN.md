@@ -452,6 +452,11 @@ sees a single element instead of one per piece of UI. There is no `::part`
 surface on purpose — it would make the chrome's internal structure a public
 contract, and an application that wants different chrome builds its own on the
 commands, which `Toolbar` has always supported by binding markup it is given.
+The chrome now follows the active surface through the closest modal dialog,
+open popover, or fullscreen boundary and returns to its original root when that
+boundary closes. Native inertness makes descendant mounting mandatory; core
+retention keeps the temporary UI child out of focus deactivation, Source, and
+History even when the top-layer element is itself the editing host.
 
 The handles inside it are one shared `Handles` component that owns no editor
 concept, so anything with a rectangle can use it, inside this engine or outside

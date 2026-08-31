@@ -20,6 +20,12 @@ the current transaction while the core owns document-level routing.
   it to `using`, and `disconnect()` is idempotent.
 - No mutable state is stored globally or shared accidentally between surfaces.
 
+`content.js` supplies the internal content boundary used by whole-document
+consumers. Direct children retained by the core are editor UI, not surface
+content: replacement preserves them and traversal leaves them out. This matters
+only while native modal, popover, or fullscreen isolation temporarily requires
+the shared chrome to be a descendant of the editable host.
+
 The surface gains schema, normalization, pending marks, history, and composition
 state through modules rather than new globals.
 

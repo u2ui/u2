@@ -21,6 +21,10 @@ document structure, or UI behavior.
   it without scanning or mutating unrelated editor contents.
 - At most one surface is active per core; active state may outlive DOM focus so
   a roaming UI can safely receive focus.
+- `retain(element)` marks editor-owned UI in the same document. Focus inside it
+  keeps the active surface, `retains(node)` identifies its composed subtree,
+  and `release(element)` removes the mark. This also distinguishes UI from
+  content when a native top-layer boundary requires both to share one host.
 - `dispose()` removes listeners and disconnects every surface. It is
   idempotent; `[Symbol.dispose]()` exposes the same teardown to `using`.
 
@@ -29,7 +33,6 @@ isolated environments. The public entry point creates one default document core.
 
 ## TODO
 
-- Define explicit UI focus-retention tokens and deactivation policy.
 - Observe removed auto-registered hosts without watching their contents.
 - Complete cross-browser ShadowRoot selection routing.
 - Add module lifecycle registration at the core boundary.

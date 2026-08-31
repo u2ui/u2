@@ -113,7 +113,10 @@ export class Editor {
     // One shadow root for everything this editor draws. It is made on first use,
     // so an editor that never shows anything adds nothing to the document.
     get chrome() {
-        this.#chrome ??= new Chrome(this.#core.root, {name: 'editor'});
+        if (!this.#chrome) {
+            this.#chrome = new Chrome(this.#core.root, {name: 'editor'});
+            this.#core.retain(this.#chrome.element);
+        }
         return this.#chrome;
     }
     get toolbar() { return this.#toolbar; }
@@ -208,6 +211,7 @@ export class Editor {
         if (!this.#connected) return false;
         const surface = this.#core.active;
         if (this.#records.has(surface) && surface.config.ui === 'roaming') this.#ensureToolbar();
+        this.#chrome?.follow(this.#records.has(surface) ? surface.element : null);
         // A control whose choices come from the host's configuration is filled
         // for the surface that is about to be shown, not once at registration.
         for (const [select, choices] of this.#dynamic) {
@@ -221,6 +225,7 @@ export class Editor {
         this.#controller.abort();
         for (const surface of [...this.#records.keys()]) this.#drop(surface);
         this.#toolbar?.dispose();
+        if (this.#chrome) this.#core.release(this.#chrome.element);
         // The chrome reference is kept: its getter must not build a new one for
         // a client that is gone.
         this.#chrome?.dispose();
@@ -487,4 +492,3 @@ function options(select, choices) {
     }
     return true;
 }
-

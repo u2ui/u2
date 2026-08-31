@@ -45,6 +45,7 @@
 
     .rte-host {
       --u2-rte: true;
+      --u2-rte-toolbar: undo redo block style bold italic underline strike code link unlink bullets numbers outdent indent rule insertTable imageOriginal unstyle breaks source;
       border: 2px solid color-mix(in srgb, Highlight 48%, var(--border));
       min-block-size: 2.8rem;
       outline: 0;
@@ -60,6 +61,8 @@
     dialog.rte-host[open]:not([data-modal]) { inline-size: 100%; margin: 0; position: static; }
     dialog.rte-host[data-modal] { inline-size: min(30rem, calc(100% - 2rem)); }
     dialog.rte-host::backdrop { background: #0008; }
+    .rte-host:popover-open { inline-size: min(30rem, calc(100% - 2rem)); }
+    .rte-host:fullscreen { background: Canvas; box-sizing: border-box; padding: 2rem; }
     button.rte-host { color: inherit; font: inherit; inline-size: 100%; text-align: start; }
     a.rte-host, a > .rte-host { display: inline-block; min-inline-size: 10rem; }
     [contenteditable=false] { border: 1px dashed var(--border); padding: .2rem; }
@@ -179,7 +182,8 @@
 
     <section class=case>
       <h3><code>&lt;label contenteditable&gt;</code></h3>
-      <label class=rte-host contenteditable data-name=label>Editable label host</label>
+      <label for="native-input" class=rte-host contenteditable data-name=label>Editable label host</label>
+      <input id="native-input" type=text placeholder="Native input" />
       <output></output>
     </section>
 
@@ -372,6 +376,26 @@
     </section>
 
     <section class=case>
+      <h3><code>showPopover()</code></h3>
+      <button id=show-popover-host type=button>Show popover editor</button>
+      <div class=rte-host contenteditable data-name=popover id=popover-host popover=manual tabindex=-1>
+        Edit this popover host.
+        <button popovertarget=popover-host popovertargetaction=hide contenteditable=false type=button>Close</button>
+      </div>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>requestFullscreen()</code></h3>
+      <button id=show-fullscreen-host type=button>Show fullscreen editor</button>
+      <div class=rte-host contenteditable data-name=fullscreen id=fullscreen-host tabindex=-1>
+        <p>Edit this fullscreen host.</p>
+        <button id=hide-fullscreen-host contenteditable=false type=button>Exit fullscreen</button>
+      </div>
+      <output></output>
+    </section>
+
+    <section class=case>
       <h3><code>contenteditable="plaintext-only"</code></h3>
       <div class=rte-host contenteditable=plaintext-only data-name=plain-text>Native plain-text host</div>
       <output></output>
@@ -406,7 +430,7 @@
   </section>
 
   <script type=module>
-    import {config, rte} from '../rte.js';
+    import {config, rte, Source} from '../rte.js';
 
     const hosts = [...document.querySelectorAll('.rte-host')];
     const events = [];
@@ -444,7 +468,7 @@
       } else {
         const settings = rte.active.config;
         active.textContent = `${name(host)}\nblock: ${settings.block || 'none'}\nEnter: ${settings.enter}`;
-        html.textContent = host.innerHTML;
+        html.textContent = new Source(rte.active).read().html;
         const range = getSelection();
         selection.textContent = range?.rangeCount
           ? `anchor: ${node(range.anchorNode)} @ ${range.anchorOffset}\nfocus:  ${node(range.focusNode)} @ ${range.focusOffset}\ncollapsed: ${range.isCollapsed}`
@@ -475,6 +499,19 @@
       events.length = 0;
       render();
     });
+    const popover = document.querySelector('#popover-host');
+    document.querySelector('#show-popover-host').addEventListener('click', () => {
+      popover.showPopover();
+      popover.focus();
+    });
+    const fullscreen = document.querySelector('#fullscreen-host');
+    const enterFullscreen = document.querySelector('#show-fullscreen-host');
+    enterFullscreen.disabled = typeof fullscreen.requestFullscreen !== 'function';
+    enterFullscreen.addEventListener('click', async () => {
+      await fullscreen.requestFullscreen();
+      fullscreen.focus();
+    });
+    document.querySelector('#hide-fullscreen-host').addEventListener('click', () => document.exitFullscreen());
     render();
   </script>
 </body>

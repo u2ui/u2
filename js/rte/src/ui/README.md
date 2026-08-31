@@ -125,6 +125,16 @@ toolbar, its contextual handles, its forms and dialogs. It carries the top
 layer, and each piece registers its own stylesheet in it through
 `style(key, css)`, once.
 
+`follow(element)` keeps that one chrome inside the closest currently active
+native top-layer boundary: a modal dialog, open popover, or fullscreen element.
+This is a DOM relationship rather than a `z-index` trick, because modal
+inertness and fullscreen rendering admit only descendants. Dialog `open`
+mutations, popover `toggle`, and `fullscreenchange` update the mount; closing a
+boundary returns the chrome to its original `Document` or `ShadowRoot`.
+The host is an explicit `contenteditable=false` boundary. A convention client
+also retains it in the core so UI focus and temporary direct-host mounting do
+not become editor state or content.
+
 An editor is chrome inside someone else's document and has to survive their
 `button {}` rule. One encapsulated root means the page's CSS reaches none of it,
 none of its styles leak out, and the application sees a single element rather

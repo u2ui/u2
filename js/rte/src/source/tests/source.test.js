@@ -1,7 +1,7 @@
 import {NativeSanitizer} from '../../sanitize/native.js';
 import {Rte} from '../../core/core.js';
 import {Source} from '../source.js';
-import {equal, test, throws, truthy, withFixture} from '../../../tests/harness.js';
+import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
 test('source: validates its surface and options', () => withSource('<div contenteditable><p>one</p></div>', ({surface}) => {
     throws(() => new Source(null), TypeError);
@@ -88,6 +88,20 @@ test('source: writing replaces the content and reports its nodes', () => withSou
         equal(nodes.map(node => node.localName), ['h2', 'p']);
         equal(getSelection().focusNode, host);
         equal(getSelection().focusOffset, 0);
+    }
+));
+
+test('source: retained top-layer UI is neither serialized nor replaced', () => withSource(
+    '<div contenteditable><p>one</p></div>', ({core, source, host}) => {
+        const ui = document.createElement('div');
+        ui.contentEditable = 'false';
+        core.retain(ui);
+        host.append(ui);
+        equal(source.read().html, '<p>one</p>');
+        source.write('<p>two</p>');
+        equal(source.read().html, '<p>two</p>');
+        same(ui.parentNode, host);
+        same(host.lastChild, ui);
     }
 ));
 

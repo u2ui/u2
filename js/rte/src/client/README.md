@@ -60,12 +60,25 @@ asynchronously, what a *new* link should point at, given the text it is being pu
 on; its answer is used only while the form is still open on the same link and
 the address is still empty.
 
+`complete(text, surface)` is asked what addresses go with what is being typed and
+answers with entries `{value, label}` — or `{value, html}` for a row with markup,
+which the form writes through `setHTML()`, so the platform sanitizes it. The form
+renders its own list rather than a native datalist, which cannot show markup: the
+arrow keys move through it, Enter takes the current entry, Escape closes the list
+before it closes the form, and a pointer does the same. One question is in flight
+at a time, and a late answer to a word that has since changed is dropped.
+
 Everything this client draws goes into one `Chrome`: its toolbar, the contextual
 handles, the link form, the source dialog. A module receives it as `chrome` in
 its setup context and puts its UI in `chrome.root`, so no module owns a layer, a
 top-layer element, or a place in the application's DOM. The chrome is made on
 first use, so an editor that never shows anything adds nothing to the document,
 and disposing the client takes all of it away at once.
+When the active surface sits in a modal dialog, open popover, or fullscreen
+element, the same chrome follows it into that native top-layer boundary and
+returns afterward. The client registers the chrome as retained core UI, so its
+controls keep activation and direct top-layer hosts keep it out of Source and
+History content.
 
 The optional `images.js` entry frames a selected image with three handles on its
 trailing edges: the bottom-right corner keeps the proportion, the right edge

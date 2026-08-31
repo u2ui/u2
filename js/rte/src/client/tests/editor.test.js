@@ -157,6 +157,36 @@ test('editor client: the convention toolbar stays in its ShadowRoot top layer', 
     }
 });
 
+test('editor client: its chrome enters a modal surface without losing activation', async () => {
+    if (typeof HTMLDialogElement === 'undefined') return;
+    const dialog = document.body.appendChild(document.createElement('dialog'));
+    dialog.contentEditable = 'true';
+    dialog.style.setProperty('--u2-rte-toolbar', 'bold');
+    dialog.innerHTML = '<p>text</p>';
+    const core = new Rte(document, {auto: false});
+    const client = new Editor(core);
+    try {
+        const surface = core.add(dialog);
+        dialog.showModal();
+        getSelection().collapse(dialog.querySelector('p').firstChild, 2);
+        core.sync();
+        same(client.chrome.element.parentNode, dialog);
+        const button = client.toolbar.element.querySelector('[data-command=bold]');
+        button.focus();
+        same(core.active, surface);
+        same(client.chrome.root.activeElement, button);
+        const closed = new Promise(resolve => dialog.addEventListener('close', resolve, {once: true}));
+        dialog.close();
+        await closed;
+        same(client.chrome.element.parentNode, document.body);
+    } finally {
+        client.dispose();
+        core.dispose();
+        dialog.close();
+        dialog.remove();
+    }
+});
+
 test('editor client: modules reach current and future surfaces and own their controls', () => withFixture(`
     <div contenteditable style="--u2-rte-toolbar:action">one</div>
     <div contenteditable style="--u2-rte-toolbar:action">two</div>

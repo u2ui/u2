@@ -6,8 +6,10 @@ contains no alternative editor or normalization implementation.
 
 `hosts.html` is a focused live matrix for comparing the convention client
 across block, text, interactive, list, table, and custom editing hosts. It also
-covers links in both nesting directions, non-modal dialogs, declarative
-`show-modal` dialogs, plain-text editing, empty hosts, and non-editable islands.
+covers links in both nesting directions, non-modal and declarative `show-modal`
+dialogs, `showPopover()` and fullscreen hosts, plain-text editing, empty hosts,
+and non-editable islands. The shared editor chrome follows an active native
+top-layer boundary and returns to the document when that boundary closes.
 It reports registration, resolved host defaults, selection, serialized content,
 and recent native events without turning the observations into cross-browser
 assertions.
