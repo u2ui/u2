@@ -1,27 +1,27 @@
-# RTE2 Agent Instructions
+# RTE Agent Instructions
 
 These instructions apply to this directory and all descendants.
 
 ## Project status — important
 
-RTE2 is new and not used in production or by downstream consumers yet. There
+RTE is new and not used in production or by downstream consumers yet. There
 is no backward-compatibility obligation. Prefer the clean final API and remove
 superseded names or designs instead of adding aliases, deprecations, shims, or
 legacy layers. Existing behavior still needs tests, but compatibility with an
-earlier RTE2 draft is not a reason to keep a weaker design.
+earlier RTE draft is not a reason to keep a weaker design.
 
 ## Start here
 
 - Read [`README.md`](./README.md) for the architecture and requirements.
 - Read [`PLAN.md`](./PLAN.md) for implemented phases and the next responsibility.
 - Read the README beside every responsibility you change.
-- Treat `../rte` as a read-only behavioral reference. Never modify it or any
-  other file outside `rte2` while working on RTE2.
+- Treat `../rte0` as a read-only behavioral reference. Never modify it or any
+  other file outside `rte` while working on RTE.
 
 ## Priorities
 
 - Keep changes focused, compact, readable, and internally consistent.
-- Prefer a small general solution to a collection of special cases. RTE2 is a
+- Prefer a small general solution to a collection of special cases. RTE is a
   generic engine and must support use cases that were not anticipated.
 - Treat reported examples as regression cases for a general rule. Do not ship
   tag-, class-, fixture-, or browser-specific behavior when the underlying
@@ -126,9 +126,9 @@ earlier RTE2 draft is not a reason to keep a weaker design.
 - Do not weaken assertions, add timing guesses, or hide failures behind
   browser-specific skips. Test the stable contract and isolate genuinely
   engine-specific behavior.
-- Run `/u2/js/rte2/tests/` through HTTP. A revision is cross-browser verified
+- Run `/u2/js/rte/tests/` through HTTP. A revision is cross-browser verified
   only when that exact revision passes in current Chromium, Firefox, and WebKit.
-- Use `/u2/js/rte2/playground/` for visual inspection of normalization, mapping,
+- Use `/u2/js/rte/playground/` for visual inspection of normalization, mapping,
   selection, and input behavior.
 
 ## Before handing off

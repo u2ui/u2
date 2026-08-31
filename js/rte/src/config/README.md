@@ -33,7 +33,7 @@ Current properties:
 `--u2-rte-enter` is consumed by the `enter` command: `break` inserts a line
 break, every other value names the element Enter splits. `--u2-rte-ui: none`
 hides a roaming `Toolbar`; `static` is reserved for the future static binding.
-The prototype root `editor.js` currently represents only `bold`, so additional
+The convention client in `rte.js` currently represents only `bold`, so additional
 toolbar names stay invisible until an optional module supplies both command and
 control.
 See [`../command/README.md`](../command/README.md) and
@@ -68,6 +68,17 @@ declaration with three consumers: the style control offers exactly those names,
 the sanitizer keeps only those from external HTML, and presentation cleanup
 leaves them and their wrappers alone. A host that declares none behaves exactly
 as before.
+
+`--u2-rte-import-elements` is what may *arrive*, a narrower question than
+`--u2-rte-elements`, which is what a host tolerates in content it already owns.
+It defaults to the `@content` preset: headings, text, lists, tables, media, and
+the text-level semantics that carry meaning — no layout, no embeds, no forms.
+The host list still bounds it; neither can widen the sanitize policy.
+
+`--u2-rte-import-sanitize` switches that whole stage off with `none`, leaving
+what the browser inserted. Which attributes and protocols are acceptable stays
+in JavaScript with the policy — that is a security decision, not a presentation
+one, and not something CSS should be carrying.
 
 ## TODO
 

@@ -1,3 +1,4 @@
+import {Editor} from './src/client/editor.js';
 import {Rte} from './src/core/core.js';
 
 export {rangeRect} from './src/browser/range-rect.js';
@@ -5,11 +6,13 @@ export {Commands} from './src/command/commands.js';
 export {BlockStyles} from './src/command/block-style.js';
 export {deleteBackward, deleteForward} from './src/command/delete.js';
 export {Edit} from './src/command/edit.js';
+export {elementAttributes, selectedElement} from './src/command/element.js';
 export {enter, lineBreak} from './src/command/enter.js';
 export {blank, blockEdge, emptyBlock, fill} from './src/command/block-boundary.js';
 export {insertFragment} from './src/command/fragment.js';
 export {insertNode} from './src/command/insert.js';
 export {Lists} from './src/command/list.js';
+export {Tables} from './src/command/table.js';
 export {applyMark, removeMark, setMarks, toggleMark, valueMark} from './src/command/mark.js';
 export {PendingMarks} from './src/command/pending-marks.js';
 export {unstyleCommand} from './src/command/unstyle.js';
@@ -18,6 +21,11 @@ export {Rte} from './src/core/core.js';
 export {History} from './src/history/history.js';
 export {ExternalInput} from './src/input/external-input.js';
 export {InputPipeline, inputRange, inputTrigger} from './src/input/input-pipeline.js';
+export {Editor} from './src/client/editor.js';
+export {externalInputs, importLevel} from './src/client/external-input.js';
+export {history} from './src/client/history.js';
+export {marks} from './src/client/marks.js';
+export {structure} from './src/client/structure.js';
 export {classMark} from './src/mark/standard.js';
 export {
     bold, boldHtml,
@@ -47,3 +55,4 @@ export {Toolbar} from './src/ui/toolbar.js';
 export {Unstyle, defaultUnstyle, defaultUnstyleLevels} from './src/unstyle/unstyle.js';
 
 export const rte = new Rte(document);
+export const editor = new Editor(rte);

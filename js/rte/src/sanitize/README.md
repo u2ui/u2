@@ -45,7 +45,7 @@ surface are unwrapped; the sanitizer policy can never be broadened.
 The native HTML Sanitizer API is not available in every target engine yet.
 `NativeSanitizer.supported(document)` exposes that capability. `sanitize()`
 throws `NotSupportedError` when the safe sink is absent; it deliberately has no
-`innerHTML` fallback. RTE2's normal paste/drop path therefore remains native in
+`innerHTML` fallback. RTE's normal paste/drop path therefore remains native in
 those engines and performs presentation plus structural cleanup afterwards; it
 does not need to parse the clipboard HTML string.
 
@@ -61,6 +61,34 @@ rich paste/drop events and direct HTML imports.
 - Attribute and URL policy remains separate from structural normalization.
 - Sanitizing creates no editor state, listeners, or markers.
 - Policies do not mutate after construction.
+
+## Where the policy is applied
+
+Three paths bring external HTML in, and all three now meet the same policy:
+
+- `Source.write()` and `ExternalInput.insert()` parse an HTML string, so they go
+  through the sanitizer's safe sink first and then `clean()`.
+- An ordinary paste or drop is inserted by the browser itself. Nothing is parsed
+  there and no fallback parser is needed, but the result still has to obey the
+  same attribute policy — so the input pipeline applies `clean()` to the nodes
+  that arrived. Until it did, the most common import was the only one without an
+  allowlist, and layout ids, tracking `data-` attributes and inline styles came
+  straight through.
+
+`clean(root, {preserve})` spares elements that were already there, so a paste
+never re-cleans the document it landed in.
+
+`narrow(root, {elements, preserve, map, skip})` reduces a subtree to the elements
+the policy allows, keeping the content of the rest. Parsed input gets this from
+the safe sink; markup the browser inserted itself has to be narrowed afterwards.
+`elements` may narrow further but never past the policy, and `skip` leaves an
+element to a later stage.
+
+`alias` names an equivalent for an element the list does not carry. Dropping
+`<b>` would lose the emphasis it holds — nothing rewrites it later, because the
+bold mark recognizes `<b>` but only a mark command ever makes an element
+canonical — so a strict list keeps the meaning by taking `<strong>` instead. An
+alias can only ever name an element the list already allows.
 
 ## Declared content classes
 

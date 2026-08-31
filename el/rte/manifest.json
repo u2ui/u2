@@ -3,11 +3,11 @@
     "readme": "README.md",
     "modules": [{
         "kind": "javascript-module",
-        "path": "rte2.js",
+        "path": "rte.js",
         "declarations": [{
             "kind": "class",
             "description": "Progressively enhances a textarea with the RTE2 rich-text editor",
-            "name": "U2Rte2",
+            "name": "U2Rte",
             "members": [{
                 "kind": "field",
                 "name": "value",
@@ -36,13 +36,13 @@
                 "syntax": "*"
             }],
             "superclass": { "name": "HTMLElement" },
-            "tagName": "u2-rte2",
+            "tagName": "u2-rte",
             "customElement": true
         }],
         "exports": [{
             "kind": "custom-element-definition",
-            "name": "u2-rte2",
-            "declaration": { "name": "U2Rte2", "module": "rte2.js" }
+            "name": "u2-rte",
+            "declaration": { "name": "U2Rte", "module": "rte.js" }
         }]
     }]
 }

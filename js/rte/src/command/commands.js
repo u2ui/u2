@@ -109,7 +109,10 @@ export class Commands {
             const result = command.run(edit);
             this.#surface.emit('u2-rte-command', {name, inputType: edit.inputType, transaction: edit.transaction, result});
             return result;
-        }, {trigger: 'command', command: name, inputType: detail.inputType || ''});
+        // A caller may mark a run as ongoing input — a field edited live, a
+        // slider dragged — so history groups it instead of recording a step per
+        // keystroke.
+        }, {trigger: detail.trigger === 'input' ? 'input' : 'command', command: name, inputType: detail.inputType || ''});
     }
 
     // The base model is handed over unnarrowed: `Edit` resolves it only if the

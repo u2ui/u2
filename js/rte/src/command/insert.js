@@ -1,13 +1,14 @@
 import {Point} from '../selection/point/point.js';
 import {fill} from './block-boundary.js';
 
-// Inserts one prepared element at the caret. The content model decides where it
-// belongs: the caret's block is split only as far as the nearest container that
-// accepts the element, so a block-level rule separates paragraphs while an
+// Inserts one prepared element at the selection. The content model decides
+// where it belongs: the block is split only as far as the nearest container
+// that accepts the element, so a block-level rule separates paragraphs while an
 // inline element stays inside its text.
 //
-// A selection is not deleted first, so the browser keeps its native behavior
-// there until deletion is an ordinary mapped command.
+// A selection is not deleted first: the element lands where the selection
+// starts and the selected content stays after it. Insertion may not depend on a
+// caret — a toolbar shown only for a selection would never offer it.
 export function insertNode(create, inputTypes = []) {
     if (typeof create !== 'function') throw new TypeError('Node insertion requires a factory function');
     if (!Array.isArray(inputTypes)) throw new TypeError('Input types must be an array');
@@ -37,7 +38,7 @@ function insert(edit, node) {
 }
 
 function container(edit, node) {
-    const start = edit.range?.collapsed && edit.range.start;
+    const start = edit.range?.start;
     if (!start) return null;
     const from = start.node.nodeType === Node.ELEMENT_NODE ? start.node : start.node.parentElement;
     for (let element = from; element && element !== edit.element; element = element.parentElement) {

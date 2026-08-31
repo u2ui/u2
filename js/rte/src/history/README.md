@@ -2,7 +2,7 @@
 
 Undo and redo for one surface.
 
-RTE2 deliberately leaves ordinary typing and deletion to the browser, so history
+RTE deliberately leaves ordinary typing and deletion to the browser, so history
 cannot be an operation log: it would only ever see the edits the engine itself
 performs. `history.js` therefore records *states*. A `MutationObserver` reports
 every change regardless of its origin — native input, a command, paste, drop, or

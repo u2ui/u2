@@ -364,6 +364,51 @@ Every step is checked against the content model first, so a host that does not
 allow the container, the item, or the text block keeps its control disabled
 instead of producing invalid structure.
 
+## One selected element
+
+`selectedElement(edit, match)` is the element a selection covers when it covers
+exactly that element and nothing else. Clicking an image inside a
+`contenteditable` produces such a selection, which is what makes an atomic
+element addressable at all.
+
+`elementAttributes(names, {match})` is a value command over a fixed set of that
+element's attributes:
+
+```js
+commands.add('imageSize', elementAttributes(['width', 'height'], {
+    match: element => element.matches('img'),
+}));
+commands.run('imageSize', {value: {width: 320, height: 200}});
+commands.run('imageSize');
+```
+
+A missing or empty value removes its attribute, so one command both sets a size
+and clears it — which is what "back to its own size" means for an image. The
+element stays selected afterwards, so a UI acting on it stays up.
+
+## Tables
+
+`Tables` groups the structural table actions. It names no section, row, or cell
+tag: they come from the model's `defaultChild`, one level apart, so a configured
+table-like structure works the same way.
+
+```js
+const tables = new Tables();
+for (const [name, command] of Object.entries(tables.commands)) commands.add(name, command);
+commands.run('insertTable', {value: {rows: 3, columns: 2}});
+```
+
+Everything but `insertTable` needs the caret inside a cell. A new row copies the
+kinds of cell its neighbour has, so a header row grows into header cells; a new
+column takes its kind from the cell it sits beside in each row. Deleting the
+last row or the last column takes the table with it, and the caret always lands
+where the edit happened.
+
+A cell spanning several rows or columns makes an index stop naming a column, so
+the actions that count on one report themselves unavailable rather than shifting
+the wrong cells. Row actions still work across a `colspan`, because a row is
+still a row.
+
 ## Inserted elements
 
 `insertNode(create, inputTypes)` inserts one prepared element at the caret. The
@@ -383,7 +428,10 @@ behavior there until deletion is an ordinary mapped command.
 ## Unstyle
 
 `unstyleCommand(policy, {blocks})` adapts the presentation policy in
-[`../unstyle/`](../unstyle/README.md) to a non-collapsed editor selection. It
+[`../unstyle/`](../unstyle/README.md) to an editor selection. A collapsed caret
+reaches everything the surface holds: someone who presses with nothing selected
+wants the content cleaned, not nothing to happen, and the caret is put back
+afterwards rather than the whole document being left selected. It
 reports the first level that can change the selection and applies exactly that
 level, so repeated presses become deliberately stronger only after the previous
 level is already a no-op.
@@ -438,6 +486,9 @@ error.
   each `[modifier+]*key` with `ctrl` matching Control or Command. The registry
   indexes them like input types, so keys belong to commands rather than to a
   toolbar and work whether or not a control is on screen.
+- `run(name, {trigger: 'input'})` marks a run as ongoing input rather than a
+  discrete action, so history groups a live control's edits — a field typed
+  into, a slider dragged — instead of recording a step per change.
 - Commands run inside exactly one transaction and report their dirty nodes.
 - A command never crosses its editing host and never splits the host itself.
 - The resulting selection is set by the command, not guessed by the caller.

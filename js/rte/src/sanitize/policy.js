@@ -64,12 +64,52 @@ export class SanitizePolicy {
         return protocol !== null && protocols.includes(protocol);
     }
 
+    // Reduces a subtree to the elements this policy allows, keeping the content
+    // of the rest. Parsed input gets this from the safe sink; markup the browser
+    // inserted itself has to be narrowed afterwards.
+    //
+    // `skip` leaves an element to a later stage. Structural repair already
+    // removes what the content model rejects, and it does so knowing that
+    // dissolving a block into inline content needs a line break to survive.
+    //
+    // `alias` names an equivalent for an element that is not allowed. Dropping
+    // `<b>` would lose the emphasis it carries, so a strict list can still keep
+    // the meaning by taking the canonical element instead.
+    narrow(root, {elements = null, preserve = null, map = null, skip = null, alias = null} = {}) {
+        // A caller may narrow further but never past the policy itself.
+        const allowed = elements === null
+            ? this.elements
+            : this.elements.filter(name => elements.includes(name));
+        const changed = [];
+        for (const element of descendants(root).reverse()) {
+            if (preserve?.has(element) || allowed.includes(element.localName)) continue;
+            if (!element.parentNode || skip?.(element)) continue;
+            const equivalent = alias?.[element.localName];
+            if (equivalent && allowed.includes(equivalent)) {
+                const replacement = element.ownerDocument.createElement(equivalent);
+                for (const attribute of element.attributes) replacement.setAttribute(attribute.name, attribute.value);
+                if (map) map.replaceWrapper(element, replacement);
+                else {
+                    replacement.append(...element.childNodes);
+                    element.replaceWith(replacement);
+                }
+                changed.push(replacement);
+                continue;
+            }
+            if (map) map.unwrap(element);
+            else element.replaceWith(...element.childNodes);
+            changed.push(element);
+        }
+        return changed;
+    }
+
     // `classes` narrows the class attribute to known names without touching the
     // security policy: an application declares its content classes once and
     // foreign ones do not survive external input.
-    clean(root, {base, classes = null} = {}) {
+    clean(root, {base, classes = null, preserve = null} = {}) {
         const known = classes === null ? null : new Set(classes);
         for (const element of descendants(root)) {
+            if (preserve?.has(element)) continue;
             for (const attribute of [...element.attributes]) {
                 if (!this.allowsAttribute(element, attribute.name)
                     || !this.allowsUrl(element, attribute.name, attribute.value, base)) {

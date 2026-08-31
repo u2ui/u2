@@ -8,12 +8,15 @@ import {history as historyModule} from './history.js';
 import {marks} from './marks.js';
 import {structure} from './structure.js';
 import {isPlainTextHost} from '../selection/ownership/ownership.js';
+import {Chrome} from '../ui/chrome.js';
 import {place} from '../ui/place.js';
 import {Toolbar} from '../ui/toolbar.js';
 
 const STYLE = `
 [data-u2-rte-editor-toolbar] {
     align-items: center;
+    pointer-events: auto;
+    transition: left .14s, top .14s;
     backdrop-filter: blur(.5rem);
     background: color-mix(in srgb, Canvas 92%, transparent);
     border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
@@ -28,8 +31,14 @@ const STYLE = `
     padding: .2rem;
     position: fixed;
     z-index: 2147483647;
+    max-inline-size: 22rem;
+    flex-wrap: wrap;
 }
 [data-u2-rte-editor-toolbar][hidden] { display: none; }
+[data-u2-rte-editor-toolbar][data-placing] { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+    [data-u2-rte-editor-toolbar] { transition: none; }
+}
 [data-u2-rte-editor-toolbar] button {
     background: transparent;
     border: 0;
@@ -57,7 +66,7 @@ const STYLE = `
 [data-u2-rte-editor-toolbar] select:disabled { opacity: .4; }
 `;
 
-const CLIENT = Symbol.for('u2.rte2.editor');
+const CLIENT = Symbol.for('u2.rte.editor');
 
 // Minimal convention client for the default editor stack. It exposes the
 // per-surface registry and a narrow registration point for optional command
@@ -69,10 +78,10 @@ export class Editor {
     #modules = new Map();
     #setups = new Map();
     #sources = new WeakMap();
+    #chrome = null;
     #toolbar = null;
     #element = null;
     #dynamic = new Map();
-    #style = null;
     #controller;
     #connected = true;
 
@@ -100,11 +109,35 @@ export class Editor {
     }
 
     get core() { return this.#core; }
+
+    // One shadow root for everything this editor draws. It is made on first use,
+    // so an editor that never shows anything adds nothing to the document.
+    get chrome() {
+        this.#chrome ??= new Chrome(this.#core.root, {name: 'editor'});
+        return this.#chrome;
+    }
     get toolbar() { return this.#toolbar; }
     get connected() { return this.#connected; }
 
     commands(surface) {
         return this.#records.get(surface)?.commands || null;
+    }
+
+    // What this editor offers, by control name, so an application can build its
+    // own list of what `--u2-rte-toolbar` may choose from without guessing.
+    get controls() {
+        const result = [];
+        for (const module of this.#modules.values()) {
+            for (const control of module.toolbar) {
+                result.push(Object.freeze({
+                    name: control.name || control.command,
+                    command: control.command,
+                    label: control.label,
+                    module: module.name,
+                }));
+            }
+        }
+        return result;
     }
 
     history(surface) {
@@ -127,6 +160,7 @@ export class Editor {
                 editor: this,
                 core: this.#core,
                 root: this.#core.root,
+                chrome: this.chrome,
             })), 'Editor module setup()');
             for (const record of this.#records.values()) {
                 this.#install(record, module);
@@ -187,12 +221,12 @@ export class Editor {
         this.#controller.abort();
         for (const surface of [...this.#records.keys()]) this.#drop(surface);
         this.#toolbar?.dispose();
-        this.#element?.remove();
-        this.#style?.remove();
+        // The chrome reference is kept: its getter must not build a new one for
+        // a client that is gone.
+        this.#chrome?.dispose();
         this.#dynamic.clear();
         this.#toolbar = null;
         this.#element = null;
-        this.#style = null;
         for (const setup of [...this.#setups.values()].reverse()) setup.dispose();
         this.#setups.clear();
         this.#modules.clear();
@@ -297,18 +331,11 @@ export class Editor {
 
     #ensureToolbar() {
         if (this.#toolbar) return this.#toolbar;
-        const container = this.#core.root.nodeType === Node.DOCUMENT_NODE
-            ? this.#document.body || this.#document.documentElement
-            : this.#core.root;
-        const style = this.#document.createElement('style');
-        style.dataset.u2RteEditorStyle = '';
-        style.textContent = STYLE;
+        this.chrome.style('toolbar', STYLE);
         const element = this.#document.createElement('div');
         element.dataset.u2RteEditorToolbar = '';
-        if (typeof element.showPopover === 'function') element.popover = 'manual';
         element.setAttribute('aria-label', 'Text formatting');
-        container.append(style, element);
-        this.#style = style;
+        this.chrome.root.append(element);
         this.#element = element;
         for (const module of this.#modules.values()) this.#append(module);
         this.#toolbar = new Toolbar(this.#core, element, {

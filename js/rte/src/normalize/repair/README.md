@@ -25,6 +25,20 @@ without changing nodes, selections, or transaction state.
 
 - `none` never plans changes. `minimal` repairs invalid relationships only.
   `structural` and `canonical` additionally shape direct root content.
+- A neutral generic block — one carrying no attributes — is redundant at any
+  depth, not only at the root. It becomes the block its context expects, or
+  dissolves into its parent. This is deliberately not a model decision: nested
+  `div`s are perfectly valid HTML, which is exactly why validity alone never
+  removes them, and why legacy documents arrive full of them. An attribute makes
+  a wrapper deliberate and it stays.
+- Loose inline content standing beside blocks in a generic container gets the
+  default block, for the same reason: the root already did this, and depth was
+  never the argument. Containers that carry their own meaning — list items,
+  cells, quotes — keep loose text as it is.
+- `canonical` goes one step beyond valid and also dissolves a generic *inline*
+  wrapper that carries nothing — a bare `<span>` — and removes an inline element
+  with neither attributes nor content, whatever its name. A semantic element
+  with content is never noise, however bare it is.
 - The configured root block wraps direct phrasing content, converts neutral
   generic blocks containing phrasing content, and removes neutral generic
   wrappers around root blocks mixed with content that can be shaped at the

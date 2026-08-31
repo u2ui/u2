@@ -207,3 +207,43 @@ test('normalizer: an element policy converts blocks, unwraps inline wrappers, an
         truthy(result.stable);
     }
 ));
+
+// Nested bare wrappers are valid HTML, so the content model alone never removes
+// them. Legacy documents arrive full of them.
+test('normalizer: bare generic wrappers dissolve at any depth, not only at the root', () => withFixture(
+    `<div><div id=head><div><div><div><h1>Title</h1></div></div></div></div></div>`, root => {
+        const host = root.firstElementChild;
+        const result = new Normalizer(host, {block: 'p'}).normalize();
+        equal(host.innerHTML, '<div id="head"><h1>Title</h1></div>',
+            'A wrapper carrying an attribute is deliberate and stays');
+        truthy(result.stable);
+    }
+));
+
+test('normalizer: a nested bare wrapper around text becomes the default block', () => withFixture(
+    '<div><section><div>loose text</div></section></div>', root => {
+        const host = root.firstElementChild;
+        new Normalizer(host, {block: 'p'}).normalize();
+        equal(host.innerHTML, '<section><p>loose text</p></section>');
+    }
+));
+
+test('normalizer: canonical dissolves meaningless inline wrappers too', () => withFixture(
+    '<div><p>one <span>two</span> <span class=x>three</span> <em>four</em><span></span></p></div>', root => {
+        const host = root.firstElementChild;
+        new Normalizer(host, {block: 'p'}).normalize();
+        equal(host.innerHTML, '<p>one <span>two</span> <span class="x">three</span> <em>four</em></p>',
+            'Structural repair keeps a wrapper with content but never a hollow one');
+        new Normalizer(host, {block: 'p', level: 'canonical'}).normalize();
+        equal(host.innerHTML, '<p>one two <span class="x">three</span> <em>four</em></p>');
+    }
+));
+
+test('normalizer: loose inline runs beside blocks become one block each', () => withFixture(
+    '<div><section id=keep><p>one</p>two<br>three<p>four</p></section></div>', root => {
+        const host = root.firstElementChild;
+        equal(host.querySelector('#keep').outerHTML, '<section id="keep"><p>one</p>two<br>three<p>four</p></section>');
+        new Normalizer(host, {block: 'p', generic: ['div', 'span', 'section']}).normalize();
+        equal(host.innerHTML, '<section id="keep"><p>one</p><p>two<br>three</p><p>four</p></section>');
+    }
+));

@@ -1,4 +1,4 @@
-import {editor} from './editor.js';
+import {editor} from './rte.js';
 import {unstyle} from './src/client/unstyle.js';
 
 export {unstyle, unstyles} from './src/client/unstyle.js';

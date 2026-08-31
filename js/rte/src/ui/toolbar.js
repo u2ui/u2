@@ -57,20 +57,23 @@ export class Toolbar {
         const active = !!commands && !this.#dismissed && surface.config.ui === 'roaming'
             && visibleForSelection(surface);
         const names = active ? configured(surface.element) : null;
+        // A host may prefer a toolbar that only ever shows what it can do, at
+        // the cost of a shape that moves with the caret.
+        const hiding = active && unavailable(surface.element) === 'hide';
         const detail = surface?.selection ? {range: surface.selection.range()} : undefined;
         let visible = 0;
         for (const item of this.#items()) {
             const name = item.dataset.command.trim();
             const control = item.dataset.control?.trim() || name;
-            const show = active && commands.has(name) && (!names || names.has(control));
-            item.hidden = !show;
-            if (!show) {
+            const offered = active && commands.has(name) && (!names || names.has(control));
+            const disabled = !offered || !commands.enabled(name, detail);
+            item.hidden = !offered || hiding && disabled;
+            if (item.hidden) {
                 state(item, null, true);
                 continue;
             }
             visible++;
-            state(item, item.hasAttribute('data-state') ? commands.state(name, detail) : null,
-                !commands.enabled(name, detail));
+            state(item, item.hasAttribute('data-state') ? commands.state(name, detail) : null, disabled);
         }
         for (const select of this.#values()) {
             const command = select.dataset.commandValue.trim();
@@ -84,11 +87,14 @@ export class Toolbar {
                 option.disabled = !enabled;
                 if (enabled) choices++;
             }
-            // A select with nothing to choose is not a control: it hides like a
-            // button whose command is unavailable.
-            const usable = show && choices > 0;
+            // Presence answers what this editor offers, availability what the
+            // selection allows. A select with no configured choice at all is
+            // absent; one whose choices simply do not apply here stays and is
+            // disabled, so the toolbar keeps its shape as the caret moves.
+            const offered = show && [...select.options].some(option => option.value);
+            const usable = offered && choices > 0;
             const value = usable ? commands.state(command, detail) : null;
-            select.hidden = !usable;
+            select.hidden = !offered || hiding && !usable;
             select.disabled = !usable;
             select.setAttribute('aria-disabled', String(!usable));
             const selected = [...select.options].find(option => option.value === value && !option.disabled);
@@ -96,8 +102,19 @@ export class Toolbar {
             if (!select.hidden) visible++;
         }
         const show = active && !!visible;
+        // Appearing is not moving: a toolbar that becomes visible must not slide
+        // in from wherever it last stood, so the first placement is made with
+        // any transition suppressed.
+        const appearing = show && this.#element.hidden;
         display(this.#element, show);
-        if (show) this.#place?.(this.#element, surface);
+        if (show) {
+            if (appearing) this.#element.dataset.placing = '';
+            this.#place?.(this.#element, surface);
+            if (appearing) {
+                const view = this.#element.ownerDocument.defaultView;
+                view.requestAnimationFrame(() => delete this.#element.dataset.placing);
+            }
+        }
         return show;
     }
 
@@ -207,6 +224,11 @@ export class Toolbar {
 
     #ownsFocus(node) {
         if (!node || !this.#surface) return false;
+        // A `focusout` listener outside the toolbar's shadow tree sees its
+        // related target retargeted to that tree's host, so focus moving into a
+        // control of its own would otherwise read as focus leaving.
+        const root = this.#element.getRootNode();
+        if (root.host && node === root.host) return true;
         return node === this.#element || this.#element.contains(node)
             || node === this.#surface.element || this.#surface.element.contains(node);
     }
@@ -222,6 +244,10 @@ function registry(value) {
 function configured(element) {
     const value = getComputedStyle(element).getPropertyValue('--u2-rte-toolbar').trim();
     return value ? new Set(value.split(/[\s,]+/).filter(Boolean)) : null;
+}
+
+function unavailable(element) {
+    return getComputedStyle(element).getPropertyValue('--u2-rte-toolbar-unavailable').trim();
 }
 
 function visibleForSelection(surface) {

@@ -1,6 +1,6 @@
-# RTE2
+# RTE
 
-RTE2 is a modern, modular rich-text editing engine for current browsers. Its
+RTE is a modern, modular rich-text editing engine for current browsers. Its
 small core owns editor state, transactions, selections, and ranges; everything
 else plugs in as an independent module. A UI is only one possible consumer.
 
@@ -19,12 +19,12 @@ override through the next ordinary text input or native IME composition.
 Ready-made HTML adapters for bold, italic, underline, strike, code, and links
 compose the same generic path.
 
-Run the dependency-free browser suite at `/u2/js/rte2/tests/` and inspect
-normalization interactively at `/u2/js/rte2/playground/`. The runner displays
+Run the dependency-free browser suite at `/u2/js/rte/tests/` and inspect
+normalization interactively at `/u2/js/rte/playground/`. The runner displays
 its own test count and result. A result is cross-browser evidence only after
 that exact revision has run in current Chromium, Firefox, and WebKit.
 
-`../rte` is a read-only behavioral reference. Reuse proven behavior and CSS
+`../rte0` is a read-only behavioral reference. Reuse proven behavior and CSS
 configuration ideas, but do not copy its architecture or modify its files.
 
 ## Intended features
@@ -79,14 +79,15 @@ code. The root contains only the public entry point and project-wide clients,
 tests, and documentation.
 
 ```text
-rte2/
+rte/
 ├── blocks.js              Optional block-style module and public entry
 ├── classes.js             Optional content-class control module and entry
 ├── breaks.js              Optional visible-line-break extension and entry
-├── editor.js              Prototype one-import convention client
+├── images.js              Optional image frame and sizing module and entry
 ├── link.js                Optional contextual link editor module and entry
-├── rte.js                 Stable public API and default document core
+├── rte.js                 Stable public API, default core, and convention client
 ├── source.js              Optional HTML source view module and entry
+├── tables.js              Optional table structure module and entry
 ├── unstyle.js             Optional staged remove-format module and entry
 ├── src/                   Production responsibilities
 │   ├── browser/           Isolated native browser policies and fallbacks
@@ -105,7 +106,7 @@ rte2/
 │   ├── surface/           State of one editable host
 │   ├── transaction/       Atomic editing changes and dirty scopes
 │   ├── unstyle/           Shared selection and external presentation policy
-│   └── ui/                Optional command-toolbar bindings and placement
+│   └── ui/                Editor chrome: toolbar, handles, placement
 ├── docs/                  Project-wide guides
 ├── playground/            Visual normalization, input, and mark inspection
 └── tests/                 Shared harness and cross-module browser cases
@@ -130,13 +131,12 @@ and placement replaceable. A future static UI binds to one surface. Several
 roaming and static UIs may coexist and expose different subsets of the same
 commands.
 
-The separate prototype `editor.js` is the convenience layer: importing it once
-and opting hosts in with `--u2-rte` lazily adds the standard Enter/input path,
-Bold, and one shared default toolbar. Optional extensions can add and remove
-commands, controls, and owned resources across current and future surfaces
-through the client without changing the engine. It intentionally keeps provisional default
-UI questions out of `rte.js`; explicit consumers continue to construct only the
-modules they need.
+`rte.js` is also the convenience layer: importing it once and opting hosts in
+with `--u2-rte` lazily adds the standard Enter/input path, Bold, and one shared
+default toolbar. Optional extensions can add and remove commands, controls, and
+owned resources across current and future surfaces through the client without
+changing the engine. The provisional decisions stay in `src/client/`; explicit
+consumers import only the modules they need and never touch `editor`.
 
 The convention client's own defaults arrive as three ordinary modules using
 that same contract: `history` for undo and redo, `marks` for the ready inline
@@ -164,7 +164,7 @@ External HTML processing has three distinct stages:
 
 1. Security sanitizing accepts external HTML through safe, context-aware sinks.
    The implemented native adapter uses `Element.setHTML()` and fails explicitly
-   when that safe sink is absent. This stage is needed only when RTE2 explicitly
+   when that safe sink is absent. This stage is needed only when RTE explicitly
    parses an HTML string rather than leaving insertion to the browser.
 2. Optional Unstyle cleanup removes configured classes, styles, presentation
    attributes, and formatting wrappers without making security decisions.
@@ -199,7 +199,7 @@ make an unconfigured editor useful and produce structurally valid HTML:
 
 ## Commands and range formatting
 
-RTE2 does not use `document.execCommand()`. Commands are explicit algorithms
+RTE does not use `document.execCommand()`. Commands are explicit algorithms
 executed inside transactions. They inspect the current selection, split only
 the necessary boundaries, transform the covered content, restore selection,
 and normalize the affected scope.
@@ -317,4 +317,4 @@ transactional undo/redo.
 - Exercise the new synchronous extension lifecycle with another contextual UI
   before adding dependency, ordering, or asynchronous setup concepts.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.
-- Port only the proven ideas from `../rte`; keep its implementation untouched.
+- Port only the proven ideas from `../rte0`; keep its implementation untouched.

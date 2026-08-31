@@ -3,28 +3,28 @@
 <head>
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
-    <title>u2-rte2 test</title>
+    <title>u2-rte test</title>
     <link rel=stylesheet href="../../../css/classless/full.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
-    <link rel=stylesheet href="../rte2.css">
-    <script src="../rte2.js" type=module async></script>
+    <link rel=stylesheet href="../rte.css">
+    <script src="../rte.js" type=module async></script>
 
 <body>
 
 <section>
     <form id=form>
         <label>HTML
-            <u2-rte2 style="--u2-rte-toolbar:bold italic underline bullets numbers">
+            <u2-rte style="--u2-rte-toolbar:bold italic underline bullets numbers">
                 <textarea name=html required placeholder="Write rich text"><p>Some <strong>HTML</strong></p></textarea>
-            </u2-rte2>
+            </u2-rte>
         </label>
 
         <label>Markdown
-            <u2-rte2 language=markdown style="--u2-rte-toolbar:bold italic bullets numbers">
+            <u2-rte language=markdown style="--u2-rte-toolbar:bold italic bullets numbers">
                 <textarea name=markdown># Markdown
 
 Some **rich text**.</textarea>
-            </u2-rte2>
+            </u2-rte>
         </label>
 
         <button>Submit</button>

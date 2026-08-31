@@ -1,6 +1,6 @@
 # Default HTML content model
 
-The default HTML content model is RTE2's ready-to-use rulebook for ordinary
+The default HTML content model is RTE's ready-to-use rulebook for ordinary
 HTML. It knows structures such as paragraphs, headings, lists, links, tables,
 media, and form controls, so an application does not have to describe them all.
 

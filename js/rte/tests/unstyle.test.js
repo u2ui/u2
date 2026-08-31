@@ -1,5 +1,5 @@
 import {Unstyle, defaultUnstyle, defaultUnstyleLevels, unstyle, unstyleCommand, unstyles} from '../unstyle.js';
-import {editor} from '../editor.js';
+import {editor} from '../rte.js';
 import {rte} from '../rte.js';
 import {test, truthy, withFixture} from './harness.js';
 

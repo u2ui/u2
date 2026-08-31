@@ -150,7 +150,7 @@ test('input pipeline: native paste unstyles only added content before structural
 ));
 
 test('input pipeline: native import cleanup may be disabled per surface', () => withPipeline(
-    '<div contenteditable style="--u2-rte-import-unstyle:none"><p>before</p></div>',
+    '<div contenteditable style="--u2-rte-import-unstyle:none; --u2-rte-import-sanitize:none"><p>before</p></div>',
     ({document, host}) => {
         const paragraph = host.firstElementChild;
         host.dispatchEvent(input(document, 'insertFromDrop', 'beforeinput'));
@@ -466,4 +466,125 @@ test('input pipeline: an unavailable shortcut leaves the key its native meaning'
         equal(runs, 0);
     },
     {}
+));
+
+// The caret ends up after pasted content, so a caret-derived scope repairs only
+// its last block and leaves a pasted document untouched.
+test('input pipeline: paste cleanup covers what arrived, not where the caret landed', () => withPipeline(
+    '<div contenteditable><p>start</p></div>', async ({document: owner, host}) => {
+        const first = host.firstElementChild;
+        caret(owner, first.firstChild, 5);
+        host.dispatchEvent(new owner.defaultView.InputEvent('beforeinput', {
+            bubbles: true, cancelable: true, inputType: 'insertFromPaste',
+        }));
+        first.insertAdjacentHTML('afterend',
+            '<div><div><h2>Title</h2></div></div><div id=keep><div><p>Body</p></div></div>');
+        caret(owner, host.lastElementChild, 0);
+        host.dispatchEvent(new owner.defaultView.InputEvent('input', {
+            bubbles: true, inputType: 'insertFromPaste',
+        }));
+        await new Promise(resolve => setTimeout(resolve));
+        // The wrapper's id does not survive the attribute policy, so nothing
+        // marks it as deliberate any more and it dissolves like the rest.
+        equal(host.innerHTML, '<p>start</p><h2>Title</h2><p>Body</p>');
+    }
+));
+
+// A native paste is the one import the browser inserts itself, so it never met
+// the attribute policy that every parsed import goes through.
+test('input pipeline: pasted content is narrowed to the allowed attributes', () => withPipeline(
+    '<div contenteditable><p>start</p></div>', async ({document: owner, host}) => {
+        const first = host.firstElementChild;
+        caret(owner, first.firstChild, 5);
+        host.dispatchEvent(new owner.defaultView.InputEvent('beforeinput', {
+            bubbles: true, cancelable: true, inputType: 'insertFromPaste',
+        }));
+        first.insertAdjacentHTML('afterend',
+            '<h2 id=title data-tracked=1 style="color:red" lang=de title=keep>Title</h2>'
+            + '<p><a href="/x" id=anchor target=_blank>link</a></p>');
+        caret(owner, host.lastElementChild, 0);
+        host.dispatchEvent(new owner.defaultView.InputEvent('input', {
+            bubbles: true, inputType: 'insertFromPaste',
+        }));
+        await new Promise(resolve => setTimeout(resolve));
+        equal(host.innerHTML, '<p>start</p><h2 lang="de" title="keep">Title</h2>'
+            + '<p><a href="/x" target="_blank">link</a></p>');
+    }
+));
+
+test('input pipeline: a host may keep the attributes the browser pasted', () => withPipeline(
+    '<div contenteditable style="--u2-rte-import-sanitize:none"><p>start</p></div>',
+    async ({document: owner, host}) => {
+        const first = host.firstElementChild;
+        caret(owner, first.firstChild, 5);
+        host.dispatchEvent(new owner.defaultView.InputEvent('beforeinput', {
+            bubbles: true, cancelable: true, inputType: 'insertFromPaste',
+        }));
+        first.insertAdjacentHTML('afterend', '<h2 id=title>Title</h2>');
+        caret(owner, host.lastElementChild, 0);
+        host.dispatchEvent(new owner.defaultView.InputEvent('input', {
+            bubbles: true, inputType: 'insertFromPaste',
+        }));
+        await new Promise(resolve => setTimeout(resolve));
+        equal(host.innerHTML, '<p>start</p><h2 id="title">Title</h2>');
+    }
+));
+
+// What may arrive is a narrower question than what a host tolerates in content
+// it already owns, so the import policy is its own list with a strict default.
+test('input pipeline: pasted markup is reduced to the importable elements', () => withPipeline(
+    '<div contenteditable><p>start</p></div>', async ({document: owner, host}) => {
+        await paste(owner, host, '<nav><ul><li><a href="/a">Link</a></li></ul></nav>'
+            + '<section><h2>Title</h2><p>Text <strong>bold</strong> <span>plain</span><span></span></p>'
+            + '<iframe src="/x"></iframe><form><input></form></section>');
+        equal(host.innerHTML, '<p>start</p><ul><li><a href="/a">Link</a></li></ul>'
+            + '<h2>Title</h2><p>Text <strong>bold</strong> <span>plain</span></p>');
+    }
+));
+
+test('input pipeline: a host may widen or disable the import policy', () => withPipeline(
+    '<div contenteditable style="--u2-rte-import-elements:@document"><p>start</p></div>',
+    async ({document: owner, host}) => {
+        await paste(owner, host, '<figure><img src="/i.png" alt="i"><figcaption>Cap</figcaption></figure><nav>x</nav>');
+        equal(host.innerHTML, '<p>start</p><figure><img src="/i.png" alt="i"><figcaption>Cap</figcaption></figure><p>x</p>');
+    }
+));
+
+test('input pipeline: the host element policy still bounds the import policy', () => withPipeline(
+    '<div contenteditable style="--u2-rte-elements:p a br; --u2-rte-import-elements:@document"><p>start</p></div>',
+    async ({document: owner, host}) => {
+        await paste(owner, host, '<h2>Title</h2><p>Text <strong>bold</strong></p>');
+        equal(host.innerHTML, '<p>start</p><p>Title</p><p>Text bold</p>');
+    }
+));
+
+async function paste(owner, host, html) {
+    const first = host.firstElementChild;
+    caret(owner, first.firstChild, 5);
+    host.dispatchEvent(new owner.defaultView.InputEvent('beforeinput', {
+        bubbles: true, cancelable: true, inputType: 'insertFromPaste',
+    }));
+    first.insertAdjacentHTML('afterend', html);
+    caret(owner, host.lastElementChild, 0);
+    host.dispatchEvent(new owner.defaultView.InputEvent('input', {bubbles: true, inputType: 'insertFromPaste'}));
+    await new Promise(resolve => setTimeout(resolve));
+}
+
+// A strict list would otherwise turn pasted emphasis into plain text, and
+// nothing rewrites `<b>` later: the bold mark recognizes it, but only a mark
+// command ever makes an element canonical.
+test('input pipeline: an element outside the import list keeps its meaning through an alias', () => withPipeline(
+    '<div contenteditable><p>start</p></div>', async ({document: owner, host}) => {
+        await paste(owner, host, '<p><b>bold</b> and <i>italic</i> and <font color=red>colour</font></p>');
+        equal(host.innerHTML,
+            '<p>start</p><p><strong>bold</strong> and <em>italic</em> and colour</p>');
+    }
+));
+
+test('input pipeline: an alias never widens the list it is aliasing into', () => withPipeline(
+    '<div contenteditable style="--u2-rte-import-elements:p br"><p>start</p></div>',
+    async ({document: owner, host}) => {
+        await paste(owner, host, '<p><b>bold</b></p>');
+        equal(host.innerHTML, '<p>start</p><p>bold</p>');
+    }
 ));

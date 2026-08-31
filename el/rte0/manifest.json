@@ -3,11 +3,11 @@
     "readme": "README.md",
     "modules": [{
         "kind": "javascript-module",
-        "path": "rte.js",
+        "path": "rte0.js",
         "declarations": [{
             "kind": "class",
             "description": "\"Rich\" Rich Text Editor (alpha)",
-            "name": "U2Rte",
+            "name": "U2Rte0",
             "members": [],
             "events": [],
             "attributes": [],
@@ -21,13 +21,13 @@
                 "syntax": "*"
             }],
             "superclass": { "name": "HTMLElement" },
-            "tagName": "u2-rte",
+            "tagName": "u2-rte0",
             "customElement": true
         }],
         "exports": [{
             "kind": "custom-element-definition",
-            "name": "u2-rte",
-            "declaration": { "name": "U2Rte", "module": "rte.js" }
+            "name": "u2-rte0",
+            "declaration": { "name": "U2Rte0", "module": "rte0.js" }
         }]
     }]
 }

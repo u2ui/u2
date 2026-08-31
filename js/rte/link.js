@@ -1,4 +1,4 @@
-import {editor} from './editor.js';
+import {editor} from './rte.js';
 import {link} from './src/client/link.js';
 
 export {link, linkEditor} from './src/client/link.js';

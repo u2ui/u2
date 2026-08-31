@@ -1,13 +1,13 @@
 # Convention editor client
 
-`editor.js` is the deliberately small batteries-included layer above the RTE2
-engine. It proves the desired one-import setup without making its provisional
-module and default-UI decisions part of the core.
+This is the deliberately small batteries-included layer above the RTE engine.
+It proves the desired one-import setup without making its provisional module and
+default-UI decisions part of the core.
 
-The public root `editor.js` creates one `Editor` for the default document core:
+The public root `rte.js` creates one `Editor` for the default document core:
 
 ```js
-import './editor.js';
+import './rte.js';
 ```
 
 ```css
@@ -32,11 +32,51 @@ presentation cleanup leaves alone.
 The optional `link.js` entry adds a contextual link editor. Its `link` command
 is an ordinary `valueMark`, so any other UI can drive the same create, change,
 and remove path; the module supplies one form, anchored at the selection, plus
-an `unlink` control that needs no form. Escape leaves the form without acting
-and puts the caret back where it was opened. The address is a plain text field on
+an `unlink` control that needs no form.
+
+The form has no Apply and no Remove: what its fields say is what the link is, as
+it is typed, and an emptied address says there is no link — the form stays open
+so the same text can be linked again.
+Each edit runs the command marked as ongoing input, so history keeps a whole
+address as one step rather than one per keystroke. Marking the link moves the
+document selection into it and an engine follows that with focus, so the field
+being typed into gets focus back with its caret intact — otherwise the second
+character would land in the editor. It belongs to the link it was
+opened on, not to wherever the caret goes next: a selection that leaves that
+link closes the form instead of dragging it along. Escape leaves without acting
+and puts the caret back. The address is a plain text field on
 purpose: native url validation rejects relative paths, fragments, and
 application schemes and would silently block the form, while which protocols are
 acceptable is the sanitizer's decision.
+
+Everything this client draws goes into one `Chrome`: its toolbar, the contextual
+handles, the link form, the source dialog. A module receives it as `chrome` in
+its setup context and puts its UI in `chrome.root`, so no module owns a layer, a
+top-layer element, or a place in the application's DOM. The chrome is made on
+first use, so an editor that never shows anything adds nothing to the document,
+and disposing the client takes all of it away at once.
+
+The optional `images.js` entry frames a selected image with three handles on its
+trailing edges: the bottom-right corner keeps the proportion, the right edge
+changes only the width and the bottom edge only the height. An image sits in a
+text flow with its top and start edges held in place, so dragging the other side
+is the only direction that grows it where the eye expects — a handle on a
+leading edge would move the picture rather than resize it. A drag moves the
+frame only and the size is written once when it is released, so a resize is one
+undo step rather than a trail of them. The module also selects an image that is
+clicked, because engines disagree about whether pointing at one does, and
+nothing is addressable until it is the selection. What is resizable is a
+selector, so any atomic element can be made sizeable.
+
+The optional `tables.js` entry puts its actions on the table itself. Row handles
+run down the table's left edge and column handles along its top, each lined up
+with the cell the caret is in: add before, delete, add after. A handle whose
+command cannot run is disabled rather than hidden, so the row of three keeps its
+shape. Only `insertTable` is a toolbar control, because it applies where no
+table is.
+
+The layer is one per editor, lives in the browser top layer, and is repositioned
+from selection, change, input, scroll, and resize — never from a timer.
 
 The optional `source.js` entry adds a modal HTML source view. Its dialog wraps
 its text area in `<u2-code>`: where that element is defined it takes the area
@@ -64,7 +104,9 @@ the view was opened on.
 - one `InputPipeline` using the normal host configuration.
 
 `commands(surface)` and `history(surface)` expose the per-surface registry and
-history to an application.
+history to an application; `controls` lists what the registered modules offer by
+name, so a host can build its own list of what `--u2-rte-toolbar` may choose
+from without guessing.
 
 Those defaults arrive as three ordinary modules — `history`, `marks`, and
 `structure`, one file each — registered before any surface exists. They use exactly the module
@@ -218,8 +260,7 @@ application chooses to read and replace rich HTML before native insertion. A
 sanitizer is mandatory and is never selected implicitly:
 
 ```js
-import {editor, externalInputs} from '../../editor.js';
-import {NativeSanitizer} from '../../rte.js';
+import {editor, externalInputs, NativeSanitizer} from '../../rte.js';
 
 editor.add(externalInputs({sanitizer: new NativeSanitizer()}));
 ```
@@ -240,7 +281,7 @@ Custom `Unstyle` policies may use their own level names. Pass `unstyle: null`
 to disable this stage, or pass `through` as a fixed name or resolver function
 to replace CSS resolution. The security sanitizer still always runs.
 
-`editor.js` exports the factory but does not install it by default. Its ordinary
+`rte.js` exports the factory but does not install it by default. Its ordinary
 input pipeline leaves paste/drop insertion to the browser, removes classes and
 inline styles from only the added elements, and then normalizes their structure.
 That path needs no HTML parser. Applications importing arbitrary HTML strings

@@ -1,10 +1,10 @@
-# RTE2 playground
+# RTE playground
 
 `index.html` is a dependency-free visual client of the real `RepairPlanner`,
 `Normalizer`, `PointMap`, range classes, command registry, and mark commands. It
 contains no alternative editor or normalization implementation.
 
-Open `/u2/js/rte2/playground/` through the local HTTP server. Included scenarios
+Open `/u2/js/rte/playground/` through the local HTTP server. Included scenarios
 cover inline runs, generic blocks, redundant wrappers, lists, lift-and-split,
 nested editable isolation, CSS-class marks, and the original invalid `p/div`
 example.
@@ -32,8 +32,15 @@ example.
   and a separator. The readout under that surface reports how many history
   entries exist and where it stands, which makes grouping visible — continuous
   typing coalesces into one entry, while each command is its own step.
+- Configure the prototype surface live from the panel beside it: tick the
+  controls `--u2-rte-toolbar` lists, and switch the other host properties. A
+  change and its effect stay in view at once, and the control names come from
+  the registered modules, so the panel cannot drift from what the editor offers.
 - Give a selection one of the host's declared content classes and watch the same
   declaration drive the sanitizer and remove-format.
+- Click the image and drag a corner to resize it, or reset it to its own size.
+- Put the caret in a table cell and use the handles on the table to add or drop
+  its rows and columns.
 - Create a link from a selection or edit an existing one from a caret through
   the contextual form, and remove one with the unlink control.
 - Open the surface's HTML in the modal source dialog, syntax highlighted through
@@ -45,7 +52,7 @@ example.
   follows the active surface, reflects command availability and mark state,
   preserves the selection during pointer or keyboard interaction, and uses the
   production collapsed-range geometry in its replaceable placement callback.
-- Exercise the separate one-import `editor.js` prototype on a visible surface.
+- Exercise the one-import `rte.js` convention client on a visible surface.
   It is opted in only through CSS and exposes its lazy default Bold toolbar,
   optional `blocks.js` value control, context-aware Enter behavior, and the
   optional staged `unstyle.js` action and non-mutating `breaks.js` line-break

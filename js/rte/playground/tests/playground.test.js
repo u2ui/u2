@@ -101,7 +101,8 @@ test('playground: the explicit editor installs structural Backspace', () => with
 
 test('playground: the one-import prototype lazily handles Enter inside a list', () => withPlayground(document => {
     const editor = document.querySelector('#editor-prototype');
-    equal(document.querySelector('[data-u2-rte-editor-toolbar]'), null);
+    equal(chrome(document).querySelector('[data-u2-rte-editor-toolbar]'), null,
+        'No toolbar exists before the first surface is active');
     const text = editor.querySelector('li').firstChild;
     document.getSelection().collapse(text, 4);
     editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
@@ -115,7 +116,7 @@ test('playground: the one-import prototype lazily handles Enter inside a list', 
     truthy(input.defaultPrevented);
     equal(editor.querySelector('ul').firstElementChild.outerHTML, '<li>List</li>');
     equal(editor.querySelector('ul').children[1].outerHTML, '<li> item</li>');
-    truthy(document.querySelector('[data-u2-rte-editor-toolbar]'));
+    truthy(chrome(document).querySelector('[data-u2-rte-editor-toolbar]'));
 }));
 
 test('playground: the optional block module exposes a value control', () => withPlayground(document => {
@@ -124,7 +125,7 @@ test('playground: the optional block module exposes a value control', () => with
     document.getSelection().collapse(text, 4);
     editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
-    const select = document.querySelector('[data-u2-rte-editor-toolbar] [data-control=block]');
+    const select = chrome(document).querySelector('[data-u2-rte-editor-toolbar] [data-control=block]');
     truthy(select);
     equal(select.value, 'paragraph');
     select.value = 'h1';
@@ -141,7 +142,7 @@ test('playground: the optional break marker is visible without changing HTML', (
     document.getSelection().collapse(text, 4);
     editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
-    const button = document.querySelector('[data-u2-rte-editor-toolbar] [data-command=showBreaks]');
+    const button = chrome(document).querySelector('[data-u2-rte-editor-toolbar] [data-command=showBreaks]');
     truthy(button);
     equal(button.getAttribute('aria-pressed'), 'true');
     truthy(editor.hasAttribute('data-u2-rte-breaks'));
@@ -166,7 +167,7 @@ test('playground: optional Unstyle advances through visible formatting levels', 
     document.getSelection().setBaseAndExtent(text, 0, text, text.length);
     editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
-    const button = document.querySelector('[data-u2-rte-editor-toolbar] [data-control=unstyle]');
+    const button = chrome(document).querySelector('[data-u2-rte-editor-toolbar] [data-control=unstyle]');
     truthy(button);
     equal(button.disabled, false);
     button.click();
@@ -295,7 +296,7 @@ test('playground: the prototype toolbar offers the structure controls', () => wi
     document.getSelection().collapse(paragraph.firstChild, 1);
     editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
-    const toolbar = document.querySelector('[data-u2-rte-editor-toolbar]');
+    const toolbar = chrome(document).querySelector('[data-u2-rte-editor-toolbar]');
     for (const name of ['undo', 'redo', 'italic', 'bullets', 'numbers', 'indent', 'outdent', 'rule', 'source', 'editLink']) {
         truthy(toolbar.querySelector(`[data-command=${name}]`), `The prototype offers ${name}`);
     }
@@ -318,9 +319,69 @@ test('playground: the style list is filled from the host declaration', () => wit
     document.getSelection().setBaseAndExtent(text, 0, text, 6);
     editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
-    const select = document.querySelector('[data-u2-rte-editor-toolbar] [data-control=style]');
+    const select = chrome(document).querySelector('[data-u2-rte-editor-toolbar] [data-control=style]');
     equal([...select.options].slice(1).map(option => option.value), ['lead', 'caption', 'brandColor']);
     equal(select.hidden, false);
+}));
+
+test('playground: an image frames itself when clicked', () => withPlayground(document => {
+    const editor = document.querySelector('#editor-prototype');
+    const image = editor.querySelector('img');
+    editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
+    image.dispatchEvent(new document.defaultView.MouseEvent('click', {bubbles: true, composed: true}));
+    const frame = chrome(document).querySelector('[data-u2-handles=images]');
+    equal(frame.hidden, false);
+    equal([...frame.querySelectorAll('button')].map(handle => handle.dataset.handle),
+        ['se', 'e', 's']);
+}));
+
+test('playground: table handles appear on the table and act on its cell', () => withPlayground(document => {
+    const editor = document.querySelector('#editor-prototype');
+    const paragraph = [...editor.querySelectorAll('p')].find(node => node.textContent.startsWith('Select a few'));
+    document.getSelection().collapse(paragraph.firstChild, 2);
+    editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    const handles = chrome(document).querySelector('[data-u2-handles=tables]');
+    truthy(!handles || handles.hidden, 'Outside a table there is nothing to act on');
+
+    const cell = editor.querySelector('td');
+    document.getSelection().collapse(cell.firstChild, 3);
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    const layer = chrome(document).querySelector('[data-u2-handles=tables]');
+    equal(layer.hidden, false);
+    const rows = editor.querySelectorAll('tr').length;
+    layer.querySelector('[data-handle=rowAfter]').click();
+    equal(editor.querySelectorAll('tr').length, rows + 1);
+}));
+
+// The panel is built from the modules themselves, so it cannot drift from what
+// the editor actually offers.
+test('playground: the host panel configures the surface live', () => withPlayground(document => {
+    const editor = document.querySelector('#editor-prototype');
+    const boxes = [...document.querySelectorAll('#toolbar-controls input')];
+    truthy(boxes.length > 5);
+    truthy(boxes.some(box => box.value === 'bold' && box.checked));
+
+    const paragraph = editor.querySelector('p');
+    const text = paragraph.firstChild;
+    document.getSelection().setBaseAndExtent(text, 0, text, 6);
+    editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
+    document.dispatchEvent(new document.defaultView.Event('selectionchange'));
+    truthy(chrome(document).querySelector('[data-command=bold]:not([hidden])'));
+
+    const bold = boxes.find(box => box.value === 'bold');
+    bold.checked = false;
+    bold.dispatchEvent(new document.defaultView.Event('change', {bubbles: true}));
+    truthy(editor.style.getPropertyValue('--u2-rte-toolbar').length);
+    equal(editor.style.getPropertyValue('--u2-rte-toolbar').includes('bold'), false);
+    equal(chrome(document).querySelector('[data-command=bold]').hidden, true,
+        'A control the host stops listing is gone at once');
+
+    const when = [...document.querySelectorAll('#host-properties select')]
+        .find(select => select.previousSibling.textContent.includes('toolbar-when'));
+    when.value = 'selection';
+    when.dispatchEvent(new document.defaultView.Event('change', {bubbles: true}));
+    equal(editor.style.getPropertyValue('--u2-rte-toolbar-when'), 'selection');
 }));
 
 test('playground: the prototype reports its history state', () => withPlayground(document => {
@@ -332,15 +393,20 @@ test('playground: the prototype reports its history state', () => withPlayground
     editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
     truthy(readout.textContent.includes('1 entries, at 1'), readout.textContent);
-    document.querySelector('[data-u2-rte-editor-toolbar] [data-command=rule]').click();
+    chrome(document).querySelector('[data-u2-rte-editor-toolbar] [data-command=rule]').click();
     truthy(readout.textContent.includes('at 2'), readout.textContent);
     truthy(readout.textContent.includes('undo'), readout.textContent);
 }));
 
+// Everything the editor draws lives in one shadow root of its own.
+function chrome(document) {
+    return document.querySelector('[data-u2-rte-chrome=editor]').shadowRoot;
+}
+
 async function withPlayground(run) {
     const frame = document.createElement('iframe');
     frame.src = '../playground/';
-    frame.title = 'RTE2 playground test';
+    frame.title = 'RTE playground test';
     frame.style.cssText = 'position:fixed;inset-inline-start:-100vw;width:800px;height:600px';
     document.body.append(frame);
     try {

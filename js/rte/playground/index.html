@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RTE2 playground</title>
+  <title>RTE playground</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -74,6 +74,42 @@
     }
 
     #stage { background: Canvas; padding: .5rem; }
+    /* The configuration stands beside what it configures, so a change and its
+       effect are in view at once. */
+    .prototype {
+      align-items: start;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+    }
+    .prototype > #editor-prototype {
+      flex: 1 1 22rem;
+      min-inline-size: 0;
+    }
+    #host-settings {
+      display: flex;
+      flex: 0 1 19rem;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    #host-settings fieldset {
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: .1rem .7rem;
+      margin: 0;
+    }
+    #host-settings #host-properties {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+    }
+    #host-settings #host-properties label {
+      display: flex;
+      flex-direction: column;
+    }
+    #host-settings :is(select, input[type=text]) { inline-size: 100%; }
+    #host-settings fieldset label { white-space: nowrap; }
     #editor, #editor-prototype {
       border: 2px solid color-mix(in srgb, Highlight 55%, var(--border));
       min-block-size: 6rem;
@@ -83,6 +119,8 @@
       &:focus { border-color: Highlight; }
       & [contenteditable] { outline: 1px dashed orange; }
       /* The demo content classes need a visible effect to be inspectable. */
+      & table { border-collapse: collapse; }
+      & :is(td, th) { border: 1px solid color-mix(in srgb, CanvasText 30%, transparent); padding: .2rem .4rem; }
       & .lead { font-size: 1.15em; }
       & .caption { font-size: .85em; opacity: .7; }
       & .brandColor { color: color-mix(in srgb, Highlight 70%, CanvasText); }
@@ -144,7 +182,7 @@
   </style>
 </head>
 <body>
-  <h1>RTE2 playground</h1>
+  <h1>RTE playground</h1>
 
   <div class="controls">
     <fieldset>
@@ -243,17 +281,25 @@
 
     <section class="panel wide">
       <h2>One-import editor prototype</h2>
-      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code link unlink bullets numbers outdent indent rule unstyle breaks source; --u2-rte-classes:lead, caption, brandColor; --u2-rte-show-breaks:true">
+      <div class="prototype">
+      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code link unlink bullets numbers outdent indent rule insertTable imageOriginal unstyle breaks source; --u2-rte-classes:lead, caption, brandColor; --u2-rte-show-breaks:true">
         <p>Select text to format it, choose its block style, or press Enter inside this list:</p>
         <ul><li>List item</li><li>Put the caret here and press the indent control</li></ul>
         <p>Turn these paragraphs into a list, then lift them out again.</p>
         <p>Select this text and link it, or put the caret in <a href="/existing">this link</a> to edit it.</p>
         <p>Select a few words and give them a <span class=brandColor>content class</span> from the style list.</p>
+        <p><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Crect width='160' height='90' fill='%23bcd'/%3E%3C/svg%3E" width="160" height="90" alt="Click the image and drag a corner"></p>
+        <table><tbody><tr><th>Head</th><th>Head</th></tr><tr><td>Put the caret in a cell</td><td>and add or drop rows and columns</td></tr></tbody></table>
         <p><span class="pasted" style="color:#b30"><strong>Select this paste-like formatting</strong></span> and click T× repeatedly.</p>
         <p>The faint arrow after this line is a visible break.<br>It is not part of the editable HTML.</p>
       </div>
+      <form id="host-settings" aria-label="Host configuration">
+        <fieldset id="toolbar-controls"><legend><code>--u2-rte-toolbar</code></legend></fieldset>
+        <div id="host-properties"></div>
+      </form>
+      </div>
       <p><small id="history-state">History: focus the surface to start recording.</small></p>
-      <p><small>This surface is wired by <code>editor.js</code>, optional <code>blocks.js</code>/<code>classes.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>/<code>link.js</code>/<code>source.js</code>, and CSS variables.</small></p>
+      <p><small>This surface is wired by <code>rte.js</code>, optional <code>blocks.js</code>/<code>classes.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>/<code>link.js</code>/<code>tables.js</code>/<code>images.js</code>/<code>source.js</code>, and CSS variables.</small></p>
     </section>
 
     <details class="panel wide">
@@ -265,7 +311,7 @@
         convention integration and wires itself from one import plus CSS.
         Invalid nested structures are built with DOM methods because the HTML
         parser repairs some of them immediately. “Parse and apply HTML” is
-        deliberately available to compare parser behavior with RTE2 behavior.
+        deliberately available to compare parser behavior with RTE behavior.
         Place a selection inside the editor before stepping to observe mapped
         range boundaries. Dispatch sends a cancelable <code>beforeinput</code>
         and, unless a command replaced it, the following <code>input</code>.
@@ -288,6 +334,16 @@
         address is a plain text field, so relative paths, fragments, and
         application schemes are accepted and the sanitizer decides what
         survives.
+        Clicking the image selects it and frames it with corner handles. The
+        drag moves the frame only and the size is written once when it is
+        released, so a resize is one undo step rather than a trail of them; the
+        corners keep the proportion. Putting the caret in a table cell brings up handles on the table itself:
+        rows down its left edge, columns along its top, lined up with the cell
+        you are in. They name no tag — sections, rows and cells come from the
+        content model's default child — and a cell spanning several columns
+        makes the counted actions unavailable rather than shifting the wrong
+        cells. Inserting a table stays a toolbar action, because it applies
+        where no table is.
         Remove formatting walks a ladder that never runs out: foreign styles,
         presentational attributes and classes, then the declared content
         classes, the remaining semantic inline elements, and finally the
@@ -308,10 +364,12 @@
   </div>
 
   <script type="module">
-    import {editor as conventionEditor} from '../editor.js';
+    import {editor as conventionEditor} from '../rte.js';
     import '../blocks.js';
     import '../classes.js';
     import '../link.js';
+    import '../images.js';
+    import '../tables.js';
     import '../source.js';
     import '../breaks.js';
     import '../unstyle.js';
@@ -680,6 +738,18 @@
       refresh();
     }
 
+    /* Everything a host configures, configurable here: the panel writes the
+       custom properties onto the surface and asks the client to refresh. */
+    const HOST_PROPERTIES = [
+      ['toolbar-when', ['always', 'selection']],
+      ['toolbar-unavailable', ['disable', 'hide']],
+      ['cleanup', ['structural', 'none', 'minimal', 'canonical']],
+      ['elements', ['all', '@basic', '@content', '@article', '@document']],
+      ['import-elements', ['@content', '@basic', '@article', '@document', 'all']],
+      ['import-unstyle', ['classes', 'none', 'styles', 'attributes', 'formatting', 'contentClasses', 'inline']],
+      ['import-sanitize', ['policy', 'none']],
+    ];
+
     /* The convention prototype reports its own history so grouping is visible. */
     const prototype = document.querySelector('#editor-prototype');
     const historyState = document.querySelector('#history-state');
@@ -699,6 +769,52 @@
     prototype.addEventListener('u2-rte-history', showHistory);
     prototype.addEventListener('u2-rte-selectionchange', showHistory);
     prototype.addEventListener('focusin', showHistory);
+
+    buildSettings();
+
+    function buildSettings() {
+      const listed = new Set(prototype.style.getPropertyValue('--u2-rte-toolbar').split(/[\s,]+/).filter(Boolean));
+      const controls = document.querySelector('#toolbar-controls');
+      /* The names come from the modules themselves, so the panel cannot drift. */
+      for (const control of conventionEditor.controls) {
+        const label = document.createElement('label');
+        const box = document.createElement('input');
+        box.type = 'checkbox';
+        box.value = control.name;
+        box.checked = listed.has(control.name);
+        box.addEventListener('change', writeToolbar);
+        label.append(box, ` ${control.name}`);
+        label.title = `${control.label} (${control.module})`;
+        controls.append(label);
+      }
+      const properties = document.querySelector('#host-properties');
+      for (const [name, values] of HOST_PROPERTIES) {
+        const label = document.createElement('label');
+        const select = document.createElement('select');
+        for (const value of values) select.append(new Option(value, value));
+        select.value = prototype.style.getPropertyValue(`--u2-rte-${name}`).trim() || values[0];
+        select.addEventListener('change', () => write(name, select.value));
+        label.append(`--u2-rte-${name}`, select);
+        properties.append(label);
+      }
+      const classes = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = prototype.style.getPropertyValue('--u2-rte-classes').trim();
+      input.addEventListener('input', () => write('classes', input.value));
+      classes.append('--u2-rte-classes', input);
+      properties.append(classes);
+    }
+
+    function writeToolbar() {
+      const names = [...document.querySelectorAll('#toolbar-controls input:checked')].map(box => box.value);
+      write('toolbar', names.join(' '));
+    }
+
+    function write(name, value) {
+      prototype.style.setProperty(`--u2-rte-${name}`, value);
+      conventionEditor.refresh();
+    }
 
     load();
     showHistory();

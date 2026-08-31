@@ -1,12 +1,12 @@
-# Using RTE2
+# Using RTE
 
-RTE2 is plain ESM with no build step and no dependencies. Choose the prototype
+RTE is plain ESM with no build step and no dependencies. Choose the prototype
 convention client for a minimal editor or `rte.js` for explicit composition.
 
 ## Minimal prototype
 
 ```js
-import './editor.js';
+import './rte.js';
 ```
 
 ```css
@@ -26,8 +26,8 @@ native.
 
 Ready control names are `undo`, `redo`, `bold`, `italic`, `underline`,
 `strike`, `code`, `bullets`, `numbers`, `indent`, `outdent`, and `rule`, plus
-`block`, `style`, `unstyle`, `breaks`, `link`, `unlink`, and `source` from the
-optional root modules.
+`block`, `style`, `unstyle`, `breaks`, `link`, `unlink`, `source`,
+`imageOriginal`, and `insertTable` from the optional root modules.
 `--u2-rte-toolbar` chooses and orders them; the commands and their shortcuts
 work whether or not a control is listed. List and separator controls consult
 the content model, so `--u2-rte-elements` disables what a host does not allow.
@@ -65,6 +65,36 @@ commands.add('highlight', {shortcut: 'ctrl+shift+h', run: edit => …});
 
 A digit is matched by its physical key, so `ctrl+shift+8` is the same chord on
 every keyboard layout.
+
+## What a paste may bring in
+
+`--u2-rte-elements` is what a host tolerates in content it already owns.
+`--u2-rte-import-elements` is the narrower question of what may *arrive*, and it
+defaults to the `@content` preset: headings, text, lists, tables, media, and the
+text-level semantics that carry meaning — no layout, no embeds, no forms.
+
+An element that preset does not carry, but whose meaning one of its own does, is
+replaced rather than dropped. `<b>` becomes `<strong>` and `<i>` becomes `<em>`,
+so the strict list costs no emphasis:
+
+```js
+import {importAliases} from './src/input/input-pipeline.js';
+new InputPipeline(surface, {aliases: {...importAliases, dfn: 'em'}});
+```
+
+Nothing rewrites `<b>` later on its own — the bold mark recognizes it, but only
+running a mark command ever makes an element canonical.
+
+## Removing formatting
+
+`unstyle` walks a ladder that never runs out: foreign styles, presentational
+attributes and classes, formatting wrappers, then the declared content classes,
+the remaining semantic inline elements, and finally the structure itself. It is
+unavailable only when the selection is already plain text in default blocks.
+
+With nothing selected it reaches the whole content. Someone who presses with no
+selection wants the document cleaned, not nothing to happen; the caret is put
+back afterwards rather than the document being left selected.
 
 ## Content classes
 
@@ -105,7 +135,9 @@ import './link.js';
 
 `link` opens a form at the selection. A selection becomes a link; a caret inside
 one edits that whole link, so its address can be changed without selecting its
-text. `unlink` removes a link without opening anything. Relative paths,
+text. There is no Apply — the link is what the fields say, as they are typed —
+and moving the selection off the link closes the form. `unlink` removes a link
+without opening anything. Relative paths,
 fragments, and application schemes are accepted — the sanitizer decides which
 protocols survive, not the form.
 
@@ -116,6 +148,92 @@ drive:
 commands.run('link', {value: {href: '/docs', target: '_blank'}});
 commands.run('link');
 ```
+
+## Present or available
+
+A control is **absent** when this editor does not offer it: its command is not
+registered, `--u2-rte-toolbar` does not list it, or its choices are not
+configured — a style select with no `--u2-rte-classes` has nothing to be. A
+control that exists but cannot act on the current selection is **disabled**,
+never hidden.
+
+That keeps the toolbar's shape following the configuration rather than the
+caret, so a control is always found in the same place.
+
+```css
+[contenteditable] { --u2-rte-toolbar-unavailable: hide; }
+```
+
+trades that away for a toolbar that only ever shows what it can do. Worth it for
+a compact toolbar; costly for a wide one, whose controls then move under the
+pointer as the caret travels.
+
+## The editor's own chrome
+
+Everything the editor draws — the toolbar, the contextual handles, the link
+form, the source dialog — lives in one shadow root of its own, marked
+`[data-u2-rte-chrome=editor]`. The page's CSS cannot reach it and its styles
+cannot leak out, which is what lets an editor survive being embedded in a
+document that styles `button` for its own purposes.
+
+That root is deliberately closed to styling: there is no `::part` surface,
+because it would make the chrome's internal structure a public contract. An
+application that wants different chrome builds its own on the commands — every
+action is a plain command, and `Toolbar` binds markup you supply. Configuration
+still crosses the boundary: custom properties inherit into it as usual.
+
+## Images
+
+```js
+import './images.js';
+```
+
+```css
+[contenteditable] { --u2-rte-toolbar: imageOriginal; }
+```
+
+Clicking an image selects it and frames it. Three handles sit on its trailing
+edges, because the flow holds its top and start edges in place: the bottom-right
+corner keeps the proportion, the right edge changes only the width and the
+bottom edge only the height. `imageOriginal` clears the size again.
+
+A resize writes `width` and `height` — the attributes the sanitize policy allows
+on an image — and does so once, when the drag is released, so it is one undo
+step. Changing one measurement alone stretches what the browser was given; an
+application that would rather regenerate the file at that size reads the new
+attributes from the ordinary `u2-rte-change` event and replaces the source.
+
+`imageTools({selector, minimum})` makes any atomic element sizeable:
+
+```js
+editor.add(imageTools({selector: 'img, video, .widget'}));
+```
+
+## Tables
+
+```js
+import './tables.js';
+```
+
+```css
+[contenteditable] { --u2-rte-toolbar: insertTable; }
+```
+
+Putting the caret in a cell brings up handles on the table: rows down its left
+edge, columns along its top, each lined up with that cell — add before, delete,
+add after. Inserting a table stays a toolbar control because it applies where no
+table is.
+
+Every action is also an ordinary command, so any other UI can drive it:
+
+```js
+commands.run('insertTable', {value: {rows: 3, columns: 2}});
+```
+
+A new row copies the kinds of cell its neighbour has, so a header row grows into
+header cells. Deleting the last row or column takes the table with it. A cell
+spanning several rows or columns makes the counted actions unavailable rather
+than shifting the wrong cells.
 
 ## Editing the HTML directly
 
@@ -135,7 +253,7 @@ significant, so reading and applying unchanged text is a round trip.
 
 The text area is wrapped in `<u2-code>`, so the source is syntax highlighted
 where that element is defined and a plain text area where it is not. This entry
-loads it from `u2/el/code` on first use; nothing else in RTE2 depends on it.
+loads it from `u2/el/code` on first use; nothing else in RTE depends on it.
 
 `new Source(surface)` is the same responsibility without any UI: `read()`
 returns `{html, start, end}` and `write(html)` replaces the content. The
@@ -153,7 +271,7 @@ An optional command module can extend the imported singleton without scanning
 or rebuilding existing editors:
 
 ```js
-import {editor} from './editor.js';
+import {editor} from './rte.js';
 import {formatModule} from './my-format-module.js';
 
 editor.add(formatModule);
@@ -196,7 +314,7 @@ safe.
 Add the ready Paragraph/H1/H2/H3 selector with one optional import:
 
 ```js
-import './editor.js';
+import './rte.js';
 import './blocks.js';
 ```
 
@@ -207,7 +325,7 @@ import './blocks.js';
 }
 ```
 
-`blocks.js` imports `editor.js` itself, so the first import may be omitted when
+`blocks.js` imports `rte.js` itself, so the first import may be omitted when
 block styles are always present. The separate form makes the base and optional
 layers visible.
 
@@ -215,7 +333,7 @@ Applications replace the default module to add class-based or custom block
 styles:
 
 ```js
-import {editor} from './editor.js';
+import {editor} from './rte.js';
 import {blockStyles, blocks, defaultBlockStyles} from './blocks.js';
 
 editor.delete(blocks);
@@ -392,7 +510,10 @@ what differs. `auto` means "use the semantic default for this tag".
 | `--u2-rte-elements` | tag list, `@basic`, `@article`, `@document`, `all` | `all` |
 | `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming` |
 | `--u2-rte-classes` | content class names separated by spaces or commas | none |
+| `--u2-rte-import-elements` | element names, `@basic`, `@content`, `@article`, `@document`, `all` | `@content` |
+| `--u2-rte-import-sanitize` | `policy`, `none` | `policy` |
 | `--u2-rte-toolbar` | control names separated by spaces or commas | every represented control |
+| `--u2-rte-toolbar-unavailable` | `disable`, `hide` | `disable` |
 | `--u2-rte-toolbar-when` | `always`, `selection` | `always` |
 | `--u2-rte-show-breaks` | truthy or false-like token | hidden |
 | `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `styles` |
@@ -633,7 +754,7 @@ pipeline.normalize('command');
 and the point map it used; it does nothing when `--u2-rte-clean-on` excludes the
 trigger.
 
-RTE2 now has an immutable security policy and a native `Element.setHTML()`
+RTE now has an immutable security policy and a native `Element.setHTML()`
 adapter, but the input pipeline does not consume clipboard or drag payloads
 yet. Structural normalization still is not sanitizing: external HTML must pass
 through a supported security adapter before insertion. Firefox/WebKit need the
@@ -682,7 +803,7 @@ Being explicit is cheaper than surprising you:
   paste/drop remains browser-native across engines and receives mapped
   presentation plus structural cleanup afterwards. The optional pre-native
   HTML-string path still requires an explicitly supplied safe sanitizer.
-- **The convention toolbar is only a prototype.** `editor.js` provides one
+- **The convention toolbar is only a prototype.** `rte.js` provides one
   styled Bold control plus optional block-style and visible-break extensions;
   the standalone roaming binder still leaves markup, theme, placement, and
   command sets to the application. Static bindings and menu state are open.

@@ -1,4 +1,4 @@
-import {editor} from './editor.js';
+import {editor} from './rte.js';
 import {blocks} from './src/client/blocks.js';
 
 export {blocks, blockStyles, defaultBlockStyles} from './src/client/blocks.js';

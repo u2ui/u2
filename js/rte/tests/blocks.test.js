@@ -1,5 +1,5 @@
 import {blocks, BlockStyles, blockStyles, defaultBlockStyles} from '../blocks.js';
-import {editor} from '../editor.js';
+import {editor} from '../rte.js';
 import {rte} from '../rte.js';
 import {test, truthy, withFixture} from './harness.js';
 

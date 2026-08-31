@@ -53,6 +53,15 @@ The generic engine does not hardcode HTML rules.
 a list, `tr` for a table section. Structural commands use it instead of naming
 tags, so the same command serves any configured list-like structure.
 
+## Cost
+
+`allows()` is the engine's hottest question — normalization asks it for every
+child of every element — so the model avoids work rather than caching answers.
+Rules are looked up by `localName`, which is already lowercase, so no lookup
+allocates a string. Ancestor exclusion is the one rule that has to walk upwards,
+and the model knows which tokens any rule excludes at all: a child nothing could
+exclude skips that walk entirely, and the answer is remembered per element name.
+
 ## TODO
 
 - Add contextual constraints that depend on sibling order and required child

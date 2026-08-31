@@ -1,5 +1,4 @@
-import {editor} from '../../js/rte2/editor.js';
-import {Source} from '../../js/rte2/rte.js';
+import {Source, editor} from '../../js/rte/rte.js';
 
 const codecs = {
     html: () => ({
@@ -21,7 +20,7 @@ const codecs = {
     },
 };
 
-export default class U2Rte2 extends HTMLElement {
+export default class U2Rte extends HTMLElement {
     #codec;
     #source;
     #observer;
@@ -34,7 +33,7 @@ export default class U2Rte2 extends HTMLElement {
     connectedCallback() {
         const textarea = this.querySelector(':scope > textarea:only-child');
         if (!textarea || this.children.length !== 1) {
-            console.error('u2-rte2 requires exactly one direct textarea');
+            console.error('u2-rte requires exactly one direct textarea');
             return;
         }
         this.textarea = textarea;
@@ -57,7 +56,7 @@ export default class U2Rte2 extends HTMLElement {
     async #init(version) {
         const load = codecs[this.language];
         if (!load) {
-            console.error(`u2-rte2: Unsupported language: ${this.language}`);
+            console.error(`u2-rte: Unsupported language: ${this.language}`);
             return;
         }
         try {
@@ -89,7 +88,7 @@ export default class U2Rte2 extends HTMLElement {
             this.dataset.ready = '';
         } catch (error) {
             this.#dispose();
-            console.error('u2-rte2:', error);
+            console.error('u2-rte:', error);
         }
     }
 
@@ -184,4 +183,4 @@ export default class U2Rte2 extends HTMLElement {
     }
 }
 
-customElements.get('u2-rte2') || customElements.define('u2-rte2', U2Rte2);
+customElements.get('u2-rte') || customElements.define('u2-rte', U2Rte);

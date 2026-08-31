@@ -75,3 +75,40 @@ test('sanitize policy: clean leaves classes alone when none are declared', () =>
     policy.clean(root);
     equal(root.innerHTML, '<p class="anything else">a</p>');
 });
+
+test('sanitize policy: narrow reduces a subtree to the allowed elements', () => {
+    const policy = new SanitizePolicy();
+    const root = document.createElement('div');
+    root.innerHTML = '<section><h2>Title</h2><nav>menu</nav></section>';
+    const changed = policy.narrow(root, {elements: ['h2', 'p']});
+    equal(root.innerHTML, '<h2>Title</h2>menu');
+    equal(changed.length, 2);
+});
+
+test('sanitize policy: narrow never widens past the policy itself', () => {
+    const policy = new SanitizePolicy({elements: ['p']});
+    const root = document.createElement('div');
+    root.innerHTML = '<h2>Title</h2><p>Text</p>';
+    policy.narrow(root, {elements: ['p', 'h2']});
+    equal(root.innerHTML, 'Title<p>Text</p>');
+});
+
+test('sanitize policy: narrow keeps meaning through an alias and skips on request', () => {
+    const policy = new SanitizePolicy();
+    const root = document.createElement('div');
+    root.innerHTML = '<b class=x>bold</b><i>italic</i><nav>menu</nav>';
+    policy.narrow(root, {
+        elements: ['strong', 'em', 'nav'],
+        alias: {b: 'strong', i: 'em'},
+        skip: element => element.localName === 'nav',
+    });
+    equal(root.innerHTML, '<strong class="x">bold</strong><em>italic</em><nav>menu</nav>');
+});
+
+test('sanitize policy: an alias outside the allowed elements falls back to unwrapping', () => {
+    const policy = new SanitizePolicy();
+    const root = document.createElement('div');
+    root.innerHTML = '<b>bold</b>';
+    policy.narrow(root, {elements: ['p'], alias: {b: 'strong'}});
+    equal(root.innerHTML, 'bold');
+});

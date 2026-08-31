@@ -2,6 +2,7 @@ import {Source} from '../source/source.js';
 
 const STYLE = `
 [data-u2-rte-source] {
+    pointer-events: auto;
     block-size: min(70vh, 40rem);
     border: 1px solid;
     inline-size: min(90vw, 60rem);
@@ -58,15 +59,15 @@ export function sourceView({highlight = null, ...options} = {}) {
     const editors = new WeakMap();
     return Object.freeze({
         name: 'source',
-        setup({editor, root}) {
+        setup({editor, root, chrome}) {
             const state = {
                 root,
+                chrome,
                 document: root.nodeType === Node.DOCUMENT_NODE ? root : root.ownerDocument,
                 options,
                 highlight,
                 loaded: null,
                 dialog: null,
-                style: null,
                 pending: null,
             };
             editors.set(editor, state);
@@ -74,7 +75,6 @@ export function sourceView({highlight = null, ...options} = {}) {
             return {dispose() {
                 if (!connected) return;
                 state.dialog?.remove();
-                state.style?.remove();
                 editors.delete(editor);
                 connected = false;
             }};
@@ -132,12 +132,7 @@ function upgraded(element) {
 
 function build(state) {
     if (state.dialog) return state.dialog;
-    const container = state.root.nodeType === Node.DOCUMENT_NODE
-        ? state.document.body || state.document.documentElement
-        : state.root;
-    const style = state.document.createElement('style');
-    style.dataset.u2RteSourceStyle = '';
-    style.textContent = STYLE;
+    state.chrome.style('source', STYLE);
     const dialog = state.document.createElement('dialog');
     dialog.dataset.u2RteSource = '';
     dialog.setAttribute('aria-label', 'HTML source');
@@ -161,8 +156,7 @@ function build(state) {
     form.append(code, menu);
     dialog.append(form);
     dialog.addEventListener('close', () => apply(state, dialog.returnValue));
-    container.append(style, dialog);
-    state.style = style;
+    state.chrome.root.append(dialog);
     state.dialog = dialog;
     return dialog;
 }

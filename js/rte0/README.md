@@ -18,19 +18,19 @@ Easily Make Elements Editable with Intuitive Controls
 ## Install
 
 ```js
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/rte/rte.js"
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/rte0/rte.js"
 ```
 
 ## Demos
 
-[behavior.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/behavior.html)  
-[test.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/test.html)  
-[selection-explorer.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/selection-explorer.html)  
-[events.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/events.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/minimal.html)  
-[fixes.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/fixes.html)  
-[range.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/range.html)  
-[ai.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/ai.html)  
+[behavior.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/behavior.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/test.html)  
+[selection-explorer.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/selection-explorer.html)  
+[events.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/events.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/minimal.html)  
+[fixes.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/fixes.html)  
+[range.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/range.html)  
+[ai.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/ai.html)  
 
 ## Files
 

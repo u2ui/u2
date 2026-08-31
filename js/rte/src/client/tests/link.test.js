@@ -20,12 +20,15 @@ test('link editor: a selection becomes a link through the form', () => withLink(
         equal(button.getAttribute('aria-pressed'), 'false');
         button.click();
         equal(form().hidden, false);
-        form().querySelector('[name=href]').value = 'https://example.com/';
-        form().querySelector('[name=target]').checked = true;
-        form().querySelector('[value=apply]').click();
+        type(form(), 'href', 'https://example.com/');
+        equal(surface.element.innerHTML, '<p><a href="https://example.com/">one</a> two</p>',
+            'What the fields say is what the link is, as it is typed');
+        const target = form().querySelector('[name=target]');
+        target.checked = true;
+        target.dispatchEvent(new Event('input', {bubbles: true}));
         equal(surface.element.innerHTML,
             '<p><a href="https://example.com/" target="_blank">one</a> two</p>');
-        equal(form().hidden, true);
+        equal(form().hidden, false, 'The form stays on the link it is editing');
     }
 ));
 
@@ -39,20 +42,25 @@ test('link editor: a caret inside a link edits the whole link', () => withLink(
         button.click();
         equal(form().querySelector('[name=href]').value, '/old', 'The form opens on the current value');
         equal(form().querySelector('[name=title]').value, 't');
-        form().querySelector('[name=href]').value = '/new';
-        form().querySelector('[value=apply]').click();
+        type(form(), 'href', '/new');
         equal(surface.element.innerHTML, '<p><a href="/new" title="t">one</a> two</p>');
     }
 ));
 
-test('link editor: remove takes the link away', () => withLink(
+// Emptying the address is how a link goes: a button for it would be a second way
+// to say the same thing.
+test('link editor: clearing the address takes the link away', () => withLink(
     ({client, surface, form}) => {
         surface.element.innerHTML = '<p><a href="/old">one</a> two</p>';
         getSelection().collapse(surface.element.querySelector('a').firstChild, 1);
         surface.core.sync();
         client.toolbar.element.querySelector('[data-control=link]').click();
-        form().querySelector('[value=remove]').click();
+        equal(form().querySelector('button'), null, 'The form is its fields and nothing else');
+        type(form(), 'href', '');
         equal(surface.element.innerHTML, '<p>one two</p>');
+        equal(form().hidden, false, 'The form stays, so the same text can be linked again');
+        type(form(), 'href', '/new');
+        equal(surface.element.innerHTML, '<p><a href="/new">one</a> two</p>');
     }
 ));
 
@@ -69,15 +77,15 @@ test('link editor: the unlink control works without the form', () => withLink(
     }
 ));
 
-test('link editor: applying without an address does nothing', () => withLink(
+test('link editor: an empty address makes no link', () => withLink(
     ({client, surface, form}) => {
         const text = surface.element.querySelector('p').firstChild;
         getSelection().setBaseAndExtent(text, 0, text, 3);
         surface.core.sync();
         client.toolbar.element.querySelector('[data-control=link]').click();
-        form().querySelector('[value=apply]').click();
+        type(form(), 'title', 'just a title');
         equal(surface.element.innerHTML, '<p>one two</p>');
-        equal(form().hidden, true);
+        equal(form().hidden, false);
     }
 ));
 
@@ -91,8 +99,7 @@ test('link editor: relative, fragment, and scheme addresses are accepted', () =>
             getSelection().setBaseAndExtent(text, 0, text, 3);
             surface.core.sync();
             client.toolbar.element.querySelector('[data-control=link]').click();
-            form().querySelector('[name=href]').value = href;
-            form().querySelector('[value=apply]').click();
+            type(form(), 'href', href);
             equal(surface.element.innerHTML, `<p><a href="${href}">one</a> two</p>`);
         }
     }
@@ -123,6 +130,23 @@ test('link editor: escape leaves the link and the caret alone', () => withLink(
     }
 ));
 
+test('link editor: enter leaves with the typed link and the caret back', () => withLink(
+    ({client, surface, form}) => {
+        surface.element.innerHTML = '<p>one two</p>';
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        type(form(), 'href', '/new');
+        form().querySelector('[name=href]').dispatchEvent(
+            new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
+        equal(form().hidden, true);
+        equal(surface.element.innerHTML, '<p><a href="/new">one</a> two</p>');
+        same(surface.selection.range().startContainer.parentElement,
+            surface.element.querySelector('a'), 'The caret is back in the document');
+    }
+));
+
 test('link editor: the form closes and is released with the module', () => withLink(
     ({client, surface, form, document: owner}) => {
         surface.element.innerHTML = '<p><a href="/old">one</a></p>';
@@ -133,10 +157,66 @@ test('link editor: the form closes and is released with the module', () => withL
         surface.activate(false);
         equal(form().hidden, true, 'Leaving the surface closes it');
         client.delete('link');
-        equal(owner.querySelector('[data-u2-rte-link]'), null);
+        equal(client.chrome.root.querySelector('[data-u2-rte-link]'), null);
         equal(client.commands(surface).has('link'), false);
     }
 ));
+
+// The form belongs to the link it was opened on, not to wherever the caret goes.
+test('link editor: moving the selection away closes the form', () => withLink(
+    ({client, surface, form}) => {
+        surface.element.innerHTML = '<p><a href="/a">one</a> and <a href="/b">two</a></p>';
+        getSelection().collapse(surface.element.querySelector('a').firstChild, 1);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        equal(form().hidden, false);
+        equal(form().querySelector('[name=href]').value, '/a');
+
+        getSelection().collapse(surface.element.querySelectorAll('a')[1].firstChild, 1);
+        surface.core.sync();
+        equal(form().hidden, true, 'Another link is not the one being edited');
+    }
+));
+
+test('link editor: a live edit is one undo step, not one per keystroke', () => withLink(
+    ({client, surface, form}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        const history = client.history(surface);
+        const entries = history.length;
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        for (const value of ['/', '/a', '/ab', '/abc']) type(form(), 'href', value);
+        equal(surface.element.innerHTML, '<p><a href="/abc">one</a> two</p>');
+        truthy(history.length - entries <= 1, `Four keystrokes left ${history.length - entries} entries`);
+    }
+));
+
+// Marking the link moves the document selection into it, and an engine follows
+// that with focus: without putting it back, the second character would land in
+// the editor.
+test('link editor: typing an address keeps the caret in its field', () => withLink(
+    ({client, surface, form}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        const field = form().querySelector('[name=href]');
+        field.focus();
+        for (const value of ['/', '/a', '/ab']) {
+            field.value = value;
+            field.dispatchEvent(new Event('input', {bubbles: true}));
+            same(client.chrome.root.activeElement, field, `still typing after ${value}`);
+        }
+        equal(surface.element.innerHTML, '<p><a href="/ab">one</a> two</p>');
+    }
+));
+
+function type(form, name, value) {
+    const field = form.querySelector(`[name=${name}]`);
+    field.value = value;
+    field.dispatchEvent(new Event('input', {bubbles: true}));
+}
 
 function withLink(run) {
     return withFixture(
@@ -147,7 +227,7 @@ function withLink(run) {
             try {
                 client.add(linkEditor());
                 const surface = core.add(root.firstElementChild);
-                const form = () => document.querySelector('[data-u2-rte-link]');
+                const form = () => client.chrome.root.querySelector('[data-u2-rte-link]');
                 return run({client, core, surface, form, document});
             } finally {
                 client.dispose();

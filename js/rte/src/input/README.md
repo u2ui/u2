@@ -2,7 +2,7 @@
 
 The input pipeline turns browser editing events—typing, Enter, paste, drop, and
 composition—into editor work. It decides whether the browser may perform an
-action itself or whether an RTE2 command replaces it, then repairs the small
+action itself or whether an RTE command replaces it, then repairs the small
 part of the document that changed.
 
 `input-pipeline.js` installs post-native behavior for one `Surface`.
@@ -65,7 +65,7 @@ to `using`. Disconnecting the surface also disposes them automatically.
 
 ## Rich external input
 
-The native path above needs no HTML parser or sanitizer adapter because RTE2
+The native path above needs no HTML parser or sanitizer adapter because RTE
 never reads the payload or reinserts its string. `ExternalInput` is a separate,
 optional pre-native path for applications that deliberately want to process a
 rich HTML string themselves.
@@ -106,6 +106,40 @@ an HTML source dialog or another trusted event adapter. It still always calls
 the configured sanitizer. A direct failure is thrown. A native event failure
 remains fail-closed—the browser insertion stays prevented—and emits
 `u2-rte-error` with `transaction: null` and `phase: 'external-input'`.
+
+## What an import goes through
+
+A native paste or drop is cleaned in three stages, in this order:
+
+1. **What may exist**: the sanitize policy narrows the arrived nodes to the
+   allowed attributes and protocols, and then to the importable elements.
+   Attributes go first — removing one moves nothing, while narrowing dissolves
+   wrappers and would leave nothing left to clean. What the content model
+   already rejects is skipped and left to stage 3, which knows that dissolving
+   a block into inline content needs a line break to survive.
+   `--u2-rte-import-sanitize: none` opts a host out of the whole stage.
+   An element the list does not carry but whose meaning a listed one does is
+   replaced rather than dropped: `importAliases` maps `b` to `strong`, `i` to
+   `em`, and `strike` to `s`, so a strict list costs no emphasis.
+2. **What it should look like**: `Unstyle` removes presentation up to
+   `--u2-rte-import-unstyle`, sparing the host's declared content classes.
+3. **How it is built**: the normalizer repairs structure.
+
+The order matters. An id removed in the first stage is exactly what lets the
+third dissolve the layout wrapper that carried it.
+
+Where to repair is decided before any of it runs: narrowing dissolves the very
+nodes that say where the import landed.
+
+## What cleanup covers
+
+The caret is not where pasted or dropped content is — it sits at the end of it.
+Deriving the cleanup scope from the caret therefore repaired only its last block
+and left the rest of a pasted document untouched, however broken. The pipeline
+already tracks the nodes that arrived, so the scope is the smallest element
+covering both them and the caret. That tracking is now set up for every cleaned
+paste or drop rather than only when presentation cleanup is configured:
+structural repair needs to know where content landed just as much.
 
 ## TODO
 

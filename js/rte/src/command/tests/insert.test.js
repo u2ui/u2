@@ -62,11 +62,18 @@ test('insert: an inline-only host has nowhere to put a block', () => withRule(
     }
 ));
 
-test('insert: a selection and atomic content stay native', () => withRule(
+test('insert: a selection inserts at its start and keeps its content', () => withRule(
     '<div contenteditable><p>onetwo</p><p><img></p></div>', ({commands, host}) => {
         const text = host.firstElementChild.firstChild;
-        getSelection().setBaseAndExtent(text, 0, text, 3);
-        equal(commands.enabled('rule'), false, 'A selection would have to be deleted first');
+        getSelection().setBaseAndExtent(text, 3, text, 6);
+        equal(commands.enabled('rule'), true, 'A toolbar shown only for a selection needs this');
+        commands.run('rule');
+        equal(host.innerHTML, '<p>one</p><hr><p>two</p><p><img></p>');
+    }
+));
+
+test('insert: atomic content stays native', () => withRule(
+    '<div contenteditable><p>onetwo</p><p><img></p></div>', ({commands, host}) => {
         const image = host.querySelector('img');
         getSelection().collapse(image.parentNode, 0);
         equal(commands.enabled('rule'), true, 'A caret beside atomic content is usable');

@@ -163,3 +163,44 @@ test('repair planner: a root that cannot hold its block plans no root shaping', 
         for (const child of host.childNodes) equal(planner.plan(host, child), {type: 'keep'});
     }
 ));
+
+test('repair planner: a bare generic wrapper is redundant at any depth', () => withFixture(
+    '<div><section><div><h2>a</h2></div><div>text</div><div id=keep><p>b</p></div></section></div>', root => {
+        const host = root.firstElementChild;
+        const planner = new RepairPlanner(host, {block: 'p'});
+        const section = host.firstElementChild;
+        const [blocks, text, kept] = section.children;
+        equal(planner.plan(section, blocks).type, 'unwrap');
+        equal(planner.plan(section, text), {type: 'convert', tag: 'p'});
+        equal(planner.plan(section, kept).type, 'keep', 'An attribute makes a wrapper deliberate');
+    }
+));
+
+test('repair planner: canonical removes meaningless inline wrappers that are valid', () => withFixture(
+    '<div><p><span>a</span><span class=x>b</span><span></span><em>c</em></p></div>', root => {
+        const host = root.firstElementChild;
+        const paragraph = host.firstElementChild;
+        const [bare, marked, empty, semantic] = paragraph.children;
+        const structural = new RepairPlanner(host, {block: 'p'});
+        const canonical = new RepairPlanner(host, {block: 'p', level: 'canonical'});
+        equal(structural.plan(paragraph, bare).type, 'keep');
+        equal(canonical.plan(paragraph, bare).type, 'unwrap');
+        equal(canonical.plan(paragraph, marked).type, 'keep', 'An attribute carries meaning');
+        equal(canonical.plan(paragraph, empty).type, 'remove');
+        equal(canonical.plan(paragraph, semantic).type, 'keep', 'A semantic element is not noise');
+    }
+));
+
+test('repair planner: loose inline content beside blocks gets the default block', () => withFixture(
+    '<div><div id=mixed><p>a</p>loose<em>text</em></div><li>loose in a list item</li></div>', root => {
+        const host = root.firstElementChild;
+        const planner = new RepairPlanner(host, {block: 'p'});
+        const mixed = host.querySelector('#mixed');
+        const item = host.querySelector('li');
+        equal(planner.plan(mixed, mixed.childNodes[1]), {type: 'wrap', tag: 'p'});
+        equal(planner.plan(mixed, mixed.querySelector('em')), {type: 'wrap', tag: 'p'});
+        equal(planner.plan(mixed, mixed.firstElementChild).type, 'keep');
+        equal(planner.plan(item, item.firstChild).type, 'keep',
+            'A list item carries its own meaning and keeps loose text');
+    }
+));

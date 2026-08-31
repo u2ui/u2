@@ -14,18 +14,18 @@ test('editor client: validates its core and creates no UI before activation', ()
         equal(client.commands(surface)?.input('deleteContentForward'), 'deleteForward');
         truthy(client.commands(surface)?.has('bold'));
         equal(client.toolbar, null);
-        equal(document.querySelector('[data-u2-rte-editor-toolbar]'), null);
+        equal(client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]'), null);
 
         const text = surface.element.querySelector('p').firstChild;
         getSelection().setBaseAndExtent(text, 0, text, 3);
         core.sync();
         truthy(client.toolbar);
-        const element = document.querySelector('[data-u2-rte-editor-toolbar]');
+        const element = client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]');
         truthy(element);
         equal(element.hidden, false);
         if (typeof element.showPopover === 'function') {
-            equal(element.popover, 'manual');
-            truthy(element.matches(':popover-open'));
+            equal(client.chrome.element.popover, 'manual', 'The chrome carries the top layer, not each piece');
+            truthy(client.chrome.element.matches(':popover-open'));
         }
         element.querySelector('[data-command=bold]').click();
         equal(surface.element.innerHTML, '<p><strong>one</strong>two</p>');
@@ -34,8 +34,8 @@ test('editor client: validates its core and creates no UI before activation', ()
         client.dispose();
         equal(client.connected, false);
         equal(client.commands(surface), null);
-        equal(document.querySelector('[data-u2-rte-editor-toolbar]'), null);
-        equal(document.querySelector('[data-u2-rte-editor-style]'), null);
+        equal(client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]'), null);
+        equal(client.chrome.element.isConnected, false, 'Disposing takes the whole chrome with it');
         const error = throws(() => client.add({name: 'late', commands: () => ({})}), DOMException);
         equal(error.name, 'InvalidStateError');
         const replacement = new Editor(core);
@@ -140,14 +140,16 @@ test('editor client: the convention toolbar stays in its ShadowRoot top layer', 
     try {
         const surface = core.add(editable);
         core.activate(surface);
-        const toolbar = root.querySelector('[data-u2-rte-editor-toolbar]');
+        const chrome = root.querySelector('[data-u2-rte-chrome=editor]');
+        truthy(chrome, 'The chrome belongs to the core it was made for');
+        same(chrome.getRootNode(), root);
+        const toolbar = client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]');
         truthy(toolbar);
-        same(toolbar.getRootNode(), root);
-        truthy(root.querySelector('[data-u2-rte-editor-style]'));
-        if (typeof toolbar.showPopover === 'function') truthy(toolbar.matches(':popover-open'));
+        truthy(client.chrome.root.querySelector('style[data-u2-rte-style=toolbar]'));
+        if (typeof chrome.showPopover === 'function') truthy(chrome.matches(':popover-open'));
         client.dispose();
-        equal(root.querySelector('[data-u2-rte-editor-toolbar]'), null);
-        equal(root.querySelector('[data-u2-rte-editor-style]'), null);
+        equal(root.querySelector('[data-u2-rte-chrome=editor]'), null);
+        equal(client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]'), null);
     } finally {
         client.dispose();
         core.dispose();
@@ -314,3 +316,32 @@ test('editor client: module validation and conflicts leave registries unchanged'
     client.dispose();
     core.dispose();
 }));
+
+// A `focusout` listener outside the toolbar's shadow tree sees its related
+// target retargeted to that tree's host, so reaching for a control of its own
+// would otherwise read as focus leaving and take the toolbar away mid-click.
+test('editor client: reaching into the toolbar does not dismiss it', () => withFixture(
+    '<div contenteditable style="--u2-rte-toolbar:bold"><p>one two</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const client = new Editor(core);
+        try {
+            const surface = core.add(root.firstElementChild);
+            const text = surface.element.querySelector('p').firstChild;
+            getSelection().setBaseAndExtent(text, 0, text, 3);
+            core.sync();
+            const toolbar = client.toolbar.element;
+            equal(toolbar.hidden, false);
+            surface.element.dispatchEvent(new FocusEvent('focusout', {
+                bubbles: true, composed: true, relatedTarget: client.chrome.element,
+            }));
+            equal(toolbar.hidden, false, 'Focus went into the toolbar, not away from it');
+            surface.element.dispatchEvent(new FocusEvent('focusout', {
+                bubbles: true, composed: true, relatedTarget: document.body,
+            }));
+            equal(toolbar.hidden, true, 'Focus that really left still dismisses it');
+        } finally {
+            client.dispose();
+            core.dispose();
+        }
+    }
+));

@@ -14,8 +14,9 @@ export class RepairPlanner {
     #level;
     #generic;
     #elements = new Map();
+    #rootWrapper;
 
-    constructor(root, {model = htmlModel, block = null, level = 'structural', generic = ['div']} = {}) {
+    constructor(root, {model = htmlModel, block = null, level = 'structural', generic = ['div', 'span']} = {}) {
         if (root?.nodeType !== Node.ELEMENT_NODE) throw new TypeError('A repair planner requires an element root');
         if (typeof model?.allows !== 'function' || typeof model?.allowed !== 'function'
             || typeof model?.rule !== 'function' || typeof model?.block !== 'function') {
@@ -46,8 +47,15 @@ export class RepairPlanner {
         if (this.#level === 'none') return KEEP;
         if (isEditingBoundary(child)) return BOUNDARY;
 
-        if (this.#level !== 'minimal' && parent === this.#root) {
-            const plan = this.#rootPlan(child);
+        if (this.#level !== 'minimal') {
+            const plan = parent === this.#root
+                ? this.#rootPlan(child)
+                : this.#genericPlan(parent, child) || this.#loosePlan(parent, child);
+            if (plan) return plan;
+        }
+        if (this.#level !== 'minimal' && this.#hollow(child)) return REMOVE;
+        if (this.#level === 'canonical') {
+            const plan = this.#canonicalPlan(parent, child);
             if (plan) return plan;
         }
         if (this.#model.allows(parent, child)) return KEEP;
@@ -77,8 +85,11 @@ export class RepairPlanner {
     }
 
     #rootPlan(child) {
-        const wrapper = this.#element(this.#block);
-        if (!wrapper || !this.#model.allows(this.#root, wrapper)) return null;
+        // Whether the root accepts its default block does not depend on the
+        // child, so it is decided once instead of for every one of them.
+        this.#rootWrapper ??= this.#usableRootWrapper();
+        const wrapper = this.#rootWrapper;
+        if (!wrapper) return null;
         if (ignorable(child)) {
             const previous = child.previousSibling;
             return child.nodeType === Node.TEXT_NODE
@@ -95,21 +106,76 @@ export class RepairPlanner {
                 return action('convert', {tag: wrapper.localName});
             }
         }
-        if (child.nodeType === Node.ELEMENT_NODE && this.#generic.has(child.localName) && neutral(child)) {
-            const children = [...child.childNodes];
-            if (child.localName !== wrapper.localName && children.every(node => this.#model.allows(wrapper, node))) {
-                return action('convert', {tag: wrapper.localName});
-            }
-            const content = children.filter(node => !ignorable(node));
-            if (content.some(node => this.#model.block(node))
-                && content.every(node => this.#model.allows(this.#root, node))) {
-                return action('unwrap', {breaks: false});
-            }
-        }
+        const plan = this.#genericPlan(this.#root, child);
+        if (plan) return plan;
         if (!this.#model.block(child) && this.#model.allows(wrapper, child)) {
             return action('wrap', {tag: wrapper.localName});
         }
         return null;
+    }
+
+    // A neutral generic block adds nothing to the document: it becomes the block
+    // its context expects, or dissolves into it. Depth is not a reason to keep
+    // one — a bare wrapper is as redundant four levels down as it is at the top,
+    // and valid nesting is exactly why the model alone never removes it. A
+    // generic inline element is not structure and is left to `canonical`.
+    #genericPlan(parent, child) {
+        if (child.nodeType !== Node.ELEMENT_NODE) return null;
+        if (!this.#generic.has(child.localName) || !neutral(child)) return null;
+        if (!this.#model.block(child)) return null;
+        const children = [...child.childNodes];
+        const wrapper = this.#element(this.#model.rule(parent).defaultChild || this.#block);
+        if (wrapper && wrapper.localName !== child.localName
+            && this.#model.allows(parent, wrapper)
+            && children.every(node => this.#model.allows(wrapper, node))) {
+            return action('convert', {tag: wrapper.localName});
+        }
+        const content = children.filter(node => !ignorable(node));
+        if (content.some(node => this.#model.block(node))
+            && content.every(node => this.#model.allows(parent, node))) {
+            return action('unwrap', {breaks: false});
+        }
+        return null;
+    }
+
+    // Loose inline content standing beside blocks in a generic container is the
+    // same asymmetry as a bare wrapper: the root already gives it a block, and
+    // depth is not a reason to leave it homeless. Containers that carry their
+    // own meaning — list items, cells, quotes — keep loose text as it is.
+    #loosePlan(parent, child) {
+        if (!this.#generic.has(parent.localName) || !this.#model.block(parent)) return null;
+        if (ignorable(child) || this.#model.block(child)) return null;
+        const wrapper = this.#element(this.#model.rule(parent).defaultChild || this.#block);
+        if (!wrapper || !this.#model.allows(parent, wrapper) || !this.#model.allows(wrapper, child)) return null;
+        if (![...parent.children].some(node => this.#model.block(node))) return null;
+        return action('wrap', {tag: wrapper.localName});
+    }
+
+    // Canonical goes one step further than valid: a generic wrapper carrying
+    // neither attributes nor meaning of its own is noise even where the model
+    // allows it. A semantic element is never noise, however bare it is.
+    // An inline element with neither attributes nor content says nothing at all,
+    // whatever its name, so it never has to survive being valid.
+    #hollow(child) {
+        return child.nodeType === Node.ELEMENT_NODE
+            && neutral(child)
+            && !child.childNodes.length
+            && !this.#model.block(child)
+            && !this.#model.atomic(child);
+    }
+
+    #canonicalPlan(parent, child) {
+        if (child.nodeType !== Node.ELEMENT_NODE || !neutral(child)) return null;
+        if (this.#model.block(child) || this.#model.atomic(child)) return null;
+        if (!this.#generic.has(child.localName)) return null;
+        return [...child.childNodes].every(node => this.#model.allows(parent, node))
+            ? action('unwrap', {breaks: false})
+            : null;
+    }
+
+    #usableRootWrapper() {
+        const wrapper = this.#element(this.#block);
+        return wrapper && this.#model.allows(this.#root, wrapper) ? wrapper : null;
     }
 
     #wrapper(parent) {

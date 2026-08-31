@@ -1,4 +1,4 @@
-# &lt;u2-rte2&gt; - element
+# &lt;u2-rte&gt; - element
 
 Progressively enhances one native textarea with the RTE2 rich-text editor.
 The textarea remains the form control, fallback, and canonical serialized value.
@@ -6,17 +6,17 @@ The textarea remains the form control, fallback, and canonical serialized value.
 ## Usage
 
 ```html
-<u2-rte2>
+<u2-rte>
     <textarea name="content"><p>Some <strong>HTML</strong></p></textarea>
-</u2-rte2>
+</u2-rte>
 ```
 
 HTML is the default language. Markdown loads its converters only when used:
 
 ```html
-<u2-rte2 language="markdown">
+<u2-rte language="markdown">
     <textarea name="content">Some **Markdown**</textarea>
-</u2-rte2>
+</u2-rte>
 ```
 
 Exactly one direct `textarea` is required. Free child content is deliberately
@@ -41,13 +41,13 @@ DOM edited by RTE2. They should not be added as aliases or partial parsers.
 ## Install
 
 ```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte2/rte2.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte2/rte2.js" type=module async></script>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte/rte.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte/rte.js" type=module async></script>
 ```
 
 ## TODO
 
-- Add `el/rte2` to U2's generated project catalog when the module is ready for
+- Add `el/rte` to U2's generated project catalog when the module is ready for
   automatic loading. It currently requires the explicit module import shown
   above because that catalog lives outside this module.
 - RTE2 needs a shared root-aware convention-client entry point before this
@@ -63,8 +63,8 @@ DOM edited by RTE2. They should not be added as aliases or partial parsers.
 
 ## Demos
 
-[test.html](http://gcdn.li/u2ui/u2@main/el/rte2/tests/test.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/rte2/tests/minimal.html)
+[test.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/minimal.html)
 
 ## About
 

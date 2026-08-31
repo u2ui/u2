@@ -1,6 +1,6 @@
 # U2 Audit TODO
 
-Stand: 2026-08-30. Statischer projektweiter Audit plus wenige Chromium-Smoke-Checks. Die Liste ist nach Risiko priorisiert. Bereits vorhandene, nicht zu diesem Audit gehörende Änderungen unter `js/rte2/` und `el/rte2/` wurden nicht angefasst.
+Stand: 2026-08-30. Statischer projektweiter Audit plus wenige Chromium-Smoke-Checks. Die Liste ist nach Risiko priorisiert. Bereits vorhandene, nicht zu diesem Audit gehörende Änderungen unter `js/rte/` und `el/rte/` wurden nicht angefasst.
 
 ## P0 – Fehler, Datenverlust und Sicherheit
 
@@ -8,8 +8,8 @@ Stand: 2026-08-30. Statischer projektweiter Audit plus wenige Chromium-Smoke-Che
 - [ ] **Generator darf nicht nebenbei alle READMEs umschreiben:** Katalogerzeugung, README-Generierung und Dateianlage trennen; Dry-run und Diff-Check ergänzen. Der aktuelle naive Markdown-Splitter kann Inhalte verlieren oder umsortieren. [`u2/tools/update.repos.json.js`](u2/tools/update.repos.json.js#L41)
 - [ ] **Externes SVG vor DOM-Injektion sanitizen:** `u2-ico` schreibt beliebig konfigurierbares, per `fetch()` geladenes SVG direkt in `innerHTML`. Scripts, Event-Attribute, `foreignObject`, externe Referenzen und gefährliche URLs müssen entfernt oder SVGs als Bild/Mask geladen werden. [`el/ico/ico.js`](el/ico/ico.js#L72)
 - [ ] **TOC ohne HTML-String bauen:** Heading-Text und daraus abgeleitete IDs landen ungeescaped in `innerHTML`; Text wie `<img ...>` wird wieder zu Markup. `a`, `href` und `textContent` per DOM-API setzen und IDs eindeutig/URL-sicher erzeugen. [`el/toc/toc.js`](el/toc/toc.js#L60)
-- [ ] **AI-Ausgabe des alten RTE als untrusted behandeln:** Remote-Modellantworten werden ungeprüft als HTML angezeigt und in den Editor übernommen. Sanitizer/Allowlist vor Vorschau, Diff und Commit einschalten; Fehler-, Timeout- und Abbruchpfad ergänzen. [`js/rte/src/ui/items/ai.js`](js/rte/src/ui/items/ai.js#L75)
-- [ ] **AI-Funktion nicht mit Platzhalter-Key ausliefern:** Endpoint, Modell und Credential-Injektion gehören in eine explizite Konfiguration bzw. einen Server-Proxy; niemals ein Browser-Bearer-Token im Quelltext vorsehen. [`js/rte/src/ui/items/ai.js`](js/rte/src/ui/items/ai.js#L118)
+- [ ] **AI-Ausgabe des alten RTE als untrusted behandeln:** Remote-Modellantworten werden ungeprüft als HTML angezeigt und in den Editor übernommen. Sanitizer/Allowlist vor Vorschau, Diff und Commit einschalten; Fehler-, Timeout- und Abbruchpfad ergänzen. [`js/rte0/src/ui/items/ai.js`](js/rte0/src/ui/items/ai.js#L75)
+- [ ] **AI-Funktion nicht mit Platzhalter-Key ausliefern:** Endpoint, Modell und Credential-Injektion gehören in eine explizite Konfiguration bzw. einen Server-Proxy; niemals ein Browser-Bearer-Token im Quelltext vorsehen. [`js/rte0/src/ui/items/ai.js`](js/rte0/src/ui/items/ai.js#L118)
 - [ ] **Service Worker nur für `GET` cachen:** Aktuell werden auch andere HTTP-Methoden abgefangen; `cache.put()` kann dann eine erfolgreiche Netzwerkantwort in einen Fehler/Fallback verwandeln. Navigation, Range-Requests und opaque Responses gezielt behandeln. [`js/serviceWorker/sw.js`](js/serviceWorker/sw.js#L58)
 - [ ] **Service-Worker-Ablaufzeit wirklich speichern:** `isCacheExpired()` liest `sw-cached-at`, aber `saveToCache()` setzt diesen Header nie. Damit laufen Cache-Einträge effektiv nicht ab. [`js/serviceWorker/sw.js`](js/serviceWorker/sw.js#L140)
 - [ ] **Offline-Fallback korrekt awaiten:** `caches.match('/offline.html') || new Response(...)` testet nur das immer truthy Promise; ein Cache-Miss kann dadurch `undefined` an `respondWith()` liefern. [`js/serviceWorker/sw.js`](js/serviceWorker/sw.js#L165)

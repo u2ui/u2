@@ -30,7 +30,7 @@ export function throws(run, ErrorType = Error, message) {
 
 export function withFixture(html, run) {
     const root = document.createElement('section');
-    root.dataset.rte2Fixture = '';
+    root.dataset.rteFixture = '';
     root.innerHTML = html;
     document.body.append(root);
     const done = () => {
@@ -67,7 +67,7 @@ export async function run(output) {
     }
     const result = {passed, failed: failures.length, total: tests.length, failures};
     document.documentElement.dataset.result = failures.length ? 'failed' : 'passed';
-    globalThis.__rte2Tests = result;
+    globalThis.__rteTests = result;
     return result;
 }
 

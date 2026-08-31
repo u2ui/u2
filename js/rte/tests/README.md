@@ -6,13 +6,13 @@ fixture cleanup, and a machine-readable result.
 
 Open `index.html` through HTTP in each current target browser. Completion is
 reported through `document.documentElement.dataset.result` and
-`globalThis.__rte2Tests`, allowing both visual inspection and automation.
+`globalThis.__rteTests`, allowing both visual inspection and automation.
 The runner starts after `window.load`, so cold module loading cannot suppress or
 reorder focus behavior under test.
 
 Browser behaviors that intentionally depend on DevTools or top-level window
 state belong in isolated reproduction pages rather than the deterministic main
-suite. No such pages are currently part of RTE2.
+suite. No such pages are currently part of RTE.
 
 `generated.test.js` adds seeded cross-module cases: it builds random editable
 content from a fixed seed and asserts the invariants that no single fixture can

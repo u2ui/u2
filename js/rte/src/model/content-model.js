@@ -7,6 +7,8 @@ export class ContentModel {
     #elements;
     #elementNames;
     #elementModels = new Map();
+    #exclusions;
+    #excludable = new Map();
 
     constructor({rules = {}, fallback = {}, text = {groups: ['flow', 'phrasing']}, elements = null} = {}) {
         this.#rules = new Map();
@@ -15,16 +17,25 @@ export class ContentModel {
         this.#text = rule(text);
         this.#elementNames = elements === null ? null : tags(elements);
         this.#elements = this.#elementNames && new Set(this.#elementNames);
+        // Every token any rule excludes. Ancestor exclusion is the one rule that
+        // has to walk, so a child no rule could ever exclude skips the walk.
+        const exclusions = new Set();
+        for (const item of [...this.#rules.values(), this.#fallback, this.#text]) {
+            for (const token of item.exclude) exclusions.add(token);
+        }
+        this.#exclusions = Object.freeze([...exclusions]);
         Object.freeze(this);
     }
 
     get elements() { return this.#elementNames; }
 
+    // `localName` is already the lowercase name for HTML elements, so the hot
+    // path does no string work at all.
     rule(node) {
         if (typeof node === 'string') return this.#rules.get(tag(node)) || this.#fallback;
         if (node?.nodeType === Node.TEXT_NODE) return this.#text;
         if (node?.nodeType !== Node.ELEMENT_NODE) return EMPTY;
-        return this.#rules.get(tag(node.tagName)) || this.#fallback;
+        return this.#rules.get(node.localName) || this.#fallback;
     }
 
     groups(node) {
@@ -34,6 +45,22 @@ export class ContentModel {
     is(node, group) {
         if (typeof group !== 'string' || !group.trim()) throw new TypeError('A group name must be a non-empty string');
         return this.rule(node).groups.includes(group.toLowerCase());
+    }
+
+    // Whether any rule could exclude this kind of child. It depends only on the
+    // node's name, so the answer is remembered per name and the ancestor walk in
+    // `allows()` is skipped for everything nothing excludes.
+    excludable(child) {
+        if (!this.#exclusions.length) return false;
+        const key = child?.nodeType === Node.ELEMENT_NODE ? child.localName
+            : child?.nodeType === Node.TEXT_NODE ? '#text' : null;
+        if (key === null) return false;
+        let found = this.#excludable.get(key);
+        if (found === undefined) {
+            found = this.#exclusions.some(token => matches(this, token, child));
+            this.#excludable.set(key, found);
+        }
+        return found;
     }
 
     block(node) {
@@ -67,7 +94,7 @@ export class ContentModel {
     allowed(node) {
         if (typeof node === 'string') return !this.#elements || this.#elements.has(tag(node));
         if (node?.nodeType === Node.TEXT_NODE) return true;
-        return node?.nodeType === Node.ELEMENT_NODE && (!this.#elements || this.#elements.has(tag(node.tagName)));
+        return node?.nodeType === Node.ELEMENT_NODE && (!this.#elements || this.#elements.has(node.localName));
     }
 
     allows(parent, child) {
@@ -166,7 +193,7 @@ function transparentParent(model, parent) {
 }
 
 function excluded(model, parent, child) {
-    if (typeof parent === 'string') return false;
+    if (typeof parent === 'string' || !model.excludable(child)) return false;
     for (let element = parent; element; element = element.parentElement) {
         if (model.rule(element).exclude.some(token => matches(model, token, child))) return true;
     }
@@ -174,10 +201,10 @@ function excluded(model, parent, child) {
 }
 
 function matches(model, token, child) {
+    if (token.charCodeAt(0) === 64) return model.rule(child).groups.includes(token.slice(1));
     if (token === '*') return child?.nodeType === Node.ELEMENT_NODE || child?.nodeType === Node.TEXT_NODE;
-    if (token.startsWith('@')) return model.is(child, token.slice(1));
     if (token === '#text') return child?.nodeType === Node.TEXT_NODE;
-    return child?.nodeType === Node.ELEMENT_NODE && tag(child.tagName) === token;
+    return child?.nodeType === Node.ELEMENT_NODE && child.localName === token;
 }
 
 function tag(name) {

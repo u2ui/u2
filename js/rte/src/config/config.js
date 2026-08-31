@@ -6,6 +6,7 @@ const INLINE_HOSTS = new Set([
 const CLEANUP = new Set(['none', 'minimal', 'structural', 'canonical']);
 const ENTER = new Set(['break', 'block', 'item', 'row', 'cell']);
 const UI = new Set(['none', 'roaming', 'static']);
+const IMPORT_SANITIZE = new Set(['policy', 'none']);
 const TAG = /^[a-z][a-z\d-]*$/;
 const CLASS = /^-?[_a-zA-Z][\w-]*$/;
 const FALSE = new Set(['0', 'false', 'none', 'off']);
@@ -13,6 +14,14 @@ const DEFAULT_CLEAN_ON = Object.freeze(['input', 'paste', 'drop', 'command']);
 const EMPTY_ELEMENTS = Object.freeze([]);
 export const elementPresets = Object.freeze({
     basic: elements('p ul ol li a strong b em i code br'),
+    // What a content field is about: headings, text, lists, tables, media and
+    // the text-level semantics that carry meaning. No layout, no embeds, no
+    // forms. This is the import default: what may arrive is a narrower question
+    // than what a host tolerates in content it owns.
+    content: elements(`
+        p h1 h2 h3 h4 h5 h6 blockquote pre ul ol li table caption thead tbody
+        tfoot tr th td hr img a strong em code span br
+    `),
     article: elements('p h1 h2 h3 h4 h5 h6 blockquote pre ul ol li hr a strong b em i u s del ins code kbd mark q small sub sup span br'),
     document: elements('p h1 h2 h3 h4 h5 h6 blockquote pre ul ol li dl dt dd hr figure figcaption img table caption thead tbody tfoot tr th td a strong b em i u s del ins code kbd mark q small sub sup span br'),
 });
@@ -49,10 +58,12 @@ export function config(host) {
         enter: choice(style, 'enter', ENTER, defaults.enter),
         cleanup: choice(style, 'cleanup', CLEANUP, 'structural'),
         cleanOn: Object.freeze(cleanOn ? cleanOn.split(/[\s,]+/).filter(Boolean) : [...DEFAULT_CLEAN_ON]),
-        elements: allowedElements(style),
+        elements: allowedElements(style, 'elements', null),
+        importElements: allowedElements(style, 'import-elements', elementPresets.content),
         classes: classNames(style),
         // Foreign presentation through the class rung: pasted markup keeps no
         // styles, no presentational attributes, and no undeclared classes.
+        importSanitize: choice(style, 'import-sanitize', IMPORT_SANITIZE, 'policy'),
         importUnstyle: value(style, 'import-unstyle') || 'classes',
         ui: choice(style, 'ui', UI, 'roaming'),
     });
@@ -84,14 +95,15 @@ function classNames(style) {
     return names.every(name => CLASS.test(name)) ? Object.freeze([...new Set(names)]) : EMPTY_ELEMENTS;
 }
 
-function allowedElements(style) {
-    const result = value(style, 'elements').toLowerCase();
-    if (!result || result === 'all') return null;
+function allowedElements(style, name, fallback) {
+    const result = value(style, name).toLowerCase();
+    if (!result) return fallback;
+    if (result === 'all') return null;
     if (result.startsWith('@')) return elementPresets[result.slice(1)] || EMPTY_ELEMENTS;
     const names = result.split(/[\s,]+/).filter(Boolean);
     return names.length && names.every(name => TAG.test(name)) ? Object.freeze([...new Set(names)]) : EMPTY_ELEMENTS;
 }
 
 function elements(value) {
-    return Object.freeze(value.split(/\s+/));
+    return Object.freeze(value.trim().split(/\s+/));
 }

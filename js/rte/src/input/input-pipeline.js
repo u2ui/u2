@@ -7,9 +7,15 @@ import {editingHost, isPlainTextHost} from '../selection/ownership/ownership.js'
 import {Point} from '../selection/point/point.js';
 import {SelectionSnapshot} from '../selection/snapshot.js';
 import {defaultUnstyle} from '../unstyle/unstyle.js';
+import {sanitizePolicy} from '../sanitize/policy.js';
 
 const TRIGGERS = new Set(['input', 'paste', 'drop', 'command']);
 const PASTE = new Set(['insertFromPaste', 'insertFromPasteAsQuotation']);
+// An element a strict import list does not carry, but whose meaning a listed one
+// does. Dropping `<b>` would lose the emphasis; `<strong>` keeps it, and the
+// bold mark already treats the two as the same thing.
+export const importAliases = Object.freeze({b: 'strong', i: 'em', strike: 's'});
+
 const DELETE_KEYS = new Map([
     ['Backspace', 'deleteContentBackward'],
     ['Delete', 'deleteContentForward'],
@@ -21,6 +27,8 @@ export class InputPipeline {
     #model;
     #commands;
     #unstyle;
+    #sanitize;
+    #aliases;
     #controller;
     #pending = null;
     #source = null;
@@ -28,7 +36,8 @@ export class InputPipeline {
     #composing = false;
     #connected = true;
 
-    constructor(surface, {model = htmlModel, commands = null, unstyle = defaultUnstyle} = {}) {
+    constructor(surface, {model = htmlModel, commands = null, unstyle = defaultUnstyle,
+        sanitize = sanitizePolicy, aliases = importAliases} = {}) {
         const root = surface?.element;
         if (root?.nodeType !== Node.ELEMENT_NODE || typeof surface?.transact !== 'function') {
             throw new TypeError('An input pipeline requires an editor surface');
@@ -43,11 +52,16 @@ export class InputPipeline {
         if (unstyle !== null && typeof unstyle?.clean !== 'function') {
             throw new TypeError('An input pipeline requires an Unstyle policy or null');
         }
+        if (sanitize !== null && typeof sanitize?.clean !== 'function') {
+            throw new TypeError('An input pipeline requires a sanitize policy or null');
+        }
         this.#surface = surface;
         this.#root = root;
         this.#model = model;
         this.#commands = commands;
         this.#unstyle = unstyle;
+        this.#sanitize = sanitize;
+        this.#aliases = aliases;
         this.#controller = new root.ownerDocument.defaultView.AbortController();
         const listen = {signal: this.#controller.signal};
         root.addEventListener('beforeinput', this.#beforeInput, listen);
@@ -83,6 +97,40 @@ export class InputPipeline {
         const initial = snapshot ? rangePoints(snapshot.range()) : [];
         const result = this.#surface.transact(transaction => {
             let points = initial;
+            // Where to repair is decided before anything moves: narrowing
+            // dissolves the very nodes that say where the import landed.
+            const reach = () => points.length
+                ? EditRange.fromPoints(points[0], points.at(-1), this.#root).range()
+                : range || selectionRange(this.#surface);
+            let target = scope || normalizationScope(affected(reach(), imported, this.#root), this.#root, normalizer);
+            // What may exist at all is decided before what it should look like.
+            // A native paste is the one import the browser inserts itself, so
+            // this is where the policy reaches it: elements first, because
+            // unwrapping moves nodes, then attributes.
+            if (this.#sanitize && settings.importSanitize === 'policy' && imported?.roots.length) {
+                // Attributes first: removing them moves nothing, while narrowing
+                // dissolves wrappers and would leave nothing left to clean.
+                for (const root of imported.roots) {
+                    this.#sanitize.clean(root, {
+                        preserve: imported.preserve,
+                        base: this.#root.ownerDocument.baseURI,
+                        classes: settings.classes.length ? settings.classes : null,
+                    });
+                }
+                const map = new PointMap(points);
+                for (const root of imported.roots) {
+                    this.#sanitize.narrow(root, {
+                        map,
+                        preserve: imported.preserve,
+                        elements: importable(settings),
+                        alias: this.#aliases,
+                        // What the model already rejects is structural repair's
+                        // job: it dissolves a block without joining two lines.
+                        skip: element => !model.allows(element.parentNode, element),
+                    });
+                }
+                points = points.map(point => map.get(point));
+            }
             const unstyled = [];
             if (this.#unstyle && settings.importUnstyle !== 'none' && imported?.roots.length) {
                 const map = new PointMap(points);
@@ -97,11 +145,8 @@ export class InputPipeline {
                 }
                 points = points.map(point => map.get(point));
             }
-            const activeRange = points.length
-                ? EditRange.fromPoints(points[0], points.at(-1), this.#root).range()
-                : range || selectionRange(this.#surface);
-            scope ||= normalizationScope(activeRange, this.#root, normalizer);
-            const normalized = normalizer.normalize({scope, points, transaction});
+            if (target !== this.#root && !this.#root.contains(target)) target = this.#root;
+            const normalized = normalizer.normalize({scope: target, points, transaction});
             if (snapshot) EditRange.fromPoints(normalized.map.get(points[0]), normalized.map.get(points.at(-1)), this.#root)
                 .select(this.#surface.core.selection, snapshot.backward);
             return unstyled.length
@@ -250,10 +295,12 @@ export class InputPipeline {
         });
     }
 
+    // What arrived is tracked for every cleaned paste or drop, not only when
+    // presentation cleanup is configured: structural repair needs to know where
+    // the content landed just as much.
     #observe(pending) {
         const settings = this.#surface.config;
-        if (!this.#unstyle || settings.importUnstyle === 'none'
-            || !settings.cleanOn.includes(pending.trigger) || !['paste', 'drop'].includes(pending.trigger)) return;
+        if (!['paste', 'drop'].includes(pending.trigger) || !settings.cleanOn.includes(pending.trigger)) return;
         const records = [];
         const Observer = this.#root.ownerDocument.defaultView.MutationObserver;
         const observer = new Observer(next => records.push(...next));
@@ -287,9 +334,36 @@ export function inputTrigger(inputType = '') {
     return 'input';
 }
 
-function normalizationScope(range, root, normalizer) {
-    let element = range?.commonAncestorContainer;
-    if (element?.nodeType !== Node.ELEMENT_NODE) element = element?.parentElement;
+// Pasted or dropped content is not where the caret ends up — the caret sits at
+// the end of it. Cleanup has to cover what actually arrived, or a pasted
+// document is only ever repaired in its last block.
+function affected(range, imported, root) {
+    let common = range?.commonAncestorContainer || null;
+    for (const node of imported?.roots || []) {
+        if (!root.contains(node)) continue;
+        common = common ? shared(common, node, root) : node;
+    }
+    return common;
+}
+
+function shared(node, other, root) {
+    let current = node;
+    while (current && current !== root && current !== other && !current.contains(other)) {
+        current = current.parentNode;
+    }
+    return current || root;
+}
+
+// What may arrive is the import policy bounded by what the host tolerates at
+// all; either alone may be open.
+function importable(settings) {
+    if (settings.importElements === null) return settings.elements;
+    if (settings.elements === null) return settings.importElements;
+    return settings.importElements.filter(name => settings.elements.includes(name));
+}
+
+function normalizationScope(node, root, normalizer) {
+    let element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
     if (!element || (element !== root && !root.contains(element))) return root;
     while (element !== root && !normalizer.planner.model.block(element)) element = element.parentElement;
     if (element === root) return root;

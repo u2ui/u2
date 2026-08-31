@@ -1,9 +1,9 @@
-u2-rte {
+u2-rte0 {
     display:block;
     border:1px solid var(--color-line, color-mix(in srgb, currentColor, transparent 75%));
 }
 
-u2-rte > textarea {
+u2-rte0 > textarea {
     display:block;
     width:100%;
 }

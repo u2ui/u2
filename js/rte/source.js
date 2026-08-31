@@ -1,4 +1,4 @@
-import {editor} from './editor.js';
+import {editor} from './rte.js';
 import {sourceView} from './src/client/source.js';
 
 export {sourceView} from './src/client/source.js';

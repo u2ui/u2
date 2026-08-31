@@ -50,8 +50,12 @@ export class Normalizer {
         outer: while (true) {
             let changed = false;
             passes++;
+            // The walk just collected these, so only a repair in this same pass
+            // can have detached one. Until that happens the check is a tree walk
+            // per element for nothing.
+            const collected = actions.length;
             for (const parent of parents(scope, this.#planner.model)) {
-                if (parent !== this.#root && !this.#root.contains(parent)) continue;
+                if (actions.length !== collected && parent !== this.#root && !this.#root.contains(parent)) continue;
                 const result = this.#normalizeParent(parent, executor, actions, issues, single);
                 if (result.changed) changed = true;
                 if (result.stopped) break outer;
@@ -77,7 +81,14 @@ export class Normalizer {
         for (let child = parent.firstChild; child;) {
             const plan = this.#planner.plan(parent, child);
             if (plan.type === 'reject') issues.set(child, Object.freeze({node: child, parent, plan}));
-            else issues.delete(child);
+            else if (issues.size) issues.delete(child);
+            // Most children need nothing. Asking the executor to confirm that
+            // would re-validate the parent against the root for every one of
+            // them, which is a tree walk per node in an unchanged document.
+            if (PASSIVE.has(plan.type)) {
+                child = child.nextSibling;
+                continue;
+            }
             if (plan.type === 'wrap') {
                 const nodes = [child];
                 let next = child.nextSibling;
@@ -95,7 +106,7 @@ export class Normalizer {
                 child = next;
             } else {
                 const next = child.nextSibling;
-                if (!PASSIVE.has(plan.type)) this.#assertLimit(actions);
+                this.#assertLimit(actions);
                 if (executor.apply(plan, parent, child)) {
                     actions.push(record(plan, parent, child));
                     changed = true;

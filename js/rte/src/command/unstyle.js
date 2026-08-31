@@ -1,7 +1,8 @@
+import {Edit} from './edit.js';
 import {EditRange} from '../selection/range/edit-range.js';
 import {elementOf, isEditingBoundary} from '../selection/ownership/ownership.js';
 import {Point} from '../selection/point/point.js';
-import {Unstyle, declared, defaultUnstyle, keepFor, removable, strip} from '../unstyle/unstyle.js';
+import {Unstyle, declared, defaultUnstyle, keepFor, removable, strip as stripAttributes} from '../unstyle/unstyle.js';
 import {indexOf} from '../selection/point/point.js';
 
 // The structural rung is the ladder's end: presentation levels only ever strip
@@ -23,11 +24,13 @@ export function unstyleCommand(policy = defaultUnstyle, {blocks = true} = {}) {
 }
 
 function next(edit, levels) {
-    if (!edit.range || edit.range.collapsed) return null;
+    if (!edit.range) return null;
+    const scope = reach(edit);
+    if (!scope.range || scope.range.collapsed) return null;
     for (const level of levels) {
         const found = level === BLOCKS
-            ? structural(edit).length
-            : targets(edit, level, edit.range, true).length;
+            ? structural(scope).length
+            : targets(scope, level, scope.range, true).length;
         if (found) return level;
     }
     return null;
@@ -35,7 +38,28 @@ function next(edit, levels) {
 
 function run(edit, level) {
     if (!level) return;
-    if (level === BLOCKS) return flatten(edit);
+    // Someone who presses with nothing selected wants the content cleaned, not
+    // nothing to happen, so the caret is put back afterwards rather than the
+    // whole document being left selected.
+    const caret = edit.range?.collapsed
+        ? new Point(edit.range.start.node, edit.range.start.offset, 'forward')
+        : null;
+    const scope = reach(edit);
+    if (caret) scope.map.add(caret);
+    const result = level === BLOCKS ? flatten(scope) : strip(scope, level);
+    if (caret) scope.select(scope.map.get(caret));
+    return result;
+}
+
+// A collapsed caret reaches everything the surface holds.
+function reach(edit) {
+    if (!edit.range?.collapsed) return edit;
+    const range = edit.document.createRange();
+    range.selectNodeContents(edit.element);
+    return new Edit(edit.surface, edit.transaction, {model: edit.model, range, value: edit.value});
+}
+
+function strip(edit, level) {
     const state = prepare(edit);
     isolate(edit, level, state.end);
     isolate(edit, level, state.start);
@@ -134,7 +158,7 @@ function targets(edit, level, range, preview = false) {
 
 function clear(edit, level, element) {
     const parent = element.parentNode;
-    strip(level, element, kept(edit, level));
+    stripAttributes(level, element, kept(edit, level));
     const unwrap = level.elements.includes(element.localName)
         || element.localName === 'span' && !element.attributes.length;
     if (unwrap && inline(edit, element)) edit.map.unwrap(element);

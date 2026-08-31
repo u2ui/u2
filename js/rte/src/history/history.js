@@ -1,6 +1,6 @@
 import {SelectionSnapshot} from '../selection/snapshot.js';
 
-// Snapshot history for one surface. RTE2 leaves ordinary typing and deletion to
+// Snapshot history for one surface. RTE leaves ordinary typing and deletion to
 // the browser, so history cannot be an operation log: it observes every mutation
 // regardless of its origin and stores the resulting content as a cloned fragment
 // with a path-addressed selection that survives content replacement.

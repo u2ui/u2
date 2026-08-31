@@ -4,7 +4,7 @@ import {Rte} from '../../core/core.js';
 import {defaultUnstyleLevels} from '../../unstyle/unstyle.js';
 import {equal, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
-test('unstyle client module: contributes a selection-only action control', () => withFixture(
+test('unstyle client module: contributes a staged action control', () => withFixture(
     '<div contenteditable style="--u2-rte-toolbar:unstyle"><p><span class=x>text</span></p></div>', root => {
         const core = new Rte(document, {auto: false});
         const client = new Editor(core);

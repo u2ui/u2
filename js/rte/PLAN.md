@@ -1,12 +1,12 @@
-# RTE2 implementation plan
+# RTE implementation plan
 
 Each phase ends with documentation, dedicated tests for every production file,
 real-browser verification, and no known failing invariant. Later phases may
 refine earlier contracts, but may not bypass their responsibility boundaries.
 
-The working `../rte` is a behavioral reference throughout the project. Existing
+The working `../rte0` is a behavioral reference throughout the project. Existing
 behavior, especially host-specific editing, selection handling, and browser
-fixes, is first captured as black-box tests. RTE2 then preserves or deliberately
+fixes, is first captured as black-box tests. RTE then preserves or deliberately
 improves it through smaller responsibilities; structural weaknesses in the old
 implementation are not mistaken for behavioral failures.
 
@@ -56,8 +56,17 @@ contextual link editor raise the current runner to 470 tests. The CSS-declared
 content classes shared by the style control, the sanitizer, and presentation
 cleanup raise the current runner to 486 tests. One shared placement policy and
 its coverage raise it to 490 tests. The full remove-format ladder and
-registry-owned shortcuts raise it to 500 tests, confirmed in Chrome 152 and
-Firefox 154.
+registry-owned shortcuts raise it to 500 tests. Depth-independent wrapper
+removal, a canonical level that does something, and paste cleanup that covers
+what arrived raise it to 508 tests. The attribute policy on native imports
+and a strict import element policy raise it to 513 tests, confirmed in Chrome
+152 and Firefox 154. Import aliases raise it to 519 tests, and the table
+structure commands with their contextual handles to 538, and the image frame
+with its attribute command to 554, all of it drawn in one shadow root per
+editor; whole-content remove-format and the presence/availability rule raise it
+to 565. The playground now configures its prototype surface live from a panel
+built out of the registered modules, so every host property can be tried without
+editing the page.
 WebKit verification of that revision is pending.
 
 Remove-format now runs a ladder that does not stop at the application's own
@@ -65,10 +74,50 @@ presentation: six presentation rungs in `Unstyle` (styles, presentational
 attributes, foreign classes, formatting wrappers, declared content classes, and
 the remaining semantic inline elements) plus a seventh `blocks` rung in the
 command that reduces lists, tables, quotes, and headings to the host's default
-block. The action is unavailable only when the selection is already plain text.
+block. The action is unavailable only when the selection is already plain text,
+and a collapsed caret reaches the whole content rather than nothing.
 Keyboard shortcuts moved from toolbar controls to the command registry, so a key
 works whether or not a control is on screen, and `Tab`/`Shift+Tab` reach the
 list-nesting commands only inside a list.
+
+What may arrive is now its own question. `--u2-rte-import-elements` defaults to
+the `@content` preset — headings, text, lists, tables, media and the text-level
+semantics — while `--u2-rte-elements` stays what a host tolerates in content it
+already owns. Neither can widen the sanitize policy.
+
+An element the import list does not carry, but whose meaning a listed one does,
+is replaced rather than dropped: `<b>` becomes `<strong>`, `<i>` becomes `<em>`.
+Nothing did that afterwards — the bold mark recognizes `<b>`, but only a mark
+command ever makes an element canonical — so a strict list would otherwise have
+turned every pasted emphasis into plain text.
+
+A native paste now meets the attribute policy. Nothing is parsed there — the
+browser inserts its own payload — so it was the one import path without an
+allowlist, and layout ids, tracking attributes and inline styles came straight
+through. The pipeline applies `SanitizePolicy.clean()` to the nodes that
+arrived, before presentation cleanup and structural repair, so an id removed in
+the first stage is what lets the third dissolve the wrapper carrying it.
+`--u2-rte-import-attributes: keep` opts a host out.
+
+Pasted content is now cleaned where it landed. The cleanup scope was derived
+from the caret, which sits at the *end* of a paste, so a pasted document was
+only ever repaired in its last block — the reason legacy markup survived intact
+even after the planner learned to remove it. The nodes that arrived are already
+tracked, and now decide the scope.
+
+Redundant markup is now removed at any depth. A neutral generic block was only
+ever reshaped as a direct child of the root, so legacy documents kept their
+nested bare `div`s — valid HTML, which is exactly why the content model alone
+never removed them. `canonical` also stopped being a synonym for `structural`:
+it now dissolves a generic inline wrapper that carries nothing.
+
+The same work made normalization measurably cheaper. Measured in Chrome 152 as
+the best of five runs against the previous revision: `ContentModel.allows()`
+14.8 → 3.2 µs, one paragraph normalized 213 → 85 µs, a clean 264-element article
+18.7 → 7.1 ms. The model no longer allocates a string per rule lookup and skips
+the ancestor-exclusion walk for children nothing can exclude; the normalizer no
+longer asks the executor to confirm the plans that change nothing, and no longer
+re-validates every element the walk just collected.
 
 A review pass consolidated four duplicated concepts into single definitions
 (`isEditingBoundary`, `elementOf`, `indexOf`, `narrow`), removed a duplicated
@@ -78,7 +127,7 @@ content model dropped from 10.0 to 1.8 µs, the list scan from 31.4 to 21.0 µs,
 and one toolbar refresh from 490 to 437 µs. A lazy `config()` was measured and
 rejected: building eight accessor descriptors costs more than parsing the values
 eagerly.
-Treat the number shown by `/u2/js/rte2/tests/` as authoritative.
+Treat the number shown by `/u2/js/rte/tests/` as authoritative.
 
 ## 0. Foundation
 
@@ -300,7 +349,7 @@ the convention toolbar now enter and leave the browser top layer with the same
 visibility contract. `--u2-rte-toolbar-when: selection` optionally requires a
 non-collapsed saved selection.
 
-The first batteries-included `editor.js` prototype is implemented: one
+The first batteries-included convention-client prototype is implemented: one
 side-effect import plus `--u2-rte` and `--u2-rte-toolbar` lazily wires standard
 Enter/input behavior, Bold, and one shared default toolbar. It allocates no UI
 before the first active rich-text surface and leaves `plaintext-only` native.
@@ -321,8 +370,11 @@ level changes only selected content; levels and labels are replaceable.
   menus and application-owned custom controls. A select's `options` may already
   be a function of the surface, so a control's choices can come from the host's
   configuration; the client refills it before the toolbar is shown.
-- A select with no usable choice hides like a button whose command is
-  unavailable.
+- Presence follows the configuration and availability the selection: a control
+  this editor does not offer is absent, one that cannot act right now is
+  disabled. A toolbar that rearranged itself as the caret moved would move its
+  targets out from under the pointer. `--u2-rte-toolbar-unavailable: hide`
+  trades that away where a host prefers a toolbar of only what it can do.
 - Implement static UIs bound to one surface; allow several UIs and command
   subsets to coexist.
 - Verify reusable placement policy across carets, ranges, writing modes, and
@@ -362,17 +414,48 @@ absent, work for current and future surfaces, and release everything through
    contextual form and an `unlink` control. Its address field is plain text
    because native url validation rejects relative paths, fragments, and
    application schemes; protocol and attribute policy stays with the sanitizer.
-   Editing the link text itself remains open.
-4. **Table tools.** Use a contextual overlay for row/column insertion,
-   deletion, and cell movement. Structural changes remain ordinary mapped
-   commands and later become ordinary history entries.
-5. **Image sizing.** Use a contextual overlay and pointer interaction around a
-   selected configured atomic image. Size policy, allowed attributes, mapping,
-   and history stay outside the overlay.
+   The form applies as it is typed rather than on an Apply button, marking each
+   run as ongoing input so history keeps an address as one step, and it closes
+   when the selection leaves the link it was opened on. Editing the link text
+   itself remains open.
+4. **Table tools — implemented as commands.** `Tables` groups insertion,
+   row and column insertion and deletion, and table removal. It names no
+   section, row, or cell tag: each comes from the model's `defaultChild`, one
+   level apart. Every change is an ordinary mapped mutation, so it is one undo
+   step and the caret lands where the edit happened. Spanning cells make the
+   index-counted actions unavailable rather than shifting the wrong cells.
+   `tables.js` puts them on the table itself: row handles down its left edge and
+   column handles along its top, each lined up with the cell the caret is in,
+   repositioned from selection, change, input, scroll and resize rather than
+   from a timer. Cell movement and span-aware column arithmetic remain open.
+5. **Image sizing — implemented.** `selectedElement()` and
+   `elementAttributes()` make the one element a selection covers addressable and
+   give it a value command over a fixed set of attributes; `images.js` adds the
+   frame and the pointer interaction. The drag moves the frame only and the size
+   is written once on release, so a resize is one undo step and the overlay owns
+   no size policy: `width` and `height` are what the sanitize policy allows on an
+   image. What is resizable is a selector. Its three handles sit on the trailing
+   edges only, because the flow holds an image's top and start edges: the corner
+   keeps the proportion, the two edges change one measurement each. An alt-text
+   editor and keyboard resizing remain open, as does a hook for regenerating the
+   file server-side rather than letting the browser stretch it.
 
 All roaming and contextual extension UI must be created in the core's
 `Document` or `ShadowRoot`, use the browser top layer through Popover or Dialog
-where appropriate, and share one placement policy. Shadow-root style ownership,
+where appropriate, and share one placement policy.
+
+Everything the convention client draws lives in one `Chrome`: a single shadow
+root per editor holding the toolbar, the contextual handles, the link form and
+the source dialog. An editor is chrome inside someone else's document and has to
+survive their `button {}` rule; one encapsulated root also means the application
+sees a single element instead of one per piece of UI. There is no `::part`
+surface on purpose — it would make the chrome's internal structure a public
+contract, and an application that wants different chrome builds its own on the
+commands, which `Toolbar` has always supported by binding markup it is given.
+
+The handles inside it are one shared `Handles` component that owns no editor
+concept, so anything with a rectangle can use it, inside this engine or outside
+it: given a document instead of a shadow root it brings its own. Shadow-root style ownership,
 focus transitions, disposal, and coexistence of multiple UIs are release-gate
 tests, not application-specific details.
 
@@ -394,4 +477,4 @@ stays in its owning command, input, normalization, or UI responsibility.
 
 The first release requires all suites green in the latest stable target
 browsers, complete responsibility READMEs/TODOs, and no `document.execCommand()`
-usage anywhere in RTE2.
+usage anywhere in RTE.

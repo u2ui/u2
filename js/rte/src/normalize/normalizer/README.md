@@ -29,6 +29,16 @@ and repeats until that part needs no further repair.
   not create an implicit transaction because fragments and playgrounds also use
   it independently.
 
+## Cost
+
+An unchanged document is the common case and must be close to free. Two guards
+used to make it linear in tree depth per node instead: the executor re-validated
+the parent against the root for every child, including the ones needing nothing,
+and the pass loop did the same for every element the walk had just collected.
+Both are now paid only where they can matter — a passive plan never reaches the
+executor, and a collected parent is re-checked only after a repair in that same
+pass could have detached it.
+
 ## TODO
 
 - Reduce executor touches into minimal stable ancestor scopes.

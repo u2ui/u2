@@ -4,22 +4,26 @@ import {valueMark} from '../command/mark.js';
 
 const STYLE = `
 [data-u2-rte-link] {
-    align-items: center;
+    background: Canvas;
+    border: 1px solid color-mix(in srgb, CanvasText 40%, transparent);
+    color: CanvasText;
     display: flex;
-    flex-wrap: wrap;
-    gap: .3rem;
+    flex-direction: column;
+    font: inherit;
+    gap: .2rem;
     inset: auto;
     margin: 0;
     padding: .3rem;
+    pointer-events: auto;
     position: fixed;
 }
 [data-u2-rte-link][hidden] { display: none; }
 [data-u2-rte-link] label {
-    align-items: center;
     display: flex;
-    gap: .3rem;
+    gap: .4rem;
+    justify-content: space-between;
 }
-[data-u2-rte-link] input[name=href] { min-inline-size: 16rem; }
+[data-u2-rte-link] input[type=text] { min-inline-size: 14rem; }
 `;
 
 const LABELS = {href: 'Address', target: 'New tab', title: 'Title', rel: 'Rel'};
@@ -37,22 +41,22 @@ export function linkEditor({fields = ['href', 'target', 'title']} = {}) {
     const editors = new WeakMap();
     return Object.freeze({
         name: 'link',
-        setup({editor, root}) {
+        setup({editor, root, chrome}) {
             const state = {
                 root,
+                chrome,
                 document: root.nodeType === Node.DOCUMENT_NODE ? root : root.ownerDocument,
                 fields: [...fields],
                 views: new Map(),
                 form: null,
-                style: null,
                 active: null,
+                writing: false,
             };
             editors.set(editor, state);
             let connected = true;
             return {dispose() {
                 if (!connected) return;
                 state.form?.remove();
-                state.style?.remove();
                 editors.delete(editor);
                 connected = false;
             }};
@@ -105,49 +109,79 @@ export const link = linkEditor();
 
 function open(state, view) {
     const form = build(state);
-    state.active = view;
+    const surface = view.surface;
+    state.active = {view, surface, element: marked(surface, at(surface)), selection: surface.selection};
     const value = view.commands.state('link');
     fill(state, value && value !== 'mixed' ? value : null);
     show(form, true);
-    place(form, view.surface, {align: 'start', prefer: 'below'});
+    place(form, surface, {align: 'start', prefer: 'below'});
     form.querySelector('[name=href]')?.focus();
     return form;
 }
 
-// The saved selection is the only record of what to mark, and focusing the
-// surface would replace it with a fresh caret. The command therefore runs on an
-// explicit range first; focus follows.
-function submit(state, action) {
-    const view = state.active;
-    if (!view?.surface.connected) return close(state);
-    const value = action === 'remove' ? null : read(state);
-    const range = target(view.surface);
-    close(state);
-    if (!range || action !== 'remove' && !value) return null;
-    const result = view.commands.run('link', {value, range});
-    view.surface.element.focus();
-    return result;
+// Every edit is applied as it is made. Marking the run as ongoing input keeps
+// history from recording a step per keystroke.
+function write(state, value, field = null) {
+    const active = state.active;
+    if (!active?.surface.connected) return null;
+    const range = target(active.surface);
+    if (!range) return close(state);
+    // Marking the link moves the document selection into it, and an engine
+    // follows that with focus. Whoever is being typed into gets it back, caret
+    // and all, or the next character would land in the editor.
+    const caret = field && typeof field.selectionStart === 'number'
+        ? [field.selectionStart, field.selectionEnd]
+        : null;
+    state.writing = true;
+    try {
+        active.view.commands.run('link', {value, range, trigger: 'input'});
+    } finally {
+        state.writing = false;
+    }
+    if (field) {
+        field.focus();
+        if (caret) field.setSelectionRange(...caret);
+    }
+    // What the form edits from here on is whatever the run left behind.
+    active.element = marked(active.surface, at(active.surface));
+    active.selection = active.surface.selection;
+    if (!active.element && value) return close(state);
+    place(state.form, active.surface, {align: 'start', prefer: 'below'});
+    return active.element;
 }
 
-// Leaving without acting puts the caret back where the form was opened on.
+// Leaving puts the caret back where the form was opened on.
 function cancel(state) {
-    const view = state.active;
+    const active = state.active;
     close(state);
-    if (!view?.surface.connected) return;
-    view.surface.element.focus();
-    view.surface.restore();
+    if (!active?.surface.connected) return;
+    active.surface.element.focus();
+    active.surface.restore();
 }
 
 function close(state, surface = null) {
     if (!state.active || surface && state.active.surface !== surface) return;
     state.active = null;
     if (state.form) show(state.form, false);
+    return null;
 }
 
+// The form belongs to the link it was opened on, not to wherever the caret goes
+// next: a selection that leaves it closes the form rather than dragging it along.
 function reposition(state, surface) {
-    if (state.active?.surface !== surface) return;
+    const active = state.active;
+    if (active?.surface !== surface || state.writing) return;
     if (!surface.connected) return close(state, surface);
+    const held = active.element
+        ? marked(surface, at(surface)) === active.element
+        : surface.selection === active.selection;
+    if (!held) return close(state, surface);
     place(state.form, surface, {align: 'start', prefer: 'below'});
+}
+
+// The node the surface's saved selection starts in.
+function at(surface) {
+    return surface.selection?.range().startContainer || null;
 }
 
 // A caret inside a link edits the whole link; a selection marks exactly itself.
@@ -162,7 +196,7 @@ function target(surface) {
 }
 
 function marked(surface, node) {
-    let element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+    let element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
     for (; element && element !== surface.element; element = element.parentElement) {
         if (linkHtml.parse(element)) return element;
     }
@@ -171,39 +205,30 @@ function marked(surface, node) {
 
 function build(state) {
     if (state.form) return state.form;
-    const container = state.root.nodeType === Node.DOCUMENT_NODE
-        ? state.document.body || state.document.documentElement
-        : state.root;
-    const style = state.document.createElement('style');
-    style.dataset.u2RteLinkStyle = '';
-    style.textContent = STYLE;
+    state.chrome.style('link', STYLE);
     const form = state.document.createElement('form');
     form.dataset.u2RteLink = '';
     form.noValidate = true;
     form.hidden = true;
-    if (typeof form.showPopover === 'function') form.popover = 'manual';
     form.setAttribute('aria-label', 'Link');
     for (const name of state.fields) form.append(field(state.document, name));
-    for (const [action, label] of [['apply', 'Apply'], ['remove', 'Remove']]) {
-        const button = state.document.createElement('button');
-        button.type = 'submit';
-        button.value = action;
-        button.textContent = label;
-        form.append(button);
-    }
+    // No Apply and no Remove: what the fields say is what the link is, as it is
+    // typed, and an emptied address says there is no link.
+    form.addEventListener('input', event => write(state, read(state), event.target));
     form.addEventListener('submit', event => {
-        event.preventDefault();
-        submit(state, event.submitter?.value || 'apply');
-    });
-    // A manual popover is not dismissed by the browser, and the form must be
-    // escapable without acting on the link.
-    form.addEventListener('keydown', event => {
-        if (event.key !== 'Escape') return;
         event.preventDefault();
         cancel(state);
     });
-    container.append(style, form);
-    state.style = style;
+    // A manual popover is not dismissed by the browser, so the form closes on
+    // its own keys. Two text fields block implicit submission anyway, and with
+    // every edit already applied Enter has nothing left to confirm and Escape
+    // nothing to undo: both leave and put the caret back.
+    form.addEventListener('keydown', event => {
+        if (event.key !== 'Escape' && event.key !== 'Enter') return;
+        event.preventDefault();
+        cancel(state);
+    });
+    state.chrome.root.append(form);
     state.form = form;
     return form;
 }
@@ -247,13 +272,6 @@ function read(state) {
 }
 
 function show(form, visible) {
-    const popover = form.hasAttribute('popover') && typeof form.showPopover === 'function';
-    if (visible) {
-        form.hidden = false;
-        if (popover && !form.matches(':popover-open')) form.showPopover();
-        return;
-    }
-    if (popover && form.matches(':popover-open')) form.hidePopover();
-    form.hidden = true;
+    form.hidden = !visible;
 }
 

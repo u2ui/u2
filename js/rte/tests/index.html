@@ -2,14 +2,14 @@
 <html lang=en>
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width">
-<title>RTE2 tests</title>
+<title>RTE tests</title>
 <style>
     body { font: 1rem/1.4 system-ui; }
     [data-result=passed] { color: green; }
     [data-result=failed] { color: red; white-space: pre-wrap; }
-    [data-rte2-fixture] { position: fixed; inset-inline-start: -100vw; }
+    [data-rte-fixture] { position: fixed; inset-inline-start: -100vw; }
 </style>
-<h1>RTE2 tests</h1>
+<h1>RTE tests</h1>
 <ol id=results></ol>
 <script type=module>
     import '../src/browser/tests/range-rect.test.js';
@@ -18,19 +18,23 @@
     import '../src/client/tests/blocks.test.js';
     import '../src/client/tests/breaks.test.js';
     import '../src/client/tests/classes.test.js';
+    import '../src/client/tests/images.test.js';
     import '../src/client/tests/link.test.js';
     import '../src/client/tests/source.test.js';
+    import '../src/client/tests/tables.test.js';
     import '../src/client/tests/unstyle.test.js';
     import '../src/command/tests/commands.test.js';
     import '../src/command/tests/block-boundary.test.js';
     import '../src/command/tests/block-style.test.js';
     import '../src/command/tests/delete.test.js';
     import '../src/command/tests/edit.test.js';
+    import '../src/command/tests/element.test.js';
     import '../src/command/tests/enter.test.js';
     import '../src/command/tests/fragment.test.js';
     import '../src/command/tests/insert.test.js';
     import '../src/command/tests/list.test.js';
     import '../src/command/tests/mark.test.js';
+    import '../src/command/tests/table.test.js';
     import '../src/command/tests/pending-marks.test.js';
     import '../src/command/tests/unstyle.test.js';
     import '../src/config/tests/config.test.js';
@@ -60,13 +64,14 @@
     import '../src/core/tests/core.test.js';
     import '../src/ui/tests/place.test.js';
     import '../src/ui/tests/toolbar.test.js';
-    import './editor.test.js';
     import './blocks.test.js';
     import './breaks.test.js';
     import './generated.test.js';
     import './classes.test.js';
+    import './images.test.js';
     import './link.test.js';
     import './source.test.js';
+    import './tables.test.js';
     import './unstyle.test.js';
     import './rte.test.js';
     import {run} from './harness.js';

@@ -79,6 +79,9 @@ Rungs 1–4 are scoped `foreign`: they spare the declared classes. Rung 5 is whe
 the application's own presentation goes, so rung 6 no longer needs to protect
 anything.
 
+With nothing selected the whole content is the target, so the ladder is a way to
+clean a document as much as a way to clean a passage.
+
 A seventh rung, `blocks`, reduces structure to the host's default block. It
 needs the content model and mapped mutation and therefore lives in
 [`../command/`](../command/README.md), not here: this policy also runs on

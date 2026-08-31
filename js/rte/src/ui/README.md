@@ -4,10 +4,10 @@
 the currently active surface. It provides the roaming behavior; it does not
 create buttons, inject styles, choose icons, or define editor commands.
 
-The useful interaction model comes from the original `../rte` toolbar: one
+The useful interaction model comes from the original `../rte0` toolbar: one
 shared toolbar follows the active editor, its items reflect the current
 selection, pointer interaction keeps the editor selection, and keyboard
-shortcuts invoke the same actions. RTE2 replaces the old global item registry,
+shortcuts invoke the same actions. RTE replaces the old global item registry,
 `execCommand()`, delayed focus repair, and automatic style injection with the
 existing core, surface, and command contracts.
 
@@ -118,9 +118,89 @@ per option or surface.
 - Markup, labels, localization, icons, layout, and placement are application
   policy and add no engine-side resources when no toolbar is constructed.
 
+## Chrome
+
+`Chrome` is one shadow root per editor for everything the editor draws: its
+toolbar, its contextual handles, its forms and dialogs. It carries the top
+layer, and each piece registers its own stylesheet in it through
+`style(key, css)`, once.
+
+An editor is chrome inside someone else's document and has to survive their
+`button {}` rule. One encapsulated root means the page's CSS reaches none of it,
+none of its styles leak out, and the application sees a single element rather
+than one per piece of UI. Its host is `all: initial`, so the page's typography
+does not shift it either; custom properties are excluded from `all` and still
+inherit, so configuration is unaffected.
+
+There is deliberately no `::part` surface. Exposing parts would make the
+internal structure of the chrome a public contract, and it is not needed:
+an application that wants different chrome builds its own on the commands, which
+is the supported path and always was. `Toolbar` already binds application-owned
+markup for exactly that reason.
+
+## Handles
+
+`Handles` is a set of buttons placed around something, with an optional frame
+drawn behind them. It owns no editor concept: a caller says where each handle
+goes and what pressing one means, so anything with a rectangle can use it —
+inside this engine or outside it.
+
+```js
+const handles = new Handles(chrome.root, {
+    name: 'tables',
+    handles: [{name: 'rowAfter', label: 'Row below', text: '+'}],
+    action: name => …,
+    press: name => …,
+});
+handles.show().place('rowAfter', x, y).disable('rowAfter', false);
+```
+
+Given a shadow root it places itself inside it and registers its stylesheet
+there. Given a document it makes an encapsulated root of its own, so it works
+just as well outside an editor.
+
+Both its listeners are on the containing root rather than the host: an event
+that is not composed never leaves the shadow tree it happened in. Pressing a
+handle prevents its default, because pointing at editor chrome must never move
+the selection it acts on.
+
+The glyph inside a handle is centred with `text-box: trim-both cap alphabetic`,
+which trims the font's leading so a bare `+` or `×` sits on its optical centre
+rather than its metric one. Where that is unsupported the flex centring alone
+still applies.
+
+## Present or available
+
+Two different questions, answered two different ways:
+
+- **Presence** says what this editor offers at all. A control is absent when its
+  command is not registered on the surface, when `--u2-rte-toolbar` does not
+  list it, or when its choices are not configured — a style select with no
+  `--u2-rte-classes` has nothing to be.
+- **Availability** says what the current selection allows. A control that exists
+  but cannot act is disabled, never hidden.
+
+Keeping the two apart is what makes a toolbar usable: its shape follows the
+configuration and stays put while the caret moves, so a control is always found
+in the same place. A toolbar whose buttons appeared and vanished with every
+selection change would move its targets out from under the pointer.
+
+`--u2-rte-toolbar-unavailable: hide` trades that away deliberately, for a
+toolbar that only ever shows what it can do. It is the host's call, not the
+default: a compact toolbar of two or three controls loses little by moving,
+while a wide one loses a great deal.
+
+## Focus across the boundary
+
+A `focusout` listener outside the toolbar's shadow tree sees its related target
+retargeted to that tree's host. Focus moving from the surface into a control of
+the toolbar's own therefore looks like focus leaving the editor, and dismissing
+on it would take the toolbar away in the middle of the click that opened a
+select. Ownership is decided against the tree's host as well as its contents.
+
 ## Placement
 
-`place(element, surface, {align, prefer})` is the one placement policy for every
+`place(element, surface, {align, prefer, gap})` is the one placement policy for every
 contextual UI. It anchors on the surface's saved selection through `rangeRect`,
 keeps the element inside the viewport, and falls to the other side when the
 preferred one does not fit. The roaming toolbar centres above the selection; the

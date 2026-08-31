@@ -184,6 +184,43 @@ test('unstyle command: the host\'s declared content classes survive', () => with
     }
 ));
 
+// Someone who presses with nothing selected wants the content cleaned, not
+// nothing to happen.
+test('unstyle command: a collapsed caret reaches the whole content', () => withUnstyle(
+    '<div contenteditable><p><span class=x>one</span></p><p style="color:red">two</p></div>',
+    ({commands, host}) => {
+        const text = host.querySelector('span').firstChild;
+        getSelection().collapse(text, 2);
+        equal(commands.state('unstyle'), 'styles');
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p><span class="x">one</span></p><p>two</p>');
+        equal(commands.run('unstyle').level, 'classes');
+        equal(host.innerHTML, '<p>one</p><p>two</p>');
+        equal(commands.enabled('unstyle'), false, 'Plain content in default blocks is the end');
+    }
+));
+
+test('unstyle command: the caret stays where it was', () => withUnstyle(
+    '<div contenteditable><p>one <span class=x>two</span> three</p></div>', ({commands, host}) => {
+        const text = host.querySelector('p').firstChild;
+        getSelection().collapse(text, 2);
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p>one two three</p>');
+        const selection = getSelection();
+        truthy(selection.isCollapsed, 'The whole document is not left selected');
+        equal(selection.focusNode.data.slice(0, selection.focusOffset), 'on');
+    }
+));
+
+test('unstyle command: a caret reaches the structural rung too', () => withUnstyle(
+    '<div contenteditable><ul><li>one</li><li>two</li></ul></div>', ({commands, host}) => {
+        getSelection().collapse(host.querySelector('li').firstChild, 1);
+        equal(commands.state('unstyle'), 'blocks');
+        commands.run('unstyle');
+        equal(host.innerHTML, '<p>one</p><p>two</p>');
+    }
+));
+
 function withUnstyle(html, run) {
     return withFixture(html, root => {
         const core = new Rte(document, {auto: false});

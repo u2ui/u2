@@ -1,5 +1,6 @@
 import {Toolbar} from '../toolbar.js';
 import {Commands} from '../../command/commands.js';
+import {elementOf} from '../../selection/ownership/ownership.js';
 import {Rte} from '../../core/core.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
@@ -285,6 +286,92 @@ test('toolbar: pointing at a control that cannot run keeps the toolbar open', ()
     button.dispatchEvent(down);
     truthy(down.defaultPrevented, 'The selection stays where it is, so the toolbar stays open');
     equal(element.hidden, false);
+    toolbar.dispose();
+    core.dispose();
+}));
+
+// Presence follows the configuration, availability the selection: a toolbar that
+// rearranged itself as the caret moved would move its targets out from under the
+// pointer.
+test('toolbar: a configured select stays and disables where it cannot apply', () => withFixture(`
+    <div contenteditable><p>text</p><pre>code</pre></div>
+    <div id=toolbar><select data-command-value=style data-control=style>
+        <option value="" disabled>Style</option><option value=lead>Lead</option>
+    </select></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    const commands = new Commands(surface, {commands: {style: {
+        enabled: edit => elementOf(edit.range?.start.node)?.localName !== 'pre',
+        state: () => null,
+        run() {},
+    }}});
+    const element = root.querySelector('#toolbar');
+    const toolbar = new Toolbar(core, element, {commands: () => commands});
+    const select = element.querySelector('select');
+
+    const text = surface.element.querySelector('p').firstChild;
+    getSelection().setBaseAndExtent(text, 0, text, 4);
+    core.sync();
+    equal(select.hidden, false);
+    equal(select.disabled, false);
+
+    const code = surface.element.querySelector('pre').firstChild;
+    getSelection().setBaseAndExtent(code, 0, code, 4);
+    core.sync();
+    equal(select.hidden, false, 'It exists here, it just cannot act');
+    equal(select.disabled, true);
+    toolbar.dispose();
+    core.dispose();
+}));
+
+test('toolbar: a select with no configured choice is absent', () => withFixture(`
+    <div contenteditable>text</div>
+    <div id=toolbar><select data-command-value=style><option value="" disabled>Style</option></select></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    const commands = new Commands(surface, {commands: {style: {enabled: () => true, run() {}}}});
+    const element = root.querySelector('#toolbar');
+    const toolbar = new Toolbar(core, element, {commands: () => commands});
+    getSelection().setBaseAndExtent(surface.element.firstChild, 0, surface.element.firstChild, 4);
+    core.sync();
+    equal(element.querySelector('select').hidden, true, 'Nothing to offer is nothing to be');
+    toolbar.dispose();
+    core.dispose();
+}));
+
+test('toolbar: a host may hide what it cannot use instead of disabling it', () => withFixture(`
+    <div contenteditable style="--u2-rte-toolbar-unavailable: hide"><p>text</p><pre>code</pre></div>
+    <div id=toolbar>
+        <button data-command=toggle></button>
+        <select data-command-value=style><option value="" disabled>Style</option><option value=lead>Lead</option></select>
+    </div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    const usable = edit => elementOf(edit.range?.start.node)?.localName !== 'pre';
+    const commands = new Commands(surface, {commands: {
+        toggle: {enabled: usable, run() {}},
+        style: {enabled: usable, state: () => null, run() {}},
+    }});
+    const element = root.querySelector('#toolbar');
+    const toolbar = new Toolbar(core, element, {commands: () => commands});
+    const button = element.querySelector('button');
+    const select = element.querySelector('select');
+
+    const text = surface.element.querySelector('p').firstChild;
+    getSelection().setBaseAndExtent(text, 0, text, 4);
+    core.sync();
+    equal(button.hidden, false);
+    equal(select.hidden, false);
+
+    const code = surface.element.querySelector('pre').firstChild;
+    getSelection().setBaseAndExtent(code, 0, code, 4);
+    core.sync();
+    equal(button.hidden, true, 'The host asked for a toolbar of what it can do');
+    equal(select.hidden, true);
+    equal(element.hidden, true, 'Nothing usable is nothing to show');
     toolbar.dispose();
     core.dispose();
 }));

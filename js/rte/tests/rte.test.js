@@ -1,6 +1,7 @@
 import {
     BlockStyles,
     ContentModel,
+    Editor,
     EditRange,
     ExternalInput,
     InputPipeline,
@@ -28,8 +29,11 @@ import {
     codeHtml,
     deleteBackward,
     deleteForward,
+    editor,
+    externalInputs,
     elementPresets,
     htmlModel,
+    importLevel,
     inputRange,
     inputTrigger,
     insertFragment,
@@ -102,5 +106,12 @@ test('public API: exports the foundation and one default document core', () => {
     truthy(Normalizer);
     truthy(rte instanceof Rte);
     same(rte.root, document);
+});
+
+test('public API: one import also creates the default convention client', () => {
+    truthy(editor instanceof Editor);
+    same(editor.core, rte);
+    truthy(typeof externalInputs === 'function');
+    truthy(typeof importLevel === 'function');
     rte.dispose();
 });

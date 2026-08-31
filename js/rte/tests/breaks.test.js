@@ -1,5 +1,5 @@
 import {breakMarks, breaks} from '../breaks.js';
-import {editor} from '../editor.js';
+import {editor} from '../rte.js';
 import {rte} from '../rte.js';
 import {same, test, truthy, withFixture} from './harness.js';
 
