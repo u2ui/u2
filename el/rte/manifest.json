@@ -3,14 +3,29 @@
     "readme": "README.md",
     "modules": [{
         "kind": "javascript-module",
-        "path": "rte.js",
+        "path": "rte2.js",
         "declarations": [{
             "kind": "class",
-            "description": "\"Rich\" Rich Text Editor (alpha)",
-            "name": "U2Rte",
-            "members": [],
-            "events": [],
-            "attributes": [],
+            "description": "Progressively enhances a textarea with the RTE2 rich-text editor",
+            "name": "U2Rte2",
+            "members": [{
+                "kind": "field",
+                "name": "value",
+                "description": "The serialized textarea value"
+            }],
+            "events": [{
+                "name": "input",
+                "description": "Fired from the textarea after the editor value changes"
+            },{
+                "name": "change",
+                "description": "Fired from the textarea when focus leaves a changed editor"
+            }],
+            "attributes": [{
+                "name": "language",
+                "description": "Serialization language",
+                "u2-type": "string",
+                "u2Examples": ["html", "markdown"]
+            }],
             "cssProperties": [{
                 "name": "--u2-rte-toolbar",
                 "description": "Space separated list of toolbar commands",
@@ -21,13 +36,13 @@
                 "syntax": "*"
             }],
             "superclass": { "name": "HTMLElement" },
-            "tagName": "u2-rte",
+            "tagName": "u2-rte2",
             "customElement": true
         }],
         "exports": [{
             "kind": "custom-element-definition",
-            "name": "u2-rte",
-            "declaration": { "name": "U2Rte", "module": "rte.js" }
+            "name": "u2-rte2",
+            "declaration": { "name": "U2Rte2", "module": "rte2.js" }
         }]
     }]
 }

@@ -3,35 +3,45 @@
 <head>
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
-    <title>Test</title>
-    <!-- <script src="../../../u2/tests/test-init.js" type=module async></script> -->
-    <script src="../../../u2/auto.js" type=module async></script>
-
+    <title>u2-rte2 test</title>
     <link rel=stylesheet href="../../../css/classless/full.css">
-    <link rel=stylesheet href="../../../css/classless/aria.css">
     <link rel=stylesheet href="../../../css/classless/simple.css">
-
-    <link href="../rte.css" rel=stylesheet>
-    <script src="../rte.js" type=module async></script>
-
-</head>
+    <link rel=stylesheet href="../rte2.css">
+    <script src="../rte2.js" type=module async></script>
 
 <body>
 
+<section>
+    <form id=form>
+        <label>HTML
+            <u2-rte2 style="--u2-rte-toolbar:bold italic underline bullets numbers">
+                <textarea name=html required placeholder="Write rich text"><p>Some <strong>HTML</strong></p></textarea>
+            </u2-rte2>
+        </label>
 
-<section id=container>
+        <label>Markdown
+            <u2-rte2 language=markdown style="--u2-rte-toolbar:bold italic bullets numbers">
+                <textarea name=markdown># Markdown
 
-    <u2-rte>
-        <p>Some <b>text</b></p>
-        <p>image:</p>
-        <img width="200" height="150" alt="tick" src="https://fastly.picsum.photos/id/237/200/150.jpg?hmac=cP3GW-TQQWpntUpoHauvAWmCaKSFUngooZCPRN50Om8">
-    </u2-rte>
+Some **rich text**.</textarea>
+            </u2-rte2>
+        </label>
 
-    <u2-rte>
-        <textarea>
-            <p>Some <b>Textarea</b> Content</p>
-            <p><i>Insane!</i></p>
-        </textarea>
-    </u2-rte>
-            
+        <button>Submit</button>
+        <button type=reset>Reset</button>
+    </form>
+    <pre id=output></pre>
 </section>
+
+<script>
+    form.addEventListener('input', show);
+    form.addEventListener('change', show);
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        show(event);
+    });
+    function show(event) {
+        output.textContent = `${event?.type || 'initial'}\n${JSON.stringify(Object.fromEntries(new FormData(form)), null, 2)}`;
+    }
+    show();
+</script>

@@ -4,22 +4,13 @@
     <meta charset=utf-8>
     <meta name=viewport content="width=device-width">
 
-    <link rel=stylesheet href="../rte.css">
-    <script src="../rte.js" type=module async></script>
+    <link rel=stylesheet href="../rte2.css">
+    <script src="../rte2.js" type=module async></script>
 
 <body>
 
-<section class="main">
-    <u2-rte style="--u2-rte-toolbar:Bold Italic">
-        <strong>RTE</strong>
-        <br>
-        <i>(Rich Text Editor)</i>
-    </u2-rte>
-</section>
-
-<style class="main">
-    u2-rte {
-        --u2-rte:true;
-        --u2-rte-toolbar:Bold Italic;
-    }
-</style>
+<form>
+    <u2-rte2 style="--u2-rte-toolbar:bold italic">
+        <textarea name=content><p>Some <strong>HTML</strong></p></textarea>
+    </u2-rte2>
+</form>
