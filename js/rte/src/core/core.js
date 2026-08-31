@@ -129,7 +129,13 @@ export class Rte extends EventTarget {
         const editable = event.composedPath().find(node =>
             node?.nodeType === Node.ELEMENT_NODE && isEditingBoundary(node)
         );
-        if (!editable) return;
+        // Focus that went somewhere else entirely ends the session: retained UI
+        // is already excluded above, so what is left is not the editor's, and
+        // everything drawn for it has to go with it.
+        if (!editable) {
+            this.activate(null);
+            return;
+        }
         if (!isEditableHost(editable)) {
             this.activate(null);
             return;

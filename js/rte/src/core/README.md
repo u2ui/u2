@@ -25,6 +25,9 @@ document structure, or UI behavior.
   keeps the active surface, `retains(node)` identifies its composed subtree,
   and `release(element)` removes the mark. This also distinguishes UI from
   content when a native top-layer boundary requires both to share one host.
+- Focus that lands anywhere else — not a surface, not retained UI — ends the
+  session, so everything drawn for it goes at once. Retaining is therefore how a
+  UI that takes focus stays alive; `Toolbar` retains its element itself.
 - `dispose()` removes listeners and disconnects every surface. It is
   idempotent; `[Symbol.dispose]()` exposes the same teardown to `using`.
 

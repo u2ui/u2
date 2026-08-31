@@ -13,57 +13,26 @@ import {place} from '../ui/place.js';
 import {Toolbar} from '../ui/toolbar.js';
 
 const STYLE = `
-[data-u2-rte-editor-toolbar] {
+#toolbar {
     align-items: center;
-    pointer-events: auto;
-    transition: left .14s, top .14s;
-    backdrop-filter: blur(.5rem);
-    background: color-mix(in srgb, Canvas 92%, transparent);
-    border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
-    border-radius: .45rem;
-    box-shadow: 0 .3rem 1rem #0003;
-    color: CanvasText;
     display: flex;
-    font: 14px/1 system-ui, sans-serif;
-    gap: .15rem;
-    inset: auto;
-    margin: 0;
-    padding: .2rem;
-    position: fixed;
-    z-index: 2147483647;
-    max-inline-size: 22rem;
     flex-wrap: wrap;
+    gap: .17em;
+    line-height: 1;
+    max-inline-size: 24.5em;
+    transition: left .14s, top .14s;
+
+    &[data-placing] { transition: none; }
+    @media (prefers-reduced-motion: reduce) { & { transition: none; } }
+    button, select { min-block-size: 2.29em; }
+    button {
+        border-radius: .34em;
+        min-inline-size: 2.29em;
+        &:hover:not(:disabled) { background: color-mix(in srgb, Highlight 16%, transparent); }
+        &[aria-pressed=true] { background: color-mix(in srgb, Highlight 28%, transparent); }
+    }
+    [data-command=bold] { font-weight: 700; }
 }
-[data-u2-rte-editor-toolbar][hidden] { display: none; }
-[data-u2-rte-editor-toolbar][data-placing] { transition: none; }
-@media (prefers-reduced-motion: reduce) {
-    [data-u2-rte-editor-toolbar] { transition: none; }
-}
-[data-u2-rte-editor-toolbar] button {
-    background: transparent;
-    border: 0;
-    border-radius: .3rem;
-    color: inherit;
-    font: inherit;
-    min-block-size: 2rem;
-    min-inline-size: 2rem;
-}
-[data-u2-rte-editor-toolbar] button:hover:not(:disabled) {
-    background: color-mix(in srgb, Highlight 16%, transparent);
-}
-[data-u2-rte-editor-toolbar] button[aria-pressed="true"] {
-    background: color-mix(in srgb, Highlight 28%, transparent);
-}
-[data-u2-rte-editor-toolbar] button:disabled { opacity: .4; }
-[data-u2-rte-editor-toolbar] [data-command="bold"] { font-weight: 700; }
-[data-u2-rte-editor-toolbar] select {
-    background: transparent;
-    border: 0;
-    color: inherit;
-    font: inherit;
-    min-block-size: 2rem;
-}
-[data-u2-rte-editor-toolbar] select:disabled { opacity: .4; }
 `;
 
 const CLIENT = Symbol.for('u2.rte.editor');
@@ -336,11 +305,9 @@ export class Editor {
 
     #ensureToolbar() {
         if (this.#toolbar) return this.#toolbar;
-        this.chrome.style('toolbar', STYLE);
-        const element = this.#document.createElement('div');
-        element.dataset.u2RteEditorToolbar = '';
+        const element = this.chrome.part('toolbar', STYLE);
+        element.className = 'panel';
         element.setAttribute('aria-label', 'Text formatting');
-        this.chrome.root.append(element);
         this.#element = element;
         for (const module of this.#modules.values()) this.#append(module);
         this.#toolbar = new Toolbar(this.#core, element, {

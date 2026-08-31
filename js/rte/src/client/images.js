@@ -1,35 +1,7 @@
 import {elementAttributes, selectedElement} from '../command/element.js';
+import {inlineUi} from '../config/config.js';
 import {Handles} from '../ui/handles.js';
 
-const STYLE = `
-[data-u2-rte-image-frame] {
-    background: transparent;
-    border: 1px solid Highlight;
-    box-sizing: border-box;
-    inset: auto;
-    margin: 0;
-    overflow: visible;
-    padding: 0;
-    pointer-events: none;
-    position: fixed;
-}
-[data-u2-rte-image-frame][hidden] { display: none; }
-[data-u2-rte-image-frame] button {
-    background: Canvas;
-    block-size: 0.65rem;
-    border: 1px solid Highlight;
-    inline-size: 0.65rem;
-    padding: 0;
-    pointer-events: auto;
-    position: absolute;
-}
-[data-u2-rte-image-frame] [data-corner$="w"] { inset-inline-start: -0.33rem; }
-[data-u2-rte-image-frame] [data-corner$="e"] { inset-inline-end: -0.33rem; }
-[data-u2-rte-image-frame] [data-corner^="n"] { inset-block-start: -0.33rem; }
-[data-u2-rte-image-frame] [data-corner^="s"] { inset-block-end: -0.33rem; }
-[data-u2-rte-image-frame] [data-corner="nw"], [data-u2-rte-image-frame] [data-corner="se"] { cursor: nwse-resize; }
-[data-u2-rte-image-frame] [data-corner="ne"], [data-u2-rte-image-frame] [data-corner="sw"] { cursor: nesw-resize; }
-`;
 
 // Only the trailing edges: an image sits in a text flow with its top and its
 // start edge held in place, so dragging the other side is the only direction
@@ -132,6 +104,7 @@ export function imageTools({selector = 'img', minimum = 16} = {}) {
 export const images = imageTools();
 
 function track(state, view, match) {
+    if (!inlineUi(view.surface.config, 'image')) return close(state, view.surface);
     const element = current(view, match);
     if (!element) return close(state, view.surface);
     build(state);

@@ -14,13 +14,13 @@ test('editor client: validates its core and creates no UI before activation', ()
         equal(client.commands(surface)?.input('deleteContentForward'), 'deleteForward');
         truthy(client.commands(surface)?.has('bold'));
         equal(client.toolbar, null);
-        equal(client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]'), null);
+        equal(client.chrome.root.getElementById('toolbar'), null);
 
         const text = surface.element.querySelector('p').firstChild;
         getSelection().setBaseAndExtent(text, 0, text, 3);
         core.sync();
         truthy(client.toolbar);
-        const element = client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]');
+        const element = client.chrome.root.getElementById('toolbar');
         truthy(element);
         equal(element.hidden, false);
         if (typeof element.showPopover === 'function') {
@@ -34,7 +34,7 @@ test('editor client: validates its core and creates no UI before activation', ()
         client.dispose();
         equal(client.connected, false);
         equal(client.commands(surface), null);
-        equal(client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]'), null);
+        equal(client.chrome.root.getElementById('toolbar'), null);
         equal(client.chrome.element.isConnected, false, 'Disposing takes the whole chrome with it');
         const error = throws(() => client.add({name: 'late', commands: () => ({})}), DOMException);
         equal(error.name, 'InvalidStateError');
@@ -143,13 +143,13 @@ test('editor client: the convention toolbar stays in its ShadowRoot top layer', 
         const chrome = root.querySelector('[data-u2-rte-chrome=editor]');
         truthy(chrome, 'The chrome belongs to the core it was made for');
         same(chrome.getRootNode(), root);
-        const toolbar = client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]');
+        const toolbar = client.chrome.root.getElementById('toolbar');
         truthy(toolbar);
-        truthy(client.chrome.root.querySelector('style[data-u2-rte-style=toolbar]'));
+        truthy(client.chrome.root.getElementById('toolbar-style'));
         if (typeof chrome.showPopover === 'function') truthy(chrome.matches(':popover-open'));
         client.dispose();
         equal(root.querySelector('[data-u2-rte-chrome=editor]'), null);
-        equal(client.chrome.root.querySelector('[data-u2-rte-editor-toolbar]'), null);
+        equal(client.chrome.root.getElementById('toolbar'), null);
     } finally {
         client.dispose();
         core.dispose();
@@ -369,6 +369,7 @@ test('editor client: reaching into the toolbar does not dismiss it', () => withF
                 bubbles: true, composed: true, relatedTarget: document.body,
             }));
             equal(toolbar.hidden, true, 'Focus that really left still dismisses it');
+            equal(getComputedStyle(toolbar).display, 'none', 'Dismissed means not drawn');
         } finally {
             client.dispose();
             core.dispose();

@@ -411,13 +411,16 @@ absent, work for current and future surfaces, and release everything through
    half: one command creates, changes, and removes a mark whose value is
    content, and at a caret it acts on the whole mark it sits on, so an existing
    link's address can be changed without selecting its text. `link.js` adds the
-   contextual form and an `unlink` control. Its address field is plain text
+   contextual form, which follows the caret the way the table and image handles
+   do: it appears at a link, anchored on it, and goes when the caret leaves, so
+   the toolbar control is left with creating one. Its address field is plain text
    because native url validation rejects relative paths, fragments, and
    application schemes; protocol and attribute policy stays with the sanitizer.
    The form applies as it is typed rather than on an Apply button, marking each
-   run as ongoing input so history keeps an address as one step, and it closes
-   when the selection leaves the link it was opened on. Editing the link text
-   itself remains open.
+   run as ongoing input so history keeps an address as one step, and it edits the
+   one link it appeared on. `normalize`, `suggest`, and `complete` leave what an
+   address means to the application, the last of them filling a list of entries
+   that may carry markup. Editing the link text itself remains open.
 4. **Table tools — implemented as commands.** `Tables` groups insertion,
    row and column insertion and deletion, and table removal. It names no
    section, row, or cell tag: each comes from the model's `defaultChild`, one

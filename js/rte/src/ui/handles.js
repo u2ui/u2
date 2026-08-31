@@ -1,23 +1,22 @@
 export const handleStyle = `
-[data-u2-handles][hidden] { display: none; }
-[data-u2-handles] > .frame {
+.handles > .frame {
     border: 1px solid Highlight;
     box-sizing: border-box;
     display: none;
     pointer-events: none;
     position: fixed;
 }
-[data-u2-handles][framed] > .frame { display: block; }
-[data-u2-handles] > button {
+.handles[framed] > .frame { display: block; }
+.handles > button {
     align-items: center;
     background: Canvas;
     border: 1px solid color-mix(in srgb, CanvasText 45%, transparent);
     border-radius: 50%;
-    block-size: var(--u2-handle-size, 1.25rem);
+    block-size: var(--u2-handle-size, 1.43em);
     color: CanvasText;
     display: flex;
-    font: .7em/1 system-ui, sans-serif;
-    inline-size: var(--u2-handle-size, 1.25rem);
+    font-size: .7em;
+    inline-size: var(--u2-handle-size, 1.43em);
     justify-content: center;
     padding: 0;
     pointer-events: auto;
@@ -26,8 +25,8 @@ export const handleStyle = `
        metric box, which is what makes a bare + or × sit straight. */
     text-box: trim-both cap alphabetic;
 }
-[data-u2-handles] > button:hover:not(:disabled) { background: color-mix(in srgb, Highlight 20%, Canvas); }
-[data-u2-handles] > button:disabled { opacity: .45; }
+.handles > button:hover:not(:disabled) { background: color-mix(in srgb, Highlight 20%, Canvas); }
+.handles > button:disabled { opacity: .45; }
 `;
 
 // A set of buttons placed around something, with an optional frame drawn behind
@@ -57,7 +56,8 @@ export class Handles {
         const document = isDocument ? root : root.ownerDocument;
         this.#action = action;
         this.#host = document.createElement('div');
-        this.#host.dataset.u2Handles = name;
+        this.#host.id = name;
+        this.#host.className = 'handles';
         this.#host.hidden = true;
         this.#host.setAttribute('aria-hidden', 'true');
         this.#frame = document.createElement('div');
@@ -91,9 +91,9 @@ export class Handles {
             if (button && !button.disabled) this.#action?.(button.dataset.handle, event);
         });
         if (isShadow) {
-            if (!root.querySelector('style[data-u2-rte-style=handles]')) {
+            if (!root.getElementById('handles-style')) {
                 const style = document.createElement('style');
-                style.dataset.u2RteStyle = 'handles';
+                style.id = 'handles-style';
                 style.textContent = handleStyle;
                 root.append(style);
             }

@@ -121,9 +121,25 @@ per option or surface.
 ## Chrome
 
 `Chrome` is one shadow root per editor for everything the editor draws: its
-toolbar, its contextual handles, its forms and dialogs. It carries the top
-layer, and each piece registers its own stylesheet in it through
-`style(key, css)`, once.
+toolbar, its contextual handles, its forms and dialogs. It carries the top layer.
+
+`part(key, css, tag)` gives a piece of chrome its node and its stylesheet under
+one name: the key becomes the element's `id`, so the css is written `#link input`
+and nothing is named twice. Inside a root shared by nothing else an id is as
+unique as an attribute, and a second claim on the same key is an error rather
+than a silent second element. `style(key, css)` registers a stylesheet alone,
+once, for a piece that builds its own node.
+
+What every piece shares is one skin, `.panel` — blur, rounding, shadow, border —
+because to the eye the editor's chrome is one thing and not five. A piece brings
+only its own layout.
+
+Sizes inside are `em`, against a text size stated once on the host. Page-relative
+units would let a site's root font resize the editor's furniture by accident, and
+a variable plus `calc()` would only be `em` with arithmetic bolted on. The size
+is still meant to be changed, just not by accident: `--u2-rte-ui-size` (default
+`14px`) sets it, and reaches the chrome because `all: initial` does not touch
+custom properties and the host inherits them from the page.
 
 `follow(element)` keeps that one chrome inside the closest currently active
 native top-layer boundary: a modal dialog, open popover, or fullscreen element.

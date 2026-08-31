@@ -52,7 +52,7 @@ example.
 - Put the caret in a table cell and use the handles on the table to add or drop
   its rows and columns.
 - Create a link from a selection or edit an existing one from a caret through
-  the contextual form, and remove one with the unlink control.
+  the contextual form, and remove one by emptying its address.
 - Open the surface's HTML in the modal source dialog, syntax highlighted through
   `<u2-code>`, edit it, and apply it as one undo step.
 - Toggle the ready-made bold mark by button or Ctrl/Command+B. The scenario

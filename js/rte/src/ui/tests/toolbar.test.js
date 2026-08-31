@@ -129,6 +129,27 @@ test('toolbar: hiding, disconnect, and disposal leave no active bindings', () =>
     equal(runs, 0);
 }));
 
+// Focus that goes somewhere else ends the session and takes every contextual UI
+// with it — but a control is not somewhere else, which is what `retain` says.
+test('toolbar: a control taking the focus does not end the session', () => withFixture(`
+    <div contenteditable>text</div>
+    <button id=outside>Outside</button>
+    <div id=toolbar><button data-command=action></button></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const surface = core.add(root.firstElementChild);
+    const commands = new Commands(surface, {commands: {action: {enabled: () => true, run() {}}}});
+    const element = root.querySelector('#toolbar');
+    const toolbar = new Toolbar(core, element, {commands: () => commands});
+    core.activate(surface);
+    element.firstElementChild.focus();
+    same(core.active, surface, 'A toolbar button is the editor');
+    root.querySelector('#outside').focus();
+    same(core.active, null, 'Anything else is not');
+    toolbar.dispose();
+    core.dispose();
+}));
+
 test('toolbar: focusout hides it until focus returns to the surface or toolbar', () => withFixture(`
     <div contenteditable>text</div>
     <button id=outside>Outside</button>

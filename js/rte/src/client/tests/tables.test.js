@@ -90,7 +90,7 @@ function withTables(run) {
                 core.sync();
                 surface.capture();
             };
-            const layer = () => client.chrome.root.querySelector('[data-u2-handles=tables]');
+            const layer = () => client.chrome.root.getElementById('tables');
             return run({caret, client, core, host, layer, surface});
         } finally {
             client.dispose();

@@ -64,16 +64,20 @@ test('link editor: clearing the address takes the link away', () => withLink(
     }
 ));
 
-test('link editor: the unlink control works without the form', () => withLink(
-    ({client, surface}) => {
+// The form is where the caret is: nobody has to ask for it.
+test('link editor: a caret in a link brings the form by itself', () => withLink(
+    ({client, surface, form}) => {
         surface.element.innerHTML = '<p><a href="/old">one</a> two</p>';
-        const commands = client.commands(surface);
+        equal(form(), null, 'Nothing drawn before there is anything to draw');
         getSelection().collapse(surface.element.querySelector('a').firstChild, 1);
         surface.core.sync();
-        equal(commands.enabled('unlink'), true);
-        commands.run('unlink');
-        equal(surface.element.innerHTML, '<p>one two</p>');
-        equal(commands.enabled('unlink'), false);
+        equal(form().hidden, false);
+        equal(form().querySelector('[name=href]').value, '/old');
+        equal(client.chrome.root.activeElement, null, 'Appearing is not a reason to take the focus');
+        getSelection().collapse(surface.element.querySelector('p').lastChild, 2);
+        surface.core.sync();
+        equal(form().hidden, true, 'And it goes when the caret does');
+        equal(getComputedStyle(form()).display, 'none', 'Gone means not drawn');
     }
 ));
 
@@ -114,19 +118,23 @@ test('link editor: a collapsed caret outside a link cannot open the form', () =>
     }
 ));
 
-test('link editor: escape leaves the link and the caret alone', () => withLink(
+// Leaving puts the caret after the link, not back inside it: whoever just made a
+// link wants to keep writing without it. The form goes with the caret.
+test('link editor: escape leaves the link alone and the caret after it', () => withLink(
     ({client, surface, form}) => {
         surface.element.innerHTML = '<p><a href="/old">one</a> two</p>';
-        const text = surface.element.querySelector('a').firstChild;
-        getSelection().collapse(text, 2);
+        const link = surface.element.querySelector('a');
+        getSelection().collapse(link.firstChild, 2);
         surface.core.sync();
         client.toolbar.element.querySelector('[data-control=link]').click();
-        equal(form().hidden, false);
-        form().dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
-        equal(form().hidden, true);
+        same(client.chrome.root.activeElement, form().querySelector('[name=href]'));
+        key(form(), 'Escape');
+        same(document.activeElement, surface.element);
         equal(surface.element.innerHTML, '<p><a href="/old">one</a> two</p>');
-        same(surface.selection.range().startContainer, text);
-        equal(surface.selection.range().startOffset, 2);
+        const range = surface.selection.range();
+        truthy(range.collapsed && range.comparePoint(link, 0) === -1, 'The caret is past the link');
+        surface.core.sync();
+        equal(form().hidden, true, 'And the form is done');
     }
 ));
 
@@ -138,13 +146,70 @@ test('link editor: enter leaves with the typed link and the caret back', () => w
         surface.core.sync();
         client.toolbar.element.querySelector('[data-control=link]').click();
         type(form(), 'href', '/new');
-        form().querySelector('[name=href]').dispatchEvent(
-            new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
-        equal(form().hidden, true);
+        key(form(), 'Enter');
         equal(surface.element.innerHTML, '<p><a href="/new">one</a> two</p>');
-        same(surface.selection.range().startContainer.parentElement,
-            surface.element.querySelector('a'), 'The caret is back in the document');
+        const range = surface.selection.range();
+        truthy(range.collapsed && range.comparePoint(surface.element.querySelector('a'), 0) === -1,
+            'The caret is back in the document, past the new link');
     }
+));
+
+// A way to see where an address actually goes. An application scheme is a link
+// the editor understands and the browser does not, so there is nothing to offer.
+test('link editor: the address offers a way to open it, when it can be opened', () => withLink(
+    ({client, surface, form}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        const open = form().querySelector('#link-open');
+        equal(open.hidden, true, 'Nothing typed, nowhere to go');
+        type(form(), 'href', 'https://example.com/a');
+        equal(open.hidden, false);
+        equal(open.getAttribute('href'), 'https://example.com/a');
+        equal(open.target, '_blank');
+        type(form(), 'href', 'cmspid://12');
+        equal(open.hidden, true, 'The browser cannot follow an application scheme');
+        type(form(), 'href', '/docs/page');
+        equal(open.hidden, false, 'A relative path is this document\'s');
+    }
+));
+
+// Marking a link selects it, which is right while someone is typing in the form
+// and wrong once they have clicked somewhere else: the click has to win.
+test('link editor: a pending edit settles without taking the caret back', () => withLink(
+    ({surface, form}) => {
+        surface.element.innerHTML = '<p><a href="/old">one</a> and two</p>';
+        getSelection().collapse(surface.element.querySelector('a').firstChild, 1);
+        surface.core.sync();
+        type(form(), 'href', 'example.com');
+        const text = surface.element.querySelector('p').lastChild;
+        getSelection().collapse(text, 5);
+        surface.core.sync();
+        equal(surface.element.innerHTML, '<p><a href="https://example.com">one</a> and two</p>');
+        const range = surface.selection.range();
+        truthy(range.collapsed, 'The click stays a caret');
+        same(range.startContainer, text);
+        equal(range.startOffset, 5);
+    },
+    {normalize: value => value && {...value, href: `https://${value.href}`}}
+));
+
+// An address is an identifier; the list is where it says what it stands for. It
+// has to answer for what the field is given, not only for what is typed into it.
+test('link editor: an address the form was handed is looked up too', () => withLink(
+    async ({client, surface, form}) => {
+        surface.element.innerHTML = '<p><a href="page://495">one</a> two</p>';
+        getSelection().collapse(surface.element.querySelector('a').firstChild, 1);
+        surface.core.sync();
+        await new Promise(resolve => setTimeout(resolve, 250));
+        equal(form().querySelector('li')?.textContent, 'Contact (495)',
+            'The caret walking into a link says which page that is');
+        getSelection().collapse(surface.element.querySelector('p').lastChild, 2);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]');
+    },
+    {complete: text => Promise.resolve(text === 'page://495' ? [{value: text, label: 'Contact (495)'}] : [])}
 ));
 
 test('link editor: validates its hooks', () => {
@@ -181,7 +246,12 @@ test('link editor: a new link is offered an address for its text', () => withLin
         surface.core.sync();
         client.toolbar.element.querySelector('[data-control=link]').click();
         await new Promise(resolve => setTimeout(resolve));
-        equal(form().querySelector('[name=href]').value, '/one');
+        const field = form().querySelector('[name=href]');
+        equal(field.value, '/one');
+        equal(surface.element.innerHTML, '<p>one two</p>', 'Offered, not applied');
+        same(client.chrome.root.activeElement, field, 'And whoever asked stays in the form');
+        equal(field.selectionEnd - field.selectionStart, field.value.length, 'One keystroke replaces it');
+        key(form(), 'Enter');
         equal(surface.element.innerHTML, '<p><a href="/one">one</a> two</p>');
     },
     {suggest: selected => Promise.resolve({href: `/${selected}`})}
@@ -281,24 +351,36 @@ test('link editor: the form closes and is released with the module', () => withL
         surface.activate(false);
         equal(form().hidden, true, 'Leaving the surface closes it');
         client.delete('link');
-        equal(client.chrome.root.querySelector('[data-u2-rte-link]'), null);
+        equal(client.chrome.root.getElementById('link'), null);
         equal(client.commands(surface).has('link'), false);
     }
 ));
 
 // The form belongs to the link it was opened on, not to wherever the caret goes.
-test('link editor: moving the selection away closes the form', () => withLink(
-    ({client, surface, form}) => {
+test('link editor: the form follows the caret from link to link', () => withLink(
+    ({surface, form}) => {
         surface.element.innerHTML = '<p><a href="/a">one</a> and <a href="/b">two</a></p>';
         getSelection().collapse(surface.element.querySelector('a').firstChild, 1);
         surface.core.sync();
-        client.toolbar.element.querySelector('[data-control=link]').click();
-        equal(form().hidden, false);
         equal(form().querySelector('[name=href]').value, '/a');
 
         getSelection().collapse(surface.element.querySelectorAll('a')[1].firstChild, 1);
         surface.core.sync();
-        equal(form().hidden, true, 'Another link is not the one being edited');
+        equal(form().hidden, false);
+        equal(form().querySelector('[name=href]').value, '/b', 'The form is for the link at hand');
+    }
+));
+
+// The form edits one link, not whatever the caret has moved on to.
+test('link editor: a pending edit lands on the link it was made for', () => withLink(
+    ({surface, form}) => {
+        surface.element.innerHTML = '<p><a href="/a">one</a> and two</p>';
+        getSelection().collapse(surface.element.querySelector('a').firstChild, 1);
+        surface.core.sync();
+        type(form(), 'href', '/changed');
+        getSelection().collapse(surface.element.querySelector('p').lastChild, 5);
+        surface.core.sync();
+        equal(surface.element.innerHTML, '<p><a href="/changed">one</a> and two</p>');
     }
 ));
 
@@ -348,7 +430,7 @@ function key(form, name) {
 
 function withLink(run, options) {
     return withFixture(
-        '<div contenteditable style="--u2-rte-toolbar:link unlink"><p>one two</p></div>',
+        '<div contenteditable style="--u2-rte-toolbar:link"><p>one two</p></div>',
         root => {
             const core = new Rte(document, {auto: false});
             const client = new Editor(core);
@@ -359,7 +441,7 @@ function withLink(run, options) {
             try {
                 client.add(linkEditor(options));
                 const surface = core.add(root.firstElementChild);
-                const form = () => client.chrome.root.querySelector('[data-u2-rte-link]');
+                const form = () => client.chrome.root.getElementById('link');
                 const result = run({client, core, surface, form, document});
                 return result?.then ? result.finally(done) : (done(), result);
             } catch (error) {

@@ -118,13 +118,67 @@ test('chrome: page styles do not reach the host', () => withChrome(chrome => {
     }
 }));
 
+// A part states its own display, and an id outranks the class that would hide it:
+// `hidden` that does not hide is exactly the bug a property assertion cannot see.
+test('chrome: a hidden part is not rendered, whatever it styles itself', () => withChrome(chrome => {
+    const part = chrome.part('panel-ish', '#panel-ish { display: flex }');
+    part.className = 'panel';
+    equal(getComputedStyle(part).display, 'flex');
+    part.hidden = true;
+    equal(getComputedStyle(part).display, 'none');
+}));
+
+// The size is meant to be changed — deliberately. Everything inside measures in
+// em against the host, so the page's own root font moves nothing here.
+test('chrome: one property scales the chrome, the page font does not', () => withChrome(chrome => {
+    const part = chrome.part('sized', '#sized { padding: 1em }');
+    equal(getComputedStyle(part).paddingTop, '14px');
+    document.documentElement.style.fontSize = '32px';
+    equal(getComputedStyle(part).paddingTop, '14px', 'A page that resizes itself leaves this alone');
+    document.documentElement.style.fontSize = '';
+    document.body.style.setProperty('--u2-rte-ui-size', '20px');
+    equal(getComputedStyle(part).paddingTop, '20px');
+    document.body.style.removeProperty('--u2-rte-ui-size');
+}));
+
+// The top layer is ordered by when each member was shown, so a page popover
+// opened after the editor would sit over it for good. What the editor draws is
+// the most recent thing the user triggered, so showing it again puts it back on
+// top — which is one close and one open, as its own toggle events report.
+test('chrome: drawing something puts the chrome back in front', () => withChrome(async chrome => {
+    if (typeof chrome.element.showPopover !== 'function') return;
+    const part = chrome.part('late');
+    part.hidden = true;
+    const toggles = [];
+    chrome.element.addEventListener('toggle', event => toggles.push(event.newState));
+    part.hidden = false;
+    await new Promise(resolve => setTimeout(resolve, 50));
+    // A popover nobody touches reports nothing, and the engine collapses the
+    // close and the open back into one event — so any report at all is the
+    // re-show, and the state after it is what matters.
+    truthy(toggles.length, 'It was shown again');
+    truthy(chrome.element.matches(':popover-open'));
+}));
+
 test('chrome: registers one stylesheet per key', () => withChrome(chrome => {
     same(chrome.style('a', 'p { color: red }'), chrome);
     chrome.style('a', 'p { color: blue }');
     chrome.style('b', 'p { color: green }');
-    const styles = [...chrome.root.querySelectorAll('style[data-u2-rte-style]')];
+    const styles = [...chrome.root.querySelectorAll('style[id]')];
     equal(styles.length, 2);
     equal(styles[0].textContent, 'p { color: red }', 'The first registration is the one that counts');
+}));
+
+// One key, one name: the node's id is the stylesheet's, so a piece of chrome is
+// never named twice and a second claim on the same name is an error, not a
+// silent second element.
+test('chrome: a part is one node and one stylesheet under one key', () => withChrome(chrome => {
+    const form = chrome.part('link', '#link { color: red }', 'form');
+    equal(form.tagName, 'FORM');
+    equal(form.id, 'link');
+    same(chrome.root.getElementById('link'), form);
+    truthy(chrome.root.getElementById('link-style'));
+    throws(() => chrome.part('link'), RangeError);
 }));
 
 test('chrome: disposal leaves nothing to find', () => {
@@ -142,10 +196,13 @@ test('chrome: disposal leaves nothing to find', () => {
 
 function withChrome(run) {
     const chrome = new Chrome(document);
+    const done = () => chrome.dispose();
     try {
-        return run(chrome);
-    } finally {
-        chrome.dispose();
+        const result = run(chrome);
+        return result?.then ? result.finally(done) : (done(), result);
+    } catch (error) {
+        done();
+        throw error;
     }
 }
 

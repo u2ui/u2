@@ -1,25 +1,25 @@
 import {Source} from '../source/source.js';
 
 const STYLE = `
-[data-u2-rte-source] {
+#source {
     pointer-events: auto;
-    block-size: min(70vh, 40rem);
+    block-size: min(70vh, 45.71em);
     border: 1px solid;
-    inline-size: min(90vw, 60rem);
+    inline-size: min(90vw, 68.57em);
     max-block-size: none;
     max-inline-size: none;
     padding: 0;
 }
-[data-u2-rte-source] form {
+#source form {
     block-size: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: .57em;
     margin: 0;
-    padding: .5rem;
+    padding: .57em;
 }
-[data-u2-rte-source] u2-code {
+#source u2-code {
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -27,7 +27,7 @@ const STYLE = `
     min-block-size: 0;
     overflow: auto;
 }
-[data-u2-rte-source] textarea {
+#source textarea {
     box-sizing: border-box;
     flex: 1;
     font-family: monospace;
@@ -35,9 +35,9 @@ const STYLE = `
     resize: none;
     white-space: pre;
 }
-[data-u2-rte-source] menu {
+#source menu {
     display: flex;
-    gap: .5rem;
+    gap: .57em;
     justify-content: flex-end;
     margin: 0;
     padding: 0;
@@ -83,6 +83,10 @@ export function sourceView({highlight = null, ...options} = {}) {
             const state = editors.get(editor);
             if (!state) throw new DOMException('The source extension is not set up', 'InvalidStateError');
             return {source: {
+                // No convention has settled here: the browsers' own "view
+                // source" is ctrl+u, which an editor owes to underline. H reads
+                // as html and is what the editor this replaces used.
+                shortcut: 'ctrl+h',
                 // Editing happens in the dialog, so opening it changes nothing
                 // and the write it may cause runs as its own transaction.
                 transaction: false,
@@ -90,7 +94,9 @@ export function sourceView({highlight = null, ...options} = {}) {
                 run: () => open(state, surface),
             }};
         },
-        toolbar: Object.freeze([Object.freeze({command: 'source', label: 'HTML source', text: '</>'})]),
+        toolbar: Object.freeze([Object.freeze({
+            command: 'source', label: 'HTML source', text: '</>', shortcut: 'ctrl+h',
+        })]),
     });
 }
 
@@ -132,9 +138,7 @@ function upgraded(element) {
 
 function build(state) {
     if (state.dialog) return state.dialog;
-    state.chrome.style('source', STYLE);
-    const dialog = state.document.createElement('dialog');
-    dialog.dataset.u2RteSource = '';
+    const dialog = state.chrome.part('source', STYLE, 'dialog');
     dialog.setAttribute('aria-label', 'HTML source');
     const form = state.document.createElement('form');
     form.method = 'dialog';

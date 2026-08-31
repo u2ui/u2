@@ -3,6 +3,7 @@ export class Toolbar {
     #element;
     #resolve;
     #place;
+    #hovered = false;
     #controller;
     #surfaceController = null;
     #surface = null;
@@ -28,12 +29,23 @@ export class Toolbar {
         core.addEventListener('u2-rte-activechange', this.#activeChange, listen);
         core.addEventListener('u2-rte-dispose', this.#coreDispose, listen);
         element.addEventListener('pointerdown', this.#pointerDown, listen);
+        // A toolbar that moves out from under the pointer is a toolbar you
+        // cannot click. While it is being aimed at, it stays where it is and
+        // catches up when the pointer goes.
+        element.addEventListener('pointerenter', () => { this.#hovered = true; }, listen);
+        element.addEventListener('pointerleave', () => {
+            this.#hovered = false;
+            if (!this.#element.hidden && this.#surface) this.#place?.(this.#element, this.#surface);
+        }, listen);
         element.addEventListener('click', this.#click, listen);
         element.addEventListener('change', this.#change, listen);
         core.root.addEventListener('focusin', this.#focusIn, {...listen, capture: true});
         core.root.addEventListener('focusout', this.#focusOut, {...listen, capture: true});
         if (!element.hasAttribute('role')) element.setAttribute('role', 'toolbar');
         element.hidden = true;
+        // Focus landing in a control is still the editor's: without this the core
+        // would end the session the moment a button took the focus.
+        core.retain(element);
         try {
             this.#activate(core.active);
         } catch (error) {
@@ -107,7 +119,7 @@ export class Toolbar {
         // any transition suppressed.
         const appearing = show && this.#element.hidden;
         display(this.#element, show);
-        if (show) {
+        if (show && !(this.#hovered && !appearing)) {
             if (appearing) this.#element.dataset.placing = '';
             this.#place?.(this.#element, surface);
             if (appearing) {
@@ -120,6 +132,7 @@ export class Toolbar {
 
     dispose() {
         if (!this.#connected) return;
+        this.#core.release(this.#element);
         this.#surfaceController?.abort();
         this.#controller.abort();
         this.#surfaceController = null;

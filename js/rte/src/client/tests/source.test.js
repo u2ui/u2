@@ -13,7 +13,7 @@ test('source client module: opens a modal dialog on the current content', () => 
         truthy(button);
         equal(button.disabled, false);
         button.click();
-        const dialog = client.chrome.root.querySelector('[data-u2-rte-source]');
+        const dialog = client.chrome.root.getElementById('source');
         truthy(dialog.open, 'The dialog uses the browser top layer');
         const area = dialog.querySelector('textarea');
         equal(area.value, '<p>one</p>\n<p>two</p>');
@@ -31,7 +31,7 @@ test('source client module: applying writes the edited text back', () => withSou
         getSelection().collapse(surface.element.querySelector('p').firstChild, 1);
         surface.core.sync();
         client.toolbar.element.querySelector('[data-command=source]').click();
-        const dialog = client.chrome.root.querySelector('[data-u2-rte-source]');
+        const dialog = client.chrome.root.getElementById('source');
         const area = dialog.querySelector('textarea');
         area.value = '<h2>edited</h2>';
         const done = closes(dialog);
@@ -49,7 +49,7 @@ test('source client module: an edit through the dialog is one undo step', () => 
         const history = client.history(surface);
         const before = history.length;
         client.toolbar.element.querySelector('[data-command=source]').click();
-        const dialog = client.chrome.root.querySelector('[data-u2-rte-source]');
+        const dialog = client.chrome.root.getElementById('source');
         dialog.querySelector('textarea').value = '<p>changed</p>';
         const done = closes(dialog);
         dialog.close('apply');
@@ -67,17 +67,17 @@ test('source client module: one dialog is shared and released with the editor', 
         surface.core.sync();
         const button = client.toolbar.element.querySelector('[data-command=source]');
         button.click();
-        const dialog = client.chrome.root.querySelector('[data-u2-rte-source]');
+        const dialog = client.chrome.root.getElementById('source');
         let done = closes(dialog);
         dialog.close('cancel');
         await done;
         button.click();
-        same(client.chrome.root.querySelector('[data-u2-rte-source]'), dialog, 'The dialog is created once');
+        same(client.chrome.root.getElementById('source'), dialog, 'The dialog is created once');
         done = closes(dialog);
         dialog.close('cancel');
         await done;
         client.delete('source');
-        equal(client.chrome.root.querySelector('[data-u2-rte-source]'), null);
+        equal(client.chrome.root.getElementById('source'), null);
         equal(client.commands(surface).has('source'), false);
     }
 ));
@@ -86,6 +86,7 @@ test('source client module: its identity is a plain module', () => {
     const module = sourceView();
     equal(module.name, 'source');
     equal(module.toolbar[0].command, 'source');
+    equal(module.toolbar[0].shortcut, 'ctrl+h', 'The control names the same key the command answers to');
     truthy(sourceView() !== module, 'Every call builds an independent module');
     throws(() => sourceView({highlight: 'code.js'}), TypeError);
 });
@@ -95,7 +96,7 @@ test('source client module: the text area is wrapped for optional highlighting',
         getSelection().collapse(surface.element.querySelector('p').firstChild, 1);
         surface.core.sync();
         client.toolbar.element.querySelector('[data-command=source]').click();
-        const dialog = client.chrome.root.querySelector('[data-u2-rte-source]');
+        const dialog = client.chrome.root.getElementById('source');
         const code = dialog.querySelector('u2-code');
         truthy(code, 'The wrapper is always present');
         same(code.firstElementChild, dialog.querySelector('textarea'));
@@ -123,7 +124,7 @@ test('source client module: a highlighter is loaded before the first open', asyn
             equal(calls, 0, 'Nothing is loaded before it is used');
             await client.commands(surface).run('source');
             equal(calls, 1);
-            const dialog = client.chrome.root.querySelector('[data-u2-rte-source]');
+            const dialog = client.chrome.root.getElementById('source');
             truthy(dialog.open);
             let done = closes(dialog);
             dialog.close('cancel');

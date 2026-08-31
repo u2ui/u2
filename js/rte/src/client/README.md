@@ -31,21 +31,33 @@ presentation cleanup leaves alone.
 
 The optional `link.js` entry adds a contextual link editor. Its `link` command
 is an ordinary `valueMark`, so any other UI can drive the same create, change,
-and remove path; the module supplies one form, anchored at the selection, plus
-an `unlink` control that needs no form.
+and remove path; the module supplies one form.
+
+That form is where the caret is: it appears on its own when the caret enters a
+link, anchored on the link rather than on the selection, and goes when the caret
+leaves — the same rule the table and image handles follow. Appearing therefore
+never takes the focus, because someone is typing. What is left for the toolbar
+control is the one thing that is a decision: turning a selection into a link, and
+at an existing link handing it the keyboard.
 
 The form has no Apply and no Remove: what its fields say is what the link is, as
-it is typed, and an emptied address says there is no link — the form stays open
-so the same text can be linked again.
+it is typed, and an emptied address says there is no link — the form stays on the
+text, so the same words can be linked again.
 Each edit runs the command marked as ongoing input, so history keeps a whole
 address as one step rather than one per keystroke. Marking the link moves the
 document selection into it and an engine follows that with focus, so the field
 being typed into gets focus back with its caret intact — otherwise the second
-character would land in the editor. It belongs to the link it was
-opened on, not to wherever the caret goes next: a selection that leaves that
-link closes the form instead of dragging it along. Enter and Escape both leave
-and put the caret back: with every edit already applied, one has nothing left to
-confirm and the other nothing to undo. The address is a plain text field on
+character would land in the editor. What it edits is one link, decided when it
+appeared — not wherever the caret has moved on to, or a pending edit would land
+somewhere else the moment the caret did. Enter and Escape hand the caret back to
+the text — after the link, not inside it, because whoever just made one wants to
+keep writing without it. Neither dismisses the form: it goes because the caret
+has left the link, and with every edit already applied one key has nothing left
+to confirm and the other nothing to undo.
+
+Beside the address sits a way to open it in a new tab, shown only while the
+address is one the browser can follow: an application scheme — a page id, a
+record reference — is a link the editor understands and the browser does not. The address is a plain text field on
 purpose: native url validation rejects relative paths, fragments, and
 application schemes and would silently block the form, while which protocols are
 acceptable is the sanitizer's decision.
@@ -60,7 +72,11 @@ takes the focus away and hands it back on every keystroke, so leaving a field is
 not an event this form can wait for. `suggest(text, surface)` is asked, possibly
 asynchronously, what a *new* link should point at, given the text it is being put
 on; its answer is used only while the form is still open on the same link and
-the address is still empty.
+the address is still empty. It is offered rather than applied — it stands in the
+field, selected so one keystroke replaces it, and becomes the link when the form
+is done. Applying it at once would mark the link, and marking moves the selection
+into it and the focus after that, throwing whoever asked for a link back into the
+text before they had seen the answer.
 
 `complete(text, surface)` is asked what addresses go with what is being typed and
 answers with entries `{value, label}` — or `{value, html}` for a row with markup,

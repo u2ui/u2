@@ -16,7 +16,7 @@ export {Tables} from './src/command/table.js';
 export {applyMark, removeMark, setMarks, toggleMark, valueMark} from './src/command/mark.js';
 export {PendingMarks} from './src/command/pending-marks.js';
 export {unstyleCommand} from './src/command/unstyle.js';
-export {config, elementPresets, enabled, hostDefaults} from './src/config/config.js';
+export {config, elementPresets, enabled, hostDefaults, inlineUi} from './src/config/config.js';
 export {Rte} from './src/core/core.js';
 export {History} from './src/history/history.js';
 export {ExternalInput} from './src/input/external-input.js';

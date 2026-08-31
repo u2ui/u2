@@ -1,47 +1,52 @@
+import {inlineUi} from '../config/config.js';
 import {linkHtml} from '../mark/standard.js';
 import {place} from '../ui/place.js';
 import {valueMark} from '../command/mark.js';
 
 const STYLE = `
-[data-u2-rte-link] {
-    background: Canvas;
-    border: 1px solid color-mix(in srgb, CanvasText 40%, transparent);
-    color: CanvasText;
+#link {
     display: flex;
     flex-direction: column;
-    font: inherit;
-    gap: .2rem;
-    inset: auto;
-    margin: 0;
-    padding: .3rem;
-    pointer-events: auto;
-    position: fixed;
+    gap: .23em;
+    padding: .34em;
+
+    label { align-items: center; display: flex; gap: .57em; justify-content: space-between; }
+    input[type=text] {
+        background: transparent;
+        border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
+        border-radius: .34em;
+        field-sizing: content;
+        min-inline-size: 16em;
+        max-inline-size: clamp(16em, 50vw, 32em);
+        padding: .17em .34em;
+        flex-grow: 1;
+    }
+    ul {
+        border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
+        border-radius: .34em;
+        cursor: default;
+        list-style: none;
+        margin: 0;
+        max-block-size: 40vh;
+        overflow: auto;
+        overscroll-behavior: contain;
+        padding: 0;
+    }
+    li { border-radius: .23em; padding: .17em .34em; }
+    #link-open { color: inherit; padding: 0 .17em; pointer-events: auto; text-decoration: none; }
+    li[aria-selected=true] { background: Highlight; color: HighlightText; }
 }
-[data-u2-rte-link][hidden] { display: none; }
-[data-u2-rte-link] label {
-    display: flex;
-    gap: .4rem;
-    justify-content: space-between;
-}
-[data-u2-rte-link] input[type=text] { min-inline-size: 14rem; }
-[data-u2-rte-link] ul {
-    background: Canvas;
-    border: 1px solid color-mix(in srgb, CanvasText 40%, transparent);
-    cursor: default;
-    list-style: none;
-    margin: 0;
-    max-block-size: 40vh;
-    overflow: auto;
-    overscroll-behavior: contain;
-    padding: 0;
-}
-[data-u2-rte-link] li { padding: .1rem .3rem; }
-[data-u2-rte-link] li[aria-selected=true] { background: Highlight; color: HighlightText; }
 `;
 
 const LABELS = {href: 'Address', target: 'New tab', title: 'Title', rel: 'Rel'};
 
 // Optional contextual link editor.
+//
+// The form is where the caret is: it appears on its own when the caret is in a
+// link and goes when the caret leaves, the way the table and image handles do. It
+// therefore never takes the focus by appearing — someone is typing — and the
+// toolbar control is left with the one thing that is a decision: turning a
+// selection into a link. Removing one is emptying its address.
 //
 // The command is an ordinary value mark, so creating, changing, and removing a
 // link is one path that any other UI can drive; this module only supplies one.
@@ -83,6 +88,7 @@ export function linkEditor({
                 views: new Map(),
                 form: null,
                 active: null,
+                dirty: false,
                 writing: false,
             };
             editors.set(editor, state);
@@ -102,19 +108,15 @@ export function linkEditor({
             const link = valueMark(linkHtml);
             return {
                 link,
-                // Opening the form changes nothing, so it needs no transaction.
-                // Creating a link needs text; editing one works at a caret.
+                // Neither creating nor reaching the form changes the document, so
+                // this needs no transaction. Creating needs text; at a link the
+                // form is already there and only wants the keyboard.
                 editLink: {
                     shortcut: 'ctrl+k',
                     transaction: false,
-                    enabled: edit => !!edit.range && (!edit.range.collapsed || !!link.state(edit)),
+                    enabled: edit => !!edit.range && (!edit.range.collapsed || link.state(edit) !== null),
                     state: edit => link.state(edit) !== null,
-                    run: () => open(state, view),
-                },
-                // Without a value the same command removes what is there.
-                unlink: {
-                    enabled: edit => link.state(edit) !== null,
-                    run: edit => link.run(edit),
+                    run: edit => link.state(edit) !== null ? reach(state) : create(state, view),
                 },
             };
         },
@@ -123,7 +125,8 @@ export function linkEditor({
             if (!state) throw new DOMException('The link extension is not set up', 'InvalidStateError');
             const controller = new state.document.defaultView.AbortController();
             const listen = {signal: controller.signal};
-            surface.addEventListener('u2-rte-selectionchange', () => reposition(state, surface), listen);
+            surface.addEventListener('u2-rte-selectionchange', () => follow(state, surface), listen);
+            surface.addEventListener('u2-rte-change', () => follow(state, surface), listen);
             surface.addEventListener('u2-rte-deactivate', () => close(state, surface), listen);
             return {dispose() {
                 controller.abort();
@@ -133,36 +136,82 @@ export function linkEditor({
         },
         toolbar: Object.freeze([
             Object.freeze({command: 'editLink', name: 'link', label: 'Link', text: '↗', state: true, shortcut: 'ctrl+k'}),
-            Object.freeze({command: 'unlink', name: 'unlink', label: 'Remove link', text: '⊗'}),
         ]),
     });
 }
 
 export const link = linkEditor();
 
-function open(state, view) {
+// An edit the form has not applied yet, applied now. Marking a link selects it,
+// which is right while someone is typing in the form and wrong once they have
+// moved on — so whatever the selection has become is put back afterwards.
+function settle(state) {
+    const active = state.active;
+    if (!state.dirty || state.closing || !active?.surface.connected) return null;
+    const selection = active.surface.core.selection;
+    const keep = selection.rangeCount ? selection.getRangeAt(0).cloneRange() : null;
+    state.closing = true;
+    try { commit(state); } finally { state.closing = false; }
+    if (!keep) return null;
+    selection.removeAllRanges();
+    selection.addRange(keep);
+    if (active.surface.element.contains(keep.startContainer)) active.surface.capture();
+    return null;
+}
+
+// The form for one link, or for a selection about to become one. Appearing is not
+// a reason to take the focus: only asking for it is.
+function show(state, view, element, focus = false) {
+    settle(state);
     const form = build(state);
     const surface = view.surface;
-    const active = {view, surface, element: marked(surface, at(surface)), selection: surface.selection};
-    state.active = active;
+    // What this form edits, once: an existing link is its own contents, a new one
+    // is the selection it was started on. Writing to "wherever the caret is" would
+    // put the address somewhere else the moment the caret moved.
+    state.active = {view, surface, element, selection: surface.selection, creating: !element,
+        range: element ? contents(element) : surface.selection?.range() || null};
+    state.dirty = false;
     const value = view.commands.state('link');
     fill(state, value && value !== 'mixed' ? value : null);
-    show(form, true);
-    place(form, surface, {align: 'start', prefer: 'below'});
-    form.querySelector('[name=href]')?.focus();
-    if (!active.element && state.suggest) propose(state, active);
+    form.hidden = false;
+    position(state);
+    if (focus) form.querySelector('[name=href]')?.focus();
     return form;
+}
+
+// Turning a selection into a link: the form opens empty, with the keyboard in it.
+function create(state, view) {
+    const active = state.active;
+    if (active?.creating && active.surface === view.surface) return reach(state);
+    show(state, view, null, true);
+    if (state.suggest) propose(state, state.active);
+    return state.form;
+}
+
+// The form is already showing; the keyboard wants to be in it.
+function reach(state) {
+    const field = state.form?.querySelector('[name=href]');
+    field?.focus();
+    field?.select();
+    return state.form || null;
 }
 
 // A new link may be asked what it should point at. The answer can take a round
 // trip, so it counts only while the form is still open on the same link and the
 // address is still the empty one it was asked about.
+//
+// It is offered, not applied: writing it would mark the link, and marking moves
+// the selection into it and the focus after that — throwing whoever asked for a
+// link straight back into the text. It stands in the field, selected so one
+// keystroke replaces it, and becomes the link when the form is done.
 async function propose(state, active) {
     const suggested = await state.suggest(target(active.surface)?.toString() || '', active.surface);
     if (state.active !== active || read(state)) return null;
     if (!suggested?.href) return null;
     fill(state, suggested);
-    return write(state, suggested);
+    state.dirty = true;
+    state.form.querySelector('[name=href]').select();
+    return suggested;
 }
 
 // Addresses that go with what is being typed. One question is in flight at a time
@@ -236,7 +285,7 @@ function completions(state, form) {
     const list = state.document.createElement('ul');
     list.role = 'listbox';
     list.hidden = true;
-    list.id = 'u2-rte-link-completions';
+    list.id = 'link-completions';
     list.addEventListener('mousedown', event => event.preventDefault()); // keep the field's focus
     list.addEventListener('click', event => take(state, event.target.closest('li')));
     list.addEventListener('mouseover', event => {
@@ -272,6 +321,9 @@ function listKey(state, event) {
 // left either — marking the link takes the focus away and gives it back on every
 // keystroke, so "left behind" is not a thing here.
 function commit(state, field = null) {
+    // Once: a second run would mark the link again and leave it selected, over
+    // whatever caret the first one settled on.
+    state.dirty = false;
     const typed = read(state);
     const value = state.normalize(typed, state.active?.surface) ?? null;
     if (value !== typed) fill(state, value);
@@ -283,7 +335,7 @@ function commit(state, field = null) {
 function write(state, value, field = null) {
     const active = state.active;
     if (!active?.surface.connected) return null;
-    const range = target(active.surface);
+    const range = active.element ? contents(active.element) : active.range;
     if (!range) return close(state);
     // Marking the link moves the document selection into it, and an engine
     // follows that with focus. Whoever is being typed into gets it back, caret
@@ -301,52 +353,92 @@ function write(state, value, field = null) {
         field.focus();
         if (caret) field.setSelectionRange(...caret);
     }
-    // What the form edits from here on is whatever the run left behind.
+    // What the form edits from here on is whatever the run left behind: the link
+    // it made, or — when emptying the address took one away — the text that is
+    // left, so the same words can be linked again.
     active.element = marked(active.surface, at(active.surface));
+    active.range = active.element ? contents(active.element)
+        : active.surface.selection?.range() || active.range;
     active.selection = active.surface.selection;
     if (!active.element && value) return close(state);
-    place(state.form, active.surface, {align: 'start', prefer: 'below'});
+    position(state);
     return active.element;
 }
 
-// Leaving puts the caret back where the form was opened on.
-function cancel(state) {
+// Leaving hands the caret back to the text, and puts it after the link rather
+// than inside it: someone who just made a link wants to keep writing, without it.
+function leave(state) {
     const active = state.active;
-    close(state);
+    const element = active?.element;
+    if (active?.creating) close(state);
+    else if (state.dirty) commit(state);
     if (!active?.surface.connected) return;
     active.surface.element.focus();
-    active.surface.restore();
+    const after = state.active?.element || element;
+    if (!after?.isConnected) return active.surface.restore();
+    const range = state.document.createRange();
+    range.setStartAfter(after);
+    range.collapse(true);
+    const selection = active.surface.core.selection;
+    selection.removeAllRanges();
+    selection.addRange(range);
+    active.surface.capture();
+    return null;
 }
 
 function close(state, surface = null) {
     if (!state.active || surface && state.active.surface !== surface) return;
-    if (!state.closing) {
-        state.closing = true;
-        try { commit(state); } finally { state.closing = false; }
-    }
+    settle(state);
     clearTimeout(state.completing);
     if (state.form?.querySelector('ul')) options(state, []);
     state.active = null;
-    if (state.form) show(state.form, false);
+    if (state.form) state.form.hidden = true;
     return null;
 }
 
-// The form belongs to the link it was opened on, not to wherever the caret goes
-// next: a selection that leaves it closes the form rather than dragging it along.
-function reposition(state, surface) {
+// Where the caret is decides: in a link the form is there, outside it is not. The
+// one state that is not a place is creating — that selection is not a link yet,
+// and the form holds until it is or the selection moves on.
+function follow(state, surface) {
     const active = state.active;
-    if (active?.surface !== surface || state.writing) return;
-    if (!surface.connected) return close(state, surface);
-    const held = active.element
-        ? marked(surface, at(surface)) === active.element
-        : surface.selection === active.selection;
-    if (!held) return close(state, surface);
-    place(state.form, surface, {align: 'start', prefer: 'below'});
+    if (state.writing || active && active.surface !== surface) return;
+    if (!surface.connected || !inlineUi(surface.config, 'link')) return close(state, surface);
+    const element = marked(surface, at(surface));
+    if (element) {
+        if (active?.element === element) return position(state);
+        return show(state, view(state, surface), element);
+    }
+    if (active?.creating && surface.selection === active.selection) return position(state);
+    return close(state, surface);
+}
+
+function view(state, surface) {
+    return state.views.get(surface);
+}
+
+// Close to what it edits: the link itself once there is one, the selection while
+// there is not.
+function position(state) {
+    const active = state.active;
+    if (!active || !state.form) return false;
+    return place(state.form, active.surface, {
+        align: 'start',
+        prefer: 'below',
+        gap: 4,
+        on: active.element?.getBoundingClientRect() || null,
+    });
 }
 
 // The node the surface's saved selection starts in.
 function at(surface) {
     return surface.selection?.range().startContainer || null;
+}
+
+// The contents of one element, as a range.
+function contents(element) {
+    const range = element.ownerDocument.createRange();
+    range.selectNodeContents(element);
+    return range;
 }
 
 // A caret inside a link edits the whole link; a selection marks exactly itself.
@@ -370,9 +462,8 @@ function marked(surface, node) {
 
 function build(state) {
     if (state.form) return state.form;
-    state.chrome.style('link', STYLE);
-    const form = state.document.createElement('form');
-    form.dataset.u2RteLink = '';
+    const form = state.chrome.part('link', STYLE, 'form');
+    form.className = 'panel';
     form.noValidate = true;
     form.hidden = true;
     form.setAttribute('aria-label', 'Link');
@@ -381,22 +472,23 @@ function build(state) {
     // No Apply and no Remove: what the fields say is what the link is, as it is
     // typed, and an emptied address says there is no link.
     form.addEventListener('input', event => {
+        state.dirty = true;
         if (state.complete && event.target.name === 'href') offer(state, event.target.value);
         write(state, read(state), event.target);
+        openable(state);
     });
     form.addEventListener('submit', event => {
         event.preventDefault();
-        cancel(state);
+        leave(state);
     });
-    // A manual popover is not dismissed by the browser, so the form closes on
-    // its own keys. Two text fields block implicit submission anyway, and with
-    // every edit already applied Enter has nothing left to confirm and Escape
-    // nothing to undo: both leave and put the caret back.
+    // Two text fields block implicit submission, so the form owns its own keys.
+    // With every edit already applied, Enter has nothing left to confirm and
+    // Escape nothing to undo: both hand the caret back to the text.
     form.addEventListener('keydown', event => {
         if (state.complete && listKey(state, event)) return event.preventDefault();
         if (event.key !== 'Escape' && event.key !== 'Enter') return;
         event.preventDefault();
-        cancel(state);
+        leave(state);
     });
     state.chrome.root.append(form);
     state.form = form;
@@ -417,15 +509,51 @@ function field(document, name) {
         input.spellcheck = false;
     }
     label.append(LABELS[name], input);
+    // A way to see where the address actually goes, without leaving the editor.
+    if (name === 'href') label.append(opener(document));
     return label;
 }
 
+function opener(document) {
+    const open = document.createElement('a');
+    open.id = 'link-open';
+    open.target = '_blank';
+    open.rel = 'noopener noreferrer';
+    open.textContent = '↗';
+    open.title = 'Open in a new tab';
+    open.hidden = true;
+    return open;
+}
+
+// Whatever the field is given — a suggestion, the link the caret walked into, a
+// normalized address — is asked about too. An address is an identifier; the list
+// is where it says what it stands for.
 function fill(state, value) {
     for (const name of state.fields) {
         const input = state.form.querySelector(`[name=${name}]`);
         if (input.type === 'checkbox') input.checked = value?.target === '_blank';
         else input.value = value?.[name] || '';
     }
+    if (state.complete) offer(state, value?.href || '');
+    return openable(state);
+}
+
+// The address, as somewhere the browser can actually go. An application scheme —
+// a cms page id, a record reference — is a link the editor understands and the
+// browser does not, so there is nothing to offer for it.
+const NAVIGABLE = new Set(['http:', 'https:', 'mailto:', 'tel:']);
+
+function openable(state) {
+    const open = state.form?.querySelector('#link-open');
+    if (!open) return null;
+    const typed = state.form.querySelector('[name=href]').value.trim();
+    let href = null;
+    try {
+        if (typed) href = NAVIGABLE.has(new URL(typed, state.document.baseURI).protocol) ? typed : null;
+    } catch { /* half an address is not one yet */ }
+    open.hidden = !href;
+    if (href) open.href = href;
+    return href;
 }
 
 function read(state) {
@@ -441,7 +569,4 @@ function read(state) {
     return value.href ? value : null;
 }
 
-function show(form, visible) {
-    form.hidden = !visible;
-}
 

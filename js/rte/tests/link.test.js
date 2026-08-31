@@ -13,7 +13,6 @@ test('link entry: one optional import extends the default convention client', ()
         const commands = editor.commands(surface);
         truthy(commands.has('link'));
         truthy(commands.has('editLink'));
-        truthy(commands.has('unlink'));
         rte.delete(surface);
     }
 ));

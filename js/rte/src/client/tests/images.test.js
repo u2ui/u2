@@ -100,12 +100,29 @@ test('image frame: original size clears what a resize wrote', () => withImages(
 test('image frame: the layer is released with the module', () => withImages(({client, pick}) => {
     pick('#a');
     client.delete('images');
-    equal(client.chrome.root.querySelector('[data-u2-handles=images]'), null);
+    equal(client.chrome.root.getElementById('images'), null);
 }));
 
 function dispatchTo(target, type, init) {
     target.dispatchEvent(new PointerEvent(type, {bubbles: true, pointerId: 1, ...init}));
 }
+
+// What a field draws at its content is the field's decision: the same module set
+// serves a body of text and a bare teaser field.
+test('image frame: a field can turn the contextual ui off', () => withImages(
+    ({host, frame, pick}) => {
+        pick('#a');
+        truthy(frame(), 'On by default');
+        host.style.setProperty('--u2-rte-inline-ui', 'table link');
+        pick('p');
+        pick('#a');
+        equal(frame().hidden, true);
+        host.style.setProperty('--u2-rte-inline-ui', 'image');
+        pick('p');
+        pick('#a');
+        equal(frame().hidden, false);
+    }
+));
 
 function withImages(run) {
     return withFixture(FIXTURE, root => {
@@ -123,7 +140,7 @@ function withImages(run) {
                 core.sync();
                 surface.capture();
             };
-            const frame = () => client.chrome.root.querySelector('[data-u2-handles=images]');
+            const frame = () => client.chrome.root.getElementById('images');
             return run({client, core, frame, host, pick, surface});
         } finally {
             client.dispose();

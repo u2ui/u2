@@ -68,7 +68,23 @@ export function config(host) {
         importSanitize: choice(style, 'import-sanitize', IMPORT_SANITIZE, 'policy'),
         importUnstyle: value(style, 'import-unstyle') || 'classes',
         ui: choice(style, 'ui', UI, 'roaming'),
+        inlineUi: inlineNames(style),
     });
+}
+
+// Which contextual UIs a field draws at its content — `table image link`. Unset
+// means every one the loaded modules bring, `none` means the field stays plain
+// while keeping the commands. The same modules then serve a body of text and a
+// bare teaser field without a second editor.
+export function inlineUi(config, name) {
+    return !config.inlineUi || config.inlineUi.includes(name);
+}
+
+function inlineNames(style) {
+    const result = value(style, 'inline-ui').toLowerCase();
+    if (!result) return null;
+    if (result === 'none') return EMPTY_ELEMENTS;
+    return Object.freeze([...new Set(result.split(/[\s,]+/).filter(Boolean))]);
 }
 
 function value(style, name) {

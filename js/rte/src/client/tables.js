@@ -1,39 +1,8 @@
 import {Tables} from '../command/table.js';
+import {inlineUi} from '../config/config.js';
 import {elementOf} from '../selection/ownership/ownership.js';
 import {Handles} from '../ui/handles.js';
 
-const STYLE = `
-[data-u2-rte-table-handles] {
-    background: transparent;
-    border: 0;
-    inset: 0;
-    margin: 0;
-    overflow: visible;
-    padding: 0;
-    pointer-events: none;
-    position: fixed;
-}
-[data-u2-rte-table-handles][hidden] { display: none; }
-[data-u2-rte-table-handles] button {
-    align-items: center;
-    background: Canvas;
-    border: 1px solid color-mix(in srgb, CanvasText 45%, transparent);
-    border-radius: 50%;
-    block-size: 1.25rem;
-    color: CanvasText;
-    display: flex;
-    font: 0.8rem/1 system-ui, sans-serif;
-    inline-size: 1.25rem;
-    justify-content: center;
-    padding: 0;
-    pointer-events: auto;
-    position: fixed;
-}
-[data-u2-rte-table-handles] button:hover:not(:disabled) {
-    background: color-mix(in srgb, Highlight 20%, Canvas);
-}
-[data-u2-rte-table-handles] button[hidden] { display: none; }
-`;
 
 // Where each handle sits: `axis` picks the edge it lines up with, `at` the
 // fraction along the cell it is anchored to.
@@ -105,6 +74,7 @@ export function tableTools({tag = 'table'} = {}) {
 export const tables = tableTools();
 
 function track(state, view) {
+    if (!inlineUi(view.surface.config, 'table')) return close(state, view.surface);
     const cell = cellAt(view.surface);
     if (!cell) return close(state, view.surface);
     build(state);

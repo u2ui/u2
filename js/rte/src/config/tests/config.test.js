@@ -1,4 +1,4 @@
-import {config, elementPresets, enabled, hostDefaults} from '../config.js';
+import {config, elementPresets, enabled, hostDefaults, inlineUi} from '../config.js';
 import {equal, same, test, truthy, withFixture} from '../../../tests/harness.js';
 
 test('config: RTE is opt-in and accepts common false values', () => withFixture(`
@@ -103,5 +103,22 @@ test('config: only usable tag names become the default block', () => withFixture
 test('config: cleanup triggers accept space and comma separated lists', () => withFixture(
     '<div contenteditable style="--u2-rte-clean-on: paste, drop"></div>', root => {
         equal(config(root.firstElementChild).cleanOn, ['paste', 'drop']);
+    }
+));
+
+// Which contextual UIs a field draws is a property of the field, not of the
+// module set: the same editor serves a body of text and a bare teaser field.
+test('config: inline ui is every one by default, and a named list otherwise', () => withFixture(
+    '<div contenteditable></div>', root => {
+        const host = root.firstElementChild;
+        equal(config(host).inlineUi, null);
+        truthy(inlineUi(config(host), 'link'));
+        host.style.setProperty('--u2-rte-inline-ui', 'table, image');
+        equal(config(host).inlineUi.join(' '), 'table image');
+        truthy(inlineUi(config(host), 'image'));
+        equal(inlineUi(config(host), 'link'), false);
+        host.style.setProperty('--u2-rte-inline-ui', 'none');
+        equal(config(host).inlineUi.length, 0);
+        equal(inlineUi(config(host), 'table'), false);
     }
 ));

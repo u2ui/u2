@@ -26,7 +26,7 @@ native.
 
 Ready control names are `undo`, `redo`, `bold`, `italic`, `underline`,
 `strike`, `code`, `bullets`, `numbers`, `indent`, `outdent`, and `rule`, plus
-`block`, `style`, `unstyle`, `breaks`, `link`, `unlink`, `source`,
+`block`, `style`, `unstyle`, `breaks`, `link`, `source`,
 `imageOriginal`, and `insertTable` from the optional root modules.
 `--u2-rte-toolbar` chooses and orders them; the commands and their shortcuts
 work whether or not a control is listed. List and separator controls consult
@@ -51,6 +51,7 @@ listed in `--u2-rte-toolbar`:
 | `Ctrl+Shift+8` `Ctrl+Shift+7` | bulleted list, numbered list |
 | `Tab` `Shift+Tab` | one list level in, one out |
 | `Ctrl+\` | remove formatting |
+| `Ctrl+H` | html source |
 | `Ctrl+Z` `Ctrl+Y` `Ctrl+Shift+Z` | undo, redo |
 
 `Ctrl` matches Command on Apple keyboards. A key only takes effect where its
@@ -130,16 +131,19 @@ import './link.js';
 ```
 
 ```css
-[contenteditable] { --u2-rte-toolbar: bold link unlink; }
+[contenteditable] { --u2-rte-toolbar: bold link; }
 ```
 
-`link` opens a form at the selection. A selection becomes a link; a caret inside
-one edits that whole link, so its address can be changed without selecting its
-text. There is no Apply — the link is what the fields say, as they are typed —
-and moving the selection off the link closes the form. `unlink` removes a link
-without opening anything. Relative paths,
-fragments, and application schemes are accepted — the sanitizer decides which
-protocols survive, not the form.
+The form is where the caret is: it appears on its own at a link and goes when the
+caret leaves, the way the table and image handles do, so it never takes the focus
+by appearing. `link` is therefore left with the one thing that is a decision:
+turning a selection into a link — and, at a link, handing the keyboard to the
+form. There is no Apply, the link is what the fields say as they are typed, and
+removing one is emptying its address. Leaving puts the caret after the link, so
+typing continues outside it. Beside the address sits a way to open it, whenever
+the address is one a browser can follow. Relative paths, fragments, and application
+schemes are accepted — the sanitizer decides which protocols survive, not the
+form.
 
 The command behind it is `valueMark(linkHtml)`, an ordinary command any UI can
 drive:
@@ -509,6 +513,8 @@ what differs. `auto` means "use the semantic default for this tag".
 | `--u2-rte-clean-on` | any of `input paste drop command` | all four |
 | `--u2-rte-elements` | tag list, `@basic`, `@article`, `@document`, `all` | `all` |
 | `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming` |
+| `--u2-rte-ui-size` | length; set on the page, not the field | `14px` |
+| `--u2-rte-inline-ui` | any of `table image link`, `none` | every one the loaded modules bring |
 | `--u2-rte-classes` | content class names separated by spaces or commas | none |
 | `--u2-rte-import-elements` | element names, `@basic`, `@content`, `@article`, `@document`, `all` | `@content` |
 | `--u2-rte-import-sanitize` | `policy`, `none` | `policy` |
@@ -696,6 +702,18 @@ ordinary element. Toggle items opt into `aria-pressed` reflection with
 `data-state`; action buttons omit it. `data-shortcut="x"` binds Ctrl+X or
 Command+X while keyboard input belongs to the active surface. An inherited
 `--u2-rte-toolbar: toggleX removeX` property selects the items for one editor.
+`--u2-rte-inline-ui` decides which contextual UIs a field draws at its content —
+the table handles, the image frame, the link form. It is a property of the field,
+not of the module set: the same editor then serves a body of text with everything
+and a bare teaser field with `none`, without a second instance. The commands stay
+either way; only the chrome goes.
+
+`--u2-rte-ui-size` scales everything the editor draws. It is the one exception to
+the table above in that it is read where the chrome hangs — the page — rather
+than on the field, and it is deliberately the only way in: every size inside the
+chrome is `em` against it, so nothing the site does to its own root font moves
+the editor's furniture.
+
 `--u2-rte-ui: none` hides the roaming toolbar. Moving focus between the surface
 and toolbar keeps it open; leaving both hides it. `rangeRect()` preserves a
 usable native range rectangle and derives an empty collapsed one from adjacent
