@@ -4,6 +4,16 @@ RTE is a modern, modular rich-text editing engine for current browsers. Its
 small core owns editor state, transactions, selections, and ranges; everything
 else plugs in as an independent module. A UI is only one possible consumer.
 
+## Install
+
+```js
+import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/rte/rte.js"
+```
+
+## Demos
+
+[index.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/index.html)  
+
 ## Start here
 
 Read this file for the design, then [`PLAN.md`](./PLAN.md) for implementation
@@ -318,3 +328,9 @@ transactional undo/redo.
   before adding dependency, ordering, or asynchronous setup concepts.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.
 - Port only the proven ideas from `../rte0`; keep its implementation untouched.
+
+## About
+
+- MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
+- Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
+

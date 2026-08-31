@@ -107,6 +107,28 @@ function dispatchTo(target, type, init) {
     target.dispatchEvent(new PointerEvent(type, {bubbles: true, pointerId: 1, ...init}));
 }
 
+// What an image says is part of the image, and a form nobody opens is a form
+// everybody fills in.
+test('image frame: a selected image carries its alt text with it', () => withImages(
+    ({client, host, pick}) => {
+        const form = () => client.chrome.root.getElementById('image');
+        pick('#a');
+        const field = form().querySelector('input');
+        equal(form().hidden, false);
+        equal(field.value, '');
+        equal(client.chrome.root.activeElement, null, 'Appearing takes no focus');
+        field.value = 'A cat';
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+        equal(host.querySelector('#a').getAttribute('alt'), 'A cat');
+        same(client.chrome.root.activeElement, field, 'Naming the image keeps the keyboard here');
+        getSelection().collapse(host.querySelector('p').firstChild, 2);
+        host.dispatchEvent(new Event('input', {bubbles: true}));
+        equal(form().hidden, true, 'It goes with the frame');
+        pick('#a');
+        equal(form().querySelector('input').value, 'A cat', 'And comes back with what it says');
+    }
+));
+
 // What a field draws at its content is the field's decision: the same module set
 // serves a body of text and a bare teaser field.
 test('image frame: a field can turn the contextual ui off', () => withImages(

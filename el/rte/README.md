@@ -6,28 +6,24 @@ The textarea remains the form control, fallback, and canonical serialized value.
 ## Usage
 
 ```html
-<u2-rte>
-    <textarea name="content"><p>Some <strong>HTML</strong></p></textarea>
-</u2-rte>
+<form>
+    <u2-rte style="--u2-rte-toolbar:bold italic">
+        <textarea name=content><p>Some <strong>HTML</strong></p></textarea>
+    </u2-rte>
+</form>
 ```
 
-HTML is the default language. Markdown loads its converters only when used:
+## Install
 
 ```html
-<u2-rte language="markdown">
-    <textarea name="content">Some **Markdown**</textarea>
-</u2-rte>
+<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte/rte.css" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte/rte.js" type=module async></script>
 ```
 
-Exactly one direct `textarea` is required. Free child content is deliberately
-not supported. Put form attributes such as `name`, `required`, `disabled`,
-`readonly`, `placeholder`, and `form` on the textarea.
+## Demos
 
-The `value` property reads and writes the serialized textarea value. Editor
-changes update it before a bubbling `input` event is emitted from the textarea.
-A bubbling `change` event follows when focus leaves an editor changed since its
-last change event. Form reset, disabled, readonly, placeholder, direction,
-language, and spellchecking state are mirrored back to the editor.
+[test.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/minimal.html)  
 
 ## Languages
 
@@ -37,13 +33,6 @@ language, and spellchecking state are mirrored back to the editor.
 
 Other formats need a proven round-trip between their source text and the HTML
 DOM edited by RTE2. They should not be added as aliases or partial parsers.
-
-## Install
-
-```html
-<link href="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte/rte.css" rel=stylesheet>
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/rte/rte.js" type=module async></script>
-```
 
 ## TODO
 
@@ -61,12 +50,8 @@ DOM edited by RTE2. They should not be added as aliases or partial parsers.
 - Allow applications to provide language codecs without turning the initial
   two built-in formats into a general plugin system prematurely.
 
-## Demos
-
-[test.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/test.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/rte/tests/minimal.html)
-
 ## About
 
 - MIT License, Copyright (c) 2022 <u2> (like all repositories in this organization) <br>
 - Suggestions, ideas, finding bugs and making pull requests make us very happy. ♥
+

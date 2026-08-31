@@ -1,6 +1,24 @@
 import {elementAttributes, selectedElement} from '../command/element.js';
 import {inlineUi} from '../config/config.js';
 import {Handles} from '../ui/handles.js';
+import {place} from '../ui/place.js';
+
+const STYLE = `
+#image {
+    align-items: center;
+    display: flex;
+    gap: .57em;
+    padding: .34em;
+
+    input {
+        background: transparent;
+        border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
+        border-radius: .34em;
+        min-inline-size: 16em;
+        padding: .17em .34em;
+    }
+}
+`;
 
 
 // Only the trailing edges: an image sits in a text flow with its top and its
@@ -16,6 +34,9 @@ const HANDLES = Object.freeze([
 // Optional image module. A selected image gets a frame with corner handles; the
 // drag resizes the frame only and the size is written once when it is released,
 // so a resize is one undo step rather than a trail of them.
+//
+// It also gets its alt text, in a field below it: what an image says is part of
+// the image, and a form nobody opens is a form everybody fills in.
 //
 // Size is expressed as `width` and `height` attributes because that is what the
 // sanitize policy allows on an image. What is resizable is a selector, so an
@@ -35,6 +56,7 @@ export function imageTools({selector = 'img', minimum = 16} = {}) {
                 drag: null,
                 minimum,
                 handles: null,
+                alt: null,
                 controller: null,
                 pending: 0,
             };
@@ -54,6 +76,7 @@ export function imageTools({selector = 'img', minimum = 16} = {}) {
             const size = elementAttributes(['width', 'height'], {match});
             return {
                 imageSize: size,
+                imageAlt: elementAttributes(['alt'], {match}),
                 // No value clears both attributes, so the image is its own size.
                 imageOriginal: {
                     enabled: edit => {
@@ -110,6 +133,10 @@ function track(state, view, match) {
     build(state);
     state.active = {view, element};
     state.handles.show();
+    state.alt.hidden = false;
+    if (state.document.activeElement !== state.chrome.element) {
+        state.alt.firstElementChild.value = element.getAttribute('alt') || '';
+    }
     schedule(state);
 }
 
@@ -128,6 +155,20 @@ function close(state, surface) {
     state.active = null;
     state.drag = null;
     state.handles?.show(false);
+    if (state.alt) state.alt.hidden = true;
+}
+
+// Naming the image moves the selection back onto it, and an engine follows that
+// with focus — so the field takes it back, caret and all, exactly as the link
+// form has to.
+function name(state, field) {
+    const active = state.active;
+    if (!active) return null;
+    const caret = [field.selectionStart, field.selectionEnd];
+    active.view.commands.run('imageAlt', {value: {alt: field.value.trim()}, trigger: 'input'});
+    field.focus();
+    field.setSelectionRange(...caret);
+    return active.element;
 }
 
 function schedule(state) {
@@ -146,10 +187,25 @@ function position(state, box = null) {
     for (const handle of HANDLES) {
         state.handles.place(handle.name, rect.left + rect.width * handle.x, rect.top + rect.height * handle.y);
     }
+    // Below the image, clear of the handles sitting on its lower edge.
+    place(state.alt, state.active.view.surface, {align: 'start', prefer: 'below', gap: 16, on: rect});
 }
 
 function build(state) {
     if (state.handles) return state.handles;
+    const form = state.chrome.part('image', STYLE, 'form');
+    form.className = 'panel';
+    form.hidden = true;
+    form.setAttribute('aria-label', 'Image');
+    const field = state.document.createElement('input');
+    field.type = 'text';
+    field.name = 'alt';
+    field.placeholder = 'Alt text';
+    field.setAttribute('aria-label', 'Alt text');
+    form.append(field);
+    form.addEventListener('submit', event => event.preventDefault());
+    form.addEventListener('input', () => name(state, field));
+    state.alt = form;
     state.handles = new Handles(state.chrome.root, {
         name: 'images',
         handles: HANDLES,

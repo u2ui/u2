@@ -29,6 +29,11 @@ function of the surface, and the client refills that select before the toolbar
 is shown. The same declaration is what the sanitizer keeps and what
 presentation cleanup leaves alone.
 
+The optional `images.js` entry frames a selected image, with handles on its
+trailing edges and its alt text in a field below it. Both come and go with the
+selection and neither takes the focus by appearing, so naming an image is one
+click away and nothing has to be opened.
+
 The optional `link.js` entry adds a contextual link editor. Its `link` command
 is an ordinary `valueMark`, so any other UI can drive the same create, change,
 and remove path; the module supplies one form.

@@ -201,6 +201,10 @@ edges, because the flow holds its top and start edges in place: the bottom-right
 corner keeps the proportion, the right edge changes only the width and the
 bottom edge only the height. `imageOriginal` clears the size again.
 
+Below it stands its alt text, in one field, appearing and going with the frame
+and never taking the focus by appearing. What an image says is part of the image,
+and a form nobody opens is a form everybody fills in.
+
 A resize writes `width` and `height` — the attributes the sanitize policy allows
 on an image — and does so once, when the drag is released, so it is one undo
 step. Changing one measurement alone stretches what the browser was given; an

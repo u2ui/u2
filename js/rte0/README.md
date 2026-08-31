@@ -15,12 +15,6 @@ Easily Make Elements Editable with Intuitive Controls
 }
 ```
 
-## Install
-
-```js
-import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/rte0/rte.js"
-```
-
 ## Demos
 
 [behavior.html](http://gcdn.li/u2ui/u2@main/js/rte0/tests/behavior.html)  
