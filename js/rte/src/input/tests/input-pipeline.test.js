@@ -61,6 +61,23 @@ test('input pipeline: ordinary input normalizes the affected invalid block and p
     }
 ));
 
+test('input pipeline: list items and table cells keep direct text unwrapped', () => withFixture(`
+    <ul><li contenteditable>item</li></ul>
+    <table><tbody><tr><td contenteditable>cell</td></tr></tbody></table>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const hosts = [root.querySelector('li'), root.querySelector('td')];
+    const pipelines = hosts.map(host => new InputPipeline(core.add(host)));
+    try {
+        for (const pipeline of pipelines) pipeline.normalize('command');
+        equal(hosts[0].innerHTML, 'item');
+        equal(hosts[1].innerHTML, 'cell');
+    } finally {
+        for (const pipeline of pipelines) pipeline.dispose();
+        core.dispose();
+    }
+}));
+
 test('input pipeline: CSS element policy drives post-input cleanup', () => withPipeline(
     '<div contenteditable style="--u2-rte-clean-on:input; --u2-rte-elements:p strong br"><h2>Title</h2></div>',
     ({document, host}) => {

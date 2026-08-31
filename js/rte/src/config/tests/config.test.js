@@ -14,13 +14,21 @@ test('config: RTE is opt-in and accepts common false values', () => withFixture(
 test('config: host defaults follow HTML editing context', () => withFixture(`
     <div id=div contenteditable></div>
     <ul id=ul contenteditable></ul>
+    <li id=li contenteditable></li>
     <p id=p contenteditable></p>
-    <table><tbody id=tbody contenteditable></tbody></table>
+    <table>
+        <caption id=caption contenteditable></caption>
+        <tbody id=tbody contenteditable><tr><th id=th contenteditable></th><td id=td contenteditable></td></tr></tbody>
+    </table>
 `, root => {
     equal(hostDefaults(root.querySelector('#div')), {block: 'p', enter: 'block'});
     equal(hostDefaults(root.querySelector('#ul')), {block: 'li', enter: 'item'});
+    equal(hostDefaults(root.querySelector('#li')), {block: null, enter: 'break'});
     equal(hostDefaults(root.querySelector('#p')), {block: null, enter: 'break'});
+    equal(hostDefaults(root.querySelector('#caption')), {block: null, enter: 'break'});
     equal(hostDefaults(root.querySelector('#tbody')), {block: 'tr', enter: 'row'});
+    equal(hostDefaults(root.querySelector('#th')), {block: null, enter: 'break'});
+    equal(hostDefaults(root.querySelector('#td')), {block: null, enter: 'break'});
     truthy(Object.isFrozen(hostDefaults(root.querySelector('#div'))));
 }));
 

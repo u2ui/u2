@@ -39,6 +39,13 @@ control.
 See [`../command/README.md`](../command/README.md) and
 [`../ui/README.md`](../ui/README.md).
 
+Semantic block defaults preserve native container shape: generic block hosts
+such as `div` use `p`, lists use `li`, and table structure uses `tbody`, `tr`,
+and `td`. A directly editable `li`, `caption`, `th`, or `td` keeps phrasing
+content unwrapped and Enter inserts `br`. Any host can override this, including
+opting those containers back into paragraphs with `--u2-rte-block: p` and
+`--u2-rte-enter: block`.
+
 Functions, command implementations, and policy objects are intentionally not
 encoded as CSS strings. They enter through module registration.
 

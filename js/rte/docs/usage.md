@@ -503,7 +503,7 @@ what differs. `auto` means "use the semantic default for this tag".
 | Property | Values | Default |
 | --- | --- | --- |
 | `--u2-rte` | any truthy token | disabled |
-| `--u2-rte-block` | tag name, `none`, `auto` | `p`, `li` in lists, none in inline hosts |
+| `--u2-rte-block` | tag name, `none`, `auto` | `p`; structural children in lists/tables; none in inline, item, and cell hosts |
 | `--u2-rte-enter` | `break`, `block`, `item`, `row`, `cell`, `auto` | derived from the host |
 | `--u2-rte-cleanup` | `none`, `minimal`, `structural`, `canonical` | `structural` |
 | `--u2-rte-clean-on` | any of `input paste drop command` | all four |
@@ -519,9 +519,11 @@ what differs. `auto` means "use the semantic default for this tag".
 | `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `styles` |
 
 The host element decides the defaults: a `<ul contenteditable>` creates list
-items, a `<p contenteditable>` stays inline and Enter inserts a line break, a
-`<div contenteditable>` uses paragraphs. Values are read on demand, so a class
-change or a media query can change editing behavior without re-registering.
+items, while a directly editable `li`, `caption`, `th`, or `td` keeps its text
+unwrapped and Enter inserts a line break. A `<p contenteditable>` behaves the
+same way, while a `<div contenteditable>` uses paragraphs. Values are read on
+demand, so a class change or a media query can change editing behavior without
+re-registering.
 
 ```css
 .notes { --u2-rte: true; --u2-rte-block: div; --u2-rte-clean-on: input command; }

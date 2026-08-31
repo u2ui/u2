@@ -3,6 +3,7 @@ const INLINE_HOSTS = new Set([
     'H6', 'I', 'KBD', 'LABEL', 'P', 'PRE', 'Q', 'SAMP', 'SMALL', 'SPAN',
     'STRONG', 'SUB', 'SUP', 'TIME', 'U', 'VAR',
 ]);
+const UNWRAPPED_HOSTS = new Set(['LI', 'CAPTION', 'TH', 'TD']);
 const CLEANUP = new Set(['none', 'minimal', 'structural', 'canonical']);
 const ENTER = new Set(['break', 'block', 'item', 'row', 'cell']);
 const UI = new Set(['none', 'roaming', 'static']);
@@ -27,7 +28,7 @@ export const elementPresets = Object.freeze({
 });
 const DEFAULTS = Object.freeze({
     block: Object.freeze({block: 'p', enter: 'block'}),
-    inline: Object.freeze({block: null, enter: 'break'}),
+    text: Object.freeze({block: null, enter: 'break'}),
     list: Object.freeze({block: 'li', enter: 'item'}),
     table: Object.freeze({block: 'tbody', enter: 'row'}),
     row: Object.freeze({block: 'tr', enter: 'row'}),
@@ -41,11 +42,12 @@ export function enabled(host) {
 
 export function hostDefaults(host) {
     const tag = host.tagName;
+    if (UNWRAPPED_HOSTS.has(tag)) return DEFAULTS.text;
     if (tag === 'UL' || tag === 'OL') return DEFAULTS.list;
     if (tag === 'TABLE') return DEFAULTS.table;
     if (tag === 'THEAD' || tag === 'TBODY' || tag === 'TFOOT') return DEFAULTS.row;
     if (tag === 'TR') return DEFAULTS.cell;
-    if (INLINE_HOSTS.has(tag)) return DEFAULTS.inline;
+    if (INLINE_HOSTS.has(tag)) return DEFAULTS.text;
     return DEFAULTS.block;
 }
 
