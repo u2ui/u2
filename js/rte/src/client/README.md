@@ -52,10 +52,12 @@ acceptable is the sanitizer's decision.
 
 What an address means is the application's decision, and `linkEditor()` takes
 two hooks for it. `normalize(value, surface)` receives the finished value
-whenever a field is left behind — not per keystroke, which would rewrite
-half-typed addresses — and may complete a bare domain, map an address into a
-scheme of its own, or derive `rel` and `target` from it; what it returns is what
-gets written and shown. `suggest(text, surface)` is asked, possibly
+once, when the form is done, and may complete a bare domain, map an address into
+a scheme of its own, or derive `rel` and `target` from it; what it returns is
+what gets written and shown. Not per keystroke, which would rewrite a half-typed
+address under the caret — and not when the field is left either: marking the link
+takes the focus away and hands it back on every keystroke, so leaving a field is
+not an event this form can wait for. `suggest(text, surface)` is asked, possibly
 asynchronously, what a *new* link should point at, given the text it is being put
 on; its answer is used only while the form is still open on the same link and
 the address is still empty.

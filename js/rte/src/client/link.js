@@ -266,9 +266,11 @@ function listKey(state, event) {
     return false;
 }
 
-// What the fields say, as the application reads it. Normalizing while a field is
-// being typed into would rewrite half-typed addresses, so it happens when one is
-// left behind.
+// What the fields say, as the application reads it. This happens once, when the
+// form is done: normalizing while a field is being typed into would rewrite
+// half-typed addresses under the caret, and the form cannot wait for a field to be
+// left either — marking the link takes the focus away and gives it back on every
+// keystroke, so "left behind" is not a thing here.
 function commit(state, field = null) {
     const typed = read(state);
     const value = state.normalize(typed, state.active?.surface) ?? null;
@@ -318,6 +320,10 @@ function cancel(state) {
 
 function close(state, surface = null) {
     if (!state.active || surface && state.active.surface !== surface) return;
+    if (!state.closing) {
+        state.closing = true;
+        try { commit(state); } finally { state.closing = false; }
+    }
     clearTimeout(state.completing);
     if (state.form?.querySelector('ul')) options(state, []);
     state.active = null;
@@ -378,7 +384,6 @@ function build(state) {
         if (state.complete && event.target.name === 'href') offer(state, event.target.value);
         write(state, read(state), event.target);
     });
-    form.addEventListener('change', event => commit(state, event.target));
     form.addEventListener('submit', event => {
         event.preventDefault();
         cancel(state);
@@ -391,7 +396,6 @@ function build(state) {
         if (state.complete && listKey(state, event)) return event.preventDefault();
         if (event.key !== 'Escape' && event.key !== 'Enter') return;
         event.preventDefault();
-        if (event.key === 'Enter') commit(state);
         cancel(state);
     });
     state.chrome.root.append(form);

@@ -153,18 +153,21 @@ test('link editor: validates its hooks', () => {
     throws(() => linkEditor({complete: 'yes'}), TypeError);
 });
 
-// Normalizing per keystroke would rewrite half-typed addresses, so it waits for
-// the field to be left behind.
-test('link editor: an address is normalized when its field is left', () => withLink(
+// Normalizing per keystroke would rewrite a half-typed address under the caret, so
+// it waits until the form is done. Marking the link takes the focus away and gives
+// it back on every keystroke, which rules out waiting for the field to be left.
+test('link editor: an address is normalized once, when the form is done', () => withLink(
     ({client, surface, form}) => {
         const text = surface.element.querySelector('p').firstChild;
         getSelection().setBaseAndExtent(text, 0, text, 3);
         surface.core.sync();
         client.toolbar.element.querySelector('[data-control=link]').click();
-        type(form(), 'href', 'example.com');
-        equal(surface.element.querySelector('a').getAttribute('href'), 'example.com');
-        leave(form(), 'href');
-        equal(form().querySelector('[name=href]').value, 'https://example.com');
+        for (const typed of ['e', 'ex', 'example.com']) {
+            type(form(), 'href', typed);
+            equal(form().querySelector('[name=href]').value, typed, 'Typing is left alone');
+            equal(surface.element.querySelector('a').getAttribute('href'), typed);
+        }
+        key(form(), 'Enter');
         equal(surface.element.innerHTML,
             '<p><a href="https://example.com" title="site">one</a> two</p>');
     },
@@ -341,10 +344,6 @@ function type(form, name, value) {
 
 function key(form, name) {
     form.dispatchEvent(new KeyboardEvent('keydown', {key: name, bubbles: true, cancelable: true}));
-}
-
-function leave(form, name) {
-    form.querySelector(`[name=${name}]`).dispatchEvent(new Event('change', {bubbles: true}));
 }
 
 function withLink(run, options) {
