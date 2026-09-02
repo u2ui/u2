@@ -117,6 +117,10 @@ test('image frame: a selected image carries its alt text with it', () => withIma
         equal(form().hidden, false);
         equal(field.value, '');
         equal(client.chrome.root.activeElement, null, 'Appearing takes no focus');
+        // Typing into the field is what the user does, and that is what takes
+        // the document selection off the image: the command has to be told
+        // which image it names.
+        field.focus();
         field.value = 'A cat';
         field.dispatchEvent(new Event('input', {bubbles: true}));
         equal(host.querySelector('#a').getAttribute('alt'), 'A cat');
