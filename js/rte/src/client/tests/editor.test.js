@@ -347,6 +347,44 @@ test('editor client: module validation and conflicts leave registries unchanged'
     core.dispose();
 }));
 
+// A button answers Space and Enter by activating itself: the text inside it never
+// sees them, and no `beforeinput` arrives at all. There the editor puts in what
+// the key meant — and nowhere else, so ordinary typing stays the browser's.
+test('editor client: a button host still takes spaces and line breaks', () => withFixture(`
+    <button id=button contenteditable style="--u2-rte:true">two words</button>
+    <div id=plain contenteditable style="--u2-rte:true">two words</div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const client = new Editor(core);
+    try {
+        const key = (surface, value) => surface.element.dispatchEvent(new KeyboardEvent('keydown',
+            {bubbles: true, composed: true, cancelable: true, key: value}));
+        const caretAtEnd = surface => {
+            const text = surface.element.firstChild;
+            getSelection().collapse(text, text.length);
+            core.sync();
+        };
+        const button = core.add(root.querySelector('#button'));
+        caretAtEnd(button);
+        equal(key(button, ' '), false, 'The key is answered by the editor');
+        equal(key(button, ' '), false);
+        // A space with nothing after it, or after another space, collapses away:
+        // the browser types a non-breaking one there and so does this. Both land
+        // where the caret was — one after the other, not back at the start.
+        equal(button.element.textContent, 'two words\u00a0\u00a0');
+        equal(key(button, 'Enter'), false);
+        truthy(button.element.querySelector('br'), 'An inline host breaks the line');
+
+        const plain = core.add(root.querySelector('#plain'));
+        caretAtEnd(plain);
+        equal(key(plain, ' '), true, 'Anywhere else the browser types');
+        equal(plain.element.textContent, 'two words');
+    } finally {
+        client.dispose();
+        core.dispose();
+    }
+}));
+
 // Focus moving into the chrome is retargeted to its shadow host, and that host
 // is retained: reaching for a control of the editor's own must not read as focus
 // leaving and take the toolbar away mid-click.

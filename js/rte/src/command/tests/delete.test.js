@@ -206,3 +206,18 @@ function caret(node, offset) {
     range.setStart(node, offset);
     getSelection().addRange(range);
 }
+
+// Clicking a rule leaves the caret inside it in some engines: a position at an
+// element that has no inside, where nothing was deletable at all.
+test('delete: a caret an engine left inside a rule removes it', () => withFixture(
+    '<div contenteditable><p>one</p><hr><p>two</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const commands = registry(core, host);
+        caret(host.querySelector('hr'), 0);
+        equal(commands.enabled('deleteBackward'), true);
+        commands.run('deleteBackward');
+        equal(host.innerHTML, '<p>one</p><p>two</p>');
+        core.dispose();
+    }
+));

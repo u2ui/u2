@@ -63,6 +63,24 @@ to `using`. Disconnecting the surface also disposes them automatically.
   surface)` is its public, shared conversion from a native `StaticRange` to an
   owned live `Range`; missing target ranges fall back to the owned selection.
 
+## Keys a host answers itself
+
+A button answers Space and Enter by activating itself, whatever it holds: the
+text inside never sees them and no `beforeinput` arrives at all. In that host,
+and only there, the pipeline turns the key into the input it should have been —
+`insertParagraph` for Enter, and for Space the `insert` command with a space of
+its own — a non-breaking one where a plain space would collapse away, which is
+what the browser itself types there. Everywhere else ordinary typing stays the
+browser's own.
+
+## Pointing at an atomic element
+
+An atomic element is addressable only as the selection: engines disagree about
+whether pointing at one selects it, and a caret an engine leaves inside one —
+clicking a rule does that in some — reaches nothing at all. A click on one
+selects it, which is what makes a frame, a command, or a delete apply to it. The
+host itself is left alone: a surface is not a thing inside itself.
+
 ## Rich external input
 
 The native path above needs no HTML parser or sanitizer adapter because RTE

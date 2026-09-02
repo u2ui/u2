@@ -113,10 +113,9 @@ text flow with its top and start edges held in place, so dragging the other side
 is the only direction that grows it where the eye expects — a handle on a
 leading edge would move the picture rather than resize it. A drag moves the
 frame only and the size is written once when it is released, so a resize is one
-undo step rather than a trail of them. The module also selects an image that is
-clicked, because engines disagree about whether pointing at one does, and
-nothing is addressable until it is the selection. What is resizable is a
-selector, so any atomic element can be made sizeable.
+undo step rather than a trail of them. Selecting the image that was clicked is
+not its job: the input pipeline selects any atomic element a click lands on.
+What is resizable is a selector, so any atomic element can be made sizeable.
 
 The optional `tables.js` entry puts its actions on the table itself. Row handles
 run down the table's left edge and column handles along its top, each lined up

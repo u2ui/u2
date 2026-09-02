@@ -406,6 +406,28 @@ test('input pipeline: surface disconnection tears the module down', () => withPi
     }
 ));
 
+// An atomic element is addressable only as the selection: engines disagree about
+// whether pointing at one selects it, and a caret one leaves inside it reaches
+// nothing at all.
+test('pipeline: a click selects the atomic element it landed on', () => withPipeline(
+    '<div contenteditable><p>one</p><hr><p>two</p></div>', ({host, surface}) => {
+        const rule = host.querySelector('hr');
+        const tap = target => target.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+        tap(rule);
+        const range = getSelection().getRangeAt(0);
+        same(range.startContainer, host);
+        equal(range.startOffset, 0 + [...host.childNodes].indexOf(rule));
+        equal(range.endOffset, range.startOffset + 1, 'The element itself, and nothing else');
+        same(surface.selection?.range().startContainer, host, 'And the surface has it');
+
+        caret(document, host.firstElementChild.firstChild, 1);
+        tap(host.firstElementChild);
+        equal(getSelection().getRangeAt(0).collapsed, true, 'A paragraph is not a thing to select');
+        tap(host);
+        equal(getSelection().getRangeAt(0).collapsed, true, 'Neither is the host itself');
+    }
+));
+
 function withPipeline(html, run, commands = null) {
     return withFixture(html, async root => {
         const host = root.firstElementChild;

@@ -99,21 +99,6 @@ export function imageTools({selector = 'img', minimum = 16} = {}) {
             surface.addEventListener('u2-rte-selectionchange', sync, listen);
             surface.addEventListener('u2-rte-change', sync, listen);
             surface.addEventListener('u2-rte-deactivate', () => close(state, surface), listen);
-            // A click has to select the image itself: engines disagree about
-            // whether pointing at one does, and nothing is addressable until it
-            // is the selection.
-            surface.element.addEventListener('click', event => {
-                const element = event.composedPath()[0];
-                if (element?.nodeType !== Node.ELEMENT_NODE || !element.matches?.(selector)) return;
-                if (!surface.element.contains(element)) return;
-                const range = state.document.createRange();
-                range.selectNode(element);
-                const selection = surface.core.selection;
-                selection.removeAllRanges();
-                selection.addRange(range);
-                surface.capture();
-                sync();
-            }, listen);
             return {dispose() {
                 controller.abort();
                 close(state, surface);

@@ -1,5 +1,6 @@
 import {htmlModel} from '../model/html/html-model.js';
 import {narrow} from '../command/edit.js';
+import {activatingAround} from '../browser/interactive.js';
 import {Normalizer} from '../normalize/normalizer/normalizer.js';
 import {PointMap} from '../selection/map/point-map.js';
 import {EditRange} from '../selection/range/edit-range.js';
@@ -71,6 +72,7 @@ export class InputPipeline {
         root.addEventListener('compositionend', this.#compositionEnd, listen);
         root.addEventListener('paste', this.#paste, listen);
         root.addEventListener('drop', this.#drop, listen);
+        root.addEventListener('click', this.#click, listen);
         surface.addEventListener('u2-rte-command', this.#command, listen);
         surface.addEventListener('u2-rte-disconnect', this.#disconnect, listen);
     }
@@ -198,6 +200,7 @@ export class InputPipeline {
             if (this.#invoke(event, shortcut, {range: selectionRange(this.#surface)})) return;
         }
         if (event.altKey) return;
+        if ((event.key === 'Enter' || event.key === ' ') && this.#activation(event)) return;
         const inputType = keyInput(event);
         if (!inputType) return;
         this.#surface.capture();
@@ -207,6 +210,19 @@ export class InputPipeline {
             range: selectionRange(this.#surface),
         });
     };
+
+    // In a button, Enter and Space belong to the button: the text inside never
+    // sees them and no `beforeinput` arrives, so the editor puts in what the key
+    // meant. Everywhere else the browser's own input is left alone.
+    #activation(event) {
+        if (event.ctrlKey || event.metaKey || !activatingAround(this.#root)) return false;
+        this.#surface.capture();
+        const range = selectionRange(this.#surface);
+        if (event.key === 'Enter') return this.#route(event, {inputType: 'insertParagraph', data: null, range});
+        const fragment = this.#root.ownerDocument.createDocumentFragment();
+        fragment.append(space(range));
+        return this.#invoke(event, 'insert', {fragment, range});
+    }
 
     #input = event => {
         if (!this.#owns(event)) return;
@@ -243,6 +259,23 @@ export class InputPipeline {
             this.#deferred = null;
             this.normalize(job.trigger, job);
         });
+    };
+
+    // An atomic element is addressable only as the selection: engines disagree
+    // about whether pointing at one selects it, and a caret one leaves inside it
+    // reaches nothing at all. The host itself is left alone — a surface is not a
+    // thing inside itself.
+    #click = event => {
+        const target = event.composedPath()[0];
+        if (target === this.#root || !this.#owns(event) || target?.nodeType !== Node.ELEMENT_NODE) return;
+        const model = this.#commands?.model || narrow(this.#model, this.#surface.config.elements);
+        if (!model.atomic(target)) return;
+        const range = this.#root.ownerDocument.createRange();
+        range.selectNode(target);
+        const selection = this.#surface.core.selection;
+        selection.removeAllRanges();
+        selection.addRange(range);
+        this.#surface.capture();
     };
 
     #paste = event => {
@@ -321,6 +354,16 @@ export class InputPipeline {
         const target = event.composedPath()[0];
         return target === this.#root || editingHost(target) === this.#root;
     }
+}
+
+// A plain space collapses away where there is nothing after it, or where another
+// space already is — so there the browser types a non-breaking one, and so does
+// this. Anywhere else a space is a space.
+function space(range) {
+    const node = range?.startContainer;
+    if (node?.nodeType !== Node.TEXT_NODE) return '\u00a0';
+    const before = range.startOffset ? node.data[range.startOffset - 1] : '';
+    return before.trim() && range.startOffset < node.length ? ' ' : '\u00a0';
 }
 
 function keyInput(event) {

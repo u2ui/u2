@@ -1,4 +1,5 @@
 import {enabled} from '../config/config.js';
+import {interactiveAround} from '../browser/interactive.js';
 import {editingHost, isEditableHost, isEditingBoundary} from '../selection/ownership/ownership.js';
 import {Surface} from '../surface/surface.js';
 
@@ -34,6 +35,7 @@ export class Rte extends EventTarget {
         for (const type of ['pointerup', 'pointercancel', 'keydown']) {
             root.addEventListener(type, this.#pointerDone, listen);
         }
+        root.addEventListener('click', this.#click, listen);
         this.#document.addEventListener('selectionchange', this.#selectionChange, {signal: this.#controller.signal});
     }
 
@@ -196,8 +198,29 @@ export class Rte extends EventTarget {
     }
 
     #pointerDown = event => {
-        this.#pointer = event.composedPath();
+        const path = event.composedPath();
+        this.#pointer = path;
+        // The right button opens a menu about what is selected; moving the
+        // selection to what it was aimed at is what makes the menu useless.
+        if (event.button === 2 && this.#editing(path[0])) event.preventDefault();
+        // The drag has to be off before this very press is acted on, which is
+        // what a capturing listener is early enough for. It stays off: a link
+        // wrapping editable content is not one anybody drags on purpose.
+        const around = interactiveAround(this.#editing(path[0]));
+        if (around) around.draggable = false;
     };
+
+    // The press belonged to the text, and so does its release.
+    #click = event => {
+        if (interactiveAround(this.#editing(event.composedPath()[0]))) event.preventDefault();
+    };
+
+    // The editing host a node sits in, if this core is the editor of it.
+    #editing(node) {
+        const host = editingHost(node);
+        if (!host) return null;
+        return this.#elements.has(host) || this.#options.auto && enabled(host) ? host : null;
+    }
 
     #pointerDone = () => {
         this.#pointer = null;

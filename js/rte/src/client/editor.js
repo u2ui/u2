@@ -1,5 +1,6 @@
 import {Commands} from '../command/commands.js';
 import {deleteBackward, deleteForward} from '../command/delete.js';
+import {insertFragment} from '../command/fragment.js';
 import {enter, lineBreak} from '../command/enter.js';
 import {History} from '../history/history.js';
 import {PendingMarks} from '../command/pending-marks.js';
@@ -229,6 +230,9 @@ export class Editor {
             enter,
             lineBreak,
             insertText: pending.insertText,
+            // Prepared content at the selection: what a host inserts itself, and
+            // what a key gets that its host answered instead of the text.
+            insert: insertFragment,
         }});
         const controller = new this.#document.defaultView.AbortController();
         const record = {surface, pending, history, commands, pipeline: null, controller, modules: new Map()};

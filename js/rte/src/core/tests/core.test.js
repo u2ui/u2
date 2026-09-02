@@ -143,6 +143,51 @@ test('core: a press beside a surface does not start editing it', () => withFixtu
     }
 ));
 
+// `<a><span contenteditable>` is a host shape engines answer with the element:
+// the link is dragged rather than giving the text a caret, and followed when the
+// press ends.
+test('core: a link around a surface neither drags nor follows', () => withFixture(
+    '<a id=link href="#docs">before <span id=host contenteditable>text</span> after</a>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.querySelector('#host');
+        const link = root.querySelector('#link');
+        core.add(host);
+        const press = target => target.dispatchEvent(
+            new PointerEvent('pointerdown', {bubbles: true, composed: true, pointerId: 1}));
+        const tap = target => {
+            const event = new MouseEvent('click', {bubbles: true, composed: true, cancelable: true});
+            target.dispatchEvent(event);
+            return event.defaultPrevented;
+        };
+        equal(link.hasAttribute('draggable'), false);
+        press(host);
+        equal(link.getAttribute('draggable'), 'false', 'A link nobody can drag is one whose text can have a caret');
+        equal(tap(host), true, 'The press belonged to the text, and so does its release');
+        // A fragment, because the assertion is that this one really is followed.
+        equal(tap(link), false, 'The link itself still works');
+        core.dispose();
+    }
+));
+
+// The right button opens a menu about what is selected: moving the selection to
+// what the menu was aimed at is what makes the menu useless.
+test('core: the right button leaves the selection where it is', () => withFixture(
+    '<div contenteditable><p>text</p></div><p id=outside>outside</p>', root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.firstElementChild);
+        const press = (target, button) => {
+            const event = new PointerEvent('pointerdown',
+                {bubbles: true, composed: true, cancelable: true, pointerId: 1, button});
+            target.dispatchEvent(event);
+            return event.defaultPrevented;
+        };
+        equal(press(surface.element.querySelector('p'), 2), true);
+        equal(press(surface.element.querySelector('p'), 0), false, 'The left button places the caret');
+        equal(press(root.querySelector('#outside'), 2), false, 'Outside the editor it is not ours');
+        core.dispose();
+    }
+));
+
 test('core: CSS opt-in registers lazily from focus events', () => withFixture(`
     <div id=enabled contenteditable style="--u2-rte:true">one</div>
     <div id=disabled contenteditable>two</div>

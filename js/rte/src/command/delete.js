@@ -63,7 +63,14 @@ function merge(edit, left, right, between) {
 
 function boundary(edit, direction) {
     const point = edit.range?.collapsed && edit.range.start;
-    if (!point || insideAtomic(edit, point.node)) return null;
+    if (!point) return null;
+    // An engine can leave the caret inside an element that has no inside —
+    // clicking a rule does that in some. The position is at the element, not in
+    // it, and deleting there is what takes the element away.
+    const hollow = elementOf(point.node) === point.node && !point.node.childNodes.length
+        && point.node !== edit.element && edit.model.atomic(point.node);
+    if (hollow) return {atomic: point.node, between: []};
+    if (insideAtomic(edit, point.node)) return null;
     const edge = direction === 'backward' ? 'start' : 'end';
     for (let current = elementOf(point.node); current && current !== edit.element; current = current.parentElement) {
         if (!edit.model.mergeable(current) || !atEdge(current, point, edge, edit.model)) continue;
