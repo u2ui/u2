@@ -91,6 +91,7 @@ test('toolbar: preserves a saved selection across pointer focus', () => withFixt
     const down = new Event('pointerdown', {bubbles: true, cancelable: true});
     button.dispatchEvent(down);
     truthy(down.defaultPrevented);
+    button.dispatchEvent(new Event('pointerup', {bubbles: true}));
     getSelection().removeAllRanges();
     button.focus();
     equal(commands.enabled('toggle'), true, 'The live selection is gone; the saved one answers');

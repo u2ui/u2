@@ -11,6 +11,7 @@ export class Rte extends EventTarget {
     #retained = new Set();
     #active = null;
     #unfocused = false;
+    #pointer = null;
     #controller;
 
     constructor(root = document, options = {}) {
@@ -26,6 +27,13 @@ export class Rte extends EventTarget {
         root.addEventListener('focus', this.#focus, listen);
         root.addEventListener('focusin', this.#focus, listen);
         root.addEventListener('focusout', this.#focusOut, listen);
+        // A press answers for every focus until it is over: one drag can hand the
+        // focus back more than once. A key taking over ends it too, so what is
+        // left of a release that never arrived cannot answer for the keyboard.
+        root.addEventListener('pointerdown', this.#pointerDown, listen);
+        for (const type of ['pointerup', 'pointercancel', 'keydown']) {
+            root.addEventListener(type, this.#pointerDone, listen);
+        }
         this.#document.addEventListener('selectionchange', this.#selectionChange, {signal: this.#controller.signal});
     }
 
@@ -151,6 +159,23 @@ export class Rte extends EventTarget {
         }
         let surface = this.#elements.get(editable);
         if (!surface && this.#options.auto && enabled(editable)) surface = this.add(editable);
+        // An engine gives the focus to the nearest editable when a press lands
+        // beside one: an inline host collects its whole line. A press that did
+        // not land in this surface is nobody starting to edit it, and the caret
+        // it would leave behind is one no one asked for.
+        //
+        // Taking it back is the one thing here that reaches into the document:
+        // the element really is focused for a moment, so the page sees a
+        // focus/blur pair it did not ask for, and anything listening for either
+        // on that element — a host's own handler, a css `:focus` rule — sees it
+        // too. Leaving it focused instead is worse: a caret that types into a
+        // surface with no session behind it.
+        if (surface && this.#pointer && !this.#pointer.includes(surface.element)) {
+            this.#unfocused = true;
+            this.activate(null);
+            editable.blur();
+            return;
+        }
         this.#unfocused = !surface;
         this.activate(surface || null);
     };
@@ -169,6 +194,14 @@ export class Rte extends EventTarget {
     #owns(node) {
         return !!node && (this.retains(node) || this.#elements.has(editingHost(node)));
     }
+
+    #pointerDown = event => {
+        this.#pointer = event.composedPath();
+    };
+
+    #pointerDone = () => {
+        this.#pointer = null;
+    };
 
     #selectionChange = () => {
         this.sync();

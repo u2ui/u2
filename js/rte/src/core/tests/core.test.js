@@ -105,6 +105,44 @@ test('core: a selection alone does not start a session the focus has left', () =
     }
 ));
 
+// An engine gives the focus to the nearest editable when a press lands beside
+// one — an inline host collects its whole line — and the caret it leaves behind
+// is one nobody asked for.
+test('core: a press beside a surface does not start editing it', () => withFixture(
+    '<p id=around>text <span id=ed contenteditable>editable</span></p>', root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.querySelector('#ed'));
+        const around = root.querySelector('#around');
+        const press = target => target.dispatchEvent(
+            new PointerEvent('pointerdown', {bubbles: true, composed: true, pointerId: 1}));
+        const focused = () => surface.element.dispatchEvent(
+            new FocusEvent('focusin', {bubbles: true, composed: true}));
+        const release = target => target.dispatchEvent(
+            new PointerEvent('pointerup', {bubbles: true, composed: true, pointerId: 1}));
+        press(around);
+        focused();
+        equal(core.active, null, 'The press landed beside it');
+        focused();
+        equal(core.active, null, 'And answers for every focus it causes: one drag hands it back twice');
+        release(around);
+        focused();
+        same(core.active, surface, 'Once the press is over, focus is focus again');
+
+        press(surface.element);
+        focused();
+        same(core.active, surface, 'A press that landed in it starts editing');
+        release(surface.element);
+
+        press(around);
+        focused();
+        equal(core.active, null);
+        around.dispatchEvent(new KeyboardEvent('keydown', {bubbles: true, composed: true, key: 'Tab'}));
+        focused();
+        same(core.active, surface, 'A key takes over from a release that never came');
+        core.dispose();
+    }
+));
+
 test('core: CSS opt-in registers lazily from focus events', () => withFixture(`
     <div id=enabled contenteditable style="--u2-rte:true">one</div>
     <div id=disabled contenteditable>two</div>

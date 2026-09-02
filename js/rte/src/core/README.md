@@ -29,6 +29,12 @@ document structure, or UI behavior.
   keeps the active surface, `retains(node)` identifies its composed subtree,
   and `release(element)` removes the mark. This also distinguishes UI from
   content when a native top-layer boundary requires both to share one host.
+- A press decides which surface a focus belongs to. Engines hand the focus to
+  the nearest editable when a press lands beside one, which an inline host in
+  running text collects a whole line of; a focus whose press did not land in the
+  surface is refused and given back. A press answers for every focus until it is
+  released — one drag can hand the focus back more than once — and a key taking
+  over ends it too, so a keyboard reaching a surface is never mistaken for it.
 - Focus that lands anywhere else — not a surface, not retained UI — ends the
   session, so everything drawn for it goes at once. So does focus that lands
   nowhere: clicking a plain paragraph focuses nothing, and no focus event
