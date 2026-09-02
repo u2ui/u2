@@ -347,10 +347,10 @@ test('editor client: module validation and conflicts leave registries unchanged'
     core.dispose();
 }));
 
-// A `focusout` listener outside the toolbar's shadow tree sees its related
-// target retargeted to that tree's host, so reaching for a control of its own
-// would otherwise read as focus leaving and take the toolbar away mid-click.
-test('editor client: reaching into the toolbar does not dismiss it', () => withFixture(
+// Focus moving into the chrome is retargeted to its shadow host, and that host
+// is retained: reaching for a control of the editor's own must not read as focus
+// leaving and take the toolbar away mid-click.
+test('editor client: reaching into the chrome does not end the session', () => withFixture(
     '<div contenteditable style="--u2-rte-toolbar:bold"><p>one two</p></div>', root => {
         const core = new Rte(document, {auto: false});
         const client = new Editor(core);

@@ -178,6 +178,26 @@ function name(state, field) {
     return active.element;
 }
 
+// Leaving hands the caret back to the text and puts it after the image: whoever
+// just named one wants to keep writing, not to keep it selected.
+function leave(state) {
+    const active = state.active;
+    if (!active) return;
+    const {element} = active;
+    const surface = active.view.surface;
+    close(state);
+    if (!surface.connected) return;
+    surface.element.focus();
+    if (!element.isConnected) return surface.restore();
+    const range = state.document.createRange();
+    range.setStartAfter(element);
+    range.collapse(true);
+    const selection = surface.core.selection;
+    selection.removeAllRanges();
+    selection.addRange(range);
+    surface.capture();
+}
+
 function schedule(state) {
     if (state.pending || !state.handles) return;
     state.pending = state.document.defaultView.requestAnimationFrame(() => {
@@ -210,7 +230,12 @@ function build(state) {
     field.placeholder = 'Alt text';
     field.setAttribute('aria-label', 'Alt text');
     form.append(field);
-    form.addEventListener('submit', event => event.preventDefault());
+    // One field, so Enter submits implicitly — and with the name already
+    // written, there is nothing left to confirm: it just leaves.
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        leave(state);
+    });
     form.addEventListener('input', () => name(state, field));
     state.alt = form;
     state.handles = new Handles(state.chrome.root, {

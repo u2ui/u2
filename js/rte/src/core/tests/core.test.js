@@ -64,6 +64,25 @@ test('core: retained UI keeps the active surface across focus', () => withFixtur
     }
 ));
 
+// Clicking a plain paragraph focuses nothing at all, so no focus event follows
+// to end the session — and everything drawn for it would stay on screen.
+test('core: focus falling out of everything ends the session', () => withFixture(
+    '<div id=outer contenteditable>text</div><div id=ui contenteditable=false><button>control</button></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.querySelector('#outer'));
+        const ui = core.retain(root.querySelector('#ui'));
+        const out = type => new FocusEvent('focusout', {bubbles: true, composed: true, relatedTarget: type});
+        core.activate(surface);
+        surface.element.dispatchEvent(out(ui.firstElementChild));
+        same(core.active, surface, 'Retained UI is where the session goes on');
+        surface.element.dispatchEvent(out(surface.element));
+        same(core.active, surface, 'So is the surface itself');
+        surface.element.dispatchEvent(out(null));
+        equal(core.active, null);
+        core.dispose();
+    }
+));
+
 test('core: CSS opt-in registers lazily from focus events', () => withFixture(`
     <div id=enabled contenteditable style="--u2-rte:true">one</div>
     <div id=disabled contenteditable>two</div>

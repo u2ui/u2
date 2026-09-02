@@ -150,7 +150,7 @@ test('toolbar: a control taking the focus does not end the session', () => withF
     core.dispose();
 }));
 
-test('toolbar: focusout hides it until focus returns to the surface or toolbar', () => withFixture(`
+test('toolbar: it goes with the session, and comes back with the surface', () => withFixture(`
     <div contenteditable>text</div>
     <button id=outside>Outside</button>
     <div id=toolbar><button data-command=action></button></div>
@@ -168,7 +168,7 @@ test('toolbar: focusout hides it until focus returns to the surface or toolbar',
     surface.element.dispatchEvent(focus('focusout', outside));
     truthy(element.hidden);
     surface.emit('u2-rte-selectionchange');
-    truthy(element.hidden, 'A late selection event must not reopen a dismissed toolbar');
+    truthy(element.hidden, 'A late selection event must not reopen a closed session');
     surface.element.dispatchEvent(focus('focusin'));
     equal(element.hidden, false);
 
@@ -177,7 +177,9 @@ test('toolbar: focusout hides it until focus returns to the surface or toolbar',
     button.dispatchEvent(focus('focusout', outside));
     truthy(element.hidden);
     button.dispatchEvent(focus('focusin'));
-    equal(element.hidden, false);
+    truthy(element.hidden, 'The session is over: a control has nothing left to act on');
+    surface.element.dispatchEvent(focus('focusin'));
+    equal(element.hidden, false, 'The surface is what brings it back');
     toolbar.dispose();
     core.dispose();
 }));

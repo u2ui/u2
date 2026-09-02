@@ -218,11 +218,11 @@ while a wide one loses a great deal.
 
 ## Focus across the boundary
 
-A `focusout` listener outside the toolbar's shadow tree sees its related target
-retargeted to that tree's host. Focus moving from the surface into a control of
-the toolbar's own therefore looks like focus leaving the editor, and dismissing
-on it would take the toolbar away in the middle of the click that opened a
-select. Ownership is decided against the tree's host as well as its contents.
+Whether focus leaving the editor ends the session is the core's decision, not
+the toolbar's: it knows every surface and every retained element, so one rule
+covers the toolbar, the contextual UI in the chrome, and anything a host
+retains. The toolbar shows and hides with the active surface and does not watch
+focus itself.
 
 ## Placement
 

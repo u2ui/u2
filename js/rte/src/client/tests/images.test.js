@@ -97,6 +97,37 @@ test('image frame: original size clears what a resize wrote', () => withImages(
     }
 ));
 
+// With the name already written, Enter has nothing left to confirm: it hands the
+// caret back to the text, after the image.
+test('image frame: enter leaves the field for the text after the image', () => withImages(
+    ({client, host, pick}) => {
+        const form = () => client.chrome.root.getElementById('image');
+        pick('#a');
+        const field = form().querySelector('input');
+        field.value = 'A cat';
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+        form().dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));
+        equal(form().hidden, true);
+        equal(client.chrome.root.getElementById('images').hidden, true, 'The frame goes with it');
+        const range = getSelection().getRangeAt(0);
+        truthy(range.collapsed);
+        same(range.startContainer, host.querySelector('#a').parentNode);
+        equal(range.startOffset, 1, 'The caret sits after the image');
+        equal(host.querySelector('#a').getAttribute('alt'), 'A cat', 'And the name stays');
+    }
+));
+
+// The frame is the editor's, not the page's: when the session ends it goes with
+// it, exactly like the toolbar.
+test('image frame: it goes when focus leaves the editor', () => withImages(
+    ({frame, pick, surface}) => {
+        pick('#a');
+        equal(frame().hidden, false);
+        surface.element.dispatchEvent(new FocusEvent('focusout', {bubbles: true, composed: true}));
+        equal(frame().hidden, true);
+    }
+));
+
 test('image frame: the layer is released with the module', () => withImages(({client, pick}) => {
     pick('#a');
     client.delete('images');
@@ -117,10 +148,9 @@ test('image frame: a selected image carries its alt text with it', () => withIma
         equal(form().hidden, false);
         equal(field.value, '');
         equal(client.chrome.root.activeElement, null, 'Appearing takes no focus');
-        // Typing into the field is what the user does, and that is what takes
-        // the document selection off the image: the command has to be told
-        // which image it names.
-        field.focus();
+        // Typing into the field takes the document selection off the image —
+        // what the command names is the selection the surface has saved.
+        getSelection().removeAllRanges();
         field.value = 'A cat';
         field.dispatchEvent(new Event('input', {bubbles: true}));
         equal(host.querySelector('#a').getAttribute('alt'), 'A cat');
@@ -140,7 +170,7 @@ test('image frame: naming leaves what is being typed alone', () => withImages(
         const form = () => client.chrome.root.getElementById('image');
         pick('#a');
         const field = form().querySelector('input');
-        field.focus();
+        getSelection().removeAllRanges();
         field.value = 'hallo ';
         field.dispatchEvent(new Event('input', {bubbles: true}));
         equal(field.value, 'hallo ', 'The trailing space is the user\'s, not the attribute\'s');

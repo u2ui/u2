@@ -8,7 +8,6 @@ export class Toolbar {
     #surfaceController = null;
     #surface = null;
     #commands = null;
-    #dismissed = false;
     #connected = true;
 
     constructor(core, element, {commands, place = null} = {}) {
@@ -39,8 +38,6 @@ export class Toolbar {
         }, listen);
         element.addEventListener('click', this.#click, listen);
         element.addEventListener('change', this.#change, listen);
-        core.root.addEventListener('focusin', this.#focusIn, {...listen, capture: true});
-        core.root.addEventListener('focusout', this.#focusOut, {...listen, capture: true});
         if (!element.hasAttribute('role')) element.setAttribute('role', 'toolbar');
         element.hidden = true;
         // Focus landing in a control is still the editor's: without this the core
@@ -66,7 +63,7 @@ export class Toolbar {
         const commands = surface?.connected ? this.#resolve(surface) : null;
         if (commands != null && !registry(commands)) throw new TypeError('Toolbar commands must resolve to a command registry');
         this.#commands = commands || null;
-        const active = !!commands && !this.#dismissed && surface.config.ui === 'roaming'
+        const active = !!commands && surface.config.ui === 'roaming'
             && visibleForSelection(surface);
         const names = active ? configured(surface.element) : null;
         // A host may prefer a toolbar that only ever shows what it can do, at
@@ -138,7 +135,6 @@ export class Toolbar {
         this.#surfaceController = null;
         this.#surface = null;
         this.#commands = null;
-        this.#dismissed = false;
         display(this.#element, false);
         this.#connected = false;
     }
@@ -154,7 +150,6 @@ export class Toolbar {
         }
         this.#surfaceController?.abort();
         this.#surface = surface || null;
-        this.#dismissed = false;
         this.#surfaceController = null;
         if (surface) {
             const Controller = this.#element.ownerDocument.defaultView.AbortController;
@@ -194,18 +189,6 @@ export class Toolbar {
     #disconnect = () => this.#activate(null);
     #refresh = () => this.refresh();
 
-    #focusIn = event => {
-        if (!this.#dismissed || !this.#ownsFocus(event.composedPath()[0])) return;
-        this.#dismissed = false;
-        this.refresh();
-    };
-
-    #focusOut = event => {
-        if (!this.#ownsFocus(event.composedPath()[0]) || this.#ownsFocus(event.relatedTarget)) return;
-        this.#dismissed = true;
-        display(this.#element, false);
-    };
-
     // The toolbar is chrome: pointing at it must never move the editor's
     // selection, not even at a control that currently has nothing to run.
     // Fields keep their own pointer behaviour so they can be opened and typed in.
@@ -233,18 +216,6 @@ export class Toolbar {
         }
         this.#run(command, {value: name});
     };
-
-
-    #ownsFocus(node) {
-        if (!node || !this.#surface) return false;
-        // A `focusout` listener outside the toolbar's shadow tree sees its
-        // related target retargeted to that tree's host, so focus moving into a
-        // control of its own would otherwise read as focus leaving.
-        const root = this.#element.getRootNode();
-        if (root.host && node === root.host) return true;
-        return node === this.#element || this.#element.contains(node)
-            || node === this.#surface.element || this.#surface.element.contains(node);
-    }
 }
 
 function registry(value) {

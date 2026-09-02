@@ -24,6 +24,7 @@ export class Rte extends EventTarget {
         const listen = {capture: true, signal: this.#controller.signal};
         root.addEventListener('focus', this.#focus, listen);
         root.addEventListener('focusin', this.#focus, listen);
+        root.addEventListener('focusout', this.#focusOut, listen);
         this.#document.addEventListener('selectionchange', this.#selectionChange, {signal: this.#controller.signal});
     }
 
@@ -143,6 +144,16 @@ export class Rte extends EventTarget {
         let surface = this.#elements.get(editable);
         if (!surface && this.#options.auto && enabled(editable)) surface = this.add(editable);
         this.activate(surface || null);
+    };
+
+    // Focus falling back to the document is the one way a session ends without
+    // a focus event to end it: nothing is focused, so nothing announces it.
+    // A related target inside a surface or in retained UI is `#focus`'s to
+    // decide — deactivating here would end a session that is only moving.
+    #focusOut = event => {
+        const next = event.relatedTarget;
+        if (next && (this.retains(next) || this.#elements.has(editingHost(next)))) return;
+        this.activate(null);
     };
 
     #selectionChange = () => {

@@ -26,8 +26,11 @@ document structure, or UI behavior.
   and `release(element)` removes the mark. This also distinguishes UI from
   content when a native top-layer boundary requires both to share one host.
 - Focus that lands anywhere else — not a surface, not retained UI — ends the
-  session, so everything drawn for it goes at once. Retaining is therefore how a
-  UI that takes focus stays alive; `Toolbar` retains its element itself.
+  session, so everything drawn for it goes at once. So does focus that lands
+  nowhere: clicking a plain paragraph focuses nothing, and no focus event
+  follows to say so, which is what `focusout` is listened to for. Retaining is
+  therefore how a UI that takes focus stays alive; `Toolbar` retains its element
+  itself.
 - `dispose()` removes listeners and disconnects every surface. It is
   idempotent; `[Symbol.dispose]()` exposes the same teardown to `using`.
 
