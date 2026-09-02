@@ -37,9 +37,14 @@ export class Edit {
         this.#data = data;
         this.#value = value;
         this.#fragment = fragment;
+        // The same rule a transaction applies: a live selection inside the
+        // surface is newer than the saved one, and a selection outside it says
+        // nothing about what is being edited — a field of the editor's own
+        // chrome holds the caret while it names what is still selected here.
         this.#range = range
             ? EditRange.fromRange(range, surface.element)
-            : EditRange.fromSelection(surface.core.selection, surface.element);
+            : EditRange.fromSelection(surface.core.selection, surface.element)
+                || (surface.selection ? EditRange.fromRange(surface.selection.range(), surface.element) : null);
     }
 
     get surface() { return this.#surface; }

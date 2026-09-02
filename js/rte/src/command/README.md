@@ -52,7 +52,10 @@ own object under the same name, or register commands the engine never ships.
 ## Edit
 
 - `range` is the `EditRange` to act on: the explicit target range if one was
-  given, otherwise the current selection. Foreign ranges resolve to `null`.
+  given, otherwise the current selection, and otherwise the selection the
+  surface has saved — a field of the editor's own chrome holds the caret while
+  it names what is still selected in the surface. Foreign ranges resolve to
+  `null`.
 - `map` is a fresh `PointMap`. Mutations that go through it keep every tracked
   point, so a command can compute its resulting caret before it exists.
 - `select(start, end, backward)` sets the resulting selection; one point

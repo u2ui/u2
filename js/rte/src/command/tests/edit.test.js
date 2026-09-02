@@ -43,6 +43,19 @@ test('edit: resolves the current selection when no range is given', () => withSu
     }
 ));
 
+// A field of the editor's own chrome takes the caret while it names what is
+// still selected in the surface, so a command run from there must still find it.
+test('edit: a selection outside the surface falls back to the saved one', () => withSurface(
+    '<div contenteditable><p>one two</p></div><input id=field>', ({surface, host, root}) => {
+        const text = host.firstElementChild.firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        surface.capture();
+        root.querySelector('#field').focus();
+        getSelection().removeAllRanges();
+        equal(new Edit(surface).range.text, 'one');
+    }
+));
+
 test('edit: an explicit range wins and foreign ranges resolve to null', () => withSurface(
     '<div contenteditable><p>one two</p></div><p id=outside>outside</p>', ({surface, host, root}) => {
         const text = host.firstElementChild.firstChild;

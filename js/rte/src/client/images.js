@@ -160,15 +160,12 @@ function close(state, surface) {
 
 // Naming the image moves the selection back onto it, and an engine follows that
 // with focus — so the field takes it back, caret and all, exactly as the link
-// form has to. The image is named as the range the command works on: typing in
-// the field is what took the document selection away from it.
+// form has to.
 function name(state, field) {
     const active = state.active;
-    if (!active?.element.isConnected) return null;
-    const range = state.document.createRange();
-    range.selectNode(active.element);
+    if (!active) return null;
     const caret = [field.selectionStart, field.selectionEnd];
-    active.view.commands.run('imageAlt', {value: {alt: field.value.trim()}, range, trigger: 'input'});
+    active.view.commands.run('imageAlt', {value: {alt: field.value.trim()}, trigger: 'input'});
     field.focus();
     field.setSelectionRange(...caret);
     return active.element;
