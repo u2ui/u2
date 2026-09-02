@@ -243,12 +243,17 @@ keeps the element inside the viewport, and falls to the other side when the
 preferred one does not fit. The roaming toolbar centres above the selection; the
 link form aligns to its start and prefers below.
 
+`caretAfter(surface, element)` is its counterpart at the end: the one way a
+contextual UI hands the caret back, after the element it was about to change
+rather than inside it. An element that is no longer there leaves the surface
+with the selection it had.
+
 A select with no usable choice hides like a button whose command is unavailable:
 a control that cannot be used is not shown.
 
 Pointing anywhere at the toolbar never moves the editor's selection, including
 at a control that currently has nothing to run — otherwise clicking a disabled
-button would blur the surface and dismiss the toolbar. Fields keep their own
+button would blur the surface and end the editing session. Fields keep their own
 pointer behaviour so they can be opened and typed in.
 
 Keys are not the toolbar's concern: a command declares its own shortcut and the

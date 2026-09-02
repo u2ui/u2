@@ -83,6 +83,28 @@ test('core: focus falling out of everything ends the session', () => withFixture
     }
 ));
 
+// Engines leave a selection inside an editable that nobody focused — clicking
+// beside one does that — and a toolbar over a caret the keyboard cannot reach is
+// worse than no toolbar.
+test('core: a selection alone does not start a session the focus has left', () => withFixture(
+    '<div contenteditable><p>one two</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.firstElementChild);
+        const text = surface.element.querySelector('p').firstChild;
+        const event = type => new FocusEvent(type, {bubbles: true, composed: true});
+        getSelection().setBaseAndExtent(text, 0, text, 3);
+        same(core.sync(), surface);
+        surface.element.dispatchEvent(event('focusout'));
+        equal(core.active, null);
+        equal(core.sync(), null, 'The selection is still there, the session is not');
+        equal(surface.selection.text, 'one', 'What the surface captured, it keeps');
+        surface.element.dispatchEvent(event('focusin'));
+        same(core.active, surface, 'Focus is what brings it back');
+        same(core.sync(), surface);
+        core.dispose();
+    }
+));
+
 test('core: CSS opt-in registers lazily from focus events', () => withFixture(`
     <div id=enabled contenteditable style="--u2-rte:true">one</div>
     <div id=disabled contenteditable>two</div>

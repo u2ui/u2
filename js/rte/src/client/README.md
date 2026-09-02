@@ -87,7 +87,8 @@ text before they had seen the answer.
 
 `complete(text, surface)` is asked what addresses go with what is being typed and
 answers with entries `{value, label}` — or `{value, html}` for a row with markup,
-which the form writes through `setHTML()`, so the platform sanitizes it. The form
+which the form writes through `setHTML()`, so the platform sanitizes it; where an
+engine does not ship that yet, the entry shows its address instead. The form
 renders its own list rather than a native datalist, which cannot show markup: the
 arrow keys move through it, Enter takes the current entry, Escape closes the list
 before it closes the form, and a pointer does the same. One question is in flight

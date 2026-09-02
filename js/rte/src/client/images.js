@@ -1,5 +1,6 @@
 import {elementAttributes, selectedElement} from '../command/element.js';
 import {inlineUi} from '../config/config.js';
+import {caretAfter} from '../ui/caret.js';
 import {Handles} from '../ui/handles.js';
 import {place} from '../ui/place.js';
 
@@ -178,24 +179,13 @@ function name(state, field) {
     return active.element;
 }
 
-// Leaving hands the caret back to the text and puts it after the image: whoever
-// just named one wants to keep writing, not to keep it selected.
 function leave(state) {
     const active = state.active;
     if (!active) return;
     const {element} = active;
     const surface = active.view.surface;
     close(state);
-    if (!surface.connected) return;
-    surface.element.focus();
-    if (!element.isConnected) return surface.restore();
-    const range = state.document.createRange();
-    range.setStartAfter(element);
-    range.collapse(true);
-    const selection = surface.core.selection;
-    selection.removeAllRanges();
-    selection.addRange(range);
-    surface.capture();
+    if (surface.connected) caretAfter(surface, element);
 }
 
 function schedule(state) {

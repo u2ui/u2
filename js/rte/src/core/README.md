@@ -18,7 +18,11 @@ document structure, or UI behavior.
   browser and document-lifecycle differences without duplicate activation.
 - The nearest explicit nested `contenteditable` is an isolation boundary.
 - `sync()` resolves the current selection to one registered surface and captures
-  it without scanning or mutating unrelated editor contents.
+  it without scanning or mutating unrelated editor contents. A selection is not
+  a session: once focus has left the editor, only focus starts one again.
+  Engines leave a selection inside an editable that nobody focused — clicking
+  beside one does that — and a toolbar over a caret the keyboard cannot reach is
+  worse than no toolbar. The surface still keeps what it captured.
 - At most one surface is active per core; active state may outlive DOM focus so
   a roaming UI can safely receive focus.
 - `retain(element)` marks editor-owned UI in the same document. Focus inside it

@@ -208,9 +208,9 @@ test('playground: class-mark controls reuse inline elements and remove neutral s
         composed: true,
         relatedTarget: document.querySelector('#analyze'),
     }));
-    equal(toolbar.hidden, true, 'The explicit integration uses production focus dismissal');
+    equal(toolbar.hidden, true, 'The explicit integration ends the session with the focus');
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
-    equal(toolbar.hidden, true, 'Selection updates do not reopen a dismissed toolbar');
+    equal(toolbar.hidden, true, 'And a selection alone does not start a new one');
 }));
 
 test('playground: class-mark toggle reflects and changes selection state', () => withPlayground(document => {

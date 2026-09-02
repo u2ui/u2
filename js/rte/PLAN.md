@@ -28,46 +28,25 @@ intercepting its mutations. Complete mark sets now resolve exclusions, remove
 configured values absent from an exact target, and apply their canonical result
 inside one mapped operation.
 
-The 201-test mark-algebra baseline was confirmed in current Chromium, Firefox,
-and WebKit. The 233-test pending-mark baseline passes in current Chromium,
-Firefox, and WebKitGTK through GNOME Web. The 361-test baseline was confirmed in
-Chromium, Firefox, and WebKit. The current runner adds empty list
-exit, context-aware nested-list Enter, mixed generic-block repair, the roaming
-toolbar, semantic wrapper removal, ready-made bold, the convention client with
-optional command modules and block-style values, heading-aware Enter,
-content-model-driven block merging in both deletion directions, focus
-dismissal, collapsed range geometry, and one shared structural element policy
-for normalization, commands, and toolbar choices. The current lifecycle and
-visible-break extension, sanitizing policy/native adapter, selection-only
-toolbar mode, staged Unstyle policy/command, mapped context-aware fragment
-replacement, fail-closed rich paste/drop composition, and mapped post-native
-presentation cleanup and composition-aware pending marks raise the verified
-runner to 369 tests. Complete mark-set coverage raises the current runner to
-375 tests. Nested canonical mark coverage raises the current runner to 379
-tests. Standard HTML mark coverage raises the current runner to 381 tests.
-State-based history — baseline entries, transaction-grouped recording, path
-addressed selection restoration, coalescing, branch and limit handling, and its
-commands — raises the current runner to 398 tests. Lists, their nesting levels,
-model-placed element insertion, and the standard mark and structure convention
-modules raise the current runner to 427 tests. Atomic-block deletion,
-selection-owned history commands, and the HTML source responsibility with its
-dialog module raise the current runner to 452 tests. Value marks and the
-contextual link editor raise the current runner to 470 tests. The CSS-declared
-content classes shared by the style control, the sanitizer, and presentation
-cleanup raise the current runner to 486 tests. One shared placement policy and
-its coverage raise it to 490 tests. The full remove-format ladder and
-registry-owned shortcuts raise it to 500 tests. Depth-independent wrapper
-removal, a canonical level that does something, and paste cleanup that covers
-what arrived raise it to 508 tests. The attribute policy on native imports
-and a strict import element policy raise it to 513 tests, confirmed in Chrome
-152 and Firefox 154. Import aliases raise it to 519 tests, and the table
-structure commands with their contextual handles to 538, and the image frame
-with its attribute command to 554, all of it drawn in one shadow root per
-editor; whole-content remove-format and the presence/availability rule raise it
-to 565. The playground now configures its prototype surface live from a panel
-built out of the registered modules, so every host property can be tried without
-editing the page.
-WebKit verification of that revision is pending.
+The browser runner covers every phase below: mark algebra, pending overrides
+carried through native IME composition, complete and nested canonical mark sets,
+state-based history with its commands, lists and their nesting levels,
+model-placed element insertion, the HTML source responsibility with its dialog,
+value marks and the contextual link editor, CSS-declared content classes shared
+by the style control, the sanitizer and presentation cleanup, one shared
+placement policy, the full remove-format ladder, registry-owned shortcuts, the
+attribute and element policies on imports with their aliases, the table
+structure commands and the image frame with their contextual handles, and the
+session rule that takes all of it away at once — everything the convention
+client draws in one shadow root per editor. The playground configures its
+prototype surface live from a panel built out of the registered modules, so
+every host property can be tried without editing the page.
+
+How many tests that is, the runner says itself; the number is not repeated here,
+because a number in prose is stale the moment the next test is written. A result
+is cross-browser evidence only after that exact revision has run in current
+Chromium, Firefox, and WebKit. The last such confirmation was Chrome 152 and
+Firefox 154; WebKit verification of that revision is pending.
 
 Remove-format now runs a ladder that does not stop at the application's own
 presentation: six presentation rungs in `Unstyle` (styles, presentational
@@ -97,7 +76,7 @@ allowlist, and layout ids, tracking attributes and inline styles came straight
 through. The pipeline applies `SanitizePolicy.clean()` to the nodes that
 arrived, before presentation cleanup and structural repair, so an id removed in
 the first stage is what lets the third dissolve the wrapper carrying it.
-`--u2-rte-import-attributes: keep` opts a host out.
+`--u2-rte-import-sanitize: none` opts a host out.
 
 Pasted content is now cleaned where it landed. The cleanup scope was derived
 from the caret, which sits at the *end* of a paste, so a pasted document was
@@ -131,7 +110,7 @@ Treat the number shown by `/u2/js/rte/tests/` as authoritative.
 
 ## 0. Foundation
 
-Status: implemented. The 106-test foundation and policy suite passed in current
+Status: implemented. The foundation and policy suite passed in current
 Chromium, Firefox, and WebKit. Later phase tests extend the same browser runner.
 
 - CSS configuration with semantic host defaults.
@@ -343,7 +322,7 @@ because a declared class is content rather than presentation.
 Status: started. The optional roaming `Toolbar` binds application-owned markup
 to the active surface's resolved command registry, reflects availability and
 boolean/mixed state, keeps saved selections across UI focus, supports simple
-Ctrl/Command shortcuts, hides after focus leaves surface and toolbar, and
+Ctrl/Command shortcuts, shows and hides with the active surface, and
 delegates placement and presentation. Application-supplied manual popovers and
 the convention toolbar now enter and leave the browser top layer with the same
 visibility contract. `--u2-rte-toolbar-when: selection` optionally requires a

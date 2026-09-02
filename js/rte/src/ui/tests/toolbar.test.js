@@ -93,7 +93,7 @@ test('toolbar: preserves a saved selection across pointer focus', () => withFixt
     truthy(down.defaultPrevented);
     getSelection().removeAllRanges();
     button.focus();
-    equal(commands.enabled('toggle'), false, 'The live selection left the editor');
+    equal(commands.enabled('toggle'), true, 'The live selection is gone; the saved one answers');
     toolbar.refresh();
     equal(button.disabled, false, 'Toolbar state must use the saved editor selection');
     button.click();
@@ -142,9 +142,13 @@ test('toolbar: a control taking the focus does not end the session', () => withF
     const element = root.querySelector('#toolbar');
     const toolbar = new Toolbar(core, element, {commands: () => commands});
     core.activate(surface);
-    element.firstElementChild.focus();
+    const outside = root.querySelector('#outside');
+    // Announced by hand: a tab that does not own the browser focus moves the
+    // focus without firing an event for it.
+    element.firstElementChild.dispatchEvent(focus('focusin'));
     same(core.active, surface, 'A toolbar button is the editor');
-    root.querySelector('#outside').focus();
+    element.firstElementChild.dispatchEvent(focus('focusout', outside));
+    outside.dispatchEvent(focus('focusin'));
     same(core.active, null, 'Anything else is not');
     toolbar.dispose();
     core.dispose();

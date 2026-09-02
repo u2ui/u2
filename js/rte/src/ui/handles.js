@@ -1,4 +1,4 @@
-export const handleStyle = `
+const handleStyle = `
 .handles > .frame {
     border: 1px solid Highlight;
     box-sizing: border-box;

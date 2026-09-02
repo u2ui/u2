@@ -117,7 +117,7 @@ rte/
 │   ├── surface/           State of one editable host
 │   ├── transaction/       Atomic editing changes and dirty scopes
 │   ├── unstyle/           Shared selection and external presentation policy
-│   └── ui/                Editor chrome: toolbar, handles, placement
+│   └── ui/                Editor chrome: toolbar, handles, placement, caret
 ├── docs/                  Project-wide guides
 ├── playground/            Visual normalization, input, and mark inspection
 └── tests/                 Shared harness and cross-module browser cases

@@ -1,5 +1,6 @@
 import {inlineUi} from '../config/config.js';
 import {linkHtml} from '../mark/standard.js';
+import {caretAfter} from '../ui/caret.js';
 import {place} from '../ui/place.js';
 import {valueMark} from '../command/mark.js';
 
@@ -365,24 +366,15 @@ function write(state, value, field = null) {
     return active.element;
 }
 
-// Leaving hands the caret back to the text, and puts it after the link rather
-// than inside it: someone who just made a link wants to keep writing, without it.
+// What is left behind decides where the caret goes: the link that was made, or
+// the text that is left when emptying the address took one away.
 function leave(state) {
     const active = state.active;
     const element = active?.element;
     if (active?.creating) close(state);
     else if (state.dirty) commit(state);
-    if (!active?.surface.connected) return;
-    active.surface.element.focus();
-    const after = state.active?.element || element;
-    if (!after?.isConnected) return active.surface.restore();
-    const range = state.document.createRange();
-    range.setStartAfter(after);
-    range.collapse(true);
-    const selection = active.surface.core.selection;
-    selection.removeAllRanges();
-    selection.addRange(range);
-    active.surface.capture();
+    if (!active?.surface.connected) return null;
+    caretAfter(active.surface, state.active?.element || element);
     return null;
 }
 

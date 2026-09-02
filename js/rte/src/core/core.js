@@ -10,6 +10,7 @@ export class Rte extends EventTarget {
     #elements = new WeakMap();
     #retained = new Set();
     #active = null;
+    #unfocused = false;
     #controller;
 
     constructor(root = document, options = {}) {
@@ -109,6 +110,12 @@ export class Rte extends EventTarget {
             this.activate(null);
             return null;
         }
+        // A selection is not a session: once the focus has left the editor, only
+        // focus brings it back. Engines leave a selection inside an editable that
+        // nobody focused — clicking beside one does that — and a toolbar over a
+        // caret the keyboard cannot reach is worse than no toolbar. What the
+        // surface captured, it keeps either way.
+        if (this.#unfocused && this.#active !== surface) return null;
         this.activate(surface);
         return surface;
     }
@@ -126,23 +133,25 @@ export class Rte extends EventTarget {
     }
 
     #focus = event => {
-        if (event.composedPath().some(node => this.#retained.has(node))) return;
-        const editable = event.composedPath().find(node =>
+        const path = event.composedPath();
+        if (path.some(node => this.#retained.has(node))) {
+            this.#unfocused = false;
+            return;
+        }
+        const editable = path.find(node =>
             node?.nodeType === Node.ELEMENT_NODE && isEditingBoundary(node)
         );
         // Focus that went somewhere else entirely ends the session: retained UI
         // is already excluded above, so what is left is not the editor's, and
         // everything drawn for it has to go with it.
-        if (!editable) {
-            this.activate(null);
-            return;
-        }
-        if (!isEditableHost(editable)) {
+        if (!editable || !isEditableHost(editable)) {
+            this.#unfocused = true;
             this.activate(null);
             return;
         }
         let surface = this.#elements.get(editable);
         if (!surface && this.#options.auto && enabled(editable)) surface = this.add(editable);
+        this.#unfocused = !surface;
         this.activate(surface || null);
     };
 
@@ -151,10 +160,15 @@ export class Rte extends EventTarget {
     // A related target inside a surface or in retained UI is `#focus`'s to
     // decide — deactivating here would end a session that is only moving.
     #focusOut = event => {
-        const next = event.relatedTarget;
-        if (next && (this.retains(next) || this.#elements.has(editingHost(next)))) return;
+        if (this.#owns(event.relatedTarget)) return;
+        this.#unfocused = true;
         this.activate(null);
     };
+
+    // The editor's world: one of its surfaces, or UI it retains.
+    #owns(node) {
+        return !!node && (this.retains(node) || this.#elements.has(editingHost(node)));
+    }
 
     #selectionChange = () => {
         this.sync();

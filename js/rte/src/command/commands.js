@@ -131,7 +131,7 @@ const MODIFIERS = ['ctrl', 'alt', 'shift'];
 // A shortcut is one or more chords separated by spaces, each written as
 // `[modifier+]*key`. `ctrl` matches Control or Command, so one declaration
 // serves both platforms.
-export function chords(value) {
+function chords(value) {
     if (value === undefined || value === null) return [];
     if (typeof value !== 'string' || !value.trim()) throw new TypeError('A command shortcut must be a non-empty string');
     return value.trim().toLowerCase().split(/\s+/).map(item => {
@@ -147,7 +147,7 @@ export function chords(value) {
 // The chord a keyboard event denotes. A digit is read from its physical key, so
 // a shifted digit is the same shortcut on every keyboard layout, while letters
 // keep their layout meaning.
-export function chord(event) {
+function chord(event) {
     const digit = /^Digit(\d)$/.exec(event.code || '');
     const parts = [];
     if (event.ctrlKey || event.metaKey) parts.push('ctrl');

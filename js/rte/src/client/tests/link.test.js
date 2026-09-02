@@ -286,8 +286,13 @@ test('link editor: the address field offers rich entries and takes one', () => w
         equal(list.hidden, false);
         equal(field.getAttribute('aria-expanded'), 'true');
         equal([...list.children].map(li => li.dataset.value).join(' '), '/ab-1 /ab-2');
-        equal(list.firstElementChild.querySelector('b').textContent, 'Ab one', 'Entry markup survives');
-        equal(list.firstElementChild.getAttribute('aria-selected'), 'true', 'The first entry is current');
+        const first = list.firstElementChild;
+        // Entry markup goes in through `setHTML()`, so the platform sanitizes it
+        // like any other import. Where that is not shipped yet, an entry is its
+        // address and nothing else — offering one still works.
+        if (first.setHTML) equal(first.querySelector('b').textContent, 'Ab one', 'Entry markup survives');
+        else equal(first.textContent, '/ab-1', 'Without setHTML an entry falls back to its value');
+        equal(first.getAttribute('aria-selected'), 'true', 'The first entry is current');
         list.children[1].click();
         equal(field.value, '/ab-2');
         equal(list.hidden, true, 'Taking an entry closes the list');

@@ -1,0 +1,21 @@
+<!doctype html><meta charset=utf-8><title>probe</title>
+<style>body{margin:0;font:16px/1.4 system-ui} #wrap{width:600px;padding:30px;background:#eee}
+#ed{border:1px solid #999} #pad{height:200px}</style>
+<body>
+<div id=wrap>Before <span id=ed contenteditable>Editable inline host</span></div>
+<div id=pad></div>
+<script type=module>
+import {Rte} from '../src/core/core.js';
+const core = new Rte(document, {auto: false});
+const surface = core.add(document.querySelector('#ed'));
+const log = [];
+for (const type of ['mousedown', 'focusin', 'focusout', 'selectionchange'])
+    document.addEventListener(type, e => log.push(type + ':' + (e.target.id || e.target.nodeName)
+        + (e.relatedTarget === undefined ? '' : '>' + (e.relatedTarget?.id || e.relatedTarget?.nodeName || 'null'))), true);
+globalThis.__step = () => ({
+    active: core.active === surface,
+    activeElement: document.activeElement?.id || document.activeElement?.tagName,
+    inside: !!getSelection().anchorNode && surface.element.contains(getSelection().anchorNode),
+    log: log.splice(0),
+});
+globalThis.__rect = () => JSON.stringify(document.querySelector('#ed').getBoundingClientRect());

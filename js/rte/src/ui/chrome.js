@@ -196,7 +196,7 @@ export class Chrome {
 // The closest boundary is the one that owns the target's current top-layer
 // context. Walking through shadow hosts keeps the rule identical for document
 // and ShadowRoot editors.
-export function topLayer(target) {
+function topLayer(target) {
     for (let element = target; element?.nodeType === Node.ELEMENT_NODE; element = composedParent(element)) {
         for (const selector of [':fullscreen', ':modal', ':popover-open']) {
             try {
