@@ -133,6 +133,24 @@ test('image frame: a selected image carries its alt text with it', () => withIma
     }
 ));
 
+// Half a word is still being typed: the attribute is trimmed, the field is not,
+// or the space between two words would never survive being typed.
+test('image frame: naming leaves what is being typed alone', () => withImages(
+    ({client, host, pick}) => {
+        const form = () => client.chrome.root.getElementById('image');
+        pick('#a');
+        const field = form().querySelector('input');
+        field.focus();
+        field.value = 'hallo ';
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+        equal(field.value, 'hallo ', 'The trailing space is the user\'s, not the attribute\'s');
+        equal(host.querySelector('#a').getAttribute('alt'), 'hallo');
+        field.value = 'hallo welt';
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+        equal(host.querySelector('#a').getAttribute('alt'), 'hallo welt');
+    }
+));
+
 // What a field draws at its content is the field's decision: the same module set
 // serves a body of text and a bare teaser field.
 test('image frame: a field can turn the contextual ui off', () => withImages(

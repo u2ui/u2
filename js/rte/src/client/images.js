@@ -57,6 +57,7 @@ export function imageTools({selector = 'img', minimum = 16} = {}) {
                 minimum,
                 handles: null,
                 alt: null,
+                writing: false,
                 controller: null,
                 pending: 0,
             };
@@ -127,6 +128,9 @@ export function imageTools({selector = 'img', minimum = 16} = {}) {
 export const images = imageTools();
 
 function track(state, view, match) {
+    // Not while the field is naming the image: what it says is being typed, and
+    // the attribute is only what has been typed so far.
+    if (state.writing) return;
     if (!inlineUi(view.surface.config, 'image')) return close(state, view.surface);
     const element = current(view, match);
     if (!element) return close(state, view.surface);
@@ -134,9 +138,7 @@ function track(state, view, match) {
     state.active = {view, element};
     state.handles.show();
     state.alt.hidden = false;
-    if (state.document.activeElement !== state.chrome.element) {
-        state.alt.firstElementChild.value = element.getAttribute('alt') || '';
-    }
+    state.alt.firstElementChild.value = element.getAttribute('alt') || '';
     schedule(state);
 }
 
@@ -165,7 +167,12 @@ function name(state, field) {
     const active = state.active;
     if (!active) return null;
     const caret = [field.selectionStart, field.selectionEnd];
-    active.view.commands.run('imageAlt', {value: {alt: field.value.trim()}, trigger: 'input'});
+    state.writing = true;
+    try {
+        active.view.commands.run('imageAlt', {value: {alt: field.value.trim()}, trigger: 'input'});
+    } finally {
+        state.writing = false;
+    }
     field.focus();
     field.setSelectionRange(...caret);
     return active.element;
