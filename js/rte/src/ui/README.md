@@ -224,6 +224,17 @@ covers the toolbar, the contextual UI in the chrome, and anything a host
 retains. The toolbar shows and hides with the active surface and does not watch
 focus itself.
 
+## The selection while a form has the focus
+
+A browser paints a selection only where the focus is, so a form of the editor's
+own makes the text it is about to change stop looking selected. `highlight.js`
+draws the surface's saved selection in its place, through the CSS custom
+highlight API, and stops the moment the text has the focus again — the browser's
+own selection is never painted over. The rule goes into the tree that holds the
+text, because a highlight is painted on the range's own nodes, and sits in the
+`u2-rte` layer, so `::highlight(u2-rte-selection)` in a page's own stylesheet
+replaces it. Engines without the API simply show nothing extra.
+
 ## Placement
 
 `place(element, surface, {align, prefer, gap})` is the one placement policy for every

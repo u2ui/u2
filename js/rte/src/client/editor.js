@@ -9,6 +9,7 @@ import {marks} from './marks.js';
 import {structure} from './structure.js';
 import {isPlainTextHost} from '../selection/ownership/ownership.js';
 import {Chrome} from '../ui/chrome.js';
+import {SelectionHighlight} from '../ui/highlight.js';
 import {place} from '../ui/place.js';
 import {Toolbar} from '../ui/toolbar.js';
 
@@ -48,6 +49,7 @@ export class Editor {
     #setups = new Map();
     #sources = new WeakMap();
     #chrome = null;
+    #highlight = null;
     #toolbar = null;
     #element = null;
     #dynamic = new Map();
@@ -85,10 +87,13 @@ export class Editor {
         if (!this.#chrome) {
             this.#chrome = new Chrome(this.#core.root, {name: 'editor'});
             this.#core.retain(this.#chrome.element);
+            // What the chrome takes the focus away from has to stay visible.
+            this.#highlight = new SelectionHighlight(this.#core);
         }
         return this.#chrome;
     }
     get toolbar() { return this.#toolbar; }
+    get highlight() { return this.#highlight; }
     get connected() { return this.#connected; }
 
     commands(surface) {
@@ -198,6 +203,8 @@ export class Editor {
         // The chrome reference is kept: its getter must not build a new one for
         // a client that is gone.
         this.#chrome?.dispose();
+        this.#highlight?.dispose();
+        this.#highlight = null;
         this.#dynamic.clear();
         this.#toolbar = null;
         this.#element = null;
