@@ -128,6 +128,39 @@ test('image frame: it goes when focus leaves the editor', () => withImages(
     }
 ));
 
+// Two fields, one editor: coming back to the image that was selected before is
+// no selection change, so only the session's return can say the frame belongs
+// on screen again.
+test('image frame: it comes back with the surface it was drawn for', () => withFixture(`
+    <div id=one contenteditable><p><img id=a src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></p></div>
+    <div id=two contenteditable><p><img id=b src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></p></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const client = new Editor(core);
+    try {
+        client.add(imageTools());
+        const surfaces = ['one', 'two'].map(id => core.add(root.querySelector(`#${id}`)));
+        const frame = () => client.chrome.root.getElementById('images');
+        const pick = (id, surface) => {
+            const range = document.createRange();
+            range.selectNode(root.querySelector(`#${id}`));
+            getSelection().removeAllRanges();
+            getSelection().addRange(range);
+            surface.element.dispatchEvent(new FocusEvent('focusin', {bubbles: true, composed: true}));
+            core.sync();
+        };
+        pick('a', surfaces[0]);
+        equal(frame().hidden, false);
+        pick('b', surfaces[1]);
+        equal(frame().hidden, false, 'The other field draws it now');
+        pick('a', surfaces[0]);
+        equal(frame().hidden, false, 'And the first one draws it again');
+    } finally {
+        client.dispose();
+        core.dispose();
+    }
+}));
+
 test('image frame: the layer is released with the module', () => withImages(({client, pick}) => {
     pick('#a');
     client.delete('images');

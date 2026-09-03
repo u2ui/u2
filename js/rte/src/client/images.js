@@ -98,6 +98,9 @@ export function imageTools({selector = 'img', minimum = 16} = {}) {
             const sync = () => track(state, view, match);
             surface.addEventListener('u2-rte-selectionchange', sync, listen);
             surface.addEventListener('u2-rte-change', sync, listen);
+            // What a session's end takes away, its beginning brings back: coming
+            // back to the same selection is no selection change to hear about.
+            surface.addEventListener('u2-rte-activate', sync, listen);
             surface.addEventListener('u2-rte-deactivate', () => close(state, surface), listen);
             return {dispose() {
                 controller.abort();

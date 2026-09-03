@@ -94,6 +94,11 @@ arrow keys move through it, Enter takes the current entry, Escape closes the lis
 before it closes the form, and a pointer does the same. One question is in flight
 at a time, and a late answer to a word that has since changed is dropped.
 
+Contextual UI goes with the editing session and comes back with it: a module
+draws on `u2-rte-activate` as well as on selection and content changes, because
+returning to the field a caret was already in is no selection change and would
+otherwise leave its handles or its form behind.
+
 Everything this client draws goes into one `Chrome`: its toolbar, the contextual
 handles, the link form, the source dialog. A module receives it as `chrome` in
 its setup context and puts its UI in `chrome.root`, so no module owns a layer, a

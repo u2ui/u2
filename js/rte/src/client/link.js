@@ -128,6 +128,9 @@ export function linkEditor({
             const listen = {signal: controller.signal};
             surface.addEventListener('u2-rte-selectionchange', () => follow(state, surface), listen);
             surface.addEventListener('u2-rte-change', () => follow(state, surface), listen);
+            // What a session's end takes away, its beginning brings back: coming
+            // back to the same selection is no selection change to hear about.
+            surface.addEventListener('u2-rte-activate', () => follow(state, surface), listen);
             surface.addEventListener('u2-rte-deactivate', () => close(state, surface), listen);
             return {dispose() {
                 controller.abort();
