@@ -1,7 +1,7 @@
 import {inlineUi} from '../config/config.js';
 import {linkHtml} from '../mark/standard.js';
 import {caretAfter} from '../ui/caret.js';
-import {place} from '../ui/place.js';
+import {panelGap, place} from '../ui/place.js';
 import {valueMark} from '../command/mark.js';
 
 const STYLE = `
@@ -419,7 +419,7 @@ function position(state) {
     return place(state.form, active.surface, {
         align: 'start',
         prefer: 'below',
-        gap: 4,
+        gap: panelGap,
         on: active.element?.getBoundingClientRect() || null,
     });
 }

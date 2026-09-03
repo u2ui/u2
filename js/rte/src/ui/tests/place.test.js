@@ -1,5 +1,6 @@
 import {Rte} from '../../core/core.js';
-import {place} from '../place.js';
+import {Chrome} from '../chrome.js';
+import {panelGap, place} from '../place.js';
 import {equal, test, truthy, withFixture} from '../../../tests/harness.js';
 
 test('place: reports when a surface has no saved selection', () => withPlaced(({surface, panel}) => {
@@ -42,6 +43,38 @@ test('place: alignment chooses the anchor edge', () => withPlaced(({surface, pan
     place(panel, surface, {align: 'center'});
     truthy(parseFloat(panel.style.left) !== start || start === 8);
 }));
+
+
+// Two panels can answer for the same thing — an image that is also a link — and
+// the second must not sit on the first.
+test('place: a panel goes under the one already drawn there', () => withFixture(
+    '<div contenteditable style="padding:40px"><p>text</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const surface = core.add(root.firstElementChild);
+        const chrome = new Chrome(document, {name: 'place-test'});
+        try {
+            const anchor = root.firstElementChild.querySelector('p').getBoundingClientRect();
+            const panels = ['first', 'second'].map(name => {
+                const element = chrome.part(name, `#${name} { position: fixed; block-size: 30px; inline-size: 90px; }`);
+                element.className = 'panel';
+                return element;
+            });
+            const put = element => {
+                place(element, surface, {align: 'start', prefer: 'below', gap: panelGap, on: anchor});
+                return element.getBoundingClientRect();
+            };
+            const first = put(panels[0]);
+            const second = put(panels[1]);
+            equal(Math.round(second.top), Math.round(first.bottom + panelGap), 'The second goes under the first');
+            panels[0].hidden = true;
+            equal(Math.round(put(panels[1]).top), Math.round(first.top),
+                'And takes the spot back when the first one goes');
+        } finally {
+            chrome.dispose();
+            core.dispose();
+        }
+    }
+));
 
 function withPlaced(run) {
     return withFixture('<div contenteditable style="position:fixed; top:40vh; left:20vw">one two</div>', root => {

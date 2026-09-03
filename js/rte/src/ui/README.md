@@ -243,6 +243,11 @@ keeps the element inside the viewport, and falls to the other side when the
 preferred one does not fit. The roaming toolbar centres above the selection; the
 link form aligns to its start and prefers below.
 
+Two panels can answer for the same thing — an image that is also a link brings
+its frame, its name and its address — so a panel goes under whatever is already
+drawn where it wants to be, in the order the chrome holds them. `panelGap` is
+the one distance they all keep from what they hang off, and from each other.
+
 `caretAfter(surface, element)` is its counterpart at the end: the one way a
 contextual UI hands the caret back, after the element it was about to change
 rather than inside it. An element that is no longer there leaves the surface

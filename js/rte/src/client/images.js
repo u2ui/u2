@@ -2,7 +2,7 @@ import {elementAttributes, selectedElement} from '../command/element.js';
 import {inlineUi} from '../config/config.js';
 import {caretAfter} from '../ui/caret.js';
 import {Handles} from '../ui/handles.js';
-import {place} from '../ui/place.js';
+import {panelGap, place} from '../ui/place.js';
 
 const STYLE = `
 #image {
@@ -193,7 +193,7 @@ function position(state, box = null) {
         state.handles.place(handle.name, rect.left + rect.width * handle.x, rect.top + rect.height * handle.y);
     }
     // Below the image, clear of the handles sitting on its lower edge.
-    place(state.alt, state.active.view.surface, {align: 'start', prefer: 'below', gap: 16, on: rect});
+    place(state.alt, state.active.view.surface, {align: 'start', prefer: 'below', gap: panelGap, on: rect});
 }
 
 function build(state) {
