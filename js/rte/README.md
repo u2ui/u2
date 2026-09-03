@@ -91,6 +91,7 @@ tests, and documentation.
 
 ```text
 rte/
+├── ai.js                  Optional assistant module factory (no default install)
 ├── blocks.js              Optional block-style module and public entry
 ├── classes.js             Optional content-class control module and entry
 ├── breaks.js              Optional visible-line-break extension and entry

@@ -4,8 +4,11 @@ const NAME = /^[a-z][a-z\d-]*$/;
 const ATTRIBUTE = /^[a-z][a-z\d_.:-]*$/;
 const PROTOCOL = /^[a-z][a-z\d+.-]*$/;
 const URL_ATTRIBUTES = new Set(['action', 'cite', 'formaction', 'href', 'poster', 'src', 'xlink:href']);
+// `style` is presentation, not execution: inline css runs no script, and where foreign styling is
+// unwanted the Unstyle policy already removes it from what an import brought — a question of taste
+// with a stage of its own. An application that must not carry it at all narrows this policy.
 const DEFAULT_ATTRIBUTES = Object.freeze({
-    '*': Object.freeze(['class', 'dir', 'lang', 'title']),
+    '*': Object.freeze(['class', 'dir', 'lang', 'style', 'title']),
     a: Object.freeze(['href', 'rel', 'target']),
     blockquote: Object.freeze(['cite']),
     img: Object.freeze(['alt', 'height', 'loading', 'src', 'width']),
@@ -30,7 +33,7 @@ const DEFAULT_PROTOCOLS = Object.freeze({
 // Elements a browser never renders the children of. Unwrapping one turns source — a stylesheet, a
 // script, document metadata — into visible text, so these go with their content. Every other unknown
 // element keeps its content: dropping it would lose text the author wrote.
-const DEFAULT_DROP = Object.freeze([
+const DEFAULT_REMOVE = Object.freeze([
     'base', 'head', 'link', 'meta', 'noscript', 'script', 'style', 'template', 'title',
 ]);
 
@@ -38,7 +41,7 @@ export const sanitizeDefaults = Object.freeze({
     elements: elementPresets.document,
     attributes: DEFAULT_ATTRIBUTES,
     protocols: DEFAULT_PROTOCOLS,
-    drop: DEFAULT_DROP,
+    removeElements: DEFAULT_REMOVE,
     comments: false,
     dataAttributes: false,
 });
@@ -49,13 +52,21 @@ export class SanitizePolicy {
 
     constructor(options = {}) {
         this.elements = names(options.elements ?? sanitizeDefaults.elements, NAME, 'element');
-        this.drop = names(options.drop ?? sanitizeDefaults.drop, NAME, 'element');
+        this.removeElements = names(options.removeElements ?? sanitizeDefaults.removeElements, NAME, 'element');
         this.#attributes = groups(options.attributes ?? sanitizeDefaults.attributes, ATTRIBUTE, 'attribute');
         this.#protocols = protocolGroups(options.protocols ?? sanitizeDefaults.protocols);
         this.attributeNames = Object.freeze(unique(Object.values(this.#attributes).flat()));
         this.comments = boolean(options.comments ?? sanitizeDefaults.comments, 'comments');
         this.dataAttributes = boolean(options.dataAttributes ?? sanitizeDefaults.dataAttributes, 'dataAttributes');
         Object.freeze(this);
+    }
+
+    /** A copy with some axes replaced: what a host declares, on top of what the application chose. */
+    with(options) {
+        return new SanitizePolicy({
+            elements: this.elements, removeElements: this.removeElements, attributes: this.#attributes,
+            protocols: this.#protocols, comments: this.comments, dataAttributes: this.dataAttributes, ...options,
+        });
     }
 
     allowsAttribute(element, attribute) {
@@ -78,15 +89,15 @@ export class SanitizePolicy {
     }
 
     // Reduces a subtree to the elements this policy allows, keeping the content
-    // of the rest — except the `drop` elements, which go with theirs. Parsed input
+    // of the rest — except the `removeElements` ones, which go with theirs. Parsed input
     // gets this from the safe sink; markup the browser inserted itself has to be
     // narrowed afterwards.
     //
     // `skip` leaves an element to a later stage. Structural repair already
     // removes what the content model rejects, and it does so knowing that
     // dissolving a block into inline content needs a line break to survive.
-    // A `drop` element is not that kind of question — no later stage may keep
-    // its content — so it goes before `skip` is asked.
+    // A removed element is not that kind of question — no later stage may keep its
+    // content — so it goes before `skip` is asked.
     //
     // `alias` names an equivalent for an element that is not allowed. Dropping
     // `<b>` would lose the emphasis it carries, so a strict list can still keep
@@ -99,7 +110,7 @@ export class SanitizePolicy {
         const changed = [];
         for (const element of descendants(root).reverse()) {
             if (preserve?.has(element) || !element.parentNode) continue;
-            if (this.drop.includes(element.localName)) {
+            if (this.removeElements.includes(element.localName)) {
                 if (map) map.remove(element);
                 else element.remove();
                 changed.push(element);
@@ -146,6 +157,20 @@ export class SanitizePolicy {
 }
 
 export const sanitizePolicy = new SanitizePolicy();
+
+// The policy a host works with: its own declarations over the one the application chose. Declaring
+// is rare and reading is not, so equal declarations share one policy instead of building it again.
+const declared = new WeakMap();
+
+export function policyFor({attributes = null, protocols = null} = {}, base = sanitizePolicy) {
+    if (!attributes && !protocols) return base;
+    const key = JSON.stringify([attributes, protocols]);
+    let known = declared.get(base);
+    if (!known) declared.set(base, known = new Map());
+    let policy = known.get(key);
+    if (!policy) known.set(key, policy = base.with({...(attributes && {attributes}), ...(protocols && {protocols})}));
+    return policy;
+}
 
 function names(values, pattern, label) {
     if (!values || typeof values[Symbol.iterator] !== 'function' || typeof values === 'string') {

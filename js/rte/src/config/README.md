@@ -83,9 +83,20 @@ the text-level semantics that carry meaning — no layout, no embeds, no forms.
 The host list still bounds it; neither can widen the sanitize policy.
 
 `--u2-rte-import-sanitize` switches that whole stage off with `none`, leaving
-what the browser inserted. Which attributes and protocols are acceptable stays
-in JavaScript with the policy — that is a security decision, not a presentation
-one, and not something CSS should be carrying.
+what the browser inserted.
+
+`--u2-rte-attributes` and `--u2-rte-protocols` say what content may carry, in one
+grammar: a bare list applies to every element, `name(…)` to one of them, and
+protocols name the attribute inside — `class title, a(href target)` and
+`a(href: http https), img(src: data http)`. Unset means the policy the
+application configured, so a declaration only states what it changes, and a
+malformed value changes nothing rather than silently narrowing. A site declares
+its own on the root and a field narrows from there, the way every other property
+here cascades.
+
+None of this is the security boundary. What a client sanitizer protects is the
+editing session — markup inserted into the author's own logged-in page — while
+what may be stored is decided where the content is saved and served.
 
 ## TODO
 

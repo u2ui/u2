@@ -283,7 +283,7 @@
     <section class="panel wide">
       <h2>One-import editor prototype</h2>
       <div class="prototype">
-      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code link bullets numbers outdent indent rule insertTable imageOriginal unstyle breaks source; --u2-rte-classes:lead, caption, brandColor; --u2-rte-show-breaks:true">
+      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code link bullets numbers outdent indent rule insertTable imageOriginal unstyle breaks source ai; --u2-rte-classes:lead, caption, brandColor; --u2-rte-show-breaks:true">
         <p>Select text to format it, choose its block style, or press Enter inside this list:</p>
         <ul><li>List item</li><li>Put the caret here and press the indent control</li></ul>
         <p>Turn these paragraphs into a list, then lift them out again.</p>
@@ -375,6 +375,7 @@
     import '../breaks.js';
     import '../unstyle.js';
     import {externalInputs, NativeSanitizer} from '../rte.js';
+    import {aiView} from '../ai.js';
     import {rangeRect} from '../src/browser/range-rect.js';
     import {Commands} from '../src/command/commands.js';
     import {deleteBackward, deleteForward} from '../src/command/delete.js';
@@ -405,6 +406,27 @@
     if (NativeSanitizer.supported()) {
         conventionEditor.add(externalInputs({sanitizer: new NativeSanitizer()}));
     }
+
+    // The assistant has no provider of its own, so the playground answers itself: the stub marks
+    // every word the prompt names and reports what it was asked, which is enough to see the dialog,
+    // the editable answer, the diff pane and what applying writes back.
+    //
+    // Comparing two html strings is a library question, so the diff is the application's to choose
+    // and is fetched on first use — a pane nobody opens costs nothing.
+    let htmlDiff = null;
+    conventionEditor.add(aiView({
+        prompts: ['Bold the keywords', 'Shorten', 'Continue'],
+        request: ({prompt, html}) => new Promise(resolve => setTimeout(() => resolve(
+            `<p><i>answered: ${prompt.replace(/[<&]/g, '')}</i></p>`
+            // Only the text between tags: bolding the whole string would edit attributes too.
+            + html.replace(/>([^<]+)</g, (all, text) => '>' + text.replace(/\b(\w{6,})\b/g, '<strong>$1</strong>') + '<'),
+        ), 400)),
+        diff: async (original, edited) => {
+            htmlDiff ??= import('https://cdn.jsdelivr.net/npm/htmldiff-js@1.0.5/+esm')
+                .then(module => module.default.default ?? module.default);
+            return (await htmlDiff).execute(original, edited);
+        },
+    }));
 
     const controls = {
       scenario: document.querySelector('#scenario'),

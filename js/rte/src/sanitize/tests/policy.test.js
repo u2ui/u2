@@ -1,4 +1,4 @@
-import {SanitizePolicy, sanitizeDefaults, sanitizePolicy} from '../policy.js';
+import {SanitizePolicy, policyFor, sanitizeDefaults, sanitizePolicy} from '../policy.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
 test('sanitize policy: default policy is immutable and covers document elements', () => {
@@ -37,6 +37,7 @@ test('sanitize policy: URL protocols are explicit and robust against whitespace'
     }
 ));
 
+// `style` survives: it is presentation, and removing it where it is unwanted is Unstyle's job.
 test('sanitize policy: clean removes foreign attributes and rejected URLs', () => withFixture(`
     <a id=link class=kept style=color:red onclick=alert(1) href="javascript:alert(1)">link</a>
     <p id=paragraph title=kept data-note=removed>text</p>
@@ -44,9 +45,17 @@ test('sanitize policy: clean removes foreign attributes and rejected URLs', () =
     const link = root.querySelector('#link');
     const paragraph = root.querySelector('#paragraph');
     sanitizePolicy.clean(root);
-    equal(link.outerHTML, '<a class="kept">link</a>');
+    equal(link.outerHTML, '<a class="kept" style="color:red">link</a>');
     equal(paragraph.outerHTML, '<p title="kept">text</p>');
 }));
+
+test('sanitize policy: a policy that must not carry presentation narrows to its own attributes', () => withFixture(
+    '<p style=color:red title=kept>text</p>', root => {
+        const paragraph = root.firstElementChild;
+        new SanitizePolicy({attributes: {'*': ['title']}}).clean(root);
+        equal(paragraph.outerHTML, '<p title="kept">text</p>');
+    }
+));
 
 test('sanitize policy: clean includes an element root and optional data attributes', () => withFixture(
     '<p data-note=kept unknown=removed>text</p>', root => {
@@ -109,8 +118,8 @@ test('sanitize policy: a dropped element goes before skip is asked', () => {
     equal(root.innerHTML, '<nav>menu</nav>');
 });
 
-test('sanitize policy: a custom drop list replaces the default one', () => {
-    const policy = new SanitizePolicy({elements: ['p'], drop: ['nav']});
+test('sanitize policy: a custom removeElements list replaces the default one', () => {
+    const policy = new SanitizePolicy({elements: ['p'], removeElements: ['nav']});
     const root = document.createElement('div');
     root.innerHTML = '<nav>menu</nav><style>css</style><p>Text</p>';
     policy.narrow(root);
@@ -143,4 +152,18 @@ test('sanitize policy: an alias outside the allowed elements falls back to unwra
     root.innerHTML = '<b>bold</b>';
     policy.narrow(root, {elements: ['p'], alias: {b: 'strong'}});
     equal(root.innerHTML, 'bold');
+});
+
+// A host declares what its fields may carry; everything the application chose stays in place.
+test('sanitize policy: policyFor layers a host declaration on the configured policy', () => {
+    const base = new SanitizePolicy({elements: ['p', 'a'], attributes: {'*': ['class']}});
+    same(policyFor({}, base), base, 'Nothing declared, nothing built');
+    const host = policyFor({attributes: {'*': ['class', 'style']}}, base);
+    same(policyFor({attributes: {'*': ['class', 'style']}}, base), host, 'Equal declarations share one policy');
+    equal(host.elements, ['p', 'a'], 'What the application chose is kept');
+    return withFixture('<p id=p class=x style=color:red title=t>text</p>', root => {
+        const paragraph = root.firstElementChild;
+        host.clean(root);
+        equal(paragraph.outerHTML, '<p class="x" style="color:red">text</p>');
+    });
 });

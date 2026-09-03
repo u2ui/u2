@@ -79,17 +79,31 @@ without a single tag it is text, escaped and joined by breaks, which is all the
 structure such a paste has. A `text/plain` paste with no html flavor beside it
 stays native as before.
 
+Sanitizing now speaks the web Sanitizer API's vocabulary throughout — `elements`,
+`removeElements`, `replaceWithChildrenElements`, `attributes`, `comments`,
+`dataAttributes` — so browser, editor, and an application's own filter name the
+same things alike. `protocols` is the one addition, because `clean()` also runs on
+nodes a browser inserted, where no sink checked them. A configuration may not
+carry `elements` and `removeElements` at once: the api rejects that pair and
+`setHTML()` yields nothing, so an allowlist expresses removal by leaving out.
+
+Inline `style` is presentation, not execution, and moved to the stage that owns
+presentation. The security policy now allows the attribute — it runs no script —
+while Unstyle keeps removing it from imported content, which is where unwanted
+foreign styling actually comes from. Content a field owns therefore keeps what an
+editor set on it, and an application that must not carry style at all narrows the
+policy's `attributes`.
+
 Keeping the content of an unlisted element is right for almost all of them, and
 wrong for the few a browser never renders the children of: unwrapping a `<style>`
 from a word processor left its stylesheet standing in the text. `SanitizePolicy`
-now carries a `drop` list — `base head link meta noscript script style template
+now carries a `removeElements` list — `base head link meta noscript script style template
 title` — that `narrow()` removes with their content, while everything else keeps
 dissolving into what the author wrote.
 
 A native paste now meets the attribute policy. Nothing is parsed there — the
 browser inserts its own payload — so it was the one import path without an
-allowlist, and layout ids, tracking attributes and inline styles came straight
-through. The pipeline applies `SanitizePolicy.clean()` to the nodes that
+allowlist, and layout ids and tracking attributes came straight through. The pipeline applies `SanitizePolicy.clean()` to the nodes that
 arrived, before presentation cleanup and structural repair, so an id removed in
 the first stage is what lets the third dissolve the wrapper carrying it.
 `--u2-rte-import-sanitize: none` opts a host out.
@@ -457,6 +471,23 @@ absent, work for current and future surfaces, and release everything through
    keeps the proportion, the two edges change one measurement each. An alt-text
    editor and keyboard resizing remain open, as does a hook for regenerating the
    file server-side rather than letting the browser stretch it.
+
+6. **Assistant — implemented.** `aiView({request})` prompts over the whole field
+   and shows the answer beside the original, editable, with an optional third
+   pane for a diff the application supplies. Applying goes through `Source`, so
+   an answer is external input like every other and meets the sanitizer instead
+   of reaching `innerHTML`. The extension carries no provider, key, or prompt
+   text: `request({prompt, html})` is mandatory, which is why `rte.js` does not
+   install it and `ai.js` exports only the factory. Each request remembers the
+   run it belongs to, so an answer arriving after the next prompt or after the
+   dialog closed is dropped rather than filling a stale pane. The request also
+   carries the surface itself: what it allows — elements, content classes, default
+   block — because everything an answer uses beyond that is cleaned away when it
+   is applied, and a model that is not told promises what it then loses; and the
+   element behind it, because what else a field means is the application's to
+   read, not this module's to enumerate. Streaming a
+   growing answer, working on a selection rather than the whole field, and
+   keeping the prompt history remain open.
 
 All roaming and contextual extension UI must be created in the core's
 `Document` or `ShadowRoot`, use the browser top layer through Popover or Dialog

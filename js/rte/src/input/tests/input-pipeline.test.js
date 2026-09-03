@@ -644,3 +644,21 @@ test('input pipeline: an alias never widens the list it is aliasing into', () =>
         equal(host.innerHTML, '<p>start</p><p>bold</p>');
     }
 ));
+
+// What a host declares reaches the import path: a style the site allows survives a native paste,
+// where the shipped policy alone would have taken it off.
+test('input pipeline: a host declaration decides the attribute policy', () => withPipeline(
+    '<div contenteditable style="--u2-rte-attributes: class; --u2-rte-import-unstyle: none"><p>before</p></div>',
+    ({document, host}) => {
+        const paragraph = host.firstElementChild;
+        host.dispatchEvent(input(document, 'insertFromPaste', 'beforeinput'));
+        const span = document.createElement('span');
+        span.className = 'kept';
+        span.title = 'dropped';
+        span.textContent = 'paste';
+        paragraph.append(span);
+        caret(document, span.firstChild, 5);
+        host.dispatchEvent(input(document, 'insertFromPaste'));
+        equal(host.innerHTML, '<p>before<span class="kept">paste</span></p>');
+    }
+));

@@ -122,3 +122,25 @@ test('config: inline ui is every one by default, and a named list otherwise', ()
         equal(inlineUi(config(host), 'table'), false);
     }
 ));
+
+// One grammar for the element-specific lists: a bare list is what every element carries, `name(…)`
+// what one of them adds. Unset stays null, so the policy's own default is what applies.
+test('config: attributes and protocols read their groups', () => withFixture(`
+    <div contenteditable style="
+        --u2-rte-attributes: class title, a(href target), img(src alt);
+        --u2-rte-protocols: a(href: http https mailto), img(src: data http);
+    "></div>
+`, root => {
+    const result = config(root.firstElementChild);
+    equal(result.attributes, {'*': ['class', 'title'], a: ['href', 'target'], img: ['src', 'alt']});
+    equal(result.protocols, {a: {href: ['http', 'https', 'mailto']}, img: {src: ['data', 'http']}});
+}));
+
+test('config: an undeclared or malformed list leaves the policy alone', () => withFixture(`
+    <div id=silent contenteditable></div>
+    <div id=broken contenteditable style="--u2-rte-attributes: class, a(href!)"></div>
+`, root => {
+    equal(config(root.querySelector('#silent')).attributes, null);
+    equal(config(root.querySelector('#silent')).protocols, null);
+    equal(config(root.querySelector('#broken')).attributes, null, 'A typo must not silently narrow');
+}));

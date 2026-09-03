@@ -6,6 +6,8 @@ const INLINE_HOSTS = new Set([
 const UNWRAPPED_HOSTS = new Set(['LI', 'CAPTION', 'TH', 'TD']);
 const CLEANUP = new Set(['none', 'minimal', 'structural', 'canonical']);
 const ENTER = new Set(['break', 'block', 'item', 'row', 'cell']);
+const ATTRIBUTE = /^[a-z][a-z\d_.:-]*$/;
+const PROTOCOL = /^[a-z][a-z\d+.-]*$/;
 const UI = new Set(['none', 'roaming', 'static']);
 const IMPORT_SANITIZE = new Set(['policy', 'none']);
 const TAG = /^[a-z][a-z\d-]*$/;
@@ -70,6 +72,8 @@ export function config(host) {
         elements: allowedElements(style, 'elements', null),
         importElements: allowedElements(style, 'import-elements', elementPresets.content),
         classes: classNames(style),
+        attributes: groups(style, 'attributes', text => list(text, ATTRIBUTE)),
+        protocols: groups(style, 'protocols', scheme),
         // Foreign presentation through the class rung: pasted markup keeps no
         // styles, no presentational attributes, and no undeclared classes.
         importSanitize: choice(style, 'import-sanitize', IMPORT_SANITIZE, 'policy'),
@@ -114,10 +118,35 @@ function choice(style, name, choices, fallback) {
 // control, the sanitizer, and presentation cleanup, so a class the host knows is
 // never offered without being allowed, or cleaned away as foreign.
 function classNames(style) {
-    const result = value(style, 'classes');
-    if (!result) return EMPTY_ELEMENTS;
-    const names = result.split(/[\s,]+/).filter(Boolean);
-    return names.every(name => CLASS.test(name)) ? Object.freeze([...new Set(names)]) : EMPTY_ELEMENTS;
+    return list(value(style, 'classes'), CLASS) ?? EMPTY_ELEMENTS;
+}
+
+// Element-specific lists share one grammar: a bare list is what every element may carry, `name(…)`
+// what one of them adds — `class title, a(href target)`, or one level deeper `a(href: http https)`.
+// Unset means the policy's own default, so a declaration only says what it changes, and a typo
+// yields nothing rather than silently narrowing.
+function groups(style, name, read) {
+    const declared = value(style, name).toLowerCase();
+    if (!declared) return null;
+    const result = {};
+    for (const group of declared.split(',')) {
+        const match = group.trim().match(/^([a-z][a-z\d-]*)\s*\((.*)\)$/s);
+        const parsed = read(match ? match[2] : group);
+        if (!parsed) return null;
+        result[match ? match[1] : '*'] = parsed;
+    }
+    return Object.freeze(result);
+}
+
+function list(text, pattern) {
+    const names = text.split(/[\s,]+/).filter(Boolean);
+    return names.length && names.every(one => pattern.test(one)) ? Object.freeze([...new Set(names)]) : null;
+}
+
+function scheme(text) {
+    const [attribute, ...rest] = text.split(':');
+    const schemes = list(rest.join(':'), PROTOCOL);
+    return schemes && ATTRIBUTE.test(attribute.trim()) ? Object.freeze({[attribute.trim()]: schemes}) : null;
 }
 
 function allowedElements(style, name, fallback) {
@@ -125,8 +154,7 @@ function allowedElements(style, name, fallback) {
     if (!result) return fallback;
     if (result === 'all') return null;
     if (result.startsWith('@')) return elementPresets[result.slice(1)] || EMPTY_ELEMENTS;
-    const names = result.split(/[\s,]+/).filter(Boolean);
-    return names.length && names.every(name => TAG.test(name)) ? Object.freeze([...new Set(names)]) : EMPTY_ELEMENTS;
+    return list(result, TAG) ?? EMPTY_ELEMENTS;
 }
 
 function elements(value) {

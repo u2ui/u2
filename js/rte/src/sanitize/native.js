@@ -39,5 +39,7 @@ function config(policy, elements) {
         dataAttributes: policy.dataAttributes,
     };
     if (replaced.length) result.replaceWithChildrenElements = replaced;
+    // No `removeElements` beside an `elements` allowlist: the api rejects a config carrying both, and
+    // an allowlist already excludes them — what they must not leave behind is `narrow()`'s job.
     return result;
 }

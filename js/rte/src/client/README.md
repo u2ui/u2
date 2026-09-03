@@ -349,6 +349,39 @@ available through `[Symbol.dispose]()`; core disposal disposes the client. One
 core accepts only one convention client at a time, preventing duplicate input
 pipelines. Disposal releases that ownership so a new client can take over.
 
+### Optional assistant
+
+`aiView(options)` adds a prompt over the whole field, shown beside the original
+with the answer in an editable pane. Applying writes it back through the source
+path, so a model's output is external input like any other and meets the
+sanitizer. Which model answers is application policy, so `request` is mandatory
+and has no default:
+
+```js
+import {editor} from '../../rte.js';
+import {aiView} from '../../ai.js';
+
+editor.add(aiView({
+    request: ({prompt, html}) => ask(prompt, html),   // returns html
+    prompts: ['Shorten', 'Continue', 'Fix spelling'], // optional suggestions
+    diff: (original, edited) => mark(original, edited), // optional third pane
+}));
+```
+
+`request({prompt, html})` receives the field's serialized content and returns
+its replacement, as a promise or directly. `surface` comes along rather than a
+digest of it: `surface.config` says what the field allows — with `null` where
+nothing is restricted — because an answer using anything else is cleaned away on
+the way back in, and `surface.element` is where an application reads whatever
+else its own fields carry; a rejection is shown in the answer
+pane and leaves the field untouched. `prompts` fills a datalist beside the
+input. Without `diff` the dialog shows two panes — comparing two HTML strings is
+a library question, not an editor one, so none is pulled in. Answers that arrive
+after the next prompt, or after the dialog closed, are dropped.
+
+`rte.js` does not install it, and `ai.js` exports only the factory: an assistant
+without a configured request would be a button that cannot work.
+
 ## Invariants
 
 - Importing the convention client adds only core listeners. It scans no DOM,

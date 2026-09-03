@@ -8,7 +8,7 @@ import {editingHost, isPlainTextHost} from '../selection/ownership/ownership.js'
 import {Point} from '../selection/point/point.js';
 import {SelectionSnapshot} from '../selection/snapshot.js';
 import {defaultUnstyle} from '../unstyle/unstyle.js';
-import {sanitizePolicy} from '../sanitize/policy.js';
+import {policyFor, sanitizePolicy} from '../sanitize/policy.js';
 
 const TRIGGERS = new Set(['input', 'paste', 'drop', 'command']);
 const PASTE = new Set(['insertFromPaste', 'insertFromPasteAsQuotation']);
@@ -109,11 +109,13 @@ export class InputPipeline {
             // A native paste is the one import the browser inserts itself, so
             // this is where the policy reaches it: elements first, because
             // unwrapping moves nodes, then attributes.
-            if (this.#sanitize && settings.importSanitize === 'policy' && imported?.roots.length) {
+            // The host may declare its own attributes and protocols; everything else stays as configured.
+            const sanitize = this.#sanitize && policyFor(settings, this.#sanitize);
+            if (sanitize && settings.importSanitize === 'policy' && imported?.roots.length) {
                 // Attributes first: removing them moves nothing, while narrowing
                 // dissolves wrappers and would leave nothing left to clean.
                 for (const root of imported.roots) {
-                    this.#sanitize.clean(root, {
+                    sanitize.clean(root, {
                         preserve: imported.preserve,
                         base: this.#root.ownerDocument.baseURI,
                         classes: settings.classes.length ? settings.classes : null,
@@ -121,7 +123,7 @@ export class InputPipeline {
                 }
                 const map = new PointMap(points);
                 for (const root of imported.roots) {
-                    this.#sanitize.narrow(root, {
+                    sanitize.narrow(root, {
                         map,
                         preserve: imported.preserve,
                         elements: importable(settings),

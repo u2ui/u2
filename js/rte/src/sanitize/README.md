@@ -8,17 +8,21 @@ repairs editable document shape.
 
 ## Policy
 
-`SanitizePolicy` is an immutable allowlist. Its options are:
+`SanitizePolicy` is an immutable allowlist. It speaks the vocabulary of the web
+Sanitizer API, so one set of terms carries through browser, editor, and whatever
+an application filters with; where the API has no answer, the policy extends it
+rather than renaming what it has. Its options are:
 
 - `elements`: element names the security policy can accept;
 - `attributes`: global (`*`) and per-element attribute names;
-- `protocols`: per-element rules for URL attributes;
-- `drop`: element names that `narrow()` removes with their content, before it
+- `protocols`: per-element rules for URL attributes — the one extension, because
+  `clean()` also runs on nodes a browser inserted, where no sink checked them;
+- `removeElements`: element names that `narrow()` removes with their content, before it
   asks `skip` — no later stage may be left holding them;
 - `comments` and `dataAttributes`: explicit booleans, both false by default.
 
 An element outside `elements` keeps its content — dropping it would lose text the
-author wrote. `drop` names the exception: elements a browser never renders the
+author wrote. `removeElements` names the exception: elements a browser never renders the
 children of, where unwrapping would turn a stylesheet, a script, or document
 metadata into visible text. It defaults to `base head link meta noscript script
 style template title` and, like every default, an application may replace it.
@@ -27,10 +31,21 @@ The supplied `sanitizePolicy` accepts the `document` element preset, ordinary
 editor metadata, and conservative web URLs. An image may carry a `data:` URL,
 because an image executes nothing — not even an SVG one, which browsers draw in
 a script-free context; in a navigating attribute the same protocol is a page, so
-links and citations keep it out. Inline styles, event attributes, comments, and
-data attributes are not enabled by default.
+links and citations keep it out. There is no allowlist of css properties, for the
+same reason the Sanitizer API has none: `style` is an attribute like any other,
+and taking presentation away is Unstyle's job.
+Event attributes, comments, and data attributes
+are not enabled by default. Inline `style` is: it executes nothing, and where
+foreign presentation is unwanted the Unstyle policy already removes it from what
+an import brought — a policy that must not carry it at all narrows `attributes`.
 Relative URLs use the explicit `relative` protocol token. Known URL attributes
 without a matching protocol rule are removed rather than accepted implicitly.
+
+`policy.with(options)` copies a policy with single axes replaced, and
+`policyFor(config, base)` is what a host gets: its own `--u2-rte-attributes` and
+`--u2-rte-protocols` over the policy the application chose, with equal
+declarations sharing one policy instead of building it again. Nothing declared
+returns the base itself.
 
 ```js
 const policy = new SanitizePolicy({
@@ -72,6 +87,8 @@ rich paste/drop events and direct HTML imports.
 - Attribute and URL policy remains separate from structural normalization.
 - Sanitizing creates no editor state, listeners, or markers.
 - Policies do not mutate after construction.
+- A configuration never carries `elements` and `removeElements` together: the api
+  rejects that pair, and `setHTML()` then yields nothing.
 
 ## Where the policy is applied
 
@@ -83,8 +100,8 @@ Three paths bring external HTML in, and all three now meet the same policy:
   there and no fallback parser is needed, but the result still has to obey the
   same attribute policy — so the input pipeline applies `clean()` to the nodes
   that arrived. Until it did, the most common import was the only one without an
-  allowlist, and layout ids, tracking `data-` attributes and inline styles came
-  straight through.
+  allowlist, and layout ids and tracking `data-` attributes came straight through.
+  Inline styles are not that kind of problem: Unstyle takes them off an import.
 
 `clean(root, {preserve})` spares elements that were already there, so a paste
 never re-cleans the document it landed in.

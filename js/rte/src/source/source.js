@@ -1,6 +1,7 @@
 import {htmlModel} from '../model/html/html-model.js';
 import {narrow} from '../command/edit.js';
 import {NativeSanitizer} from '../sanitize/native.js';
+import {policyFor} from '../sanitize/policy.js';
 import {SelectionSnapshot} from '../selection/snapshot.js';
 import {replaceContent} from '../surface/content.js';
 
@@ -21,7 +22,9 @@ export class Source {
     #sanitizer;
     #indent;
 
-    constructor(surface, {sanitizer = new NativeSanitizer(), indent = '    '} = {}) {
+    constructor(surface, {sanitizer = null, indent = '    '} = {}) {
+        // Without one supplied, the host's own declarations decide what may be written back.
+        sanitizer ??= new NativeSanitizer(policyFor(surface?.config));
         if (surface?.element?.nodeType !== Node.ELEMENT_NODE || typeof surface?.transact !== 'function') {
             throw new TypeError('A source view requires an editor surface');
         }
