@@ -71,10 +71,10 @@ test('external input: an html flavor without markup is imported as the text it i
     let received = null;
     return withExternal('<div contenteditable><p>one</p></div>', ({document, host}) => {
         caret(document, host.firstElementChild.firstChild, 3);
-        const event = richInput(document, 'insertFromPaste', null, () => 'a & b > c\nline two', ['text/html', 'text/plain']);
-        host.dispatchEvent(event);
-        truthy(event.defaultPrevented);
-        equal(received, 'a &amp; b &gt; c<br>line two');
+        host.dispatchEvent(richInput(document, 'insertFromPaste', null, () => 'x\ny', ['text/html', 'text/plain']));
+        equal(received, 'x<br>y');
+        host.dispatchEvent(richInput(document, 'insertFromPaste', null, () => 'a & b > c', ['text/html', 'text/plain']));
+        equal(received, 'a &amp; b &gt; c'); // text becoming markup on the way through the string
     }, {sanitizer: {sanitize(html, {document}) { received = html; return document.createDocumentFragment(); }}});
 });
 

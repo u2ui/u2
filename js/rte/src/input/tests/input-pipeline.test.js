@@ -166,6 +166,23 @@ test('input pipeline: native paste unstyles only added content before structural
     }
 ));
 
+// A word processor puts its stylesheet in the clipboard html, and the browser inserts it. Unwrapping
+// would leave the css standing in the text, so the element goes with its content.
+test('input pipeline: a native paste drops what carries no content', () => withPipeline(
+    '<div contenteditable><p>before</p></div>',
+    ({document, host}) => {
+        const paragraph = host.firstElementChild;
+        host.dispatchEvent(input(document, 'insertFromPaste', 'beforeinput'));
+        const style = document.createElement('style');
+        style.textContent = 'p { line-height: 115% }';
+        const text = document.createTextNode('pasted');
+        paragraph.append(style, text);
+        caret(document, text, 6);
+        host.dispatchEvent(input(document, 'insertFromPaste'));
+        equal(host.innerHTML, '<p>beforepasted</p>');
+    }
+));
+
 test('input pipeline: native import cleanup may be disabled per surface', () => withPipeline(
     '<div contenteditable style="--u2-rte-import-unstyle:none; --u2-rte-import-sanitize:none"><p>before</p></div>',
     ({document, host}) => {

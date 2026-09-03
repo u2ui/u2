@@ -99,6 +99,16 @@ test('sanitize policy: narrow drops the elements whose content is not content', 
     equal(changed.length, 2);
 });
 
+// The input pipeline skips what the content model rejects, so structural repair can dissolve it with
+// its line break intact. A stylesheet has no content to keep, and no later stage may be left with it.
+test('sanitize policy: a dropped element goes before skip is asked', () => {
+    const policy = new SanitizePolicy();
+    const root = document.createElement('div');
+    root.innerHTML = '<style>p { color: red }</style><nav>menu</nav>';
+    policy.narrow(root, {skip: () => true});
+    equal(root.innerHTML, '<nav>menu</nav>');
+});
+
 test('sanitize policy: a custom drop list replaces the default one', () => {
     const policy = new SanitizePolicy({elements: ['p'], drop: ['nav']});
     const root = document.createElement('div');

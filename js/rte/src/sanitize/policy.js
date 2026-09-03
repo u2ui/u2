@@ -85,6 +85,8 @@ export class SanitizePolicy {
     // `skip` leaves an element to a later stage. Structural repair already
     // removes what the content model rejects, and it does so knowing that
     // dissolving a block into inline content needs a line break to survive.
+    // A `drop` element is not that kind of question — no later stage may keep
+    // its content — so it goes before `skip` is asked.
     //
     // `alias` names an equivalent for an element that is not allowed. Dropping
     // `<b>` would lose the emphasis it carries, so a strict list can still keep
@@ -96,15 +98,14 @@ export class SanitizePolicy {
             : this.elements.filter(name => elements.includes(name));
         const changed = [];
         for (const element of descendants(root).reverse()) {
-            if (preserve?.has(element)) continue;
-            if (!element.parentNode || skip?.(element)) continue;
+            if (preserve?.has(element) || !element.parentNode) continue;
             if (this.drop.includes(element.localName)) {
                 if (map) map.remove(element);
                 else element.remove();
                 changed.push(element);
                 continue;
             }
-            if (allowed.includes(element.localName)) continue;
+            if (skip?.(element) || allowed.includes(element.localName)) continue;
             const equivalent = alias?.[element.localName];
             if (equivalent && allowed.includes(equivalent)) {
                 const replacement = element.ownerDocument.createElement(equivalent);

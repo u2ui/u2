@@ -13,7 +13,8 @@ repairs editable document shape.
 - `elements`: element names the security policy can accept;
 - `attributes`: global (`*`) and per-element attribute names;
 - `protocols`: per-element rules for URL attributes;
-- `drop`: element names that `narrow()` removes with their content;
+- `drop`: element names that `narrow()` removes with their content, before it
+  asks `skip` — no later stage may be left holding them;
 - `comments` and `dataAttributes`: explicit booleans, both false by default.
 
 An element outside `elements` keeps its content — dropping it would lose text the
