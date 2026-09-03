@@ -1,3 +1,4 @@
+import {configuredElements} from '../config/config.js';
 import {htmlModel} from '../model/html/html-model.js';
 import {EditRange} from '../selection/range/edit-range.js';
 import {PointMap} from '../selection/map/point-map.js';
@@ -55,7 +56,7 @@ export class Edit {
     // checks never consult it. Resolving it on first use keeps a toolbar
     // refresh from paying for every control that does not care.
     get model() {
-        this.#narrowed ??= narrow(this.#model, this.#surface.config.elements);
+        this.#narrowed ??= narrow(this.#model, configuredElements(this.#surface.element));
         return this.#narrowed;
     }
     get map() { return this.#map; }

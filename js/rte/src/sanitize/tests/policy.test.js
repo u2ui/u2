@@ -27,7 +27,12 @@ test('sanitize policy: URL protocols are explicit and robust against whitespace'
         truthy(sanitizePolicy.allowsUrl(link, 'href', '/relative'));
         truthy(sanitizePolicy.allowsUrl(link, 'href', 'mailto:test@example.com'));
         equal(sanitizePolicy.allowsUrl(link, 'href', 'java\nscript:alert(1)'), false);
-        equal(sanitizePolicy.allowsUrl(image, 'src', 'data:image/png;base64,x'), false);
+        // An image executes nothing, an SVG one included: browsers draw it in a
+        // script-free context. A navigating attribute is a page, and keeps out.
+        truthy(sanitizePolicy.allowsUrl(image, 'src', 'data:image/png;base64,x'));
+        truthy(sanitizePolicy.allowsUrl(image, 'src', 'data:image/svg+xml;utf8,%3Csvg%3E%3C/svg%3E'));
+        equal(sanitizePolicy.allowsUrl(image, 'src', 'javascript:alert(1)'), false);
+        equal(sanitizePolicy.allowsUrl(link, 'href', 'data:text/html,%3Cscript%3E'), false);
         equal(sanitizePolicy.allowsUrl(link, 'action', '/submit'), false, 'URL attributes need a matching rule');
     }
 ));

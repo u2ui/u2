@@ -19,7 +19,11 @@ const DEFAULT_ATTRIBUTES = Object.freeze({
 const DEFAULT_PROTOCOLS = Object.freeze({
     a: Object.freeze({href: Object.freeze(['http', 'https', 'mailto', 'relative', 'tel'])}),
     blockquote: Object.freeze({cite: Object.freeze(['http', 'https', 'relative'])}),
-    img: Object.freeze({src: Object.freeze(['http', 'https', 'relative'])}),
+    // `data:` belongs to an image and to nothing else here: an image executes
+    // nothing, not even an SVG one, which browsers draw in a script-free
+    // context. In a navigating attribute the same protocol is a page, so `a`
+    // and the citations keep it out.
+    img: Object.freeze({src: Object.freeze(['data', 'http', 'https', 'relative'])}),
     q: Object.freeze({cite: Object.freeze(['http', 'https', 'relative'])}),
 });
 

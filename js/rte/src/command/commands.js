@@ -1,3 +1,4 @@
+import {configuredElements} from '../config/config.js';
 import {Edit, narrow} from './edit.js';
 import {htmlModel} from '../model/html/html-model.js';
 
@@ -28,7 +29,7 @@ export class Commands {
 
     get surface() { return this.#surface; }
     get model() {
-        return narrow(this.#model, this.#surface.config.elements);
+        return narrow(this.#model, configuredElements(this.#surface.element));
     }
     get names() { return [...this.#commands.keys()]; }
 

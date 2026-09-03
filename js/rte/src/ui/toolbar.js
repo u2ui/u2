@@ -63,12 +63,16 @@ export class Toolbar {
         const commands = surface?.connected ? this.#resolve(surface) : null;
         if (commands != null && !registry(commands)) throw new TypeError('Toolbar commands must resolve to a command registry');
         this.#commands = commands || null;
-        const active = !!commands && surface.config.ui === 'roaming'
-            && visibleForSelection(surface);
-        const names = active ? configured(surface.element) : null;
+        // One computed style for the settings only this toolbar reads: asking for
+        // it three times is three style resolutions on a path every keystroke
+        // goes down. The shared ones keep coming from the surface, defaults and
+        // validation included.
+        const style = commands && getComputedStyle(surface.element);
+        const active = !!commands && surface.config.ui === 'roaming' && visibleForSelection(surface, style);
+        const names = active ? configured(style) : null;
         // A host may prefer a toolbar that only ever shows what it can do, at
         // the cost of a shape that moves with the caret.
-        const hiding = active && unavailable(surface.element) === 'hide';
+        const hiding = active && setting(style, 'toolbar-unavailable') === 'hide';
         const detail = surface?.selection ? {range: surface.selection.range()} : undefined;
         let visible = 0;
         for (const item of this.#items()) {
@@ -225,18 +229,18 @@ function registry(value) {
         && typeof value?.run === 'function';
 }
 
-function configured(element) {
-    const value = getComputedStyle(element).getPropertyValue('--u2-rte-toolbar').trim();
+function setting(style, name) {
+    return style.getPropertyValue(`--u2-rte-${name}`).trim();
+}
+
+function configured(style) {
+    const value = setting(style, 'toolbar');
     return value ? new Set(value.split(/[\s,]+/).filter(Boolean)) : null;
 }
 
-function unavailable(element) {
-    return getComputedStyle(element).getPropertyValue('--u2-rte-toolbar-unavailable').trim();
-}
-
-function visibleForSelection(surface) {
-    const value = getComputedStyle(surface.element).getPropertyValue('--u2-rte-toolbar-when').trim();
-    return value !== 'selection' || !!surface.selection && !surface.selection.collapsed;
+function visibleForSelection(surface, style) {
+    return setting(style, 'toolbar-when') !== 'selection'
+        || !!surface.selection && !surface.selection.collapsed;
 }
 
 function state(item, value, disabled) {

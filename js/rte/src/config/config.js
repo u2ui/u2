@@ -51,6 +51,13 @@ export function hostDefaults(host) {
     return DEFAULTS.block;
 }
 
+// Only the setting the model narrowing wants. The whole configuration parses
+// eleven properties, and reading a computed style is the expensive part of a
+// path every keystroke and every availability check goes through.
+export function configuredElements(host) {
+    return allowedElements(getComputedStyle(host), 'elements', null);
+}
+
 export function config(host) {
     const style = getComputedStyle(host);
     const defaults = hostDefaults(host);

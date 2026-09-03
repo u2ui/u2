@@ -223,9 +223,38 @@
     </section>
 
     <section class=case>
+      <h3><code>&lt;button&gt; &lt;span contenteditable&gt;</code></h3>
+      <button type=button>
+        Wraps <span class=rte-host contenteditable data-name=inside-button>editable host</span>
+      </button>
+      <output></output>
+    </section>
+
+    <section class=case>
+      <h3><code>&lt;form&gt; &lt;button contenteditable&gt;</code></h3>
+      <form id=submit-form>
+        <button class=rte-host contenteditable data-name=submit-button>Editable submit button</button>
+        <output id=submit-state>not submitted</output>
+      </form>
+      <output></output>
+    </section>
+
+    <section class=case>
       <h3><code>&lt;div contenteditable&gt; &lt;a&gt;</code></h3>
       <div class=rte-host contenteditable data-name=around-link>
         Editable host around <a href=#links>a link</a>
+      </div>
+      <output></output>
+    </section>
+
+    <h2 class=group>Atomic content</h2>
+
+    <section class=case>
+      <h3><code>&lt;div contenteditable&gt;</code> with a rule, an image, and a control</h3>
+      <div class=rte-host contenteditable data-name=atomic>
+        <p>Text before the rule</p>
+        <hr>
+        <p>An image <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40'%3E%3Crect width='80' height='40' fill='%23bcd'/%3E%3C/svg%3E" alt="Placeholder" width=80 height=40> and a <button type=button>button</button> in the text</p>
       </div>
       <output></output>
     </section>
@@ -433,6 +462,12 @@
     import {config, rte, Source} from '../rte.js';
 
     const hosts = [...document.querySelectorAll('.rte-host')];
+    // An editable submit button: typing in it must never send the form, which is
+    // what a key and a click both mean to a button that is not editable.
+    document.querySelector('#submit-form').addEventListener('submit', event => {
+      event.preventDefault();
+      document.querySelector('#submit-state').textContent = 'submitted';
+    });
     const events = [];
     const active = document.querySelector('#active');
     const selection = document.querySelector('#selection');

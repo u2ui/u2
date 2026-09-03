@@ -12,7 +12,10 @@ reorder focus behavior under test.
 
 Browser behaviors that intentionally depend on DevTools or top-level window
 state belong in isolated reproduction pages rather than the deterministic main
-suite. No such pages are currently part of RTE.
+suite. `webkit-data-image-drag.html` is one: dragging an image with a `data:`
+URL inside a plain contenteditable hangs WebKitGTK 2.52, with no editor on the
+page at all. A hang is not a result the runner can report, and the page carries
+no editor so that the answer stays unambiguous.
 
 `generated.test.js` adds seeded cross-module cases: it builds random editable
 content from a fixed seed and asserts the invariants that no single fixture can

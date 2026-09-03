@@ -13,6 +13,7 @@ export class Rte extends EventTarget {
     #active = null;
     #unfocused = false;
     #pointer = null;
+    #handed = false;
     #controller;
 
     constructor(root = document, options = {}) {
@@ -175,7 +176,14 @@ export class Rte extends EventTarget {
         if (surface && this.#pointer && !this.#pointer.includes(surface.element)) {
             this.#unfocused = true;
             this.activate(null);
-            editable.blur();
+            // Handing the focus back once per press. An engine that answers a
+            // blur by focusing again — the selection is still in there, after
+            // all — would otherwise trade focus with the editor for as long as
+            // the button is down, and the session stays refused either way.
+            if (!this.#handed) {
+                this.#handed = true;
+                editable.blur();
+            }
             return;
         }
         this.#unfocused = !surface;
@@ -200,13 +208,15 @@ export class Rte extends EventTarget {
     #pointerDown = event => {
         const path = event.composedPath();
         this.#pointer = path;
+        this.#handed = false;
+        const editing = this.#editing(path[0]);
         // The right button opens a menu about what is selected; moving the
         // selection to what it was aimed at is what makes the menu useless.
-        if (event.button === 2 && this.#editing(path[0])) event.preventDefault();
+        if (event.button === 2 && editing) event.preventDefault();
         // The drag has to be off before this very press is acted on, which is
         // what a capturing listener is early enough for. It stays off: a link
         // wrapping editable content is not one anybody drags on purpose.
-        const around = interactiveAround(this.#editing(path[0]));
+        const around = interactiveAround(editing);
         if (around) around.draggable = false;
     };
 

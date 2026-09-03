@@ -1,0 +1,15 @@
+<!doctype html><meta charset=utf-8><title>WebKit: dragging a data: image</title>
+<!--
+  Isolated reproduction, no editor on the page: dragging an image with a `data:`
+  URL inside a contenteditable hangs WebKitGTK 2.52 (Epiphany) until the process
+  is killed. Chrome and Firefox move it. Kept out of the suite because a hang is
+  not a result the runner can report.
+-->
+<style>body{margin:0;font:16px/1.4 system-ui} div{padding:20px;border:1px solid #999}</style>
+<body>
+<p>No editor on this page. Drag the image into the last paragraph.</p>
+<div contenteditable>
+  <p>Before the image.</p>
+  <p><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='90'%3E%3Crect width='160' height='90' fill='%23bcd'/%3E%3C/svg%3E" width=160 height=90 alt="Placeholder"></p>
+  <p>Drop it here.</p>
+</div>

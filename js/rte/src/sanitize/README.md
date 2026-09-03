@@ -16,8 +16,11 @@ repairs editable document shape.
 - `comments` and `dataAttributes`: explicit booleans, both false by default.
 
 The supplied `sanitizePolicy` accepts the `document` element preset, ordinary
-editor metadata, and conservative web URLs. Inline styles, event attributes,
-`data:` URLs, comments, and data attributes are not enabled by default.
+editor metadata, and conservative web URLs. An image may carry a `data:` URL,
+because an image executes nothing — not even an SVG one, which browsers draw in
+a script-free context; in a navigating attribute the same protocol is a page, so
+links and citations keep it out. Inline styles, event attributes, comments, and
+data attributes are not enabled by default.
 Relative URLs use the explicit `relative` protocol token. Known URL attributes
 without a matching protocol rule are removed rather than accepted implicitly.
 

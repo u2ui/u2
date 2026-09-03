@@ -106,6 +106,26 @@ content model dropped from 10.0 to 1.8 µs, the list scan from 31.4 to 21.0 µs,
 and one toolbar refresh from 490 to 437 µs. A lazy `config()` was measured and
 rejected: building eight accessor descriptors costs more than parsing the values
 eagerly.
+
+Measured again in Chrome after the host-shape work, then sampled with the CPU
+profiler over 400 keystrokes. What a keystroke costs was never normalization: a
+third of it was reading CSS the caller did not need. `Commands.model` and
+`Edit.model` narrow the content model by one property and were parsing all
+eleven, and the toolbar resolved a computed style four times per refresh. Both
+now read what they use, without a cache anywhere — the settings stay live.
+
+| | before | after |
+| --- | --- | --- |
+| `Commands.model` | 8.7 µs | 0.7 µs |
+| `commands.enabled('bold')` | 11.3 µs | 6.1 µs |
+| `Toolbar.refresh` (8 controls) | 160 µs | 120 µs |
+| one keystroke, roaming toolbar | 519 µs | 415 µs |
+
+What is left is flat: `getBoundingClientRect` for the toolbar's placement is the
+largest single item at 14% of a keystroke, then event dispatch, range cloning,
+and the model's own rules. A click inside a surface costs 8.0 µs against 6.0 µs
+for the same event outside the editor, a keydown 4.6 against 3.4, and drawing
+the saved selection 0.5 µs per selection change.
 Treat the number shown by `/u2/js/rte/tests/` as authoritative.
 
 ## 0. Foundation

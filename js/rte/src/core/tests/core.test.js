@@ -169,6 +169,20 @@ test('core: a link around a surface neither drags nor follows', () => withFixtur
     }
 ));
 
+// A label hands a press to the control it names, editable content and all: the
+// caret would land in the field instead of in the text someone clicked.
+test('core: a label around a surface keeps the press to itself', () => withFixture(
+    '<label id=label for=field contenteditable>Name</label><input id=field>', root => {
+        const core = new Rte(document, {auto: false});
+        const label = root.querySelector('#label');
+        core.add(label);
+        const event = new MouseEvent('click', {bubbles: true, composed: true, cancelable: true});
+        label.dispatchEvent(event);
+        equal(event.defaultPrevented, true);
+        core.dispose();
+    }
+));
+
 // The right button opens a menu about what is selected: moving the selection to
 // what the menu was aimed at is what makes the menu useless.
 test('core: the right button leaves the selection where it is', () => withFixture(

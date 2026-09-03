@@ -268,8 +268,10 @@ export class InputPipeline {
     #click = event => {
         const target = event.composedPath()[0];
         if (target === this.#root || !this.#owns(event) || target?.nodeType !== Node.ELEMENT_NODE) return;
-        const model = this.#commands?.model || narrow(this.#model, this.#surface.config.elements);
-        if (!model.atomic(target)) return;
+        // The base model, not the narrowed one: what an element is does not
+        // depend on which elements a host allows, and narrowing costs a computed
+        // style on a path every click in the text goes through.
+        if (!this.#model.atomic(target)) return;
         const range = this.#root.ownerDocument.createRange();
         range.selectNode(target);
         const selection = this.#surface.core.selection;

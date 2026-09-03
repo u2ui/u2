@@ -374,6 +374,7 @@
     import '../source.js';
     import '../breaks.js';
     import '../unstyle.js';
+    import {externalInputs, NativeSanitizer} from '../rte.js';
     import {rangeRect} from '../src/browser/range-rect.js';
     import {Commands} from '../src/command/commands.js';
     import {deleteBackward, deleteForward} from '../src/command/delete.js';
@@ -394,6 +395,16 @@
     import {Point} from '../src/selection/point/point.js';
     import {SelectionSnapshot} from '../src/selection/snapshot.js';
     import {Toolbar} from '../src/ui/toolbar.js';
+
+    // Taking over paste and drop is the application's call, because a sanitizer
+    // is a security boundary and the engine does not pick one. Left to the
+    // browser, an image dragged inside the text is whatever that browser decides
+    // to make of it: Firefox writes a `data:` image out as its URL, in plain
+    // text. The one shipped here needs `Element.setHTML()`, which not every
+    // engine has yet.
+    if (NativeSanitizer.supported()) {
+        conventionEditor.add(externalInputs({sanitizer: new NativeSanitizer()}));
+    }
 
     const controls = {
       scenario: document.querySelector('#scenario'),

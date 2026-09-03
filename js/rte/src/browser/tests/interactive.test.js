@@ -6,6 +6,7 @@ import {equal, same, test, withFixture} from '../../../tests/harness.js';
 test('interactive: what an editing host sits in', () => withFixture(`
     <a id=link href="#docs">before <span id=wrapped contenteditable>text</span> after</a>
     <button id=button contenteditable>label</button>
+    <label id=label for=field contenteditable>name</label><input id=field>
     <div id=plain contenteditable>text <a id=inner href="#inner">link</a></div>
 `, root => {
     const wrapped = root.querySelector('#wrapped');
@@ -15,7 +16,11 @@ test('interactive: what an editing host sits in', () => withFixture(`
     equal(interactiveAround(plain), null, 'A link the content holds is content');
     equal(interactiveAround(null), null);
 
+    same(interactiveAround(root.querySelector('#label')), root.querySelector('#label'),
+        'A label hands a press to the control it names');
+
     same(activatingAround(root.querySelector('#button')), root.querySelector('#button'));
+    equal(activatingAround(root.querySelector('#label')), null, 'A label answers a press, not a key');
     equal(activatingAround(wrapped), null, 'A link is followed, not activated by a key');
     equal(activatingAround(plain), null);
 }));

@@ -29,9 +29,10 @@ document structure, or UI behavior.
   keeps the active surface, `retains(node)` identifies its composed subtree,
   and `release(element)` removes the mark. This also distinguishes UI from
   content when a native top-layer boundary requires both to share one host.
-- A link or a button around an editing host is answered by the element, not by
-  the text: the link is dragged rather than giving the text a caret, and
-  followed when the press ends. Both are suppressed for a press that belongs to
+- A link, a button, or a label around an editing host is answered by the element,
+  not by the text: the link is dragged rather than giving the text a caret and
+  followed when the press ends, and the label hands the press to the control it
+  names. Both are suppressed for a press that belongs to
   the text, and the link is left undraggable — nobody drags a link wrapped
   around editable content on purpose.
 - The right button never moves the selection inside a surface: its menu is about
