@@ -71,10 +71,13 @@ command ever makes an element canonical — so a strict list would otherwise hav
 turned every pasted emphasis into plain text.
 
 Not every `text/html` flavor is html. A pdf viewer offers its selection as one
-while putting plain text with line breaks inside it, and importing that as html
-collapsed them all into a single line. `ExternalInput` now takes a paste over
-only when the flavor carries markup, so text stays with the browser, which
-inserts it with its breaks intact.
+while putting plain text inside it, and importing that as html collapsed every
+line break into a single line. `ExternalInput` still decides by flavor list —
+reading the payload before preventing native insertion would give a failed read
+somewhere to fall back to — but the payload now decides what the flavor *is*:
+without a single tag it is text, escaped and joined by breaks, which is all the
+structure such a paste has. A `text/plain` paste with no html flavor beside it
+stays native as before.
 
 Keeping the content of an unlisted element is right for almost all of them, and
 wrong for the few a browser never renders the children of: unwrapping a `<style>`

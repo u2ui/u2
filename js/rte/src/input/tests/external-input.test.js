@@ -65,20 +65,18 @@ test('external input: sanitizes, optionally unstyles, and inserts rich paste at 
     });
 });
 
-// A pdf viewer labels its plain selection `text/html`. Importing that as html would collapse the
-// line breaks; the browser inserts the text flavor with them intact.
-test('external input: an html flavor without markup is left to the browser', () => withExternal(
-    '<div contenteditable><p>one</p></div>', ({document, host}) => {
-        const text = host.firstElementChild.firstChild;
-        caret(document, text, 3);
-        const plain = richInput(document, 'insertFromPaste', null, 'line one\nline two', ['text/html', 'text/plain']);
-        host.dispatchEvent(plain);
-        equal(plain.defaultPrevented, false);
-        const markup = richInput(document, 'insertFromPaste', null, '<p>line one</p>', ['text/html', 'text/plain']);
-        host.dispatchEvent(markup);
-        truthy(markup.defaultPrevented);
-    }
-));
+// A pdf viewer labels its plain selection `text/html`, where the line breaks it carries say nothing.
+// They are all the structure that text has, so the import keeps them as breaks.
+test('external input: an html flavor without markup is imported as the text it is', () => {
+    let received = null;
+    return withExternal('<div contenteditable><p>one</p></div>', ({document, host}) => {
+        caret(document, host.firstElementChild.firstChild, 3);
+        const event = richInput(document, 'insertFromPaste', null, () => 'a & b > c\nline two', ['text/html', 'text/plain']);
+        host.dispatchEvent(event);
+        truthy(event.defaultPrevented);
+        equal(received, 'a &amp; b &gt; c<br>line two');
+    }, {sanitizer: {sanitize(html, {document}) { received = html; return document.createDocumentFragment(); }}});
+});
 
 test('external input: drop replaces the beforeinput target rather than the current selection', () => withExternal(
     '<div contenteditable><p>one</p><p>two</p></div>', ({document, host}) => {
