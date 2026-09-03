@@ -103,7 +103,10 @@ const external = new ExternalInput(surface, {
 
 For `insertFromPaste` and `insertFromDrop`, the contenteditable Input Events
 contract supplies rich and plain data in `dataTransfer` plus the DOM range that
-would be replaced. The adapter takes over only when `text/html` is present. It
+would be replaced. The adapter takes over only when `text/html` is present and
+carries markup: a pdf viewer labels its plain selection `text/html`, and
+importing that as html would collapse the line breaks the text flavor keeps, so
+a flavor without a single tag is left to the browser. It
 prevents native insertion first, sanitizes into a detached `DocumentFragment`,
 optionally cleans presentation cumulatively through the selected level, and
 passes the result and exact target range to the registered command. Drop thus

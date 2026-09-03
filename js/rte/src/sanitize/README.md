@@ -13,7 +13,14 @@ repairs editable document shape.
 - `elements`: element names the security policy can accept;
 - `attributes`: global (`*`) and per-element attribute names;
 - `protocols`: per-element rules for URL attributes;
+- `drop`: element names that `narrow()` removes with their content;
 - `comments` and `dataAttributes`: explicit booleans, both false by default.
+
+An element outside `elements` keeps its content — dropping it would lose text the
+author wrote. `drop` names the exception: elements a browser never renders the
+children of, where unwrapping would turn a stylesheet, a script, or document
+metadata into visible text. It defaults to `base head link meta noscript script
+style template title` and, like every default, an application may replace it.
 
 The supplied `sanitizePolicy` accepts the `document` element preset, ordinary
 editor metadata, and conservative web URLs. An image may carry a `data:` URL,

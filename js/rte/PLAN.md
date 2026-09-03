@@ -70,6 +70,19 @@ Nothing did that afterwards — the bold mark recognizes `<b>`, but only a mark
 command ever makes an element canonical — so a strict list would otherwise have
 turned every pasted emphasis into plain text.
 
+Not every `text/html` flavor is html. A pdf viewer offers its selection as one
+while putting plain text with line breaks inside it, and importing that as html
+collapsed them all into a single line. `ExternalInput` now takes a paste over
+only when the flavor carries markup, so text stays with the browser, which
+inserts it with its breaks intact.
+
+Keeping the content of an unlisted element is right for almost all of them, and
+wrong for the few a browser never renders the children of: unwrapping a `<style>`
+from a word processor left its stylesheet standing in the text. `SanitizePolicy`
+now carries a `drop` list — `base head link meta noscript script style template
+title` — that `narrow()` removes with their content, while everything else keeps
+dissolving into what the author wrote.
+
 A native paste now meets the attribute policy. Nothing is parsed there — the
 browser inserts its own payload — so it was the one import path without an
 allowlist, and layout ids, tracking attributes and inline styles came straight

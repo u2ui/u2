@@ -97,7 +97,7 @@ export class ExternalInput {
     #beforeInput = event => {
         if (!this.#owns(event) || !INPUTS.has(event.inputType) || !event.cancelable
             || event.defaultPrevented || event.isComposing || isPlainTextHost(this.#root)) return;
-        if (!hasHtml(event.dataTransfer)) return;
+        if (!hasMarkup(event.dataTransfer)) return;
         event.preventDefault();
         try {
             const html = event.dataTransfer.getData('text/html');
@@ -123,8 +123,13 @@ export class ExternalInput {
     }
 }
 
-function hasHtml(transfer) {
+// An html flavor carrying no markup is text that was labelled html — a pdf viewer offers its
+// selection that way. Importing it as html would collapse the line breaks it carries, while the
+// browser inserts the text flavor with them intact, so that one stays with the browser.
+function hasMarkup(transfer) {
     if (!transfer || typeof transfer.getData !== 'function') return false;
     const types = [...(transfer.types || [])].map(type => String(type).toLowerCase());
-    return types.includes('text/html');
+    if (!types.includes('text/html')) return false;
+    if (!types.includes('text/plain')) return true;
+    return /<[a-z!/]/i.test(transfer.getData('text/html'));
 }

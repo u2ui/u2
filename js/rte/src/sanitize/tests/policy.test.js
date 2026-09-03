@@ -90,6 +90,23 @@ test('sanitize policy: narrow reduces a subtree to the allowed elements', () => 
     equal(changed.length, 2);
 });
 
+test('sanitize policy: narrow drops the elements whose content is not content', () => {
+    const policy = new SanitizePolicy();
+    const root = document.createElement('div');
+    root.innerHTML = '<style>p { color: red }</style><p>Text</p><nav>menu</nav>';
+    const changed = policy.narrow(root);
+    equal(root.innerHTML, '<p>Text</p>menu');
+    equal(changed.length, 2);
+});
+
+test('sanitize policy: a custom drop list replaces the default one', () => {
+    const policy = new SanitizePolicy({elements: ['p'], drop: ['nav']});
+    const root = document.createElement('div');
+    root.innerHTML = '<nav>menu</nav><style>css</style><p>Text</p>';
+    policy.narrow(root);
+    equal(root.innerHTML, 'css<p>Text</p>');
+});
+
 test('sanitize policy: narrow never widens past the policy itself', () => {
     const policy = new SanitizePolicy({elements: ['p']});
     const root = document.createElement('div');

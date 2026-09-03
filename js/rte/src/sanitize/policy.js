@@ -27,10 +27,18 @@ const DEFAULT_PROTOCOLS = Object.freeze({
     q: Object.freeze({cite: Object.freeze(['http', 'https', 'relative'])}),
 });
 
+// Elements a browser never renders the children of. Unwrapping one turns source — a stylesheet, a
+// script, document metadata — into visible text, so these go with their content. Every other unknown
+// element keeps its content: dropping it would lose text the author wrote.
+const DEFAULT_DROP = Object.freeze([
+    'base', 'head', 'link', 'meta', 'noscript', 'script', 'style', 'template', 'title',
+]);
+
 export const sanitizeDefaults = Object.freeze({
     elements: elementPresets.document,
     attributes: DEFAULT_ATTRIBUTES,
     protocols: DEFAULT_PROTOCOLS,
+    drop: DEFAULT_DROP,
     comments: false,
     dataAttributes: false,
 });
@@ -41,6 +49,7 @@ export class SanitizePolicy {
 
     constructor(options = {}) {
         this.elements = names(options.elements ?? sanitizeDefaults.elements, NAME, 'element');
+        this.drop = names(options.drop ?? sanitizeDefaults.drop, NAME, 'element');
         this.#attributes = groups(options.attributes ?? sanitizeDefaults.attributes, ATTRIBUTE, 'attribute');
         this.#protocols = protocolGroups(options.protocols ?? sanitizeDefaults.protocols);
         this.attributeNames = Object.freeze(unique(Object.values(this.#attributes).flat()));
@@ -69,8 +78,9 @@ export class SanitizePolicy {
     }
 
     // Reduces a subtree to the elements this policy allows, keeping the content
-    // of the rest. Parsed input gets this from the safe sink; markup the browser
-    // inserted itself has to be narrowed afterwards.
+    // of the rest — except the `drop` elements, which go with theirs. Parsed input
+    // gets this from the safe sink; markup the browser inserted itself has to be
+    // narrowed afterwards.
     //
     // `skip` leaves an element to a later stage. Structural repair already
     // removes what the content model rejects, and it does so knowing that
@@ -86,8 +96,15 @@ export class SanitizePolicy {
             : this.elements.filter(name => elements.includes(name));
         const changed = [];
         for (const element of descendants(root).reverse()) {
-            if (preserve?.has(element) || allowed.includes(element.localName)) continue;
+            if (preserve?.has(element)) continue;
             if (!element.parentNode || skip?.(element)) continue;
+            if (this.drop.includes(element.localName)) {
+                if (map) map.remove(element);
+                else element.remove();
+                changed.push(element);
+                continue;
+            }
+            if (allowed.includes(element.localName)) continue;
             const equivalent = alias?.[element.localName];
             if (equivalent && allowed.includes(equivalent)) {
                 const replacement = element.ownerDocument.createElement(equivalent);

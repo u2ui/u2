@@ -65,6 +65,21 @@ test('external input: sanitizes, optionally unstyles, and inserts rich paste at 
     });
 });
 
+// A pdf viewer labels its plain selection `text/html`. Importing that as html would collapse the
+// line breaks; the browser inserts the text flavor with them intact.
+test('external input: an html flavor without markup is left to the browser', () => withExternal(
+    '<div contenteditable><p>one</p></div>', ({document, host}) => {
+        const text = host.firstElementChild.firstChild;
+        caret(document, text, 3);
+        const plain = richInput(document, 'insertFromPaste', null, 'line one\nline two', ['text/html', 'text/plain']);
+        host.dispatchEvent(plain);
+        equal(plain.defaultPrevented, false);
+        const markup = richInput(document, 'insertFromPaste', null, '<p>line one</p>', ['text/html', 'text/plain']);
+        host.dispatchEvent(markup);
+        truthy(markup.defaultPrevented);
+    }
+));
+
 test('external input: drop replaces the beforeinput target rather than the current selection', () => withExternal(
     '<div contenteditable><p>one</p><p>two</p></div>', ({document, host}) => {
         const first = host.firstElementChild.firstChild;
