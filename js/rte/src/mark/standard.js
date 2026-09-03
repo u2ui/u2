@@ -18,6 +18,8 @@ export const codeHtml = element(code, 'code', 'code');
 export const linkHtml = new MarkAdapter(link, {
     selector: 'a[href]',
     tag: 'a',
+    // A link is about the content, not about its text: an image can be one.
+    covers: 'content',
     read: readLink,
     write: writeLink,
     clear: clearLink,

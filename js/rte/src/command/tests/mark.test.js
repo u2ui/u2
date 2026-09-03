@@ -446,6 +446,35 @@ test('value mark: a partly marked selection reports mixed', () => withValues(
     }
 ));
 
+
+// An image can be a link, and an emphasized image is nothing: only a mark about
+// content goes around content that has no text of its own.
+test('mark command: a content mark wraps an atomic element, a text mark does not', () => withFixture(
+    '<div contenteditable><p>text <img alt=one> more</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const host = root.firstElementChild;
+        const image = host.querySelector('img');
+        const commands = new Commands(core.add(host), {commands: {
+            link: valueMark(linkHtml),
+            bold: toggleMark(boldHtml),
+        }});
+        const range = document.createRange();
+        range.selectNode(image);
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+        equal(commands.enabled('bold'), false, 'Nothing to emphasize in a picture');
+        equal(commands.enabled('link', {value: {href: '/docs'}}), true);
+        commands.run('link', {value: {href: '/docs'}});
+        equal(host.innerHTML, '<p>text <a href="/docs"><img alt="one"></a> more</p>');
+        // Typing an address is one command per keystroke: what is already there
+        // has to be seen, or every one of them would make the same first link.
+        equal(commands.state('link'), {href: '/docs'});
+        commands.run('link', {value: {href: '/docs/two'}});
+        equal(host.innerHTML, '<p>text <a href="/docs/two"><img alt="one"></a> more</p>');
+        core.dispose();
+    }
+));
+
 function withValues(html, run) {
     return withFixture(html, root => {
         const core = new Rte(document, {auto: false});

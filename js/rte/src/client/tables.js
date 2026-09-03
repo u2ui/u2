@@ -1,6 +1,7 @@
 import {Tables} from '../command/table.js';
 import {inlineUi} from '../config/config.js';
 import {elementOf} from '../selection/ownership/ownership.js';
+import {follows} from './contextual.js';
 import {Handles} from '../ui/handles.js';
 
 
@@ -54,19 +55,13 @@ export function tableTools({tag = 'table'} = {}) {
             const state = editors.get(editor);
             const view = state?.views.get(surface);
             if (!view) throw new DOMException('The table surface is not set up', 'InvalidStateError');
-            const controller = new state.document.defaultView.AbortController();
-            const listen = {signal: controller.signal};
             const sync = () => track(state, view);
-            surface.addEventListener('u2-rte-selectionchange', sync, listen);
-            surface.addEventListener('u2-rte-change', sync, listen);
-            // What a session's end takes away, its beginning brings back: coming
-            // back to the same selection is no selection change to hear about.
-            surface.addEventListener('u2-rte-activate', sync, listen);
-            surface.addEventListener('u2-rte-deactivate', () => close(state, surface), listen);
-            surface.element.addEventListener('input', sync, listen);
+            const following = follows(surface, sync, () => close(state, surface));
+            // A table's own shape changes with what is typed in it, wherever the
+            // caret happens to be.
+            surface.element.addEventListener('input', sync, {signal: following.signal});
             return {dispose() {
-                controller.abort();
-                close(state, surface);
+                following.dispose();
                 state.views.delete(surface);
             }};
         },

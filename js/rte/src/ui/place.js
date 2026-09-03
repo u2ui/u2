@@ -6,10 +6,11 @@ import {rangeRect} from '../browser/range-rect.js';
 //
 // A UI that belongs to one element rather than to the selection passes that
 // element's rect as `on`: what it points at should not shift with the caret.
-// One distance for every panel that hangs off an element rather than off the
-// selection: the handles on a frame's edge reach about this far, and two panels
-// answering for the same element must not sit at two different heights.
-export const panelGap = 16;
+// One distance for every panel that hangs off something, and between two of them
+// — near enough to read as belonging to it. What must be cleared belongs in the
+// rect a caller anchors on, not in this number: a frame's handles reach past the
+// element they sit on, and the panel below them is told so.
+export const panelGap = 8;
 
 export function place(element, surface, {align = 'center', prefer = 'above', gap = 28, on = null} = {}) {
     const range = on ? null : surface.selection?.range();

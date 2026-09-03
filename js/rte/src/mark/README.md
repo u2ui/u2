@@ -17,6 +17,13 @@ an attribute, a style, or something custom. `standard.js` provides the compact
 default HTML policies for bold, italic, underline, strike, code, and links. The
 range commands apply or remove those representations on selected text.
 
+## What a mark is about
+
+A mark covers `text` by default: bold, italic, a content class. `covers:
+"content"` says the other kind — a link is not about the letters but about what
+they point at, so it also goes around content that has no text of its own. An
+image can be a link; an emphasized image is nothing, and stays unmarked.
+
 ## Public contract
 
 `MarkType` describes one kind of formatting. `bold`, `link`, and `color` are

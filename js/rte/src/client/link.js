@@ -1,6 +1,8 @@
 import {inlineUi} from '../config/config.js';
+import {rangeRect} from '../browser/range-rect.js';
 import {linkHtml} from '../mark/standard.js';
 import {caretAfter} from '../ui/caret.js';
+import {follows} from './contextual.js';
 import {panelGap, place} from '../ui/place.js';
 import {valueMark} from '../command/mark.js';
 
@@ -124,17 +126,9 @@ export function linkEditor({
         attach({editor, surface}) {
             const state = editors.get(editor);
             if (!state) throw new DOMException('The link extension is not set up', 'InvalidStateError');
-            const controller = new state.document.defaultView.AbortController();
-            const listen = {signal: controller.signal};
-            surface.addEventListener('u2-rte-selectionchange', () => follow(state, surface), listen);
-            surface.addEventListener('u2-rte-change', () => follow(state, surface), listen);
-            // What a session's end takes away, its beginning brings back: coming
-            // back to the same selection is no selection change to hear about.
-            surface.addEventListener('u2-rte-activate', () => follow(state, surface), listen);
-            surface.addEventListener('u2-rte-deactivate', () => close(state, surface), listen);
+            const following = follows(surface, () => follow(state, surface), () => close(state, surface));
             return {dispose() {
-                controller.abort();
-                close(state, surface);
+                following.dispose();
                 state.views.delete(surface);
             }};
         },
@@ -420,13 +414,20 @@ function position(state) {
         align: 'start',
         prefer: 'below',
         gap: panelGap,
-        on: active.element?.getBoundingClientRect() || null,
+        // What the link covers, not the box it occupies: an inline element that
+        // holds an image is a line box of text height, nowhere near the picture
+        // someone is looking at.
+        on: active.element ? rangeRect(contents(active.element), {root: active.surface.element}) : null,
     });
 }
 
-// The node the surface's saved selection starts in.
+// The node the surface's saved selection starts in — or the one it holds, when
+// that is a single element: an image's link is on the image, not on the block the
+// range around it starts in.
 function at(surface) {
-    return surface.selection?.range().startContainer || null;
+    const range = surface.selection?.range();
+    if (!range) return null;
+    return range.startContainer.childNodes?.[range.startOffset] ?? range.startContainer;
 }
 
 // The contents of one element, as a range.

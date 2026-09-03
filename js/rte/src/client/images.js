@@ -1,6 +1,7 @@
 import {elementAttributes, selectedElement} from '../command/element.js';
 import {inlineUi} from '../config/config.js';
 import {caretAfter} from '../ui/caret.js';
+import {follows} from './contextual.js';
 import {Handles} from '../ui/handles.js';
 import {panelGap, place} from '../ui/place.js';
 
@@ -93,18 +94,9 @@ export function imageTools({selector = 'img', minimum = 16} = {}) {
             const state = editors.get(editor);
             const view = state?.views.get(surface);
             if (!view) throw new DOMException('The image surface is not set up', 'InvalidStateError');
-            const controller = new state.document.defaultView.AbortController();
-            const listen = {signal: controller.signal};
-            const sync = () => track(state, view, match);
-            surface.addEventListener('u2-rte-selectionchange', sync, listen);
-            surface.addEventListener('u2-rte-change', sync, listen);
-            // What a session's end takes away, its beginning brings back: coming
-            // back to the same selection is no selection change to hear about.
-            surface.addEventListener('u2-rte-activate', sync, listen);
-            surface.addEventListener('u2-rte-deactivate', () => close(state, surface), listen);
+            const following = follows(surface, () => track(state, view, match), () => close(state, surface));
             return {dispose() {
-                controller.abort();
-                close(state, surface);
+                following.dispose();
                 state.views.delete(surface);
             }};
         },
@@ -192,8 +184,12 @@ function position(state, box = null) {
     for (const handle of HANDLES) {
         state.handles.place(handle.name, rect.left + rect.width * handle.x, rect.top + rect.height * handle.y);
     }
-    // Below the image, clear of the handles sitting on its lower edge.
-    place(state.alt, state.active.view.surface, {align: 'start', prefer: 'below', gap: panelGap, on: rect});
+    // Below the image and below its handles: they sit on its edges and reach
+    // past them, so what the form hangs off is the pair of them.
+    const lowest = Math.max(rect.bottom, ...HANDLES.map(handle =>
+        state.handles.button(handle.name)?.getBoundingClientRect().bottom ?? 0));
+    place(state.alt, state.active.view.surface, {align: 'start', prefer: 'below', gap: panelGap,
+        on: {left: rect.left, width: rect.width, top: rect.top, bottom: lowest}});
 }
 
 function build(state) {

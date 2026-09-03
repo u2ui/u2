@@ -12,8 +12,7 @@ export class Rte extends EventTarget {
     #retained = new Set();
     #active = null;
     #unfocused = false;
-    #pointer = null;
-    #handed = false;
+    #press = null;
     #controller;
 
     constructor(root = document, options = {}) {
@@ -173,15 +172,15 @@ export class Rte extends EventTarget {
         // on that element — a host's own handler, a css `:focus` rule — sees it
         // too. Leaving it focused instead is worse: a caret that types into a
         // surface with no session behind it.
-        if (surface && this.#pointer && !this.#pointer.includes(surface.element)) {
+        if (surface && this.#press && !this.#press.path.includes(surface.element)) {
             this.#unfocused = true;
             this.activate(null);
             // Handing the focus back once per press. An engine that answers a
             // blur by focusing again — the selection is still in there, after
             // all — would otherwise trade focus with the editor for as long as
             // the button is down, and the session stays refused either way.
-            if (!this.#handed) {
-                this.#handed = true;
+            if (!this.#press.handed) {
+                this.#press.handed = true;
                 editable.blur();
             }
             return;
@@ -207,8 +206,7 @@ export class Rte extends EventTarget {
 
     #pointerDown = event => {
         const path = event.composedPath();
-        this.#pointer = path;
-        this.#handed = false;
+        this.#press = {path, handed: false};
         const editing = this.#editing(path[0]);
         // The right button opens a menu about what is selected; moving the
         // selection to what it was aimed at is what makes the menu useless.
@@ -233,7 +231,7 @@ export class Rte extends EventTarget {
     }
 
     #pointerDone = () => {
-        this.#pointer = null;
+        this.#press = null;
     };
 
     #selectionChange = () => {

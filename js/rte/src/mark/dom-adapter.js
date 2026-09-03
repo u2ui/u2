@@ -10,8 +10,9 @@ export class MarkAdapter {
     #write;
     #clear;
     #reuse;
+    #covers;
 
-    constructor(type, {selector, tag, read = TRUE, write, clear, reuse = false, render} = {}) {
+    constructor(type, {selector, tag, read = TRUE, write, clear, reuse = false, render, covers = 'text'} = {}) {
         if (!(type instanceof MarkType)) throw new TypeError('A mark adapter requires a mark type');
         if (typeof selector !== 'string' || !selector.trim()) {
             throw new TypeError('A mark adapter requires a non-empty selector');
@@ -25,6 +26,7 @@ export class MarkAdapter {
         if (reuse && !write) throw new TypeError('A reusable mark adapter requires write');
         if (render !== undefined && typeof render !== 'function') throw new TypeError('A mark renderer must be a function');
         if (render && tag !== undefined) throw new TypeError('A custom mark renderer cannot be combined with tag');
+        if (covers !== 'text' && covers !== 'content') throw new TypeError('A mark covers "text" or "content"');
         if (!render && (typeof tag !== 'string' || !/^[a-z][a-z0-9-]*$/.test(tag))) {
             throw new TypeError('A mark adapter requires a lowercase HTML tag');
         }
@@ -34,6 +36,7 @@ export class MarkAdapter {
         this.#write = write;
         this.#clear = clear;
         this.#reuse = reuse;
+        this.#covers = covers;
         this.#render = render || ((document, value) => {
             const element = document.createElement(tag);
             write?.(element, value);
@@ -44,6 +47,10 @@ export class MarkAdapter {
     get type() { return this.#type; }
     get selector() { return this.#selector; }
     get reusable() { return !!this.#reuse; }
+    // What the mark is about: the text it formats, or the content it applies to.
+    // A link is the second kind — an image can be one, an emphasized image is
+    // nothing — and only that kind goes around content with no text of its own.
+    get covers() { return this.#covers; }
     get removable() { return !!this.#clear; }
 
     parse(element) {

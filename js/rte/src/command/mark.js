@@ -189,8 +189,8 @@ function selected(edit) {
 function canApply(edit, adapter, mark) {
     if (!selected(edit)) return false;
     const wrapper = adapter.render(mark, edit.document);
-    for (const node of edit.range.textNodes()) {
-        if (!node.data || blocked(edit, node) || has(edit, adapter, mark, node)) continue;
+    for (const node of markable(edit, adapter)) {
+        if (has(edit, adapter, mark, node)) continue;
         for (let element = node.parentElement; element && element !== edit.element; element = element.parentElement) {
             if (edit.model.block(element) || isEditingBoundary(element)) break;
             const current = adapter.parse(element);
@@ -224,8 +224,7 @@ function markState(edit, adapter, mark) {
     }
     let active = false;
     let inactive = false;
-    for (const node of edit.range.textNodes()) {
-        if (!node.data || blocked(edit, node)) continue;
+    for (const node of markable(edit, adapter)) {
         has(edit, adapter, mark, node) ? active = true : inactive = true;
         if (active && inactive) return 'mixed';
     }
@@ -265,8 +264,7 @@ function marksAt(edit, adapters, node) {
 function marksIn(edit, adapter) {
     const marks = [];
     if (!edit.range) return marks;
-    for (const node of edit.range.textNodes()) {
-        if (!node.data || blocked(edit, node)) continue;
+    for (const node of markable(edit, adapter)) {
         for (let element = node.parentElement; element && element !== edit.element; element = element.parentElement) {
             if (isEditingBoundary(element) || edit.model.block(element)) break;
             const mark = adapter.parse(element);
@@ -290,7 +288,18 @@ function apply(edit, adapter, mark, range) {
                 changed.push(wrapper);
                 continue;
             }
-            if (node.nodeType !== Node.ELEMENT_NODE || isEditingBoundary(node) || edit.model.atomic(node)) continue;
+            if (node.nodeType !== Node.ELEMENT_NODE || isEditingBoundary(node)) continue;
+            // An atomic element carries a mark the way a word does: nothing can
+            // be marked inside it, so the mark goes around it.
+            if (edit.model.atomic(node)) {
+                if (!covered(range, node) || !wrappable(edit, adapter, mark, node)) continue;
+                const wrapper = adapter.render(mark, edit.document);
+                if (!edit.model.allows(parent, wrapper)) continue;
+                edit.map.wrap([node], wrapper);
+                edit.transaction.touch(wrapper);
+                changed.push(wrapper);
+                continue;
+            }
             if (covered(range, node) && reusable(edit, adapter, node)) {
                 const current = adapter.parse(node);
                 if (current && !current.conflicts(mark)) {
@@ -489,6 +498,29 @@ function marked(edit, adapter, mark, node) {
         if (adapter.parse(element)?.equals(mark)) found = element;
     }
     return found;
+}
+
+// What a mark can sit on inside the range: the text it formats, and — for a mark
+// about content — the atomic elements that have no text to format. Everything
+// asking what is marked, what could be, and what to replace asks this.
+function markable(edit, adapter) {
+    if (!edit.range) return [];
+    return [...edit.range.textNodes().filter(node => node.data && !blocked(edit, node)),
+        ...atomics(edit, adapter)];
+}
+
+// The atomic elements in the range a content mark can sit on: nothing inside one
+// can carry a mark, so the mark is around it — and a text mark has no business
+// with them at all.
+function atomics(edit, adapter) {
+    if (adapter.covers !== 'content' || !edit.range) return [];
+    return edit.range.roots().filter(node => node.nodeType === Node.ELEMENT_NODE
+        && !isEditingBoundary(node) && edit.model.atomic(node));
+}
+
+function wrappable(edit, adapter, mark, node) {
+    return adapter.covers === 'content' && node?.nodeType === Node.ELEMENT_NODE
+        && !isEditingBoundary(node) && edit.model.atomic(node) && !has(edit, adapter, mark, node);
 }
 
 function has(edit, adapter, mark, node) {
