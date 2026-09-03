@@ -54,7 +54,7 @@ test('config: element policies accept presets and explicit narrowing', () => wit
 `, root => {
     same(config(root.querySelector('#preset')).elements, elementPresets.article);
     equal(config(root.querySelector('#custom')).elements, ['p', 'h1', 'x-card']);
-    equal(config(root.querySelector('#invalid')).elements, [], 'An invalid policy must not broaden allowed content');
+    equal(config(root.querySelector('#invalid')).elements, null, 'An invalid declaration is ignored, as css ignores an invalid value');
     truthy(Object.isFrozen(elementPresets.article));
 }));
 

@@ -63,12 +63,11 @@ export function configuredElements(host) {
 export function config(host) {
     const style = getComputedStyle(host);
     const defaults = hostDefaults(host);
-    const cleanOn = value(style, 'clean-on');
     return Object.freeze({
         block: tag(style, 'block', defaults.block),
         enter: choice(style, 'enter', ENTER, defaults.enter),
         cleanup: choice(style, 'cleanup', CLEANUP, 'structural'),
-        cleanOn: Object.freeze(cleanOn ? cleanOn.split(/[\s,]+/).filter(Boolean) : [...DEFAULT_CLEAN_ON]),
+        cleanOn: list(value(style, 'clean-on'), TAG) ?? DEFAULT_CLEAN_ON,
         elements: allowedElements(style, 'elements', null),
         importElements: allowedElements(style, 'import-elements', elementPresets.content),
         classes: classNames(style),
@@ -93,9 +92,8 @@ export function inlineUi(config, name) {
 
 function inlineNames(style) {
     const result = value(style, 'inline-ui').toLowerCase();
-    if (!result) return null;
     if (result === 'none') return EMPTY_ELEMENTS;
-    return Object.freeze([...new Set(result.split(/[\s,]+/).filter(Boolean))]);
+    return list(result, TAG);
 }
 
 function value(style, name) {
@@ -153,8 +151,10 @@ function allowedElements(style, name, fallback) {
     const result = value(style, name).toLowerCase();
     if (!result) return fallback;
     if (result === 'all') return null;
-    if (result.startsWith('@')) return elementPresets[result.slice(1)] || EMPTY_ELEMENTS;
-    return list(result, TAG) ?? EMPTY_ELEMENTS;
+    // An unreadable declaration is ignored, the way css ignores an invalid value: what applies is
+    // what applied before it, not an empty field.
+    if (result.startsWith('@')) return elementPresets[result.slice(1)] ?? fallback;
+    return list(result, TAG) ?? fallback;
 }
 
 function elements(value) {
