@@ -42,8 +42,9 @@ Relative URLs use the explicit `relative` protocol token. Known URL attributes
 without a matching protocol rule are removed rather than accepted implicitly.
 
 `policy.with(options)` copies a policy with single axes replaced, and
-`policyFor(config, base)` is what a host gets: its own `--u2-rte-attributes` and
-`--u2-rte-protocols` over the policy the application chose, with equal
+`policyFor(config, base)` is what a host gets: its own `--u2-rte-elements`,
+`--u2-rte-attributes` and `--u2-rte-protocols` over the policy the application
+chose — each axis declared is that axis, not a narrowing of it — with equal
 declarations sharing one policy instead of building it again. Nothing declared
 returns the base itself.
 

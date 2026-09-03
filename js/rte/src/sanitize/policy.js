@@ -158,17 +158,22 @@ export class SanitizePolicy {
 
 export const sanitizePolicy = new SanitizePolicy();
 
-// The policy a host works with: its own declarations over the one the application chose. Declaring
-// is rare and reading is not, so equal declarations share one policy instead of building it again.
+// The policy a host works with: what it declares is what it may carry, and the rest stays as the
+// application configured it. Declaring is rare and reading is not, so equal declarations share one
+// policy instead of building it again.
 const declared = new WeakMap();
 
-export function policyFor({attributes = null, protocols = null} = {}, base = sanitizePolicy) {
-    if (!attributes && !protocols) return base;
-    const key = JSON.stringify([attributes, protocols]);
+export function policyFor({elements = null, attributes = null, protocols = null} = {}, base = sanitizePolicy) {
+    if (!elements && !attributes && !protocols) return base;
+    const key = JSON.stringify([elements, attributes, protocols]);
     let known = declared.get(base);
     if (!known) declared.set(base, known = new Map());
     let policy = known.get(key);
-    if (!policy) known.set(key, policy = base.with({...(attributes && {attributes}), ...(protocols && {protocols})}));
+    if (!policy) {
+        known.set(key, policy = base.with({
+            ...(elements && {elements}), ...(attributes && {attributes}), ...(protocols && {protocols}),
+        }));
+    }
     return policy;
 }
 

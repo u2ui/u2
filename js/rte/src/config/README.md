@@ -85,8 +85,11 @@ The host list still bounds it; neither can widen the sanitize policy.
 `--u2-rte-import-sanitize` switches that whole stage off with `none`, leaving
 what the browser inserted.
 
-`--u2-rte-attributes` and `--u2-rte-protocols` say what content may carry, in one
-grammar: a bare list applies to every element, `name(…)` to one of them, and
+`--u2-rte-elements`, `--u2-rte-attributes` and `--u2-rte-protocols` say what
+content may carry, and each of them *is* the policy where it is declared rather
+than a narrowing of one — a field may name an element the shipped default does
+not, because what may be inserted is the site's decision. The two
+element-specific ones share one grammar: a bare list applies to every element, `name(…)` to one of them, and
 protocols name the attribute inside — `class title, a(href target)` and
 `a(href: http https), img(src: data http)`. Unset means the policy the
 application configured, so a declaration only states what it changes, and a

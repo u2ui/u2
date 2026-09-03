@@ -167,3 +167,15 @@ test('sanitize policy: policyFor layers a host declaration on the configured pol
         equal(paragraph.outerHTML, '<p class="x" style="color:red">text</p>');
     });
 });
+
+// A host that names an element the shipped policy does not carry gets it: what may be inserted is
+// the site's decision, and what may be stored is decided where the content is saved.
+test('sanitize policy: a declared element list is the policy, not a narrowing of it', () => {
+    const base = new SanitizePolicy({elements: ['p', 'strong']});
+    const host = policyFor({elements: ['p', 'div']}, base);
+    equal(host.elements, ['p', 'div']);
+    const root = document.createElement('div');
+    root.innerHTML = '<p>one</p><div>two</div><strong>three</strong>';
+    host.narrow(root);
+    equal(root.innerHTML, '<p>one</p><div>two</div>three');
+});

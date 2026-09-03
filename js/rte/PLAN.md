@@ -79,6 +79,16 @@ without a single tag it is text, escaped and joined by breaks, which is all the
 structure such a paste has. A `text/plain` paste with no html flavor beside it
 stays native as before.
 
+What a field may carry is now declared where every other host decision is
+declared: `--u2-rte-elements`, `--u2-rte-attributes` and `--u2-rte-protocols`,
+one grammar for the element-specific ones — a bare list for every element,
+`name(…)` for one, and the attribute named inside for protocols. Each axis
+declared *is* that axis, so a site may name what the shipped default does not.
+That is not a hole: a client sanitizer protects the editing session — markup
+inserted into the author's own logged-in page — while what may be stored is
+decided where content is saved and served, and CSS is no less the application's
+than JavaScript is.
+
 Sanitizing now speaks the web Sanitizer API's vocabulary throughout — `elements`,
 `removeElements`, `replaceWithChildrenElements`, `attributes`, `comments`,
 `dataAttributes` — so browser, editor, and an application's own filter name the
