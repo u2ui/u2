@@ -131,13 +131,11 @@ async function loadSvgString(url) {
         }
     }
 
-    const svg = await loadCached(url);
-    // temporary cache svg
-    
     // external element
-    if (hash) { // todo, cache the svgDoc?
-        const parser = new DOMParser();
-        const svgDoc = parser.parseFromString(svg, "image/svg+xml");
+    if (hash) {
+        url.hash = '';
+        const svgDoc = await (cachedDocuments[url] ??= loadCached(url).then(svg =>
+            new DOMParser().parseFromString(svg, "image/svg+xml")));
         const element = svgDoc.getElementById(hash);
         if (element) {
             return element.outerHTML;
@@ -147,10 +145,11 @@ async function loadSvgString(url) {
     }
 
     // external document
-    return svg;
+    return loadCached(url);
 }
 
 const cachedRequests = {};
+const cachedDocuments = {};
 
 async function loadCached(url) {
     return cachedRequests[url] ??= fetch(url, {cache: "force-cache"}).then(res => {
