@@ -1,12 +1,17 @@
 import {Rte} from '../../core/core.js';
 import {equal, same, test, throws, truthy, withFixture} from '../../../tests/harness.js';
 
-test('surface: resolves CSS configuration on demand', () => withFixture(
+// Read once per burst of work and again when told: a refresh asks dozens of times, and a computed
+// style is the expensive part of a path every keystroke goes down.
+test('surface: resolves CSS configuration on demand and keeps it until invalidated', () => withFixture(
     '<div contenteditable></div>', root => {
         const core = new Rte(document, {auto: false});
         const surface = core.add(root.firstElementChild);
         equal(surface.config.cleanup, 'structural');
+        same(surface.config, surface.config, 'The same reading answers twice');
         surface.element.style.setProperty('--u2-rte-cleanup', 'minimal');
+        equal(surface.config.cleanup, 'structural', 'What was read stands until it is dropped');
+        same(surface.invalidate(), surface);
         equal(surface.config.cleanup, 'minimal');
         core.dispose();
     }

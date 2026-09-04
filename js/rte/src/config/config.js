@@ -12,6 +12,9 @@ const UI = new Set(['none', 'roaming', 'static']);
 const IMPORT_SANITIZE = new Set(['policy', 'none']);
 const TAG = /^[a-z][a-z\d-]*$/;
 const CLASS = /^-?[_a-zA-Z][\w-]*$/;
+const LABEL = /^[^\s(),]+$/;
+// A block style is one element with conditions on it: `p`, `p.lead`, `p[aria-label=note]`.
+const SELECTOR = /^[a-z][a-z\d-]*(?:\.[_a-zA-Z][\w-]*|\[[a-z][\w-]*(?:=[^\]\s]+)?\])*$/;
 const FALSE = new Set(['0', 'false', 'none', 'off']);
 const DEFAULT_CLEAN_ON = Object.freeze(['input', 'paste', 'drop', 'command']);
 const EMPTY_ELEMENTS = Object.freeze([]);
@@ -71,8 +74,10 @@ export function config(host) {
         elements: allowedElements(style, 'elements', null),
         importElements: allowedElements(style, 'import-elements', elementPresets.content),
         classes: classNames(style),
-        attributes: groups(style, 'attributes', text => list(text, ATTRIBUTE)),
-        protocols: groups(style, 'protocols', scheme),
+        classGroups: groups(style, 'class-groups', text => list(text, CLASS), label),
+        blocks: groups(style, 'blocks', text => SELECTOR.test(text.trim()) ? text.trim() : null, label),
+        attributes: groups(style, 'attributes', text => list(text.toLowerCase(), ATTRIBUTE)),
+        protocols: groups(style, 'protocols', text => scheme(text.toLowerCase())),
         // Foreign presentation through the class rung: pasted markup keeps no
         // styles, no presentational attributes, and no undeclared classes.
         importSanitize: choice(style, 'import-sanitize', IMPORT_SANITIZE, 'policy'),
@@ -123,18 +128,23 @@ function classNames(style) {
 // what one of them adds — `class title, a(href target)`, or one level deeper `a(href: http https)`.
 // Unset means the policy's own default, so a declaration only says what it changes, and a typo
 // yields nothing rather than silently narrowing.
-function groups(style, name, read) {
-    const declared = value(style, name).toLowerCase();
+function groups(style, name, read, key = element) {
+    const declared = value(style, name); // not lowercased: element names are, class names are not
     if (!declared) return null;
     const result = {};
     for (const group of declared.split(',')) {
-        const match = group.trim().match(/^([a-z][a-z\d-]*)\s*\((.*)\)$/s);
+        const match = group.trim().match(/^([^\s(),]+)\s*\((.*)\)$/s);
         const parsed = read(match ? match[2] : group);
-        if (!parsed) return null;
-        result[match ? match[1] : '*'] = parsed;
+        const name = match ? key(match[1]) : '*';
+        if (!parsed || !name) return null;
+        result[name] = parsed;
     }
     return Object.freeze(result);
 }
+
+// An element is a tag name, normalized; a group is a label and stays as it was written.
+const element = name => TAG.test(name.toLowerCase()) ? name.toLowerCase() : null;
+const label = name => LABEL.test(name) ? name : null;
 
 function list(text, pattern) {
     const names = text.split(/[\s,]+/).filter(Boolean);

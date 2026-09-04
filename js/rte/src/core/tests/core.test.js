@@ -284,3 +284,26 @@ test('core: delete and disposal disconnect surfaces and listeners once', () => w
     auto.dispatchEvent(new FocusEvent('focusin', {bubbles: true, composed: true}));
     equal(core.get(auto), null);
 }));
+
+// A press in the editor's own retained ui — a select in its toolbar — hands the focus back to the
+// surface it acts on. Refusing that session would take the toolbar away in the middle of a command.
+test('core: a press in retained ui keeps the session it returns to', () => withFixture(
+    '<div id=host contenteditable><p>text</p></div><div id=ui><select><option>x</option></select></div>',
+    root => {
+        const core = new Rte(document, {auto: false});
+        try {
+            const host = root.querySelector('#host');
+            const ui = core.retain(root.querySelector('#ui'));
+            const surface = core.add(host);
+            core.activate(surface);
+            const select = ui.querySelector('select');
+            select.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, composed: true}));
+            select.dispatchEvent(new FocusEvent('focusin', {bubbles: true, composed: true}));
+            // What a command does when it is done: the caret goes back to the surface it acted on.
+            host.dispatchEvent(new FocusEvent('focusin', {bubbles: true, composed: true}));
+            same(core.active, surface, 'The session survived its own control');
+        } finally {
+            core.dispose();
+        }
+    }
+));

@@ -127,7 +127,7 @@ test('playground: the optional block module exposes a value control', () => with
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
     const select = chrome(document).querySelector('#toolbar [data-control=block]');
     truthy(select);
-    equal(select.value, 'paragraph');
+    equal(select.value, 'p', 'The prototype declares its own styles, named by their selector');
     select.value = 'h1';
     select.dispatchEvent(new document.defaultView.Event('change', {bubbles: true}));
     equal(editor.firstElementChild.localName, 'h1');
@@ -312,16 +312,19 @@ test('playground: the prototype toolbar offers the structure controls', () => wi
     equal(bullets.getAttribute('aria-pressed'), 'true');
 }));
 
-test('playground: the style list is filled from the host declaration', () => withPlayground(document => {
+// The prototype declares two groups beside its plain list, so the menu shows all three sections.
+test('playground: the style menu is filled from the host declaration', () => withPlayground(document => {
     const editor = document.querySelector('#editor-prototype');
     const paragraph = [...editor.querySelectorAll('p')].find(node => node.textContent.startsWith('Select a few'));
     const text = paragraph.firstChild;
     document.getSelection().setBaseAndExtent(text, 0, text, 6);
     editor.dispatchEvent(new document.defaultView.FocusEvent('focusin', {bubbles: true, composed: true}));
     document.dispatchEvent(new document.defaultView.Event('selectionchange'));
-    const select = chrome(document).querySelector('#toolbar [data-control=style]');
-    equal([...select.options].slice(1).map(option => option.value), ['lead', 'caption', 'brandColor']);
-    equal(select.hidden, false);
+    const menu = chrome(document).querySelector('#toolbar button[data-command-menu]');
+    const entries = [...chrome(document).querySelectorAll('#toolbar [data-menu] button[data-value]')];
+    equal(entries.map(entry => entry.dataset.value), ['Red', 'Green', 'Left', 'Center', 'Right'],
+        'One section per declared group; the policy list is not an offering');
+    equal(menu.hidden, false);
 }));
 
 test('playground: an image frames itself when clicked', () => withPlayground(document => {

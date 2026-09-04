@@ -107,3 +107,26 @@ function withSurface(html, run) {
         }
     });
 }
+
+// A command that answers for a set of values has to ask its adapter about another one; spreading an
+// edit would leave its getters behind, and a copy has to keep the range it was asked about.
+test('edit: with() replaces single inputs and keeps the rest', () => withFixture(
+    '<div contenteditable><p>text</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        try {
+            const surface = core.add(root.firstElementChild);
+            const text = surface.element.firstElementChild.firstChild;
+            const range = document.createRange();
+            range.setStart(text, 1);
+            range.setEnd(text, 3);
+            const edit = new Edit(surface, null, {range, value: 'Red', inputType: 'x'});
+            const other = edit.with({value: null});
+            equal(other.value, null);
+            equal(other.inputType, 'x');
+            same(other.surface, surface);
+            equal(other.range.range().toString(), 'ex');
+        } finally {
+            core.dispose();
+        }
+    }
+));

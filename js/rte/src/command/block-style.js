@@ -41,9 +41,13 @@ export class BlockStyles {
         return edit.range.blocks(element => element !== edit.element && this.#current(element));
     }
 
+    // The most specific match, not the last one declared: `p.lead` says more about an element than
+    // `p` does, so a plain tag needs no `:not()` to stay out of the way of its own variants.
     #current(element) {
         let current = null;
-        for (const style of this.#styles) if (matches(style, element)) current = style;
+        for (const style of this.#styles) {
+            if (matches(style, element) && (!current || conditions(style) >= conditions(current))) current = style;
+        }
         return current;
     }
 
@@ -117,4 +121,10 @@ function style(value) {
 
 function matches(style, element) {
     return element.matches(style.selector);
+}
+
+// How much a selector asks for beyond its tag: every class, attribute, id, or pseudo-class counts
+// once. Enough to order `p` against `p.lead` and `p.lead[data-x]` without parsing css specificity.
+function conditions(style) {
+    return (style.selector.match(/[.#[:]/g) ?? []).length;
 }

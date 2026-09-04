@@ -74,3 +74,36 @@ test('block styles client module: CSS element policy filters values on demand', 
         core.dispose();
     }
 ));
+
+// A host may name its own block styles, and what follows the tag is written and cleared with them.
+test('block styles: a host declaration names, applies and switches its own styles', () => withFixture(`
+    <div contenteditable style="
+        --u2-rte-toolbar: block; --u2-rte-elements: p h2;
+        --u2-rte-blocks: Absatz(p), Lead(p.lead), Notiz(p[data-note]), Titel(h2);
+    "><p>text</p></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const client = new Editor(core);
+    try {
+        client.add(blockStyles());
+        const surface = core.add(root.firstElementChild);
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 0, text, 4);
+        core.sync();
+        const select = client.toolbar.element.querySelector('select[data-control=block]');
+        equal([...select.options].slice(1).map(option => option.label), ['Absatz', 'Lead', 'Notiz', 'Titel']);
+
+        const commands = client.commands(surface);
+        equal(commands.state('blockStyle'), 'p', 'A plain paragraph is the plain entry');
+        commands.run('blockStyle', {value: 'p.lead'});
+        equal(surface.element.innerHTML, '<p class="lead">text</p>');
+        equal(commands.state('blockStyle'), 'p.lead', 'The more specific match wins without a :not()');
+        commands.run('blockStyle', {value: 'p[data-note]'});
+        equal(surface.element.innerHTML, '<p data-note="">text</p>', 'Switching clears what the last one wrote');
+        commands.run('blockStyle', {value: 'p'});
+        equal(surface.element.innerHTML, '<p>text</p>');
+    } finally {
+        client.dispose();
+        core.dispose();
+    }
+}));

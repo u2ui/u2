@@ -7,8 +7,13 @@
 export function follows(surface, draw, close) {
     const controller = new surface.element.ownerDocument.defaultView.AbortController();
     const listen = {signal: controller.signal};
+    // Only while the surface has a session. A selection is not one: engines leave a selection inside
+    // an editable nobody focused — clicking beside one does that — and the core captures it before
+    // it decides that no session follows. Drawing on that capture would put a form on a caret the
+    // keyboard cannot reach, which is exactly what the toolbar already refuses to do.
+    const drawing = () => surface.active && draw();
     for (const type of ['u2-rte-selectionchange', 'u2-rte-change', 'u2-rte-activate']) {
-        surface.addEventListener(type, draw, listen);
+        surface.addEventListener(type, drawing, listen);
     }
     surface.addEventListener('u2-rte-deactivate', close, listen);
     return {

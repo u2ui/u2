@@ -1,7 +1,7 @@
 import {inlineUi} from '../config/config.js';
 import {rangeRect} from '../browser/range-rect.js';
 import {linkHtml} from '../mark/standard.js';
-import {caretAfter} from '../ui/caret.js';
+import {caretAfter, caretAfterRange} from '../ui/caret.js';
 import {follows} from './contextual.js';
 import {panelGap, place} from '../ui/place.js';
 import {valueMark} from '../command/mark.js';
@@ -42,6 +42,7 @@ const STYLE = `
 `;
 
 const LABELS = {href: 'Address', target: 'New tab', title: 'Title', rel: 'Rel'};
+
 
 // Optional contextual link editor.
 //
@@ -342,8 +343,9 @@ function write(state, value, field = null) {
         ? [field.selectionStart, field.selectionEnd]
         : null;
     state.writing = true;
+    let changed = null;
     try {
-        active.view.commands.run('link', {value, range, trigger: 'input'});
+        changed = active.view.commands.run('link', {value, range, trigger: 'input'});
     } finally {
         state.writing = false;
     }
@@ -354,9 +356,11 @@ function write(state, value, field = null) {
     // What the form edits from here on is whatever the run left behind: the link
     // it made, or — when emptying the address took one away — the text that is
     // left, so the same words can be linked again.
-    active.element = marked(active.surface, at(active.surface));
+    // What the run made, as the run reports it. Asking the caret instead answers about wherever the
+    // caret happens to be — and while a form is being typed into, that is the form.
+    active.element = made(changed) ?? marked(active.surface, at(active.surface));
     active.range = active.element ? contents(active.element)
-        : active.surface.selection?.range() || active.range;
+        : live(active.surface) || active.surface.selection?.range() || active.range;
     active.selection = active.surface.selection;
     if (!active.element && value) return close(state);
     position(state);
@@ -368,10 +372,18 @@ function write(state, value, field = null) {
 function leave(state) {
     const active = state.active;
     const element = active?.element;
-    if (active?.creating) close(state);
-    else if (state.dirty) commit(state);
+    if (!active?.creating && state.dirty) commit(state);
+    // What the document holds now, not what the form was opened on: committing re-marks the link,
+    // and the element the form remembered is the one that was replaced.
+    const surface = active?.surface;
+    const target = surface?.connected && marked(surface, at(surface)) || state.active?.element || element;
+    const range = state.active?.range || active?.range;
+    // Both keys mean the same thing: done. The form stays only while the caret is in a link, and
+    // emptying an address left none — it would otherwise follow the words it just unlinked.
+    close(state);
     if (!active?.surface.connected) return null;
-    caretAfter(active.surface, state.active?.element || element);
+    if (target?.isConnected) caretAfter(active.surface, target);
+    else caretAfterRange(active.surface, range);
     return null;
 }
 
@@ -424,10 +436,21 @@ function position(state) {
 // The node the surface's saved selection starts in — or the one it holds, when
 // that is a single element: an image's link is on the image, not on the block the
 // range around it starts in.
+// Where the caret is now, not where it was captured: an engine announces a selection change in its
+// own time, and everything here happens between marking a link and that announcement.
 function at(surface) {
-    const range = surface.selection?.range();
+    const range = live(surface) || surface.selection?.range();
     if (!range) return null;
     return range.startContainer.childNodes?.[range.startOffset] ?? range.startContainer;
+}
+
+// A copy, never the selection's own range: that one is live and follows every later move, so a form
+// that remembered it would be holding the caret by the time it is used.
+function live(surface) {
+    const selection = surface.core.selection;
+    if (!selection?.rangeCount) return null;
+    const range = selection.getRangeAt(0);
+    return surface.element.contains(range.startContainer) ? range.cloneRange() : null;
 }
 
 // The contents of one element, as a range.
@@ -446,6 +469,12 @@ function target(surface) {
     const whole = surface.element.ownerDocument.createRange();
     whole.selectNodeContents(element);
     return whole;
+}
+
+// The link a run left behind, among the elements it reports as changed.
+function made(changed) {
+    if (!Array.isArray(changed)) return null;
+    return changed.find(node => node?.nodeType === Node.ELEMENT_NODE && node.isConnected && linkHtml.parse(node)) ?? null;
 }
 
 function marked(surface, node) {

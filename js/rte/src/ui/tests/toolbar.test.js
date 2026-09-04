@@ -403,3 +403,62 @@ test('toolbar: a host may hide what it cannot use instead of disabling it', () =
     toolbar.dispose();
     core.dispose();
 }));
+
+// The declaration says what a toolbar looks like, order included; what it does not name keeps the
+// order its modules were registered in, behind the rest.
+test('toolbar: the host declaration is the order', () => withFixture(
+    '<div contenteditable style="--u2-rte-toolbar: second first"><p>text</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const element = document.createElement('div');
+        document.body.append(element);
+        for (const name of ['first', 'second', 'third']) {
+            const button = document.createElement('button');
+            button.dataset.command = name;
+            button.dataset.control = name;
+            element.append(button);
+        }
+        const surface = core.add(root.firstElementChild);
+        const commands = new Commands(surface, {commands: {
+            first: {run: () => {}}, second: {run: () => {}}, third: {run: () => {}},
+        }});
+        const toolbar = new Toolbar(core, element, {commands: () => commands});
+        try {
+            core.activate(surface);
+            toolbar.refresh();
+            equal([...element.children].map(child => child.dataset.control), ['second', 'first', 'third']);
+            equal([...element.children].filter(child => !child.hidden).map(child => child.dataset.control),
+                ['second', 'first'], 'And what it does not name is not shown');
+        } finally {
+            toolbar.dispose();
+            core.dispose();
+            element.remove();
+        }
+    }
+));
+
+// Poking a control that has nothing to do must not end the session: a disabled field cannot take the
+// focus, and focus going nowhere is how a session ends.
+test('toolbar: pressing a disabled field keeps the caret where it is', () => withFixture(
+    '<div contenteditable><p>text</p></div>', root => {
+        const core = new Rte(document, {auto: false});
+        const element = document.createElement('div');
+        const select = document.createElement('select');
+        select.dataset.commandValue = 'first';
+        select.dataset.control = 'first';
+        select.disabled = true;
+        element.append(select);
+        document.body.append(element);
+        const surface = core.add(root.firstElementChild);
+        const commands = new Commands(surface, {commands: {first: {run: () => {}}}});
+        const toolbar = new Toolbar(core, element, {commands: () => commands});
+        try {
+            const press = new PointerEvent('pointerdown', {bubbles: true, composed: true, cancelable: true});
+            select.dispatchEvent(press);
+            equal(press.defaultPrevented, true, 'The press stays with the editor');
+        } finally {
+            toolbar.dispose();
+            core.dispose();
+            element.remove();
+        }
+    }
+));

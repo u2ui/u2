@@ -35,6 +35,38 @@ const STYLE = `
     }
     [data-command=bold] { font-weight: 700; }
 }
+
+/* A menu is the toolbar's own panel, one row per entry: sections keep their names, and a set that
+   carries something says so where the eye already is — at the row, not in the button. */
+[data-menu] {
+    background: Canvas;
+    border: 1px solid color-mix(in srgb, CanvasText 25%, transparent);
+    border-radius: .34em;
+    color: CanvasText;
+    font: inherit;
+    margin: 0;
+    padding: .34em;
+    position: absolute;
+
+    & b { display: block; font-size: .86em; opacity: .6; padding: .5em .6em .17em; }
+    & button {
+        background: none;
+        border: 0;
+        border-radius: .34em;
+        color: inherit;
+        display: block;
+        font: inherit;
+        inline-size: 100%;
+        padding: .34em .6em .34em 1.7em;
+        position: relative;
+        text-align: start;
+        &:hover:not(:disabled) { background: color-mix(in srgb, Highlight 16%, transparent); }
+        &[aria-pressed=true] {
+            background: color-mix(in srgb, Highlight 20%, transparent);
+            &::before { content: '✓'; inset-inline-start: .5em; position: absolute; }
+        }
+    }
+}
 `;
 
 const CLIENT = Symbol.for('u2.rte.editor');
@@ -54,6 +86,7 @@ export class Editor {
     #toolbar = null;
     #element = null;
     #dynamic = new Map();
+    #menus = new Map();
     #controller;
     #connected = true;
 
@@ -185,12 +218,18 @@ export class Editor {
     refresh() {
         if (!this.#connected) return false;
         const surface = this.#core.active;
+        surface?.invalidate();
         if (this.#records.has(surface) && surface.config.ui === 'roaming') this.#ensureToolbar();
         this.#chrome?.follow(this.#records.has(surface) ? surface.element : null);
         // A control whose choices come from the host's configuration is filled
         // for the surface that is about to be shown, not once at registration.
         for (const [select, choices] of this.#dynamic) {
             options(select, this.#records.has(surface) ? choices(surface) : []);
+        }
+        for (const [panel, groups] of this.#menus) {
+            entries(panel, this.#records.has(surface) ? groups(surface) : []);
+            // Where it fits changes with the toolbar, which moves with the caret.
+            if (!panel.hidden) placeMenu(panel, panel.previousElementSibling);
         }
         return this.#toolbar?.refresh() || false;
     }
@@ -207,6 +246,7 @@ export class Editor {
         this.#highlight?.dispose();
         this.#highlight = null;
         this.#dynamic.clear();
+        this.#menus.clear();
         this.#toolbar = null;
         this.#element = null;
         for (const setup of [...this.#setups.values()].reverse()) setup.dispose();
@@ -331,6 +371,49 @@ export class Editor {
     #append(module) {
         if (!this.#element) return;
         for (const control of module.toolbar || []) {
+            // A menu is one control whose content is read per surface, so a host may offer three
+            // sets of classes where another offers none, without a control per set.
+            if (control.type === 'menu') {
+                const panel = this.#document.createElement('div');
+                panel.id = `u2-rte-menu-${control.name || control.command}`;
+                panel.dataset.menu = control.command;
+                panel.hidden = true;
+                const button = this.#document.createElement('button');
+                button.type = 'button';
+                button.dataset.commandMenu = control.command;
+                button.dataset.control = control.name;
+                button.dataset.u2RteModule = module.name;
+                button.setAttribute('aria-label', control.label);
+                button.setAttribute('aria-expanded', 'false');
+                button.title = control.label;
+                button.textContent = control.text;
+                // Not a popover: the chrome raises itself into the top layer whenever anything it
+                // draws appears, and a separate top-layer panel would end up underneath it.
+                // Dismissal is therefore ours, and placement follows the toolbar while it is open.
+                const close = () => {
+                    if (panel.hidden) return;
+                    panel.hidden = true;
+                    button.setAttribute('aria-expanded', 'false');
+                };
+                button.addEventListener('click', () => {
+                    if (!panel.hidden) return close();
+                    panel.hidden = false;
+                    button.setAttribute('aria-expanded', 'true');
+                    placeMenu(panel, button);
+                });
+                this.#element.addEventListener('pointerdown', event => {
+                    if (!panel.contains(event.composedPath()[0]) && event.composedPath()[0] !== button) close();
+                });
+                this.#document.addEventListener('pointerdown', event => {
+                    if (!this.#element?.contains(event.composedPath()[0])) close();
+                }, {signal: this.#controller.signal});
+                this.#document.addEventListener('keydown', event => {
+                    if (event.key === 'Escape') close();
+                }, {signal: this.#controller.signal});
+                this.#element.append(button, panel);
+                if (typeof control.groups === 'function') this.#menus.set(panel, control.groups);
+                continue;
+            }
             if (control.type === 'select') {
                 const select = this.#document.createElement('select');
                 select.dataset.commandValue = control.command;
@@ -411,6 +494,15 @@ function validModule(module) {
             });
             return Object.freeze({...control, type, options: Object.freeze(choices)});
         }
+        if (type === 'menu') {
+            for (const property of ['name', 'command', 'label', 'text']) {
+                if (typeof control[property] !== 'string' || !control[property].trim()) {
+                    throw new TypeError(`An editor toolbar menu requires ${property}`);
+                }
+            }
+            if (typeof control.groups !== 'function') throw new TypeError('An editor toolbar menu requires groups');
+            return Object.freeze({...control, type});
+        }
         if (type !== 'button') throw new TypeError(`Unknown editor toolbar control: ${type}`);
         for (const property of ['command', 'label', 'text']) {
             if (typeof control[property] !== 'string' || !control[property].trim()) {
@@ -456,6 +548,44 @@ function keyLabel(shortcut) {
 
 // Rewrites a select's choices, keeping its disabled placeholder and leaving the
 // element alone when nothing changed.
+// Anchored to the toolbar rather than to the viewport: the toolbar is the menu's offset parent, so
+// a panel placed against it follows every move it makes without a frame loop. Above the button where
+// the viewport allows — the toolbar sits over the text being edited, and a menu opening upwards
+// covers the chrome instead of the words.
+function placeMenu(panel, button) {
+    const toolbar = panel.parentElement.getBoundingClientRect();
+    const above = toolbar.top - panel.offsetHeight >= 0;
+    panel.style.insetInlineStart = `${button.offsetLeft}px`;
+    panel.style.insetBlockStart = above ? 'auto' : '100%';
+    panel.style.insetBlockEnd = above ? '100%' : 'auto';
+}
+
+// A menu is rebuilt only when its sets changed: it is refilled on every surface change, and
+// replacing the buttons under an open menu would close it.
+function entries(panel, groups) {
+    const key = groups.map(group => `${group.label}:${group.values.join(' ')}`).join('|');
+    if (panel.dataset.sets === key) return false;
+    panel.dataset.sets = key;
+    panel.replaceChildren();
+    const command = panel.dataset.menu;
+    for (const group of groups) {
+        if (group.label) {
+            const caption = panel.ownerDocument.createElement('b');
+            caption.textContent = group.label;
+            panel.append(caption);
+        }
+        for (const value of group.values) {
+            const entry = panel.ownerDocument.createElement('button');
+            entry.type = 'button';
+            entry.dataset.commandValue = command;
+            entry.dataset.value = value;
+            entry.textContent = value;
+            panel.append(entry);
+        }
+    }
+    return true;
+}
+
 function options(select, choices) {
     const current = [...select.options].slice(1);
     if (current.length === choices.length

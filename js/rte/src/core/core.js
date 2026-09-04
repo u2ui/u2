@@ -206,7 +206,9 @@ export class Rte extends EventTarget {
 
     #pointerDown = event => {
         const path = event.composedPath();
-        this.#press = {path, handed: false};
+        // A press in retained ui is the editor's own: its controls hand the focus back to the
+        // surface they act on, and refusing that session would take the toolbar away mid-command.
+        this.#press = path.some(node => this.#retained.has(node)) ? null : {path, handed: false};
         const editing = this.#editing(path[0]);
         // The right button opens a menu about what is selected; moving the
         // selection to what it was aimed at is what makes the menu useless.

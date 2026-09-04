@@ -9,6 +9,7 @@ export class Toolbar {
     #surface = null;
     #commands = null;
     #connected = true;
+    #ordered = null;
 
     constructor(core, element, {commands, place = null} = {}) {
         if (!core?.root || typeof core?.addEventListener !== 'function') {
@@ -60,6 +61,7 @@ export class Toolbar {
     refresh() {
         if (!this.#connected) return false;
         const surface = this.#surface;
+        surface?.invalidate(); // whatever a host declared may have changed since the last one
         const commands = surface?.connected ? this.#resolve(surface) : null;
         if (commands != null && !registry(commands)) throw new TypeError('Toolbar commands must resolve to a command registry');
         this.#commands = commands || null;
@@ -70,6 +72,7 @@ export class Toolbar {
         const style = commands && getComputedStyle(surface.element);
         const active = !!commands && surface.config.ui === 'roaming' && visibleForSelection(surface, style);
         const names = active ? configured(style) : null;
+        this.#order(names);
         // A host may prefer a toolbar that only ever shows what it can do, at
         // the cost of a shape that moves with the caret.
         const hiding = active && setting(style, 'toolbar-unavailable') === 'hide';
@@ -78,7 +81,7 @@ export class Toolbar {
         for (const item of this.#items()) {
             const name = item.dataset.command.trim();
             const control = item.dataset.control?.trim() || name;
-            const offered = active && commands.has(name) && (!names || names.has(control));
+            const offered = active && commands.has(name) && (!names || names.includes(control));
             const disabled = !offered || !commands.enabled(name, detail);
             item.hidden = !offered || hiding && disabled;
             if (item.hidden) {
@@ -88,10 +91,35 @@ export class Toolbar {
             visible++;
             state(item, item.hasAttribute('data-state') ? commands.state(name, detail) : null, disabled);
         }
+        // A menu button offers what its entries do: present when the command is, available while at
+        // least one entry is, and each entry marked with the value its set currently carries.
+        for (const button of this.#element.querySelectorAll('button[data-command-menu]')) {
+            const command = button.dataset.commandMenu.trim();
+            const control = button.dataset.control?.trim() || command;
+            const show = active && commands.has(command) && (!names || names.includes(control));
+            const panel = this.#element.querySelector(`[data-menu="${command}"]`);
+            let usable = 0;
+            for (const entry of panel?.querySelectorAll('button[data-value]') ?? []) {
+                const value = entry.dataset.value;
+                const on = show && commands.state(command, {...detail, value}) === value;
+                // What is already set stays in the list, marked: an entry the selection carries has
+                // nothing left to apply, and hiding it would take the answer away with the question.
+                const enabled = on || show && commands.enabled(command, {...detail, value});
+                entry.disabled = !enabled;
+                entry.hidden = !enabled;
+                entry.setAttribute('aria-pressed', String(on));
+                if (enabled) usable++;
+            }
+            const offered = show && !!panel?.querySelector('button[data-value]');
+            button.hidden = !offered || hiding && !usable;
+            state(button, null, !usable);
+            if (button.hidden && panel) panel.hidden = true;
+            else visible++;
+        }
         for (const select of this.#values()) {
             const command = select.dataset.commandValue.trim();
             const control = select.dataset.control?.trim() || command;
-            const show = active && commands.has(command) && (!names || names.has(control));
+            const show = active && commands.has(command) && (!names || names.includes(control));
             let choices = 0;
             for (const option of select.options) {
                 if (!option.value) continue;
@@ -167,6 +195,21 @@ export class Toolbar {
         this.refresh();
     }
 
+    // The declaration is the order, not only the choice: a host says what its toolbar looks like,
+    // and what it does not name keeps the order its modules were registered in, behind the rest.
+    // Only a changed declaration moves anything — this runs on every refresh.
+    #order(names) {
+        const key = names?.join(' ') ?? '';
+        if (this.#ordered === key) return;
+        this.#ordered = key;
+        if (!names) return;
+        for (const name of [...names].reverse()) {
+            const control = this.#element.querySelector(`[data-control="${name}"]`);
+            const panel = control?.nextElementSibling?.hasAttribute('data-menu') ? control.nextElementSibling : null;
+            if (control) this.#element.prepend(control, ...(panel ? [panel] : []));
+        }
+    }
+
     #items() {
         return this.#element.querySelectorAll('[data-command]');
     }
@@ -198,11 +241,23 @@ export class Toolbar {
     // Fields keep their own pointer behaviour so they can be opened and typed in.
     #pointerDown = event => {
         const target = event.composedPath()[0];
-        if (target?.closest?.('select, input, textarea')) return;
+        // Fields keep their own pointer behaviour so they can be opened and typed in — but only
+        // while they can take the focus. A disabled one would send it nowhere, and a session ends
+        // where its focus went.
+        const field = target?.closest?.('select, input, textarea');
+        if (field && !field.disabled) return;
         event.preventDefault();
     };
 
     #click = event => {
+        // A menu entry sets a value the way a select does; the menu stays open, so a second set can
+        // be picked without opening it again.
+        const entry = event.target?.closest?.('button[data-command-value][data-value]');
+        if (entry && this.#element.contains(entry) && !entry.disabled) {
+            event.preventDefault();
+            this.#run(entry.dataset.commandValue.trim(), {value: entry.dataset.value});
+            return;
+        }
         const item = this.#item(event.target);
         if (!item) return;
         event.preventDefault();
@@ -235,7 +290,7 @@ function setting(style, name) {
 
 function configured(style) {
     const value = setting(style, 'toolbar');
-    return value ? new Set(value.split(/[\s,]+/).filter(Boolean)) : null;
+    return value ? [...new Set(value.split(/[\s,]+/).filter(Boolean))] : null;
 }
 
 function visibleForSelection(surface, style) {
@@ -250,9 +305,11 @@ function state(item, value, disabled) {
     else item.removeAttribute('aria-pressed');
 }
 
+// Hidden before it leaves the top layer, shown after it enters: the two attributes hide the same
+// element, and `togglePopover(force)` says which state is wanted rather than asking for the current.
 function display(element, visible) {
-    const popover = element.hasAttribute('popover') && typeof element.showPopover === 'function';
-    if (!visible && popover && element.matches(':popover-open')) element.hidePopover();
+    const popover = element.hasAttribute('popover') && typeof element.togglePopover === 'function';
+    if (!visible && popover) element.togglePopover(false);
     element.hidden = !visible;
-    if (visible && popover && !element.matches(':popover-open')) element.showPopover();
+    if (visible && popover) element.togglePopover(true);
 }

@@ -7,6 +7,7 @@ export class Surface extends EventTarget {
     #element;
     #options;
     #selection = null;
+    #settings = null;
     #transaction = null;
     #active = false;
     #connected = true;
@@ -21,7 +22,15 @@ export class Surface extends EventTarget {
     get core() { return this.#core; }
     get element() { return this.#element; }
     get options() { return this.#options; }
-    get config() { return config(this.#element); }
+    // One reading per burst of work: a refresh asks dozens of times, and a computed style is the
+    // expensive part of a path every keystroke goes down. The next task reads again, and anything
+    // that changes a host property in this one says so with `invalidate()` — as `refresh()` does.
+    get config() { return this.#settings ??= config(this.#element); }
+
+    invalidate() {
+        this.#settings = null;
+        return this;
+    }
     get selection() { return this.#selection; }
     get transaction() { return this.#transaction; }
     get active() { return this.#active; }

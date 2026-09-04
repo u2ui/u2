@@ -456,3 +456,97 @@ function withLink(run, options) {
         }
     );
 }
+
+// Chromium resolves a caret at the boundary behind an element towards that element, so what looked
+// like "after the link" kept typing inside it. The start of the following text says it without pull.
+test('link editor: leaving names the text after the link, not the boundary behind it', () => withLink(
+    ({client, surface, form}) => {
+        surface.element.innerHTML = '<p><a href="/old">one</a> two</p>';
+        const link = surface.element.querySelector('a');
+        getSelection().collapse(link.firstChild, 2);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        key(form(), 'Enter');
+        const range = surface.selection.range();
+        same(range.startContainer, link.nextSibling, 'The caret sits in the text, not on the boundary');
+        equal(range.startOffset, 0);
+    }
+));
+
+// Emptying the address takes the link away, and Enter is still "done": the form goes, and the caret
+// lands after the words that are left rather than back in the middle of them.
+test('link editor: emptying the address and leaving ends with the form gone', () => withLink(
+    ({client, surface, form}) => {
+        surface.element.innerHTML = '<p><a href="/old">one</a> two</p>';
+        const link = surface.element.querySelector('a');
+        getSelection().collapse(link.firstChild, 2);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        type(form(), 'href', '');
+        equal(surface.element.innerHTML, '<p>one two</p>', 'An empty address is how a link is removed');
+        key(form(), 'Enter');
+        equal(form().hidden, true, 'The form is done, not following the words it just unlinked');
+        const range = surface.selection.range();
+        truthy(range.collapsed);
+        // Where exactly is what removing the mark left behind — inside the words, not lost.
+        truthy(surface.element.contains(range.startContainer));
+    }
+));
+
+// An engine announces a selection change in its own time, and everything the form does happens
+// before that: marking the link moved the caret, but the captured selection still points at what was
+// replaced. Resolving the link from that snapshot found none — and a form editing no link closes.
+test('link editor: typing keeps the form before the engine announces the new selection', () => withLink(
+    ({client, surface, form}) => {
+        surface.element.innerHTML = '<p><a href="/old">one</a> two</p>';
+        getSelection().collapse(surface.element.querySelector('a').firstChild, 2);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        type(form(), 'href', '/new'); // no sync: the snapshot stays where it was
+        equal(form().hidden, false, 'The form is still editing the link it marked');
+        equal(surface.element.innerHTML, '<p><a href="/new">one</a> two</p>');
+        type(form(), 'href', '/newer');
+        equal(form().hidden, false, 'And again, with the snapshot another step behind');
+        equal(surface.element.innerHTML, '<p><a href="/newer">one</a> two</p>');
+    }
+));
+
+// Emptying an address takes the link away and leaves the words: the form stays on them so the same
+// words can be linked again. What it remembers has to be those words, not the caret they contain.
+test('link editor: an address typed after emptying one links the same words again', () => withLink(
+    ({client, surface, form}) => {
+        surface.element.innerHTML = '<p>before <a href="/old">one</a> after</p>';
+        getSelection().collapse(surface.element.querySelector('a').firstChild, 2);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        type(form(), 'href', '');
+        equal(surface.element.innerHTML, '<p>before one after</p>', 'The link is gone');
+        equal(form().hidden, false, 'The form stays on the words');
+        // The caret moves while the address is typed — an engine collapses it, a click puts it
+        // somewhere. What the form remembers must be the words, not wherever the caret went.
+        getSelection().collapse(surface.element.querySelector('p').firstChild, 0);
+        type(form(), 'href', '/new');
+        equal(surface.element.innerHTML, '<p>before <a href="/new">one</a> after</p>', 'The same words, linked again');
+        equal(form().hidden, false, 'And the form is still there');
+    }
+));
+
+// While a form is being typed into, the caret is in the form: asking the document where the link is
+// answers about the field. The run reports what it made, and that is what the form goes on editing.
+test('link editor: a new link is found even when the caret is in the form', () => withLink(
+    ({client, surface, form}) => {
+        surface.element.innerHTML = '<p>one two three</p>';
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().setBaseAndExtent(text, 4, text, 7); // marking splits this text node
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-control=link]').click();
+        // What a browser does once a field has the focus: the document selection is no longer in the
+        // text, and the snapshot points into a node that marking split away.
+        const field = form().querySelector('[name=href]');
+        field.value = '/new';
+        getSelection().removeAllRanges();
+        field.dispatchEvent(new Event('input', {bubbles: true}));
+        equal(surface.element.innerHTML, '<p>one <a href="/new">two</a> three</p>');
+        equal(form().hidden, false, 'The form stays on the link it just made');
+    }
+));

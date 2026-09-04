@@ -25,6 +25,8 @@ test('image frame: appears on a selected image and vanishes otherwise', () => wi
 // is addressable until it is the selection.
 test('image frame: clicking an image selects it', () => withImages(({host, frame}) => {
     const image = host.querySelector('#a');
+    // A click into an editable focuses it, and contextual ui belongs to the session that starts there.
+    host.dispatchEvent(new FocusEvent('focusin', {bubbles: true, composed: true}));
     image.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
     equal(getSelection().toString(), '');
     same(getSelection().getRangeAt(0).startContainer, image.parentNode);

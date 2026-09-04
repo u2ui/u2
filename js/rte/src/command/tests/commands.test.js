@@ -28,6 +28,7 @@ test('commands: CSS element policy narrows the current model on demand', () => w
         const first = commands.model;
         same(commands.model, first);
         surface.element.style.setProperty('--u2-rte-elements', 'p h1');
+        surface.invalidate(); // the reading stands until the surface is told to take another
         equal(commands.model.allowed('h1'), true);
     }
 ));

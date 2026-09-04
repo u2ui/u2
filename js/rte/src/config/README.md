@@ -97,6 +97,19 @@ malformed value changes nothing rather than silently narrowing. A site declares
 its own on the root and a field narrows from there, the way every other property
 here cascades.
 
+`--u2-rte-blocks` names the block styles a field offers — `Absatz(p), Lead(p.lead),
+Notiz(p[data-note]), Titel(h2)`. The label names it, the selector says what it is:
+the tag decides what is created, and what follows it — classes, attributes — is
+written when the style is applied and taken off when another replaces it. The
+most specific match wins, so a plain `p` needs no `:not(.lead)` to stay out of
+the way of its own variants. Unset leaves the styles the application registered.
+
+`--u2-rte-class-groups` names either-or sets — `color(Red Green), align(Left
+Center Right)`. Each becomes a section of the class menu, exclusive in itself and
+free of the others, so a field can carry one class from every set. It decides
+nothing about what may exist, only how it is offered, so its names are declared
+in `--u2-rte-classes` as well.
+
 None of this is the security boundary. What a client sanitizer protects is the
 editing session — markup inserted into the author's own logged-in page — while
 what may be stored is decided where the content is saved and served.

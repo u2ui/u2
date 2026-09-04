@@ -55,6 +55,11 @@ item, boolean and `'mixed'` command states become `aria-pressed`, so toggle
 buttons need no separate adapter. Action buttons omit `data-state` and never
 pretend to be toggles merely because their command can report state.
 `data-control` may give a button a CSS-facing name different from its command,
+A declared `--u2-rte-toolbar` names the controls in the order they are shown; the
+toolbar arranges its markup to match, and anything it does not name keeps the
+order it was built in, after the rest. Nothing moves while the declaration stays
+the same.
+
 just as it does for a value control. This lets `--u2-rte-toolbar: breaks` expose
 a button whose command is `showBreaks`.
 

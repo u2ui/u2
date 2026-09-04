@@ -132,9 +132,14 @@ function split(edit, unit) {
     return tail;
 }
 
+// What Enter at the end of a block continues with: the host's plain default block. A heading, a
+// lead, a note — anything carrying more than the bare tag — is a shape someone chose for that one
+// block, and the line after it is a new thought. Splitting in the middle keeps the kind, because
+// there both halves are the same block.
 function continuationBlock(edit, unit, point) {
     const tag = edit.config.block;
-    if (!tag || !edit.model.textBlock(unit) || unit.localName === tag || !blockEdge(unit, point, 'end')) return null;
+    if (!tag || !edit.model.textBlock(unit) || !blockEdge(unit, point, 'end')) return null;
+    if (unit.localName === tag && !unit.attributes.length) return null; // already plain
     const block = edit.document.createElement(tag);
     if (!edit.model.allows(unit.parentElement, block)) return null;
     return block;

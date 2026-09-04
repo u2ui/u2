@@ -107,7 +107,7 @@ export function aiView({request, diff = null, prompts = [], label = 'Assistant',
                 run: () => show(state, surface),
             }};
         },
-        toolbar: Object.freeze([Object.freeze({command: 'ai', label, text: '✨', shortcut: 'ctrl+m'})]),
+        toolbar: Object.freeze([Object.freeze({command: 'ai', label, text: '✦', shortcut: 'ctrl+m'})]),
     });
 }
 

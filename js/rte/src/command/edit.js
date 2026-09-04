@@ -1,4 +1,3 @@
-import {configuredElements} from '../config/config.js';
 import {htmlModel} from '../model/html/html-model.js';
 import {EditRange} from '../selection/range/edit-range.js';
 import {PointMap} from '../selection/map/point-map.js';
@@ -56,13 +55,24 @@ export class Edit {
     // checks never consult it. Resolving it on first use keeps a toolbar
     // refresh from paying for every control that does not care.
     get model() {
-        this.#narrowed ??= narrow(this.#model, configuredElements(this.#surface.element));
+        // The surface has read its host already; asking the platform again is the expensive half of
+        // an availability check, and every control makes one.
+        this.#narrowed ??= narrow(this.#model, this.config.elements);
         return this.#narrowed;
     }
     get map() { return this.#map; }
     get inputType() { return this.#inputType; }
     get data() { return this.#data; }
     get value() { return this.#value; }
+
+    /** The same edit with single inputs replaced: a command answering for a set of values has to ask
+     *  its adapter about another one, and spreading an edit would leave its getters behind. */
+    with(options) {
+        return new Edit(this.#surface, this.#transaction, {
+            model: this.#model, range: this.#range?.range() ?? null, inputType: this.#inputType,
+            data: this.#data, value: this.#value, fragment: this.#fragment, ...options,
+        });
+    }
     get fragment() { return this.#fragment; }
     get range() { return this.#range; }
     get document() { return this.#surface.element.ownerDocument; }

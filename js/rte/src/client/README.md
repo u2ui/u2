@@ -22,12 +22,34 @@ when focus reaches it; the client then installs its standard command registry
 and input pipeline. A default roaming toolbar is allocated only when the first
 rich-text surface becomes active. `plaintext-only` hosts stay completely native.
 
+The optional `blocks.js` entry adds the block-style control. A host may name its
+own with `--u2-rte-blocks: Absatz(p), Lead(p.lead), Notiz(p[data-note])`:
+`declaredStyles()` turns each selector into a style whose tag is created and
+whose conditions are written and cleared with it, so a block class needs no code.
+Recognition takes the most specific match, which is why a plain tag and its
+variants can be declared side by side.
+
 The optional `classes.js` entry adds a content-class control. Its choices come
 from the host's `--u2-rte-classes`, so its toolbar select is filled per surface
 rather than at registration: a module control may declare `options` as a
 function of the surface, and the client refills that select before the toolbar
 is shown. The same declaration is what the sanitizer keeps and what
 presentation cleanup leaves alone.
+
+One set of classes is one mark and therefore one either-or choice. A field that
+combines axes — a colour *and* an alignment — names them in
+`--u2-rte-class-groups: color(Red Green), align(Left Center Right)`, and each set
+becomes a section of the same menu: exclusive in itself, free of the others.
+
+The control is a menu rather than a select for that reason: a select carries one
+value, and the whole point is carrying one from each set. It is also why the
+sections can come from CSS at all — a toolbar builds its controls once, when a
+module is registered, so how many *controls* there are cannot depend on a host,
+while what one control *contains* is read per surface like every other choice.
+
+The names still have to be in `--u2-rte-classes`: what may exist and what is
+offered are separate questions, and a class foreign content may carry needs no
+control at all.
 
 The optional `images.js` entry frames a selected image, with handles on its
 trailing edges and its alt text in a field below it. Both come and go with the
@@ -94,8 +116,13 @@ arrow keys move through it, Enter takes the current entry, Escape closes the lis
 before it closes the form, and a pointer does the same. One question is in flight
 at a time, and a late answer to a word that has since changed is dropped.
 
-Contextual UI goes with the editing session and comes back with it. `follows()`
-owns that lifecycle for every module that draws one: selection, content, and the
+Contextual UI goes with the editing session and comes back with it, and it draws
+only while there is one. A selection is not a session: engines leave a selection
+inside an editable nobody focused — clicking beside one does that — and the core
+captures it before deciding that no session follows. Drawing on that capture
+would put a link form or a set of handles on a caret the keyboard cannot reach,
+which is what the toolbar already refuses. `follows()` owns that lifecycle for
+every module that draws one: selection, content, and the
 session's return, because coming back to the selection a module was already
 showing for is no selection change and would otherwise leave its handles or its
 form behind. A module that has more of its own to hear ends it with the same
@@ -169,7 +196,9 @@ Those defaults arrive as three ordinary modules — `history`, `marks`, and
 contract below and can be removed with `editor.delete('structure')`, so nothing
 about them is privileged. Every control they contribute is gated by
 `--u2-rte-toolbar`, so a host that lists only `bold` shows only Bold while the
-commands and their keyboard shortcuts stay available.
+commands and their keyboard shortcuts stay available. The list is also the order
+they appear in: what a toolbar looks like is the host's to say, and without a
+declaration the controls keep the order their modules were registered in.
 
 `add(module)` installs an optional extension into already registered and future
 rich-text surfaces. A module has one client-wide name and may provide a command

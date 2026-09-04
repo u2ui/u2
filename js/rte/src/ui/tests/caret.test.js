@@ -13,8 +13,10 @@ test('caret: it lands after the element, collapsed and captured', () => withFixt
             truthy(caretAfter(surface, link));
             const range = getSelection().getRangeAt(0);
             truthy(range.collapsed);
-            same(range.startContainer, link.parentNode);
-            equal(range.startOffset, 2, 'Right behind it, not inside it');
+            // The start of the text that follows, not the boundary behind the element: engines pull
+            // a caret at that boundary back into what it sits behind.
+            same(range.startContainer, link.nextSibling);
+            equal(range.startOffset, 0, 'Right behind it, not inside it');
             truthy(surface.selection, 'The surface saved what it was handed');
             equal(surface.selection.collapsed, true);
         } finally {

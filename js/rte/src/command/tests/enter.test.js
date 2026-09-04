@@ -278,3 +278,24 @@ function withCommands(html, run) {
         }
     });
 }
+
+
+// A block style is chosen for one block: the line after a heading, a lead or a note is a new
+// thought, so Enter at the end continues plain. Splitting in the middle keeps the kind.
+test('enter: a block carrying a style continues as the plain default block', () => withCommands(
+    '<div contenteditable><p class="Lead">lead</p><h2>title</h2><p data-note="">note</p></div>',
+    ({commands, host}) => {
+        caret(host.firstElementChild.firstChild, 4);
+        commands.run('enter');
+        equal(host.innerHTML.startsWith('<p class="Lead">lead</p><p><br></p>'), true);
+
+        const note = host.querySelector('[data-note]');
+        caret(note.firstChild, 4);
+        commands.run('enter');
+        equal(host.innerHTML.includes('<p data-note="">note</p><p><br></p>'), true);
+
+        caret(host.querySelector('h2').firstChild, 2);
+        commands.run('enter');
+        equal(host.innerHTML.includes('<h2>ti</h2><h2>tle</h2>'), true, 'A split in the middle keeps the kind');
+    }
+));

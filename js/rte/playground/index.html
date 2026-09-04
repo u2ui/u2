@@ -179,6 +179,14 @@
     details { font-size: .9em; }
     details > summary { cursor: pointer; }
     .wide { grid-column: 1 / -1; }
+  /* what the declared block styles write: a class on one, an attribute on the other */
+  .Lead { font-size: 1.15em; font-weight: 600 }
+  [data-note] { border-inline-start: 3px solid; opacity: .75; padding-inline-start: .6em }
+  .Red { color: #c00 }
+  .Green { color: #0a0 }
+  .Left { text-align: left }
+  .Center { text-align: center }
+  .Right { text-align: right }
   </style>
 </head>
 <body>
@@ -283,7 +291,7 @@
     <section class="panel wide">
       <h2>One-import editor prototype</h2>
       <div class="prototype">
-      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code link bullets numbers outdent indent rule insertTable imageOriginal unstyle breaks source ai; --u2-rte-classes:lead, caption, brandColor; --u2-rte-show-breaks:true">
+      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code link bullets numbers outdent indent rule insertTable imageOriginal unstyle breaks source ai; --u2-rte-blocks:Absatz(p), Lead(p.Lead), Notiz(p[data-note]), Zitat(blockquote), Titel(h1), Untertitel(h2); --u2-rte-classes:lead, caption, brandColor, Red, Green, Left, Center, Right, Lead; --u2-rte-class-groups:color(Red Green), align(Left Center Right); --u2-rte-show-breaks:true">
         <p>Select text to format it, choose its block style, or press Enter inside this list:</p>
         <ul><li>List item</li><li>Put the caret here and press the indent control</li></ul>
         <p>Turn these paragraphs into a list, then lift them out again.</p>
@@ -319,7 +327,8 @@
         Input types without a command run cleanup policies only; they do not
         imitate the browser's native DOM mutation, so edit or apply HTML first.
         The prototype toolbar lists every ready control, so the order in
-        <code>--u2-rte-toolbar</code> is the order shown. Undo and redo also
+        <code>--u2-rte-toolbar</code> is the order shown — the list decides both which
+        controls appear and where. Undo and redo also
         work from Ctrl/Command+Z and +Y; the readout under the surface reports
         how many entries the history holds and where it stands, which makes the
         grouping visible: continuous typing coalesces, while each command,
@@ -351,11 +360,14 @@
         structure itself — lists, tables, quotes and headings all reduce to
         plain blocks. Every control's key works whether or not it is listed in
         <code>--u2-rte-toolbar</code>; hover a control to see its shortcut.
-        The style list offers exactly the names in
-        <code>--u2-rte-classes</code>. That one declaration is also what the
-        sanitizer keeps from pasted HTML and what remove-format leaves alone, so
-        a class the host knows is never offered without being allowed, and never
-        cleaned away as foreign.
+        <code>--u2-rte-classes</code> says which classes may exist: it is what the
+        sanitizer keeps from pasted HTML and what remove-format leaves alone.
+        What the style menu <em>offers</em> is
+        <code>--u2-rte-class-groups</code> — <code>color(Red Green)</code> is one
+        either-or set, and a field carries one class from each set at a time.
+        Block styles are declared the same way in <code>--u2-rte-blocks</code>:
+        <code>Lead(p.Lead)</code> creates a paragraph and writes the class with
+        it, <code>Notiz(p[data-note])</code> an attribute instead.
         Bold recognizes both <code>&lt;strong&gt;</code> and <code>&lt;b&gt;</code>,
         creates canonical <code>&lt;strong&gt;</code>, and unwraps either form on
         removal. The class-mark buttons reuse a fully selected inline element;
@@ -414,6 +426,7 @@
     // Comparing two html strings is a library question, so the diff is the application's to choose
     // and is fetched on first use — a pane nobody opens costs nothing.
     let htmlDiff = null;
+    globalThis.__client = conventionEditor; // measuring hook for the browser runner
     conventionEditor.add(aiView({
         prompts: ['Bold the keywords', 'Shorten', 'Continue'],
         request: ({prompt, html}) => new Promise(resolve => setTimeout(() => resolve(
@@ -831,13 +844,16 @@
         label.append(`--u2-rte-${name}`, select);
         properties.append(label);
       }
-      const classes = document.createElement('label');
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = prototype.style.getPropertyValue('--u2-rte-classes').trim();
-      input.addEventListener('input', () => write('classes', input.value));
-      classes.append('--u2-rte-classes', input);
-      properties.append(classes);
+      // The text-valued host properties: what may exist, what the menus offer, and the block styles.
+      for (const name of ['classes', 'class-groups', 'blocks']) {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = prototype.style.getPropertyValue(`--u2-rte-${name}`).trim();
+        input.addEventListener('input', () => write(name, input.value));
+        label.append(`--u2-rte-${name}`, input);
+        properties.append(label);
+      }
     }
 
     function writeToolbar() {

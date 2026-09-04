@@ -144,3 +144,11 @@ test('config: an undeclared or malformed list leaves the policy alone', () => wi
     equal(config(root.querySelector('#silent')).protocols, null);
     equal(config(root.querySelector('#broken')).attributes, null, 'A typo must not silently narrow');
 }));
+
+// A group name is a label, not a tag: it is shown as written, umlauts and capitals included.
+test('config: class groups keep their names as declared', () => withFixture(
+    '<div contenteditable style="--u2-rte-class-groups: Ausrichtung(Center Left), Farbe(Rot Blau)"></div>',
+    root => {
+        equal(config(root.firstElementChild).classGroups, {Ausrichtung: ['Center', 'Left'], Farbe: ['Rot', 'Blau']});
+    }
+));

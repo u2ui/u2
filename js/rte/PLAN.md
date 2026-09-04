@@ -79,6 +79,18 @@ without a single tag it is text, escaped and joined by breaks, which is all the
 structure such a paste has. A `text/plain` paste with no html flavor beside it
 stays native as before.
 
+A host is read once per burst of work. `Surface.config` kept resolving a computed
+style on every access, and an availability check asks for it several times — a
+toolbar refresh went down that path 65 times. It now holds its reading until
+`invalidate()`, which `refresh()` calls before anything looks: 65 style
+resolutions became 2. `Edit.model` and `Commands.model` stopped asking the
+platform a second question they already had the answer to, which is most of that
+difference. Measured in Firefox 155 on the playground: `unstyle` availability
+600 → 200 µs, the ordinary marks 150 → 100 µs. What is left in a refresh is a
+forced layout, which the placement of a toolbar that follows the caret cannot
+avoid, and one `Edit` per availability check — 21 controls, two questions each.
+Sharing one edit across a refresh is the next thing to try.
+
 What a field may carry is now declared where every other host decision is
 declared: `--u2-rte-elements`, `--u2-rte-attributes` and `--u2-rte-protocols`,
 one grammar for the element-specific ones — a bare list for every element,
@@ -498,6 +510,15 @@ absent, work for current and future surfaces, and release everything through
    read, not this module's to enumerate. Streaming a
    growing answer, working on a selection rather than the whole field, and
    keeping the prompt history remain open.
+
+7. **Declared block styles — implemented.** A block style was always a selector, a
+   tag and optional write/clear hooks, so `--u2-rte-blocks: Absatz(p),
+   Lead(p.lead), Notiz(p[data-note])` needed no new concept: the label names it,
+   the tag is what gets created, and every condition after it is written when the
+   style is applied and cleared when another replaces it. Recognition now takes
+   the most specific match instead of the last declared, so a plain tag and its
+   variants live side by side without `:not()` chains. What a control offers is a
+   host question again; which module registers it stays the application's.
 
 All roaming and contextual extension UI must be created in the core's
 `Document` or `ShadowRoot`, use the browser top layer through Popover or Dialog
