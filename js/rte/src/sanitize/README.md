@@ -38,8 +38,13 @@ Event attributes, comments, and data attributes
 are not enabled by default. Inline `style` is: it executes nothing, and where
 foreign presentation is unwanted the Unstyle policy already removes it from what
 an import brought — a policy that must not carry it at all narrows `attributes`.
-Relative URLs use the explicit `relative` protocol token. Known URL attributes
-without a matching protocol rule are removed rather than accepted implicitly.
+A URL that resolves inside the document — `/page`, `page.html`, `#anchor`,
+`?q=1` — passes wherever the attribute has a rule at all. It reaches nowhere the
+document is not, so there is nothing for a policy to allow and nothing an
+application can forbid by forgetting to name it. `//host/x` and `\\host/x` name no
+scheme either but resolve elsewhere: they are absolute URLs in disguise, judged
+as the `http`/`https` ones they turn into. Known URL attributes without a
+matching protocol rule are removed rather than accepted implicitly.
 
 `policy.with(options)` copies a policy with single axes replaced, and
 `policyFor(config, base)` is what a host gets: its own `--u2-rte-elements`,
@@ -52,7 +57,7 @@ returns the base itself.
 const policy = new SanitizePolicy({
     elements: ['p', 'a', 'strong'],
     attributes: {'*': ['class'], a: ['href', 'rel']},
-    protocols: {a: {href: ['https', 'relative']}},
+    protocols: {a: {href: ['https']}},
 });
 ```
 
@@ -126,6 +131,20 @@ touching the security policy. An application declares its content classes once
 through `--u2-rte-classes`; external HTML then cannot smuggle in classes the
 host does not know, and the same list drives the style control and presentation
 cleanup.
+
+## Possible extensions
+
+Neither is planned; both are written down because the protocol list invites them
+and answers neither.
+
+- **A host allowlist.** A protocol list says `https` is fine and cannot say
+  *whose* `https`. An application that wants its own images and no foreign
+  tracking pixel has no way to state it here, and stating it as a protocol —
+  which an earlier `relative` token tried — describes the wrong axis.
+- **Reading the document's CSP.** `img-src`, `media-src` and `frame-src` already
+  declare what the page will load at all. An editor that read them would stop
+  offering what the browser is about to refuse, without a second list to keep in
+  step.
 
 ## TODO
 

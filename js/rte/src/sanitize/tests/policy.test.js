@@ -13,7 +13,7 @@ test('sanitize policy: default policy is immutable and covers document elements'
 test('sanitize policy: custom names are normalized, deduplicated, and isolated', () => {
     const elements = ['P', 'a', 'p'];
     const attributes = {'*': ['TITLE'], a: ['href', 'title']};
-    const policy = new SanitizePolicy({elements, attributes, protocols: {a: {href: ['HTTPS', 'relative']}}});
+    const policy = new SanitizePolicy({elements, attributes, protocols: {a: {href: ['HTTPS']}}});
     elements.push('script');
     attributes.a.push('onclick');
     equal(policy.elements, ['p', 'a']);
@@ -25,6 +25,7 @@ test('sanitize policy: URL protocols are explicit and robust against whitespace'
         const link = root.querySelector('#link');
         const image = root.querySelector('#image');
         truthy(sanitizePolicy.allowsUrl(link, 'href', '/relative'));
+        truthy(sanitizePolicy.allowsUrl(link, 'href', '#anchor'));
         truthy(sanitizePolicy.allowsUrl(link, 'href', 'mailto:test@example.com'));
         equal(sanitizePolicy.allowsUrl(link, 'href', 'java\nscript:alert(1)'), false);
         // An image executes nothing, an SVG one included: browsers draw it in a
@@ -34,6 +35,23 @@ test('sanitize policy: URL protocols are explicit and robust against whitespace'
         equal(sanitizePolicy.allowsUrl(image, 'src', 'javascript:alert(1)'), false);
         equal(sanitizePolicy.allowsUrl(link, 'href', 'data:text/html,%3Cscript%3E'), false);
         equal(sanitizePolicy.allowsUrl(link, 'action', '/submit'), false, 'URL attributes need a matching rule');
+    }
+));
+
+// A url that resolves inside the document reaches nowhere the document is not, so a rule cannot
+// forbid it. One that only looks that way is judged by the protocol it turns into.
+test('sanitize policy: this document\'s own URLs pass, disguised absolute ones do not', () => withFixture(
+    '<img id=image>', root => {
+        const image = root.querySelector('#image');
+        const policy = new SanitizePolicy({protocols: {img: {src: ['data']}}});
+        truthy(policy.allowsUrl(image, 'src', '/bild.png'), 'a path is this document\'s');
+        truthy(policy.allowsUrl(image, 'src', 'bild.png'));
+        truthy(policy.allowsUrl(image, 'src', '?v=2'));
+        for (const disguise of ['//evil.example/p.png', '\\\\evil.example/p.png', '/\\evil.example/p.png']) {
+            equal(policy.allowsUrl(image, 'src', disguise), false, `${disguise} is an absolute url`);
+        }
+        equal(policy.allowsUrl(image, 'src', 'javascript:alert(1)'), false);
+        truthy(policy.allowsUrl(image, 'src', 'data:image/png;base64,x'));
     }
 ));
 

@@ -15,7 +15,7 @@ test('native sanitizer: narrows elements and filters the detached result', () =>
     const policy = new SanitizePolicy({
         elements: ['p', 'a', 'em'],
         attributes: {'*': ['class'], a: ['href']},
-        protocols: {a: {href: ['https', 'relative']}},
+        protocols: {a: {href: ['https']}},
     });
     const fragment = document.createDocumentFragment();
     const link = document.createElement('a');

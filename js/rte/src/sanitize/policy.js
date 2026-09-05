@@ -20,14 +20,14 @@ const DEFAULT_ATTRIBUTES = Object.freeze({
     time: Object.freeze(['datetime']),
 });
 const DEFAULT_PROTOCOLS = Object.freeze({
-    a: Object.freeze({href: Object.freeze(['http', 'https', 'mailto', 'relative', 'tel'])}),
-    blockquote: Object.freeze({cite: Object.freeze(['http', 'https', 'relative'])}),
+    a: Object.freeze({href: Object.freeze(['http', 'https', 'mailto', 'tel'])}),
+    blockquote: Object.freeze({cite: Object.freeze(['http', 'https'])}),
     // `data:` belongs to an image and to nothing else here: an image executes
     // nothing, not even an SVG one, which browsers draw in a script-free
     // context. In a navigating attribute the same protocol is a page, so `a`
     // and the citations keep it out.
-    img: Object.freeze({src: Object.freeze(['data', 'http', 'https', 'relative'])}),
-    q: Object.freeze({cite: Object.freeze(['http', 'https', 'relative'])}),
+    img: Object.freeze({src: Object.freeze(['data', 'http', 'https'])}),
+    q: Object.freeze({cite: Object.freeze(['http', 'https'])}),
 });
 
 // Elements a browser never renders the children of. Unwrapping one turns source — a stylesheet, a
@@ -84,8 +84,7 @@ export class SanitizePolicy {
         const protocols = this.#protocols[element.localName.toLowerCase()]?.[attributeName]
             || this.#protocols['*']?.[attributeName];
         if (!protocols) return false;
-        const protocol = urlProtocol(value, base);
-        return protocol !== null && protocols.includes(protocol);
+        return allowedUrl(value, base, protocols);
     }
 
     // Reduces a subtree to the elements this policy allows, keeping the content
@@ -217,14 +216,17 @@ function protocolGroups(value) {
     return Object.freeze(result);
 }
 
-function urlProtocol(value, base) {
-    const input = String(value).trim();
-    const compact = input.replace(/[\u0000-\u0020]/g, '');
-    if (!/^[a-z][a-z\d+.-]*:/i.test(compact)) return 'relative';
+// A url naming no scheme that lands on the document's own origin — `/page`, `#anchor`, `?q=1` —
+// reaches nowhere the document is not: nothing to allow, and nothing to forbid by forgetting to
+// name it. `//host` and `\\host` name none either but go elsewhere, so their real scheme decides.
+function allowedUrl(value, base, protocols) {
+    const input = String(value).trim().replace(/[\u0000-\u0020]/g, '');
+    const own = !/^([a-z][a-z\d+.-]*:|[/\\]{2})/i.test(input);
     try {
-        return new URL(input, base).protocol.slice(0, -1).toLowerCase();
+        const url = new URL(input, base);
+        return own ? url.origin === new URL(base).origin : protocols.includes(url.protocol.slice(0, -1));
     } catch {
-        return null;
+        return own; // nothing to resolve against — an opaque document keeps its own urls
     }
 }
 
