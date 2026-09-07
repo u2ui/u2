@@ -4,12 +4,11 @@
 the currently active surface. It provides the roaming behavior; it does not
 create buttons, inject styles, choose icons, or define editor commands.
 
-The useful interaction model comes from the original `../rte0` toolbar: one
-shared toolbar follows the active editor, its items reflect the current
+One shared toolbar follows the active editor, its items reflect the current
 selection, pointer interaction keeps the editor selection, and keyboard
-shortcuts invoke the same actions. RTE replaces the old global item registry,
-`execCommand()`, delayed focus repair, and automatic style injection with the
-existing core, surface, and command contracts.
+shortcuts invoke the same actions. The core, surface, and command contracts
+replace global item registries, `execCommand()`, delayed focus repair, and
+automatic style injection.
 
 ## Contract
 

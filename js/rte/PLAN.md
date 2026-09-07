@@ -4,12 +4,6 @@ Each phase ends with documentation, dedicated tests for every production file,
 real-browser verification, and no known failing invariant. Later phases may
 refine earlier contracts, but may not bypass their responsibility boundaries.
 
-The working `../rte0` is a behavioral reference throughout the project. Existing
-behavior, especially host-specific editing, selection handling, and browser
-fixes, is first captured as black-box tests. RTE then preserves or deliberately
-improves it through smaller responsibilities; structural weaknesses in the old
-implementation are not mistaken for behavioral failures.
-
 ## Resume work
 
 Phases 0–3 provide the core, selection/range primitives, content model, scoped

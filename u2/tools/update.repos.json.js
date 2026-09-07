@@ -1,6 +1,7 @@
 // deno run -A --no-lock ./u2/tools/update.repos.json.js
 
 const repos = {};
+const HIDDEN = new Set(['rte0']);
 
 import * as fs from 'https://deno.land/std@0.100.0/fs/mod.ts';
 
@@ -13,6 +14,7 @@ base = base.replace(/file:\/\/\//, '/');
     for await (const entry of Deno.readDir(base+category)) {
         if (!entry.isDirectory) continue;
         const name = entry.name;
+        if (HIDDEN.has(name)) continue;
         const data = await writeReadMe(category, entry);
 
         const css = fs.existsSync(`${base}${category}/${name}/${name}.css`);

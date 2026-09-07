@@ -13,6 +13,7 @@ import * as module from "https://cdn.jsdelivr.net/gh/u2ui/u2@main/js/rte/rte.js"
 
 ## Demos
 
+[webkit-data-image-drag.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/webkit-data-image-drag.html)  
 [index.html](http://gcdn.li/u2ui/u2@main/js/rte/tests/index.html)  
 
 ## Start here
@@ -34,9 +35,6 @@ Run the dependency-free browser suite at `/u2/js/rte/tests/` and inspect
 normalization interactively at `/u2/js/rte/playground/`. The runner displays
 its own test count and result. A result is cross-browser evidence only after
 that exact revision has run in current Chromium, Firefox, and WebKit.
-
-`../rte0` is a read-only behavioral reference. Reuse proven behavior and CSS
-configuration ideas, but do not copy its architecture or modify its files.
 
 ## Intended features
 
@@ -329,7 +327,6 @@ transactional undo/redo.
 - Exercise the new synchronous extension lifecycle with another contextual UI
   before adding dependency, ordering, or asynchronous setup concepts.
 - Build the browser test matrix for current Chromium, Firefox, and WebKit.
-- Port only the proven ideas from `../rte0`; keep its implementation untouched.
 
 ## About
 

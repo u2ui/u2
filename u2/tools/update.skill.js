@@ -6,6 +6,7 @@ let base = import.meta.resolve('../../');
 base = base.replace(/file:\/\/\//, '/');
 
 const categories = ['attr', 'class', 'el', 'css', 'js'];
+const HIDDEN = new Set(['rte0']);
 
 async function generateSkillMd() {
     const repos = {};
@@ -16,6 +17,7 @@ async function generateSkillMd() {
             for await (const entry of Deno.readDir(base + category)) {
                 if (!entry.isDirectory) continue;
                 const name = entry.name;
+                if (HIDDEN.has(name)) continue;
                 
                 const readmePath = `${base}${category}/${name}/README.md`;
                 let description = '';

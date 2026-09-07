@@ -196,14 +196,6 @@
     }
   },
   "el": {
-    "rte0": {
-      "name": "rte0",
-      "description": "\"Rich\" Rich Text Editor (alpha)",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
     "tabs": {
       "name": "tabs",
       "description": "Turns HTML structures with headings into an interactive, tabbed interface, using the content between headings as each tab’s content.",
@@ -568,14 +560,6 @@
     }
   },
   "js": {
-    "rte0": {
-      "name": "rte0",
-      "description": "Easily Make Elements Editable with Intuitive Controls",
-      "beta": false,
-      "deprecated": false,
-      "css": false,
-      "js": false
-    },
     "serviceWorker": {
       "name": "serviceWorker",
       "description": "",

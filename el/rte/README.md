@@ -56,9 +56,6 @@ DOM edited by RTE. They should not be added as aliases or partial parsers.
 
 ## TODO
 
-- Add `el/rte` to U2's generated project catalog when the module is ready for
-  automatic loading. It currently requires the explicit module import shown
-  above because that catalog lives outside this module.
 - RTE needs a shared root-aware convention-client entry point before this
   adapter can support editors placed inside an application ShadowRoot. The
   current public convenience client owns the document root only.

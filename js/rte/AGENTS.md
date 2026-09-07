@@ -15,9 +15,6 @@ earlier RTE draft is not a reason to keep a weaker design.
 - Read [`README.md`](./README.md) for the architecture and requirements.
 - Read [`PLAN.md`](./PLAN.md) for implemented phases and the next responsibility.
 - Read the README beside every responsibility you change.
-- Treat `../rte0` as a read-only behavioral reference. Never modify it or any
-  other file outside `rte` while working on RTE.
-
 ## Priorities
 
 - Keep changes focused, compact, readable, and internally consistent.
