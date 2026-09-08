@@ -103,6 +103,7 @@ contain: layout style paint;  /* Neu ok? */
 			}
 			:host([mode=fade]) .body {
 				display:flex;
+				min-width: 0;
 			}
 			:host([mode=fade]) .body::slotted(*) {
 				transition:opacity var(--u2-carousel-animation-speed, .7s) ease-in-out;
