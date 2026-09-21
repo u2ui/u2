@@ -192,6 +192,43 @@
 
     });
 
+    // A subtree inserted by a script is reported as one node, whatever the readyState.
+    describe('SelectorObserver nested inserts during page load', () => {
+        const nested = '<div><div class=nested></div></div>';
+
+        // module scripts run while readyState is "interactive"
+        const found = [];
+        new SelectorObserver({ on: el => found.push(el) }).observe('.nested');
+        const state = document.readyState;
+        document.body.insertAdjacentHTML('beforeend', `<div id=interactiveInsert>${nested}</div>`);
+
+        it('nested insert while "'+state+'":', done => {
+            setTimeout(()=>{
+                chai.expect(found).to.include(interactiveInsert.querySelector('.nested'));
+                interactiveInsert.remove();
+                done();
+            },50);
+        });
+
+        it('nested insert while "loading" (script inside a parsing document):', async () => {
+            const src = (await (await fetch('../SelectorObserver.js')).text()).replace('export class', 'class');
+            const frame = document.createElement('iframe');
+            document.body.append(frame);
+            const doc = frame.contentDocument;
+            doc.open();
+            doc.write('<!doctype html><script>'+src+'; window.found=[]; new SelectorObserver({on:el=>found.push(el)}).observe(".nested")<\/script>');
+            doc.write(`<div id=parsed>${nested}</div>`); // parser: every node reported on its own
+            doc.write(`<script>window.state=document.readyState; document.body.insertAdjacentHTML("beforeend", "<div id=scripted>${nested}</div>")<\/script>`);
+            await new Promise(r => setTimeout(r, 50));
+            const win = frame.contentWindow;
+            chai.expect(win.state).to.equal('loading');
+            chai.expect(win.found).to.include(doc.querySelector('#parsed .nested'));
+            chai.expect(win.found).to.include(doc.querySelector('#scripted .nested'));
+            doc.close();
+            frame.remove();
+        });
+    });
+
     /*
     describe('SelectorObserver check by animationend', () => {
         it('nested, add parent class:', done => {

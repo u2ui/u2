@@ -140,9 +140,8 @@ export class SelectorObserver {
      */
      _addTree(target) {
         target.matches(this.selector) && this._add(target);
-        if (document.readyState === 'complete') { // Before domready MutationObserver reports every node, ok?
-            for (const el of target.querySelectorAll(this.selector)) this._add(el);
-        }
+        // a scripted insert is reported as its root only, even while parsing; nodes found twice are deduped by targets
+        for (const el of target.querySelectorAll(this.selector)) this._add(el);
     }
 
     /**
