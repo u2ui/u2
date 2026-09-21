@@ -229,6 +229,65 @@
         });
     });
 
+    // all mutations of one task arrive as one batch; what counts is the state at its end
+    describe('SelectorObserver batched mutations', () => {
+        const ons = [], offs = [];
+        const o = new SelectorObserver({ on: el => ons.push(el), off: el => offs.push(el) });
+        o.observe('.batch');
+        const reset = () => { ons.length = offs.length = 0; };
+        const later = fn => new Promise(r => setTimeout(() => r(fn()), 50));
+
+        it('added and removed in the same task: neither on nor off', async () => {
+            reset();
+            const el = document.createElement('div');
+            el.className = 'batch';
+            document.body.append(el);
+            el.remove();
+            await later(() => {
+                chai.expect(ons).to.have.length(0);
+                chai.expect(offs).to.have.length(0);
+            });
+        });
+
+        it('touched after removal in the same task: not added', async () => {
+            const el = document.createElement('div');
+            el.className = 'batch';
+            document.body.append(el);
+            await later(() => {});
+            reset();
+            el.remove();
+            el.setAttribute('data-x', '1'); // still reported: the observer follows removed nodes until delivery
+            await later(() => {
+                chai.expect(offs).to.deep.equal([el]);
+                chai.expect(ons).to.have.length(0);
+                chai.expect(o.targets.has(el)).to.equal(false);
+            });
+        });
+
+        it('child appended to a parent inserted in the same task: on once', async () => {
+            reset();
+            const parent = document.createElement('div');
+            document.body.append(parent);
+            parent.innerHTML = '<div class=batch><div class=batch></div></div>';
+            parent.firstChild.append(Object.assign(document.createElement('div'), { className: 'batch' }));
+            await later(() => {
+                chai.expect(ons).to.have.length(3);
+                chai.expect(new Set(ons).size).to.equal(3);
+                parent.remove();
+            });
+        });
+
+        it('removed subtree: off for every match', async () => {
+            const parent = document.createElement('div');
+            parent.innerHTML = '<div class=batch><div class=batch></div></div>';
+            document.body.append(parent);
+            await later(() => {});
+            reset();
+            parent.remove();
+            await later(() => chai.expect(offs).to.have.length(2));
+        });
+    });
+
     /*
     describe('SelectorObserver check by animationend', () => {
         it('nested, add parent class:', done => {

@@ -12,19 +12,18 @@ function forRoot(root, method, el) {
     for (const observer of observers) observer.root === root && observer[method](el);
 }
 function checkMutations(mutations, root) {
-    for (const mutation of mutations) {
-        if (mutation.type==='childList') {
-            for (const target of mutation.addedNodes) {
-                target.nodeType === 1 && forRoot(root, '_addTree', target);
-            }
-            for (const target of mutation.removedNodes) {
-                target.nodeType === 1 && forRoot(root, '_removeTree', target);
-            }
-        }
-        if (mutation.type==='attributes') {
-            forRoot(root, '_treeModified', mutation.target);
-        }
+    const added = new Set(), removed = new Set(), modified = new Set();
+    for (const m of mutations) {
+        if (m.type === 'attributes') { modified.add(m.target); continue; }
+        for (const n of m.removedNodes) n.nodeType === 1 && removed.add(n);
+        for (const n of m.addedNodes) n.nodeType === 1 && added.add(n);
     }
+    // a node inside another node of the same batch is covered by that node's subtree
+    const top = (n, set) => { for (let p = n.parentNode; p; p = p.parentNode) if (set.has(p)) return false; return true; };
+    for (const n of removed) top(n, removed) && forRoot(root, '_removeTree', n);
+    // judged by the final state: a node that left again, or was only touched while detached, is not added
+    for (const n of added) top(n, added) && root.contains(n) && forRoot(root, '_addTree', n);
+    for (const n of modified) root.contains(n) && forRoot(root, '_treeModified', n);
 }
 
 
@@ -148,7 +147,7 @@ export class SelectorObserver {
      * @private
      */
      _removeTree(target) {
-        //if (!this._off) return; // performance
+        if (!this.targets.size) return;
         this._remove(target);
         for (const el of target.querySelectorAll('*')) this._remove(el);
     }
