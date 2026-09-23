@@ -1,3 +1,4 @@
+// bug: https://github.com/whatwg/html/issues/10905
 
 class Menu {
     constructor(menuItem) {
@@ -323,6 +324,7 @@ document.documentElement.addEventListener('contextmenu', e=>{
     e.preventDefault();
     
     rootEl.showPopover();
+
     rootEl.querySelector('button').focus();
 
     let top  = e.clientY + 2;
