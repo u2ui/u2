@@ -1,5 +1,3 @@
-// bug: https://github.com/whatwg/html/issues/10905
-
 class Menu {
     constructor(menuItem) {
         this.menuItem = menuItem;
@@ -324,6 +322,8 @@ document.documentElement.addEventListener('contextmenu', e=>{
     e.preventDefault();
     
     rootEl.showPopover();
+    // pointerup still pending (not on Windows): capture it, so it does not light-dismiss the popover
+    if (e.buttons) rootEl.setPointerCapture(e.pointerId);
 
     rootEl.querySelector('button').focus();
 
