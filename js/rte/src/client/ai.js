@@ -148,7 +148,11 @@ async function ask(state) {
         parts.apply.disabled = false;
         await update(state, pending, run);
     } catch (error) {
-        if (state.pending === pending && pending.run === run) parts.answer.textContent = String(error?.message ?? error);
+        // A failure is no answer: it comes as an alert, and the panes keep what they had.
+        if (state.pending === pending && pending.run === run) {
+            const {alert} = await import('../../../dialog/dialog.js');
+            alert(String(error?.message ?? error), {root: state.dialog.parentNode});
+        }
     } finally {
         if (state.pending === pending && pending.run === run) parts.busy.disabled = false;
     }

@@ -402,8 +402,8 @@ its replacement, as a promise or directly. `surface` comes along rather than a
 digest of it: `surface.config` says what the field allows — with `null` where
 nothing is restricted — because an answer using anything else is cleaned away on
 the way back in, and `surface.element` is where an application reads whatever
-else its own fields carry; a rejection is shown in the answer
-pane and leaves the field untouched. `prompts` fills a datalist beside the
+else its own fields carry; a rejection is shown as an alert
+(`js/dialog`) and leaves the panes and the field untouched. `prompts` fills a datalist beside the
 input. Without `diff` the dialog shows two panes — comparing two HTML strings is
 a library question, not an editor one, so none is pulled in. Answers that arrive
 after the next prompt, or after the dialog closed, are dropped.

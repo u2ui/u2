@@ -87,9 +87,13 @@ test('ai client module: a failing request is reported instead of thrown', () => 
         answer.fail = new Error('no model');
         dialog.querySelector('[name=prompt]').value = 'shorten';
         dialog.querySelector('button[type=button]').click();
-        await answer.done;
-        equal(dialog.querySelectorAll('.pane div')[1].textContent, 'no model');
+        const alert = await appears(() => client.chrome.root.querySelector('dialog.u2x-modal'));
+        truthy(alert?.textContent.includes('no model'), 'The failure comes as an alert');
+        equal(dialog.querySelectorAll('.pane div')[1].textContent, '', 'Not shown as an answer');
         equal(dialog.querySelector('[value=apply]').disabled, true, 'Nothing to apply');
+        const dismissed = closes(alert);
+        alert.close();
+        await dismissed;
         const closed = closes(dialog);
         dialog.close('cancel');
         await closed;
@@ -126,6 +130,12 @@ test('ai client module: the diff pane is optional and follows edits to the answe
 // timers. Waiting for the event itself is the only deterministic way to observe what closing did.
 function closes(dialog) {
     return new Promise(resolve => dialog.addEventListener('close', () => resolve(), {once: true}));
+}
+
+// The alert's module loads on the first failure, so it shows up after some tasks, not microtasks.
+async function appears(find, tries = 100) {
+    for (let i = 0; i < tries && !find(); i++) await new Promise(resolve => setTimeout(resolve, 10));
+    return find();
 }
 
 function withAi(run, {diff = false, capture = null} = {}) {
