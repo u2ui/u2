@@ -8,6 +8,7 @@ Treeview component `<u2-tree>Folder <u2-tree>File</u2-tree> </u2-tree>`
 - Expand/collapse events
 - Lazy loading of children
 - Drag and drop (opt-in, loaded on demand via the `draggable` attribute)
+- Checkbox tree (opt-in, loaded on demand via the `tristate` attribute)
 
 ## Usage
 
@@ -67,6 +68,17 @@ This is either not expandable or like aria-expanded="false" if it has children.
 This indicates, that the node has to be loaded.  
 The `u2-tree-collapse` event will get a property `event.load(asyncFn)` to load their children.
 
+#### tristate
+`<u2-tree tristate>` — an item's checkbox (the first in its content) stands for everything below it:
+checking it checks every checkbox below, and it follows its child items' — checked when all are,
+indeterminate when some are. A checkbox checked in the markup checks all below it on load, and so
+do items added later under a checked item (e.g. loaded on expand).
+```html
+<u2-tree tristate aria-expanded=true><label><input type=checkbox name=a value=cms> cms</label>
+    <u2-tree><label><input type=checkbox name=a value=cms/node> node</label></u2-tree>
+</u2-tree>
+```
+
 ### Events
 
 #### expand / collapse
@@ -117,6 +129,7 @@ treeElement.addEventListener('u2-tree-drop', (e) => {
 [dnd-shadow.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/dnd-shadow.html)  
 [custom.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/custom.html)  
 [test.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/test.html)  
+[tristate.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/tristate.html)  
 [animated.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/animated.html)  
 [minimal.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/minimal.html)  
 [dnd.html](http://gcdn.li/u2ui/u2@main/el/tree/tests/dnd.html)  

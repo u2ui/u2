@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html lang=en>
+<head>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width">
+    <title>u2-tree tristate</title>
+    <script src="../../../u2/tests/test-init.js" type=module async></script>
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+    <link rel=stylesheet href="../../../css/classless/aria.css">
+    <link rel=stylesheet href="../../../css/classless/simple.css">
+
+    <script src="../tree.js" type=module async></script>
+    <link rel=stylesheet href="../tree.css">
+    <style>
+    [data-result=passed] #summary { color:green; }
+    [data-result=failed] #summary { color:red; }
+    #report .-fail { color:red; }
+    </style>
+
+<body>
+
+<section class=main>
+
+    <h1>u2-tree tristate</h1>
+    <p>A checkbox stands for everything below it. "cms" is checked, of "auth" only "otp".</p>
+
+    <form>
+        <u2-tree tristate aria-expanded=true><label><input type=checkbox name=tools value=cms checked> cms</label>
+            <u2-tree><label><input type=checkbox name=tools value=cms/node> cms/node</label></u2-tree>
+            <u2-tree><label><input type=checkbox name=tools value=cms/files> cms/files</label></u2-tree>
+        </u2-tree>
+        <u2-tree tristate aria-expanded=true><label><input type=checkbox name=tools value=auth> auth</label>
+            <u2-tree><label><input type=checkbox name=tools value=auth/otp checked> auth/otp</label></u2-tree>
+            <u2-tree aria-expanded=true><label><input type=checkbox name=tools value=auth/webauthn> auth/webauthn</label>
+                <u2-tree><label><input type=checkbox name=tools value=auth/webauthn/login> auth/webauthn/login</label></u2-tree>
+                <u2-tree><label><input type=checkbox name=tools value=auth/webauthn/confirm> auth/webauthn/confirm</label></u2-tree>
+            </u2-tree>
+        </u2-tree>
+    </form>
+
+    <h2>Tests</h2>
+    <p id=summary>running…</p>
+    <ol id=report></ol>
+
+</section>
+
+<template id=fixture>
+    <u2-tree tristate aria-expanded=true><label><input type=checkbox> a</label>
+        <u2-tree aria-expanded=true><label><input type=checkbox> a1</label>
+            <u2-tree><label><input type=checkbox> a1x</label></u2-tree>
+            <u2-tree><label><input type=checkbox> a1y</label></u2-tree>
+        </u2-tree>
+        <u2-tree><label><input type=checkbox> a2</label></u2-tree>
+        <u2-tree>no checkbox</u2-tree>
+    </u2-tree>
+</template>
+
+<script type=module>
+const tests = [];
+const test = (name, run) => tests.push({ name, run });
+const equal = (actual, expected, what) => {
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) throw new Error(`${what}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+};
+
+/** A fresh tree from the template, removed after `run`; its boxes by their label. */
+async function withFixture(run, attr = true) {
+    const tree = document.getElementById('fixture').content.firstElementChild.cloneNode(true);
+    if (!attr) tree.removeAttribute('tristate');
+    document.body.append(tree);
+    await customElements.whenDefined('u2-tree');
+    await tree._tristate;
+    const boxes = Object.fromEntries([...tree.querySelectorAll('label')].map(l => [l.textContent.trim(), l.firstElementChild]));
+    const state = (...names) => names.map(n => boxes[n].indeterminate ? 'mixed' : boxes[n].checked ? 'on' : 'off');
+    try { await run({ boxes, state }); } finally { tree.remove(); }
+}
+
+test('checking an item checks everything below it', () => withFixture(async (t) => {
+    t.boxes.a.click();
+    equal(t.state('a', 'a1', 'a1x', 'a1y', 'a2'), ['on', 'on', 'on', 'on', 'on'], 'checked');
+    t.boxes.a.click();
+    equal(t.state('a', 'a1', 'a1x', 'a1y', 'a2'), ['off', 'off', 'off', 'off', 'off'], 'unchecked');
+}));
+
+test('some children checked: the ancestors are indeterminate, up to the root', () => withFixture(async (t) => {
+    t.boxes.a1x.click();
+    equal(t.state('a1x', 'a1', 'a'), ['on', 'mixed', 'mixed'], 'after a1x');
+}));
+
+test('all children checked: the item is checked', () => withFixture(async (t) => {
+    t.boxes.a1x.click();
+    t.boxes.a1y.click();
+    equal(t.state('a1', 'a'), ['on', 'mixed'], 'a1 complete');
+    t.boxes.a2.click();
+    equal(t.state('a'), ['on'], 'a complete');
+    t.boxes.a1y.click();
+    equal(t.state('a1', 'a'), ['mixed', 'mixed'], 'one off again');
+}));
+
+test('a checked indeterminate item checks all below it', () => withFixture(async (t) => {
+    t.boxes.a1x.click();
+    t.boxes.a.click();
+    equal(t.state('a', 'a1', 'a1x', 'a1y', 'a2'), ['on', 'on', 'on', 'on', 'on'], 'all');
+}));
+
+test('initial state: a checked item checks all below, partial ones are indeterminate', async () => {
+    const form = document.querySelector('form');
+    await customElements.whenDefined('u2-tree');
+    await Promise.all([...form.querySelectorAll('u2-tree[tristate]')].map(t => t._tristate));
+    const box = v => form.querySelector(`[value="${v}"]`);
+    const s = v => box(v).indeterminate ? 'mixed' : box(v).checked ? 'on' : 'off';
+    equal(['cms', 'cms/node', 'cms/files'].map(s), ['on', 'on', 'on'], 'cms');
+    equal(['auth', 'auth/otp', 'auth/webauthn', 'auth/webauthn/login'].map(s), ['mixed', 'on', 'off', 'off'], 'auth');
+});
+
+/** An item as the tree would load it, after the observer has seen it. */
+const add = async (parent, label, checked = false) => {
+    parent.insertAdjacentHTML('beforeend', `<u2-tree><label><input type=checkbox ${checked ? 'checked' : ''}> ${label}</label></u2-tree>`);
+    await new Promise(r => setTimeout(r));
+};
+
+test('items added later: checked under a checked item, else the items above follow', () => withFixture(async (t) => {
+    t.boxes.a.click();
+    await add(t.boxes.a1.closest('u2-tree'), 'a1z');
+    equal(t.state('a', 'a1'), ['on', 'on'], 'under a checked item');
+    equal(t.boxes.a1.closest('u2-tree').lastElementChild.querySelector('input').checked, true, 'the new one');
+    t.boxes.a.click();
+    await add(t.boxes.a2.closest('u2-tree'), 'a2x', true);
+    equal(t.state('a2', 'a'), ['on', 'mixed'], 'a checked one under an unchecked item');
+}));
+
+test('items removed: the items above follow', () => withFixture(async (t) => {
+    t.boxes.a1x.click();
+    equal(t.state('a1'), ['mixed'], 'before');
+    t.boxes.a1y.closest('u2-tree').remove();
+    await new Promise(r => setTimeout(r));
+    equal(t.state('a1'), ['on'], 'the unchecked one gone');
+}));
+
+test('a large tree stays fast: 20 × 20 × 5 items', async () => {
+    const leaf = i => `<u2-tree><label><input type=checkbox> ${i}</label></u2-tree>`;
+    const level = (n, inner) => Array.from({ length: n }, (_, i) => `<u2-tree><label><input type=checkbox ${i % 3 ? '' : 'checked'}> ${i}</label>${inner}</u2-tree>`).join('');
+    const host = document.createElement('div');
+    host.innerHTML = `<u2-tree tristate><label><input type=checkbox> root</label>${level(20, level(20, Array.from({ length: 5 }, (_, i) => leaf(i)).join('')))}</u2-tree>`;
+    let at = performance.now();
+    document.body.append(host);
+    const tree = host.firstElementChild;
+    await tree._tristate;
+    const load = performance.now() - at;
+    const root = tree.querySelector('input');
+    at = performance.now();
+    root.click();
+    root.click();
+    tree.querySelector(':scope > u2-tree > u2-tree > u2-tree input').click(); // deep: up to the root
+    const clicks = performance.now() - at;
+    host.remove();
+    console.log(`tristate: 2421 items, load ${load.toFixed(1)} ms, 3 clicks ${clicks.toFixed(1)} ms`);
+    if (load > 500 || clicks > 100) throw new Error(`too slow: load ${load.toFixed(1)} ms, clicks ${clicks.toFixed(1)} ms`);
+});
+
+test('without the attribute nothing cascades', () => withFixture(async (t) => {
+    t.boxes.a.click();
+    equal(t.state('a', 'a1', 'a2'), ['on', 'off', 'off'], 'only a');
+}, false));
+
+addEventListener('load', async () => {
+    const report = document.getElementById('report');
+    let failed = 0;
+    for (const { name, run } of tests) {
+        const li = report.appendChild(document.createElement('li'));
+        try { await run(); li.textContent = `✓ ${name}`; }
+        catch (e) { failed++; li.className = '-fail'; li.textContent = `✗ ${name}: ${e.message}`; }
+    }
+    document.getElementById('summary').textContent = failed ? `${failed} of ${tests.length} failed` : `all ${tests.length} passed`;
+    document.documentElement.dataset.result = failed ? 'failed' : 'passed';
+});
+</script>

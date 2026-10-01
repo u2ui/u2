@@ -25,7 +25,10 @@
                 "name": "u2-tree-drop",
                 "type": { "text": "Event" }
             }],
-            "attributes": [],
+            "attributes": [{
+                "name": "tristate",
+                "description": "An item's checkbox stands for everything below it: checks all below, follows its children (indeterminate when some are checked)"
+            }],
             "cssProperties": [{
                 "name": "--indent",
                 "syntax": "<length>",

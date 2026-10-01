@@ -79,7 +79,7 @@ https://github.com/u2ui/u2
 - **time** - The better time-element, e.g. live changing relative dates
 - **toc** - Automatically generate a Navigation by using the headings of the document.
 - **tooltip** - Bind to target as child or via aria-labelledby
-- **tree** - Treeview component `<u2-tree>Folder <u2-tree>File</u2-tree> </u2-tree>`
+- **tree** - Treeview component `<u2-tree>Folder <u2-tree>File</u2-tree> </u2-tree>`; `draggable` (DnD), `tristate` (checkbox tree)
 - **typewriter** - Simple typewriter element
 - **video** - Video-element with controls and keyboard shortcuts.
 

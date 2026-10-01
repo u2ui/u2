@@ -40,8 +40,11 @@ styleSheet.replaceSync(css);
 
 export default class U2Tree extends HTMLElement {
 
-    static observedAttributes = ['draggable'];
-    attributeChangedCallback() { U2Tree.dnd ??= import('./ext/dnd.js'); }  // load DnD lazily once draggable appears
+    static observedAttributes = ['draggable', 'tristate'];
+    attributeChangedCallback(name) {
+        if (name === 'draggable') U2Tree.dnd ??= import('./ext/dnd.js');  // load DnD lazily once draggable appears
+        if (name === 'tristate' && this.hasAttribute(name)) this._tristate ??= import('./ext/tristate.js').then(({tristate}) => tristate(this));
+    }
 
     constructor() {
         super();
