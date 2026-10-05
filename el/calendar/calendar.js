@@ -62,19 +62,25 @@ export default class U2Calendar extends U2Element {
       </style>
       <div class=navigation>
         <h2></h2>
-        <button onclick="this.getRootNode().host.date = new Date()" style="padding-inline:.5rem">
+        <button name=today style="padding-inline:.5rem">
           Today
         </button>
-        <button onclick="this.getRootNode().host.prev()">
+        <button name=prev>
           <u2-ico icon="chevron-left">&lt;</u2-ico>
         </button>
-        <button onclick="this.getRootNode().host.next()">
+        <button name=next>
           <u2-ico icon="chevron-right">&gt;</u2-ico>
         </button>
       </div>
       <div class=header></div>
       <div class=grid role=grid><slot></slot></div>
     `;
+    // no inline handlers: a CSP without 'unsafe-inline' would block them
+    this.shadowRoot.querySelector('.navigation').addEventListener('click', (e) => {
+      const name = e.target.closest('button')?.name;
+      if (name === 'today') this.date = new Date();
+      else if (name) this[name]();
+    });
   }
 
   _setLocale(localeStr) {
