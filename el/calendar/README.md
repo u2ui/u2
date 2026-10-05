@@ -5,7 +5,7 @@ Calendar / month view component, use `<u2-calendaritem>` as children
 
 ## Features
 
-- month view
+- month view, always six weeks: every month has the same height
 - lightweight layout and styling
 - supports `u2-calendaritem` children with `start` and `end` attributes
 - events rendered as colored bars spanning multiple days

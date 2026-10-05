@@ -154,10 +154,9 @@ export default class U2Calendar extends U2Element {
     const firstOfMonth = new Date(Date.UTC(year, month, 1));
     const startOffset = (firstOfMonth.getUTCDay() - this._weekStart + 7) % 7;
 
-    for (let i = 0; i < 42; i++) { // 6 Wochen x 7 Tage
+    for (let i = 0; i < 42; i++) { // always 6 weeks, so every month has the same height
       const date = new Date(Date.UTC(year, month, 1 - startOffset + i));
       const isOtherMonth = date.getUTCMonth() !== month;
-      if (isOtherMonth && i === 35) break; // stop, if other month and last row
       const isToday = date.toDateString() === today.toDateString();
       grid.appendChild(this.createDayCell(date, i, isOtherMonth, isToday));
     }
@@ -235,14 +234,11 @@ export default class U2Calendar extends U2Element {
   splitIntoWeeks(start, end, year, month) {
     const weeks = [];
     const firstDay = new Date(Date.UTC(year, month, 1));
-    const monthEnd = new Date(Date.UTC(year, month + 1, 0));
     const startOffset = (firstDay.getUTCDay() - this._weekStart + 7) % 7;
 
     // Calculate the first and last day of the visible calendar view
     const viewStart = new Date(Date.UTC(year, month, 1 - startOffset));
-    const daysInMonth = monthEnd.getUTCDate();
-    const totalDays = Math.ceil((daysInMonth + startOffset) / 7) * 7;
-    const viewEnd = new Date(Date.UTC(year, month, 1 - startOffset + totalDays - 1));
+    const viewEnd = new Date(Date.UTC(year, month, 1 - startOffset + 41)); // 6 weeks, as rendered
 
     // Parse input dates and normalize to start of day
     const eventStart = new Date(start);
