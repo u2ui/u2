@@ -76,7 +76,7 @@ document.addEventListener('wheel', e => {
 
 // move event by one day left or right
 document.addEventListener('keydown', e => {
-    const item = e.target.closest('u2-calendaritem');
+    const item = e.target.closest('u2-calendar-item');
     if (!item) return;
     if (!item.draggable) return;
 

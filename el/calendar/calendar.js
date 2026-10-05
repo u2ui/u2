@@ -195,7 +195,7 @@ export default class U2Calendar extends U2Element {
     });
   }
   _updateLayout() {
-    const items = Array.from(this.querySelectorAll('u2-calendaritem'));
+    const items = Array.from(this.querySelectorAll('u2-calendar-item'));
 
     // Berechne Wochen-Segmente für alle Items
     const itemWeeks = items.map(item => ({
@@ -389,4 +389,6 @@ function getTimeFormatter(localeTag, options = { hour: '2-digit', minute: '2-dig
 
 
 customElements.get('u2-calendar') || customElements.define('u2-calendar', U2Calendar);
-customElements.get('u2-calendaritem') || customElements.define('u2-calendaritem', U2CalendarItem);
+customElements.get('u2-calendar-item') || customElements.define('u2-calendar-item', U2CalendarItem);
+
+export const extraElements = { 'u2-calendar-item': U2CalendarItem };

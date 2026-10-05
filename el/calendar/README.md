@@ -1,5 +1,5 @@
 # <u2-calendar> - element  (BETA)
-Calendar / month view component, use `<u2-calendaritem>` as children
+Calendar / month view component, use `<u2-calendar-item>` as children
 
 > Status: BETA — experimental. API and markup may change.
 
@@ -7,7 +7,7 @@ Calendar / month view component, use `<u2-calendaritem>` as children
 
 - month view, always six weeks: every month has the same height
 - lightweight layout and styling
-- supports `u2-calendaritem` children with `start` and `end` attributes
+- supports `u2-calendar-item` children with `start` and `end` attributes
 - events rendered as colored bars spanning multiple days
 - performat and responsive using css grid
 
@@ -21,8 +21,8 @@ u2Calendaritem2.addEventListener('click',()=>{
 
 ```html
 <u2-calendar date="2025-10-01">
-    <u2-calendaritem start="2025-10-09">Demo</u2-calendaritem>
-    <u2-calendaritem start="2025-10-19" end="2025-10-23" id="u2Calendaritem2">Demo 2</u2-calendaritem>
+    <u2-calendar-item start="2025-10-09">Demo</u2-calendar-item>
+    <u2-calendar-item start="2025-10-19" end="2025-10-23" id="u2Calendaritem2">Demo 2</u2-calendar-item>
 </u2-calendar>
   
 ```
@@ -31,7 +31,7 @@ u2Calendaritem2.addEventListener('click',()=>{
 u2-calendar {
   font-size:10px;
 }
-u2-calendaritem {
+u2-calendar-item {
   background-color:var(--color, orange);
   &:hover {
     background-color:var(--color-dark, red);

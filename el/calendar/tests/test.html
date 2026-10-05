@@ -38,16 +38,16 @@
     </p>
 
     <u2-calendar view="month" id="calendar" date="2025-10-01" lang="de-DE">
-      <u2-calendaritem start="2025-10-12">Ganztägiges Ereignis</u2-calendaritem>
-      <u2-calendaritem start="2025-10-22" end="2025-10-29">Langzeit-Projekt</u2-calendaritem>
-      <u2-calendaritem start="2025-10-29T09:00" end="2025-10-29T10:30">Tägliches Standup</u2-calendaritem>
-      <u2-calendaritem start="2025-10-11T09:00" end="2025-10-14T10:30" draggable="true">Draggable Item</u2-calendaritem>
-      <u2-calendaritem start="2025-10-29T11:00" end="2025-10-29T12:00" style="background-color:#2196f3">Team Meeting</u2-calendaritem>
-      <u2-calendaritem start="2025-10-29T14:00" end="2025-10-29T15:30" style="background-color:#f44336" id="clickIt" onclick="alert('clicked!')">Click on me</u2-calendaritem>
-      <u2-calendaritem start="2025-10-29T16:00" end="2025-10-29T17:00" style="background-color:#ff9800">1:1 Meeting</u2-calendaritem>
-      <u2-calendaritem start="2025-10-30T10:00" end="2025-10-30T11:30" style="background-color:#9c27b0">Design Review</u2-calendaritem>
-      <u2-calendaritem start="2025-10-30T13:00" end="2025-10-30T14:00" style="background-color:#009688">Lunch &amp; Learn</u2-calendaritem>
-      <u2-calendaritem start="2025-11-01T09:00" end="2025-11-01T17:00" style="background-color:#607d8b">Workshop</u2-calendaritem>
+      <u2-calendar-item start="2025-10-12">Ganztägiges Ereignis</u2-calendar-item>
+      <u2-calendar-item start="2025-10-22" end="2025-10-29">Langzeit-Projekt</u2-calendar-item>
+      <u2-calendar-item start="2025-10-29T09:00" end="2025-10-29T10:30">Tägliches Standup</u2-calendar-item>
+      <u2-calendar-item start="2025-10-11T09:00" end="2025-10-14T10:30" draggable="true">Draggable Item</u2-calendar-item>
+      <u2-calendar-item start="2025-10-29T11:00" end="2025-10-29T12:00" style="background-color:#2196f3">Team Meeting</u2-calendar-item>
+      <u2-calendar-item start="2025-10-29T14:00" end="2025-10-29T15:30" style="background-color:#f44336" id="clickIt" onclick="alert('clicked!')">Click on me</u2-calendar-item>
+      <u2-calendar-item start="2025-10-29T16:00" end="2025-10-29T17:00" style="background-color:#ff9800">1:1 Meeting</u2-calendar-item>
+      <u2-calendar-item start="2025-10-30T10:00" end="2025-10-30T11:30" style="background-color:#9c27b0">Design Review</u2-calendar-item>
+      <u2-calendar-item start="2025-10-30T13:00" end="2025-10-30T14:00" style="background-color:#009688">Lunch &amp; Learn</u2-calendar-item>
+      <u2-calendar-item start="2025-11-01T09:00" end="2025-11-01T17:00" style="background-color:#607d8b">Workshop</u2-calendar-item>
     </u2-calendar>
 
     <u2-code editable trim>
@@ -57,7 +57,7 @@
             border-radius: 0.9em;
             box-shadow: 0 0 1rem #0004;            
         }
-        u2-calendaritem {
+        u2-calendar-item {
             background: #88f;
             border-radius: 0.7em;
             background-image:linear-gradient(to bottom right,#0002, #fff4);
@@ -87,7 +87,7 @@
       };
 
       window.addEventWithoutEnd = () => {
-        const item = document.createElement('u2-calendaritem');
+        const item = document.createElement('u2-calendar-item');
         item.setAttribute('start', '2025-10-29T13:00');
         item.style.backgroundColor = '#673ab7';
         item.textContent = 'Spontanes Meeting (30min)';

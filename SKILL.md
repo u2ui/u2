@@ -46,9 +46,9 @@ https://github.com/u2ui/u2
 - **breadcrumb** - Breadcrumb from a list of links
 - **buttongroup** - A container for grouping buttons together; buttons that don’t have space will be moved into a dropdown menu.
 - **bytes** - Displays formatted bytes
-- **calendar** - Calendar / month view component, use `<u2-calendaritem>` as children
+- **calendar** - Calendar / month view component, use `<u2-calendar-item>` as children
 - **carousel** - Simple carousel component
-- **carousel-nav** - Carousel navigation element for u2-carousel. (beta) *(beta)*
+- **carouselnav** - Carousel navigation element for u2-carousel. (beta) *(beta)*
 - **chart** - Renders a chart from html like `<table>` or `<dl>` elements. `<u2-chart type="pie"><table>...`
 - **code** - Code-blocks. <u2-code editable trim><style|textarea|script>...
 - **cookiebanner** - Cookie banner for consent management.
@@ -64,7 +64,7 @@ https://github.com/u2ui/u2
 - **number** - Displays formatted numbers
 - **out** - Output variables (beta) *(beta)*
 - **pagination** - Page number navigation with customizable URL patterns
-- **parallax-bg** - Scroll-driven parallax background-layer with dynamic container sizing for full content visibility
+- **parallaxbg** - Scroll-driven parallax background-layer with dynamic container sizing for full content visibility
 - **qrcode** - QR-Code element
 - **rating** - Rating element, form associated
 - **responsive** - A Container, where you can define strategies, that are applied through CSS states. `<u2-responsive strategies="hideOptional">`

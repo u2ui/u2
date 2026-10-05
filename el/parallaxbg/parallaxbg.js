@@ -107,7 +107,7 @@ export default class U2ParallaxBg extends HTMLElement {
         this.visible = this.shadowRoot.querySelector('.visible');
 
         const style = getComputedStyle(this);
-        const speed = style.getPropertyValue('--parallax-bg-speed');
+        const speed = style.getPropertyValue('--parallaxbg-speed');
         this.speed = speed === '' ? .5 : parseFloat(speed);
     }
 	connectedCallback() {
@@ -149,13 +149,13 @@ export default class U2ParallaxBg extends HTMLElement {
         this.mover.style.bottom = -offset + 'px';
 
         // if the element cannot go further down or up
-        // the [parallax-bg-visible] element
+        // the [parallaxbg-visible] element
         // the most complicated part of the lib, seems to work well, but it was born by trial and error
         if (this.speed < 0) {
-            console.warn('parallax-bg: parallax-bg-visible attribute is not implemented for speed < 0');
+            console.warn('parallaxbg: parallaxbg-visible attribute is not implemented for speed < 0');
             return;
         }
-        //const visibleEl = this.querySelector('[parallax-bg-visible]');
+        //const visibleEl = this.querySelector('[parallaxbg-visible]');
         const visibleEl = this.visible;
         if (visibleEl) {
             let top = 0;
@@ -194,4 +194,4 @@ export default class U2ParallaxBg extends HTMLElement {
     }
 }
 
-customElements.get('u2-parallax-bg') || customElements.define('u2-parallax-bg', U2ParallaxBg)
+customElements.get('u2-parallaxbg') || customElements.define('u2-parallaxbg', U2ParallaxBg)

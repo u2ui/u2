@@ -47,7 +47,7 @@
             "cssProperties": [],
             "cssParts": [],
             "superclass": { "name": "HTMLElement" },
-            "tagName": "u2-calendaritem",
+            "tagName": "u2-calendar-item",
             "customElement": true
         }],
         "exports": [{
@@ -59,7 +59,7 @@
             }
         },{
             "kind": "custom-element-definition",
-            "name": "u2-calendaritem",
+            "name": "u2-calendar-item",
             "declaration": {
                 "name": "U2CalendarItem",
                 "module": "calendar.js"

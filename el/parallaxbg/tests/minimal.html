@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+
+    <link rel=stylesheet href="../../../css/classless/full.css">
+
+    <link href="../parallaxbg.css" rel=stylesheet>
+    <script src="../parallaxbg.js" type=module async></script>
+
+<body>
+
+<section class="main" style="margin:80vh 0; height:30vh; background:var(--color)">
+    <div class=u2-parallaxbg-stage style="height:100%">
+        <u2-parallaxbg>
+            <img src="https://raw.githubusercontent.com/u2ui/u2/main/el/parallaxbg/tests/bg.jpg" alt="parallaxbg demo">
+        </u2-parallaxbg>
+    </div>
+</section>
+
+<style class="main">
+u2-parallaxbg {
+    --parallaxbg-speed:.7
+}
+u2-parallaxbg div {
+    display:grid;
+    place-items: center;
+}
+</style>

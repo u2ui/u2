@@ -17,7 +17,7 @@ function removePart(el, partName) {
 document.addEventListener('dragstart', (e) => {
     const item = e.target.closest('[draggable="true"]');
     if (!item) return;
-    if (item.tagName.toLowerCase() !== 'u2-calendaritem') return;
+    if (item.tagName.toLowerCase() !== 'u2-calendar-item') return;
     draggedItem = item;
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', '');

@@ -98,7 +98,8 @@ export function enhance(root, { registry = root.customElementRegistry ?? customE
     // neither a DOMTokenList nor a NamedNodeMap iterator is allocated per element.
     function visit(el) {
         const tag = el.tagName;
-        if (tag.startsWith('U2-')) load('el', tag.slice(3).toLowerCase());
+        // the project is the part up to the first hyphen: u2-calendar-item comes with el/calendar
+        if (tag.startsWith('U2-')) load('el', tag.slice(3).toLowerCase().replace(/-.*/, ''));
 
         const cls = el.className; // string on html elements, SVGAnimatedString on svg
         if (typeof cls === 'string' && cls.includes('u2-')) {

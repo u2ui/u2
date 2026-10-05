@@ -6,7 +6,7 @@ u2-calendar {
         z-index: 1;
     }
 }
-u2-calendaritem {
+u2-calendar-item {
     &[draggable="true"] {
         cursor: move;
     }
@@ -20,7 +20,7 @@ u2-calendaritem {
 u2-calendar:not(:defined) {
     display:block;
 }
-u2-calendaritem:not(:defined) {
+u2-calendar-item:not(:defined) {
     display:block;
     padding:.2em .9em;
     margin:.2em 0;

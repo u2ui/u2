@@ -2,8 +2,8 @@
 <head>
     <meta charset="utf-8">
     <meta name=viewport content="width=device-width">
-    <link rel=stylesheet href="../parallax-bg.css">
-    <script src="../parallax-bg.js" type=module async></script> <!---->
+    <link rel=stylesheet href="../parallaxbg.css">
+    <script src="../parallaxbg.js" type=module async></script> <!---->
     <style>
         body, html {
             margin:0;
@@ -15,18 +15,18 @@
             text-align:center;
             font-size:calc(16px + 1.1vmax);
         }
-        .u2-parallax-bg-stage {
+        .u2-parallaxbg-stage {
             flex:1 1 100px;
             overflow:visible;
             margin:110vh 0;
             outline:10px solid black;
         }
-        u2-parallax-bg {
+        u2-parallaxbg {
             background: url(bg.jpg) 50%/cover;
             opacity:.9;
             overflow:visible;
         }
-        u2-parallax-bg > div {
+        u2-parallaxbg > div {
             padding:1rem;
             background-color:#ff0a;
         }
@@ -35,46 +35,46 @@
 <body>
 <p>Only the yellow part can ever be reached</p>
 <div style="display:flex; gap:3rem; overflow:hidden; padding:30px; padding-bottom:100px">
-    <div class=u2-parallax-bg-stage style="margin:0 0 auto 0; height:300px">
-        <u2-parallax-bg style="--parallax-bg-speed:.5">
+    <div class=u2-parallaxbg-stage style="margin:0 0 auto 0; height:300px">
+        <u2-parallaxbg style="--parallaxbg-speed:.5">
             <div></div>
-        </u2-parallax-bg>
+        </u2-parallaxbg>
         <h1> on top </h1>
     </div>
-    <div class=u2-parallax-bg-stage style="margin:auto 0 0 0; height:300px">
-        <u2-parallax-bg style="--parallax-bg-speed:.5">
+    <div class=u2-parallaxbg-stage style="margin:auto 0 0 0; height:300px">
+        <u2-parallaxbg style="--parallaxbg-speed:.5">
             <div></div>
-        </u2-parallax-bg>
+        </u2-parallaxbg>
         <h1> on bottom </h1>
     </div>
-    <div class=u2-parallax-bg-stage style="margin:80vh 0">
-        <u2-parallax-bg style="--parallax-bg-speed:2">
+    <div class=u2-parallaxbg-stage style="margin:80vh 0">
+        <u2-parallaxbg style="--parallaxbg-speed:2">
             <div></div>
-        </u2-parallax-bg>
+        </u2-parallaxbg>
         <h1>speed 2 <br> faktor 1 </h1>
     </div>
-    <div class=u2-parallax-bg-stage style="margin:60vh 0">
-        <u2-parallax-bg style="--parallax-bg-speed:1">
+    <div class=u2-parallaxbg-stage style="margin:60vh 0">
+        <u2-parallaxbg style="--parallaxbg-speed:1">
             <div></div>
-        </u2-parallax-bg>
+        </u2-parallaxbg>
         <h1>speed 1 <br> faktor 0</h1>
     </div>
-    <div class=u2-parallax-bg-stage style="margin:60vh 0">
-        <u2-parallax-bg style="--parallax-bg-speed:.5">
+    <div class=u2-parallaxbg-stage style="margin:60vh 0">
+        <u2-parallaxbg style="--parallaxbg-speed:.5">
             <div></div>
-        </u2-parallax-bg>
+        </u2-parallaxbg>
         <h1>speed 0.5 <br> faktor -0.5</h1>
     </div>
-    <div class=u2-parallax-bg-stage>
-        <u2-parallax-bg style="--parallax-bg-speed:0">
+    <div class=u2-parallaxbg-stage>
+        <u2-parallaxbg style="--parallaxbg-speed:0">
             <div></div>
-        </u2-parallax-bg>
+        </u2-parallaxbg>
         <h1>speed 0 <br> faktor -1</h1>
     </div>
-    <div class=u2-parallax-bg-stage style="margin:60vh 0">
-        <u2-parallax-bg style="--parallax-bg-speed:-1">
+    <div class=u2-parallaxbg-stage style="margin:60vh 0">
+        <u2-parallaxbg style="--parallaxbg-speed:-1">
             <div></div>
-        </u2-parallax-bg>
+        </u2-parallaxbg>
         <h1>
             speed -1 <br> faktor -2
             <div style="color:red">not implemented for speed < 0</div>

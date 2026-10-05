@@ -246,15 +246,7 @@
     },
     "calendar": {
       "name": "calendar",
-      "description": "Calendar / month view component, use `<u2-calendaritem>` as children",
-      "beta": false,
-      "deprecated": false,
-      "css": true,
-      "js": true
-    },
-    "parallax-bg": {
-      "name": "parallax-bg",
-      "description": "Scroll-driven parallax background-layer with dynamic container sizing for full content visibility",
+      "description": "Calendar / month view component, use `<u2-calendar-item>` as children",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -282,6 +274,14 @@
       "beta": false,
       "deprecated": false,
       "css": true,
+      "js": true
+    },
+    "carouselnav": {
+      "name": "carouselnav",
+      "description": "Carousel navigation element for u2-carousel. (beta)",
+      "beta": true,
+      "deprecated": false,
+      "css": false,
       "js": true
     },
     "fields": {
@@ -327,6 +327,14 @@
     "tooltip": {
       "name": "tooltip",
       "description": "Bind to target as child or via aria-labelledby",
+      "beta": false,
+      "deprecated": false,
+      "css": true,
+      "js": true
+    },
+    "parallaxbg": {
+      "name": "parallaxbg",
+      "description": "Scroll-driven parallax background-layer with dynamic container sizing for full content visibility",
       "beta": false,
       "deprecated": false,
       "css": true,
@@ -490,14 +498,6 @@
       "beta": false,
       "deprecated": false,
       "css": true,
-      "js": true
-    },
-    "carousel-nav": {
-      "name": "carousel-nav",
-      "description": "Carousel navigation element for u2-carousel. (beta)",
-      "beta": true,
-      "deprecated": false,
-      "css": false,
       "js": true
     },
     "accordion": {

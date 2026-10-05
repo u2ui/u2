@@ -1,10 +1,10 @@
-.u2-parallax-bg-stage {
+.u2-parallaxbg-stage {
     position:relative;
     display: flow-root; /* prevent margin collapse on inner element */
     z-index:0; /* needed? else the parallax-element will go behinde everithing with a stackingcontext? */
 }
 
-u2-parallax-bg {
+u2-parallaxbg {
     position:absolute;
     inset: -.4px; /* ugly strange 1px space see demo */
     z-index:-1;

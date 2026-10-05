@@ -1,13 +1,13 @@
 
 const style = document.createElement('style');
 style.innerHTML = `
-u2-carousel-nav {
+u2-carouselnav {
 	display:flex;
 	justify-content:center;
 	margin:.5rem;
 	gap:.5rem;
 }
-u2-carousel-nav > * {
+u2-carouselnav > * {
 	width:1.2rem;
 	height:1.2rem;
 	border-radius:99rem;
@@ -22,10 +22,10 @@ u2-carousel-nav > * {
 	align-items:center;
 	opacity:.3;
 }
-u2-carousel-nav > :hover {
+u2-carouselnav > :hover {
 	opacity:.6;
 }
-u2-carousel-nav > .-active {
+u2-carouselnav > .-active {
 	opacity:1;
 }
 `
@@ -71,4 +71,4 @@ export default class U2CarouselNav extends HTMLElement {
 		})
 	}
 }
-customElements.get('u2-carousel-nav') || customElements.define('u2-carousel-nav', U2CarouselNav)
+customElements.get('u2-carouselnav') || customElements.define('u2-carouselnav', U2CarouselNav)

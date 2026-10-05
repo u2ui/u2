@@ -3,7 +3,7 @@
     "readme": "README.md",
     "modules": [{
         "kind": "javascript-module",
-        "path": "carousel-nav.js",
+        "path": "carouselnav.js",
         "declarations": [{
             "kind": "class",
             "description": "Carousel navigation element for u2-carousel. (beta)",
@@ -16,15 +16,15 @@
             }],
             "cssProperties": [],
             "superclass": { "name": "HTMLElement" },
-            "tagName": "u2-carousel-nav",
+            "tagName": "u2-carouselnav",
             "customElement": true
         }],
         "exports": [{
             "kind": "custom-element-definition",
-            "name": "u2-carousel-nav",
+            "name": "u2-carouselnav",
             "declaration": {
                 "name": "U2CarouselNav",
-                "module": "carousel-nav.js"
+                "module": "carouselnav.js"
             }
         }]
     }]

@@ -1,10 +1,10 @@
-# &lt;u2-carousel-nav&gt; - element
+# &lt;u2-carouselnav&gt; - element
 Carousel navigation element for u2-carousel. (beta)
 
 ## Usage
 
 ```html
-<u2-carousel-nav></u2-carousel-nav>
+<u2-carouselnav></u2-carouselnav>
 <u2-carousel>
     <div>Item 1</div>
     <div>Item 2</div>
@@ -13,10 +13,10 @@ Carousel navigation element for u2-carousel. (beta)
 ```
 
 ```css
-u2-carousel-nav > * {
+u2-carouselnav > * {
     transition:.3s;
 }
-u2-carousel-nav > .-active {
+u2-carouselnav > .-active {
     transform:scale(1.2);
 }
 ```
@@ -24,13 +24,13 @@ u2-carousel-nav > .-active {
 ## Install
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/carousel-nav/carousel-nav.js" type=module async></script>
+<script src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/el/carouselnav/carouselnav.js" type=module async></script>
 ```
 
 ## Demos
 
-[test.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/test.html)  
-[minimal.html](http://gcdn.li/u2ui/u2@main/el/carousel-nav/tests/minimal.html)  
+[test.html](http://gcdn.li/u2ui/u2@main/el/carouselnav/tests/test.html)  
+[minimal.html](http://gcdn.li/u2ui/u2@main/el/carouselnav/tests/minimal.html)  
 
 ## About
 
