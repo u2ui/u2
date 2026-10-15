@@ -3,7 +3,7 @@ Prominent hints, alerts and facts. `<u2-alert open variant=info>...</u2-alert>`
 
 ## Features
 
-- Various variants for Success, Warn, Error, and Info alerts.
+- Various variants for Success, Warning, Error, and Info alerts.
 - Dismissable alerts allow user to close them.
 - Support for icons within alerts.
 - Customizable actions through buttons in the alert.
@@ -34,7 +34,7 @@ u2-alert::part(icon) {
 ### Attributes
 
 - `variant`  
-  Determines the alert type (`success`, `warn`, `error`, `info`); sets default icon and ARIA role.
+  Determines the alert type (`success`, `warning`, `error`, `info`); sets default icon and ARIA role. `warn` still works, but is deprecated.
 
 - `dismissable`  
   Shows a close button. Without this attribute the close button is hidden.

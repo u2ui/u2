@@ -106,11 +106,11 @@ export default class U2Alert extends U2Element {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name==='variant') {
-            const variant = this.getAttribute('variant');
+            const variant = variantOf(this);
             this.shadowRoot.getElementById('container').role = variantData[variant]?.role || 'status'; // better to set role to host?
         }
         if (name==='variant' || name==='icon') {
-            const variant = this.getAttribute('variant');
+            const variant = variantOf(this);
             const icon = this.getAttribute('icon') || variantData[variant]?.icon || 'info';
             this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
         }
@@ -150,7 +150,7 @@ const variantData = {
         icon: 'check',
         role: 'status',
     },
-    warn: {
+    warning: {
         icon: 'warning',
         role: 'alert',
     },
@@ -159,6 +159,16 @@ const variantData = {
         role: 'alert',
     }
 };
+
+/** The variant; "warn" is read as "warning" (deprecated, warned about once). */
+let warned = false;
+function variantOf(el) {
+    const variant = el.getAttribute('variant');
+    if (variant !== 'warn') return variant;
+    if (!warned) console.warn('u2-alert: variant "warn" is deprecated, use "warning"', el);
+    warned = true;
+    return 'warning';
+}
 
 customElements.get('u2-alert') || customElements.define('u2-alert', U2Alert);
 
@@ -173,7 +183,7 @@ function alert(message, variant, options={}) {
 }
 export const info = (message, options) => alert(message, 'info', options);
 export const success = (message, options) => alert(message, 'success', options);
-export const warn = (message, options) => alert(message, 'warn', options);
+export const warn = (message, options) => alert(message, 'warning', options);
 export const error = (message, options) => alert(message, 'error', options);
 
 

@@ -17,7 +17,7 @@ u2-alert:not([open]) {
 }
 
 u2-alert[variant=success] { --color: var(--color-green); }
-u2-alert[variant=warn] { --color: var(--color-yellow); }
+u2-alert:is([variant=warning], [variant=warn]) { --color: var(--color-yellow); } /* warn: deprecated */
 u2-alert[variant=error] { --color: var(--color-red); }
 u2-alert[variant=info] { --color: var(--color-blue); }
 
