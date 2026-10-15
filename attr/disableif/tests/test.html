@@ -27,7 +27,6 @@
                     <option value="">Bitte wählen</option>
                     <option value="freelancer">Freelancer</option>
                     <option value="teilzeit">Teilzeit</option>
-                    <option value="vollzeit">Vollzeit</option>
                 </select>
             </label>
             <label>
@@ -51,40 +50,11 @@
         </fieldset>
         <fieldset u2-disableif="type!=freelancer">
             <legend>Freelancer</legend>
-            <label>
-                Stundensatz:
-                <input type=text name="freelancerRate">
-            </label>
-            <label>
-                Projektbeschreibung:
-                <input type=text name="freelancerDescription">
-            </label>
+            <label>Stundensatz: <input name="freelancerRate"></label>
         </fieldset>
         <fieldset u2-disableif="type!=teilzeit">
             <legend>Teilzeit</legend>
-            <label>
-                Teilzeitstunden pro Woche:
-                <input type=text name="partTimeHours">
-            </label>
-            <label>
-                Abteilung:
-                <input type=text name="partTimeDepartment">
-            </label>
-        </fieldset>
-        <fieldset u2-disableif="type!=vollzeit">
-            <legend>Vollzeit</legend>
-            <label>
-                Vollzeitposition:
-                <input type=text name="fullTimePosition">
-            </label>
-            <label>
-                Abteilung:
-                <input type=text name="fullTimeDepartment">
-            </label>
-            <label>
-                Gehalt:
-                <input type=text name="fullTimeSalary">
-            </label>
+            <label>Stunden pro Woche: <input name="partTimeHours"></label>
         </fieldset>
         <button type="submit">Absenden</button>
     </form>
