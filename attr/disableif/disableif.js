@@ -1,5 +1,13 @@
 import { SelectorObserver } from '../../js/SelectorObserver/SelectorObserver.js';
 
+/** Once per element and problem, not on every update. */
+const warned = new WeakMap();
+function warn(el, problem) {
+    if (warned.get(el) === problem) return;
+    warned.set(el, problem);
+    console.warn('u2-disableif: ' + problem, el);
+}
+
 /**
  * Whether the element's condition holds. A field's values are what the form would send under its
  * name (FormData): none for an unchecked box or a disabled field, several for same-named fields or
@@ -13,8 +21,8 @@ function holds(el, data) {
     // a custom element that is not defined yet is no form field yet: check again once it is
     const pending = !form.elements[field] && form.querySelector(`:not(:defined)[name="${CSS.escape(field)}"]`);
     if (pending) { customElements.whenDefined(pending.localName).then(() => schedule(form)); return; }
-    if (not && operator) { console.warn(`u2-disableif: "!" cannot be combined with "${operator}"`, el); return; }
-    if (!form.elements[field]) console.warn(`u2-disableif: field "${field}" not found, so it is empty`, el); // a typo?
+    if (not && operator) { warn(el, `"!" cannot be combined with "${operator}"`); return; }
+    if (!form.elements[field]) warn(el, `field "${field}" not found, so it is empty`); // a typo?
     const values = data.getAll(field).map(v => typeof v === 'string' ? v : v.name);
     switch (operator) {
         case '=': return values.includes(value);

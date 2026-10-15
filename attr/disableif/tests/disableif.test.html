@@ -347,9 +347,14 @@ section('invalid conditions');
         <input name=a>
         <input id=missing u2-disableif="nope" disabled>
         <input id=combined u2-disableif="!a=x" disabled>`);
+    for (const v of ['x', 'y', 'z']) set(f.elements.a, v);
+    const count = (text) => warnings.filter(w => w.includes(text)).length;
+    assert(!$(f, 'missing').disabled && count('"nope" not found') === 1, 'an unknown field warns once and counts as empty');
+    assert($(f, 'combined').disabled && count('cannot be combined') === 1, '"!" with an operator warns once and leaves the element alone');
+    $(f, 'missing').setAttribute('u2-disableif', 'nix');
+    await tick();
     console.warn = warn;
-    assert(!$(f, 'missing').disabled && warnings.some(w => w.includes('"nope" not found')), 'an unknown field warns and counts as empty');
-    assert($(f, 'combined').disabled && warnings.some(w => w.includes('cannot be combined')), '"!" with an operator warns and leaves the element alone');
+    assert(count('"nix" not found') === 1, 'a new problem warns again');
 }
 
 summary.textContent = failed ? `${failed} failed, ${passed} passed` : `all ${passed} passed`;
