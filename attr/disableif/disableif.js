@@ -3,14 +3,18 @@ import { SelectorObserver } from '../../js/SelectorObserver/SelectorObserver.js'
 /**
  * Whether the element's condition holds. A field's values are what the form would send under its
  * name (FormData): none for an unchecked box or a disabled field, several for same-named fields or
- * a select multiple; a file counts by its name. undefined: no valid condition.
+ * a select multiple; a file counts by its name. undefined: no valid condition (yet).
  */
 function holds(el, data) {
     const match = el.getAttribute('u2-disableif').match(/^(!?)([^=!<>]*)(=|!=|>|<)?([^=!<>]*)$/);
     if (!match) return;
     const [, not, field, operator, value] = match;
+    const form = el.form;
+    // a custom element that is not defined yet is no form field yet: check again once it is
+    const pending = !form.elements[field] && form.querySelector(`:not(:defined)[name="${CSS.escape(field)}"]`);
+    if (pending) { customElements.whenDefined(pending.localName).then(() => update(form)); return; }
     const problem = not && operator ? `"!" cannot be combined with "${operator}"`
-        : !el.form.elements[field] ? `field "${field}" not found` : '';
+        : !form.elements[field] ? `field "${field}" not found` : '';
     if (problem) { console.warn('u2-disableif: ' + problem, el); return; }
     const values = data.getAll(field).map(v => typeof v === 'string' ? v : v.name);
     switch (operator) {

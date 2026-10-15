@@ -182,6 +182,36 @@ section('form-associated custom element');
     assert($(f, 'lt').disabled, 'the value it gives the form counts');
 }
 
+section('custom element defined later');
+{
+    const warn = console.warn, warnings = [];
+    console.warn = (...args) => warnings.push(args[0]);
+    const f = await fixture(`
+        <test-late name=amount></test-late>
+        <input id=lt u2-disableif="amount<4000">`);
+    assert(!warnings.length, 'not defined yet: no warning');
+    customElements.define('test-late', class extends HTMLElement {
+        static formAssociated = true;
+        #internals = this.attachInternals();
+        connectedCallback() { this.#internals.setFormValue('3000'); }
+    });
+    await tick();
+    console.warn = warn;
+    assert($(f, 'lt').disabled, 'once defined, its value is applied without an input');
+}
+
+section('fieldset');
+{
+    const f = await fixture(`
+        <input type=checkbox name=a>
+        <fieldset id=set u2-disableif="!a"><input name=b value=x></fieldset>
+        <input id=c u2-disableif="b">`);
+    assert($(f, 'set').disabled, 'a fieldset takes a condition');
+    assert(!$(f, 'c').disabled, 'a field in it sends nothing while it is disabled');
+    set(f.elements.a, true);
+    assert(!$(f, 'set').disabled && $(f, 'c').disabled, 'enabled, the field in it counts');
+}
+
 section('disabled fields count as empty');
 {
     const f = await fixture(`

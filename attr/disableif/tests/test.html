@@ -104,6 +104,23 @@
         <input u2-disableif="agb" placeholder="enabled when not checked">
     </form>
 
+    <h2>Chain</h2>
+    <p>
+        The font depends on the format, the format on the newsletter. Without the newsletter the format is
+        disabled, so it sends nothing, so the font is disabled too — whatever format was chosen.
+    </p>
+    <form>
+        <label><input type=checkbox name=newsletter> Newsletter</label>
+        <label>
+            Format:
+            <select name=format u2-disableif="!newsletter">
+                <option value=html>HTML</option>
+                <option value=text>Text</option>
+            </select>
+        </label>
+        <label>Font: <input name=font u2-disableif="format!=html"></label>
+    </form>
+
     <h2>Radio group</h2>
     <p>Expected: the text field is enabled only while "other" is chosen.</p>
     <form>
