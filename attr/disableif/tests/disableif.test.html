@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>u2-disableif — tests</title>
+
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    <style>
+    #summary { padding:.6em 1em; border-radius:.3em; font-weight:bold; color:#fff; }
+    #summary.-ok  { background:#2e7d32; }
+    #summary.-bad { background:#c62828; }
+    #report h3 { margin:1.4em 0 .4em; font-size:1em; opacity:.7; }
+    #report > div { border-left:.3em solid var(--c); padding:.3em .6em; margin-block:1px; font-family:monospace; font-size:.9em; }
+    #report .-pass { --c:#2e7d32; }
+    #report .-fail { --c:#c62828; }
+    </style>
+</head>
+<body>
+
+<h1>u2-disableif</h1>
+<p>
+    A field's values are what the form would send under its name (FormData): none for an unchecked
+    box or a disabled field, several for same-named fields or a select multiple.
+</p>
+
+<div id=summary>running…</div>
+<div id=report></div>
+<div id=fixtures hidden></div>
+
+<script type=module>
+import '../disableif.js';
+
+for (const type of ['error', 'unhandledrejection']) addEventListener(type, (e) => {
+    summary.textContent = 'error: ' + (e.error ?? e.reason ?? e.message);
+    summary.className = '-bad';
+});
+
+const report = document.getElementById('report');
+const summary = document.getElementById('summary');
+let passed = 0, failed = 0;
+const line = (state, text) => {
+    const el = document.createElement('div');
+    el.className = '-' + state;
+    el.textContent = state.toUpperCase() + '  ' + text;
+    report.append(el);
+};
+const assert = (condition, message) => {
+    condition ? passed++ : failed++;
+    line(condition ? 'pass' : 'fail', message);
+};
+const section = (title) => report.insertAdjacentHTML('beforeend', `<h3>${title}</h3>`);
+const tick = () => new Promise(r => setTimeout(r, 50));
+
+/** A form with the markup, once disableif has seen it. */
+async function fixture(html) {
+    const form = document.createElement('form');
+    form.innerHTML = html;
+    document.getElementById('fixtures').append(form);
+    await tick();
+    return form;
+}
+/** Change a control as a user would: the value, then an input event. */
+function set(el, value) {
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = value;
+    else if (el.multiple) for (const o of el.options) o.selected = value.includes(o.value);
+    else el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+}
+const $ = (form, id) => form.querySelector('#' + id);
+
+section('operators on a text field');
+{
+    const f = await fixture(`
+        <input name=a>
+        <input id=bare u2-disableif="a">
+        <input id=not u2-disableif="!a">
+        <input id=eq u2-disableif="a=x">
+        <input id=ne u2-disableif="a!=x">
+        <input id=gt u2-disableif="a>3">
+        <input id=lt u2-disableif="a<3">`);
+    const state = () => ['bare', 'not', 'eq', 'ne', 'gt', 'lt'].map(id => +$(f, id).disabled).join('');
+    assert(state() === '010100', 'empty: "!a" and "a!=x" hold');
+    set(f.elements.a, 'x');
+    assert(state() === '101000', '"x": "a" and "a=x" hold');
+    set(f.elements.a, '5');
+    assert(state() === '100110', '"5": "a", "a!=x" and "a>3" hold');
+    set(f.elements.a, '1');
+    assert(state() === '100101', '"1": "a", "a!=x" and "a<3" hold');
+}
+
+section('checkbox');
+{
+    const f = await fixture(`
+        <input type=checkbox name=a value=yes>
+        <input id=bare u2-disableif="a">
+        <input id=not u2-disableif="!a">
+        <input id=eq u2-disableif="a=yes">`);
+    assert(!$(f, 'bare').disabled && $(f, 'not').disabled && !$(f, 'eq').disabled, 'unchecked sends nothing');
+    set(f.elements.a, true);
+    assert($(f, 'bare').disabled && !$(f, 'not').disabled && $(f, 'eq').disabled, 'checked sends its value');
+}
+
+section('checkbox with a hidden twin of the same name');
+{
+    const f = await fixture(`
+        <input type=hidden name=a>
+        <input type=checkbox name=a value=1 id=box>
+        <input id=bare u2-disableif="a">
+        <input id=not u2-disableif="!a">`);
+    assert(!$(f, 'bare').disabled && $(f, 'not').disabled, 'unchecked: only the empty twin is sent');
+    set($(f, 'box'), true);
+    assert($(f, 'bare').disabled && !$(f, 'not').disabled, 'checked: the box counts beside the twin');
+}
+
+section('radio group');
+{
+    const f = await fixture(`
+        <input type=radio name=kind value=private id=private>
+        <input type=radio name=kind value=other id=other>
+        <input id=ne u2-disableif="kind!=other">
+        <input id=bare u2-disableif="kind">`);
+    assert($(f, 'ne').disabled && !$(f, 'bare').disabled, 'nothing chosen is "not other" and empty');
+    set($(f, 'other'), true);
+    assert(!$(f, 'ne').disabled && $(f, 'bare').disabled, '"other" chosen');
+    set($(f, 'private'), true);
+    assert($(f, 'ne').disabled, '"private" chosen');
+}
+
+section('select');
+{
+    const f = await fixture(`
+        <select name=one><option value="">–<option>a<option>b</select>
+        <select name=many multiple><option>a<option>b<option>c</select>
+        <input id=oneB u2-disableif="one=b">
+        <input id=manyC u2-disableif="many=c">
+        <input id=manyNotC u2-disableif="many!=c">`);
+    set(f.elements.one, 'b');
+    assert($(f, 'oneB').disabled, 'single select: its value');
+    set(f.elements.many, ['a', 'c']);
+    assert($(f, 'manyC').disabled && !$(f, 'manyNotC').disabled, 'select multiple: any chosen option, not only the first');
+    set(f.elements.many, ['a']);
+    assert(!$(f, 'manyC').disabled && $(f, 'manyNotC').disabled, 'select multiple without c');
+}
+
+section('same-named text fields');
+{
+    const f = await fixture(`
+        <input name=tag id=t1><input name=tag id=t2>
+        <input id=eq u2-disableif="tag=x">
+        <input id=bare u2-disableif="tag">`);
+    set($(f, 't2'), 'x');
+    assert($(f, 'eq').disabled && $(f, 'bare').disabled, 'any of them counts, not only the first');
+}
+
+section('file');
+{
+    const f = await fixture(`
+        <input type=file name=doc>
+        <input id=bare u2-disableif="doc">
+        <input id=eq u2-disableif="doc=cv.pdf">`);
+    assert(!$(f, 'bare').disabled, 'no file chosen');
+    const files = new DataTransfer();
+    files.items.add(new File(['x'], 'cv.pdf'));
+    f.elements.doc.files = files.files;
+    f.elements.doc.dispatchEvent(new Event('input', { bubbles: true }));
+    assert($(f, 'bare').disabled && $(f, 'eq').disabled, 'a chosen file counts by its name');
+}
+
+section('form-associated custom element');
+{
+    customElements.define('test-value', class extends HTMLElement {
+        static formAssociated = true;
+        #internals = this.attachInternals();
+        set value(v) { this.#internals.setFormValue(v); }
+    });
+    const f = await fixture(`
+        <test-value name=amount></test-value>
+        <input id=lt u2-disableif="amount<4000">`);
+    f.querySelector('test-value').value = '3000';
+    f.dispatchEvent(new Event('input'));
+    assert($(f, 'lt').disabled, 'the value it gives the form counts');
+}
+
+section('disabled fields count as empty');
+{
+    const f = await fixture(`
+        <input name=a value=x>
+        <fieldset disabled><input name=b value=x></fieldset>
+        <input id=a u2-disableif="a">
+        <input id=b u2-disableif="b">`);
+    assert($(f, 'a').disabled, 'an enabled field counts');
+    assert(!$(f, 'b').disabled, 'a field in a disabled fieldset is not sent');
+}
+
+section('chains');
+{
+    // listed against the order they depend on each other, so one pass is not enough
+    const f = await fixture(`
+        <input id=c name=c value=x u2-disableif="!b">
+        <input id=b name=b value=x u2-disableif="!a">
+        <input type=checkbox name=a checked>`);
+    assert(!$(f, 'b').disabled && !$(f, 'c').disabled, 'a checked: b and c enabled');
+    set(f.elements.a, false);
+    assert($(f, 'b').disabled, 'a unchecked: b disabled');
+    assert($(f, 'c').disabled, '…and c too, because a disabled b sends nothing');
+    set(f.elements.a, true);
+    assert(!$(f, 'b').disabled && !$(f, 'c').disabled, 'a checked again: both back');
+}
+
+section('a cycle ends');
+{
+    // disabled, it sends nothing, so it is enabled again, so it sends "x" …
+    const f = await fixture(`<input name=a value=x u2-disableif="a"><input name=go>`);
+    set(f.elements.go, '1');
+    assert(true, 'a field that disables itself by its own value: the update returns');
+}
+
+section('one FormData per pass');
+{
+    const f = await fixture(`<input name=a><input u2-disableif="a=x">`);
+    let built = 0;
+    f.addEventListener('formdata', () => built++);
+    set(f.elements.a, 'y');
+    assert(built === 1, 'an input that changes nothing builds one');
+    built = 0;
+    set(f.elements.a, 'x');
+    assert(built === 2, 'one that disables something builds one more, to see it settled');
+}
+
+section('reset');
+{
+    const f = await fixture(`<input name=a><input id=t u2-disableif="a">`);
+    set(f.elements.a, 'x');
+    assert($(f, 't').disabled, 'disabled after typing');
+    f.reset();
+    await tick();
+    assert(!$(f, 't').disabled, 'enabled again after the form is reset');
+}
+
+section('fields linked by the form attribute');
+{
+    const f = await fixture(`<input name=a>`);
+    f.id = 'outer';
+    const outside = document.createElement('div');
+    outside.innerHTML = `<input name=b form=outer value=x><input id=out form=outer u2-disableif="a=x">`;
+    document.getElementById('fixtures').append(outside);
+    await tick();
+    set(f.elements.a, 'x');
+    assert(outside.querySelector('#out').disabled, 'a condition outside the form element is applied');
+}
+
+section('invalid conditions leave the element alone');
+{
+    const warn = console.warn, warnings = [];
+    console.warn = (...args) => warnings.push(args[0]);
+    const f = await fixture(`
+        <input name=a>
+        <input id=missing u2-disableif="nope">
+        <input id=combined u2-disableif="!a=x" disabled>`);
+    console.warn = warn;
+    assert(!$(f, 'missing').disabled && warnings.some(w => w.includes('"nope" not found')), 'an unknown field warns');
+    assert($(f, 'combined').disabled && warnings.some(w => w.includes('cannot be combined')), '"!" with an operator warns');
+}
+
+summary.textContent = failed ? `${failed} failed, ${passed} passed` : `all ${passed} passed`;
+summary.className = failed ? '-bad' : '-ok';
+</script>

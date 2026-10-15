@@ -89,6 +89,30 @@
         <button type="submit">Absenden</button>
     </form>
 
+    <h2>Checkbox with a hidden twin</h2>
+    <p>
+        An unchecked box sends nothing, so forms often put a hidden input of the same name in front of it.
+        Then <code>form.elements.agb</code> is a list, not the checkbox.
+        Expected: the text field is enabled while the box is checked.
+    </p>
+    <form>
+        <label>
+            <input type=hidden name=agb>
+            <input type=checkbox name=agb value=1> I accept the terms
+        </label>
+        <input u2-disableif="!agb" placeholder="enabled when checked">
+        <input u2-disableif="agb" placeholder="enabled when not checked">
+    </form>
+
+    <h2>Radio group</h2>
+    <p>Expected: the text field is enabled only while "other" is chosen.</p>
+    <form>
+        <label><input type=radio name=kind value=private> private</label>
+        <label><input type=radio name=kind value=company> company</label>
+        <label><input type=radio name=kind value=other> other</label>
+        <input u2-disableif="kind!=other" placeholder="enabled for other">
+    </form>
+
 </section>
 
 <style class=main>

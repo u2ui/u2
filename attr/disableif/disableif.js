@@ -1,59 +1,59 @@
 import { SelectorObserver } from '../../js/SelectorObserver/SelectorObserver.js';
 
-function checkCondition(el) {
-    const condition = el.getAttribute('u2-disableif');
+/**
+ * Whether the element's condition holds. A field's values are what the form would send under its
+ * name (FormData): none for an unchecked box or a disabled field, several for same-named fields or
+ * a select multiple; a file counts by its name. undefined: no valid condition.
+ */
+function holds(el, data) {
+    const match = el.getAttribute('u2-disableif').match(/^(!?)([^=!<>]*)(=|!=|>|<)?([^=!<>]*)$/);
+    if (!match) return;
+    const [, not, field, operator, value] = match;
+    const problem = not && operator ? `"!" cannot be combined with "${operator}"`
+        : !el.form.elements[field] ? `field "${field}" not found` : '';
+    if (problem) { console.warn('u2-disableif: ' + problem, el); return; }
+    const values = data.getAll(field).map(v => typeof v === 'string' ? v : v.name);
+    switch (operator) {
+        case '=': return values.includes(value);
+        case '!=': return !values.includes(value);
+        case '>': return values.some(v => parseFloat(v) > parseFloat(value));
+        case '<': return values.some(v => parseFloat(v) < parseFloat(value));
+    }
+    return values.some(Boolean) !== !!not;
+}
 
-    const match = condition.match(/^(!?)([^=!<>]*)(=|!=|>|<)?([^=!<>]*)$/);
-    if (match) {
-        let [_, not, field, operator, value] = match;
-        if (not) {
-            if (operator) console.warn(`u2-disableif: "!" operator is not supported with other operators`, { el, field, operator, value });
-            operator = '=';
+/** Applies all conditions of the form, again until nothing changes: disabling a field empties it for
+ *  the conditions that depend on it. A cycle stops after as many passes as there are conditions. */
+function update(form) {
+    const els = [...form.elements].filter(el => el.hasAttribute('u2-disableif'));
+    for (let pass = 0; pass <= els.length; pass++) {
+        const data = new FormData(form); // fires "formdata", once per pass
+        let changed = false;
+        for (const el of els) {
+            const disabled = holds(el, data);
+            if (disabled === undefined || disabled === el.disabled) continue;
+            el.disabled = disabled;
+            changed = true;
         }
-        const target = el.form.elements[field];
-        if (!target) {
-            console.warn(`u2-disableif: field "${field}" not found`, { el, field, operator, value });
-            return;
-        }
-        let stringTargetValue = target.value;
-        if (target.type === 'checkbox') stringTargetValue = target.checked ? target.value : '';
-
-        const numericTargetValue = parseFloat(stringTargetValue);
-        const numericConditionValue = parseFloat(value);
-
-        let conditionMet = false;
-        switch (operator) {
-            case undefined:
-                conditionMet = !!stringTargetValue;
-                break;
-            case '=':
-                conditionMet = stringTargetValue === value;
-                break;
-            case '!=':
-                conditionMet = stringTargetValue !== value;
-                break;
-            case '>':
-                conditionMet = numericTargetValue > numericConditionValue;
-                break;
-            case '<':
-                conditionMet = numericTargetValue < numericConditionValue;
-                break;
-        }
-        el.disabled = conditionMet;
+        if (!changed) return;
     }
 }
 
+const forms = new WeakSet();
 
 new SelectorObserver({
     on: (el) => {
-        checkCondition(el);
-        // wait for custom-element-inputs
-        // queueMicrotask(()=>checkCondition(el));
-        requestAnimationFrame(()=>checkCondition(el));
-        //setTimeout(()=>checkCondition(el));
         const form = el.form;
-        el.form.addEventListener('input', () => checkCondition(el));
+        if (!form) return;
+        if (!forms.has(form)) {
+            forms.add(form);
+            form.addEventListener('input', () => update(form));
+            form.addEventListener('reset', () => setTimeout(() => update(form))); // the values change after the event
+        }
+        update(form);
+        // wait for custom-element-inputs
+        // queueMicrotask(() => update(form));
+        requestAnimationFrame(() => update(form));
+        // setTimeout(() => update(form));
     },
-    off: (el) => {
-    }
 }).observe('[u2-disableif]');
