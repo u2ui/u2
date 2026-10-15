@@ -336,7 +336,7 @@ section('performance');
     const start = performance.now();
     for (let i = 0; i < 100; i++) set(form.elements.a, i % 2 ? 'x' : 'y');
     const ms = performance.now() - start;
-    assert(ms < 500, `100 inputs that switch 200 conditions: ${ms.toFixed(0)} ms (headless runs on virtual time)`);
+    assert(ms < 500, `100 inputs that switch 200 conditions: ${ms.toFixed(0)} ms`);
 }
 
 section('invalid conditions');

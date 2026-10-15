@@ -42,12 +42,13 @@ function update(form) {
     }
 }
 
-/** One update per form and microtask, however many changes ask for it. */
-const scheduled = new WeakSet();
-function schedule(form) {
-    if (!form || scheduled.has(form)) return;
-    scheduled.add(form);
-    queueMicrotask(() => { scheduled.delete(form); update(form); });
+/** One update per form and `wait` (microtask, frame), however many changes ask for it. */
+const scheduled = new Map();
+function schedule(form, wait = queueMicrotask) {
+    const forms = scheduled.get(wait) ?? scheduled.set(wait, new WeakSet()).get(wait);
+    if (!form || forms.has(form)) return;
+    forms.add(form);
+    wait(() => { forms.delete(form); update(form); });
 }
 
 /** Typing applies at once. Fields and conditions that are added, removed or changed in the form
@@ -71,7 +72,7 @@ new SelectorObserver({
         schedule(el.form);
         // wait for custom-element-inputs
         // queueMicrotask(() => schedule(el.form));
-        requestAnimationFrame(() => schedule(el.form));
+        schedule(el.form, requestAnimationFrame);
         // setTimeout(() => schedule(el.form));
     },
 }).observe('[u2-disableif]');
