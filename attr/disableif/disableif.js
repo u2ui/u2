@@ -12,10 +12,9 @@ function holds(el, data) {
     const form = el.form;
     // a custom element that is not defined yet is no form field yet: check again once it is
     const pending = !form.elements[field] && form.querySelector(`:not(:defined)[name="${CSS.escape(field)}"]`);
-    if (pending) { customElements.whenDefined(pending.localName).then(() => update(form)); return; }
-    const problem = not && operator ? `"!" cannot be combined with "${operator}"`
-        : !form.elements[field] ? `field "${field}" not found` : '';
-    if (problem) { console.warn('u2-disableif: ' + problem, el); return; }
+    if (pending) { customElements.whenDefined(pending.localName).then(() => schedule(form)); return; }
+    if (not && operator) { console.warn(`u2-disableif: "!" cannot be combined with "${operator}"`, el); return; }
+    if (!form.elements[field]) console.warn(`u2-disableif: field "${field}" not found, so it is empty`, el); // a typo?
     const values = data.getAll(field).map(v => typeof v === 'string' ? v : v.name);
     switch (operator) {
         case '=': return values.includes(value);
@@ -43,21 +42,36 @@ function update(form) {
     }
 }
 
-const forms = new WeakSet();
+/** One update per form and microtask, however many changes ask for it. */
+const scheduled = new WeakSet();
+function schedule(form) {
+    if (!form || scheduled.has(form)) return;
+    scheduled.add(form);
+    queueMicrotask(() => { scheduled.delete(form); update(form); });
+}
+
+/** Typing applies at once. Fields and conditions that are added, removed or changed in the form
+ *  apply on the next microtask; one that changes its form also updates the new one. */
+const ATTRIBUTES = ['u2-disableif', 'name', 'form', 'value', 'checked', 'selected', 'multiple', 'type'];
+const watched = new WeakSet();
+function watch(form) {
+    if (!form || watched.has(form)) return;
+    watched.add(form);
+    form.addEventListener('input', () => update(form));
+    form.addEventListener('reset', () => setTimeout(() => update(form))); // the values change after the event
+    new MutationObserver(records => {
+        schedule(form);
+        for (const { target } of records) if (target.form !== form) { watch(target.form); schedule(target.form); }
+    }).observe(form, { subtree: true, childList: true, attributes: true, attributeFilter: ATTRIBUTES });
+}
 
 new SelectorObserver({
     on: (el) => {
-        const form = el.form;
-        if (!form) return;
-        if (!forms.has(form)) {
-            forms.add(form);
-            form.addEventListener('input', () => update(form));
-            form.addEventListener('reset', () => setTimeout(() => update(form))); // the values change after the event
-        }
-        update(form);
+        watch(el.form);
+        schedule(el.form);
         // wait for custom-element-inputs
-        // queueMicrotask(() => update(form));
-        requestAnimationFrame(() => update(form));
-        // setTimeout(() => update(form));
+        // queueMicrotask(() => schedule(el.form));
+        requestAnimationFrame(() => schedule(el.form));
+        // setTimeout(() => schedule(el.form));
     },
 }).observe('[u2-disableif]');

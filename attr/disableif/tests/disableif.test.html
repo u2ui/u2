@@ -280,17 +280,76 @@ section('fields linked by the form attribute');
     assert(outside.querySelector('#out').disabled, 'a condition outside the form element is applied');
 }
 
-section('invalid conditions leave the element alone');
+section('changes to the form, without any input');
+{
+    const f = await fixture(`<input id=t u2-disableif="a">`);
+    f.insertAdjacentHTML('afterbegin', `<input type=checkbox name=a checked>`);
+    await tick();
+    assert($(f, 't').disabled, 'a field added with a value applies');
+    f.elements.a.remove();
+    await tick();
+    assert(!$(f, 't').disabled, 'a field removed applies');
+
+    f.insertAdjacentHTML('beforeend', `<input name=b value=x><input id=late u2-disableif="b=x">`);
+    await tick();
+    assert($(f, 'late').disabled, 'a condition added to the form applies');
+    $(f, 'late').setAttribute('u2-disableif', 'b=y');
+    await tick();
+    assert(!$(f, 'late').disabled, 'a changed condition applies');
+    f.elements.b.setAttribute('name', 'c');
+    $(f, 'late').setAttribute('u2-disableif', 'c=x');
+    await tick();
+    assert($(f, 'late').disabled, 'a renamed field applies');
+    f.elements.c.setAttribute('value', 'z');
+    await tick();
+    assert(!$(f, 'late').disabled, 'a changed value attribute applies');
+}
+
+section('moving between forms');
+{
+    const one = await fixture(`<input name=a value=x><input id=moved u2-disableif="a=x">`);
+    const two = await fixture(`<input name=a value=y>`);
+    assert($(one, 'moved').disabled, 'in the first form: a=x');
+    two.append($(one, 'moved'));
+    await tick();
+    assert(!$(two, 'moved').disabled, 'moved into the second form: its a counts');
+    two.id = 'second';
+    one.insertAdjacentHTML('beforeend', `<input id=linked u2-disableif="a=x">`);
+    await tick();
+    assert($(one, 'linked').disabled, 'in the first form');
+    $(one, 'linked').setAttribute('form', 'second');
+    await tick();
+    assert(!$(one, 'linked').disabled, 'given to the second form by its form attribute');
+}
+
+section('performance');
+{
+    const form = document.createElement('form');
+    form.innerHTML = '<input name=a value=x>' + '<input u2-disableif="a=x">'.repeat(200);
+    let built = 0;
+    form.addEventListener('formdata', () => built++);
+    document.getElementById('fixtures').append(form);
+    await tick();
+    assert(built <= 3, `200 conditions added at once: ${built} FormData, not one per condition`);
+    assert([...form.elements].filter(el => el.disabled).length === 200, 'and all of them applied');
+    built = 0;
+    const start = performance.now();
+    for (let i = 0; i < 100; i++) set(form.elements.a, i % 2 ? 'x' : 'y');
+    const ms = performance.now() - start;
+    assert(ms < 500, `100 inputs that switch 200 conditions: ${ms.toFixed(0)} ms (headless runs on virtual time)`);
+}
+
+section('invalid conditions');
 {
     const warn = console.warn, warnings = [];
     console.warn = (...args) => warnings.push(args[0]);
     const f = await fixture(`
         <input name=a>
-        <input id=missing u2-disableif="nope">
+        <input id=missing u2-disableif="nope" disabled>
         <input id=combined u2-disableif="!a=x" disabled>`);
     console.warn = warn;
-    assert(!$(f, 'missing').disabled && warnings.some(w => w.includes('"nope" not found')), 'an unknown field warns');
-    assert($(f, 'combined').disabled && warnings.some(w => w.includes('cannot be combined')), '"!" with an operator warns');
+    assert(!$(f, 'missing').disabled && warnings.some(w => w.includes('"nope" not found')), 'an unknown field warns and counts as empty');
+    assert($(f, 'combined').disabled && warnings.some(w => w.includes('cannot be combined')), '"!" with an operator warns and leaves the element alone');
 }
 
 summary.textContent = failed ? `${failed} failed, ${passed} passed` : `all ${passed} passed`;

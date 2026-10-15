@@ -33,6 +33,11 @@ A field's values are what the form would send under its name (`FormData`): none 
 checkbox or a disabled field, several for same-named fields or a `select multiple`, a file by its name.
 So a field disabled by its own condition counts as empty for the conditions that depend on it, and
 chains settle in one go. Each check builds the `FormData`, which fires the form's `formdata` event.
+A field that is not in the form counts as empty, with a warning (a typo?).
+
+Typing applies at once; fields and conditions added, removed or changed in the form apply on the
+next microtask. A value set by script (`input.value = …`) is only seen with an `input` event.
+Removing the attribute leaves the element as it is.
 
 ## Install
 
