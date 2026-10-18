@@ -68,7 +68,7 @@ u2-ico[inline] {
 /* SVG */
 u2-ico > svg {
     vertical-align:bottom;
-    height:1em;
+    height:1em; /* todo: 1cap? */
     width:auto;
     min-width:1em;
     overflow:visible;
