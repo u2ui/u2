@@ -3,13 +3,13 @@ import {Source} from '../source/source.js';
 const STYLE = `
 #ai {
     block-size: min(80vh, 50em);
-    border: 1px solid;
     inline-size: min(95vw, 80em);
     max-block-size: none;
     max-inline-size: none;
+    inset: 0;
+    margin: auto;
     overflow: hidden; /* only the text boxes scroll, never the dialog itself */
     padding: 0;
-    pointer-events: auto;
 
     & form {
         block-size: 100%;
@@ -21,8 +21,11 @@ const STYLE = `
         padding: .57em;
     }
     & .prompt {
+        border: 0;
         display: flex;
         gap: .57em;
+        margin: 0;
+        padding: 0;
 
         & input { flex: 1; min-inline-size: 0 }
     }
@@ -41,7 +44,7 @@ const STYLE = `
         min-block-size: 8em;
 
         & > b { flex: 0 0 auto }
-        & > div { border: 1px solid; flex: 1; min-block-size: 0; overflow: auto; padding: .57em }
+        & > div { border: 1px solid var(--line); border-radius: .34em; flex: 1; min-block-size: 0; overflow: auto; padding: .57em }
     }
     /* Added and removed read faster as colour than as underline and strike, and mixing into the
        page's own background keeps them legible in a light and a dark chrome alike. */
@@ -168,6 +171,7 @@ function build(state) {
     if (state.dialog) return state.dialog;
     const create = (tag, properties) => Object.assign(state.document.createElement(tag), properties);
     const dialog = state.chrome.part('ai', STYLE, 'dialog');
+    dialog.className = 'panel';
     dialog.setAttribute('aria-label', state.label);
     const form = create('form', {method: 'dialog'});
 

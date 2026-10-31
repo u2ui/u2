@@ -12,13 +12,7 @@ const STYLE = `
     gap: .57em;
     padding: .34em;
 
-    input {
-        background: transparent;
-        border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
-        border-radius: .34em;
-        min-inline-size: 16em;
-        padding: .17em .34em;
-    }
+    input { min-inline-size: 16em; }
 }
 `;
 

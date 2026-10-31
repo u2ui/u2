@@ -28,9 +28,7 @@ const STYLE = `
     @media (prefers-reduced-motion: reduce) { & { transition: none; } }
     button, select { min-block-size: 2.29em; }
     button {
-        border-radius: .34em;
         min-inline-size: 2.29em;
-        &:hover:not(:disabled) { background: color-mix(in srgb, Highlight 16%, transparent); }
         &[aria-pressed=true] { background: color-mix(in srgb, Highlight 28%, transparent); }
     }
     [data-command=bold] { font-weight: 700; }
@@ -40,27 +38,19 @@ const STYLE = `
    carries something says so where the eye already is — at the row, not in the button. */
 [data-menu] {
     background: Canvas;
-    border: 1px solid color-mix(in srgb, CanvasText 25%, transparent);
+    border: 1px solid var(--line);
     border-radius: .34em;
-    color: CanvasText;
-    font: inherit;
     margin: 0;
     padding: .34em;
     position: absolute;
 
     & b { display: block; font-size: .86em; opacity: .6; padding: .5em .6em .17em; }
     & button {
-        background: none;
-        border: 0;
-        border-radius: .34em;
-        color: inherit;
         display: block;
-        font: inherit;
         inline-size: 100%;
         padding: .34em .6em .34em 1.7em;
         position: relative;
         text-align: start;
-        &:hover:not(:disabled) { background: color-mix(in srgb, Highlight 16%, transparent); }
         &[aria-pressed=true] {
             background: color-mix(in srgb, Highlight 20%, transparent);
             &::before { content: '✓'; inset-inline-start: .5em; position: absolute; }

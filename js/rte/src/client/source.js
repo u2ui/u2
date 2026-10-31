@@ -2,12 +2,12 @@ import {Source} from '../source/source.js';
 
 const STYLE = `
 #source {
-    pointer-events: auto;
     block-size: min(70vh, 45.71em);
-    border: 1px solid;
     inline-size: min(90vw, 68.57em);
     max-block-size: none;
     max-inline-size: none;
+    inset: 0;
+    margin: auto;
     padding: 0;
 }
 #source form {
@@ -139,6 +139,7 @@ function upgraded(element) {
 function build(state) {
     if (state.dialog) return state.dialog;
     const dialog = state.chrome.part('source', STYLE, 'dialog');
+    dialog.className = 'panel';
     dialog.setAttribute('aria-label', 'HTML source');
     const form = state.document.createElement('form');
     form.method = 'dialog';

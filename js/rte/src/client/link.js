@@ -15,17 +15,13 @@ const STYLE = `
 
     label { align-items: center; display: flex; gap: .57em; justify-content: space-between; }
     input[type=text] {
-        background: transparent;
-        border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
-        border-radius: .34em;
         field-sizing: content;
         min-inline-size: 16em;
         max-inline-size: clamp(16em, 50vw, 32em);
-        padding: .17em .34em;
         flex-grow: 1;
     }
     ul {
-        border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
+        border: 1px solid var(--line);
         border-radius: .34em;
         cursor: default;
         list-style: none;

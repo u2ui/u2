@@ -58,9 +58,10 @@ export class Chrome {
    so hiding says so outright, once, for everything drawn in here. */
 [hidden] { display: none !important; }
 .panel {
+    --line: color-mix(in srgb, CanvasText 24%, transparent);
     backdrop-filter: blur(.57em);
     background: color-mix(in srgb, Canvas 92%, transparent);
-    border: 1px solid color-mix(in srgb, CanvasText 24%, transparent);
+    border: 1px solid var(--line);
     border-radius: .51em;
     box-shadow: 0 .34em 1.14em #0006;
     color: CanvasText;
@@ -71,9 +72,15 @@ export class Chrome {
     position: fixed;
     z-index: 2147483647;
 
-    button, input, select { color: inherit; font: inherit; }
+    button, input, select, textarea { border-radius: .34em; color: inherit; font: inherit; }
     button, select { background: transparent; border: 0; }
+    input, textarea { background: transparent; border: 1px solid var(--line); padding: .17em .34em; }
+    button:hover:not(:disabled, menu :last-child) { background: color-mix(in srgb, Highlight 16%, transparent); }
+    :focus-visible { outline: 2px solid Highlight; outline-offset: -1px; }
     :disabled { opacity: .4; }
+    /* A dialog's buttons are labelled, not icons; the last action is what it is for. */
+    &:is(dialog) button { border: 1px solid var(--line); padding: .34em .86em; }
+    menu button:last-child { background: Highlight; border-color: Highlight; color: HighlightText; }
 }`;
         this.#root.append(style);
         this.#home = isDocument ? document.body || document.documentElement : root;

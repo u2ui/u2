@@ -37,7 +37,7 @@ export function place(element, surface, {align = 'center', prefer = 'above', gap
 // two always stack the same way round.
 function clear(element, box, gap) {
     let top = box.top;
-    for (const panel of element.getRootNode().querySelectorAll?.('.panel') ?? []) {
+    for (const panel of element.getRootNode().querySelectorAll?.('.panel:not(dialog)') ?? []) {
         if (panel === element || panel.hidden) continue;
         const other = panel.getBoundingClientRect();
         const misses = other.bottom <= top || other.top >= top + box.height
