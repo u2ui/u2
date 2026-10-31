@@ -20,6 +20,8 @@ const STYLE = `
         margin: 0;
         padding: .57em;
     }
+    /* Until there is an answer to apply, asking is what the dialog is for. */
+    &:has([value=apply]:disabled) .prompt button { background: Highlight; border-color: Highlight; color: HighlightText }
     & .prompt {
         border: 0;
         display: flex;

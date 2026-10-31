@@ -81,6 +81,7 @@ export class Chrome {
     /* A dialog's buttons are labelled, not icons; the last action is what it is for. */
     &:is(dialog) button { border: 1px solid var(--line); padding: .34em .86em; }
     menu button:last-child { background: Highlight; border-color: Highlight; color: HighlightText; }
+    &::backdrop { background: #0003; }
 }`;
         this.#root.append(style);
         this.#home = isDocument ? document.body || document.documentElement : root;
@@ -95,6 +96,15 @@ export class Chrome {
             document.addEventListener(type, this.#topLayerChange, listen);
             if (!isDocument) root.addEventListener(type, this.#topLayerChange, listen);
         }
+        // Ctrl+Enter in a dialog takes its last action, before a field turns the Enter into a line.
+        this.#root.addEventListener('keydown', event => {
+            if (event.key !== 'Enter' || !(event.ctrlKey || event.metaKey)) return;
+            const action = event.target.closest?.('dialog')?.querySelector('menu :last-child');
+            if (!action || action.disabled) return;
+            event.preventDefault();
+            event.stopPropagation(); // the field itself would act on the Enter too
+            action.click();
+        }, listen);
         // Dialogs expose their open state synchronously as an attribute, but
         // current engines do not all dispatch their newer toggle event yet.
         this.#observer = new document.defaultView.MutationObserver(this.#topLayerChange);
