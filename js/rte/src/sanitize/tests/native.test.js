@@ -21,6 +21,7 @@ test('native sanitizer: narrows elements and filters the detached result', () =>
     const link = document.createElement('a');
     link.setAttribute('class', 'kept');
     link.setAttribute('href', 'javascript:alert(1)');
+    link.append(document.createElement('em'), 'text');
     fragment.append(link);
     let call;
     const fakeDocument = {
@@ -39,13 +40,12 @@ test('native sanitizer: narrows elements and filters the detached result', () =>
     same(result, fragment);
     equal(call.html, '<p>input</p>');
     equal(call.options.sanitizer, {
-        elements: ['p', 'a'],
+        removeElements: policy.removeElements,
         attributes: ['class', 'href'],
         comments: false,
         dataAttributes: false,
-        replaceWithChildrenElements: ['em'],
     });
-    equal(link.outerHTML, '<a class="kept"></a>');
+    equal(link.outerHTML, '<a class="kept">text</a>');
 });
 
 test('native sanitizer: an unavailable safe sink fails explicitly', () => {
@@ -54,6 +54,13 @@ test('native sanitizer: an unavailable safe sink fails explicitly', () => {
         DOMException,
     );
     equal(error.name, 'NotSupportedError');
+});
+
+test('native sanitizer: an element outside the policy keeps its content', () => {
+    if (!NativeSanitizer.supported(document)) return;
+    const policy = new SanitizePolicy({elements: ['p']});
+    const fragment = new NativeSanitizer(policy).sanitize('<p>a <small>b</small> <x-y>c</x-y><style>d</style></p>');
+    equal(fragment.firstElementChild.outerHTML, '<p>a b c</p>');
 });
 
 test('native sanitizer: the browser safe sink rejects active content when available', () => {

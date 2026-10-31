@@ -20,26 +20,17 @@ export class NativeSanitizer {
         if (typeof template?.setHTML !== 'function') {
             throw new DOMException('Element.setHTML() is not available', 'NotSupportedError');
         }
-        template.setHTML(html, {sanitizer: config(this.policy, options.elements)});
+        template.setHTML(html, {sanitizer: {
+            removeElements: this.policy.removeElements,
+            attributes: this.policy.attributeNames,
+            comments: this.policy.comments,
+            dataAttributes: this.policy.dataAttributes,
+        }});
+        // An element allowlist would make the sink drop the rest with their text; narrow() unwraps it.
+        this.policy.narrow(template.content, {elements: options.elements ?? null});
         return this.policy.clean(template.content, {
             base: options.base ?? document.baseURI,
             classes: options.classes ?? null,
         });
     }
-}
-
-function config(policy, elements) {
-    const selected = elements == null ? null : new Set(elements.map(name => name.toLowerCase()));
-    const allowed = selected ? policy.elements.filter(name => selected.has(name)) : policy.elements;
-    const replaced = selected ? policy.elements.filter(name => !selected.has(name)) : [];
-    const result = {
-        elements: allowed,
-        attributes: policy.attributeNames,
-        comments: policy.comments,
-        dataAttributes: policy.dataAttributes,
-    };
-    if (replaced.length) result.replaceWithChildrenElements = replaced;
-    // No `removeElements` beside an `elements` allowlist: the api rejects a config carrying both, and
-    // an allowlist already excludes them — what they must not leave behind is `narrow()`'s job.
-    return result;
 }
