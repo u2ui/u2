@@ -127,6 +127,7 @@ function show(state, surface) {
     parts.apply.disabled = true;
     parts.prompt.value = '';
     state.pending = {view, surface, html, run: 0};
+    dialog.returnValue = ''; // Firefox keeps the last one, and Escape would take it again
     dialog.showModal();
     parts.prompt.focus();
     return view;

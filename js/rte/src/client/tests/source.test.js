@@ -42,6 +42,28 @@ test('source client module: applying writes the edited text back', () => withSou
     }
 ));
 
+test('source client module: Escape after an earlier apply changes nothing', () => withSource(
+    async ({client, surface}) => {
+        const open = () => {
+            getSelection().collapse(surface.element.querySelector('p, h2').firstChild, 1);
+            surface.core.sync();
+            client.toolbar.element.querySelector('[data-command=source]').click();
+            return client.chrome.root.getElementById('source');
+        };
+        let dialog = open();
+        dialog.querySelector('textarea').value = '<h2>applied</h2>';
+        let done = closes(dialog);
+        dialog.close('apply');
+        await done;
+        dialog = open();
+        dialog.querySelector('textarea').value = '<h2>dismissed</h2>';
+        done = closes(dialog);
+        dialog.close(); // what Escape does: no value of its own
+        await done;
+        equal(surface.element.innerHTML, '<h2>applied</h2>');
+    }
+));
+
 test('source client module: an edit through the dialog is one undo step', () => withSource(
     async ({client, surface, document: owner}) => {
         getSelection().collapse(surface.element.querySelector('p').firstChild, 1);

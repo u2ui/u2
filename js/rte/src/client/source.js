@@ -122,6 +122,7 @@ function show(state, surface) {
     // to a focused field.
     if (input === code) code.value = html;
     state.pending = {view, surface, code, area};
+    dialog.returnValue = ''; // Firefox keeps the last one, and Escape would take it again
     dialog.showModal();
     input.focus();
     input.setSelectionRange(start ?? 0, end ?? start ?? 0);
