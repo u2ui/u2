@@ -26,6 +26,25 @@ test('source client module: opens a modal dialog on the current content', () => 
     }
 ));
 
+test('source client module: cancelling returns to the caret it opened on, wherever focus put it since', () => withSource(
+    async ({client, surface}) => {
+        const text = surface.element.querySelector('p').firstChild;
+        getSelection().collapse(text, 2);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-command=source]').click();
+        const dialog = client.chrome.root.getElementById('source');
+        // What Firefox does when focus returns to the editor: the caret goes to its start, and the
+        // surface records that before the dialog's close event arrives.
+        getSelection().collapse(surface.element.lastElementChild.firstChild, 0);
+        surface.core.sync();
+        const done = closes(dialog);
+        dialog.close('cancel');
+        await done;
+        same(getSelection().focusNode, text);
+        equal(getSelection().focusOffset, 2);
+    }
+));
+
 test('source client module: applying writes the edited text back', () => withSource(
     async ({client, surface, document: owner}) => {
         getSelection().collapse(surface.element.querySelector('p').firstChild, 1);

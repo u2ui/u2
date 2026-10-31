@@ -121,7 +121,7 @@ function show(state, surface) {
     // The value has to be set before focus; an upgraded element defers a write
     // to a focused field.
     if (input === code) code.value = html;
-    state.pending = {view, surface, code, area};
+    state.pending = {view, surface, code, area, selection: surface.selection};
     dialog.returnValue = ''; // Firefox keeps the last one, and Escape would take it again
     dialog.showModal();
     input.focus();
@@ -177,7 +177,7 @@ function apply(state, result) {
     if (result !== 'apply') {
         // Closing without applying leaves the surface exactly as it was,
         // including the caret the view was opened on.
-        pending.surface.restore();
+        pending.selection?.restore(); // not where returning focus put it
         return;
     }
     const {code, area} = pending;

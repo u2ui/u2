@@ -126,7 +126,7 @@ function show(state, surface) {
     if (parts.diff) parts.diff.innerHTML = '';
     parts.apply.disabled = true;
     parts.prompt.value = '';
-    state.pending = {view, surface, html, run: 0};
+    state.pending = {view, surface, html, run: 0, selection: surface.selection};
     dialog.returnValue = ''; // Firefox keeps the last one, and Escape would take it again
     dialog.showModal();
     parts.prompt.focus();
@@ -232,7 +232,7 @@ function finish(state, result) {
     // Focus returns before writing, so the surface owns the selection the transaction captures.
     pending.surface.element.focus();
     if (result !== 'apply') {
-        pending.surface.restore();
+        pending.selection?.restore(); // not where returning focus put it
         return;
     }
     pending.view.write(state.parts.answer.innerHTML);
