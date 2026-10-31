@@ -45,6 +45,26 @@ test('ai client module: asks with the surface content and applies the answer', (
     }
 ));
 
+test('ai client module: an answer is sanitized before it is shown', () => withAi(
+    async ({client, surface, answer}) => {
+        getSelection().collapse(surface.element.querySelector('p').firstChild, 1);
+        surface.core.sync();
+        client.toolbar.element.querySelector('[data-command=ai]').click();
+        const dialog = client.chrome.root.getElementById('ai');
+        answer.value = '<p onclick="alert(1)">safe</p><img src="x" onerror="alert(2)"><script>alert(3)<\/script>';
+        dialog.querySelector('[name=prompt]').value = 'go';
+        dialog.querySelector('button[type=button]').click();
+        await answer.done;
+        const shown = dialog.querySelectorAll('.pane div')[1];
+        equal(shown.querySelector('script'), null);
+        equal(shown.querySelector('[onclick], [onerror]'), null);
+        truthy(shown.textContent.includes('safe'));
+        const closed = closes(dialog);
+        dialog.close('cancel');
+        await closed;
+    }
+));
+
 test('ai client module: cancelling leaves the surface untouched', () => withAi(
     async ({client, surface, answer}) => {
         const text = surface.element.querySelector('p').firstChild;

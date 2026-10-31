@@ -150,7 +150,8 @@ async function ask(state) {
         // an answer may use, and what else it says about itself is the application's to read.
         const answer = await state.request({prompt, html: pending.html, surface: pending.surface});
         if (state.pending !== pending || pending.run !== run) return;
-        parts.answer.innerHTML = String(answer ?? '');
+        // The answer is foreign markup: it passes the sanitizer before it is shown, not only when applied.
+        parts.answer.replaceChildren(pending.view.sanitizer.sanitize(String(answer ?? ''), {document: state.document}));
         parts.apply.disabled = false;
         await update(state, pending, run);
     } catch (error) {
