@@ -125,10 +125,10 @@ function show(state, surface) {
     dialog.showModal();
     input.focus();
     input.setSelectionRange(start ?? 0, end ?? start ?? 0);
-    // A long document opens scrolled to the selection instead of at the top.
-    const lines = html.slice(0, start ?? 0).split('\n').length - 1;
-    const height = parseFloat(state.document.defaultView.getComputedStyle(area).lineHeight);
-    if (lines && height) (input === code ? code : area).scrollTop = lines * height;
+    // A long document opens with the selection centred instead of at the top. Lines do not wrap, so
+    // the share of lines is the share of height — no line height to measure on a hidden field.
+    const lines = html.slice(0, start ?? 0).split('\n').length / html.split('\n').length;
+    input.scrollTop = input.scrollHeight * lines - input.clientHeight / 2;
     return view;
 }
 
