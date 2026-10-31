@@ -91,6 +91,40 @@ test('source: writing replaces the content and reports its nodes', () => withSou
     }
 ));
 
+test('source: writing places the selection at the offsets it is given', () => withSource(
+    '<div contenteditable><p>one</p></div>', ({source, host}) => {
+        const html = '<h2>title</h2>\n<p>a &amp; <a href="x">bc</a></p>';
+        source.write(html, html.indexOf('title') + 2, html.indexOf('bc') + 1);
+        equal(host.innerHTML, '<h2>title</h2><p>a &amp; <a href="x">bc</a></p>', 'The marks leave nothing behind');
+        same(getSelection().anchorNode, host.firstChild.firstChild);
+        equal(getSelection().anchorOffset, 2);
+        same(getSelection().focusNode, host.querySelector('a').firstChild);
+        equal(getSelection().focusOffset, 1);
+        equal(source.read(), {html, start: html.indexOf('title') + 2, end: html.indexOf('bc') + 1}, 'A round trip');
+    }
+));
+
+test('source: a selection in a tag, an entity or between blocks moves into the content after it', () => withSource(
+    '<div contenteditable><p>one</p></div>', ({source, host}) => {
+        const html = '<p>a &amp; b</p>\n<p><a href="x">c</a></p>';
+        source.write(html, html.indexOf('amp'));
+        equal(source.read().start, html.indexOf(' b'));
+        source.write(html, html.indexOf('href'));
+        equal(source.read().start, html.indexOf('c<'));
+        source.write(html, html.indexOf('\n') + 1);
+        equal(source.read().start, html.indexOf('c<'));
+        equal(host.textContent, 'a & bc');
+    }
+));
+
+test('source: content carrying the mark character keeps it', () => withSource(
+    '<div contenteditable><p>one</p></div>', ({source, host}) => {
+        source.write('<p>a\uE000b</p>', 4);
+        equal(host.innerHTML, '<p>a\uE000b</p>');
+        same(getSelection().focusNode, host);
+    }
+));
+
 test('source: retained top-layer UI is neither serialized nor replaced', () => withSource(
     '<div contenteditable><p>one</p></div>', ({core, source, host}) => {
         const ui = document.createElement('div');

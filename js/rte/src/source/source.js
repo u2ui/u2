@@ -5,6 +5,8 @@ import {policyFor} from '../sanitize/policy.js';
 import {SelectionSnapshot} from '../selection/snapshot.js';
 import {replaceContent} from '../surface/content.js';
 
+const MARK = '\uE000'; // private use: no text means it
+
 const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
 
 // Reads and writes one surface's content as HTML text.
@@ -59,9 +61,24 @@ export class Source {
         return {html, start: clamp(start), end: clamp(end)};
     }
 
-    // Replaces the whole content and returns the inserted nodes.
-    write(html) {
+    // Replaces the whole content and returns the inserted nodes. `start` and `end` point into `html`
+    // as read() reports them, and the selection lands there.
+    write(html, start = null, end = start) {
         if (typeof html !== 'string') throw new TypeError('Source must be written as a string');
+        // The selection rides through parsing as marks. One that would split a tag or an entity moves
+        // past it; one between tags would be a break of its own, pruned, so it moves into what follows.
+        const past = offset => {
+            const before = html.slice(0, offset), after = html.slice(offset);
+            const skip = /<[^>]*$/.test(before) ? after.match(/^[^>]*>?/)[0]
+                : /&[#\w]*$/.test(before) ? after.match(/^[#\w]*;?/)[0]
+                : /(^|>)\s*$/.test(before) ? after.match(/^(\s*<[^>]*>)*/)[0] : '';
+            return skip ? past(offset + skip.length) : offset;
+        };
+        const marked = start !== null && !html.includes(MARK); // content of its own carrying one keeps it
+        if (marked) {
+            const from = past(start), to = Math.max(from, past(end));
+            html = html.slice(0, from) + MARK + html.slice(from, to) + MARK + html.slice(to);
+        }
         const root = this.#surface.element;
         const settings = this.#surface.config;
         const fragment = this.#sanitizer.sanitize(html, {
@@ -69,6 +86,11 @@ export class Source {
             elements: settings.elements ?? undefined,
             classes: settings.classes.length ? settings.classes : null,
         });
+        const marks = [];
+        const walker = root.ownerDocument.createTreeWalker(fragment, NodeFilter.SHOW_TEXT);
+        for (let node; marked && (node = walker.nextNode());) {
+            for (let at; (at = node.data.indexOf(MARK)) >= 0; node.deleteData(at, 1)) marks.push([node, at]);
+        }
         // The breaks between blocks are what reading added for legibility; they
         // are not content and must not return as text nodes.
         prune(fragment, this.#model());
@@ -77,8 +99,10 @@ export class Source {
             replaceContent(this.#surface, fragment);
             transaction.touch(root);
             const range = root.ownerDocument.createRange();
-            range.setStart(root, 0);
-            range.collapse(true);
+            // A mark in a pruned break is gone with it; the start of the content stands in.
+            const [from = [root, 0], to = from] = marks.filter(([node]) => root.contains(node));
+            range.setStart(...from);
+            range.setEnd(...to);
             new SelectionSnapshot(root, range).restore(this.#surface.core.selection);
         }, {trigger: 'command', command: 'source'});
         return nodes;

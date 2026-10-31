@@ -179,5 +179,7 @@ function apply(state, result) {
         pending.surface.restore();
         return;
     }
-    pending.view.write(upgraded(pending.code) ? pending.code.value : pending.area.value);
+    const {code, area} = pending;
+    const field = upgraded(code) ? code.textarea : area; // the caret lives in the field, not the element
+    pending.view.write(upgraded(code) ? code.value : area.value, field?.selectionStart ?? null, field?.selectionEnd);
 }
