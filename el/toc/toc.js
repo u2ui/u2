@@ -73,7 +73,10 @@ export default class U2Toc extends HTMLElement {
             }
 
             currentLi = document.createElement('li');
-            currentLi.innerHTML = `<a href="#${heading.id}">${heading.textContent}</a>`;
+            const link = document.createElement('a');
+            link.href = '#' + heading.id;
+            link.textContent = heading.textContent;
+            currentLi.append(link);
             currentUl.append(currentLi);
 
             lastLevel = level;
