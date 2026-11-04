@@ -11,8 +11,8 @@ export async function applyItemjs(treeElement, item, { render = null } = {}) {
     });
 }
 
-function createTreeItem(item, render) {
-    const treeItem = document.createElement('u2-tree');
+function createTreeItem(parent, item, render) {
+    const treeItem = document.createElement('u2-tree', { customElementRegistry: parent.customElementRegistry });
     treeItem.dataset.key = item.key || '';
     treeItem.textContent = item.key || '';
     render?.(treeItem, item);
@@ -29,7 +29,7 @@ function syncTreeItem(treeElement, item, render) {
 
     // add new & sync all
     subItems.forEach(subItem => {
-        const child = treeElement.querySelector(`:scope > u2-tree[data-key="${subItem.key}"]`) ?? treeElement.appendChild(createTreeItem(subItem, render));
+        const child = treeElement.querySelector(`:scope > u2-tree[data-key="${subItem.key}"]`) ?? treeElement.appendChild(createTreeItem(treeElement, subItem, render));
         syncTreeItem(child, subItem, render);
     });
 }
