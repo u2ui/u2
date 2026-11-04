@@ -2,7 +2,7 @@
 
 **Ziel:** Ein CMS-Panel (oder jedes andere eingebettete UI) läuft mit *seiner* u2-Version in
 *seinem* Shadow-Root, unabhängig davon, welche u2-Version die Kundenseite lädt. Grundlage sind
-Scoped Custom Element Registries — Chrome/Edge 146+, Safari 26+, Firefox noch nicht.
+Scoped Custom Element Registries — Chrome/Edge 146+, Safari 26+ und Firefox.
 
 ---
 
@@ -159,8 +159,9 @@ Beides selten, beides dokumentierbar.
 **Weg B macht Weg A überflüssig** — bis auf den Parse-Gewinn, der ein eigener, unabhängiger
 Optimierungsschritt bleibt.
 
-### 4. Firefox
+### 4. Ältere Browser
 
 Ohne Scoped Registries fällt `enhance` auf `customElements` zurück und alles verhält sich wie
-bisher — kein Fehler, aber auch keine Isolation. Fürs CMS-Panel bewusst als Voraussetzung gesetzt.
-Wenn Firefox nachzieht, ist nichts zu tun.
+bisher — kein Fehler, aber auch keine Isolation. Der Fallback bleibt, weil `auto.js` über `enhance`
+auch auf öffentlichen Seiten läuft. Fürs CMS-Panel sind Scoped Registries Voraussetzung, der
+`browserCheck` von `cms.frontend` prüft das.
