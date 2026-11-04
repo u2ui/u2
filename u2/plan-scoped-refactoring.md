@@ -6,7 +6,7 @@ Scoped Custom Element Registries — Chrome/Edge 146+, Safari 26+ und Firefox.
 
 ---
 
-## Stand (1.5.3)
+## Stand
 
 **Funktioniert.** Das Panel kann u2-Elemente benutzen, ohne dass auf der Kundenseite etwas kaputt
 geht — auch wenn beide eine andere u2-Version fahren.
@@ -49,10 +49,6 @@ Ausreisser gehören an die Aufrufstelle, nicht als Feld an alle 41 Elemente:
 `useAttr('skin', {css:true, js:false})`. `skin` bleibt dauerhaft ein Attribut, weil es einen Wert
 trägt — als Klasse ginge das erst mit einem Selektor wie `.u2-class-*`.
 
-`v1.5.3` ist veröffentlicht; qino zeigt darauf — beide Pins,
-[`qino/deno.json`](../../qinojs/qino/deno.json) und `core/lib/util.ts`, ein Test wacht über den
-Gleichlauf. `deno check --all qino/` ist grün.
-
 ---
 
 ## Offen
@@ -84,7 +80,7 @@ Listener-Sätze am Dokument → doppelte Confirm-Dialoge, doppelte Drops. Der re
 Gegenstück zu `customElements.get()` — ein Symbol am `document`, die zweite Kopie installiert nicht.
 Erledigt (b) vollständig; aus „zwei kaputte Kopien" wird „eine funktionierende". (c) bleibt.
 
-**Richtige Lösung (1.6.0):** Attribute exportieren `install(root)` statt sich selbst zu installieren,
+**Richtige Lösung:** Attribute exportieren `install(root)` statt sich selbst zu installieren,
 `useAttr` installiert in den Root. **Der Haken:** fünf von ihnen — `confirm`, `dropzone`,
 `draghandle`, `movable`, `selectable` — benutzen `composedPath()` *absichtlich*, um über
 Shadow-Grenzen hinweg zu arbeiten. Für die ist „der Root" nicht die richtige Grenze. Das geht Modul
@@ -123,7 +119,7 @@ customElements.define('u2-buttongroup', U2Buttongroup);
 </script>
 ```
 
-Das ist der geplante 1.6.0-Break: 41 Dateien, plus READMEs und SKILL.md neu generieren.
+Das ist ein Breaking Change: 41 Dateien, plus READMEs und SKILL.md neu generieren.
 
 ### 3. CSS-Reihenfolge — zwei Wege, der zweite ist besser
 
