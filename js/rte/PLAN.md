@@ -39,8 +39,8 @@ every host property can be tried without editing the page.
 How many tests that is, the runner says itself; the number is not repeated here,
 because a number in prose is stale the moment the next test is written. A result
 is cross-browser evidence only after that exact revision has run in current
-Chromium, Firefox, and WebKit. The last such confirmation was Chrome 152 and
-Firefox 154; WebKit verification of that revision is pending.
+Chromium, Firefox, and WebKit. The last such confirmation was Chrome 157 and
+Firefox 159; WebKit verification of that revision is pending.
 
 Remove-format now runs a ladder that does not stop at the application's own
 presentation: six presentation rungs in `Unstyle` (styles, presentational
@@ -241,7 +241,7 @@ implemented. `ExternalInput` consumes rich paste/drop `dataTransfer` and the
 native target range, applies the selected sanitizer and optional Unstyle
 policy, and invokes mapped fragment insertion while failures stay fail-closed.
 Without an explicitly selected sanitizer, native paste/drop remains
-browser-owned; the pipeline removes classes and styles only from observed added
+browser-owned; the pipeline removes classes and styles only from added
 roots before structural normalization while preserving elements that predate
 the input.
 Collapsed backward and forward deletion at a

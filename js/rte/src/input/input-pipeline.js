@@ -138,7 +138,8 @@ export class InputPipeline {
             const unstyled = [];
             if (this.#unstyle && settings.importUnstyle !== 'none' && imported?.roots.length) {
                 const map = new PointMap(points);
-                for (const root of imported.roots) {
+                // Read again: narrowing replaced and dissolved roots it was given.
+                for (const root of importRoots(this.#root, imported.preserve)) {
                     unstyled.push(...this.#unstyle.clean(root, {
                         through: settings.importUnstyle,
                         map,
@@ -164,7 +165,7 @@ export class InputPipeline {
     dispose() {
         if (!this.#connected) return;
         this.#controller.abort();
-        this.#clearPending();
+        this.#pending = null;
         this.#source = null;
         this.#deferred = null;
         this.#composing = false;
@@ -180,17 +181,17 @@ export class InputPipeline {
         this.#surface.capture();
         if (event.defaultPrevented) return;
         if (this.#route(event)) return;
-        this.#clearPending();
+        this.#pending = null;
         const pending = {
             inputType: event.inputType || '',
             range: inputRange(event, this.#surface),
             trigger: this.#source || inputTrigger(event.inputType),
         };
-        this.#observe(pending);
+        this.#track(pending);
         this.#pending = pending;
         this.#source = null;
-        queueMicrotask(() => {
-            if (this.#pending === pending) this.#clearPending();
+        this.#afterTask(() => {
+            if (this.#pending === pending) this.#pending = null;
         });
     };
 
@@ -236,7 +237,7 @@ export class InputPipeline {
             trigger: pending?.trigger || this.#source || inputTrigger(inputType),
             imported: takeImports(pending, this.#root),
         };
-        this.#clearPending();
+        this.#pending = null;
         this.#source = null;
         if (this.#composing || event.isComposing) {
             this.#deferred = job;
@@ -319,7 +320,7 @@ export class InputPipeline {
             || event.isComposing || isPlainTextHost(this.#root)) return false;
         if (!this.#commands.enabled(name, detail)) return false;
         event.preventDefault();
-        this.#clearPending();
+        this.#pending = null;
         this.#source = null;
         this.#commands.run(name, detail);
         return true;
@@ -327,31 +328,26 @@ export class InputPipeline {
 
     #rememberSource(trigger) {
         this.#source = trigger;
-        queueMicrotask(() => {
+        this.#afterTask(() => {
             if (this.#source === trigger) this.#source = null;
         });
+    }
+
+    // A native input follows its `beforeinput`, and that one the paste or drop
+    // it came from, within one task — but not within one microtask: the browser
+    // runs a checkpoint after every listener, before it changes the document.
+    // What is remembered for that input therefore lasts until the task ends.
+    #afterTask(run) {
+        this.#root.ownerDocument.defaultView.setTimeout(run);
     }
 
     // What arrived is tracked for every cleaned paste or drop, not only when
     // presentation cleanup is configured: structural repair needs to know where
     // the content landed just as much.
-    #observe(pending) {
+    #track(pending) {
         const settings = this.#surface.config;
         if (!['paste', 'drop'].includes(pending.trigger) || !settings.cleanOn.includes(pending.trigger)) return;
-        const records = [];
-        const Observer = this.#root.ownerDocument.defaultView.MutationObserver;
-        const observer = new Observer(next => records.push(...next));
-        observer.observe(this.#root, {childList: true, subtree: true});
-        pending.import = {
-            observer,
-            records,
-            preserve: new Set(this.#root.querySelectorAll('*')),
-        };
-    }
-
-    #clearPending() {
-        this.#pending?.import?.observer.disconnect();
-        this.#pending = null;
+        pending.preserve = new Set(this.#root.querySelectorAll('*'));
     }
 
     #owns(event) {
@@ -441,21 +437,22 @@ function rangePoints(range) {
 }
 
 function takeImports(pending, root) {
-    if (!pending?.import) return null;
-    const {observer, records, preserve} = pending.import;
-    records.push(...observer.takeRecords());
-    const roots = importRoots(records.flatMap(record => [...record.addedNodes]), root, preserve);
-    return roots.length ? {roots, preserve} : null;
+    if (!pending?.preserve) return null;
+    const roots = importRoots(root, pending.preserve);
+    return roots.length ? {roots, preserve: pending.preserve} : null;
 }
 
-function importRoots(nodes, root, preserve) {
-    const elements = new Set();
-    for (const node of nodes) {
-        if (node.nodeType !== Node.ELEMENT_NODE || !root.contains(node)) continue;
-        if (!preserve.has(node)) elements.add(node);
-        for (const child of node.querySelectorAll('*')) if (!preserve.has(child)) elements.add(child);
-    }
-    const added = [...elements];
-    return added.filter(node => !added.some(parent => parent !== node && parent.contains(node)));
+// What an input brought is every element that was not there before it, reduced
+// to the topmost ones. Read from the document rather than recorded while it
+// arrived, so it is still true once a cleanup stage replaced or dissolved a root.
+function importRoots(root, preserve) {
+    const added = new Set([...root.querySelectorAll('*')].filter(element => !preserve.has(element)));
+    const nested = element => {
+        for (let parent = element.parentNode; parent !== root; parent = parent.parentNode) {
+            if (added.has(parent)) return true;
+        }
+        return false;
+    };
+    return [...added].filter(element => !nested(element));
 }
 

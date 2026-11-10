@@ -25,7 +25,7 @@ Current properties:
 | `--u2-rte-cleanup` | `none`, `minimal`, `structural`, `canonical` | `structural` |
 | `--u2-rte-clean-on` | space- or comma-separated triggers | `input paste drop command` |
 | `--u2-rte-elements` | tag list, `@basic`, `@article`, `@document`, `all` | `all` |
-| `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `styles` |
+| `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `classes` |
 | `--u2-rte-ui` | `none`, `roaming`, `static` | `roaming` |
 | `--u2-rte-toolbar` | control names separated by spaces or commas | every represented control |
 | `--u2-rte-toolbar-when` | `always`, `selection` | `always` |
@@ -66,8 +66,9 @@ The list controls elements only; it is deliberately not an attribute or URL
 sanitizer.
 
 `--u2-rte-import-unstyle` controls presentation cleanup for native paste and
-drop. The default removes classes and inline styles only from elements added by
-that input; `none` keeps native presentation. A custom `Unstyle` policy may
+drop. The default, `classes`, removes inline styles, presentational attributes
+and undeclared classes, only from elements added by that input; `none` keeps
+native presentation. A custom `Unstyle` policy may
 provide other level names.
 
 `--u2-rte-classes` lists the class names the host treats as content. It is one

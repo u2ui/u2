@@ -199,16 +199,58 @@ test('input pipeline: native import cleanup may be disabled per surface', () => 
     }
 ));
 
-test('input pipeline: paste and drop sources classify only their immediate native input', () => withPipeline(
+test('input pipeline: paste and drop sources classify only the native input of their own task', () => withPipeline(
     '<div contenteditable style="--u2-rte-clean-on: paste"><div>text</div></div>',
     async ({document, host}) => {
         host.dispatchEvent(new document.defaultView.Event('paste', {bubbles: true}));
-        await Promise.resolve();
+        await task();
         host.dispatchEvent(input(document, ''));
         equal(host.innerHTML, '<div>text</div>');
         host.dispatchEvent(new document.defaultView.Event('paste', {bubbles: true}));
+        await Promise.resolve();
         host.dispatchEvent(input(document, ''));
         equal(host.innerHTML, '<p>text</p>');
+    }
+));
+
+// The browser runs a microtask checkpoint after every listener, so one lies
+// between `beforeinput` and the insertion it announces. What the pipeline
+// remembers for that input has to outlive it.
+test('input pipeline: a native paste is cleaned across the microtask checkpoint before it lands', () => withPipeline(
+    '<div contenteditable><p>start</p></div>', async ({document, host}) => {
+        host.dispatchEvent(input(document, 'insertFromPaste', 'beforeinput'));
+        await Promise.resolve();
+        host.firstElementChild.insertAdjacentHTML('afterend',
+            '<p class=MsoNormal style="margin-bottom:8pt"><span style="font-family:Calibri">pasted</span></p>');
+        caret(document, host.lastElementChild, 1);
+        host.dispatchEvent(input(document, 'insertFromPaste'));
+        equal(host.innerHTML, '<p>start</p><p>pasted</p>');
+    }
+));
+
+test('input pipeline: a paste that never lands claims no later input', () => withPipeline(
+    '<div contenteditable><p>start</p></div>', async ({document, host}) => {
+        host.dispatchEvent(input(document, 'insertFromPaste', 'beforeinput'));
+        await task();
+        host.firstElementChild.insertAdjacentHTML('beforeend', '<span class=own style="color: red;">typed</span>');
+        caret(document, host.firstElementChild.lastChild, 1);
+        host.dispatchEvent(input(document, ''));
+        equal(host.innerHTML, '<p>start<span class="own" style="color: red;">typed</span></p>');
+    }
+));
+
+// Narrowing replaces an aliased element and dissolves one outside the list. When
+// that element is the root of what arrived, the cleanup after it must still
+// reach the replacement and the content the wrapper left behind.
+test('input pipeline: an import root that narrowing replaces or dissolves is still unstyled', () => withPipeline(
+    '<div contenteditable><p>start</p></div>', async ({document, host}) => {
+        const first = host.firstElementChild;
+        host.dispatchEvent(input(document, 'insertFromPaste', 'beforeinput'));
+        first.insertAdjacentHTML('beforeend', '<b class=office style="color:red"><span style="font-size:14pt">bold</span></b>');
+        first.insertAdjacentHTML('afterend', '<nav class=menu><p class=MsoNormal style="margin:0">Body</p></nav>');
+        caret(document, host.lastElementChild, 0);
+        host.dispatchEvent(input(document, 'insertFromPaste'));
+        equal(host.innerHTML, '<p>start<strong>bold</strong></p><p>Body</p>');
     }
 ));
 
@@ -460,6 +502,9 @@ function withPipeline(html, run, commands = null) {
         }
     });
 }
+
+// The end of the current task: what belongs to one native input is gone by then.
+const task = () => new Promise(resolve => setTimeout(resolve));
 
 function caret(document, node, offset) {
     const range = document.createRange();

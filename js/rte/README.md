@@ -260,7 +260,7 @@ Work is limited through dirty scopes:
 
 - typing normalizes the smallest affected inline or block neighborhood after
   the input transaction;
-- native paste/drop unstyles only observed added roots, then normalizes the
+- native paste/drop unstyles only the added roots, then normalizes the
   insertion neighborhood; explicitly parsed rich input sanitizes first;
 - commands normalize their touched nodes and necessary ancestors;
 - external DOM mutations queue only their affected subtrees;
@@ -284,10 +284,10 @@ passes its `inputType`, text data, and target range unchanged to the replacing
 command.
 
 The pipeline deliberately does not read or trust clipboard and drag payloads.
-For native paste/drop it observes newly added element roots, maps presentation
-cleanup through the current selection, and then performs normal structural
-cleanup. Classes and inline styles are removed by default; existing destination
-content is untouched.
+For native paste/drop it takes the elements that were not there before the
+input, maps presentation cleanup through the current selection, and then
+performs normal structural cleanup. Inline styles, presentational attributes and
+classes are removed by default; existing destination content is untouched.
 The optional `ExternalInput` boundary owns rich HTML first, uses a selected
 sanitizer and optional Unstyle policy, then invokes the mapped
 `insertFragment` command. Sanitizer failures keep native insertion prevented

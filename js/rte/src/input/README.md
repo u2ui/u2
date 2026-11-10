@@ -40,13 +40,19 @@ to `using`. Disconnecting the surface also disposes them automatically.
 - `insertFromPaste` and `insertFromDrop` are separate `paste` and `drop`
   triggers. Other input types use `input`; explicit editor commands use
   `command`.
-- Native paste/drop payloads remain browser-owned. Between their matching
-  `beforeinput` and `input`, the pipeline records only newly added element roots,
-  applies the configured `Unstyle` level to those roots with point mapping, and
-  then structurally normalizes the affected neighborhood. Elements present
-  before the input retain their presentation even when the browser moves them
-  below a newly inserted wrapper. The default level is `styles`; `none` disables
+- Native paste/drop payloads remain browser-owned. At `beforeinput` the
+  pipeline notes the elements that are there; at the matching `input`, every
+  element that was not is what arrived. It applies the configured `Unstyle`
+  level to the topmost of those with point mapping, and then structurally
+  normalizes the affected neighborhood. Elements present before the input
+  retain their presentation even when the browser moves them below a newly
+  inserted wrapper. The default level is `classes`; `none` disables
   presentation cleanup.
+- What is remembered for one native input — the pending `beforeinput` and the
+  `paste` or `drop` it came from — lasts until the end of that task. A microtask
+  would be too short: the browser runs a checkpoint after every listener, so one
+  lies between `beforeinput` and the insertion it announces. A `beforeinput`
+  whose input never arrives claims nothing later.
 - `--u2-rte-clean-on` decides which triggers run. Cleanup level and semantic
   default block are resolved from the surface CSS configuration for every run.
 - Scope starts at the affected block. If that block has an invalid relationship
@@ -146,6 +152,9 @@ A native paste or drop is cleaned in three stages, in this order:
    `em`, and `strike` to `s`, so a strict list costs no emphasis.
 2. **What it should look like**: `Unstyle` removes presentation up to
    `--u2-rte-import-unstyle`, sparing the host's declared content classes.
+   What arrived is read from the document again for this stage: the first one
+   replaced aliased roots and dissolved others, and their replacement and
+   content are imports all the same.
 3. **How it is built**: the normalizer repairs structure.
 
 The order matters. An id removed in the first stage is exactly what lets the
@@ -159,8 +168,8 @@ nodes that say where the import landed.
 The caret is not where pasted or dropped content is — it sits at the end of it.
 Deriving the cleanup scope from the caret therefore repaired only its last block
 and left the rest of a pasted document untouched, however broken. The pipeline
-already tracks the nodes that arrived, so the scope is the smallest element
-covering both them and the caret. That tracking is now set up for every cleaned
+already knows the nodes that arrived, so the scope is the smallest element
+covering both them and the caret. It knows them for every cleaned
 paste or drop rather than only when presentation cleanup is configured:
 structural repair needs to know where content landed just as much.
 
@@ -174,5 +183,8 @@ structural repair needs to know where content landed just as much.
 - Add contextual plain-text and quotation import without folding their line and
   block semantics into HTML sanitizing.
 - Verify trusted clipboard and drag interactions in all target engines in
-  addition to the deterministic event-contract suite.
+  addition to the deterministic event-contract suite. A trusted paste is what
+  showed that the pending input did not survive the checkpoint before the
+  insertion; the event-contract suite now waits a microtask there, but only a
+  real clipboard proves the order.
 - Group composition and consecutive typing transactions for history.

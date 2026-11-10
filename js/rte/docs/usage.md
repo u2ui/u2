@@ -405,7 +405,8 @@ split so surrounding content retains its formatting; a partially selected
 block is left alone.
 
 Native paste and drop reuse the same policy automatically. By default they
-remove classes and inline styles only from elements added by that input, then
+remove inline styles, presentational attributes and classes only from elements
+added by that input, then
 run structural normalization. Existing content around the insertion is not
 unstyled. Set `--u2-rte-import-unstyle:none` to retain native presentation.
 
@@ -526,7 +527,7 @@ what differs. `auto` means "use the semantic default for this tag".
 | `--u2-rte-toolbar-unavailable` | `disable`, `hide` | `disable` |
 | `--u2-rte-toolbar-when` | `always`, `selection` | `always` |
 | `--u2-rte-show-breaks` | truthy or false-like token | hidden |
-| `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `styles` |
+| `--u2-rte-import-unstyle` | `none` or an installed Unstyle level | `classes` |
 
 The host element decides the defaults: a `<ul contenteditable>` creates list
 items, while a directly editable `li`, `caption`, `th`, or `td` keeps its text

@@ -38,7 +38,7 @@ defaultUnstyle.clean(fragment, {through: 'styles'});
 // Insert the detached fragment through an editor transaction afterwards.
 ```
 
-`InputPipeline` uses the mapped live form only on element roots observed during
+`InputPipeline` uses the mapped live form only on element roots that arrived with
 one native paste/drop. `ExternalInput` uses the detached form after explicitly
 sanitizing rich data. Its `through` option may resolve a different named level
 per surface or input type.
