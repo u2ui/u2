@@ -62,7 +62,8 @@ export class Source {
     }
 
     // Replaces the whole content and returns the inserted nodes. `start` and `end` point into `html`
-    // as read() reports them, and the selection lands there.
+    // as read() reports them, and the selection lands there. Without them a selection in the surface
+    // moves to the start; a surface without one stays without, so writing never takes the focus.
     write(html, start = null, end = start) {
         if (typeof html !== 'string') throw new TypeError('Source must be written as a string');
         // The selection rides through parsing as marks. One that would split a tag or an entity moves
@@ -95,9 +96,13 @@ export class Source {
         // are not content and must not return as text nodes.
         prune(fragment, this.#model());
         const nodes = [...fragment.childNodes];
+        // Only a caret that was asked for, or one already in here, is placed: setting a selection
+        // focuses the surface, and filling an editor nobody is in must not take the focus.
+        const place = start !== null || SelectionSnapshot.capture(this.#surface.core.selection, root);
         this.#surface.transact(transaction => {
             replaceContent(this.#surface, fragment);
             transaction.touch(root);
+            if (!place) return;
             const range = root.ownerDocument.createRange();
             // A mark in a pruned break is gone with it; the start of the content stands in.
             const [from = [root, 0], to = from] = marks.filter(([node]) => root.contains(node));

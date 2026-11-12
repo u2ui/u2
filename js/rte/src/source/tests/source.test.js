@@ -83,11 +83,27 @@ test('source: no selection reports no offsets', () => withSource(
 
 test('source: writing replaces the content and reports its nodes', () => withSource(
     '<div contenteditable><p>one</p></div>', ({source, host}) => {
+        getSelection().collapse(host.firstChild.firstChild, 2);
         const nodes = source.write('<h2>title</h2>\n<p>body</p>');
         equal(host.innerHTML, '<h2>title</h2><p>body</p>', 'The added breaks do not come back as text');
         equal(nodes.map(node => node.localName), ['h2', 'p']);
-        equal(getSelection().focusNode, host);
+        equal(getSelection().focusNode, host, 'A caret that was in here moves to the start');
         equal(getSelection().focusOffset, 0);
+    }
+));
+
+test('source: writing a surface nobody is in places no caret and takes no focus', () => withSource(
+    '<div contenteditable><p>one</p></div>', ({source, host}) => {
+        const outside = document.body.appendChild(document.createElement('input'));
+        try {
+            outside.focus();
+            source.write('<p>filled</p>');
+            equal(host.innerHTML, '<p>filled</p>');
+            same(document.activeElement, outside);
+            equal(source.read().start, null, 'No selection in the surface');
+        } finally {
+            outside.remove();
+        }
     }
 ));
 
