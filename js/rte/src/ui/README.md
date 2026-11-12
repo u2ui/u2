@@ -247,6 +247,11 @@ keeps the element inside the viewport, and falls to the other side when the
 preferred one does not fit. The roaming toolbar centres above the selection; the
 link form aligns to its start and prefers below.
 
+`dock(element, {gap})` is the touch-screen alternative: there the platform's own
+selection menu (cut, copy, paste) covers the selection, so on `(pointer: coarse)`
+the roaming toolbar docks centred at the bottom of the visual viewport — above
+the virtual keyboard — and follows it as the keyboard opens, scrolls, or zooms.
+
 Two panels can answer for the same thing — an image that is also a link brings
 its frame, its name and its address — so a panel goes under whatever is already
 drawn where it wants to be, in the order the chrome holds them. `panelGap` is

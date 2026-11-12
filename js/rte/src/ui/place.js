@@ -31,6 +31,21 @@ export function place(element, surface, {align = 'center', prefer = 'above', gap
     return true;
 }
 
+// On a touch screen the platform draws its own menu over a selection — cut, copy,
+// paste — right where `place` would put a toolbar. A toolbar there docks instead:
+// centred at the bottom of the visual viewport, which is what the virtual keyboard
+// leaves of the screen.
+export function dock(element, {gap = panelGap} = {}) {
+    const view = element.ownerDocument.defaultView;
+    const port = view.visualViewport;
+    const width = port?.width ?? view.innerWidth;
+    const height = port?.height ?? view.innerHeight;
+    const box = element.getBoundingClientRect();
+    element.style.left = `${(port?.offsetLeft ?? 0) + Math.max(gap, (width - box.width) / 2)}px`;
+    element.style.top = `${(port?.offsetTop ?? 0) + height - box.height - gap}px`;
+    return true;
+}
+
 // Two panels can answer for the same thing — an image that is also a link — and
 // the second must not sit on the first. What is already drawn keeps its spot and
 // the newcomer goes under it, in the order the chrome holds them, so the same

@@ -1,6 +1,6 @@
 import {Rte} from '../../core/core.js';
 import {Chrome} from '../chrome.js';
-import {panelGap, place} from '../place.js';
+import {dock, panelGap, place} from '../place.js';
 import {equal, test, truthy, withFixture} from '../../../tests/harness.js';
 
 test('place: reports when a surface has no saved selection', () => withPlaced(({surface, panel}) => {
@@ -44,6 +44,14 @@ test('place: alignment chooses the anchor edge', () => withPlaced(({surface, pan
     truthy(parseFloat(panel.style.left) !== start || start === 8);
 }));
 
+// A docked toolbar does not depend on a selection: it sits at the bottom of the visual viewport.
+test('dock: centres at the bottom of the visual viewport', () => withPlaced(({panel}) => {
+    truthy(dock(panel));
+    const port = visualViewport;
+    const box = panel.getBoundingClientRect();
+    equal(Math.round(box.bottom), Math.round(port.offsetTop + port.height - panelGap));
+    truthy(Math.abs(box.left + box.width / 2 - (port.offsetLeft + port.width / 2)) <= 1);
+}));
 
 // Two panels can answer for the same thing — an image that is also a link — and
 // the second must not sit on the first.

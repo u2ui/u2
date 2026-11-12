@@ -11,7 +11,7 @@ import {structure} from './structure.js';
 import {isPlainTextHost} from '../selection/ownership/ownership.js';
 import {Chrome} from '../ui/chrome.js';
 import {SelectionHighlight} from '../ui/highlight.js';
-import {place} from '../ui/place.js';
+import {dock, place} from '../ui/place.js';
 import {Toolbar} from '../ui/toolbar.js';
 
 const STYLE = `
@@ -24,7 +24,7 @@ const STYLE = `
     max-inline-size: 24.5em;
     transition: left .14s, top .14s;
 
-    &[data-placing] { transition: none; }
+    &[data-placing], &[data-docked] { transition: none; }
     @media (prefers-reduced-motion: reduce) { & { transition: none; } }
     button, select { min-block-size: 2.29em; }
     button {
@@ -351,10 +351,20 @@ export class Editor {
         element.setAttribute('aria-label', 'Text formatting');
         this.#element = element;
         for (const module of this.#modules.values()) this.#append(module);
+        const view = this.#document.defaultView;
+        const touch = view.matchMedia('(pointer: coarse)');
         this.#toolbar = new Toolbar(this.#core, element, {
             commands: surface => this.commands(surface),
-            place,
+            place: (panel, surface) => {
+                panel.toggleAttribute('data-docked', touch.matches);
+                return touch.matches ? dock(panel) : place(panel, surface);
+            },
         });
+        // A docked toolbar follows the visual viewport: the keyboard opening, a scroll, a pinch.
+        const follow = () => !element.hidden && element.hasAttribute('data-docked') && dock(element);
+        for (const type of ['resize', 'scroll']) {
+            view.visualViewport?.addEventListener(type, follow, {signal: this.#controller.signal});
+        }
         return this.#toolbar;
     }
 
