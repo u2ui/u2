@@ -8,6 +8,7 @@ export const italic = new MarkType('italic');
 export const underline = new MarkType('underline');
 export const strike = new MarkType('strike');
 export const code = new MarkType('code');
+export const highlight = new MarkType('highlight');
 export const link = new MarkType('link');
 
 export const boldHtml = element(bold, 'strong, b', 'strong');
@@ -15,6 +16,7 @@ export const italicHtml = element(italic, 'em, i', 'em');
 export const underlineHtml = element(underline, 'u', 'u');
 export const strikeHtml = element(strike, 's, strike', 's');
 export const codeHtml = element(code, 'code', 'code');
+export const highlightHtml = element(highlight, 'mark', 'mark');
 export const linkHtml = new MarkAdapter(link, {
     selector: 'a[href]',
     tag: 'a',

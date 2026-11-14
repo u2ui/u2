@@ -291,7 +291,7 @@
     <section class="panel wide">
       <h2>One-import editor prototype</h2>
       <div class="prototype">
-      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code link bullets numbers outdent indent rule insertTable imageOriginal unstyle breaks source ai; --u2-rte-blocks:Absatz(p), Lead(p.Lead), Notiz(p[data-note]), Zitat(blockquote), Titel(h1), Untertitel(h2); --u2-rte-classes:lead, caption, brandColor, Red, Green, Left, Center, Right, Lead; --u2-rte-class-groups:color(Red Green), align(Left Center Right); --u2-rte-show-breaks:true">
+      <div id="editor-prototype" contenteditable style="--u2-rte:true; --u2-rte-toolbar:undo redo block style bold italic underline strike code highlight link bullets numbers outdent indent rule insertTable imageOriginal unstyle breaks source ai; --u2-rte-blocks:Absatz(p), Lead(p.Lead), Notiz(p[data-note]), Zitat(blockquote), Titel(h1), Untertitel(h2); --u2-rte-classes:lead, caption, brandColor, Red, Green, Left, Center, Right, Lead; --u2-rte-class-groups:color(Red Green), align(Left Center Right); --u2-rte-show-breaks:true">
         <p>Select text to format it, choose its block style, or press Enter inside this list:</p>
         <ul><li>List item</li><li>Put the caret here and press the indent control</li></ul>
         <p>Turn these paragraphs into a list, then lift them out again.</p>
@@ -308,7 +308,7 @@
       </form>
       </div>
       <p><small id="history-state">History: focus the surface to start recording.</small></p>
-      <p><small>This surface is wired by <code>rte.js</code>, optional <code>blocks.js</code>/<code>classes.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>/<code>link.js</code>/<code>tables.js</code>/<code>images.js</code>/<code>source.js</code>, and CSS variables.</small></p>
+      <p><small>This surface is wired by <code>rte.js</code>, optional <code>blocks.js</code>/<code>classes.js</code>/<code>unstyle.js</code>/<code>breaks.js</code>/<code>highlight.js</code>/<code>link.js</code>/<code>tables.js</code>/<code>images.js</code>/<code>source.js</code>, and CSS variables.</small></p>
     </section>
 
     <details class="panel wide">
@@ -385,6 +385,7 @@
     import '../tables.js';
     import '../source.js';
     import '../breaks.js';
+    import '../highlight.js';
     import '../unstyle.js';
     import {externalInputs, NativeSanitizer} from '../rte.js';
     import {aiView} from '../ai.js';

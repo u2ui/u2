@@ -93,6 +93,7 @@ rte/
 ├── blocks.js              Optional block-style module and public entry
 ├── classes.js             Optional content-class control module and entry
 ├── breaks.js              Optional visible-line-break extension and entry
+├── highlight.js           Optional `<mark>` inline mark and entry
 ├── images.js              Optional image frame and sizing module and entry
 ├── link.js                Optional contextual link editor module and entry
 ├── rte.js                 Stable public API, default core, and convention client

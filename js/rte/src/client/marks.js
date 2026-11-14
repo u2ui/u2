@@ -1,4 +1,4 @@
-import {boldHtml, codeHtml, italicHtml, strikeHtml, underlineHtml} from '../mark/standard.js';
+import {boldHtml, codeHtml, highlightHtml, italicHtml, strikeHtml, underlineHtml} from '../mark/standard.js';
 
 // The ready-made inline marks as one convention module. Every control goes
 // through the surface's shared `PendingMarks`, so a caret toggle formats the
@@ -11,11 +11,11 @@ const MARKS = [
     {name: 'code', adapter: codeHtml, label: 'Code', text: '‹›', shortcut: 'ctrl+e'},
 ];
 
-export const marks = Object.freeze({
-    name: 'marks',
-    commands: ({pending}) => Object.fromEntries(MARKS.map(mark =>
+const module = (name, list) => Object.freeze({
+    name,
+    commands: ({pending}) => Object.fromEntries(list.map(mark =>
         [mark.name, {...pending.toggle(mark.adapter), shortcut: mark.shortcut}])),
-    toolbar: Object.freeze(MARKS.map(mark => Object.freeze({
+    toolbar: Object.freeze(list.map(mark => Object.freeze({
         command: mark.name,
         label: mark.label,
         text: mark.text,
@@ -23,3 +23,11 @@ export const marks = Object.freeze({
         shortcut: mark.shortcut,
     }))),
 });
+
+export const marks = module('marks', MARKS);
+
+// Optional: text set apart for its relevance (`<mark>`). Not one of the ready marks, so an
+// editor offers it only where the root `highlight.js` entry was imported.
+export const highlight = module('highlight', [
+    {name: 'highlight', adapter: highlightHtml, label: 'Highlight', text: 'H', shortcut: 'ctrl+shift+h'},
+]);

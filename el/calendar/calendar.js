@@ -6,7 +6,7 @@ export default class U2Calendar extends U2Element {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this._currentDate = new Date();
+    this._currentDate = localDate(new Date());
     this._locale = null;
     this._weekStart = 0; // 0 = Sunday .. 6 = Saturday
     this.useEl('ico');
@@ -78,7 +78,7 @@ export default class U2Calendar extends U2Element {
     // no inline handlers: a CSP without 'unsafe-inline' would block them
     this.shadowRoot.querySelector('.navigation').addEventListener('click', (e) => {
       const name = e.target.closest('button')?.name;
-      if (name === 'today') this.date = new Date();
+      if (name === 'today') this.date = localDate(new Date());
       else if (name) this[name]();
     });
   }
@@ -142,7 +142,7 @@ export default class U2Calendar extends U2Element {
   }
 
   _render() {
-    const today = new Date();
+    const today = localDate(new Date());
     const year = this._currentDate.getUTCFullYear();
     const month = this._currentDate.getUTCMonth();
     const dateString = Intl.DateTimeFormat(this._locale?.baseName || navigator.language, { year: 'numeric', month: 'long', timeZone: 'UTC' }).format(this._currentDate);
@@ -177,7 +177,7 @@ export default class U2Calendar extends U2Element {
     for (let i = 0; i < 42; i++) { // always 6 weeks, so every month has the same height
       const date = new Date(Date.UTC(year, month, 1 - startOffset + i));
       const isOtherMonth = date.getUTCMonth() !== month;
-      const isToday = date.toDateString() === today.toDateString();
+      const isToday = date.getTime() === today.getTime();
       grid.appendChild(this.createDayCell(date, i, isOtherMonth, isToday));
     }
   }
@@ -253,7 +253,7 @@ export default class U2Calendar extends U2Element {
   }
 
   _layoutDate(item, date) {
-    return item.allDay ? date : new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    return item.allDay ? date : localDate(date);
   }
 
   splitIntoWeeks(start, end, year, month) {
@@ -409,6 +409,12 @@ itemStyle.replaceSync(`
 `);
 
 // Helpers
+function localDate(value) {
+  const date = new Date(0);
+  date.setUTCFullYear(value.getFullYear(), value.getMonth(), value.getDate());
+  return date;
+}
+
 // Module-level cache for Intl.DateTimeFormat instances
 const __u2_timeFormatterCache = new Map();
 function getTimeFormatter(localeTag, options = { hour: '2-digit', minute: '2-digit' }) {

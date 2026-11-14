@@ -26,7 +26,7 @@ native.
 
 Ready control names are `undo`, `redo`, `bold`, `italic`, `underline`,
 `strike`, `code`, `bullets`, `numbers`, `indent`, `outdent`, and `rule`, plus
-`block`, `style`, `unstyle`, `breaks`, `link`, `source`,
+`block`, `style`, `unstyle`, `breaks`, `highlight`, `link`, `source`,
 `imageOriginal`, and `insertTable` from the optional root modules.
 `--u2-rte-toolbar` chooses and orders them; the commands and their shortcuts
 work whether or not a control is listed. List and separator controls consult
@@ -359,6 +359,22 @@ Unrelated block attributes survive conversion. A selection spanning different
 styles shows a mixed/empty value; choosing one applies it to every styleable
 text block. Lists, layout containers, table structure, and nested editors are
 not mistaken for paragraphs.
+
+### Optional highlight
+
+`highlight.js` adds `<mark>` as one more inline mark — text set apart for its
+relevance, such as an offer. It is not among the ready marks:
+
+```js
+import './highlight.js';
+```
+
+```css
+[contenteditable] { --u2-rte-toolbar: bold italic highlight; }
+```
+
+The command is `highlight`, its key `Ctrl+Shift+H`; `highlightHtml` is the
+adapter.
 
 ### Optional visible line breaks
 

@@ -146,6 +146,7 @@ Each exported type has one replaceable default adapter:
 | `underline` | `u` | `u` |
 | `strike` | `s`, `strike` | `s` |
 | `code` | `code` | `code` |
+| `highlight` | `mark` | `mark` |
 | `link` | `a[href]` | `a` |
 
 Boolean marks use the default value `true`. A link uses
