@@ -100,8 +100,21 @@ export default class U2Calendar extends U2Element {
   connectedCallback() {
     if (!this.hasAttribute('lang')) this._setLocale();
     this.render();
-    new MutationObserver(() => this.updateLayout()).observe(this, { childList: true });
+    this._observer ??= new MutationObserver(() => this.updateLayout());
+    this._observer.observe(this, { childList: true });
     import('./ext/keyNavigation.js');
+  }
+
+  disconnectedCallback() {
+    this._observer?.disconnect();
+  }
+
+  get range() {
+    const cells = this.shadowRoot.querySelectorAll('.day');
+    if (!cells.length) return null;
+    const end = new Date(cells[cells.length - 1].dataset.date);
+    end.setUTCDate(end.getUTCDate() + 1);
+    return { start: cells[0].dataset.date, end: end.toISOString().slice(0, 10) };
   }
 
   set date(date) {
@@ -130,9 +143,9 @@ export default class U2Calendar extends U2Element {
 
   _render() {
     const today = new Date();
-    const year = this._currentDate.getFullYear();
-    const month = this._currentDate.getMonth();
-    const dateString = Intl.DateTimeFormat(this._locale?.baseName || navigator.language, { year: 'numeric', month: 'long' }).format(this._currentDate);
+    const year = this._currentDate.getUTCFullYear();
+    const month = this._currentDate.getUTCMonth();
+    const dateString = Intl.DateTimeFormat(this._locale?.baseName || navigator.language, { year: 'numeric', month: 'long', timeZone: 'UTC' }).format(this._currentDate);
 
     this.shadowRoot.querySelector('.navigation h2').innerHTML = dateString;
     this.shadowRoot.querySelector('.header').innerHTML = `
@@ -153,6 +166,7 @@ export default class U2Calendar extends U2Element {
 
     this.renderMonth(year, month, today);
     this.updateLayout();
+    this.dispatchEvent(new CustomEvent('rangechange', { detail: this.range, bubbles: true }));
   }
 
   renderMonth(year, month, today) {
@@ -195,16 +209,17 @@ export default class U2Calendar extends U2Element {
     });
   }
   _updateLayout() {
-    const items = Array.from(this.querySelectorAll('u2-calendar-item'));
+    const items = Array.from(this.querySelectorAll('u2-calendar-item'))
+      .filter(item => Number.isFinite(item.start?.getTime()));
 
     // Berechne Wochen-Segmente für alle Items
     const itemWeeks = items.map(item => ({
       item,
       weeks: this.splitIntoWeeks(
-        item.start,
-        item.end,
-        this._currentDate.getFullYear(),
-        this._currentDate.getMonth()
+        this._layoutDate(item, item.start),
+        this._layoutDate(item, item.end > item.start ? new Date(item.end.getTime() - 1) : item.end),
+        this._currentDate.getUTCFullYear(),
+        this._currentDate.getUTCMonth()
       )
     }));
 
@@ -235,6 +250,10 @@ export default class U2Calendar extends U2Element {
     itemWeeks.forEach(({ item, weeks }) => {
       item.updateLayout?.({ weeks });
     });
+  }
+
+  _layoutDate(item, date) {
+    return item.allDay ? date : new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   }
 
   splitIntoWeeks(start, end, year, month) {
@@ -282,7 +301,7 @@ export default class U2Calendar extends U2Element {
       });
 
       // Move to the next day after this segment
-      current.setDate(current.getDate() + span);
+      current.setUTCDate(current.getUTCDate() + span);
 
       // If we've reached the end of the event, break
       if (current > finalEnd) break;
@@ -327,6 +346,7 @@ class U2CalendarItem extends U2Element {
 
   get start() { return this._start; }
   get end() { return this._end && this._end > this._start ? this._end : this._start; }
+  get allDay() { return /^\d{4}-\d{2}-\d{2}$/.test(this.getAttribute('start')); }
 
   updateLayout(layoutInfo) {
     if (!layoutInfo) return;
@@ -336,21 +356,25 @@ class U2CalendarItem extends U2Element {
     const timeFormatter = getTimeFormatter(localeTag);
 
     const text = this.textContent.trim();
-    let startString = timeFormatter.format(this.start);
-    let endString = timeFormatter.format(this.end);
+    let startString = this.allDay ? '' : timeFormatter.format(this.start);
+    let endString = this.allDay ? '' : timeFormatter.format(this.end);
     if (startString === '00:00' || startString === '12:00 AM') startString = '';
     if (endString === '00:00' || endString === '12:00 AM') endString = '';
 
-    this.shadowRoot.innerHTML = `${layoutInfo.weeks.map(week => `
-        <div class=bar 
-          title="${startString} - ${endString}\n${text}"
-          tabindex="0"
-          style="
-            grid-column: ${week.gridColumn};
-            grid-row: ${week.gridRow}; 
-            margin-block-start: ${(week.track || 0) * 2.0 + 2.3}em;
-        ">${startString} ${text}</div>
-      `).join('')}`;
+    const link = this.querySelector('a[href]');
+    this.shadowRoot.replaceChildren(...layoutInfo.weeks.map(week => {
+      const bar = document.createElement(link ? 'a' : 'div');
+      bar.className = 'bar';
+      bar.title = `${startString} - ${endString}\n${text}`;
+      bar.tabIndex = 0;
+      if (link) bar.href = link.href;
+      bar.style.gridColumn = week.gridColumn;
+      bar.style.gridRow = week.gridRow;
+      bar.style.marginBlockStart = `${(week.track || 0) * 2.0 + 2.3}em`;
+      if (startString) bar.append(document.createTextNode(startString + ' '));
+      bar.append(...Array.from((link ?? this).childNodes, node => node.cloneNode(true)));
+      return bar;
+    }));
   }
 }
 
@@ -375,6 +399,12 @@ itemStyle.replaceSync(`
   .bar {
     all: inherit;
     display:block;
+  }
+  .bar svg, .bar img {
+    inline-size: 1em;
+    block-size: 1em;
+    vertical-align: middle;
+    fill: currentColor;
   }
 `);
 

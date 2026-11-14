@@ -9,6 +9,11 @@ Calendar / month view component, use `<u2-calendar-item>` as children
 - lightweight layout and styling
 - supports `u2-calendar-item` children with `start` and `end` attributes
 - events rendered as colored bars spanning multiple days
+- `end` is exclusive; a one-day all-day entry ends on the following date
+- timed entries use the browser's time zone; date-only entries remain calendar dates
+- `range` returns the visible `{ start, end }` dates; `rangechange` emits them after rendering
+- links inside items remain keyboard-accessible links in the calendar bars
+- item content, including icons, is cloned as DOM nodes rather than interpreted as HTML text
 - performat and responsive using css grid
 
 ## Usage
