@@ -12,15 +12,7 @@ https://www.tjvantoll.com/2013/04/15/list-of-pseudo-elements-to-style-form-contr
 
 @layer normalize {
 
-ul {
-	list-style-type: '•  '; 	/* ·•●⏺‣▶⏵✔⊚○◌🞅🞇🞉🖝 */
-	padding-inline-start: 1em;
-}
-ul > li::marker {
-	font-size: 1em;
-}
-
-	/*****************/
+/*****************/
 /* custom select */
 /*****************/
 :where(select:not([size], [multiple])) {

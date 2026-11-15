@@ -41,6 +41,9 @@ h1,.h1 { font-size: calc(1rem * pow(1.24, 4)); }
 :is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6) + :is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6) { margin-top: 0; }
 :is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6):has(+ :is(h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6)) { margin-bottom: .3em; }
 
+ul { padding-inline-start: 1.1em; list-style-type: '•  '; }
+ol { padding-inline-start: 1.6em; }
+
 
 table {
     inline-size: 100%;/* -webkit-fill-available; not working in firefox https://jsfiddle.net/1hkp6dfg/21/ */
