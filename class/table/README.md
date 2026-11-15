@@ -8,7 +8,7 @@ Better tables
 - Use modifier classes: 
     - Flex: To make table rows flex and break rows on smaller screens
     - NoSideGaps: to remove the left and right padding
-    - Sticky: to make make header-cells sticky
+    - Sticky: to make header and footer cells sticky
     - Fields: to make inputs width 100%
 
 ## Usage
