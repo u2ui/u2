@@ -149,5 +149,11 @@
 	inline-size: fit-content;
 	text-decoration: none;
 	color:inherit;
-	&:not([hidden]) { display:inline-block; }
+	display:inline-block;
 }
+
+/* Hidden is hidden: a class that sets display (.u2-card, .u2-flex…) beats the UA rule hiding a hidden
+   element, a closed popover or dialog. Outside the layer (a layered rule loses against unlayered classes)
+   and without !important, so transitions (display allow-discrete) and animations still animate in and out.
+   until-found hides by content-visibility, so find-in-page can reveal it. */
+[hidden]:not([hidden=until-found]), [popover]:not(:popover-open), dialog:not([open]) { display: none; }

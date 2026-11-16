@@ -121,4 +121,7 @@ https://jsfiddle.net/x90cz65o/103/
         display: flex inline;
     }
     /**/
+
+    /* hidden is hidden: the displays above beat the UA rule, also where base.css is not loaded */
+    :is(&, & *)[hidden]:not([hidden=until-found]) { display: none; }
 }
