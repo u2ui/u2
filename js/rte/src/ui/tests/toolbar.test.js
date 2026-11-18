@@ -67,6 +67,28 @@ test('toolbar: follows the active surface and reflects command availability and 
     core.dispose();
 }));
 
+test('toolbar: stays hidden while its placement has nothing to stand on', () => withFixture(`
+    <div id=one contenteditable></div>
+    <div id=toolbar><button data-command=action></button></div>
+`, root => {
+    const core = new Rte(document, {auto: false});
+    const one = core.add(root.querySelector('#one'));
+    const element = root.querySelector('#toolbar');
+    let ready = false;
+    const toolbar = new Toolbar(core, element, {
+        commands: surface => new Commands(surface, {commands: {action: {enabled: () => true, run() {}}}}),
+        place: () => ready,
+    });
+    core.activate(one);
+    truthy(element.hidden, 'A toolbar that could not be placed must not appear in the corner');
+    equal(element.hasAttribute('data-placing'), false);
+    ready = true;
+    toolbar.refresh();
+    equal(element.hidden, false);
+    toolbar.dispose();
+    core.dispose();
+}));
+
 test('toolbar: preserves a saved selection across pointer focus', () => withFixture(`
     <div contenteditable>text</div>
     <div id=toolbar><button data-command=toggle data-state></button></div>

@@ -30,6 +30,8 @@ const toolbar = new Toolbar(core, element, {
   registry to `Surface`.
 - `place(element, surface)` is optional presentation policy called after every
   visible refresh. Positioning remains replaceable and outside command logic.
+  Returning `false` says there is nothing to anchor on yet: a toolbar about to
+  appear then stays hidden until a later refresh can place it.
 - `refresh()` reads command availability and state immediately and returns
   whether the toolbar is visible.
 - `dispose()` removes all core, surface, DOM, and shortcut listeners. Core

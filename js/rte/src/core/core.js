@@ -186,6 +186,12 @@ export class Rte extends EventTarget {
             return;
         }
         this.#unfocused = !surface;
+        // A selection can be inside before the focus is: an engine puts one there
+        // for a press beside the surface, while no surface existed to take it. A
+        // press on that very spot moves nothing and announces nothing, so a
+        // surface without a selection of its own takes what is already there.
+        // One that has one keeps it: focus handed back is followed by a restore.
+        if (surface && !surface.selection) surface.capture();
         this.activate(surface || null);
     };
 

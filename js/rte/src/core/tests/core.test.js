@@ -221,6 +221,20 @@ test('core: CSS opt-in registers lazily from focus events', () => withFixture(`
     core.dispose();
 }));
 
+test('core: focus takes a selection that arrived before its surface did', () => withFixture(
+    '<div id=late contenteditable style="--u2-rte:true">one</div>', root => {
+        const core = new Rte(document);
+        const element = root.querySelector('#late');
+        // An engine puts the caret there for a press beside it; no surface exists yet to take it.
+        document.getSelection().collapse(element.firstChild, 3);
+        element.dispatchEvent(new FocusEvent('focusin', {bubbles: true, composed: true}));
+        const range = core.active?.selection?.range();
+        same(range?.startContainer, element.firstChild);
+        equal(range?.startOffset, 3);
+        core.dispose();
+    }
+));
+
 test('core: activation switches exactly one surface', () => withFixture(`
     <div id=one contenteditable></div><div id=two contenteditable></div>
 `, root => {

@@ -150,7 +150,14 @@ export class Toolbar {
         display(this.#element, show);
         if (show && !(this.#hovered && !appearing)) {
             if (appearing) this.#element.dataset.placing = '';
-            this.#place?.(this.#element, surface);
+            // Focus activates a surface before its first selection arrives: with
+            // nothing to stand on yet, the toolbar stays hidden instead of
+            // appearing in the corner. The selection brings it.
+            if (this.#place?.(this.#element, surface) === false && appearing) {
+                delete this.#element.dataset.placing;
+                display(this.#element, false);
+                return false;
+            }
             if (appearing) {
                 const view = this.#element.ownerDocument.defaultView;
                 view.requestAnimationFrame(() => delete this.#element.dataset.placing);
