@@ -1,4 +1,4 @@
-import 'https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js';
+import '../../vendor/dragdroptouch/DragDropTouch.js';
 
 const css = `
 [u2-draghandle] {
