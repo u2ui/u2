@@ -426,6 +426,12 @@ level changes only selected content; levels and labels are replaceable.
   viewport edges.
 - Exercise the lifecycle with another contextual UI before adding dependency,
   ordering, or asynchronous setup concepts.
+- Localize the default UI: every label, tooltip and option of the toolbar and
+  its extensions (Paragraph, Heading n, Block style, …) is English today. Translate
+  locally from the page's `lang`, like `js/Tour/Tour.js`, with no dependency on
+  a host's translation service; a host's own labels stay replaceable.
+- Rework the toolbar buttons: the default controls (T×, B, I, the list button)
+  look improvised; give them consistent icons, sizes and states.
 
 ### Optional extension probes
 
