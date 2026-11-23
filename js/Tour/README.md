@@ -6,6 +6,8 @@ The mask is isolated, while the info and buttons inherit the website's styles.
 Style `.u2TourInfo`, `.u2TourContent`, `.u2TourButtons`, `.u2TourBack`,
 `.u2TourNext` and `.u2TourClose` as part of the website.
 
+The buttons speak the page's language (`<html lang>`), else the browser's.
+
 ## Usage
 
 ```html

@@ -24,9 +24,9 @@ export class Tour extends EventTarget {
 
         this.current = index;
         this.content.replaceChildren(content instanceof Node ? content.cloneNode(true) : content);
-        this.info.ariaLabel = `Tour step ${index + 1} of ${this.steps.length}`;
+        this.info.ariaLabel = text('step').replace('{i}', index + 1).replace('{n}', this.steps.length);
         this.backButton.disabled = index === 0;
-        this.nextButton.textContent = index === this.steps.length - 1 ? 'Done' : 'Next';
+        this.nextButton.textContent = text(index === this.steps.length - 1 ? 'done' : 'next');
         this.target.scrollIntoView({block:'nearest', inline:'nearest'});
         this.placer.followElement(this.target);
         this.#draw();
@@ -106,14 +106,14 @@ export class Tour extends EventTarget {
         `;
         info.innerHTML = `
             <div style="margin-bottom:1em;">
-                <button class="u2-unstyle u2TourClose" aria-label="Close tour" style="float:right;">
+                <button class="u2-unstyle u2TourClose" aria-label="${text('close')}" style="float:right;">
                     <u2-ico icon=close>&times;</u2-ico>
                 </button>
                 <div aria-live=polite aria-atomic=true class=u2TourContent></div>
             </div>
             <footer class=u2-flex u2-focusgroup style="justify-content:space-between;">
-                <button class=u2TourBack>Back</button>
-                <button class=u2TourNext>Next</button>
+                <button class=u2TourBack>${text('back')}</button>
+                <button class=u2TourNext>${text('next')}</button>
             </footer>
         `;
         info.onkeydown = e => {
@@ -154,3 +154,34 @@ export class Tour extends EventTarget {
         });
     };
 }
+
+// The tour speaks the page's language (its lang attribute), else the browser's.
+const text = key => {
+    const lang = (document.documentElement.lang || navigator.language || 'en').slice(0, 2).toLowerCase();
+    return (texts[lang] ?? texts.en)[KEYS.indexOf(key)];
+};
+const KEYS = ['back', 'next', 'done', 'close', 'step'];
+const texts = {
+    ar: ['رجوع', 'التالي', 'تم', 'إغلاق الجولة', 'الخطوة {i} من {n}'],
+    cs: ['Zpět', 'Další', 'Hotovo', 'Zavřít prohlídku', 'Krok {i} z {n}'],
+    da: ['Tilbage', 'Næste', 'Færdig', 'Luk rundvisningen', 'Trin {i} af {n}'],
+    de: ['Zurück', 'Weiter', 'Fertig', 'Tour schließen', 'Schritt {i} von {n}'],
+    en: ['Back', 'Next', 'Done', 'Close tour', 'Tour step {i} of {n}'],
+    es: ['Atrás', 'Siguiente', 'Listo', 'Cerrar recorrido', 'Paso {i} de {n}'],
+    fi: ['Takaisin', 'Seuraava', 'Valmis', 'Sulje esittely', 'Vaihe {i}/{n}'],
+    fr: ['Retour', 'Suivant', 'Terminé', 'Fermer la visite', 'Étape {i} sur {n}'],
+    hi: ['पीछे', 'आगे', 'हो गया', 'टूर बंद करें', 'चरण {i} / {n}'],
+    it: ['Indietro', 'Avanti', 'Fine', 'Chiudi il tour', 'Passo {i} di {n}'],
+    ja: ['戻る', '次へ', '完了', 'ツアーを閉じる', 'ステップ {i}/{n}'],
+    ko: ['이전', '다음', '완료', '둘러보기 닫기', '{n}단계 중 {i}단계'],
+    nb: ['Tilbake', 'Neste', 'Ferdig', 'Lukk omvisningen', 'Trinn {i} av {n}'],
+    nl: ['Terug', 'Volgende', 'Klaar', 'Rondleiding sluiten', 'Stap {i} van {n}'],
+    pl: ['Wstecz', 'Dalej', 'Gotowe', 'Zamknij przewodnik', 'Krok {i} z {n}'],
+    pt: ['Voltar', 'Seguinte', 'Concluir', 'Fechar tour', 'Passo {i} de {n}'],
+    ru: ['Назад', 'Далее', 'Готово', 'Закрыть тур', 'Шаг {i} из {n}'],
+    sv: ['Tillbaka', 'Nästa', 'Klar', 'Stäng rundturen', 'Steg {i} av {n}'],
+    tr: ['Geri', 'İleri', 'Bitti', 'Turu kapat', 'Adım {i}/{n}'],
+    uk: ['Назад', 'Далі', 'Готово', 'Закрити тур', 'Крок {i} з {n}'],
+    zh: ['上一步', '下一步', '完成', '关闭导览', '第 {i} 步，共 {n} 步'],
+};
+texts.no = texts.nb;
