@@ -35,7 +35,8 @@ export default class U2Pagination extends HTMLElement {
     get total() { return +this.getAttribute('total') || 1; }
     get current() { return Math.max(1, Math.min(+this.getAttribute('current') || this.#detectCurrentPage(), this.total)); }
 
-    #url(page) { return this.href.replaceAll('{page}', page); }
+    // "{page}" also URL-encoded, as URL APIs leave it ("?page=%7Bpage%7D")
+    #url(page) { return this.href.replace(/\{page\}|%7Bpage%7D/gi, page); }
 
     #detectCurrentPage() {
         for (let page = 1; page <= this.total; page++) {

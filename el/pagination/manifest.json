@@ -27,7 +27,7 @@
                 "u2-type": "number"
             },{
                 "name": "href",
-                "description": "URL pattern, {page} is replaced by the page number",
+                "description": "URL pattern, {page} (also URL-encoded) is replaced by the page number",
                 "u2Examples": ["?page={page}", "/page/{page}"]
             }],
             "cssProperties": [],

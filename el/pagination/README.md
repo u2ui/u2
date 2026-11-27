@@ -4,6 +4,7 @@ Page number navigation with customizable URL patterns
 ## Features
 
 - Shows as many pages as fit its width; all items are equally wide
+- `{page}` in `href` may be URL-encoded (`%7Bpage%7D`), as URL APIs leave it
 - Its content is the fallback until it runs (or without JavaScript), then replaced:
   ```html
   <u2-pagination total="22" current="4" href="/{page}">
