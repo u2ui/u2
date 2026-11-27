@@ -4,34 +4,23 @@ addEventListener('keydown', e => {
     if (e.altKey) return; // alt is reserved for browser back/forward
     if (e.ctrlKey || e.metaKey || e.shiftKey) return; // we only want to handle arrow keys without modifiers, in the future we could add a setting for this (focus last element with arrow left + shift)
 
-	const isVertical = (e.code === 'ArrowUp' || e.code === 'ArrowDown');
-	const isHorizontal = (e.code === 'ArrowLeft' || e.code === 'ArrowRight');
+	const isVertical = e.code === 'ArrowUp' || e.code === 'ArrowDown';
+	const isHorizontal = e.code === 'ArrowLeft' || e.code === 'ArrowRight';
 	if (!isVertical && !isHorizontal) return;
 
 	const {target, container} = eventTargets(e);
 	if (!container) return;
 
-	if (isHorizontal) {
-		if (target.tagName === 'INPUT' && (target.type !== 'checkbox' && target.type !== 'radio')) return;
-		if (target.tagName === 'TEXTAREA') return;
-	}
-	if (isVertical) {
-		if (target.tagName === 'SELECT') return;
-		if (target.tagName === 'TEXTAREA') return;
-	}
+	// keys the field itself needs
+	if (target.tagName === 'TEXTAREA') return;
+	if (isHorizontal && target.tagName === 'INPUT' && target.type !== 'checkbox' && target.type !== 'radio') return;
+	if (isVertical && target.tagName === 'SELECT') return;
 
-	const tmp = container.getAttribute('u2-focusgroup').split(' ');
-	const options = Object.fromEntries(tmp.map(o => [o, true]));
-	if (!options.horizontal && !options.vertical) {
-		options.horizontal = true;
-		options.vertical = true;
-	}
+	const options = Object.fromEntries(container.getAttribute('u2-focusgroup').split(' ').map(o => [o, true]));
+	if (!options.horizontal && !options.vertical) options.horizontal = options.vertical = true;
+	if (!options[isHorizontal ? 'horizontal' : 'vertical']) return;
 
-	if (!options.horizontal && isHorizontal) return;
-	if (!options.vertical && isVertical) return;
-
-	const direction = e.code === 'ArrowLeft' || e.code === 'ArrowUp' ? -1 : e.code === 'ArrowRight' || e.code === 'ArrowDown' ? 1 : 0;
-	if (direction === 0) return;
+	const direction = e.code === 'ArrowLeft' || e.code === 'ArrowUp' ? -1 : 1;
 
 	const items = groupItems(container);
 	if (items.length < 2) return;
@@ -43,7 +32,8 @@ addEventListener('keydown', e => {
 		return;
 	}
 
-	let next = items[index + direction] || (options.wrap ? direction === 1 ? items.at(0) : items.at(-1) : null);
+	// wrapping: past the last to the first, before the first (-1) to the last
+	const next = options.wrap ? items.at((index + direction) % items.length) : items[index + direction];
 	if (!next) return;
 
 	next.focus();
@@ -73,10 +63,7 @@ function groupItems(container) {
 
 	// handle slotted elements, beta
 	const slots = container.matches('slot') ? [container] : container.querySelectorAll('slot'); // TODO: handle slotted elements
-	slots.forEach(slot => {
-		const slotted = slot.assignedElements({flatten: true}).filter(el => el.matches(selector));
-		elements.push(...slotted);
-	});
+	for (const slot of slots) elements.push(...slot.assignedElements({flatten: true}).filter(el => el.matches(selector)));
 
 	return elements.filter(el => !el.disabled);
 }
@@ -90,8 +77,5 @@ function eventTargets(event){
 		container = target.closest('[u2-focusgroup]');
 	}
 	container ||= target.assignedSlot?.closest('[u2-focusgroup]'); // if slotted, ok?
-	return {
-		target,
-		container
-	};
+	return {target, container};
 }
