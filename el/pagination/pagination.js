@@ -39,17 +39,13 @@ export default class U2Pagination extends HTMLElement {
             const middle = current !== 1 && current !== total && current;
             return [1, current > 2 && '...', middle, current < total - 1 && '...', total > 1 && total].filter(Boolean);
         }
-        const sideItems = Math.floor((maxItems - 3) / 2);
-        let start = Math.max(2, current - sideItems);
-        let end = Math.min(total - 1, current + sideItems);
-        if (current <= sideItems + 2) {
-            start = 2;
-            end = Math.min(total - 1, maxItems - 1);
-        } else if (current >= total - sideItems - 1) {
-            start = Math.max(2, total - maxItems + 2);
-            end = total - 1;
-        }
-        return [1, start > 2 && '...', ...range(start, end), end < total - 1 && '...', total].filter(Boolean);
+        // a window between the first and the last page, around the current one; at a cut, '...' takes its edge
+        const size = maxItems - 2;
+        const start = Math.min(Math.max(2, current - (size - 1 >> 1)), total - size);
+        const pages = range(start, start + size - 1);
+        if (start > 2) pages[0] = '...';
+        if (start + size < total) pages[size - 1] = '...';
+        return [1, ...pages, total];
     }
 
     #updateLink(a, page, rel, current) {
@@ -65,14 +61,8 @@ export default class U2Pagination extends HTMLElement {
     render() {
         const { current, total } = this;
 
-        let nav = this.querySelector('nav');
-        if (!nav) {
-            nav = document.createElement('nav');
-            nav.ariaLabel = text(this, 'nav');
-            nav.innerHTML = '<ul u2-focusgroup="remember"></ul>';
-            this.append(nav);
-        }
-        const ul = nav.querySelector('ul');
+        if (!this.querySelector('nav')) this.insertAdjacentHTML('beforeend', `<nav aria-label="${text(this, 'nav')}"><ul u2-focusgroup="remember"></ul></nav>`);
+        const ul = this.querySelector('nav ul');
 
         // [page, rel] per link, null for '...'
         const items = this.#calculatePages().map(page => page === '...' ? null : [page]);
