@@ -27,15 +27,14 @@ export default class U2Pagination extends HTMLElement {
             detail: { page: +target.dataset.page, previous: this.current },
             bubbles: true, composed: true, cancelable: true
         });
-        this.dispatchEvent(event);
-        event.defaultPrevented && e.preventDefault();
+        if (!this.dispatchEvent(event)) e.preventDefault();
     };
 
     get href() { return this.getAttribute('href') || '?page={page}'; }
     get total() { return +this.getAttribute('total') || 1; }
-    get current() { return +this.getAttribute('current') || this.#detectCurrentPage(); }
+    get current() { return Math.max(1, Math.min(+this.getAttribute('current') || this.#detectCurrentPage(), this.total)); }
 
-    #url(page) { return this.href.replace('{page}', page); }
+    #url(page) { return this.href.replaceAll('{page}', page); }
 
     #detectCurrentPage() {
         for (let page = 1; page <= this.total; page++) {
@@ -53,7 +52,7 @@ export default class U2Pagination extends HTMLElement {
         if (maxItems < 5) return [current]; // no room for first, last and the cuts: the arrows around the current page
         // a window between the first and the last page, around the current one; at a cut, null takes its edge
         const size = maxItems - 2;
-        const start = Math.min(Math.max(2, current - (size - 1 >> 1)), total - size);
+        const start = Math.min(Math.max(2, current - Math.floor((size - 1) / 2)), total - size);
         const pages = range(start, start + size - 1);
         if (start > 2) pages[0] = null;
         if (start + size < total) pages[size - 1] = null;
