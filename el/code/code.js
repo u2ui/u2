@@ -75,22 +75,18 @@ export default class U2Code extends HTMLElement {
         });
             
         this.textarea = this.shadowRoot.querySelector('textarea');
+        this.textarea.addEventListener('input', e => {
+            this.setHighlightValue(e.target.value);
+            this.setSourceValue(e.target.value);
+        });
+        this.textarea.addEventListener('blur', () => { // if textarea is focused, the code is not updated
+            if (this.unUpdatedValue != null) this.value = this.unUpdatedValue;
+        });
     }
     connectedCallback() {
         requestAnimationFrame(()=>this._init());
     }
     _init(){
-
-        this.textarea.addEventListener('input', e => {
-            this.setHighlightValue(e.target.value);
-            this.setSourceValue(e.target.value);
-        });
-
-        this.textarea.addEventListener('blur', e => { // if textarea is focused, the code is not updated
-            if (this.unUpdatedValue == null) return;
-            this.value = this.unUpdatedValue;
-        });
-
         const elementId = this.getAttribute('element');
         if (elementId) {
             this.setForeignElement(document.getElementById(elementId));

@@ -180,7 +180,6 @@ class Morph {
 // import Idiomorph from 'https://esm.sh/idiomorph@0.3.0';
 // Idiomorph.morph(oldNode, newNode);
 
-import morphdom from 'https://esm.sh/morphdom@2.7.4';
 function morphDocument(newDoc) {
   // am liebsten würde ich ganzes dokument inklusive header morphen, aber dann kann generiertes css verloren gehen... :(
   //morphdom(document.body, newDoc.body);

@@ -179,9 +179,9 @@ class PasswordHandler extends TypeHandler {
         clearTimeout(this.timer);
         const visible = this.realInput.type === 'text';
         const type = visible ? 'password' : 'text';
-        const icon = visible ? 'visibility' : 'visibility_off';
+        const icon = visible ? 'visibility_off' : 'visibility';
 
-        this.visibilityBtn.ariaLabel = visible ? 'hide password' : 'show password';
+        this.visibilityBtn.ariaLabel = visible ? 'show password' : 'hide password';
         this.visibilityBtn.querySelector('u2-ico').setAttribute('icon', icon);
         this.realInput.type = type;
 

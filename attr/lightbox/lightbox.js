@@ -61,6 +61,7 @@ document.body.append(overlay);
 
 
 const carousel = overlay.querySelector('u2-carousel');
+let ready;
 
 overlay.addEventListener('click', e => e.target === overlay && overlay.hidePopover() );
 overlay.querySelector('.-close').addEventListener('click', ()=>overlay.hidePopover());
@@ -92,28 +93,28 @@ document.addEventListener('click', e => {
   
     overlay.showPopover();
 
-    Promise.all([
+    ready ??= Promise.all([
         u2.js('loading'),
         u2.el('carousel')
-    ]).then(([loading])=>{ 
-
+    ]).then(([loading])=>{
         const load = (el)=>{
             if (!el || el.slot || el.src) return;
             loading.mark(el);
             el.src = el.dataset.src;
-        }
-
+        };
         carousel.addEventListener('u2-carousel.slide', ({detail})=>{
             load(detail.slide);
             setTimeout(()=>{ // requestIdleCallback??
                 load(detail.slide.nextElementSibling);
                 load(detail.slide.previousElementSibling);
-            },200)
+            },200);
         });
-        carousel.slideTo(group.indexOf(src));
         carousel.tabIndex = -1;
-        carousel.focus();
         u2.el('ico');
+    });
+    ready.then(()=>{
+        carousel.slideTo(group.indexOf(src));
+        carousel.focus();
     });
   
   e.preventDefault();

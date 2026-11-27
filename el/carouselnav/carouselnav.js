@@ -33,15 +33,9 @@ document.head.prepend(style);
 
 function refSlideshows(el) {
 	const grp = el.getAttribute('sync-group');
-	if (grp) {
-		const slides = [];
-		document.body.c1FindAll('u2-carousel[sync-group="'+grp+'"]').forEach(function(ssEl){
-			slides.push(ssEl);
-		});
-		return slides;
-	} else {
-		return [el.parentNode.querySelector('u2-carousel')];
-	}
+	return grp
+		? document.querySelectorAll('u2-carousel[sync-group="'+grp+'"]')
+		: [el.parentNode.querySelector('u2-carousel')];
 }
 
 export default class U2CarouselNav extends HTMLElement {

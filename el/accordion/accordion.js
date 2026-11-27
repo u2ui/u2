@@ -120,14 +120,13 @@ export default class U2Accordion extends U2Element {
                         </div>
                     `;
                     // chrome needs this extra <div style="overflow:hidden">
+                    item.querySelector('.trigger').addEventListener("mousedown", e => {
+                        if (e.detail === 2) e.preventDefault(); // Doppelklick
+                    });
                     container.appendChild(item);
                 }
                 const title = item.querySelector('.title');
                 title.assign(node);
-                // todo: added again on every _build(); delegate on the shadow root instead
-                item.querySelector('.trigger').addEventListener("mousedown", e => {
-                    if (e.detail === 2) e.preventDefault(); // Doppelklick
-                });
                 activeContent = item.querySelector('.content');
                 collectedContents = [];
             } else if (activeContent) {

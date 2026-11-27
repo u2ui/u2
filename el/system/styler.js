@@ -253,7 +253,7 @@ class ColorSystemStyler extends HTMLElement {
                         {
                         label: 'Haupt Schrift',
                         children: [
-                            { name: '--font-1', label: 'Fontfamily', type: 'select', options: Object.keys(FONTS), value: 'system-ui' },
+                            { name: '--font-1', label: 'Fontfamily', type: 'select', options: Object.keys(FONTS), value: 'system' },
                             { name: '--font-1-wdth', label: 'Schriftbreite (wdth)', min: 25, max: 151, step: 1, unit: '', value: 100 },
                             { name: '--font-1-opsz', label: 'Optical Size (opsz)', min: 8, max: 144, step: 1, unit: '', value: 16 },
                             { name: '--font-1-mono', label: 'Monospace (MONO)', min: 0, max: 1, step: 0.01, value: 0 },
@@ -263,7 +263,7 @@ class ColorSystemStyler extends HTMLElement {
                     },{
                         label: 'Zweit Schrift',
                         children: [
-                            { name: '--font-2', label: 'Fontfamily', type: 'select', options: Object.keys(FONTS), value: 'system-ui' },
+                            { name: '--font-2', label: 'Fontfamily', type: 'select', options: Object.keys(FONTS), value: 'system' },
                             { name: '--font-2-wdth', label: 'Schriftbreite (wdth)', min: 25, max: 151, step: 1, unit: '', value: 100 },
                             { name: '--font-2-opsz', label: 'Optical Size (opsz)', min: 8, max: 144, step: 1, unit: '', value: 16 },
                             { name: '--font-2-mono', label: 'Monospace (MONO)', min: 0, max: 1, step: 0.01, value: 0 },

@@ -13,6 +13,7 @@
  */
 export function indicateDrop(position, element, { box = 'border' } = {}) {
     let indicator = document.getElementById('drop-indicator');
+    if (!position || !element) return indicator?.hidePopover();
 
     if (!indicator) {
         indicator = document.createElement('div');
@@ -55,11 +56,6 @@ export function indicateDrop(position, element, { box = 'border' } = {}) {
             </style>
         `;
         document.body.appendChild(indicator);
-    }
-
-    if (!position || !element) {
-        indicator.hidePopover();
-        return;
     }
 
     const rect = element.getBoundingClientRect();

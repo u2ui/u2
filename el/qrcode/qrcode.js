@@ -31,7 +31,7 @@ export default class U2Qrcode extends HTMLElement {
         container.ariaLabel = 'QR-Code: '+text;
         const {default:{QrCode}} = await import('https://cdn.jsdelivr.net/npm/nayuki-qr-code-generator@1.8.0/index.min.js');
         const qr0 = QrCode.encodeText(text, QrCode.Ecc.MEDIUM);
-        container.innerHTML = toSvgString(qr0, 4);
+        container.innerHTML = toSvgString(qr0);
     }
 
 }

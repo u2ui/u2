@@ -27,9 +27,9 @@
         --color-init-bg: var(--color-bg);
         --color-init-text: var(--color-text);
     }
-    [u2-skin]:has(>&) {
-        outline: 10px dotted red !important; /* invert can not be child of skin; */
-    }   
+    /* [u2-skin]:has(>&) {
+        outline: 10px dotted red !important; /* invert can not be child of skin; * /
+    }*/
 }
 
 [u2-skin=theme] {

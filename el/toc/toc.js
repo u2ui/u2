@@ -33,6 +33,7 @@ export default class U2Toc extends HTMLElement {
         let from = parseInt(fromAttr) || 1;
 
         const root = scopeId ? document.getElementById(scopeId) : document;
+        if (!root) return;
 
         const counts = [0,0,0,0,0,0,0];
 

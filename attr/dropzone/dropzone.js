@@ -326,13 +326,15 @@ function canDrop(dropzone, dragged) {
 
 
 function indicateDrop(container, position, element = null) {
+    let indicator = document.getElementById('drop-indicator');
+    // Verstecken
+    if (!container) return indicator?.hidePopover();
 
     if (!element) { // no reference element: drop appends to the container
         element = container.lastElementChild;
         position = 'after';
     }
 
-    let indicator = document.getElementById('drop-indicator');
     if (!indicator) {
         indicator = document.createElement('div');
         indicator.id = 'drop-indicator';
@@ -374,12 +376,6 @@ function indicateDrop(container, position, element = null) {
         `;
         document.body.appendChild(indicator);
     }
-    // Verstecken
-    if (!container) {
-        indicator.hidePopover();
-        return;
-    }
-
 
     // Leerer Container
     if (!element) {

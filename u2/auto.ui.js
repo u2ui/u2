@@ -53,8 +53,6 @@ async function renderUi(el){
     );
 }
 
-const needed = window.u2.needed;
-
 const exportCode = async function(){
     await repos();
 

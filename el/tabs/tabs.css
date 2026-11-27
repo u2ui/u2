@@ -15,7 +15,7 @@ u2-tabs [role="tab"] {
 u2-tabs [role="tab"][aria-selected="true"] {
     border-bottom-color: var(--color);
 }
-u2-tabs [role="tab"]:hover, [role="tab"]:focus {
+u2-tabs [role="tab"]:is(:hover, :focus) {
     background-color: #0000000a;
 }
 u2-tabs [role="tabpanel"] {

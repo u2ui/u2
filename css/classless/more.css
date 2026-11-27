@@ -283,12 +283,12 @@ summary {
     padding-inline: 0;
 	line-height:1; /* to center floated ::after */
 	--line-height:1; /* to center floated ::after */
+	list-style-type: none;
 }
 details[open] > summary { margin-block-end: .5rem; }
 details[open] { padding-block-end: 1rem; }
 
 
-summary { list-style-type: none; }
 summary::-webkit-details-marker { display: none; }
 summary::after {
 	line-height:.9;

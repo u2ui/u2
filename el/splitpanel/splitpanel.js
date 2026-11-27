@@ -89,13 +89,7 @@ export default class U2Splitpanel extends HTMLElement {
         //this.shadowRoot.addEventListener('pointerup', () => this.isDragging = false ); not needed?
         this.shadowRoot.addEventListener('lostpointercapture', () => this.isDragging = false );
 
-        this.observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                if (mutation.type === 'childList') {
-                    this.assignChildren();
-                }
-            });
-        });        
+        this.observer = new MutationObserver(() => this.assignChildren());
     }
     
     connectedCallback() {

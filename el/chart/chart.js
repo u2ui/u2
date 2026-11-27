@@ -17,7 +17,6 @@ export default class U2Chart extends HTMLElement {
             </style>
             <div class="chart-container"></div>`;
         this.container = this.shadowRoot.querySelector('.chart-container');
-        this.chart = null; // Initialisiere die Chart-Instanz
     }
     connectedCallback() {
         this._requestBuild();
