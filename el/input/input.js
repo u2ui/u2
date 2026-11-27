@@ -58,7 +58,7 @@ class SelectHandler extends TypeHandler {
         );
 
         // Bestimme selected value (Priorität: value Attribut > <option selected>)
-        const selectedValue = value || this.element.querySelector('option[selected]')?.value;
+        const selectedValue = value || (this.element.querySelector('option[selected]')?.value ?? value);
         // Füge selectedValue hinzu wenn nicht in options
         if (selectedValue && !options.some(o => o.value === selectedValue)) {
             options.unshift({ value: selectedValue, label: selectedValue });
