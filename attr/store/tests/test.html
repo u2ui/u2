@@ -84,6 +84,26 @@
                 Remember me:
                 <input type="checkbox" name="remember" value="true">
             </label>
+            <br>
+            <fieldset>
+                <legend>Size</legend>
+                <label><input type="radio" name="size" value="s"> S</label>
+                <label><input type="radio" name="size" value="m"> M</label>
+                <label><input type="radio" name="size" value="l"> L</label>
+            </fieldset>
+            <label>
+                Colors:
+                <select name="colors" multiple>
+                    <option>red</option>
+                    <option>green</option>
+                    <option>blue</option>
+                </select>
+            </label>
+            <br>
+            <label>
+                Password (never stored):
+                <input type="password" name="password">
+            </label>
         </form>
         <p>This form's data is stored under the form's ID.</p>
         <button onclick="clearFormStorage()">Clear Form Storage</button>

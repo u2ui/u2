@@ -1,11 +1,12 @@
 # [u2-store] - attribute
-Persists form/input values using localStorage (form[id] / input[name] as keys)
+Persists form/input values in sessionStorage or localStorage (form[id] / input[name] as keys)
 
 ## Features
 
 Automatically saves and restores form and input values using the browser's storage.  
 
 - Works with any form or individual input elements
+- Supports text inputs, checkboxes, radios and (multiple) selects
 - Persists values across page reloads
 - Handles both form-scoped and global input storage
 - Works with custom-elements that support `value` and `name` properties
@@ -13,7 +14,8 @@ Automatically saves and restores form and input values using the browser's stora
 
 Warnings:
 - forms need an `id` attribute!
-- inputs need a `name` attribute **and** no `value` attribute!
+- inputs need a `name` attribute; text-like inputs with a `value` attribute keep their preset value
+- password and file inputs are never stored
 - sessionStorage is used by default, localStorage needs a privacy-policy cookie "u2-cookiebanner" with a value like `{functional:true}`
 
 ## Usage
