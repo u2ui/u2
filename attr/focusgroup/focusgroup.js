@@ -15,6 +15,7 @@ addEventListener('keydown', e => {
 	if (target.tagName === 'TEXTAREA') return;
 	if (isHorizontal && target.tagName === 'INPUT' && target.type !== 'checkbox' && target.type !== 'radio') return;
 	if (isVertical && target.tagName === 'SELECT') return;
+	if (isVertical && target.tagName === 'INPUT' && /^(number|range|date|time|datetime-local|month|week)$/.test(target.type)) return; // up/down change its value
 
 	const options = optionsOf(container);
 	if ((options.horizontal || options.vertical) && !options[isHorizontal ? 'horizontal' : 'vertical']) return; // neither: both
@@ -40,10 +41,11 @@ addEventListener('keydown', e => {
 	e.preventDefault();
 });
 
-// remember: the item focused last is the group's only tab stop, however it got the focus (arrow key, click, script)
+// memory, as with the native focusgroup on unless "nomemory": the item focused last is the group's only tab stop,
+// however it got the focus (arrow key, click, script)
 addEventListener('focusin', e => {
 	const {target, container} = eventTargets(e);
-	if (!container || !optionsOf(container).remember) return;
+	if (!container || optionsOf(container).nomemory) return;
 	const items = groupItems(container);
 	if (!items.includes(target)) return; // not one of its items (e.g. one of a nested group): the tab stop stays
 	items.forEach(el => el.tabIndex = el === target ? 0 : -1);

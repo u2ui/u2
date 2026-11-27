@@ -91,7 +91,7 @@ export default class U2Alert extends U2Element {
                 <slot name=icon part=icon></slot>
                 <div id=body>
                     <slot id=content></slot>
-                    <slot name=action u2-focusgroup></slot>
+                    <slot name=action u2-focusgroup=nomemory></slot>
                 </div>
                 <button id=close part=close aria-label=close>
                     <svg viewBox="0 0 15 15" style="display:block;width:.7em" aria-hidden="true"><path d="M1.5 1.5l12 12m-12 0l12-12" stroke="currentColor"></path></svg>

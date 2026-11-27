@@ -23,7 +23,7 @@ class Dialog {
         element.innerHTML = 
             `<form method=dialog>
                 ${options.body}
-                ${options.buttons?'<div class=-buttons u2-focusgroup></div>':''}
+                ${options.buttons?'<div class=-buttons u2-focusgroup=nomemory></div>':''}
             </form>`;
 
         const btnCont = element.querySelector('.-buttons');

@@ -79,7 +79,7 @@ export default class U2Pagination extends HTMLElement {
         this.#fit = this.#fits();
 
         if (!this.#ul) {
-            this.innerHTML = `<nav aria-label="${text(this, 'nav')}"><ul u2-focusgroup="remember"></ul></nav>`;
+            this.innerHTML = `<nav aria-label="${text(this, 'nav')}"><ul u2-focusgroup></ul></nav>`;
             this.#ul = this.querySelector('ul');
         }
         const ul = this.#ul;

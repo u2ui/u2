@@ -7,8 +7,9 @@ It allows you to focus elements with arrow keys inside a container.
 
 - Works inside shadow dom.
 - Use focusgroup="wrap" to focus the first element when the last element is focused and vice versa.
-- Use focusgroup="remember" to focus the last focused element when group is focused again (focused by arrow key, click or script).
+- The last focused element (by arrow key, click or script) is the group's only tab stop: coming back by tab focuses it. Use focusgroup="nomemory" to turn it off.
 - Text-Inputs only works for up and down arrow keys.
+- Arrow keys a field needs itself stay with it: textarea, select (up/down), number, range and date inputs. Leave them by tab.
 - A nested group is a group of its own: an element belongs to its closest group only.
 
 
@@ -19,7 +20,7 @@ https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer
 ## Usage
 
 ```html
-<div u2-focusgroup="wrap remember">
+<div u2-focusgroup=wrap>
     <button>focusgroup</button>
     <button>focus and</button>
     <button>then use arrow-keys</button>

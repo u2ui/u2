@@ -6,7 +6,7 @@ export default class U2Buttongroup extends HTMLElement {
     constructor(...args) {
         super(...args);
         this.resizeObserver = new ResizeObserver(() => this._build());
-        this.setAttribute('u2-focusgroup','horizontal remember');
+        this.setAttribute('u2-focusgroup','horizontal');
         import('../../attr/focusgroup/focusgroup.js')
         //import ('../menubutton/menubutton.js'); // needs the css too
     }

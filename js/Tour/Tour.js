@@ -111,7 +111,7 @@ export class Tour extends EventTarget {
                 </button>
                 <div aria-live=polite aria-atomic=true class=u2TourContent></div>
             </div>
-            <footer class=u2-flex u2-focusgroup style="justify-content:space-between;">
+            <footer class=u2-flex u2-focusgroup=nomemory style="justify-content:space-between;">
                 <button class=u2TourBack>${text('back')}</button>
                 <button class=u2TourNext>${text('next')}</button>
             </footer>

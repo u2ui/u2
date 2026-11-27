@@ -24,15 +24,15 @@
     </section>
 
     <section>
-        <h2>u2-focusgroup="wrap remember"</h2>
+        <h2>u2-focusgroup=wrap</h2>
         <p>
             <strong>Wrap:</strong> If the last element has focus the next will be the first element.
         </p>
         <p>
-            <strong>Remember:</strong> If you come back to the group the last focused element will be focused. (The others can not be focused by tab-key.)
+            <strong>Memory</strong> (in every group, unless "nomemory"): If you come back to the group the last focused element will be focused. (The others can not be focused by tab-key.)
         </p>
 
-        <div style="display:flex; gap:1rem" u2-focusgroup="wrap remember">
+        <div style="display:flex; gap:1rem" u2-focusgroup=wrap>
             <label>1. <input type="checkbox"></label>
             <label>2. <input type="checkbox"></label>
             <label>3. <input type="checkbox"></label>
@@ -108,6 +108,16 @@
                 select
                 <select><option>1</option><option>2</option></select>
                 vertical does not work
+            </label>
+            <label>
+                number
+                <input type="number">
+                horizontal and vertical do not work (up/down change its value)
+            </label>
+            <label>
+                range
+                <input type="range">
+                horizontal and vertical do not work
             </label>
             <label>
                 textarea

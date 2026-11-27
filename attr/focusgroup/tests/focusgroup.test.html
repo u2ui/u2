@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width">
+    <title>u2-focusgroup — tests</title>
+
+    <link href="../../../css/classless/simple.css" rel=stylesheet>
+    <style>
+    #summary { padding:.6em 1em; border-radius:.3em; font-weight:bold; color:#fff; }
+    #summary.-ok  { background:#2e7d32; }
+    #summary.-bad { background:#c62828; }
+    #summary.-wait { background:#666; }
+    #report h3 { margin:1.4em 0 .4em; font-size:1em; opacity:.7; }
+    #report > div { border-left:.3em solid var(--c); padding:.3em .6em; margin-block:1px; font-family:monospace; font-size:.9em; }
+    #report .-pass { --c:#2e7d32; }
+    #report .-fail { --c:#c62828; }
+    #fixtures { position:fixed; inset-inline-start:-100vw; }
+    </style>
+</head>
+<body>
+
+<h1>u2-focusgroup</h1>
+<p>
+    Keys are dispatched as keydown events on the focused element; focus moves for real,
+    so the page needs the focus of its window.
+</p>
+
+<div id=summary>running…</div>
+<div id=report></div>
+<div id=fixtures></div>
+
+<script type=module>
+import '../focusgroup.js';
+
+for (const type of ['error', 'unhandledrejection']) addEventListener(type, (e) => {
+    summary.textContent = 'error: ' + (e.error ?? e.reason ?? e.message);
+    summary.className = '-bad';
+});
+
+const report = document.getElementById('report');
+const summary = document.getElementById('summary');
+let passed = 0, failed = 0;
+const line = (state, text) => {
+    const el = document.createElement('div');
+    el.className = '-' + state;
+    el.textContent = state.toUpperCase() + '  ' + text;
+    report.append(el);
+};
+const assert = (condition, message) => {
+    condition ? passed++ : failed++;
+    line(condition ? 'pass' : 'fail', message);
+};
+const section = (title) => report.insertAdjacentHTML('beforeend', `<h3>${title}</h3>`);
+
+// without the window's focus, browsers fire no focus events
+if (!document.hasFocus()) {
+    summary.textContent = 'waiting for the focus: click into the page';
+    summary.className = '-wait';
+    await new Promise(r => addEventListener('focus', r, {once: true}));
+}
+
+/** A fixture with the markup; ids are unique per fixture only, so look them up in it. */
+function fixture(html) {
+    const root = document.createElement('div');
+    root.innerHTML = html;
+    document.getElementById('fixtures').append(root);
+    return root;
+}
+/** The focused element, also inside shadow roots. */
+function focused() {
+    let el = document.activeElement;
+    while (el?.shadowRoot?.activeElement) el = el.shadowRoot.activeElement;
+    return el;
+}
+/** Focus the element, press the key on it; whether the key was taken (default prevented). */
+function press(el, code, init = {}) {
+    el.focus();
+    return !el.dispatchEvent(new KeyboardEvent('keydown', {code, bubbles: true, composed: true, cancelable: true, ...init}));
+}
+const $ = (root, id) => root.querySelector('#' + id);
+const tabIndexes = (...els) => els.map(el => el.getAttribute('tabindex')).join();
+
+section('moving');
+{
+    const f = fixture(`<div u2-focusgroup><button id=a>a</button><button id=b>b</button><button id=c disabled>c</button><button id=d>d</button></div>`);
+    assert(press($(f, 'a'), 'ArrowRight') && focused() === $(f, 'b'), 'right: to the next, the key is taken');
+    assert(press($(f, 'b'), 'ArrowDown') && focused() === $(f, 'd'), 'down as well, a disabled item is skipped');
+    assert(press($(f, 'b'), 'ArrowLeft') && focused() === $(f, 'a'), 'left: to the previous');
+    assert(!press($(f, 'd'), 'ArrowRight') && focused() === $(f, 'd'), 'at the end: stays, the key is not taken');
+    assert(!press($(f, 'a'), 'ArrowUp') && focused() === $(f, 'a'), 'at the start: stays');
+    for (const key of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey']) {
+        assert(!press($(f, 'a'), 'ArrowRight', {[key]: true}) && focused() === $(f, 'a'), `with ${key}: nothing`);
+    }
+    $(f, 'a').focus();
+    const e = new KeyboardEvent('keydown', {code: 'ArrowRight', bubbles: true, cancelable: true});
+    e.preventDefault();
+    $(f, 'a').dispatchEvent(e);
+    assert(focused() === $(f, 'a'), 'a key taken before: nothing');
+    assert(!press($(f, 'a'), 'Home') && focused() === $(f, 'a'), 'another key: nothing');
+}
+
+section('wrap');
+{
+    const f = fixture(`<div u2-focusgroup=wrap><button id=a>a</button><button id=b>b</button><button id=c>c</button></div>`);
+    assert(press($(f, 'c'), 'ArrowRight') && focused() === $(f, 'a'), 'past the last to the first');
+    assert(press($(f, 'a'), 'ArrowLeft') && focused() === $(f, 'c'), 'before the first to the last');
+    const one = fixture(`<div u2-focusgroup=wrap><button id=a>a</button></div>`);
+    assert(!press($(one, 'a'), 'ArrowRight'), 'a single item: the key is not taken');
+}
+
+section('axes');
+{
+    const h = fixture(`<div u2-focusgroup=horizontal><button id=a>a</button><button id=b>b</button></div>`);
+    assert(press($(h, 'a'), 'ArrowRight') && focused() === $(h, 'b'), 'horizontal: left and right');
+    assert(!press($(h, 'a'), 'ArrowDown') && focused() === $(h, 'a'), 'horizontal: not up and down');
+    const v = fixture(`<div u2-focusgroup=vertical><button id=a>a</button><button id=b>b</button></div>`);
+    assert(press($(v, 'a'), 'ArrowDown') && focused() === $(v, 'b'), 'vertical: up and down');
+    assert(!press($(v, 'a'), 'ArrowRight') && focused() === $(v, 'a'), 'vertical: not left and right');
+    const both = fixture(`<div u2-focusgroup="horizontal vertical"><button id=a>a</button><button id=b>b</button></div>`);
+    assert(press($(both, 'a'), 'ArrowDown') && press($(both, 'b'), 'ArrowLeft'), 'both named: both');
+}
+
+section('fields keep the keys they need');
+{
+    const f = fixture(`<div u2-focusgroup>
+        <button id=first>first</button>
+        <input id=text>
+        <input id=box type=checkbox>
+        <select id=select><option>1<option>2</select>
+        <textarea id=area></textarea>
+        <input id=number type=number>
+        <input id=range type=range>
+        <input id=date type=date>
+        <button id=last>last</button>
+    </div>`);
+    assert(!press($(f, 'text'), 'ArrowRight') && press($(f, 'text'), 'ArrowDown'), 'text: left/right stay, up/down move');
+    assert(press($(f, 'box'), 'ArrowRight') && press($(f, 'box'), 'ArrowDown'), 'checkbox: all move');
+    assert(press($(f, 'select'), 'ArrowRight') && !press($(f, 'select'), 'ArrowDown'), 'select: left/right move, up/down stay');
+    assert(!press($(f, 'area'), 'ArrowRight') && !press($(f, 'area'), 'ArrowDown'), 'textarea: all stay');
+    for (const id of ['number', 'range', 'date']) {
+        assert(!press($(f, id), 'ArrowRight') && !press($(f, id), 'ArrowDown') && focused() === $(f, id), `${id}: all stay`);
+    }
+}
+
+section('nested groups');
+{
+    const f = fixture(`<div u2-focusgroup=horizontal>
+        <button id=a>a</button>
+        <div u2-focusgroup=vertical><button id=i1>i1</button><button id=i2>i2</button></div>
+        <button id=own u2-focusgroup>own</button>
+        <button id=b>b</button>
+    </div>`);
+    assert(press($(f, 'a'), 'ArrowRight') && focused() === $(f, 'b'), 'the outer group skips the inner one and an item that is a group itself');
+    assert(press($(f, 'i1'), 'ArrowDown') && focused() === $(f, 'i2'), 'the inner group moves within itself');
+    assert(!press($(f, 'i1'), 'ArrowRight') && focused() === $(f, 'i1'), 'the inner group does not take the outer axis');
+}
+
+section('shadow dom');
+{
+    const f = fixture(`<div id=host></div><div id=slotting><button id=s1>s1</button><button id=s2>s2</button></div>
+        <div u2-focusgroup><button id=a>a</button><span id=component></span><button id=b>b</button></div>`);
+    const root = $(f, 'host').attachShadow({mode: 'open'});
+    root.innerHTML = `<div u2-focusgroup><button id=x1>x1</button><button id=x2>x2</button></div>`;
+    assert(press($(root, 'x1'), 'ArrowRight') && focused() === $(root, 'x2'), 'a group inside a shadow root');
+    $(f, 'slotting').attachShadow({mode: 'open'}).innerHTML = `<div u2-focusgroup><slot></slot></div>`;
+    assert(press($(f, 's1'), 'ArrowRight') && focused() === $(f, 's2'), 'slotted items');
+    const component = $(f, 'component').attachShadow({mode: 'open'});
+    component.innerHTML = `<button id=y>y</button>`;
+    const warn = console.warn, warnings = [];
+    console.warn = (...args) => warnings.push(args);
+    const taken = press($(component, 'y'), 'ArrowRight');
+    console.warn = warn;
+    assert(!taken && focused() === $(component, 'y') && !warnings.length, 'a button in a component inside a group: not an item, no warning');
+}
+
+section('memory');
+{
+    const f = fixture(`<div u2-focusgroup>
+        <button id=a>a</button><button id=b>b</button>
+        <div u2-focusgroup><button id=i>i</button></div>
+    </div>`);
+    const [a, b, i] = ['a', 'b', 'i'].map(id => $(f, id));
+    assert(tabIndexes(a, b) === ',', 'nothing set before a focus');
+    press(a, 'ArrowRight');
+    assert(tabIndexes(a, b) === '-1,0', 'by arrow key: the focused item is the only tab stop');
+    a.focus();
+    assert(tabIndexes(a, b) === '0,-1', 'by script or click');
+    i.focus();
+    assert(tabIndexes(a, b, i) === '0,-1,0', 'an item of a nested group is its own group\'s tab stop, the outer one stays');
+    const host = fixture(`<div id=host></div>`).firstChild;
+    const root = host.attachShadow({mode: 'open'});
+    root.innerHTML = `<div u2-focusgroup><button id=a>a</button><button id=b>b</button></div>`;
+    $(root, 'b').focus();
+    assert(tabIndexes($(root, 'a'), $(root, 'b')) === '-1,0', 'inside a shadow root');
+    const off = fixture(`<div u2-focusgroup=nomemory><button id=a>a</button><button id=b>b</button></div>`);
+    press($(off, 'a'), 'ArrowRight');
+    assert(focused() === $(off, 'b') && tabIndexes($(off, 'a'), $(off, 'b')) === ',', 'nomemory: moves, but sets no tabindex');
+}
+
+document.activeElement?.blur();
+summary.textContent = failed ? `${failed} failed, ${passed} passed` : `all ${passed} passed`;
+summary.className = failed ? '-bad' : '-ok';
+document.documentElement.dataset.result = failed ? 'failed' : 'passed';
+</script>

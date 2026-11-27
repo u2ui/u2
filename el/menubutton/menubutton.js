@@ -8,7 +8,7 @@ export default class U2Menubutton extends HTMLElement {
 
             const menu = this.querySelector('menu');
 
-            menu.setAttribute('u2-focusgroup', 'remember');
+            menu.setAttribute('u2-focusgroup', '');
             menu.setAttribute('popover', 'auto');
 
             let button = this.querySelector(':scope > button');
