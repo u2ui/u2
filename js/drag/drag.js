@@ -2,7 +2,6 @@
 export let dragged = null;
 
 document.addEventListener('dragstart', (e) => {
-    dragged = null;
     // composedPath() statt e.target: bei Events aus einem Shadow-Root ist e.target auf den
     // Host retargetiert -> wir würden das falsche Element ziehen. Das gezogene Element ist
     // das erste [draggable] im Pfad (funktioniert in Light- und Shadow-DOM gleich).

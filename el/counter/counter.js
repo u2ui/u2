@@ -10,7 +10,7 @@ export default class U2Counter extends HTMLElement {
         this._observer = new IntersectionObserver((entries)=>{
             if (entries[0].isIntersecting) {
                 this._animate(this._start, this._end)
-                if (this.hasAttribute('once')) this._observer.disconnect(this);
+                if (this.hasAttribute('once')) this._observer.disconnect();
             } else {
                 this._reset();
             }
@@ -24,7 +24,7 @@ export default class U2Counter extends HTMLElement {
     }
     set value(value){
         value = String(value).trim();
-        let [ integer, digits='' ] = value.trim().split('.');
+        const [, digits = ''] = value.split('.');
         this._minDigits = digits.length;
 
         this._end = Number(value);
@@ -35,10 +35,10 @@ export default class U2Counter extends HTMLElement {
     connectedCallback() {
         // measure final-width
         this.innerHTML = format(this, this._end);
-        const writingMode = getComputedStyle(this).getPropertyValue('writing-mode');
-        const vertical = writingMode.includes('vertical');
+        const style = getComputedStyle(this);
+        const vertical = style.writingMode.includes('vertical');
         const inlineSizePx = vertical ? this.offsetHeight : this.offsetWidth;
-        const fontSizePx = Number(getComputedStyle(this).getPropertyValue('font-size').slice(0,-2));
+        const fontSizePx = parseFloat(style.fontSize);
         const em = inlineSizePx / fontSizePx;
         this.style.setProperty('--js-final-inline-size', em+'em');
 
@@ -46,7 +46,7 @@ export default class U2Counter extends HTMLElement {
         this._observer.observe(this);
     }
     disconnectedCallback() {
-        this._observer.disconnect(this)
+        this._observer.disconnect();
         this._stop();
     }
     _animate(from, to) {
@@ -81,7 +81,7 @@ export default class U2Counter extends HTMLElement {
 
 // https://easings.net/de
 function easeOutCubic(x) {
-    return 1 - Math.pow(1 - x, 3);
+    return 1 - (1 - x) ** 3;
 }
 
 function format(el, val){

@@ -94,7 +94,7 @@ u2-ico[state] {
     &[state="fail"] {
         font-size: 0.8em;
         width: auto;
-        ::before {
+        &::before {
             display:block;
         }
     }

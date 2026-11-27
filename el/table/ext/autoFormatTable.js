@@ -78,7 +78,7 @@ export function autoFormatTable(table) {
         if (nonEmptyValues.length === 0) continue;
 
         // 1. NUMERIC CHECK
-        const allNumeric = nonEmptyValues.every(v => !isNaN(v) && v !== '');
+        const allNumeric = nonEmptyValues.every(v => !isNaN(v));
         if (allNumeric) {
             allCells.forEach(cell => cell.classList.add('auto-numeric'));
             
@@ -145,7 +145,7 @@ export function autoFormatTable(table) {
         // 5. BOOLEAN CHECK
         const booleanValues = ['true', 'false', 'yes', 'no', 'ja', 'nein', '✓', '✗', 'x'];
         const allBoolean = nonEmptyValues.every(v => 
-            booleanValues.includes(v.trim().toLowerCase())
+            booleanValues.includes(v.toLowerCase())
         );
         if (allBoolean) {
             bodyCells.forEach(cell => {
@@ -219,7 +219,6 @@ export function autoFormatTable(table) {
         // 9. LONG HEADER CHECK (vertical writing)
         if (headerCell) {
             const headerLength = headerCell.textContent.trim().length;
-            const maxContentLength = Math.max(...nonEmptyValues.map(v => v.length));
             if (headerLength > maxContentLength * 1.5 && headerLength > 15) {
                 headerCell.classList.add('auto-vertical');
             }

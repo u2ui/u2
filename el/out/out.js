@@ -2,7 +2,6 @@ const itemJsRoot = '../../../../nuxodin/item.js/';
 //import { effect } from '../../../../nuxodin/item.js/item.js';
 
 export default class U2Out extends HTMLElement {
-    connectedCallback() {}
     async render() {
         const item = this._item;
         const {effect} = await import(itemJsRoot+'item.js');

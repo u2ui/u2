@@ -11,7 +11,7 @@ export default class U2Masonry extends HTMLElement{
         this.rObserver.observe(this);
     }
     disconnectedCallback(){
-        this.rObserver.unobserve(this);
+        this.rObserver.disconnect();
     }
     render(){
         const widthContainer = this.clientWidth;
@@ -68,14 +68,11 @@ function cssLengthToPixels(length, element) {
         case 'px':
             return value;
         case 'em':
-            const fontSize = parseFloat(getComputedStyle(element).fontSize);
-            return value * fontSize;
+            return value * parseFloat(getComputedStyle(element).fontSize);
         case 'rem':
-            const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
-            return value * rootFontSize;
+            return value * parseFloat(getComputedStyle(document.documentElement).fontSize);
         case '%':
-            const parentSize = parseFloat(getComputedStyle(element.parentNode).width);
-            return (value / 100) * parentSize;
+            return (value / 100) * parseFloat(getComputedStyle(element.parentNode).width);
         case 'vh':
             return value * (innerHeight / 100);
         case 'vw':

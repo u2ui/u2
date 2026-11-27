@@ -16,7 +16,7 @@ class DynamicScrollSpy {
         this.idLinkMap.get(id)?.classList.add(this.ACTIVE_CLASS);
     }
     recalibrate() {
-        if (this.observer) this.observer.disconnect();
+        this.observer?.disconnect();
         
         this.menuLinks = [...this.navElement.querySelectorAll('a[href*="#"]')];
 
@@ -24,9 +24,9 @@ class DynamicScrollSpy {
         
         const currentURL = location.href.split('#')[0];
         const sections = this.menuLinks.map(link => {
-            const linkURL = link.href.split('#')[0];
-            const hash = decodeURIComponent(link.href.split('#')[1]);
-            if (linkURL === currentURL && hash) {
+            const [linkURL, rawHash] = link.href.split('#');
+            if (linkURL === currentURL && rawHash) {
+                const hash = decodeURIComponent(rawHash);
                 const section = document.getElementById(hash);
                 this.idLinkMap.set(hash, link);
                 return section;
@@ -56,7 +56,7 @@ class DynamicScrollSpy {
         this.mutationObserver = new MutationObserver((mutationsList) => {
             for (const mutation of mutationsList) {
                 if (mutation.type === 'childList') {
-                    window.requestAnimationFrame(() => this.recalibrate());
+                    requestAnimationFrame(() => this.recalibrate());
                     break;
                 }
             }
@@ -65,8 +65,8 @@ class DynamicScrollSpy {
     }
 
     disconnect() {
-        if (this.observer) this.observer.disconnect();
-        if (this.mutationObserver) this.mutationObserver.disconnect();
+        this.observer?.disconnect();
+        this.mutationObserver?.disconnect();
     }
 }
 
@@ -77,9 +77,7 @@ new SelectorObserver({
         navElement._scrollspyInstance = new DynamicScrollSpy(navElement);
     },
     off: (navElement) => {
-        if (navElement._scrollspyInstance) {
-            navElement._scrollspyInstance.disconnect();
-            delete navElement._scrollspyInstance;
-        }
+        navElement._scrollspyInstance?.disconnect();
+        delete navElement._scrollspyInstance;
     }
 }).observe('[u2-scrollspy]');

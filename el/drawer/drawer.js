@@ -10,8 +10,6 @@ export default class U2Drawer extends HTMLElement {
     }
 
     connectedCallback() {
-        const placement = this.getAttribute('placement') || 'right';
-
         if (!this.hasAttribute('popover')) this.setAttribute('popover', 'auto');
 
         this.swipeConfig = {
@@ -88,6 +86,7 @@ export default class U2Drawer extends HTMLElement {
                     width: fit-content;
                     transform: translateY(0);
                 }
+                </style>
             `
             this.addEventListener('beforetoggle', e => {
                 if (e.newState === "open") {
@@ -155,8 +154,7 @@ export default class U2Drawer extends HTMLElement {
             if (shouldClose) {
                 this.hidePopover();
             } else {
-                const config = this.swipeConfig[placement];
-                this.style.transform = config.open;
+                this.style.transform = this.swipeConfig[placement].open;
             }
         });
     }

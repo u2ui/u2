@@ -15,7 +15,7 @@ export function importCss(url, options={}) {
 
 function _importCss(url, options={}){
     // handle relative urls
-    if (url.indexOf('./') === 0) {
+    if (url.startsWith('./')) {
         // better?
         // const e = new Error();
         // const lines = e.stack.split('\n');

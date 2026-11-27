@@ -56,9 +56,8 @@ export default class U2Responsive extends HTMLElement {
         if (growing && this.currentLevel > 0) {
             const criticalWidth = this.criticalWidths.get(this.currentLevel-1);
             let margin = 0;
-            if (criticalWidth !=null) {
-                const distanceToCritical = criticalWidth - width;
-                margin = Math.max(0, distanceToCritical / 1);
+            if (criticalWidth != null) {
+                margin = Math.max(0, criticalWidth - width);
             }
             const growCheck = width > this.lastGrowingCheckAt + margin;
 
@@ -111,7 +110,7 @@ export default class U2Responsive extends HTMLElement {
             if (tryGrowingAt) {
                 const marker = div.querySelector('#tryGrowingAt') || document.createElement('div');
                 marker.id = 'tryGrowingAt';
-                marker.style.cssText = `position:absolute; width:2px; height:20px; background:blue; white-space:nowrap; text-aligen:center`;
+                marker.style.cssText = `position:absolute; width:2px; height:20px; background:blue; white-space:nowrap; text-align:center`;
                 marker.style.left = tryGrowingAt+'px';
                 marker.style.top = '-10px';
                 div.append(marker);

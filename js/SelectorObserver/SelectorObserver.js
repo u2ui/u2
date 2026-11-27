@@ -122,7 +122,7 @@ export class SelectorObserver {
     _add(el) {
         if (this.targets.has(el)) return;
         this.targets.add(el);
-        this._on && this._on(el);
+        this._on?.(el);
     }
 
     /**
@@ -131,7 +131,7 @@ export class SelectorObserver {
      _remove(el) {
         if (!this.targets.has(el)) return;
         this.targets.delete(el);
-        this._off && this._off(el);
+        this._off?.(el);
     }
 
     /**

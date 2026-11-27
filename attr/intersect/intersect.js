@@ -30,7 +30,7 @@ new SelectorObserver({
 
             attrValue = attrValue.trim();
             el.setAttribute('u2-intersect', attrValue);
-            el.classList[onTarget?'add':'remove']('u2-intersected');
+            el.classList.toggle('u2-intersected', onTarget);
 
             const event = new CustomEvent('u2-intersect.'+(onTarget?'enter':'leave'), {bubbles:true} );
             el.dispatchEvent(event);
@@ -43,7 +43,7 @@ new SelectorObserver({
 
     },
     off: (el) => {
-        if (el.u2IntersectionObserver) el.u2IntersectionObserver.unobserve(el);
+        el.u2IntersectionObserver?.unobserve(el);
     }
 }).observe('[u2-intersect]');
 

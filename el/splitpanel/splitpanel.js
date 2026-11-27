@@ -52,10 +52,11 @@ export default class U2Splitpanel extends HTMLElement {
             this.nextPanel = this.draggingDivider.nextElementSibling.assignedNodes()[0];
 
             // set flex-basis for all children
+            const vertical = this.hasAttribute('vertical');
             const children = [...this.children];
             let total = 0;
             children.forEach((child) => {
-                const size = this.hasAttribute('vertical') ? child.clientHeight : child.clientWidth;
+                const size = vertical ? child.clientHeight : child.clientWidth;
                 total += size;
                 requestAnimationFrame(() => {
                     child.style.flexBasis = `${size / total * 100}%`;
@@ -66,14 +67,16 @@ export default class U2Splitpanel extends HTMLElement {
 
         this.shadowRoot.addEventListener('pointermove', (event) => {
             if (!this.isDragging) return;
+            const v = this.hasAttribute('vertical');
             const rect = this.getBoundingClientRect();
-            const position = this.hasAttribute('vertical') ? event.clientY - rect.top : event.clientX - rect.left;
-            const previousSize = this.hasAttribute('vertical') ? this.previousPanel.clientHeight : this.previousPanel.clientWidth;
-            const nextSize = this.hasAttribute('vertical') ? this.nextPanel.clientHeight : this.nextPanel.clientWidth;
+            const position = v ? event.clientY - rect.top : event.clientX - rect.left;
+            const previousSize = v ? this.previousPanel.clientHeight : this.previousPanel.clientWidth;
+            const nextSize = v ? this.nextPanel.clientHeight : this.nextPanel.clientWidth;
             const totalSize = previousSize + nextSize;
             const totalPercentage = parseFloat(this.previousPanel.style.flexBasis) + parseFloat(this.nextPanel.style.flexBasis);
         
-            const newPreviousSize = position - (this.previousPanel.getBoundingClientRect()[this.hasAttribute('vertical') ? 'top' : 'left'] - rect[this.hasAttribute('vertical') ? 'top' : 'left']);
+            const prop = v ? 'top' : 'left';
+            const newPreviousSize = position - (this.previousPanel.getBoundingClientRect()[prop] - rect[prop]);
             const newNextSize = totalSize - newPreviousSize;
 
             const prevPercent = newPreviousSize / totalSize * totalPercentage;

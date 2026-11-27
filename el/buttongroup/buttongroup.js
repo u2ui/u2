@@ -60,8 +60,7 @@ export default class U2Buttongroup extends HTMLElement {
         this.resizeObserver.observe(this.parentElement);
     }
     disconnectedCallback() {
-        this.resizeObserver.unobserve(this);
-        this.resizeObserver.unobserve(this.parentElement);
+        this.resizeObserver.disconnect();
     }
 
 }

@@ -11,8 +11,7 @@ u2-menubutton menu {
     right:0;
     width:max-content;
     margin:0;
-    padding:.4em;
-    padding-inline:0;
+    padding:.4em 0;
     opacity:0;
     visibility: hidden;
     transition: opacity .2s .1s;

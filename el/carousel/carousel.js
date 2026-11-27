@@ -172,7 +172,7 @@ contain: layout style paint;  /* Neu ok? */
 		if (!U2Carousel.mode[mode]) mode = 'slide';
 		this.setAttribute('mode', mode);
 		this.handler = U2Carousel.mode[mode];
-		this.handler.init && this.handler.init.call(this);
+		this.handler.init?.call(this);
 	}
 	get mode(){
 		return this.getAttribute('mode');
@@ -181,18 +181,19 @@ contain: layout style paint;  /* Neu ok? */
 		return this.slider.assignedElements({flatten:true});
 	}
 	activeIndex(){
-		return Array.prototype.indexOf.call(this._items(), this.active);
+		return this._items().indexOf(this.active);
 	}
 	slideTo(target){
 		
 		if (target==null) return;
 
-		if (typeof target === 'number') target = this._items()[target]; // by index
+		const items = this._items();
+		if (typeof target === 'number') target = items[target]; // by index
 
-		if (!Array.from(this._items()).includes(target)) console.error('target not a child of this slider!')
+		if (!items.includes(target)) console.error('target not a child of this slider!')
 
 		if (this.active !== target) { // just trigger if not active
-			for (let child of this._items()) {
+			for (let child of items) {
 				child.ariaHidden = target !== child;
                 // target !== child ? child.setAttribute('hidden', 'until-found') : child.removeAttribute('hidden'); // todo: findable
 			}
@@ -202,12 +203,12 @@ contain: layout style paint;  /* Neu ok? */
 				bubbles:true,
 				detail:{
 					slide:target,
-					index:Array.prototype.indexOf.call(this._items(), target),
+					index:items.indexOf(target),
 					slider:this,
 				}
 			}));
 		}
-		this.handler.slideTo && this.handler.slideTo.call(this, target); // needed if not active?
+		this.handler.slideTo?.call(this, target); // needed if not active?
 	}
 	next(){ this.slideTo(this._sibling('next')); }
 	prev(){ this.slideTo(this._sibling('prev')); }
@@ -259,7 +260,7 @@ contain: layout style paint;  /* Neu ok? */
 	}
 	disconnectedCallback() {
 		this.stop();
-		this.slider && this.slider.removeEventListener('slotchange', this._onSlotChange);
+		this.slider?.removeEventListener('slotchange', this._onSlotChange);
 	}
 }
 

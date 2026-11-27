@@ -91,7 +91,7 @@ export default class U2Accordion extends U2Element {
 
         let hLevel = 6;
         for (let node of this.children) { // get highest heading level
-            if (!node.tagName.match(/^H[1-6]$/)) continue;
+            if (!/^H[1-6]$/.test(node.tagName)) continue;
             hLevel = Math.min(hLevel, parseInt(node.tagName[1]));
         }
 
@@ -100,7 +100,7 @@ export default class U2Accordion extends U2Element {
         let collectedContents = [];
         for (let node of this.childNodes) {
             if (node.tagName === 'H' + hLevel) {
-                activeContent && activeContent.assign(...collectedContents);
+                activeContent?.assign(...collectedContents);
                 index++;
                 let item = container.childNodes[index];
                 if (!item) {
@@ -130,12 +130,12 @@ export default class U2Accordion extends U2Element {
                 });
                 activeContent = item.querySelector('.content');
                 collectedContents = [];
-            } else {
-                if (activeContent) collectedContents.push(node);
+            } else if (activeContent) {
+                collectedContents.push(node);
             }
         }
         while (container.children.length > index + 1) container.lastChild.remove(); // remove excess items
-        activeContent && activeContent.assign(...collectedContents);
+        activeContent?.assign(...collectedContents);
     }
 
     _getTargetTriggerFromEvent(event) {
@@ -192,8 +192,8 @@ export default class U2Accordion extends U2Element {
         const idx = [...item.parentElement.children].indexOf(item);
 
         const actions = {
-            ArrowUp: (idx) => this._focusItem(idx - 1),
-            ArrowDown: (idx) => this._focusItem(idx + 1),
+            ArrowUp: () => this._focusItem(idx - 1),
+            ArrowDown: () => this._focusItem(idx + 1),
             Home: () => this._focusItem(0),
             End: () => this._focusItem(this.items.length - 1),
             Enter: () => this._toggleItem(idx),
@@ -201,7 +201,7 @@ export default class U2Accordion extends U2Element {
         };
         if (actions[e.code]) {
             e.preventDefault();
-            actions[e.code](idx);
+            actions[e.code]();
         }
     }
 }

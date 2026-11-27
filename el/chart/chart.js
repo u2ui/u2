@@ -50,10 +50,8 @@ export default class U2Chart extends HTMLElement {
         });
     }
     async _build() {
-        if (this.engineInstance) {
-            this.engineInstance.destroy();
-            this.engineInstance = null;
-        }
+        this.engineInstance?.destroy();
+        this.engineInstance = null;
 
         this.container.innerHTML = ''; // Clear container
 
@@ -73,10 +71,6 @@ export default class U2Chart extends HTMLElement {
             }
         };
 
-        if (type === 'pie' || type === 'doughnut') {
-            options.scales = undefined;
-        }
-
         const { hue, saturation, lightness } = getHSLofElement(this);
 
         function getColor(i) {
@@ -88,21 +82,18 @@ export default class U2Chart extends HTMLElement {
             data = data[0].map((_, i) => data.map(row => row[i]));
         }
 
-        const attr_axisLabels = this.getAttribute('axis-labels')
-        if (attr_axisLabels != null) {
-            if (attr_axisLabels === 'false') {
-                options.scales.x.ticks.display = false;
-                options.scales.y.ticks.display = false;
-            }
+        if (this.getAttribute('axis-labels') === 'false') {
+            options.scales.x.ticks.display = false;
+            options.scales.y.ticks.display = false;
         }
-        const attr_grid = this.getAttribute('grid')
-        if (attr_grid != null) {
-            if (attr_grid === 'false') {
-                options.scales.x.grid.display = false;
-                options.scales.y.grid.display = false;
-                options.scales.x.border.display = false;
-                options.scales.y.border.display = false;
-            }
+        if (this.getAttribute('grid') === 'false') {
+            options.scales.x.grid.display = false;
+            options.scales.y.grid.display = false;
+            options.scales.x.border.display = false;
+            options.scales.y.border.display = false;
+        }
+        if (type === 'pie' || type === 'doughnut') {
+            options.scales = undefined;
         }
 
         try {
@@ -118,10 +109,8 @@ export default class U2Chart extends HTMLElement {
         }
     }
     disconnectedCallback() {
-        if (this.engineInstance) {
-            this.engineInstance.destroy();
-            this.engineInstance = null;
-        }
+        this.engineInstance?.destroy();
+        this.engineInstance = null;
     }
 }
 

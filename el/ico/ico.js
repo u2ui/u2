@@ -26,9 +26,6 @@ const observeStyle = (
 */
 
 export default class U2Ico extends HTMLElement {
-    constructor() {
-        super();
-    }
     connectedCallback() {
 
         // observeStyle(this, '--u2-ico-dir', dir => {
@@ -81,8 +78,8 @@ export default class U2Ico extends HTMLElement {
                     this.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id')); // remove ids
                     const svgEl = this.firstElementChild;
                     if (!svgEl.hasAttribute('viewBox')) { // SF Symbol
-                        const width = parseFloat(svgEl.getAttribute('width')) ?? 24;
-                        const height = parseFloat(svgEl.getAttribute('height')) ?? 24;
+                        const width = parseFloat(svgEl.getAttribute('width')) || 24;
+                        const height = parseFloat(svgEl.getAttribute('height')) || 24;
                         svgEl.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
                     }
                     ['xmlns','xmlns:xlink','version','class'].forEach(attr=>svgEl.removeAttribute(attr));

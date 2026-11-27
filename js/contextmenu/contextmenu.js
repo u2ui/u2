@@ -138,7 +138,7 @@ class MenuItem {
         }
         if (this.currentActive || this.currentTarget) {
             this.el.hidden = false;
-            this.options?.onparse?.bind(this)({target:this.currentTarget});
+            this.options?.onparse?.call(this, {target:this.currentTarget});
             return true;
         }
         this.el.hidden = true;
@@ -263,10 +263,10 @@ function focusNext(direction){
     const activeLi = root.activeElement.closest('li');
     let next = activeLi;
     while (next) {
-        if (direction==='next') next = next?.nextElementSibling;
-        if (direction==='prev') next = next?.previousElementSibling;
-        if (direction==='parent') next = next?.parentElement?.parentElement;
-        if (direction==='child') next = next?.querySelector('li');
+        if (direction==='next') next = next.nextElementSibling;
+        if (direction==='prev') next = next.previousElementSibling;
+        if (direction==='parent') next = next.parentElement?.parentElement;
+        if (direction==='child') next = next.querySelector('li');
         if (!next) return;
         if (next.hidden) continue;
         const firstFocusable = next.querySelector(':scope :is(button, [tabindex], a, input, select, textarea)');
@@ -284,7 +284,7 @@ const onkey = {
 }
 rootEl.addEventListener('keydown',e=>{
     if (!onkey[e.key]) return;
-    onkey[e.key]?.(e);
+    onkey[e.key](e);
     e.preventDefault();
 });
 

@@ -80,7 +80,7 @@ export default class U2Typewriter extends HTMLElement {
     }
     pause() {
         this.dispatchEvent(new CustomEvent('u2-typewriter-pause', {bubbles:true}));
-        clearInterval(this.playInterval);
+        clearTimeout(this.playInterval);
     }
     next() {
         this.activeChar.classList.add('-Active');
@@ -114,11 +114,7 @@ function findNextChar(root, node) {
             if (next) break;
         }
     }
-    if (next.classList.contains('-Symbol')) {
-        return next;
-    } else {
-        return findNextChar(root, next);
-    }
+    return next.classList.contains('-Symbol') ? next : findNextChar(root, next);
 }
 
 function separateChars(parent) {
@@ -156,6 +152,5 @@ document.addEventListener('u2-typewriter-play', (e)=>{
     el.audioObj.play();
 });
 document.addEventListener('u2-typewriter-pause', e=>{
-    const el = e.target;
-    el.audioObj && el.audioObj.pause();
+    e.target.audioObj?.pause();
 })

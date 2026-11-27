@@ -4,9 +4,7 @@ import { promiseElementById } from "../../u2/tools/promiseElementById.js";
 export default class U2Copy extends HTMLElement {
     constructor() {
         super();
-        this.mutationObserver = new MutationObserver(() => {
-            this.updateContent();
-        });
+        this.mutationObserver = new MutationObserver(() => this.updateContent());
     }
 
     static observedAttributes = ['for', 'sync'];
@@ -31,10 +29,8 @@ export default class U2Copy extends HTMLElement {
     set sync(value) {
         if (!value) {
             this.mutationObserver.disconnect();
-        } else {
-            if (this._targetElement) {
-                this.mutationObserver.observe(this._targetElement, { childList: true, subtree: true, characterData: true });
-            }
+        } else if (this._targetElement) {
+            this.mutationObserver.observe(this._targetElement, { childList: true, subtree: true, characterData: true });
         }
         this._sync = value;
     }

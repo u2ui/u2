@@ -105,15 +105,12 @@ export default class U2Alert extends U2Element {
     static observedAttributes = ['icon', 'variant'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
-        if (name==='variant') {
-            const variant = variantOf(this);
+        const variant = variantOf(this);
+        if (name === 'variant') {
             this.shadowRoot.getElementById('container').role = variantData[variant]?.role || 'status'; // better to set role to host?
         }
-        if (name==='variant' || name==='icon') {
-            const variant = variantOf(this);
-            const icon = this.getAttribute('icon') || variantData[variant]?.icon || 'info';
-            this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
-        }
+        const icon = this.getAttribute('icon') || variantData[variant]?.icon || 'info';
+        this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
     }
 
     hide() {

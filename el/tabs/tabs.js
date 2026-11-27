@@ -95,7 +95,7 @@ export default class U2Tabs extends HTMLElement {
 
     _update() {
         this.tabs = this._tabsSlot.assignedNodes({ flatten: true });
-        this.panels = this._panelsSlot.assignedNodes({ flatten: true }).filter(el => el.nodeType === Node.ELEMENT_NODE);
+        this.panels = this._panelsSlot.assignedElements({ flatten: true });
         for (let panel of this.panels) panel.role = 'tabpanel';
         for (let tab of this.tabs) tab.role = 'tab';
         this._selectTab(this._selected);

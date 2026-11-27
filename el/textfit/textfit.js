@@ -1,3 +1,4 @@
+let c2d;
 const throttle = (func, ms) => {
     let timeOut;
     return (...args) => {
@@ -41,22 +42,18 @@ export default class U2Textfit extends HTMLElement {
     connectedCallback() {
         addEventListener('load',this.render); // e.g. font switch
         this.render();
-        this._rObserver && this._rObserver.observe(this);
+        this._rObserver.observe(this);
     }
     disconnectedCallback() {
         removeEventListener('load',this.render); // e.g. font switch
-        this._rObserver.disconnect(this);
+        this._rObserver.disconnect();
     }
 
     render(e){
         const style = getComputedStyle(this);
-        const font   = style.getPropertyValue('font-family');
-        const weight = style.getPropertyValue('font-weight');
-        const fStyle = style.getPropertyValue('font-style');
-        const canvas = document.createElement('canvas');
-        const c2d = canvas.getContext('2d');
+        c2d ??= document.createElement('canvas').getContext('2d');
         c2d.direction = 'ltr';
-        c2d.font = fStyle + ' ' + weight + ' 100px ' + font;
+        c2d.font = `${style.fontStyle} ${style.fontWeight} 100px ${style.fontFamily}`;
         const text = this.innerText;
         const measure = c2d.measureText(text);
         const left  = measure.actualBoundingBoxLeft;

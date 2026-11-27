@@ -14,8 +14,7 @@ export default class U2Number extends HTMLElement {
         this.observer.disconnect();
     }
     render() {
-        let value = this.hasAttribute('value') ? this.getAttribute('value') : this.innerHTML;
-        value = value.trim();
+        let value = (this.getAttribute('value') ?? this.innerHTML).trim();
         if (value==='') return this.outEl.innerHTML = '-';
         value = parseFloat(value);
 

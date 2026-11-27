@@ -463,14 +463,14 @@ class ColorSystemStyler extends HTMLElement {
                 <details>
                     <summary>${v.label}</summary>
                     <div class="details-content">
-                    ${v.children.map(c => renderItem(c)).join('')}
+                    ${v.children.map(renderItem).join('')}
                     </div>
                 </details>`;
             }
             return this.createControlHtml(v);
         };
 
-        const controls = this.variables.map(v => renderItem(v)).join('');        
+        const controls = this.variables.map(renderItem).join('');        
 
         import('../../attr/movable/movable.js');
         this.setAttribute('u2-movable', '');

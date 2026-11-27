@@ -2,12 +2,12 @@ document.addEventListener('click', e => {
 	if (e.button !== 0) return; // only left-click
 	if (e.defaultPrevented) return; // not if prevented
     if (!e.target.closest) return; // some targets have no closest method?
-	const A = e.target.closest('[u2-href]');
-	if (!A) return;
-	let href = A.getAttribute('u2-href'); // get the url
+	const a = e.target.closest('[u2-href]');
+	if (!a) return;
+	let href = a.getAttribute('u2-href'); // get the url
 
 	if (href === '') {
-		const realA = A.querySelector('a[href]');
+		const realA = a.querySelector('a[href]');
 		if (!realA) return;
 		href = realA.href;
 	}
@@ -30,7 +30,7 @@ document.addEventListener('click', e => {
 	const url = new URL(href, location.href); // security check, as its not a standard attribute, puryfiers will probably not remove it
 	if (url.protocol === 'javascript:') return;
 
-	let target = A.getAttribute('u2-href-target'); // get the target
+	let target = a.getAttribute('u2-href-target'); // get the target
     if (e.ctrlKey || e.metaKey) target = '_blank';
 	// var event = new CustomEvent('u2-href-navigate', { // trigger custom event with the ability to prevent Navigation
 	// 	cancelable: true,

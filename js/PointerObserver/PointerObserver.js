@@ -63,7 +63,7 @@ export class PointerObserver {
 		/* */
 		this.clientPos = { x: pointer.clientX, y: pointer.clientY }; // für scroll
 
-		this.onstart && this.onstart(e);
+		this.onstart?.(e);
 
 		if (this.options.mouse) {
             d.addEventListener('mousemove', this.move, {signal});
@@ -110,12 +110,12 @@ export class PointerObserver {
 		};
 		this.clientPos = { x: pointer.clientX, y: pointer.clientY }; // für scroll
 
-        this.onmove && this.onmove(e);
+        this.onmove?.(e);
 	}
 	scroll(e) {
 		const syntEvent = {
-			pageX: this.clientPos.x + window.pageXOffset,
-			pageY: this.clientPos.y + window.pageYOffset,
+			pageX: this.clientPos.x + scrollX,
+			pageY: this.clientPos.y + scrollY,
 			clientX: this.clientPos.x,
 			clientY: this.clientPos.y,
 			timeStamp: e.timeStamp,
@@ -124,7 +124,7 @@ export class PointerObserver {
 	}	
 	stop(e) {
 		if (e.changedTouches && e.changedTouches[0].identifier !== this.identifier) return;
-		this.onstop && this.onstop(e);
+		this.onstop?.(e);
 		this.abortCtrl.abort();
 		this.running = false;
 	}

@@ -28,9 +28,6 @@ export default class U2System extends HTMLElement {
         `;
         this.shadowRoot.getElementById('demoHtml').addEventListener('click', () => this.demo());
     }
-    connectedCallback() {
-
-    }
 
     async demo() {
         let demoEl = document.getElementById('u2SystemHtmlDemo');
@@ -76,9 +73,5 @@ addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.altKey || e.metaKey) return;
     if (e.key !== 's') return;
 
-    if (!document.querySelector('u2-system').matches(':popover-open')) {
-        document.querySelector('u2-system').showPopover();
-    } else {
-        document.querySelector('u2-system').hidePopover();
-    }
+    document.querySelector('u2-system')?.togglePopover();
 });

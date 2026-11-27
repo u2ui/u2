@@ -15,8 +15,7 @@ function create(el) {
 }
 
 function destroy(el) {
-    const manager = managers.get(el);
-    manager.destroy();
+    managers.get(el)?.destroy();
     managers.delete(el);
 }
 

@@ -1,4 +1,4 @@
-let css = `
+const css = `
 :host { display:block; }
 :host([role=tree]) { --indent:1rem; }
 :host(:not([aria-expanded=true])) [part=children] { display:none; }
@@ -84,7 +84,7 @@ export default class U2Tree extends HTMLElement {
                 let current = this.nextFocusable() || this.root();
                 while (current && current !== this) {
                     let text = current.shadowRoot.querySelector('[part=content]').assignedNodes().map(item=>item.textContent).join(' ').trim().toLowerCase();
-                    if (text.startsWith(e.key)) {
+                    if (text.startsWith(e.key.toLowerCase())) {
                         current.setFocus();
                         break;
                     }
@@ -147,7 +147,8 @@ export default class U2Tree extends HTMLElement {
         return n;
     }
     nextFocusable(){ // next visible row: first child, else next item, else nearest ancestor's next item
-        if (this.isExpanded() && this.items().length) return this.items()[0];
+        const f = this.isExpanded() && this.items()[0];
+        if (f) return f;
         let item = this;
         while (item?.tagName === this.tagName) {
             const next = item.next();

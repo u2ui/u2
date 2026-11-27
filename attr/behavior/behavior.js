@@ -12,7 +12,7 @@ const observer = new SelectorObserver({
         }
 
         const active = behavior.init?.(el);
-        setStates(el, {active: active, inactive: !active, success: false, error: false});
+        setStates(el, {active, inactive: !active, success: false, error: false});
 
 
         if ('hidden' in behavior) {
@@ -20,19 +20,16 @@ const observer = new SelectorObserver({
         }
         
         if (behavior.text) {
-            let textEl = el;
-            if (!textEl || textEl.innerHTML) textEl = el.querySelector('.-text');
+            const textEl = el.innerHTML ? el.querySelector('.-text') : el;
             if (textEl && !textEl.innerHTML) textEl.innerHTML = behavior.text.en;
         }
 
         if (behavior.action) {
             el.addEventListener('click', async (e)=>{
                 el.inert = true;
-                let active = null;
                 try {
-                    active = await behavior.action(e, el);
-                    setStates(el, {active, inactive: !active});
-                    setStates(el, {success: true, error: false});
+                    const active = await behavior.action(e, el);
+                    setStates(el, {active, inactive: !active, success: true, error: false});
                 } catch (e) {
                     setStates(el, {error: true, success: false});
                 }
@@ -232,7 +229,7 @@ register('scroll', {
 let wakeLock = null;
 register('wakeLock', {
     init: (el) => {
-        el.disabled = "wakeLock" in navigator ? false : true;
+        el.disabled = !('wakeLock' in navigator);
     },
     async action(e, el){
         if (wakeLock) {

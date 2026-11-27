@@ -39,7 +39,7 @@ function _markElement(el, {delay = 0} = {}) {
 
 
         const root = el.getRootNode();
-        if (root.adoptedStyleSheets.indexOf(sheet) === -1) root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+        if (!root.adoptedStyleSheets.includes(sheet)) root.adoptedStyleSheets.push(sheet);
 
         el.u2Loading_oldCssText = el.style.cssText;
         el.ariaBusy = 'true';
@@ -54,8 +54,8 @@ function _markElement(el, {delay = 0} = {}) {
             //if (!el.offsetHeight) el.style.minHeight = '36px';
             //if (!el.offsetWidth)  el.style.minWidth = '36px';
             
-            let svg = getComputedStyle(el).getPropertyValue('--loading-svg');
-            svg = svg.replace('currentColor', getComputedStyle(el).color);
+            const style = getComputedStyle(el);
+            const svg = style.getPropertyValue('--loading-svg').replace('currentColor', style.color);
             el.style.setProperty('background-image', svg, 'important');
         },delay);
     }

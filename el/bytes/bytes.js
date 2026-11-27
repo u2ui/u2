@@ -48,8 +48,7 @@ export default class U2Bytes extends HTMLElement {
         this.setAttribute('value', val);
     }
     get value() {
-        let value = this.getAttribute('value') ?? this.textContent;
-        value = value.trim();
+        const value = (this.getAttribute('value') ?? this.textContent).trim();
         return value === '' ? null : parseFloat(value);
     }
 }
@@ -90,9 +89,9 @@ function convertBytes(bytes, options) {
     const space = lang === 'fr' ? '\u202f' : (lang === 'ja' || lang === 'zh') ? '' : '\u00A0'; // nbsp
   
     return {
-        number: bytes / Math.pow(base, i),
-        space: space,
+        number: bytes / base ** i,
+        space,
         compact: compact[i],
-        unit: unit,
+        unit,
     };
 }

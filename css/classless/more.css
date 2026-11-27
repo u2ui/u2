@@ -52,7 +52,6 @@ input:is([type=radio], [type=checkbox]) {
 
 	position: relative;
 	border-radius: .15em;
-	padding: 0;
 
 	&:checked {
 		border-color: var(--color, blue);
@@ -101,7 +100,6 @@ input[type=radio] {
 }
 /* indeterminate */
 input:is([type=radio],[type=checkbox]):indeterminate::before {
-	color: currentColor;
 	color: #000;
 	font-size: 1em;
 	content: "−"; /* − ﹣*/

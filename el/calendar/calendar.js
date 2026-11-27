@@ -150,7 +150,7 @@ export default class U2Calendar extends U2Element {
     this.shadowRoot.querySelector('.navigation h2').innerHTML = dateString;
     this.shadowRoot.querySelector('.header').innerHTML = `
       ${(() => {
-        const localeTag = (this._locale && this._locale.baseName) || this.getAttribute('lang') || navigator.language;
+        const localeTag = this._locale?.baseName || this.getAttribute('lang') || navigator.language;
         const dtf = getTimeFormatter(localeTag, { weekday: 'short' });
         const out = [];
         for (let i = 0; i < 7; i++) {
@@ -302,9 +302,6 @@ export default class U2Calendar extends U2Element {
 
       // Move to the next day after this segment
       current.setUTCDate(current.getUTCDate() + span);
-
-      // If we've reached the end of the event, break
-      if (current > finalEnd) break;
     }
 
     return weeks;

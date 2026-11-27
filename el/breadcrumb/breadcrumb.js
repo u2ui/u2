@@ -72,6 +72,7 @@ export default class U2Breadcrumb extends HTMLElement {
     render() {
         const links = Array.from(this.querySelectorAll(':scope > :not(script)'));
 
+        const pageUrl = location.href.split('#')[0].split('?')[0];
         this.ol.innerHTML = '';
         links.forEach((link, index) => {
             const li = document.createElement('li');
@@ -85,7 +86,6 @@ export default class U2Breadcrumb extends HTMLElement {
             })
             li.append(slot, separator);
             this.ol.append(li);
-            const pageUrl = location.href.split('#')[0].split('?')[0];
             if (link.href === pageUrl) {
                 link.ariaCurrent = 'page';
                 link.dataset.href = link.getAttribute('href');
@@ -101,7 +101,7 @@ export default class U2Breadcrumb extends HTMLElement {
                 "@type": "ListItem",
                 "position": index + 1,
                 "name": link.textContent.trim(),
-                "item": new URL(link.href, window.location.origin).href
+                "item": new URL(link.href, location.origin).href
             }))
         };
         this.ldScript.textContent = JSON.stringify(breadcrumbData, null, 2);

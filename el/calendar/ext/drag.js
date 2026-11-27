@@ -2,22 +2,9 @@
 let draggedItem = null;
 let currentDropTarget = null;
 
-// Hilfsfunktionen für 'part'
-function addPart(el, partName) {
-    const parts = (el.getAttribute('part') || '').split(/\s+/).filter(Boolean);
-    if (!parts.includes(partName)) parts.push(partName);
-    el.setAttribute('part', parts.join(' '));
-}
-
-function removePart(el, partName) {
-    const parts = (el.getAttribute('part') || '').split(/\s+/).filter(p => p !== partName);
-    parts.length ? el.setAttribute('part', parts.join(' ')) : el.removeAttribute('part');
-}
-
 document.addEventListener('dragstart', (e) => {
     const item = e.target.closest('[draggable="true"]');
-    if (!item) return;
-    if (item.tagName.toLowerCase() !== 'u2-calendar-item') return;
+    if (!item || item.tagName !== 'U2-CALENDAR-ITEM') return;
     draggedItem = item;
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', '');
@@ -35,13 +22,13 @@ document.addEventListener('dragover', (e) => {
     const target = e.composedPath().find(el => el.closest?.('.day'))?.closest('.day');
     if (!target || target === currentDropTarget) return;
 
-    currentDropTarget && removePart(currentDropTarget, 'drop-target');
+    currentDropTarget?.part.remove('drop-target');
     currentDropTarget = target;
-    addPart(target, 'drop-target');
+    target.part.add('drop-target');
 });
 
 document.addEventListener('dragend', () => {
-    currentDropTarget && removePart(currentDropTarget, 'drop-target');
+    currentDropTarget?.part.remove('drop-target');
     draggedItem = null;
     currentDropTarget = null;
 });
@@ -63,7 +50,7 @@ document.addEventListener('drop', (e) => {
     draggedItem.setAttribute('start', newStart.toISOString());
     draggedItem.setAttribute('end', newEnd.toISOString());
 
-    removePart(currentDropTarget, 'drop-target');
+    currentDropTarget.part.remove('drop-target');
     draggedItem = null;
     currentDropTarget = null;
 });

@@ -91,8 +91,7 @@ export default class U2Fields extends U2Element {
             labelSlot.part = 'label';
             const inputSlot = document.createElement('slot');
             inputSlot.part = 'input';
-            wrapperLabel.appendChild(labelSlot);
-            wrapperLabel.appendChild(inputSlot);
+            wrapperLabel.append(labelSlot, inputSlot);
             this.container.appendChild(wrapperLabel);
             if (pair.labelNodes.length > 0) {
                 labelSlot.assign(...pair.labelNodes);
@@ -108,8 +107,7 @@ export default class U2Fields extends U2Element {
     }
     get values() {
         const result = {};
-        const inputs = [...this.querySelectorAll('[name]')];
-        for (const input of inputs) {
+        for (const input of this.querySelectorAll('[name]')) {
             const name = input.name;
             if (!name || input.form === undefined || input.disabled) continue;
             if (input.type === 'checkbox') {

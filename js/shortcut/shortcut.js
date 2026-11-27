@@ -28,7 +28,7 @@ function normalizeKey(key) {
 
 export function listen(combination, callback, options = {}) {
     const target = options.target || document;
-    const keys = combination.split('+').map(k => normalizeKey(k));
+    const keys = combination.split('+').map(normalizeKey);
     let activeIndex = -1;
 
     target.addEventListener('keydown', function (event) {

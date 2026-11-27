@@ -1,8 +1,8 @@
 
 let activeUrl = location.href;
 
-let oldPush = history.pushState;
-let oldReplace = history.replaceState;
+const oldPush = history.pushState;
+const oldReplace = history.replaceState;
 history.pushState = function (...args) {
     oldPush.apply(this, args);
     trigger(location.href);
@@ -22,7 +22,7 @@ function trigger(url) {
     activeUrl = url;
 
     const event = new CustomEvent('u2-url-change',{bubbles:false, cancelable:false, detail: {url, sameDocument}});
-    window.dispatchEvent(event);
+    dispatchEvent(event);
 }
 
 addEventListener("popstate", () => trigger(location.href));

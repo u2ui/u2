@@ -24,7 +24,7 @@ function syncTreeItem(treeElement, item, render) {
     const subItemKeys = new Set(subItems.map(i => i.key));
 
     // remove stale children
-    [...treeElement.querySelectorAll(':scope > u2-tree')]
+    treeElement.querySelectorAll(':scope > u2-tree')
         .forEach(child => !subItemKeys.has(child.dataset.key) && child.remove());
 
     // add new & sync all

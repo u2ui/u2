@@ -26,7 +26,7 @@ export default class U2Menubutton extends HTMLElement {
             button.addEventListener('keydown', (e) => { // keyup?
                 if (e.key === 'ArrowDown') {
                     this.open();
-                    nextFocusable(this.querySelector(':scope > menu')).focus();
+                    nextFocusable(menu)?.focus();
                     e.preventDefault();
                 }
             });
@@ -68,8 +68,7 @@ export default class U2Menubutton extends HTMLElement {
     }
     _place() {
         import('../../js/Placer/Placer.js').then(({Placer}) => {
-            const placer = new Placer(this.menu, { x:'append', y:'after', margin:0 });
-            placer.toElement(this.button);
+            new Placer(this.menu, { x:'append', y:'after', margin:0 }).toElement(this.button);
         });
     }
 }

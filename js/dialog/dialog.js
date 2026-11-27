@@ -45,7 +45,7 @@ class Dialog {
             });
         }
         this.options = options;
-        options.init && options.init(this.element);
+        options.init?.(this.element);
     }
     show(){
         const element = this.element;
@@ -56,9 +56,8 @@ class Dialog {
         element.showModal();
         if (this.options.audio) {
             const url = this.options.audio === true ? import.meta.url + '/../notification.mp3' : this.options.audio;
-            const audio = new Audio();
+            const audio = new Audio(url);
             audio.volume = 0.2;
-            audio.src = url;
             audio.play().catch(()=>{}); // autoplay policy may reject
         }
 
@@ -135,11 +134,7 @@ export function form(html, defaults){
     options.buttons =
         [{title:'OK',action(){ // TODO: triggers by click but would be better by form.submit?
             const form = dialog.element.querySelector('form');
-            if (!form.checkValidity()) dialog.value = null;
-            else {
-                const data = Object.fromEntries(new FormData(form).entries());
-                dialog.value = data;
-            }
+            dialog.value = form.checkValidity() ? Object.fromEntries(new FormData(form)) : null;
         }},{title: translate(options.lang, 'Cancel'), type:'button', action(){
             dialog.element.close();
         }}];
@@ -180,8 +175,7 @@ addEventListener('click', event=>{
     if (el.tagName !== 'DIALOG') return;
     if (!el.classList.contains('backdropClose')) return;
     const rect = el.getBoundingClientRect();
-    let isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height && rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
-    if (isInDialog) return;
+    if (rect.top <= event.clientY && event.clientY <= rect.bottom && rect.left <= event.clientX && event.clientX <= rect.right) return;
     el.close();
     //hideAnimated(el, ()=>el.close());
 });

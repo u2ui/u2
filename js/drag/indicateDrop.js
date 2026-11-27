@@ -25,7 +25,6 @@ export function indicateDrop(position, element, { box = 'border' } = {}) {
                 position: fixed;
                 margin: 0;
                 padding: 0;
-                border: none;
                 border:0 solid var(--color);
                 height: 2px;
                 background: var(--color);

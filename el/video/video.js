@@ -75,10 +75,8 @@ export default class U2Video extends HTMLElement {
                 font-size: clamp(10px, 1em, 3cqw);
                 position: relative;
                 width: 100%;
-                background: var(--u2-video-bg, #000);
-            }
-            #container {
                 aspect-ratio: 16 / 9;
+                background: var(--u2-video-bg, #000);
             }
             #controls {
                 position: absolute;
@@ -441,7 +439,6 @@ export default class U2Video extends HTMLElement {
     attributeChangedCallback(name, oldVal, newVal) {
         if (!this._video) return;
 
-        const booleanAttrs = new Set(['autoplay', 'loop', 'muted', 'playsinline']);
         switch (name) {
             case 'src':
                 this._video.src = newVal;
@@ -455,7 +452,6 @@ export default class U2Video extends HTMLElement {
             case 'loop':
             case 'muted':
             case 'playsinline':
-                if (!booleanAttrs.has(name)) break;
                 this._video.toggleAttribute(name, newVal !== null);
                 break;
         }
@@ -514,7 +510,7 @@ function mirrorPrototypeMembers({
             if (seen.has(key)) continue;
             seen.add(key);
 
-            if (Object.prototype.hasOwnProperty.call(targetProto, key)) continue;
+            if (Object.hasOwn(targetProto, key)) continue;
 
             const desc = Object.getOwnPropertyDescriptor(proto, key);
             if (!desc) continue;

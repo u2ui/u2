@@ -12,31 +12,23 @@ document.addEventListener('input', e => {
     const target = e.target;
     const name = target.name;
     const form = target.form;
-    const isCheckbox = target.type === 'checkbox';
-    const value = isCheckbox ? target.checked : target.value;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const save = key => {
+        const data = readStore(key);
+        data[name] = value;
+        store.setItem(key, JSON.stringify(data));
+    };
     // save in form-store
-    if (form && form.hasAttribute('u2-store')) {
-        const formId = form.id || '_noid_';
-        const key = 'u2-store-form-' + formId;
-        const data = readStore(key);
-        data[name] = value;
-        store.setItem(key, JSON.stringify(data));
-    }
+    if (form?.hasAttribute('u2-store')) save('u2-store-form-' + (form.id || '_noid_'));
     // and/or save in global-store
-    if (target.hasAttribute('u2-store')) {
-        const key = 'u2-store-input';
-        const data = readStore(key);
-        data[name] = value;
-        store.setItem(key, JSON.stringify(data));
-    }
+    if (target.hasAttribute('u2-store')) save('u2-store-input');
 });
 
 const elObserver = new SelectorObserver({
     on: (el) => {
         if (el.tagName === 'FORM' && el.id) { // form-store
-            const formId = el.id;
-            const data = readStore('u2-store-form-' + formId);
-            for (let input of el.elements) {
+            const data = readStore('u2-store-form-' + el.id);
+            for (const input of el.elements) {
                 if (!input.name) continue;
                 if (input.hasAttribute('value') && input.type !== 'checkbox') continue;
                 if (data[input.name] == null) continue;
@@ -49,13 +41,8 @@ const elObserver = new SelectorObserver({
             }
         } else { // global-store
             const data = readStore('u2-store-input');
-            if (el.hasAttribute('value')) return;
-            if (data[el.name] == null) return;
-            if (el.type === 'checkbox') {
-                el.checked = data[el.name];
-            } else {
-                el.value = data[el.name];
-            }
+            if (el.hasAttribute('value') || data[el.name] == null) return;
+            el.type === 'checkbox' ? el.checked = data[el.name] : el.value = data[el.name];
         }
     },
     off: (el) => {}

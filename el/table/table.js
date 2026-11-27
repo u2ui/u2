@@ -134,11 +134,9 @@ export default class U2Table extends HTMLElement {
         const tdValue = td => {
             let string = (td.dataset.value ?? td.textContent).trim();
             if (string === '') {
-                if (td.querySelector('input')) {
-                    string = td.querySelector('input').value;
-                } else {
-                    return null;
-                }
+                const input = td.querySelector('input');
+                if (!input) return null;
+                string = input.value;
             }
             return parseFloat(string);
         }
@@ -153,8 +151,8 @@ export default class U2Table extends HTMLElement {
                     td.textContent = this.columns.item(index).cellsByGroup(this.table.tBodies[0]).reduce((a, b) => a + tdValue(b), 0);
                 }
                 if (td.hasAttribute('data-avg')) {
-                    const index = this.columns.indexOf(td);
-                    td.textContent = this.columns.item(index).cellsByGroup(this.table.tBodies[0]).reduce((a, b) => a + tdValue(b), 0) / this.columns.item(index).cellsByGroup(this.table.tBodies[0]).length;
+                    const cells = this.columns.item(this.columns.indexOf(td)).cellsByGroup(this.table.tBodies[0]);
+                    td.textContent = cells.reduce((a, b) => a + tdValue(b), 0) / cells.length;
                 }
                 if (td.hasAttribute('data-count')) {
                     const index = this.columns.indexOf(td);
@@ -195,7 +193,7 @@ function tableSortListener(e) {
 
     const tds = columns.item(index).cellsByGroup(tbody);
     tds
-        .map(td => { return { td, val: td.getAttribute('data-value') ?? td.textContent.trim() }; })
+        .map(td => ({ td, val: td.getAttribute('data-value') ?? td.textContent.trim() }))
         .sort((a, b) => {
             if (!ascending) [a, b] = [b, a];
             const [v1, v2] = [a.val, b.val];
@@ -443,7 +441,7 @@ class Column {
         // Wir iterieren über alle Gruppen (thead, tbody, tfoot)
         for (const group of this.table.children) {
             if (group.tagName === 'COLGROUP' || group.tagName === 'CAPTION') continue;
-            this.cellsByGroup(group).forEach(cell => cells.push(cell));
+            cells.push(...this.cellsByGroup(group));
         }
         return cells;
     }

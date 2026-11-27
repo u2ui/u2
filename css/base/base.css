@@ -115,8 +115,8 @@
 	textarea {
 		vertical-align: baseline;
 		vertical-align: -webkit-baseline-middle;
+		resize: vertical;
 	}
-	textarea { resize: vertical; }
 
 	input:not([type=radio], [type=checkbox], [type=file], [type=date], [type=time], [type=datetime-local], [type=color]), textarea { inline-size:13rem; }
 	input:where([type=range]) { vertical-align:middle }

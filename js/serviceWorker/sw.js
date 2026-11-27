@@ -68,9 +68,9 @@ function isHttpRequest(req) {
 
 function getAssetType(url) {
   const path = new URL(url).pathname.toLowerCase();
-  if (/\.(jpg|jpeg|png|gif|webp|svg|ico)$/i.test(path)) return 'images';
-  if (/\.(js|mjs)$/i.test(path)) return 'scripts';
-  if (/\.css$/i.test(path)) return 'styles';
+  if (/\.(jpg|jpeg|png|gif|webp|svg|ico)$/.test(path)) return 'images';
+  if (/\.(js|mjs)$/.test(path)) return 'scripts';
+  if (/\.css$/.test(path)) return 'styles';
   return path.startsWith('/api/') ? 'api' : 'html';
 }
 

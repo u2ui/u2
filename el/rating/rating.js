@@ -83,14 +83,11 @@ export default class U2Rating extends U2Element {
         const max = parseFloat(this.getAttribute('max')) || 5;
         const icon = this.getAttribute('icon') ?? 'star';
 
-        this.starsEl.innerHTML = '';
-        for (let i = 0; i < max; i++) {
-            this.starsEl.innerHTML += `<u2-ico icon=${icon}></u2-ico>`;
-        }
+        this.starsEl.innerHTML = `<u2-ico icon=${icon}></u2-ico>`.repeat(Math.max(0, Math.ceil(max)));
 
         this._internals.ariaLabel = translate('Rating');
-        this._internals.ariaMin = 1;
-        this._internals.ariaMax = max;        
+        this._internals.ariaValueMin = 1;
+        this._internals.ariaValueMax = max;        
     }
     get value() {
         return this.#value;
@@ -110,7 +107,7 @@ export default class U2Rating extends U2Element {
         }
     }
     get form() { return this._internals.form; }
-    static observedAttributes = ['value', 'icon', 'max','value'];
+    static observedAttributes = ['value', 'icon', 'max'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'value') {

@@ -285,9 +285,6 @@ function detectLayout(container, children) {
     const first = children[0].getBoundingClientRect();
     const second = children[1].getBoundingClientRect();
 
-    const verticalGap = Math.abs(second.top - first.bottom);
-    const horizontalGap = Math.abs(second.left - first.right);
-
     // Gleiche Zeile = horizontal
     if (Math.abs(first.top - second.top) < 10) return 'horizontal';
 
@@ -330,15 +327,9 @@ function canDrop(dropzone, dragged) {
 
 function indicateDrop(container, position, element = null) {
 
-    if (!element) {
-        if (position === 'after') {
-            element = container.firstElementChild;
-            position = 'before';
-        }
-        if (position === 'before') {
-            element = container.lastElementChild;
-            position = 'after';
-        }
+    if (!element) { // no reference element: drop appends to the container
+        element = container.lastElementChild;
+        position = 'after';
     }
 
     let indicator = document.getElementById('drop-indicator');
@@ -421,7 +412,6 @@ function indicateDrop(container, position, element = null) {
         let left;
         if (sibling) {
             const siblingRect = sibling.getBoundingClientRect();
-            const siblingStyles = getComputedStyle(sibling);
 
             if (position === 'before') {
                 // Zwischen previousSibling und element

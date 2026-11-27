@@ -13,7 +13,7 @@ function remove(el){
     if (pool.size === 0) removeGlobalListeners();
 }
 
-var styEl = document.createElement('style');
+const styEl = document.createElement('style');
 styEl.innerHTML = '[u2-parallax]{z-index:1; will-change:transform;}';
 document.head.prepend(styEl);
 
@@ -43,7 +43,7 @@ const parallax = class {
         //const y = yRoute * Math.sin(this.angle);
         //const x = yRoute * Math.cos(this.angle);
         // todo, only transform if visible?
-        this.el.style.transform = 'translate3d('+0+'px,'+yRoute+'px,0)';
+        this.el.style.transform = `translate3d(0,${yRoute}px,0)`;
         // this.el.attributeStyleMap.set('transform', new CSSTransformValue([
         //     new CSSTranslate(CSS.px(0),CSS.px(yRoute),CSS.px(0))
         // ]));
@@ -109,11 +109,6 @@ function vpRectWithoutTransform(el){
 
 import {SelectorObserver} from '../../js/SelectorObserver/SelectorObserver.js';
 new SelectorObserver({
-    on: (el) => {
-        const parallaxObj = add(el);
-        parallaxObj.connect();
-    },
-    off: (el) => {
-        remove(el)
-    }
+    on: (el) => add(el).connect(),
+    off: (el) => remove(el)
 }).observe('[u2-parallax]');

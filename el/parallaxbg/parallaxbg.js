@@ -42,27 +42,20 @@ function addListeners(){
         paraxBg.layout();
         paraxBg.positionize();
     },passive);
-	document.addEventListener('scroll', ()=>{
+    const onScroll = () => {
         pageY = scrollY;
-        requestAnimationFrame(()=>paraxBg.positionize()) // better!
-    },passive);
-
-	addEventListener('wheel', ()=>{ // for firefox
-        pageY = scrollY;
-        requestAnimationFrame(()=>paraxBg.positionize())
-    },passive);
-
-	addEventListener('resize', ()=>{
+        requestAnimationFrame(() => paraxBg.positionize());
+    };
+    const onResize = () => {
         setVPDimensions();
         paraxBg.layout();
         paraxBg.positionize();
-    },passive);
+    };
+	document.addEventListener('scroll', onScroll, passive);
+	addEventListener('wheel', onScroll, passive); // for firefox
+	addEventListener('resize', onResize, passive);
 
-    resizeObserver = new ResizeObserver(entries => {
-        setVPDimensions();
-        paraxBg.layout();
-        paraxBg.positionize();
-    })
+    resizeObserver = new ResizeObserver(onResize);
     resizeObserver.observe(document.body);
 }
 function removeListeners(){

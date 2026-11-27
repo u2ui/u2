@@ -58,10 +58,7 @@ class SelectHandler extends TypeHandler {
         );
 
         // Bestimme selected value (Priorität: value Attribut > <option selected>)
-        let selectedValue = value;
-        if (!selectedValue && this.element.querySelector('option[selected]')) {
-            selectedValue = this.element.querySelector('option[selected]').value;
-        }
+        const selectedValue = value || this.element.querySelector('option[selected]')?.value;
         // Füge selectedValue hinzu wenn nicht in options
         if (selectedValue && !options.some(o => o.value === selectedValue)) {
             options.unshift({ value: selectedValue, label: selectedValue });
@@ -108,14 +105,12 @@ class SelectHandler extends TypeHandler {
         // Fallback auf lokale Daten wenn Remote fehlschlägt oder nicht vorhanden
         if (listId) {
             const list = document.getElementById(listId);
-            if (list) {
-                [...list.querySelectorAll('option')].forEach(opt => options.push({
-                    value: opt.value,
-                    label: opt.label || opt.textContent || opt.value,
-                }));
-            }
+            list?.querySelectorAll('option').forEach(opt => options.push({
+                value: opt.value,
+                label: opt.label || opt.textContent || opt.value,
+            }));
         } else if (this.element.querySelector('select')) {
-            [...this.element.querySelectorAll('option')].forEach(opt => options.push({
+            this.element.querySelectorAll('option').forEach(opt => options.push({
                 value: opt.value,
                 label: opt.textContent
             }));

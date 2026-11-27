@@ -50,7 +50,7 @@ export class TargetObserver {
         }
         for (const pTarget of this.parentTargets) {
             if (el && pTarget.contains(el)) continue;
-            this.opts?.out(pTarget);
+            this.opts.out?.(pTarget);
             this.parentTargets.delete(pTarget);
         }
     }

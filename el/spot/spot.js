@@ -1,3 +1,5 @@
+const EVENTS = ['mouseover', 'mouseout', 'focusin', 'focusout', 'click'];
+
 export default class U2Spot extends HTMLElement {
     constructor() {
         super();
@@ -10,9 +12,7 @@ export default class U2Spot extends HTMLElement {
 
     connectedCallback() {
         this.parent = this.parentElement;
-        ['mouseover', 'mouseout', 'focusin', 'focusout', 'click'].forEach(evt =>
-            this.parent.addEventListener(evt, this)
-        );
+        EVENTS.forEach(evt => this.parent.addEventListener(evt, this));
         this.reset();
         this.resizeObserver.observe(this.parent);
     }
@@ -95,9 +95,7 @@ export default class U2Spot extends HTMLElement {
     }
 
     disconnectedCallback() {
-        ['mouseover', 'mouseout', 'focusin', 'focusout', 'click'].forEach(evt =>
-            this.parent.removeEventListener(evt, this)
-        );
+        EVENTS.forEach(evt => this.parent.removeEventListener(evt, this));
         this.resizeObserver?.disconnect();
         this.parent = null;
     }

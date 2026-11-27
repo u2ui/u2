@@ -12,7 +12,6 @@
 u2-input {
     & > button:is([slot=start],[slot=end]) {
         &:is(button) {
-            padding-block:inline;
             border-radius:0;
             border:0;
             white-space:nowrap;

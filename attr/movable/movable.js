@@ -72,7 +72,7 @@ function handleStart(e) {
 
     observer.onmove = (e) => {
         const diff = observer.startDiff;
-        const distance = Math.sqrt(diff.x * diff.x + diff.y * diff.y);
+        const distance = Math.hypot(diff.x, diff.y);
         if (distance < threshold) return;
 
         const deltaX = xEnabled ? diff.x : 0;

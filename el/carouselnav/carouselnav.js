@@ -45,10 +45,6 @@ function refSlideshows(el) {
 }
 
 export default class U2CarouselNav extends HTMLElement {
-	constructor() {
-		super();
-	}
-
 	connectedCallback() {
 		customElements.whenDefined('u2-carousel').then(()=>{
 			const SS = refSlideshows(this)[0];

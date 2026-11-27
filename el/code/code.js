@@ -82,7 +82,7 @@ export default class U2Code extends HTMLElement {
     _init(){
 
         this.textarea.addEventListener('input', e => {
-            this.setHightlightValue(e.target.value);
+            this.setHighlightValue(e.target.value);
             this.setSourceValue(e.target.value);
         });
 
@@ -116,7 +116,7 @@ export default class U2Code extends HTMLElement {
         }
         return this.isForeign ? 'html' : false;
     }
-    setHightlightValue(value){
+    setHighlightValue(value){
         if (!this.libLoaded) this.shadowRoot.querySelector('#code').innerHTML = htmlEncode(value); // fast display and then highlight
         libPromise.then( ({default:hljs})=>{
             this.libLoaded = true;
@@ -137,21 +137,13 @@ export default class U2Code extends HTMLElement {
 
         const el = this.sourceElement;
         if (el.tagName === 'TEXTAREA') { el.value = value; return; }
-        if (this.isForeign) {
-            el.innerHTML = value;
-        } else {
-            el.textContent = value;
-        }
+        this.isForeign ? el.innerHTML = value : el.textContent = value;
     }
     getSourceValue(){
         const el = this.sourceElement;
         if (el.tagName === 'TEXTAREA') return el.value;
         if (el.tagName === 'SCRIPT') return el.textContent.replaceAll('\\/script>','/script>');
-        if (this.isForeign) {
-            return cleanInnerHTML(el.innerHTML);
-        } else {
-            return el.textContent;
-        }
+        return this.isForeign ? cleanInnerHTML(el.innerHTML) : el.textContent;
     }
     setForeignElement(element){
         this.isForeign = true;
@@ -174,7 +166,7 @@ export default class U2Code extends HTMLElement {
             this.unUpdatedValue = value;
             return;
         }
-        this.setHightlightValue(value);
+        this.setHighlightValue(value);
         this.textarea.value = value;
 
     }
@@ -208,7 +200,7 @@ function trimCode(value){
     // evaluate min num of starting whitespace
     let minWhitespace = 999;
     for (const line of lines) {
-        if (line.match(/^\s*$/)) continue; // ignore empty lines
+        if (!line.trim()) continue; // ignore empty lines
         const num = line.match(/^\s*/)[0].length;
         if (num < minWhitespace) minWhitespace = num;
     }

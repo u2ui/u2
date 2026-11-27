@@ -40,8 +40,6 @@ u2-alert[variant=info] { --color: var(--color-blue); }
     max-width: 28rem;
     width: 100%;
     height:auto;
-    
-    overflow:auto;
 
     padding: 2vmin;
     z-index: 1000;

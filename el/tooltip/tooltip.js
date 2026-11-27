@@ -94,8 +94,7 @@ function checkOff(e){
 }
 function getTooltipForElement(el) {
     if (!el?.getAttribute) return; // if document
-    let tt = null;
-    tt = el.ariaLabelledByElements?.find(tt => tt.tagName === 'U2-TOOLTIP') || el.ariaDescribedByElements?.find(tt => tt.tagName === 'U2-TOOLTIP');
+    const tt = el.ariaLabelledByElements?.find(tt => tt.tagName === 'U2-TOOLTIP') || el.ariaDescribedByElements?.find(tt => tt.tagName === 'U2-TOOLTIP');
     if (tt) return tt;
     // zzz fallback remove if supported everywhere
     const id = el.getAttribute('aria-labelledby') || el.getAttribute('aria-describedby');
@@ -134,7 +133,7 @@ function isSpaceOccupied(referenceElement, position) {
             console.error(`Ungültige Position: ${position}`);
             return true; // Im Zweifel: Keine Platzierung erlauben
     }
-    if (testX < 0 || testX > window.innerWidth || testY < 0 || testY > window.innerHeight) {
+    if (testX < 0 || testX > innerWidth || testY < 0 || testY > innerHeight) {
         return true; 
     }
     const elementsAtPoint = document.elementsFromPoint(testX, testY);

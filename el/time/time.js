@@ -14,7 +14,7 @@ export default class U2Time extends HTMLElement {
     disconnectedCallback() {
         clearTimeout(this.__timer);
     }
-    static  observedAttributes = ['datetime', 'lang', 'type', 'weekday', 'year', 'month', 'day', 'hour', 'minute', 'second', 'mode'];
+    static observedAttributes = ['datetime', 'lang', 'type', 'weekday', 'year', 'month', 'day', 'hour', 'minute', 'second', 'mode'];
     attributeChangedCallback(name, old, value) {
         if (old === value) return;
         this.reset();
@@ -105,7 +105,6 @@ const types = {
                     console.warn(`value ${val} for attribute ${key} not allowed`);
                     options[key] = fallback;
                 }
-                options[key] = opts.allowed.includes(val) ? val : fallback;
             }
         }
         if (options.second && !options.minute) options.minute = options.second;

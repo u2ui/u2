@@ -69,8 +69,7 @@ new U2TargetObserver({
 addEventListener('toggle', e => {
     const el = e.target;
     if (!el.matches('[popover][u2-navigable][id]')) return;
-	const newState = e.newState;
-	toggleParam(el.id, newState === 'open');
+	toggleParam(el.id, e.newState === 'open');
 }, true);
 
 
