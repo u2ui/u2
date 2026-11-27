@@ -14,6 +14,8 @@ u2-pagination {
 ```
 
 Labels follow the closest `lang` attribute, else the browser's language.
+At either end an arrow is disabled, not removed. To hide it, keep its place:
+`u2-pagination a[aria-disabled] { visibility: hidden }`.
 
 ## Install
 

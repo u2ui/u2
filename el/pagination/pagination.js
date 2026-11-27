@@ -6,7 +6,8 @@ export default class U2Pagination extends HTMLElement {
     #resize = new ResizeObserver(() => {
         if (this.clientWidth !== this.#width || this.#cellWidth() !== this.#cell) this.render();
     });
-    #cellWidth() { return this.querySelector('nav li')?.offsetWidth ?? 0; }
+    // the current page's cell: always there and shown, other items may be hidden by css
+    #cellWidth() { return this.querySelector('nav [aria-current]')?.parentNode.offsetWidth ?? 0; }
 
     connectedCallback() {
         this.render();
@@ -46,7 +47,7 @@ export default class U2Pagination extends HTMLElement {
     // page numbers and '...', as many as fit
     #calculatePages() {
         const { total, current } = this;
-        const maxItems = this.#cell && Math.floor(this.#width / this.#cell) - (current > 1) - (current < total);
+        const maxItems = this.#cell && Math.floor(this.#width / this.#cell) - 2; // the arrows
         if (total <= maxItems) return range(1, total);
         if (maxItems < 5) return [current]; // no room for first, last and the cuts: the arrows around the current page
         // a window between the first and the last page, around the current one; at a cut, '...' takes its edge
@@ -60,16 +61,18 @@ export default class U2Pagination extends HTMLElement {
 
     #updateLink(a, page, rel, current) {
         const label = { prev: '←', next: '→' }[rel];
-        a.href = this.#url(page);
+        const off = page < 1 || page > this.total; // an arrow at either end: disabled, not gone
+        off ? a.removeAttribute('href') : a.href = this.#url(page);
         a.innerHTML = label ? `<span aria-hidden="true">${label}</span>` : page;
-        a.dataset.page = page;
+        off ? delete a.dataset.page : a.dataset.page = page;
+        a.ariaDisabled = off ? 'true' : null;
         a.ariaLabel = text(this, rel ?? 'page').replace('{i}', page);
         rel ? a.rel = rel : a.removeAttribute('rel');
         a.ariaCurrent = page === current ? 'page' : null;
     }
 
     render(again = true) {
-        const { current, total } = this;
+        const { current } = this;
         this.#width = this.clientWidth;
 
         if (!this.querySelector('nav')) this.insertAdjacentHTML('beforeend', `<nav aria-label="${text(this, 'nav')}"><ul u2-focusgroup="remember"></ul></nav>`);
@@ -77,12 +80,12 @@ export default class U2Pagination extends HTMLElement {
 
         // [page, rel] per link, null for '...'
         const items = this.#calculatePages().map(page => page === '...' ? null : [page]);
-        if (current > 1) items.unshift([current - 1, 'prev']);
-        if (current < total) items.push([current + 1, 'next']);
+        items.unshift([current - 1, 'prev']);
+        items.push([current + 1, 'next']);
 
         // focus follows its link, not its position: the same arrow, or the same page
         const f = this.contains(document.activeElement) && document.activeElement;
-        const key = f && (f.rel ? `a[rel=${f.rel}]` : `a[data-page="${f.dataset.page}"]:not([rel])`);
+        const key = f && (f.rel ? `a[rel=${f.rel}][href]` : `a[data-page="${f.dataset.page}"]:not([rel])`);
 
         // update or create list items, kept for the focus
         items.forEach((item, i) => {

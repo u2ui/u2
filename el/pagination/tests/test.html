@@ -59,6 +59,15 @@
     <u2-pagination total="6" current="3" href="?page={page}"></u2-pagination>
 </section>
 
+<section>
+    <h2>Variante 9: Inaktive Pfeile ausgeblendet (JavaScript)</h2>
+    <u2-pagination id="js-pagination-compact" total="20" current="1"></u2-pagination>
+    <style>
+        /* the whole item: an empty one would still take its cell */
+        #js-pagination-compact li:has(a[aria-disabled]) { display: none; }
+    </style>
+</section>
+
 <script>
     // Demo für JavaScript-Variante
     const jsPagination = document.getElementById('js-pagination');
@@ -74,6 +83,12 @@
 
         // Simuliere AJAX-Call
         console.log('Loading data for page', e.detail.page, '...');
+    });
+
+    // Variante 9: paged by JavaScript as well, to reach both ends
+    document.getElementById('js-pagination-compact').addEventListener('u2-pagination-change', e => {
+        e.preventDefault();
+        e.target.setAttribute('current', e.detail.page);
     });
 </script>
 

@@ -26,8 +26,12 @@ u2-pagination nav {
         text-align: center;
     }
 
-    & a:hover {
+    & a[href]:hover {
         background: var(--color-light, color-mix(in srgb, CanvasText, Canvas 88%));
+    }
+
+    & a[aria-disabled] {
+        opacity: .4;
     }
 
     & a[aria-current="page"] {
