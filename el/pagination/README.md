@@ -1,6 +1,20 @@
 # &lt;u2-pagination&gt; - element
 Page number navigation with customizable URL patterns
 
+## Features
+
+- Shows as many pages as fit its width; all items are equally wide
+- Its content is the fallback until it runs (or without JavaScript), then replaced:
+  ```html
+  <u2-pagination total="22" current="4" href="/{page}">
+      <a href="/3" rel=prev>Back</a>
+      <a href="/5" rel=next>Next</a>
+  </u2-pagination>
+  ```
+- At either end an arrow is disabled, not removed. To hide it, keep its place:
+  `u2-pagination a[aria-disabled] { visibility: hidden }`
+- Labels in 21 languages, following the closest `lang` attribute, else the browser's language
+
 ## Usage
 
 ```html
@@ -12,10 +26,6 @@ u2-pagination {
     margin: 2rem;
 }
 ```
-
-Labels follow the closest `lang` attribute, else the browser's language.
-At either end an arrow is disabled, not removed. To hide it, keep its place:
-`u2-pagination a[aria-disabled] { visibility: hidden }`.
 
 ## Install
 

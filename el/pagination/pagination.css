@@ -1,7 +1,6 @@
 u2-pagination {
     display: block; /* its width decides how many pages fit */
-}
-u2-pagination nav {
+
     & ul { /* every item as wide as the widest: one tells how many fit */
         display: grid;
         grid-auto-flow: column;
@@ -18,8 +17,9 @@ u2-pagination nav {
         text-align: center;
     }
 
+    /* also the fallback links, before or without js: in a row and as high as the items */
     & a {
-        display: block;
+        display: inline-block;
         padding: calc(var(--gap, 1rem) / 2) var(--gap, 1rem);
         text-decoration: none;
         color: inherit;
@@ -37,6 +37,6 @@ u2-pagination nav {
     & a[aria-current="page"] {
         font-weight: bold;
         background: var(--color, CanvasText);
-        color: white;
+        color: var(--color-bg, Canvas);
     }
 }

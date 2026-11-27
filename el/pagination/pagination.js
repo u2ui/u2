@@ -1,12 +1,13 @@
 
 export default class U2Pagination extends HTMLElement {
+    #ul; // its list; created on the first render, replacing the fallback content (e.g. prev/next links without js)
     #fit = 0; // items that fit, as last rendered for
     // renders anew only when another number fits (width, font, zoom, digits)
     #resize = new ResizeObserver(() => this.#fits() !== this.#fit && this.render());
 
     // the grid makes all items as wide as the widest; the current page's is always there and shown
     #fits() {
-        const cell = this.querySelector('nav [aria-current]')?.parentNode.offsetWidth;
+        const cell = this.#ul?.querySelector('[aria-current]')?.parentNode.offsetWidth;
         return cell ? Math.floor(this.clientWidth / cell) : 0;
     }
 
@@ -14,7 +15,7 @@ export default class U2Pagination extends HTMLElement {
         this.render();
         this.addEventListener('click', this.#handleClick);
         this.#resize.observe(this);
-        this.#resize.observe(this.querySelector('nav ul'));
+        this.#resize.observe(this.#ul);
     }
     disconnectedCallback() {
         this.#resize.disconnect();
@@ -65,6 +66,7 @@ export default class U2Pagination extends HTMLElement {
         off ? a.removeAttribute('href') : a.href = this.#url(page);
         a.innerHTML = label ? `<span aria-hidden="true">${label}</span>` : page;
         off ? delete a.dataset.page : a.dataset.page = page;
+        a.role = off ? 'link' : null; // without href it would be no link, its label and state unannounced
         a.ariaDisabled = off ? 'true' : null;
         a.ariaLabel = text(this, rel ?? 'page').replace('{i}', page);
         rel ? a.rel = rel : a.removeAttribute('rel');
@@ -75,8 +77,11 @@ export default class U2Pagination extends HTMLElement {
         const { current } = this;
         this.#fit = this.#fits();
 
-        if (!this.querySelector('nav')) this.insertAdjacentHTML('beforeend', `<nav aria-label="${text(this, 'nav')}"><ul u2-focusgroup="remember"></ul></nav>`);
-        const ul = this.querySelector('nav ul');
+        if (!this.#ul) {
+            this.innerHTML = `<nav aria-label="${text(this, 'nav')}"><ul u2-focusgroup="remember"></ul></nav>`;
+            this.#ul = this.querySelector('ul');
+        }
+        const ul = this.#ul;
 
         // [page, rel] per link, null for a cut
         const items = [[current - 1, 'prev'], ...this.#calculatePages().map(page => page && [page]), [current + 1, 'next']];
@@ -88,7 +93,8 @@ export default class U2Pagination extends HTMLElement {
         // update or create list items, kept for the focus
         items.forEach((item, i) => {
             const li = ul.children[i] ?? ul.appendChild(document.createElement('li'));
-            if (!item) return li.innerHTML = '<span aria-hidden="true">…</span>';
+            li.ariaHidden = item ? null : 'true'; // a cut: no empty item in the list for screen readers
+            if (!item) return li.textContent = '…';
             let a = li.querySelector('a');
             if (!a) li.replaceChildren(a = document.createElement('a'));
             this.#updateLink(a, item[0], item[1], current);

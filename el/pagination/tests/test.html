@@ -19,8 +19,11 @@
 <h1>u2-pagination Demo</h1>
 
 <section>
-    <h2>Variante 1: Mit Links (SEO/SSR)</h2>
-    <u2-pagination total="88" href="?page={page}"></u2-pagination>
+    <h2>Variante 1: Mit Links (SEO/SSR), ohne JS nur Zurück/Weiter</h2>
+    <u2-pagination total="88" current="4" href="?page={page}">
+        <a href="?page=3" rel=prev>Zurück</a>
+        <a href="?page=5" rel=next>Weiter</a>
+    </u2-pagination>
 </section>
 
 <section>
