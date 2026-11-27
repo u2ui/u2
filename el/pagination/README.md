@@ -13,6 +13,8 @@ u2-pagination {
 }
 ```
 
+Labels follow the closest `lang` attribute, else the browser's language.
+
 ## Install
 
 ```html

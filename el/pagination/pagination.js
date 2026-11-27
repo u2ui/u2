@@ -20,121 +20,81 @@ export default class U2Pagination extends HTMLElement {
     get total() { return +this.getAttribute('total') || 1; }
     get current() { return +this.getAttribute('current') || this.#detectCurrentPage(); }
 
+    #url(page) { return this.href.replace('{page}', page); }
+
     #detectCurrentPage() {
-        const currentUrl = window.location.href;
         for (let page = 1; page <= this.total; page++) {
-            const pageUrl = this.href.replace('{page}', page);
-            const fullUrl = new URL(pageUrl, window.location.href).href;
-            if (currentUrl === fullUrl || currentUrl.startsWith(fullUrl + '#')) {
-                return page;
-            }
+            const url = new URL(this.#url(page), location.href).href;
+            if (location.href === url || location.href.startsWith(url + '#')) return page;
         }
         return 1;
     }
+
+    // page numbers and '...', as many as fit
     #calculatePages() {
         const { total, current } = this;
         const maxItems = Math.floor((this.clientWidth || 600) / 40) - 2;
-
-        if (maxItems < 5 || total <= maxItems) {
-            return total <= maxItems
-                ? Array.from({ length: total }, (_, i) => i + 1)
-                : this.#getMinimalPages();
+        if (total <= maxItems) return range(1, total);
+        if (maxItems < 5) {
+            const middle = current !== 1 && current !== total && current;
+            return [1, current > 2 && '...', middle, current < total - 1 && '...', total > 1 && total].filter(Boolean);
         }
-
         const sideItems = Math.floor((maxItems - 3) / 2);
         let start = Math.max(2, current - sideItems);
         let end = Math.min(total - 1, current + sideItems);
-
         if (current <= sideItems + 2) {
-            end = Math.min(total - 1, maxItems - 1);
             start = 2;
+            end = Math.min(total - 1, maxItems - 1);
         } else if (current >= total - sideItems - 1) {
             start = Math.max(2, total - maxItems + 2);
             end = total - 1;
         }
-
-        const pages = [1];
-        if (start > 2) pages.push('...');
-        for (let i = start; i <= end; i++) pages.push(i);
-        if (end < total - 1) pages.push('...');
-        if (total > 1) pages.push(total);
-
-        return pages;
+        return [1, start > 2 && '...', ...range(start, end), end < total - 1 && '...', total].filter(Boolean);
     }
 
-    #getMinimalPages() {
-        const { total, current } = this;
-        const pages = [1];
-        if (current > 2) pages.push('...');
-        if (current !== 1 && current !== total) pages.push(current);
-        if (current < total - 1) pages.push('...');
-        if (total > 1) pages.push(total);
-        return pages;
-    }
-
-    #updateLink(a, page, label, rel) {
-        a.href = this.href.replace('{page}', page);
+    #updateLink(a, page, rel, current) {
+        const label = { prev: '←', next: '→' }[rel];
+        a.href = this.#url(page);
         a.innerHTML = label ? `<span aria-hidden="true">${label}</span>` : page;
         a.dataset.page = page;
-        a.setAttribute('aria-label', rel ? `${rel} page` : `Page ${page}`);
-        rel ? a.setAttribute('rel', rel) : a.removeAttribute('rel');
-        page === this.current ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+        a.ariaLabel = text(this, rel ?? 'page').replace('{i}', page);
+        rel ? a.rel = rel : a.removeAttribute('rel');
+        a.ariaCurrent = page === current ? 'page' : null;
     }
 
     render() {
         const { current, total } = this;
-        const pages = this.#calculatePages();
 
         let nav = this.querySelector('nav');
         if (!nav) {
             nav = document.createElement('nav');
-            nav.setAttribute('aria-label', 'Pagination');
+            nav.ariaLabel = text(this, 'nav');
             nav.innerHTML = '<ul u2-focusgroup="remember"></ul>';
             this.append(nav);
         }
-        
         const ul = nav.querySelector('ul');
-        const items = [];
-        
-        // Previous
-        if (current > 1) items.push({ type: 'prev', page: current - 1 });
-        
-        // Pages
-        pages.forEach(page => {
-            items.push(page === '...' ? { type: 'dots' } : { type: 'page', page });
-        });
-        
-        // Next
-        if (current < total) items.push({ type: 'next', page: current + 1 });
-        
-        // Update oder erstelle list items
-        const lis = Array.from(ul.children);
+
+        // [page, rel] per link, null for '...'
+        const items = this.#calculatePages().map(page => page === '...' ? null : [page]);
+        if (current > 1) items.unshift([current - 1, 'prev']);
+        if (current < total) items.push([current + 1, 'next']);
+
+        // focus follows its link, not its position: the same arrow, or the same page
+        const f = this.contains(document.activeElement) && document.activeElement;
+        const key = f && (f.rel ? `a[rel=${f.rel}]` : `a[data-page="${f.dataset.page}"]:not([rel])`);
+
+        // update or create list items, kept for the focus
         items.forEach((item, i) => {
-            let li = lis[i];
-            if (!li) {
-                li = document.createElement('li');
-                ul.append(li);
-            }
-            
-            if (item.type === 'dots') {
-                li.innerHTML = '<span aria-hidden="true">…</span>';
-            } else {
-                let a = li.querySelector('a');
-                if (!a) {
-                    a = document.createElement('a');
-                    li.innerHTML = '';
-                    li.append(a);
-                }
-                
-                const label = item.type === 'prev' ? '←' : item.type === 'next' ? '→' : null;
-                this.#updateLink(a, item.page, label, item.type !== 'page' ? item.type : null);
-            }
+            const li = ul.children[i] ?? ul.appendChild(document.createElement('li'));
+            if (!item) return li.innerHTML = '<span aria-hidden="true">…</span>';
+            let a = li.querySelector('a');
+            if (!a) li.replaceChildren(a = document.createElement('a'));
+            this.#updateLink(a, item[0], item[1], current);
         });
-        
-        // Entferne überschüssige items
-        while (ul.children.length > items.length) {
-            ul.lastChild.remove();
-        }
+
+        // remove surplus items
+        while (ul.children.length > items.length) ul.lastChild.remove();
+        if (key) (this.querySelector(key) ?? this.querySelector('[aria-current]'))?.focus();
     }
 
     static observedAttributes = ['total', 'current', 'href'];
@@ -143,5 +103,38 @@ export default class U2Pagination extends HTMLElement {
         if (this.isConnected) this.render();
     }
 }
+
+const range = (from, to) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+
+// It speaks the language of its surroundings (the closest lang attribute), else the browser's.
+const text = (el, key) => {
+    const lang = (el.closest('[lang]')?.lang || navigator.language || 'en').slice(0, 2).toLowerCase();
+    return (texts[lang] ?? texts.en)[KEYS.indexOf(key)];
+};
+const KEYS = ['nav', 'prev', 'next', 'page'];
+const texts = {
+    ar: ['ترقيم الصفحات', 'الصفحة السابقة', 'الصفحة التالية', 'الصفحة {i}'],
+    cs: ['Stránkování', 'Předchozí stránka', 'Další stránka', 'Stránka {i}'],
+    da: ['Sideinddeling', 'Forrige side', 'Næste side', 'Side {i}'],
+    de: ['Seitennavigation', 'Vorherige Seite', 'Nächste Seite', 'Seite {i}'],
+    en: ['Pagination', 'Previous page', 'Next page', 'Page {i}'],
+    es: ['Paginación', 'Página anterior', 'Página siguiente', 'Página {i}'],
+    fi: ['Sivutus', 'Edellinen sivu', 'Seuraava sivu', 'Sivu {i}'],
+    fr: ['Pagination', 'Page précédente', 'Page suivante', 'Page {i}'],
+    hi: ['पृष्ठांकन', 'पिछला पृष्ठ', 'अगला पृष्ठ', 'पृष्ठ {i}'],
+    it: ['Paginazione', 'Pagina precedente', 'Pagina successiva', 'Pagina {i}'],
+    ja: ['ページ送り', '前のページ', '次のページ', '{i} ページ'],
+    ko: ['페이지 탐색', '이전 페이지', '다음 페이지', '{i}페이지'],
+    nb: ['Sidenavigasjon', 'Forrige side', 'Neste side', 'Side {i}'],
+    nl: ['Paginering', 'Vorige pagina', 'Volgende pagina', 'Pagina {i}'],
+    pl: ['Paginacja', 'Poprzednia strona', 'Następna strona', 'Strona {i}'],
+    pt: ['Paginação', 'Página anterior', 'Página seguinte', 'Página {i}'],
+    ru: ['Навигация по страницам', 'Предыдущая страница', 'Следующая страница', 'Страница {i}'],
+    sv: ['Sidnavigering', 'Föregående sida', 'Nästa sida', 'Sida {i}'],
+    tr: ['Sayfalama', 'Önceki sayfa', 'Sonraki sayfa', 'Sayfa {i}'],
+    uk: ['Навігація сторінками', 'Попередня сторінка', 'Наступна сторінка', 'Сторінка {i}'],
+    zh: ['分页', '上一页', '下一页', '第 {i} 页'],
+};
+texts.no = texts.nb;
 
 customElements.get('u2-pagination') || customElements.define('u2-pagination', U2Pagination);
