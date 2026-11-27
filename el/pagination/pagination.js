@@ -1,8 +1,21 @@
 
 export default class U2Pagination extends HTMLElement {
+    #width = 0; // its own, as last rendered for
+    #cell = 0; // one item's: the grid makes all as wide as the widest; until measured only the fewest pages show
+    // renders anew only for another width or cell (font, zoom, digits)
+    #resize = new ResizeObserver(() => {
+        if (this.clientWidth !== this.#width || this.#cellWidth() !== this.#cell) this.render();
+    });
+    #cellWidth() { return this.querySelector('nav li')?.offsetWidth ?? 0; }
+
     connectedCallback() {
         this.render();
         this.addEventListener('click', this.#handleClick);
+        this.#resize.observe(this);
+        this.#resize.observe(this.querySelector('nav ul'));
+    }
+    disconnectedCallback() {
+        this.#resize.disconnect();
     }
 
     #handleClick = e => {
@@ -33,12 +46,9 @@ export default class U2Pagination extends HTMLElement {
     // page numbers and '...', as many as fit
     #calculatePages() {
         const { total, current } = this;
-        const maxItems = Math.floor((this.clientWidth || 600) / 40) - 2;
+        const maxItems = this.#cell && Math.floor(this.#width / this.#cell) - (current > 1) - (current < total);
         if (total <= maxItems) return range(1, total);
-        if (maxItems < 5) {
-            const middle = current !== 1 && current !== total && current;
-            return [1, current > 2 && '...', middle, current < total - 1 && '...', total > 1 && total].filter(Boolean);
-        }
+        if (maxItems < 5) return [current]; // no room for first, last and the cuts: the arrows around the current page
         // a window between the first and the last page, around the current one; at a cut, '...' takes its edge
         const size = maxItems - 2;
         const start = Math.min(Math.max(2, current - (size - 1 >> 1)), total - size);
@@ -58,8 +68,9 @@ export default class U2Pagination extends HTMLElement {
         a.ariaCurrent = page === current ? 'page' : null;
     }
 
-    render() {
+    render(again = true) {
         const { current, total } = this;
+        this.#width = this.clientWidth;
 
         if (!this.querySelector('nav')) this.insertAdjacentHTML('beforeend', `<nav aria-label="${text(this, 'nav')}"><ul u2-focusgroup="remember"></ul></nav>`);
         const ul = this.querySelector('nav ul');
@@ -85,6 +96,13 @@ export default class U2Pagination extends HTMLElement {
         // remove surplus items
         while (ul.children.length > items.length) ul.lastChild.remove();
         if (key) (this.querySelector(key) ?? this.querySelector('[aria-current]'))?.focus();
+
+        // measured otherwise than assumed: once more
+        const cell = this.#cellWidth();
+        if (again && cell !== this.#cell) {
+            this.#cell = cell;
+            this.render(false);
+        }
     }
 
     static observedAttributes = ['total', 'current', 'href'];

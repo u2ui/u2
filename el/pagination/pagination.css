@@ -2,12 +2,20 @@ u2-pagination {
     display: block; /* its width decides how many pages fit */
 }
 u2-pagination nav {
-    & ul {
-        display: flex;
+    & ul { /* every item as wide as the widest: one tells how many fit */
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        inline-size: max-content;
         list-style: none;
         padding: 0;
         margin: 0;
-        flex-wrap: wrap;
+    }
+
+    & li {
+        display: grid;
+        align-items: center;
+        text-align: center;
     }
 
     & a {
