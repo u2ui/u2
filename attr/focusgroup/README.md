@@ -9,10 +9,11 @@ It allows you to focus elements with arrow keys inside a container.
 - Use focusgroup="wrap" to focus the first element when the last element is focused and vice versa.
 - Use focusgroup="remember" to focus the last focused element when group is focused again.
 - Text-Inputs only works for up and down arrow keys.
+- A nested group is a group of its own: an element belongs to its closest group only.
 
 
 See also:  
-https://open-ui.org/components/focusgroup.explainer/  
+https://open-ui.org/components/scoped-focusgroup.explainer/  
 https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Focusgroup/explainer.md
 
 ## Usage

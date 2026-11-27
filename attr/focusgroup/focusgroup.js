@@ -17,8 +17,7 @@ addEventListener('keydown', e => {
 	if (isVertical && target.tagName === 'SELECT') return;
 
 	const options = Object.fromEntries(container.getAttribute('u2-focusgroup').split(' ').map(o => [o, true]));
-	if (!options.horizontal && !options.vertical) options.horizontal = options.vertical = true;
-	if (!options[isHorizontal ? 'horizontal' : 'vertical']) return;
+	if ((options.horizontal || options.vertical) && !options[isHorizontal ? 'horizontal' : 'vertical']) return; // neither: both
 
 	const direction = e.code === 'ArrowLeft' || e.code === 'ArrowUp' ? -1 : 1;
 
@@ -58,8 +57,9 @@ addEventListener('keydown', e => {
 
 
 function groupItems(container) {
-	const selector = ' :not(u2-focusgroup) a[href], button, input, select, textarea, [contenteditable], [tabindex]';
-	const elements = [...container.querySelectorAll(selector)];
+	const selector = 'a[href], button, input, select, textarea, [contenteditable], [tabindex]';
+	// an element belongs to its closest group only: a nested group is a group of its own, as with the native focusgroup
+	const elements = [...container.querySelectorAll(selector)].filter(el => el.closest('[u2-focusgroup]') === container);
 
 	// handle slotted elements, beta
 	const slots = container.matches('slot') ? [container] : container.querySelectorAll('slot'); // TODO: handle slotted elements

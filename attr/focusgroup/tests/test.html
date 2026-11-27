@@ -54,7 +54,20 @@
             <div tabindex="0">1</div>
             <div tabindex="0">2</div>
         </fieldset>
+    </section>
+
     <section>
+        <h2>nested: a group of its own</h2>
+
+        <div style="display:flex; gap:1rem" u2-focusgroup="horizontal">
+            <button>outer 1</button>
+            <div style="display:flex; flex-direction:column; gap:1rem" u2-focusgroup="vertical">
+                <button>inner 1 (up/down, reached by tab)</button>
+                <button>inner 2</button>
+            </div>
+            <button>outer 2 (left/right skips the inner group)</button>
+        </div>
+    </section>
 
     <section>
         <h2>inside shadow dom</h2>
