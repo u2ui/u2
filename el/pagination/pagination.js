@@ -1,13 +1,14 @@
 
 export default class U2Pagination extends HTMLElement {
-    #width = 0; // its own, as last rendered for
-    #cell = 0; // one item's: the grid makes all as wide as the widest; until measured only the fewest pages show
-    // renders anew only for another width or cell (font, zoom, digits)
-    #resize = new ResizeObserver(() => {
-        if (this.clientWidth !== this.#width || this.#cellWidth() !== this.#cell) this.render();
-    });
-    // the current page's cell: always there and shown, other items may be hidden by css
-    #cellWidth() { return this.querySelector('nav [aria-current]')?.parentNode.offsetWidth ?? 0; }
+    #fit = 0; // items that fit, as last rendered for
+    // renders anew only when another number fits (width, font, zoom, digits)
+    #resize = new ResizeObserver(() => this.#fits() !== this.#fit && this.render());
+
+    // the grid makes all items as wide as the widest; the current page's is always there and shown
+    #fits() {
+        const cell = this.querySelector('nav [aria-current]')?.parentNode.offsetWidth;
+        return cell ? Math.floor(this.clientWidth / cell) : 0;
+    }
 
     connectedCallback() {
         this.render();
@@ -44,18 +45,18 @@ export default class U2Pagination extends HTMLElement {
         return 1;
     }
 
-    // page numbers and '...', as many as fit
+    // page numbers and null for a cut, as many as fit; until measured only the fewest
     #calculatePages() {
         const { total, current } = this;
-        const maxItems = this.#cell && Math.floor(this.#width / this.#cell) - 2; // the arrows
+        const maxItems = this.#fit - 2; // the arrows
         if (total <= maxItems) return range(1, total);
         if (maxItems < 5) return [current]; // no room for first, last and the cuts: the arrows around the current page
-        // a window between the first and the last page, around the current one; at a cut, '...' takes its edge
+        // a window between the first and the last page, around the current one; at a cut, null takes its edge
         const size = maxItems - 2;
         const start = Math.min(Math.max(2, current - (size - 1 >> 1)), total - size);
         const pages = range(start, start + size - 1);
-        if (start > 2) pages[0] = '...';
-        if (start + size < total) pages[size - 1] = '...';
+        if (start > 2) pages[0] = null;
+        if (start + size < total) pages[size - 1] = null;
         return [1, ...pages, total];
     }
 
@@ -73,15 +74,13 @@ export default class U2Pagination extends HTMLElement {
 
     render(again = true) {
         const { current } = this;
-        this.#width = this.clientWidth;
+        this.#fit = this.#fits();
 
         if (!this.querySelector('nav')) this.insertAdjacentHTML('beforeend', `<nav aria-label="${text(this, 'nav')}"><ul u2-focusgroup="remember"></ul></nav>`);
         const ul = this.querySelector('nav ul');
 
-        // [page, rel] per link, null for '...'
-        const items = this.#calculatePages().map(page => page === '...' ? null : [page]);
-        items.unshift([current - 1, 'prev']);
-        items.push([current + 1, 'next']);
+        // [page, rel] per link, null for a cut
+        const items = [[current - 1, 'prev'], ...this.#calculatePages().map(page => page && [page]), [current + 1, 'next']];
 
         // focus follows its link, not its position: the same arrow, or the same page
         const f = this.contains(document.activeElement) && document.activeElement;
@@ -101,11 +100,7 @@ export default class U2Pagination extends HTMLElement {
         if (key) (this.querySelector(key) ?? this.querySelector('[aria-current]'))?.focus();
 
         // measured otherwise than assumed: once more
-        const cell = this.#cellWidth();
-        if (again && cell !== this.#cell) {
-            this.#cell = cell;
-            this.render(false);
-        }
+        if (again && this.#fits() !== this.#fit) this.render(false);
     }
 
     static observedAttributes = ['total', 'current', 'href'];
