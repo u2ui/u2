@@ -16,7 +16,7 @@ addEventListener('keydown', e => {
 	if (isHorizontal && target.tagName === 'INPUT' && target.type !== 'checkbox' && target.type !== 'radio') return;
 	if (isVertical && target.tagName === 'SELECT') return;
 
-	const options = Object.fromEntries(container.getAttribute('u2-focusgroup').split(' ').map(o => [o, true]));
+	const options = optionsOf(container);
 	if ((options.horizontal || options.vertical) && !options[isHorizontal ? 'horizontal' : 'vertical']) return; // neither: both
 
 	const direction = e.code === 'ArrowLeft' || e.code === 'ArrowUp' ? -1 : 1;
@@ -35,25 +35,21 @@ addEventListener('keydown', e => {
 	const next = options.wrap ? items.at((index + direction) % items.length) : items[index + direction];
 	if (!next) return;
 
-	next.focus();
-
-    // remember
-    if (options.remember) {
-        items.forEach(el => el.setAttribute('tabindex', el === next ? '0' : '-1'));
-    }
+	next.focus(); // remembered by focusin
 
 	e.preventDefault();
 });
 
+// remember: the item focused last is the group's only tab stop, however it got the focus (arrow key, click, script)
+addEventListener('focusin', e => {
+	const {target, container} = eventTargets(e);
+	if (!container || !optionsOf(container).remember) return;
+	const items = groupItems(container);
+	if (!items.includes(target)) return; // not one of its items (e.g. one of a nested group): the tab stop stays
+	items.forEach(el => el.tabIndex = el === target ? 0 : -1);
+});
 
-// addEventListener('focusin', e => {
-// 	const {target, container} = eventTargets(e);
-// 	if (!container) return;
-// 	const remember = container.getAttribute('u2-focusgroup').split(' ').includes('remember');
-// 	if (!remember) return;
-// 	groupItems(container).forEach(el => el.setAttribute('tabindex', el === target ? '0' : '-1'));
-// });
-
+const optionsOf = container => Object.fromEntries(container.getAttribute('u2-focusgroup').split(' ').map(o => [o, true]));
 
 
 function groupItems(container) {
@@ -69,13 +65,7 @@ function groupItems(container) {
 }
 
 function eventTargets(event){
-	let target = event.target;
-	let container = target.closest('[u2-focusgroup]');
-	if (!container) { // inside shadow dom
-		target = event.originalTarget; // only for firefox?
-		if (!target) return {};
-		container = target.closest('[u2-focusgroup]');
-	}
-	container ||= target.assignedSlot?.closest('[u2-focusgroup]'); // if slotted, ok?
+	const target = event.composedPath()[0]; // the real target, also inside an open shadow root (event.target is its host)
+	const container = target.closest('[u2-focusgroup]') ?? target.assignedSlot?.closest('[u2-focusgroup]'); // if slotted, ok?
 	return {target, container};
 }
