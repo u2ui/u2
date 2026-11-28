@@ -95,17 +95,14 @@ document.addEventListener('touchstart', handleStart, { passive: true });
 
 
 function findOwnHandler(root) {
-    let found = null;
     function walk(node) {
-        if (found) return;
-        if (node !== root && node.hasAttribute?.('u2-movable')) return;
-        if (node.hasAttribute?.('u2-movable-handler')) found = node;
+        if (node !== root && node.hasAttribute?.('u2-movable')) return null;
+        if (node.hasAttribute?.('u2-movable-handler')) return node;
         for (const child of node.children) {
-            walk(child);
-            if (found) return;
+            const found = walk(child);
+            if (found) return found;
         }
-        if (node.shadowRoot) walk(node.shadowRoot);
+        return node.shadowRoot ? walk(node.shadowRoot) : null;
     }
-    walk(root);
-    return found;
+    return walk(root);
 }

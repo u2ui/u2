@@ -40,10 +40,7 @@ export default class U2Time extends HTMLElement {
         // }
 
 
-        let date = string.match(/^-?\d{5,}$/) ? Number(string) : Date.parse(string);
-
-        date = new Date(date);
-        this.__date = date;
+        this.__date = new Date(string?.match(/^-?\d{5,}$/) ? Number(string) : Date.parse(string));
         this.__lang = localeFromElement(this) || 'default';
         this.render();
     }

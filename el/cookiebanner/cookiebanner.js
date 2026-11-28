@@ -97,7 +97,7 @@ window.addEventListener('u2-cookiebanner-consent', ({ detail: { consent } }) => 
         if (script.src) newScript.src = script.src;
         else newScript.textContent = script.textContent;
         newScript.type = 'text/javascript';
-        script.parentNode.replaceChild(newScript, script);
+        script.replaceWith(newScript);
       }
     });
   }, 10);

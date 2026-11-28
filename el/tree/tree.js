@@ -79,12 +79,12 @@ export default class U2Tree extends HTMLElement {
                 Home:       ()=> this.root().setFocus(),
             }[e.key];
             // focus next where text starts with the key pressed
-            const isChar = /^.$/u.test(e.key);
-            if (isChar) {
+            if (/^.$/u.test(e.key)) {
+                const key = e.key.toLowerCase();
                 let current = this.nextFocusable() || this.root();
                 while (current && current !== this) {
-                    let text = current.shadowRoot.querySelector('[part=content]').assignedNodes().map(item=>item.textContent).join(' ').trim().toLowerCase();
-                    if (text.startsWith(e.key.toLowerCase())) {
+                    const text = current.shadowRoot.querySelector('[part=content]').assignedNodes().map(item=>item.textContent).join(' ').trim().toLowerCase();
+                    if (text.startsWith(key)) {
                         current.setFocus();
                         break;
                     }
@@ -96,7 +96,7 @@ export default class U2Tree extends HTMLElement {
 
         this.addEventListener('mousedown', e => e.detail >= 2 && e.preventDefault() );  // prevent dbl-click selection
 
-        this.childrenObserver = new MutationObserver(mutations => this._markup())
+        this.childrenObserver = new MutationObserver(() => this._markup())
 
     }
     connectedCallback() {

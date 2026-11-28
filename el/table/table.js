@@ -17,7 +17,7 @@ export default class U2Table extends HTMLElement {
             // console.log('check?', !this._isUpdating)
             if (this._isUpdating) return; // IGNORIEREN WÄHREND UPDATE
             if (!this._watchCells && !mutations.some(m => isSkeleton(m.target))) return;
-            this.columns.refresh();
+            this.columns?.refresh();
             this.#checkTable();
         });
         this.mutObs.observe(this, { childList: true, subtree: true, /* attributes: true, characterData: true*/});
@@ -145,18 +145,17 @@ export default class U2Table extends HTMLElement {
         // the foot aggregates read cell values, so such a table has to watch the cells as well
         this._watchCells = !!firstFootTr?.querySelector('[data-sum], [data-avg], [data-count]');
         if (firstFootTr) {
+            const colCells = td => this.columns.item(this.columns.indexOf(td)).cellsByGroup(this.table.tBodies[0]);
             for (const td of firstFootTr.children) {
                 if (td.hasAttribute('data-sum')) {
-                    const index = this.columns.indexOf(td);
-                    td.textContent = this.columns.item(index).cellsByGroup(this.table.tBodies[0]).reduce((a, b) => a + tdValue(b), 0);
+                    td.textContent = colCells(td).reduce((a, b) => a + tdValue(b), 0);
                 }
                 if (td.hasAttribute('data-avg')) {
-                    const cells = this.columns.item(this.columns.indexOf(td)).cellsByGroup(this.table.tBodies[0]);
+                    const cells = colCells(td);
                     td.textContent = cells.reduce((a, b) => a + tdValue(b), 0) / cells.length;
                 }
                 if (td.hasAttribute('data-count')) {
-                    const index = this.columns.indexOf(td);
-                    td.textContent = this.columns.item(index).cellsByGroup(this.table.tBodies[0]).filter(td => tdValue(td) !== null).length;
+                    td.textContent = colCells(td).filter(td => tdValue(td) !== null).length;
                 }
             }
         }
@@ -291,12 +290,7 @@ function tableCheckboxMultiSelectListener(e) {
  * The factory for the Columns class.
  */
 const TableColMap = new WeakMap();
-export const getTableColumns = (table) => {
-    if (!TableColMap.has(table)) {
-        TableColMap.set(table, new Columns(table));
-    }
-    return TableColMap.get(table);
-}
+export const getTableColumns = (table) => TableColMap.get(table) ?? TableColMap.set(table, new Columns(table)).get(table);
 
 /**
  * The Columns class represents a collection of the columns in a table.

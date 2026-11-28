@@ -11,14 +11,6 @@ export default class U2Drawer extends HTMLElement {
 
     connectedCallback() {
         if (!this.hasAttribute('popover')) this.setAttribute('popover', 'auto');
-
-        this.swipeConfig = {
-            right: { open: 'translateX(0)', closed: 'translateX(100%)' },
-            left: { open: 'translateX(0)', closed: 'translateX(-100%)' },
-            top: { open: 'translateY(0)', closed: 'translateY(-100%)' },
-            bottom: { open: 'translateY(0)', closed: 'translateY(100%)' }
-        };
-
         this.update();
         this.setupSwipe();
     }
@@ -104,11 +96,11 @@ export default class U2Drawer extends HTMLElement {
         this.addEventListener('touchstart', (e) => {
             if (!this.matches(':popover-open')) return;
 
-            this.startX = e.touches[0].clientX;
-            this.startY = e.touches[0].clientY;
+            this.currentX = this.startX = e.touches[0].clientX;
+            this.currentY = this.startY = e.touches[0].clientY;
             this.isDragging = true;
             this.style.transition = 'none';
-        });
+        }, { passive: true });
 
         this.addEventListener('touchmove', (e) => {
             if (!this.isDragging) return;
@@ -132,7 +124,7 @@ export default class U2Drawer extends HTMLElement {
                     this.style.transform = `translateY(${deltaY}px)`;
                 }
             }
-        });
+        }, { passive: true });
 
         this.addEventListener('touchend', () => {
             if (!this.isDragging) return;
@@ -154,7 +146,7 @@ export default class U2Drawer extends HTMLElement {
             if (shouldClose) {
                 this.hidePopover();
             } else {
-                this.style.transform = this.swipeConfig[placement].open;
+                this.style.transform = placement === 'right' || placement === 'left' ? 'translateX(0)' : 'translateY(0)';
             }
         });
     }

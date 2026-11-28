@@ -79,8 +79,7 @@ export default class U2Toc extends HTMLElement {
             lastLevel = level;
         }
         if (this.innerHTML.trim() === nav.outerHTML) return;
-        this.innerHTML = '';
-        this.appendChild(nav);
+        this.replaceChildren(nav);
     }
 }
 

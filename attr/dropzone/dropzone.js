@@ -377,6 +377,8 @@ function indicateDrop(container, position, element = null) {
         document.body.appendChild(indicator);
     }
 
+    const s = indicator.style;
+
     // Leerer Container
     if (!element) {
         const rect = container.getBoundingClientRect();
@@ -385,9 +387,9 @@ function indicateDrop(container, position, element = null) {
         const paddingLeft = parseFloat(styles.paddingLeft);
 
         indicator.className = 'vertical';
-        indicator.style.top = `${rect.top + paddingTop}px`;
-        indicator.style.left = `${rect.left + paddingLeft}px`;
-        indicator.style.width = `${rect.width - paddingLeft - parseFloat(styles.paddingRight)}px`;
+        s.top = `${rect.top + paddingTop}px`;
+        s.left = `${rect.left + paddingLeft}px`;
+        s.width = `${rect.width - paddingLeft - parseFloat(styles.paddingRight)}px`;
         indicator.showPopover();
         return;
     }
@@ -396,76 +398,57 @@ function indicateDrop(container, position, element = null) {
     const sibling = position === 'before'
         ? element.previousElementSibling
         : element.nextElementSibling;
-    const isHorizontal = detectHorizontalLayout(element, sibling);
-
     const rect = element.getBoundingClientRect();
-    const styles = getComputedStyle(element);
+    const siblingRect = sibling?.getBoundingClientRect();
+    const isHorizontal = siblingRect && Math.abs(rect.top - siblingRect.top) < (rect.height + siblingRect.height) / 4;
 
     if (isHorizontal) {
         // VERTIKALER Indikator (zwischen horizontal angeordneten Elementen)
         indicator.className = 'horizontal';
 
         let left;
-        if (sibling) {
-            const siblingRect = sibling.getBoundingClientRect();
-
+        if (siblingRect) {
             if (position === 'before') {
                 // Zwischen previousSibling und element
-                const gap = rect.left - siblingRect.right;
-                left = siblingRect.right + gap / 2;
+                left = (siblingRect.right + rect.left) / 2;
             } else {
                 // Zwischen element und nextSibling
-                const gap = siblingRect.left - rect.right;
-                left = rect.right + gap / 2;
+                left = (rect.right + siblingRect.left) / 2;
             }
         } else { // Kein Nachbar: Am Rand mit Margin
-            const margin = position === 'before' ? parseFloat(styles.marginLeft) : parseFloat(styles.marginRight);
+            const styles = getComputedStyle(element);
+            const margin = parseFloat(position === 'before' ? styles.marginLeft : styles.marginRight);
             left = position === 'before' ? rect.left - margin / 2 : rect.right + margin / 2;
         }
 
-        indicator.style.left = `${left - 1}px`;
-        indicator.style.top = `${rect.top}px`;
-        indicator.style.height = `${rect.height}px`;
-        indicator.style.width = '2px';
+        s.left = `${left - 1}px`;
+        s.top = `${rect.top}px`;
+        s.height = `${rect.height}px`;
+        s.width = '2px';
 
     } else {
         // HORIZONTALER Indikator (zwischen vertikal angeordneten Elementen)
         indicator.className = 'vertical';
 
         let top;
-        if (sibling) {
-            const siblingRect = sibling.getBoundingClientRect();
-
+        if (siblingRect) {
             if (position === 'before') { // Zwischen previousSibling und element
-                const gap = rect.top - siblingRect.bottom;
-                top = siblingRect.bottom + gap / 2;
+                top = (siblingRect.bottom + rect.top) / 2;
             } else { // Zwischen element und nextSibling
-                const gap = siblingRect.top - rect.bottom;
-                top = rect.bottom + gap / 2;
+                top = (rect.bottom + siblingRect.top) / 2;
             }
         } else {
             // Kein Nachbar: Am Rand mit Margin
-            const margin = position === 'before' ? parseFloat(styles.marginTop) : parseFloat(styles.marginBottom);
+            const styles = getComputedStyle(element);
+            const margin = parseFloat(position === 'before' ? styles.marginTop : styles.marginBottom);
             top = position === 'before' ? rect.top - margin / 2 : rect.bottom + margin / 2;
         }
 
-        indicator.style.top = `${top - 1}px`;
-        indicator.style.left = `${rect.left}px`;
-        indicator.style.width = `${rect.width}px`;
-        indicator.style.height = '2px';
+        s.top = `${top - 1}px`;
+        s.left = `${rect.left}px`;
+        s.width = `${rect.width}px`;
+        s.height = '2px';
     }
 
     indicator.showPopover();
-}
-
-function detectHorizontalLayout(element, sibling) {
-    if (!sibling) return false;
-
-    const rect = element.getBoundingClientRect();
-    const siblingRect = sibling.getBoundingClientRect();
-
-    const yDiff = Math.abs(rect.top - siblingRect.top);
-    const avgHeight = (rect.height + siblingRect.height) / 2;
-
-    return yDiff < avgHeight * 0.5;
 }

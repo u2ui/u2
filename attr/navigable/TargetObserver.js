@@ -45,7 +45,7 @@ export class TargetObserver {
             while (closest) {
                 this.opts.in(closest);
                 this.parentTargets.add(closest);
-                closest = closest.parentNode.closest(this.opts.matches);
+                closest = closest.parentElement?.closest(this.opts.matches);
             }
         }
         for (const pTarget of this.parentTargets) {

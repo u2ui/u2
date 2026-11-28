@@ -94,7 +94,7 @@ export default class U2Tabs extends HTMLElement {
     }
 
     _update() {
-        this.tabs = this._tabsSlot.assignedNodes({ flatten: true });
+        this.tabs = this._tabsSlot.assignedElements({ flatten: true });
         this.panels = this._panelsSlot.assignedElements({ flatten: true });
         for (let panel of this.panels) panel.role = 'tabpanel';
         for (let tab of this.tabs) tab.role = 'tab';
@@ -145,11 +145,9 @@ export default class U2Tabs extends HTMLElement {
     }
 
     _findFirstSelectedTab() {
-        let index;
-        for (let [i, tab] of this.tabs.entries()) {
-            if (tab.hasAttribute('selected')) index = i;
+        for (const [i, tab] of this.tabs.entries()) {
+            if (tab.hasAttribute('selected')) return i;
         }
-        return index;
     }
 
     static observedAttributes = ['selected'];

@@ -51,11 +51,7 @@ class Menu {
         this.children.forEach(m=>m._subMenu?.close());
     }
     async _placer() {
-        if (!this.__placer) {
-            const Placer = (await import('../../js/Placer/Placer.js')).Placer;
-            this.__placer = new Placer(this.el, {x:'after', y:'prepend'});
-        }
-        return this.__placer;
+        return this.__placer ??= new (await import('../../js/Placer/Placer.js')).Placer(this.el, {x:'after', y:'prepend'});
     }
 }
 

@@ -16,7 +16,7 @@ document.head.insertAdjacentHTML('afterbegin', `<style>${css}</style>`);
 let activeDraggable = null;
 document.addEventListener('pointermove', e => {
     const handle = e.composedPath()[0]?.closest?.('[u2-draghandle]');
-    const draggable = handle ? handle.closest('[draggable]') : null;
+    const draggable = handle?.closest('[draggable]') ?? null;
     if (draggable === activeDraggable) return; // kein Wechsel -> nichts tun
     activeDraggable?.setAttribute('draggable', 'false');
     activeDraggable = draggable;

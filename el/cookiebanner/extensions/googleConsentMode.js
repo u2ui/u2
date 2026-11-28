@@ -24,11 +24,10 @@ gtag('consent', 'default', defaultConsent);
 
 
 function updateConsent(consent) {
-    Object.entries(googleConsentMap).forEach(([key, value]) => {
-        gtag('consent', 'update', {
-            [key]: consent[value] ? 'granted' : 'denied'
-        });
-    });
+    gtag('consent', 'update', Object.fromEntries(Object.entries(googleConsentMap).map(([key, value]) => [
+        key,
+        consent[value] ? 'granted' : 'denied'
+    ])));
     console.log('updateConsent for google-consent-mode', Object.entries(googleConsentMap).map(([key, value]) => [key, consent[value]]));
 }
 

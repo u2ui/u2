@@ -6,6 +6,3 @@ u2-accordion:not(:defined) {
     display:contents;
 }
 
-u2-accordion .accTrigger {
-    font-size:inherit;
-}

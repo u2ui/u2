@@ -161,7 +161,6 @@ class DevIframe extends HTMLElement {
                     document.querySelectorAll('link').forEach(link => {
                         if (link.href.includes('/css/base/')) link.remove();
                         if (link.href.includes('/css/classless/')) link.remove();
-                        if (link.href.includes('/css/classless/')) link.remove();
                         if (link.href.includes('/attr/skin/skin.css')) link.remove();
                     });
                 }

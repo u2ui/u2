@@ -4,7 +4,7 @@ export default class U2Number extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.outEl = this.shadowRoot;
-        this.observer = new MutationObserver(mutations => this.render());
+        this.observer = new MutationObserver(() => this.render());
     }
     connectedCallback() {
         this.render();
@@ -36,12 +36,7 @@ export default class U2Number extends HTMLElement {
         const locales = localesFromElement(this);
         const formatter = new Intl.NumberFormat(locales, options);
 
-        let html = '';
-        for (const part of formatter.formatToParts(value)) {
-            html += `<span part="${part.type}">${part.value}</span>`;
-        }
-
-        this.outEl.innerHTML = html;
+        this.outEl.innerHTML = formatter.formatToParts(value).map(p => `<span part="${p.type}">${p.value}</span>`).join('');
     }
     static observedAttributes = ['value', 'lang', 'digits', 'unit', 'currency', 'percent'];
 

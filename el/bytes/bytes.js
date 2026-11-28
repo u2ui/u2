@@ -4,7 +4,7 @@ export default class U2Bytes extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.outEl = this.shadowRoot;
-        this.observer = new MutationObserver(mutations => this.render());
+        this.observer = new MutationObserver(() => this.render());
     }
     connectedCallback() {
         this.render();

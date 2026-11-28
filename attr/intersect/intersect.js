@@ -14,7 +14,7 @@ new SelectorObserver({
         el.u2IntersectionObserver = new IntersectionObserver(entries=>{
             let attrValue = '';
             const entry = entries[0];
-            let ratio = entry.intersectionRatio;
+            const ratio = entry.intersectionRatio;
             let onTarget = false;
             if (entry.isIntersecting) {
                 for (const val of thresholds) {
@@ -28,12 +28,9 @@ new SelectorObserver({
                 attrValue += ' above';
             }
 
-            attrValue = attrValue.trim();
-            el.setAttribute('u2-intersect', attrValue);
+            el.setAttribute('u2-intersect', attrValue.trim());
             el.classList.toggle('u2-intersected', onTarget);
-
-            const event = new CustomEvent('u2-intersect.'+(onTarget?'enter':'leave'), {bubbles:true} );
-            el.dispatchEvent(event);
+            el.dispatchEvent(new CustomEvent('u2-intersect.'+(onTarget?'enter':'leave'), {bubbles:true}));
         }, {
             //root: document.scrollingElement,
             rootMargin: margin,
@@ -43,7 +40,7 @@ new SelectorObserver({
 
     },
     off: (el) => {
-        el.u2IntersectionObserver?.unobserve(el);
+        el.u2IntersectionObserver?.disconnect();
     }
 }).observe('[u2-intersect]');
 

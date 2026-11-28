@@ -53,11 +53,12 @@ export function tristate(tree) {
         if (item !== tree) up(item.parentNode);
     });
 
+    const has = nodes => [...nodes].some(n => n.localName === tree.localName);
     new MutationObserver(records => {
         for (const { target, addedNodes, removedNodes } of records) {
-            const items = nodes => [...nodes].some(n => n.localName === tree.localName);
-            if (items(addedNodes) && box(target)?.checked) cascade(target, true);
-            else if (items(addedNodes) || items(removedNodes)) up(target);
+            const added = has(addedNodes);
+            if (added && box(target)?.checked) cascade(target, true);
+            else if (added || has(removedNodes)) up(target);
         }
     }).observe(tree, { childList: true, subtree: true });
 }

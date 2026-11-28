@@ -54,8 +54,9 @@ export default class U2Chart extends HTMLElement {
 
         this.container.innerHTML = ''; // Clear container
 
-        let { rows, cols, data } = await this._extractdata();
-        if (!data) { console.error('No data found'); return; }
+        const extracted = await this._extractdata();
+        if (!extracted?.data) { console.error('No data found'); return; }
+        let { rows, cols, data } = extracted;
 
         const type = this.getAttribute('type') || 'line';
         const engine = this.getAttribute('engine') || 'chart.js';

@@ -64,6 +64,7 @@ export class SelectionManager {
 
     onkeydown(e) {
         const items = this.items();
+        if (!items.length) return;
         const current = e.composedPath().find(el => items.includes(el));
 
         const idx = items.indexOf(current);

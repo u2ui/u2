@@ -53,14 +53,7 @@ class DynamicScrollSpy {
     
     init() {
         this.recalibrate();
-        this.mutationObserver = new MutationObserver((mutationsList) => {
-            for (const mutation of mutationsList) {
-                if (mutation.type === 'childList') {
-                    requestAnimationFrame(() => this.recalibrate());
-                    break;
-                }
-            }
-        });
+        this.mutationObserver = new MutationObserver(() => requestAnimationFrame(() => this.recalibrate()));
         this.mutationObserver.observe(this.navElement, { childList: true, subtree: true });
     }
 

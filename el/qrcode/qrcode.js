@@ -38,17 +38,11 @@ export default class U2Qrcode extends HTMLElement {
 customElements.get('u2-qrcode') || customElements.define('u2-qrcode', U2Qrcode);
 
 function toSvgString(qr) {
-    const border = 0;
-    let parts = [];
+    const parts = [];
     for (let y = 0; y < qr.size; y++) {
         for (let x = 0; x < qr.size; x++) {
-            if (qr.getModule(x, y))
-                parts.push(`M${x + border},${y + border}h1v1h-1z`);
+            if (qr.getModule(x, y)) parts.push(`M${x},${y}h1v1h-1z`);
         }
     }
-    return `
-    <svg viewBox="0 0 ${qr.size + border * 2} ${qr.size + border * 2}">
-        <path d="${parts.join(" ")}"/>
-    </svg>
-    `
+    return `<svg viewBox="0 0 ${qr.size} ${qr.size}"><path d="${parts.join(" ")}"/></svg>`;
 }

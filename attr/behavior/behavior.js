@@ -45,14 +45,8 @@ const observer = new SelectorObserver({
 
 function setStates(el, states) {
     for (const state in states) {
-        setAttr(el.querySelector('.-'+state), 'hidden', !states[state]);
+        el.querySelector('.-'+state)?.toggleAttribute('hidden', !states[state]);
     }
-}
-function setAttr(el, name, value) {
-    if (!el) return;
-    if (value == null || value === false) return el.removeAttribute(name);
-    if (value === true) return el.setAttribute(name, '');
-    el.setAttribute(name, value);
 }
 
 

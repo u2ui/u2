@@ -389,11 +389,7 @@ export default class U2Video extends HTMLElement {
     }
 
     toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            this.requestFullscreen();
-        } else {
-            document.exitFullscreen();
-        }
+        document.fullscreenElement ? document.exitFullscreen() : this.requestFullscreen();
     }
 
     showOverlay(text) {

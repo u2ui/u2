@@ -16,7 +16,7 @@ export default class U2Responsive extends HTMLElement {
     }
     connectedCallback() {
         this.resizeObserver.observe(this);
-        setMutationObserver(this, this.getAttribute('mutation') !== null);
+        setMutationObserver(this, this.hasAttribute('mutation'));
     }
     disconnectedCallback() {
         this.resizeObserver.disconnect();

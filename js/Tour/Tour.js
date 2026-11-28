@@ -122,8 +122,9 @@ export class Tour extends EventTarget {
             e.preventDefault();
             this.stop();
         };
+        const stop = e => e.stopPropagation();
         for (const event of ['pointerdown', 'mousedown', 'touchstart', 'click', 'dblclick', 'contextmenu']) {
-            info.addEventListener(event, e => e.stopPropagation());
+            info.addEventListener(event, stop);
         }
         host.append(info);
         this.content = info.querySelector('.u2TourContent');

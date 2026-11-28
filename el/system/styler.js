@@ -490,19 +490,20 @@ class ColorSystemStyler extends HTMLElement {
             </div>`;
 
         // Event Listener
+        const computed = getComputedStyle(this.targetElement);
         this.shadowRoot.querySelectorAll('input, select').forEach(input => {
             if (input.classList.contains('disable-toggle')) {
                 input.addEventListener('change', () => this.handleDisableToggle(input));
             } else {
                 input.addEventListener('input', () => this.handleInput(input));
                 input.addEventListener('change', () => this.handleInput(input));
-                this.setInitialValue(input);
+                this.setInitialValue(input, computed);
             }
         });
     }
 
-    setInitialValue(input) {
-        const elValue = getComputedStyle(this.targetElement).getPropertyValue(input.name).trim();
+    setInitialValue(input, style = getComputedStyle(this.targetElement)) {
+        const elValue = style.getPropertyValue(input.name).trim();
         
         if (!elValue) return;
 
@@ -550,12 +551,11 @@ class ColorSystemStyler extends HTMLElement {
         if (name === '--font-1' || name === '--font-2') {
             loadFont(value);
 
-            const google = FONTS[value].google;
+            const axes = FONTS[value].google?.match(/:([^@]+)@/)?.[1].toLowerCase().split(',') ?? []; // e.g. "Recursive:slnt,CASL,MONO@..."
             for (const variant of this.shadowRoot.querySelector(`[data-var="${name}"]`).parentNode.children) {
                 if (!variant.dataset.var.startsWith(name + '-')) continue;
                 const setting = variant.dataset.var.replace(name+'-', '');
-                const ok = google?.includes(setting);
-                variant.inert = !ok;
+                variant.inert = !axes.includes(setting);
             }
             this.targetElement.style.setProperty(
                 name,
@@ -627,32 +627,9 @@ function unitToPx(value, unit, el){
     return null;
 }
 
-function pxToUnit(px, unit, el){
-    if (!unit) return px;
-    if (unit === 'px')  return px;
-    if (unit === 'cm')  return px * 2.54 / 96;
-    if (unit === 'mm')  return px * 25.4 / 96;
-    if (unit === 'in')  return px / 96;
-    if (unit === 'pt')  return px * 72 / 96;
-    if (unit === 'pc')  return px * 6 / 96;
-    if (unit === 'rem') return px / parseFloat(getComputedStyle(document.documentElement).fontSize);
-    if (unit === 'em')  return px / parseFloat(getComputedStyle(el).fontSize); // not el.parentNode
-    if (unit === 'vw')  return px / (innerWidth / 100);
-    if (unit === 'vh')  return px / (innerHeight / 100);
-    if (unit === '%')   {
-        console.warn('todo: "%" is dependant of the css-property used');
-        return null;
-        //return px * 100 / el.parentElement.offsetWidth;
-    }
-    if (unit === 'lh')   {
-        const raw = getComputedStyle(el).lineHeight;
-        if (raw === 'normal') {
-            console.warn('lh is "normal" which is not easy to pixelize');
-            return null;
-        }
-        const lh = parseFloat(raw);
-        return px / lh;    
-    }
+function pxToUnit(px, unit, el) {
+    const factor = unitToPx(1, unit, el);
+    return factor ? px / factor : null;
 }
 
 function rgbToHex(rgb) {

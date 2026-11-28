@@ -48,7 +48,7 @@ export default class U2Fields extends U2Element {
         `;
 
         this.container = this.shadowRoot.getElementById('container');
-        this.observer = new MutationObserver(this.processChildren.bind(this));
+        this.observer = new MutationObserver(() => this.processChildren());
     }
 
     connectedCallback() {

@@ -145,23 +145,15 @@ export default class U2Calendar extends U2Element {
     const today = localDate(new Date());
     const year = this._currentDate.getUTCFullYear();
     const month = this._currentDate.getUTCMonth();
-    const dateString = Intl.DateTimeFormat(this._locale?.baseName || navigator.language, { year: 'numeric', month: 'long', timeZone: 'UTC' }).format(this._currentDate);
+    const localeTag = this._locale?.baseName || navigator.language;
+    const dateString = getTimeFormatter(localeTag, { year: 'numeric', month: 'long', timeZone: 'UTC' }).format(this._currentDate);
 
     this.shadowRoot.querySelector('.navigation h2').innerHTML = dateString;
-    this.shadowRoot.querySelector('.header').innerHTML = `
-      ${(() => {
-        const localeTag = this._locale?.baseName || this.getAttribute('lang') || navigator.language;
-        const dtf = getTimeFormatter(localeTag, { weekday: 'short' });
-        const out = [];
-        for (let i = 0; i < 7; i++) {
-          const idx = (this._weekStart + i) % 7;
-          const ref = new Date(Date.UTC(1970, 0, 4 + idx));
-          const label = dtf.format(ref);
-          out.push(`<div class="header-day">${label}</div>`);
-        }
-        return out.join('');
-      })()}
-    `;
+    const dtf = getTimeFormatter(this._locale?.baseName || this.getAttribute('lang') || navigator.language, { weekday: 'short' });
+    this.shadowRoot.querySelector('.header').innerHTML = Array.from({ length: 7 }, (_, i) => {
+      const ref = new Date(Date.UTC(1970, 0, 4 + (this._weekStart + i) % 7));
+      return `<div class="header-day">${dtf.format(ref)}</div>`;
+    }).join('');
     this.shadowRoot.querySelector('.grid').innerHTML = `<slot></slot>`;
 
     this.renderMonth(year, month, today);
@@ -225,8 +217,7 @@ export default class U2Calendar extends U2Element {
 
     // Track assignment for overlapping events (optimized):
     // Flatten segments, sort by row/start, then greedily assign tracks per row
-    const segments = [];
-    itemWeeks.forEach(({ weeks }) => weeks.forEach(w => segments.push(w)));
+    const segments = itemWeeks.flatMap(({ weeks }) => weeks);
 
     segments.sort((a, b) => a.row - b.row || a.startCol - b.startCol);
 

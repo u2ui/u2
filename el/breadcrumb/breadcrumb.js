@@ -56,9 +56,9 @@ export default class U2Breadcrumb extends HTMLElement {
         homeLink.href = currentUrl.origin + '/';
         this.append(homeLink);
 
-        pathParts.forEach((part, index) => {
+        pathParts.forEach(part => {
             currentPath += part;
-            const name = part.replace('/','').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const name = part.replace('/','').replaceAll('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
             const link = document.createElement('a');
             link.textContent = name;
             link.href = currentPath;
@@ -70,11 +70,11 @@ export default class U2Breadcrumb extends HTMLElement {
     }
 
     render() {
-        const links = Array.from(this.querySelectorAll(':scope > :not(script)'));
+        const links = [...this.querySelectorAll(':scope > :not(script)')];
 
         const pageUrl = location.href.split('#')[0].split('?')[0];
         this.ol.innerHTML = '';
-        links.forEach((link, index) => {
+        links.forEach(link => {
             const li = document.createElement('li');
             const slot = document.createElement('slot');
             const separator = document.createElement('span');

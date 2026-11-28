@@ -35,7 +35,7 @@ export async function render(container, data, config) {
         };
 
         if (type === 'doughnut') {
-            config.options = { ...config.options, donut: true };
+            options.donut = true;
         }
     } else {
         // Line/Bar

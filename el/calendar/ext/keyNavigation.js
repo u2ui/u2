@@ -1,38 +1,19 @@
 // cell navigations
+const cell = (grid, row, col) => grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
+const page = (row, col, grid, fn) => {
+    fn();
+    setTimeout(() => (cell(grid, row, col) || grid.querySelector(':scope > :last-child')).focus(), 10);
+};
 const calendarKeyDownFns = {
-    'ArrowLeft': (row, col, grid)=>{
-        return grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col - 1}"]`);
-    },
-    'ArrowRight': (row, col, grid)=>{
-        return grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col + 1}"]`);
-    },
-    'ArrowUp': (row, col, grid)=>{
-        return grid.querySelector(`[aria-rowindex="${row - 1}"][aria-colindex="${col}"]`);
-    },
-    'ArrowDown': (row, col, grid)=>{
-        return grid.querySelector(`[aria-rowindex="${row + 1}"][aria-colindex="${col}"]`);
-    },
-    'PageUp': (row, col, grid, calendar)=>{
-        calendar.prev();
-        setTimeout(()=>{
-            const nextTarget = grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
-            nextTarget ? nextTarget.focus() : grid.querySelector(':scope > :last-child').focus();
-        }, 10);
-    },
-    'PageDown': (row, col, grid, calendar)=>{
-        calendar.next();
-        setTimeout(()=>{
-            const nextTarget = grid.querySelector(`[aria-rowindex="${row}"][aria-colindex="${col}"]`);
-            nextTarget ? nextTarget.focus() : grid.querySelector(':scope > :last-child').focus();
-        }, 10);
-    },
-    'Home': (row, col, grid)=>{
-        return grid.querySelector(`[aria-rowindex="1"][aria-colindex="1"]`);
-    },
-    'End': (row, col, grid)=>{
-        return grid.querySelector(':scope > :last-child');
-    },
-}
+    ArrowLeft:  (r, c, g) => cell(g, r, c - 1),
+    ArrowRight: (r, c, g) => cell(g, r, c + 1),
+    ArrowUp:    (r, c, g) => cell(g, r - 1, c),
+    ArrowDown:  (r, c, g) => cell(g, r + 1, c),
+    PageUp:     (r, c, g, cal) => page(r, c, g, () => cal.prev()),
+    PageDown:   (r, c, g, cal) => page(r, c, g, () => cal.next()),
+    Home:       (r, c, g) => cell(g, 1, 1),
+    End:        (r, c, g) => g.querySelector(':scope > :last-child'),
+};
 document.addEventListener('keydown', e=>{
     if (e.target.tagName !== 'U2-CALENDAR') return;
 

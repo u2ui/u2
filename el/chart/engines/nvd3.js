@@ -30,7 +30,7 @@ export async function render(container, data, config) {
     }
 
     const { rows, cols, data: chartData } = data;
-    const { type, options } = config;
+    const { type } = config;
 
     // Map types
     // NVD3 types: lineChart, discreteBarChart, pieChart, multiBarChart

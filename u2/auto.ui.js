@@ -61,19 +61,18 @@ const exportCode = async function(){
 
 
 
-    let strCss = Object.entries(needed.css).filter(([,prio])=>prio===1).map(([url,prio])=>'<link href="'+url+'" rel="stylesheet" crossorigin>').join('\n');
+    const css = Object.entries(needed.css);
+    const crit = css.filter(([,p]) => p === 1);
+    const strCss = crit.map(([url]) => `<link href="${url}" rel="stylesheet" crossorigin>`).join('\n');
 
     // todo: combined string (just in the console for now)
-    let strCssPromizes = Object.entries(needed.css).filter(([,prio])=>prio===1).map(([url,prio])=>{
-        return fetch(url).then(res=>res.text());
-    });
-    const cssContents = await Promise.all(strCssPromizes);
+    const cssContents = await Promise.all(crit.map(([url]) => fetch(url).then(res => res.text())));
     const cssText = cssContents.join('').replace(/\/\*[\s\S]*?\*\//g, '');
     console.log(cssText);
 
 
-    let strJs  = Object.entries(needed.js).map(([url,prio])=>'<script src="'+url+'" type=module crossorigin async></script>').join('\n');
-    let strCssNonCritical = Object.entries(needed.css).filter(([,prio])=>prio>1).map(([url,prio])=>'<link rel="stylesheet" href="'+url+'" crossorigin>').join('\n');
+    const strJs = Object.entries(needed.js).map(([url]) => `<script src="${url}" type=module crossorigin async></script>`).join('\n');
+    const strCssNonCritical = css.filter(([,p]) => p > 1).map(([url]) => `<link rel="stylesheet" href="${url}" crossorigin>`).join('\n');
     return strCss +'\n' + strJs + '\n' + '\n<!-- non critical at the end -->\n' + strCssNonCritical;
 }
 

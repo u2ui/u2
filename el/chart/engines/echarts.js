@@ -3,7 +3,7 @@ export async function render(container, data, config) {
 
     const chart = echarts.init(container, null, { renderer: config.renderer });
     const { rows, cols, data: chartData } = data;
-    const { type, getColor, renderer } = config;
+    const { type, getColor } = config;
 
     // Map chart.js types to echarts types
     const typeMap = {

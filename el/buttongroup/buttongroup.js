@@ -5,7 +5,7 @@
 export default class U2Buttongroup extends HTMLElement {
     constructor(...args) {
         super(...args);
-        this.resizeObserver = new ResizeObserver(() => this._build());
+        this.resizeObserver = new ResizeObserver(() => this.menuButton && this._build());
         this.setAttribute('u2-focusgroup','horizontal');
         import('../../attr/focusgroup/focusgroup.js')
         //import ('../menubutton/menubutton.js'); // needs the css too
@@ -57,7 +57,7 @@ export default class U2Buttongroup extends HTMLElement {
             this._build();
         });
         this.resizeObserver.observe(this);
-        this.resizeObserver.observe(this.parentElement);
+        this.parentElement && this.resizeObserver.observe(this.parentElement);
     }
     disconnectedCallback() {
         this.resizeObserver.disconnect();

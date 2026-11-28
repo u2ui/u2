@@ -34,16 +34,8 @@ function templateToHtml(template) {
         if (tagName === '-') {
             placeholderHTML += '<span style="flex-grow:1;"><s hidden></s></span>';
         } else if (tagName === 'table') {
-            const [rows, cols] = options.split('x').map(n => parseInt(n));
-            placeholderHTML += '<table>';
-            for (let i = 0; i < rows; i++) {
-                placeholderHTML += '<tr>';
-                for (let j = 0; j < cols; j++) {
-                    placeholderHTML += '<td></td>';
-                }
-                placeholderHTML += '</tr>';
-            }
-            placeholderHTML += '</table>';
+            const [rows, cols] = options.split('x').map(n => Math.max(0, parseInt(n) || 0));
+            placeholderHTML += `<table>${`<tr>${'<td></td>'.repeat(cols)}</tr>`.repeat(rows)}</table>`;
         } else {
             placeholderHTML += `<${tagName}></${tagName}>`;
         }

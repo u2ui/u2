@@ -35,13 +35,8 @@ export async function render(container, data, config) {
     const styleTag = document.head.lastElementChild;
     styleTag.tagName === 'STYLE' && container.append(styleTag);
 
-    // Handle resizing (no, svgs are responsive by default)
-    const resizeObserver = new ResizeObserver(() => {});
-    resizeObserver.observe(container);
-
     return {
         destroy() {
-            resizeObserver.disconnect();
             // chart.destroy(); // Frappe charts doesn't have destroy?
             container.innerHTML = ''; // Clear container
         }

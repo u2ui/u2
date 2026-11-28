@@ -19,7 +19,7 @@ document.addEventListener('dragover', (e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
 
-    const target = e.composedPath().find(el => el.closest?.('.day'))?.closest('.day');
+    const target = e.composedPath().find(el => el.classList?.contains('day'));
     if (!target || target === currentDropTarget) return;
 
     currentDropTarget?.part.remove('drop-target');

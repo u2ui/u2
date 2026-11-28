@@ -67,8 +67,8 @@ function addGlobalListeners(){
     addEventListener('load',calcViewportRects);
     addEventListener('resize', onScroll);
     addEventListener('load', onScroll);
-    document.addEventListener('scroll', onScroll);
-    addEventListener('wheel', onScroll); // firefox, scroll is async so wheel is faster
+    document.addEventListener('scroll', onScroll, {passive: true});
+    addEventListener('wheel', onScroll, {passive: true}); // firefox, scroll is async so wheel is faster
 }
 function removeGlobalListeners(){
     removeEventListener('resize',calcViewportRects);

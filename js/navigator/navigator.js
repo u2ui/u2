@@ -32,7 +32,7 @@ class PersistentStorage {
   }
   
   static async get(url) {
-    const now = performance.now() + performance.timeOrigin;
+    const now = Date.now();
     
     if (state.persistentCache === 'localStorage') {
       try {
@@ -68,7 +68,7 @@ class PersistentStorage {
   }
   
   static async set(url, html) {
-    const now = performance.now() + performance.timeOrigin;
+    const now = Date.now();
     
     if (state.persistentCache === 'localStorage') {
       try {
@@ -100,7 +100,7 @@ class PersistentStorage {
   static cleanup(force = false) {
     if (state.persistentCache !== 'localStorage') return;
     
-    const now = performance.now() + performance.timeOrigin;
+    const now = Date.now();
     const keys = Object.keys(localStorage).filter(k => k.startsWith('router:'));
     
     for (const key of keys) {
@@ -156,10 +156,10 @@ class Morph {
       if (!oldChild && newChild) {
         oldNode.append(newChild);
       } else if (oldChild && !newChild) {
-        oldNode.removeChild(oldChild);
+        oldChild.remove();
       } else if (oldChild && newChild) {
         if (this.#shouldReplace(oldChild, newChild)) {
-          oldNode.replaceChild(newChild, oldChild);
+          oldChild.replaceWith(newChild);
         } else {
           this.morph(oldChild, newChild);
         }

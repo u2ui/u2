@@ -98,8 +98,6 @@ export default class U2Alert extends U2Element {
                 </button>
             </div>
         `;
-    }
-    connectedCallback() {
         this.shadowRoot.querySelector('#close').onclick = () => this.hide();
     }
     static observedAttributes = ['icon', 'variant'];

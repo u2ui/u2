@@ -16,18 +16,16 @@ export default class U2Masonry extends HTMLElement{
     render(){
         const widthContainer = this.clientWidth;
         if (!widthContainer) return;
-        let minWidth = cssLengthToPixelsStyle(this, '--u2-Items-width') || 200;
-        const rowGap = cssLengthToPixelsStyle(this, 'row-gap') ?? 0;
-        const columnGap = cssLengthToPixelsStyle(this, 'column-gap') ?? 0;
+        const style = getComputedStyle(this);
+        let minWidth = cssLengthToPixels(style.getPropertyValue('--u2-Items-width'), this, style) || 200;
+        const rowGap = cssLengthToPixels(style.getPropertyValue('row-gap'), this, style) ?? 0;
+        const columnGap = cssLengthToPixels(style.getPropertyValue('column-gap'), this, style) ?? 0;
 
         minWidth = Math.min(widthContainer, minWidth);
     
         const columns = Math.floor((widthContainer + columnGap) / (minWidth + columnGap));
         const columnWidth = (widthContainer - columnGap * (columns - 1)) / columns;
-        const columnHeights = [];
-        for (let i = 0; i < columns; i++){
-            columnHeights[i] = [i, 0];
-        }
+        const columnHeights = Array.from({length: columns}, (_, i) => [i, 0]);
 
         requestAnimationFrame(() => { // todo: prevent reflow: set all widths first
             for (const current of this.children){
@@ -54,11 +52,7 @@ function sortByHeight(a, b){
 
 /* helper */
 /* todo: similiar code in styler.js (unitToPx) and variable-styler.js */
-function cssLengthToPixelsStyle(element, property) {
-    const length = getComputedStyle(element).getPropertyValue(property);
-    return cssLengthToPixels(length, element);
-}
-function cssLengthToPixels(length, element) {
+function cssLengthToPixels(length, element, style = getComputedStyle(element)) {
     if (length === undefined) return undefined;
     length = length.trim();
     const value = parseFloat(length);
@@ -68,7 +62,7 @@ function cssLengthToPixels(length, element) {
         case 'px':
             return value;
         case 'em':
-            return value * parseFloat(getComputedStyle(element).fontSize);
+            return value * parseFloat(style.fontSize);
         case 'rem':
             return value * parseFloat(getComputedStyle(document.documentElement).fontSize);
         case '%':

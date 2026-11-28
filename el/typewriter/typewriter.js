@@ -84,11 +84,9 @@ export default class U2Typewriter extends HTMLElement {
     }
     next() {
         this.activeChar.classList.add('-Active');
-        let next = findNextChar(this, this.activeChar);
-        if (!next) {
-            return false;
-        }
-        next.append(this.caretElement)
+        const next = findNextChar(this, this.activeChar);
+        if (!next) return false;
+        next.append(this.caretElement);
         return this.activeChar = next;
     }
     reset(){

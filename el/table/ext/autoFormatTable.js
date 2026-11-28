@@ -3,14 +3,10 @@ import { getTableColumns } from "../table.js";
 export function autoFormatTable(table) {
 
     const root = table.shadowRoot || document.documentElement;
-    let style = root.querySelector('style[data-autoformat]');
-    if (!style) {
-        style = document.createElement('style'); // ok, reicht fast immer
+    if (!root.querySelector('style[data-autoformat]')) {
+        const style = document.createElement('style'); // ok, reicht fast immer
         style.dataset.autoformat = '';
-        root.prepend(style);
-    }
-
-    style.textContent = `
+        style.textContent = `
         /* AUTO-FORMAT STYLES (BETA) */
         :is(td, th).auto-numeric,
         :is(td, th).auto-currency {
@@ -53,6 +49,8 @@ export function autoFormatTable(table) {
             font-size:max(.8em, 12px);
         }
     `;
+        root.prepend(style);
+    }
 
     const firstHeadTr = table.querySelector(':scope > thead > tr');
     if (firstHeadTr) {
@@ -143,17 +141,19 @@ export function autoFormatTable(table) {
         }
 
         // 5. BOOLEAN CHECK
-        const booleanValues = ['true', 'false', 'yes', 'no', 'ja', 'nein', '✓', '✗', 'x'];
-        const allBoolean = nonEmptyValues.every(v => 
-            booleanValues.includes(v.toLowerCase())
-        );
+        const trueVals = ['true', 'yes', 'ja', '✓'];
+        const falseVals = ['false', 'no', 'nein', '✗', 'x'];
+        const allBoolean = nonEmptyValues.every(v => {
+            const l = v.toLowerCase();
+            return trueVals.includes(l) || falseVals.includes(l);
+        });
         if (allBoolean) {
             bodyCells.forEach(cell => {
                 cell.classList.add('auto-boolean');
                 const val = cell.textContent.trim().toLowerCase();
-                if (['true', 'yes', 'ja', '✓'].includes(val)) {
+                if (trueVals.includes(val)) {
                     cell.textContent = '🟢'; // ✓ ●
-                } else if (['false', 'no', 'nein', '✗', 'x'].includes(val)) {
+                } else if (falseVals.includes(val)) {
                     cell.textContent = '⚪'; // ✗ ○
                 }
             });
