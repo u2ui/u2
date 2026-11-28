@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400..700&display=swap');
 
-/* Schatten Theme */
+/* shadow theme */
 
 html {
-    --hsl-h: 240; /* Blauer Farbton */
-    --hsl-s: 30%; /* Sättigung */
-    --hsl-l: 50%; /* Helligkeit */
+    --hsl-h: 240; /* blue hue */
+    --hsl-s: 30%; /* saturation */
+    --hsl-l: 50%; /* lightness */
 
     /* misc */
     --width: 42rem;

@@ -5,7 +5,7 @@ const CONFIG = {
   cacheSize: 50,
   prefetchDelay: 100,
   mouseProximity: 200,
-  cacheDuration: 3 * 60 * 60 * 1000, // 3 Stunden
+  cacheDuration: 3 * 60 * 60 * 1000, // 3 hours
   cacheVersion: 'v1',
 };
 
@@ -112,7 +112,7 @@ class PersistentStorage {
   }
 }
 
-// ==================== DOM MORPHING (IdleCallback optimiert) ====================
+// ==================== DOM MORPHING (IdleCallback optimized) ====================
 class Morph {
   static morph(oldNode, newNode) {
     if (oldNode.nodeType === Node.TEXT_NODE) {
@@ -167,7 +167,7 @@ class Morph {
 // Idiomorph.morph(oldNode, newNode);
 
 function morphDocument(newDoc) {
-  // am liebsten würde ich ganzes dokument inklusive header morphen, aber dann kann generiertes css verloren gehen... :(
+  // ideally the whole document including the head would be morphed, but then generated css can get lost... :(
   //morphdom(document.body, newDoc.body);
   //morphdom(document.documentElement, newDoc.documentElement);
   document.title = newDoc.title;
@@ -233,7 +233,7 @@ class CacheManager {
       
       
       if (!response.ok) {
-        state.failedUrls.add(url); // In Blacklist eintragen
+        state.failedUrls.add(url); // add to the blacklist
         return null;
       }
       
@@ -256,7 +256,7 @@ async function loadPage(url, shouldUpdateHistory = true) {
         return;
     }
     
-    // Parse mit DOMParser
+    // parse with DOMParser
     const parser = new DOMParser();
     const newDoc = parser.parseFromString(html, 'text/html');
     
@@ -298,7 +298,7 @@ class Prefetch {
         const links = this.getAllInternalLinks();
         links.sort((a, b) => a.distance - b.distance);
 
-        // Priority: Links nahe der Maus
+        // priority: links near the mouse
         const nearbyLinks = links.filter(l => l.distance < CONFIG.mouseProximity);
         const otherLinks = links.filter(l => l.distance >= CONFIG.mouseProximity);
 
@@ -311,7 +311,7 @@ class Prefetch {
             state.prefetchQueue.delete(link.url);
         }
 
-        // Rest der Links (rate-limited)
+        // the remaining links (rate-limited)
         for (const link of otherLinks.slice(0, 10)) {
             if (!state.isIdle || state.prefetchQueue.has(link.url)) break;
             await Utils.idlePromise({ timeout: 2000 });

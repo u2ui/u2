@@ -50,8 +50,8 @@ export default class U2Breadcrumb extends HTMLElement {
         this.innerHTML = '';
         const currentUrl = new URL(location.href);
         const pathParts = currentUrl.pathname.match(/[^/]+\/|[^/]+/g) || [];
-        let currentPath = currentUrl.origin + '/'; // Startet mit der Basis-URL (z.B. https://example.com)
-        const homeLink = document.createElement('a'); // Start-Element "Home" (/)
+        let currentPath = currentUrl.origin + '/'; // starts with the base url (e.g. https://example.com)
+        const homeLink = document.createElement('a'); // start element "Home" (/)
         homeLink.textContent = 'Home';
         homeLink.href = currentUrl.origin + '/';
         this.append(homeLink);

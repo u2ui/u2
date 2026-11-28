@@ -130,8 +130,8 @@ function isSpaceOccupied(referenceElement, position) {
             testY = refRect.top - offset;
             break;
         default:
-            console.error(`Ungültige Position: ${position}`);
-            return true; // Im Zweifel: Keine Platzierung erlauben
+            console.error(`Invalid position: ${position}`);
+            return true; // when in doubt: do not allow placement
     }
     if (testX < 0 || testX > innerWidth || testY < 0 || testY > innerHeight) return true;
     const elementsAtPoint = document.elementsFromPoint(testX, testY);

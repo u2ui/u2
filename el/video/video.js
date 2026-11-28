@@ -230,7 +230,7 @@ export default class U2Video extends HTMLElement {
             if (src) videoEl.src = src;
         }
 
-        // Attribute übertragen
+        // transfer attributes
         const booleanAttrs = new Set(['autoplay', 'loop', 'muted', 'playsinline']);
         ['poster', 'preload', 'autoplay', 'loop', 'muted', 'playsinline', 'crossorigin'].forEach((attr) => {
             const val = this.getAttribute(attr);
@@ -238,13 +238,13 @@ export default class U2Video extends HTMLElement {
             videoEl.setAttribute(attr, booleanAttrs.has(attr) || val === '' || val === 'true' ? '' : val);
         });
 
-        // Native controls verstecken
+        // hide native controls
         videoEl.removeAttribute('controls');
 
         this._video = videoEl;
         this._container = this.$('container');
 
-        // Video in Container einfügen falls nicht schon da
+        // insert the video into the container if not there yet
         !this.querySelector('video') && this._container.prepend(videoEl);
 
         // Events
@@ -300,10 +300,10 @@ export default class U2Video extends HTMLElement {
         });
 
 
-        // Click auf video = play/pause
+        // click on video = play/pause
         this._video.addEventListener('click', () => this.togglePlay());
 
-        // Touch events für mobile
+        // touch events for mobile
         let controlsTimeout;
         this._container.addEventListener('touchstart', () => {
             controls.classList.add('show');

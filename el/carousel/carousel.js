@@ -254,7 +254,7 @@ contain: layout style paint;  /* Neu ok? */
 		return getComputedStyle(this).getPropertyValue('--u2-carousel-'+property);
 	}
 	connectedCallback() {
-		this.hasAttribute('play') && this.play();
+		this.matches('[autoplay],[play]') && this.play();
 		this.slider.addEventListener('slotchange', this._onSlotChange);
 		//this._updateItemCount(); // needed here?
 	}
@@ -351,7 +351,7 @@ addEventListener('keydown', ({target,code})=>{
 /* sync */
 addEventListener('u2-carousel.slide', e=>{
 	const group = e.detail.slider.getAttribute('sync');
-	group && document.querySelectorAll('u2-carousel[sync="'+group+'"]').forEach( el => el.slideTo(e.detail.index) );
+	group && document.querySelectorAll(`u2-carousel[sync="${CSS.escape(group)}"]`).forEach( el => el.slideTo(e.detail.index) );
 });
 /*  */
 

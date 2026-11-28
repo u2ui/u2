@@ -44,7 +44,7 @@ export class PointerObserver {
 		let signal = this.abortCtrl.signal;
 
 
-		/* neu: *
+		/* new: *
 		const initial = {
             x: pointer.pageX,
             y: pointer.pageY,
@@ -60,7 +60,7 @@ export class PointerObserver {
 			y:pointer.pageY
 		};
 		/* */
-		this.clientPos = { x: pointer.clientX, y: pointer.clientY }; // für scroll
+		this.clientPos = { x: pointer.clientX, y: pointer.clientY }; // for scroll
 
 		this.onstart?.(e);
 
@@ -98,7 +98,7 @@ export class PointerObserver {
 			if (pointer.identifier !== this.identifier) return;
 		}
 		
-		// NEU: Verhindern, dass 'last' überschrieben wird, wenn keine tatsächliche Bewegung stattfand.
+		// NEW: do not overwrite 'last' if there was no actual movement.
         if (pointer.pageX === this.pos.x && pointer.pageY === this.pos.y) return;
 
 		this.last = this.pos;
@@ -107,7 +107,7 @@ export class PointerObserver {
 			y: pointer.pageY,
 			time: e.timeStamp,
 		};
-		this.clientPos = { x: pointer.clientX, y: pointer.clientY }; // für scroll
+		this.clientPos = { x: pointer.clientX, y: pointer.clientY }; // for scroll
 
         this.onmove?.(e);
 	}

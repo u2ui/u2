@@ -43,7 +43,7 @@ impCss(rootUrl+'css/norm/norm.css');
 impCss(rootUrl+'css/base/base.css');
 setTimeout(()=>{
     impCss(rootUrl+'css/base/print.css', {media:'print'});
-    impCss(rootUrl+'css/base/nomotion.css', {media:'prefers-reduced-motion'});
+    impCss(rootUrl+'css/base/nomotion.css', {media:'(prefers-reduced-motion)'});
 })
 impCss(rootUrl+'css/classless/variables.css');
 impCss(rootUrl+'css/classless/classless.css');

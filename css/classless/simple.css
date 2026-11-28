@@ -100,7 +100,7 @@ section {
         gap: var(--gap);
 
         & > :is(h1,h2,h3,h4) {
-            grid-column: 1 / -1; /* gesamte Breite */
+            grid-column: 1 / -1; /* full width */
         }
         & > :not(:is(h1,h2,h3,h4)) {
             margin:0;

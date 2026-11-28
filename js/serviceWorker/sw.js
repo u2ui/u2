@@ -217,5 +217,5 @@ self.addEventListener('sync', e => {
 
 async function syncData() {
   console.log('[SW] Syncing data...');
-  // Implementiere deine Sync-Logik
+  // implement your sync logic
 }

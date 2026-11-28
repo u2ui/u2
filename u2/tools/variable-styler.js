@@ -5,8 +5,8 @@ class ElementVariableStyler extends HTMLElement {
         super();
         this.targetElement = this.getStyleTarget();
         
-        // Definition der zu steuernden Variablen - NUR Font Size in 'px', der Rest in 'rem'
-        // Gruppen werden nun mit 'isGroup: true' markiert und enthalten 'children'
+        // the variables to control - ONLY font size in 'px', the rest in 'rem'
+        // groups are marked with 'isGroup: true' and contain 'children'
         this.variables = [
             { name: '--color', label: 'Akzentfarbe', type: 'color', value: '#007bff' },
             { name: '--width', label: 'Layout Breite (rem)', min: 40, max: 120, step: 1, unit: 'rem', value: 75 },
@@ -44,7 +44,7 @@ class ElementVariableStyler extends HTMLElement {
         return document.documentElement;
     }
 
-    // Hilfsfunktion zur Erzeugung eines einzelnen Steuerelements
+    // helper that creates a single control
     createControlHtml(v) {
         const isRange = v.type !== 'color';
         const valueDisplayId = v.name.replace('--', '') + '-value';
@@ -96,7 +96,7 @@ class ElementVariableStyler extends HTMLElement {
             .control-group {
                 display: flex;
                 flex-direction: column;
-                margin-bottom: 0.3em; /* Abstand zwischen einzelnen Controlls */
+                margin-bottom: 0.3em; /* spacing between single controls */
             }
             label {
                 font-family: sans-serif;
@@ -116,7 +116,7 @@ class ElementVariableStyler extends HTMLElement {
                 white-space:nowrap;
             }
             
-            /* Styling für die Details-Gruppe */
+            /* styling for the details group */
             details {
                 border: 1px solid #eee;
                 border-radius: 0.3em;
@@ -127,13 +127,13 @@ class ElementVariableStyler extends HTMLElement {
                 padding: 0.2em 0;
                 cursor: pointer;
                 outline: none;
-                list-style: none; /* Entfernt den Standardpfeil */
+                list-style: none; /* removes the default arrow */
                 font-size: 0.8em;
             }
             summary::marker {
-                content: none; /* Entfernt Marker in Browsern, wo list-style:none nicht reicht */
+                content: none; /* removes the marker in browsers where list-style:none is not enough */
             }
-            /* Fügt manuellen Chevron-Pfeil hinzu */
+            /* adds a manual chevron arrow */
             summary::before {
                 content: '▶'; 
                 display: inline-block;
@@ -147,7 +147,7 @@ class ElementVariableStyler extends HTMLElement {
             .details-content {
                 display: grid;
                 gap: 0.6em;
-                margin-top: 0.5em; /* Abstand nach Summary */
+                margin-top: 0.5em; /* spacing after summary */
             }
         `;
 
@@ -155,7 +155,7 @@ class ElementVariableStyler extends HTMLElement {
         
         this.variables.forEach(v => {
             if (v.isGroup && v.children && Array.isArray(v.children)) {
-                // Dies ist eine verschachtelte, klappbare Gruppe (Details/Summary)
+                // a nested, collapsible group (details/summary)
                 const childrenHtml = v.children.map(child => this.createControlHtml(child)).join('');
                 
                 controls += `
@@ -167,7 +167,7 @@ class ElementVariableStyler extends HTMLElement {
                     </details>
                 `;
             } else {
-                // Dies ist ein einzelnes Steuerelement
+                // a single control
                 controls += this.createControlHtml(v);
             }
         });
@@ -180,14 +180,14 @@ class ElementVariableStyler extends HTMLElement {
 
         this.shadowRoot.querySelectorAll('input').forEach(input => {
             input.addEventListener('input', this.handleInput.bind(this));
-            // Die setInitialValue-Methode muss für alle Inputs, auch in Subgruppen, aufgerufen werden
+            // setInitialValue has to be called for all inputs, in subgroups too
             this.setInitialValue(input); 
             
-            // Finde die Gruppe (details) für das Input-Element und öffne sie, falls der Wert != Standard ist
+            // find the group (details) of the input and open it if the value != default
             if (input.name.startsWith('--shadow-')) {
                 const groupDetails = input.closest('details');
                 const initialValue = parseFloat(input.value);
-                // Annahme: Wenn x, y oder blur nicht 0 ist, ist die Gruppe relevant und sollte offen sein
+                // assumption: if x, y or blur is not 0, the group is relevant and should be open
                 if (groupDetails && initialValue !== 0 && initialValue !== 0.3) {
                      //groupDetails.open = true;
                 }
@@ -195,7 +195,7 @@ class ElementVariableStyler extends HTMLElement {
         });
     }
     
-    // setInitialValue, handleInput, applyVariable bleiben funktional unverändert
+    // setInitialValue, handleInput, applyVariable stay functionally unchanged
     
     setInitialValue(input) {
         // const targetValue = this.targetElement.style.getPropertyValue(input.name) || 

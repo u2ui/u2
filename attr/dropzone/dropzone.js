@@ -2,7 +2,7 @@ import * as dnd from '../../js/drag/drag.js';
 
 function eventDropzone(e) {
     for (const node of e.composedPath()) {
-        if (node.nodeType === 1 && node.matches?.('[u2-dropzone]')) return node;
+        if (node.matches?.('[u2-dropzone]')) return node;
     }
     return null;
 }
@@ -20,19 +20,19 @@ const dropzoneHandler = {
             zone.classList.toggle(':drop-valid', valid);
         });
         
-        // NEU: Strategy vorbereiten (placeholder/clone erstellen)
+        // NEW: prepare the strategy (create placeholder/clone)
         const firstValidZone = document.querySelector('[u2-dropzone].\\:drop-valid');
         currentStrategy = getStrategy(firstValidZone);
     },
     
     dragend: (e) => {
-        // NEU: Cancel aufrufen wenn nicht gedropped (ESC oder invalid drop)
+        // NEW: call cancel if not dropped (ESC or invalid drop)
         if (e.dataTransfer.dropEffect === 'none') currentStrategy?.cancel?.();
         
         document.querySelectorAll('[u2-dropzone]').forEach(zone => zone.classList.remove(':drop-invalid', ':drop-valid', ':dragover'));
         
-        // NEU: Strategy zurücksetzen
-        //currentStrategy = null; // Nein! wird noch gebraucht für effekt
+        // NEW: reset strategy
+        //currentStrategy = null; // No! still needed for the effect
     },
     
     dragover: (e) => {
@@ -44,21 +44,21 @@ const dropzoneHandler = {
         const before = getElementBefore(dropzone, e);
 
         if (currentDropzone !== dropzone || currentBefore !== before) {
-            // NEU: Strategy von dieser Zone verwenden
+            // NEW: use the strategy of this zone
             const strategy = getStrategy(dropzone);
-            // NEU: Wenn Strategy wechselt, cleanup alte & prepare neue
+            // NEW: if the strategy changes, clean up the old one & prepare the new one
             if (currentStrategy && currentStrategy !== strategy) {
                 currentStrategy.cancel?.();
                 strategy.prepare?.(dnd.dragged);
                 currentStrategy = strategy;
             }
-            // NEU: Strategy move() aufrufen statt direkt indicateDrop()
+            // NEW: call the strategy's move() instead of indicateDrop() directly
             strategy.move(dropzone, 'before', before);
         }
         currentBefore = before;
         currentDropzone = dropzone;
         
-        // ALT: indicateDrop(dropzone, 'before', before);
+        // OLD: indicateDrop(dropzone, 'before', before);
 
         e.preventDefault();
     },
@@ -69,11 +69,11 @@ const dropzoneHandler = {
         if (!dropzone.contains(e.relatedTarget)) {
             dropzone.classList.remove(':dragover');
             
-            // NEU: Nur cleanup wenn wir ALLE Dropzones verlassen
+            // NEW: only clean up once we left ALL dropzones
             const stillInAnyZone = document.querySelector('[u2-dropzone].\\:dragover');
             if (!stillInAnyZone) currentStrategy?.cancel?.();
             
-            // ALT: indicateDrop(null);
+            // OLD: indicateDrop(null);
         }
     },
     
@@ -91,15 +91,15 @@ const dropzoneHandler = {
                 bubbles: true
             }));
         }
-        // NEU: performDrop unterscheidet sich je nach Strategy
+        // NEW: performDrop differs per strategy
         const performDrop = () => {
-            // Bei 'move' und 'ghost' ist Element schon am richtigen Ort
-            // Bei 'indicate' muss es erst jetzt bewegt werden
+            // with 'move' and 'ghost' the element is already in place
+            // with 'indicate' it has to be moved only now
             if (currentStrategy !== strategies.move && currentStrategy !== strategies.ghost) {
                 dropzone.insertBefore(dnd.dragged, before);
             }
             
-            // NEU: Strategy finalisieren (cleanup placeholder/clone)
+            // NEW: finalize the strategy (clean up placeholder/clone)
             currentStrategy?.finalize?.();
             dropzone.dispatchEvent(new CustomEvent('u2-dropzone-drop', {
                 detail: { add: dnd.dragged },
@@ -107,13 +107,13 @@ const dropzoneHandler = {
             }));
         };
         
-        // ALT: const performDrop = () => dropzone.insertBefore(dnd.dragged, before);
+        // OLD: const performDrop = () => dropzone.insertBefore(dnd.dragged, before);
 
         startViewTransition(performDrop);
 
-        // ALT: indicateDrop(null);
+        // OLD: indicateDrop(null);
         
-        // NEU: Strategy zurücksetzen
+        // NEW: reset strategy
         //currentStrategy = null;
     }
 };
@@ -146,7 +146,7 @@ export const strategies = {
         originalNext: null,
         
         prepare(dragging) {
-            // Ursprungsposition merken für cancel
+            // remember the origin for cancel
             this.originalParent = dragging.parentNode;
             this.originalNext = dragging.nextElementSibling;
         },
@@ -164,7 +164,7 @@ export const strategies = {
             this.originalNext = null;
         },
         cancel() {
-            // Zurück zur Ursprungsposition
+            // back to the origin
             if (this.originalParent && dnd.dragged) {
                 this.originalParent.insertBefore(dnd.dragged, this.originalNext);
             }
@@ -175,7 +175,7 @@ export const strategies = {
     ghost: {
         clone: null,
         prepare(dragging) {
-            this.clone = dragging.cloneNode(true); // Ghost/Preview während drag
+            this.clone = dragging.cloneNode(true); // ghost/preview while dragging
             this.clone.classList.add('drag-clone');
             this.clone.style.opacity = '0.5';
             dragging.parentNode.insertBefore(this.clone, dragging);
@@ -187,14 +187,14 @@ export const strategies = {
             zone.insertBefore(this.clone, before);
         },
         finalize() {
-            if (this.clone && dnd.dragged) { // Clone wird zum echten Element
+            if (this.clone && dnd.dragged) { // the clone becomes the real element
                 this.clone.parentNode.insertBefore(dnd.dragged, this.clone);
             }
             this.clone?.remove();
             this.clone = null;
         },
         cancel() {
-            this.clone?.remove(); // Einfach clone entfernen
+            this.clone?.remove(); // just remove the clone
             this.clone = null;
         }
     },
@@ -203,8 +203,8 @@ export const strategies = {
 
 function startViewTransition(fn){
     if (!document.startViewTransition) return fn();
-    // Wird die Transition übersprungen (z.B. weil schon eine andere startet), rejected .ready –
-    // der Update-Callback (fn) läuft trotzdem. Rejection abfangen, sonst unhandled in der Konsole.
+    // If the transition is skipped (e.g. because another one starts), .ready rejects –
+    // the update callback (fn) runs anyway. Catch the rejection, else it is unhandled in the console.
     document.startViewTransition(fn).ready.catch(() => {});
 }
 
@@ -218,10 +218,10 @@ function getElementBefore(container, e) {
     const mouseX = e.clientX;
     const mouseY = e.clientY;
 
-    // Layout-Richtung erkennen
+    // detect the layout direction
     const layout = detectLayout(container, children);
 
-    // Alle Elemente mit Position und Distanz
+    // all elements with position and distance
     const elements = children.map(child => {
         const box = child.getBoundingClientRect();
         return {
@@ -232,16 +232,16 @@ function getElementBefore(container, e) {
         };
     });
 
-    // Nach visueller Position sortieren
+    // sort by visual position
     elements.sort((a, b) => {
         if (layout === 'vertical') return a.centerY - b.centerY;
         if (layout === 'horizontal') return a.centerX - b.centerX;
-        // Grid/Flex mit Wrapping: erst Y, dann X
+        // grid/flex with wrapping: Y first, then X
         const yDiff = Math.abs(a.centerY - b.centerY);
         return yDiff > 10 ? a.centerY - b.centerY : a.centerX - b.centerX;
     });
 
-    // Finde erstes Element NACH der Maus
+    // find the first element AFTER the mouse
     for (const item of elements) {
         const isAfter = layout === 'vertical'
             ? item.centerY > mouseY
@@ -252,7 +252,7 @@ function getElementBefore(container, e) {
         if (isAfter) return item.element;
     }
 
-    return null; // Am Ende einfügen
+    return null; // insert at the end
 }
 
 function detectLayout(container, children) {
@@ -276,14 +276,14 @@ function detectLayout(container, children) {
         return columns > 1 ? 'grid' : 'vertical';
     }
 
-    // Heuristik: Vergleiche erste zwei Elemente
+    // heuristic: compare the first two elements
     const first = children[0].getBoundingClientRect();
     const second = children[1].getBoundingClientRect();
 
-    // Gleiche Zeile = horizontal
+    // same row = horizontal
     if (Math.abs(first.top - second.top) < 10) return 'horizontal';
 
-    // Gleiche Spalte = vertical
+    // same column = vertical
     if (Math.abs(first.left - second.left) < 10) return 'vertical';
 
     // Wrapping Grid/Flex
@@ -292,10 +292,10 @@ function detectLayout(container, children) {
 function isAfterInGrid(item, mouseX, mouseY) {
     const { box, centerX, centerY } = item;
 
-    // Element ist in einer späteren Zeile
+    // element is in a later row
     if (centerY > mouseY + box.height / 4) return true;
 
-    // Gleiche Zeile, aber rechts von Maus
+    // same row, but right of the mouse
     const sameLine = Math.abs(centerY - mouseY) < box.height / 2;
     return sameLine && centerX > mouseX;
 }
@@ -322,7 +322,7 @@ function canDrop(dropzone, dragged) {
 
 function indicateDrop(container, position, element = null) {
     let indicator = document.getElementById('drop-indicator');
-    // Verstecken
+    // hide
     if (!container) return indicator?.hidePopover();
 
     if (!element) { // no reference element: drop appends to the container
@@ -374,7 +374,7 @@ function indicateDrop(container, position, element = null) {
 
     const s = indicator.style;
 
-    // Leerer Container
+    // empty container
     if (!element) {
         const rect = container.getBoundingClientRect();
         const styles = getComputedStyle(container);
@@ -389,7 +389,7 @@ function indicateDrop(container, position, element = null) {
         return;
     }
 
-    // Orientierung erkennen
+    // detect the orientation
     const sibling = position === 'before'
         ? element.previousElementSibling
         : element.nextElementSibling;
@@ -398,15 +398,15 @@ function indicateDrop(container, position, element = null) {
     const isHorizontal = siblingRect && Math.abs(rect.top - siblingRect.top) < (rect.height + siblingRect.height) / 4;
 
     if (isHorizontal) {
-        // VERTIKALER Indikator (zwischen horizontal angeordneten Elementen)
+        // VERTICAL indicator (between horizontally arranged elements)
         indicator.className = 'horizontal';
 
         let left;
         if (siblingRect) {
             left = position === 'before'
-                ? (siblingRect.right + rect.left) / 2 // Zwischen previousSibling und element
-                : (rect.right + siblingRect.left) / 2; // Zwischen element und nextSibling
-        } else { // Kein Nachbar: Am Rand mit Margin
+                ? (siblingRect.right + rect.left) / 2 // between previousSibling and element
+                : (rect.right + siblingRect.left) / 2; // between element and nextSibling
+        } else { // no neighbour: at the edge with margin
             const styles = getComputedStyle(element);
             const margin = parseFloat(position === 'before' ? styles.marginLeft : styles.marginRight);
             left = position === 'before' ? rect.left - margin / 2 : rect.right + margin / 2;
@@ -418,16 +418,16 @@ function indicateDrop(container, position, element = null) {
         s.width = '2px';
 
     } else {
-        // HORIZONTALER Indikator (zwischen vertikal angeordneten Elementen)
+        // HORIZONTAL indicator (between vertically arranged elements)
         indicator.className = 'vertical';
 
         let top;
         if (siblingRect) {
             top = position === 'before'
-                ? (siblingRect.bottom + rect.top) / 2 // Zwischen previousSibling und element
-                : (rect.bottom + siblingRect.top) / 2; // Zwischen element und nextSibling
+                ? (siblingRect.bottom + rect.top) / 2 // between previousSibling and element
+                : (rect.bottom + siblingRect.top) / 2; // between element and nextSibling
         } else {
-            // Kein Nachbar: Am Rand mit Margin
+            // no neighbour: at the edge with margin
             const styles = getComputedStyle(element);
             const margin = parseFloat(position === 'before' ? styles.marginTop : styles.marginBottom);
             top = position === 'before' ? rect.top - margin / 2 : rect.bottom + margin / 2;

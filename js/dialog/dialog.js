@@ -82,7 +82,7 @@ export function alert(text, defaults) {
     const options = toOptions(text, defaults);
     options.buttons = [{title:'OK'}];
     return new Dialog(options).show();
-};
+}
 
 /**
  * Creates and shows a dialog with a confirmation message.
@@ -102,7 +102,7 @@ export function confirm(text, defaults) {
     const dialog = new Dialog(options);
     dialog.value = false;
     return dialog.show();
-};
+}
 
 /**
  * Creates and shows a dialog with a prompt message.
@@ -125,7 +125,7 @@ export function prompt(text, initial, defaults) {
     setTimeout(()=>input.focus());
     dialog.value = null;
     return dialog.show();
-};
+}
 
 /* */
 export function form(html, defaults){

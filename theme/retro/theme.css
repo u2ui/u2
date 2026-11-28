@@ -3,9 +3,9 @@
 /* this is a very retro theme */
 
 html {
-    --hsl-h: 45; /* Orangefarbener Farbton */
-    --hsl-s: 100%; /* Sättigung */
-    --hsl-l: 50%; /* Helligkeit */
+    --hsl-h: 45; /* orange hue */
+    --hsl-s: 100%; /* saturation */
+    --hsl-l: 50%; /* lightness */
 
     /* misc */
     --width: 42rem;

@@ -125,7 +125,7 @@ export default class U2Calendar extends U2Element {
   walkByMonth(offset) {
     const d = new Date(this._currentDate);
     //d.setMonth(d.getMonth() + offset, 1);
-    d.setUTCMonth(d.getUTCMonth() + offset, 1); // besser?
+    d.setUTCMonth(d.getUTCMonth() + offset, 1); // better?
     this.date = d;
   }
 
@@ -204,7 +204,7 @@ export default class U2Calendar extends U2Element {
     const items = Array.from(this.querySelectorAll('u2-calendar-item'))
       .filter(item => Number.isFinite(item.start?.getTime()));
 
-    // Berechne Wochen-Segmente für alle Items
+    // compute week segments for all items
     const itemWeeks = items.map(item => ({
       item,
       weeks: this.splitIntoWeeks(
@@ -237,7 +237,7 @@ export default class U2Calendar extends U2Element {
       week.track = track;
     }
 
-    // Layout auf Items anwenden (guard against missing/early items)
+    // apply the layout to the items (guard against missing/early items)
     itemWeeks.forEach(({ item, weeks }) => {
       item.updateLayout?.({ weeks });
     });

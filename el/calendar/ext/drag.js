@@ -1,4 +1,4 @@
-// Globale Drag-States
+// global drag state
 let draggedItem = null;
 let currentDropTarget = null;
 

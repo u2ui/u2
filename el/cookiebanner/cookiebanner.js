@@ -1,5 +1,5 @@
 // Cookie Banner
-// consent gilt momentan für gesamten Domain
+// consent currently applies to the whole domain
 
 let initialEmitted = false;
 
@@ -51,7 +51,7 @@ function getCookie() {
     return cookieValue ? JSON.parse(cookieValue) : null;
   } catch (error) {
     console.error(error);
-    return null; // todo: kann weg, da sonst null oder undefined? zurückgegeben wird.
+    return null; // todo: can go, as null or undefined? is returned otherwise.
   }
 }
 
@@ -60,7 +60,7 @@ customElements.get('u2-cookiebanner') || customElements.define('u2-cookiebanner'
 
 
 // load scripts based on consent
-// todo: SelectorObserver verwenden
+// todo: use SelectorObserver
 const alternativeCategories = {
   // own
   'necessary': 'necessary', // also Cookiebot
@@ -71,13 +71,13 @@ const alternativeCategories = {
   'preferences': 'functional',
   'statistics': 'analytics',
   'ignore': null,
-  // Usercentrics / andere Labels
+  // Usercentrics / other labels
   'essential': 'necessary',
-  // OneTrust (ID-basiert, unsicher ob Zuordnung stimmt)
-  'C0001': 'necessary',
-  'C0002': 'analytics',
-  'C0003': 'functional',
-  'C0004': 'marketing',
+  // OneTrust (ID based, unsure whether the mapping is right)
+  'c0001': 'necessary', // lowercase: values are compared lowercased
+  'c0002': 'analytics',
+  'c0003': 'functional',
+  'c0004': 'marketing',
 };
 
 window.addEventListener('u2-cookiebanner-consent', ({ detail: { consent } }) => {
@@ -103,9 +103,9 @@ window.addEventListener('u2-cookiebanner-consent', ({ detail: { consent } }) => 
 });
 
 
-// Bekannte Daten löschen
-// todo: Wildcards berücksichtigen
-// todo: cookies besser löschen
+// delete known data
+// todo: respect wildcards
+// todo: delete cookies better
 addEventListener('u2-cookiebanner-consent', async ({detail: {consent, isUpdate}}) => {
     if (!isUpdate) return;
 

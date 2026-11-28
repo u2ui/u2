@@ -53,13 +53,13 @@ export default class U2Copy extends HTMLElement {
             const elements = fragment.querySelectorAll('[id]');
 
             // todo:
-            // aria-Attribute (z.B. aria-labelledby, aria-describedby, aria-controls, aria-owns, aria-activedescendant, aria-flowto)
+            // aria attributes (e.g. aria-labelledby, aria-describedby, aria-controls, aria-owns, aria-activedescendant, aria-flowto)
             // svg: use xlink:href, clip-path, mask, fill, stroke, filter, marker, pattern, gradient
             // headers attribute in table cells
             // usemap attribute in img
             // form attribute in input, button, select, textarea, label
-            // href-Attribute in a, area
-            // list-Attribute in input-elements
+            // href attribute in a, area
+            // list attribute in input elements
 
             const idMap = new Map();
             elements.forEach(element => {

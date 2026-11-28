@@ -73,7 +73,7 @@ document.addEventListener('click', e => {
     const groupName = el.getAttribute('u2-lightbox');
     const src = el.href;
     const group = groupName 
-        ? [...document.querySelectorAll(`a[u2-lightbox="${groupName}"]`)].map(a => a.href)
+        ? [...document.querySelectorAll(`a[u2-lightbox="${CSS.escape(groupName)}"]`)].map(a => a.href)
         : [src];
     
     carousel.innerHTML = `

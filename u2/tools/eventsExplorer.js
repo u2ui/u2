@@ -87,15 +87,15 @@ function fnv1aHash(str) {
 function stringToColor(str) {
     let hash = fnv1aHash(str);
 
-    let h = (hash >> 16) & 0xFF; // Extrahiere die höchsten 8 Bits für Hue
-    let s = (hash >> 8) & 0xFF; // Extrahiere die mittleren 8 Bits für Saturation
-    let l = hash & 0xFF; // Extrahiere die niedrigsten 8 Bits für Lightness
+    let h = (hash >> 16) & 0xFF; // the highest 8 bits for hue
+    let s = (hash >> 8) & 0xFF; // the middle 8 bits for saturation
+    let l = hash & 0xFF; // the lowest 8 bits for lightness
 
-    // Normalisiere die Werte in ihre jeweiligen Bereiche
-    h = (h % 360); // Hue zwischen 0 und 359
-    // Sättigung zwischen 60% und 100%
+    // normalize the values into their ranges
+    h = (h % 360); // hue between 0 and 359
+    // saturation between 60% and 100%
     s = 60 + (s % 41);
-    // Helligkeit zwischen 30% und 50%, um extreme Dunkelheit/Helligkeit zu vermeiden
+    // lightness between 30% and 50%, to avoid extreme dark/light
     l = 30 + (l % 21);
 
     return `hsl(${h}, ${s}%, ${l}%)`;

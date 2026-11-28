@@ -145,7 +145,7 @@ function generateCategoryModules(repos, category) {
     if (!modules || Object.keys(modules).length === 0) return '';
     
     return '\n' + Object.values(modules)
-        .sort((a, b) => a.name.localeCompare(b.name)) // Alphabetisch sortieren
+        .sort((a, b) => a.name.localeCompare(b.name)) // sort alphabetically
         .map(mod => {
             let line = `- **${mod.name}**`;
             if (mod.description) line += ` - ${mod.description}`;

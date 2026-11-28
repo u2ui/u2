@@ -44,7 +44,7 @@ function addListeners(){
     },passive);
     const onScroll = () => {
         pageY = scrollY;
-        requestAnimationFrame(() => paraxBg.positionize());
+        paraxBg.positionize(); // schedules its own frame
     };
     const onResize = () => {
         setVPDimensions();
@@ -174,9 +174,10 @@ export default class U2ParallaxBg extends HTMLElement {
         return moved*(this.speed-1);
     }
 
-    positionizing = false; // todo: never set to true, so the guard below never holds
+    positionizing = false; // one frame per element, however often it is called
     positionize(){
         if (this.positionizing) return;
+        this.positionizing = true;
         requestAnimationFrame(()=>{
             this._positionize()
             this.positionizing = false;

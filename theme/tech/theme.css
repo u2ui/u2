@@ -3,9 +3,9 @@
 /* Tech Theme */
 
 html {
-    --hsl-h: 200; /* Blauer Farbton */
-    --hsl-s: 70%; /* Sättigung */
-    --hsl-l: 50%; /* Helligkeit */
+    --hsl-h: 200; /* blue hue */
+    --hsl-s: 70%; /* saturation */
+    --hsl-l: 50%; /* lightness */
 
     /* misc */
     --width: 42rem;

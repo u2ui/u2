@@ -55,8 +55,8 @@ function handleStart(e) {
 
     const initialState = getInitialState(target, method);
 
-    // todo: jedesmal wird ein neuer observer erstellt der mouse und touch beobachtet.
-    // das ist überhaupt nicht gut, PointerObserver sollte eventuell kein element erhalten
+    // todo: every start creates a new observer that watches mouse and touch.
+    // that is not good at all, maybe PointerObserver should not take an element
     const observer = new PointerObserver(handler, {
         mouse: true,
         touch: true,

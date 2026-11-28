@@ -48,8 +48,8 @@ html {
     --gray-darker:   color-mix(in var(--color-space), var(--gray), #000 60%);
 
     /* Semantic - automatisch aus Grundfarbe * /
-    --color-bg:   light-dark(var(--color-lightest), var(--color-darkest)); /* wird bereits auf "html" angewendet * /
-    --color-text: light-dark(var(--color-darkest), var(--color-lightest)); /* wird bereits auf "html" angewendet * /
+    --color-bg:   light-dark(var(--color-lightest), var(--color-darkest)); /* already applied to "html" * /
+    --color-text: light-dark(var(--color-darkest), var(--color-lightest)); /* already applied to "html" * /
     --color-line: var(--color-text);
     --color-area: light-dark(var(--color-lighter), var(--color-darker));
 

@@ -3,9 +3,9 @@
 /* Brutalismus Theme */
 
 html {
-    --hsl-h: 0; /* Grauer Farbton */
-    --hsl-s: 0%; /* Sättigung */
-    --hsl-l: 20%; /* Helligkeit */
+    --hsl-h: 0; /* grey hue */
+    --hsl-s: 0%; /* saturation */
+    --hsl-l: 20%; /* lightness */
 
     /* misc */
     --width: 42rem;

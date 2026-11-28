@@ -4,9 +4,9 @@
 /* this is a very nature theme */
 
 html {
-    --hsl-h: 120; /* Grüner Farbton */
-    --hsl-s: 50%; /* Sättigung */
-    --hsl-l: 40%; /* Helligkeit */
+    --hsl-h: 120; /* green hue */
+    --hsl-s: 50%; /* saturation */
+    --hsl-l: 40%; /* lightness */
 
     /* misc */
     --width: 42rem;

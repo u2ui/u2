@@ -9,7 +9,7 @@ export default class U2Fields extends U2Element {
 
         this.shadowRoot.innerHTML = `
             <style>
-                /* Minimales Layout */
+                /* minimal layout */
                 :host {
                     margin-block:.5rem;
                     white-space:nowrap;
@@ -52,7 +52,7 @@ export default class U2Fields extends U2Element {
     }
 
     connectedCallback() {
-        // Observer lauscht auf alle Kindknoten der Komponente
+        // the observer listens to all child nodes of the component
         this.observer.observe(this, { childList: true });
         this.processChildren();
     }

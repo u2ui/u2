@@ -198,7 +198,7 @@ function trimCode(value){
     return lines.map(line => line.slice(minWhitespace)).join('\n');
 }
 function htmlEncode(input) {
-    return input.replace(/[\u00A0-\u9999<>\&]/g, c => '&#' + c.charCodeAt(0) + ';');
+    return input.replace(/[<>&]/g, c => '&#' + c.charCodeAt(0) + ';');
 }
 
 
@@ -209,7 +209,7 @@ function cleanInnerHTML(code) {
     return code
     .replace(/<\/(td|th|tr|tbody|thead|tfoot)>/gi, '')
     .replace(/<([^>]+)>/g, (match, tagContent) => {
-        // Ersetze attribute="" und attribute=''
+        // replace attribute="" and attribute=''
         const cleaned = tagContent.replace(/([a-z][a-z0-9-]*)=(['"])\2/gi, '$1');
         return `<${cleaned}>`;
     });

@@ -99,7 +99,7 @@ export class BaseElement extends HTMLElement {
     }
 
     connectedCallback() {
-        // BaseElement Logik IMMER zuerst
+        // BaseElement logic ALWAYS first
         if (typeof this.childrenCallback === 'function') {
             this.#setupMutationObserver();
         }
@@ -111,17 +111,17 @@ export class BaseElement extends HTMLElement {
 
         this.requestUpdate();
 
-        // Dann Subklassen-Callback falls vorhanden
+        // then the subclass callback, if any
         if (this._userConnectedCallback) {
             this._userConnectedCallback();
         }
     }
 
     disconnectedCallback() {
-        // BaseElement Cleanup IMMER zuerst
+        // BaseElement cleanup ALWAYS first
         this.#mutationObserver?.disconnect();
 
-        // Dann Subklassen-Callback falls vorhanden
+        // then the subclass callback, if any
         if (this._userDisconnectedCallback) {
             this._userDisconnectedCallback();
         }
@@ -130,7 +130,7 @@ export class BaseElement extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
 
-        // BaseElement Logik IMMER zuerst
+        // BaseElement logic ALWAYS first
         const config = this.constructor.attributesMap?.get(name);
         if (config) {
 
@@ -142,7 +142,7 @@ export class BaseElement extends HTMLElement {
             this.requestUpdate();
         }
 
-        // Dann Subklassen-Callback falls vorhanden
+        // then the subclass callback, if any
         if (this._userAttributeChangedCallback) {
             this._userAttributeChangedCallback(name, oldValue, newValue);
         }
@@ -180,7 +180,7 @@ export class BaseElement extends HTMLElement {
         });
     }
 
-    // Helper: Query im Shadow DOM
+    // helper: query in the shadow DOM
     $(selector) { return this.shadowRoot?.querySelector(selector); }
     $$(selector) { return this.shadowRoot?.querySelectorAll(selector); }
 
@@ -195,7 +195,7 @@ export class BaseElement extends HTMLElement {
         return this.dispatchEvent(event);
     }
 
-    // Helper: Locales für Internationalisierung
+    // helper: locales for internationalization
     locales() {
         const langEl = this.closest('[lang]') || document.documentElement;
         return Intl.getCanonicalLocales([langEl.lang, ...navigator.languages, 'en']);

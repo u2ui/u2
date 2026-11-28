@@ -142,7 +142,7 @@ export class Placer {
         const run = this.following && this.el.parentNode && this.following.parentNode && this.el.offsetWidth && this.following.offsetWidth;
         run ? this._toElement(this.following) : this.unfollow();
     }
-};
+}
 
 
 const offsetParent = (el) => {

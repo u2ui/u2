@@ -3,9 +3,9 @@
 /* this is an elegant theme */
 
 html {
-    --hsl-h: 210; /* Eleganter Blauton */
-    --hsl-s: 20%; /* Sättigung */
-    --hsl-l: 40%; /* Helligkeit */
+    --hsl-h: 210; /* elegant blue hue */
+    --hsl-s: 20%; /* saturation */
+    --hsl-l: 40%; /* lightness */
 
     /* misc */
     --width: 42rem;

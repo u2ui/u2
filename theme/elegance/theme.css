@@ -3,9 +3,9 @@
 /* Modern and Elegant Theme */
 
 html {
-    --hsl-h: 210; /* Blauer Farbton */
-    --hsl-s: 50%; /* Sättigung */
-    --hsl-l: 45%; /* Helligkeit */
+    --hsl-h: 210; /* blue hue */
+    --hsl-s: 50%; /* saturation */
+    --hsl-l: 45%; /* lightness */
 
     /* misc */
     --width: 42rem;

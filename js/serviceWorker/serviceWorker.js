@@ -1,15 +1,15 @@
-// Zentrale Registration - nur einmal aufrufen
+// central registration - call only once
 export async function register(options = {}) {
     if (!('serviceWorker' in navigator)) return null;
 
     try {
-        // Warten auf load event
+        // wait for the load event
         if (document.readyState !== 'complete') {
             console.log('not "load" yet, wait for register')
             await new Promise(resolve => addEventListener('load', resolve, { once: true }));
         }
 
-        const registration = await navigator.serviceWorker.register('../sw.js', { // '.. ???? im selben verzeichnis'
+        const registration = await navigator.serviceWorker.register('../sw.js', { // '.. ???? in the same directory'
             scope: options.scope || '/'
         });
 
@@ -20,8 +20,8 @@ export async function register(options = {}) {
 
         navigator.serviceWorker.ready.then(() => registration.navigationPreload.enable());
 
-        registration.update(); // Updates checken, macht das sinn?
-        setInterval(() => registration.update(), 30 * 1000); // regelmässsig
+        registration.update(); // check for updates, does that make sense?
+        setInterval(() => registration.update(), 30 * 1000); // regularly
 
         return registration;
     } catch (error) {
@@ -34,30 +34,30 @@ export function onUpdateAvailable(callback) {
     if (!('serviceWorker' in navigator)) return;
 
     navigator.serviceWorker.ready.then(registration => {
-        // Update gefunden
+        // update found
         registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
             if (!newWorker) return;
 
             newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    // Neuer SW wartet, alter ist noch aktiv
+                    // new SW is waiting, the old one is still active
                     callback(newWorker);
                 }
             });
         });
 
-        // gleich Manuell auf Updates prüfen??
+        // check for updates manually right away??
     });
 
-    // Controller hat gewechselt (nach skipWaiting)
+    // the controller changed (after skipWaiting)
     navigator.serviceWorker.addEventListener('controllerchange', () => {
         console.log('🔄 Controller changed - reloading');
         //callback();
     });
 }
 
-// Neues Update aktivieren
+// activate the new update
 export function skipWaiting() {
   const controller = navigator.serviceWorker.controller;
   if (!controller) {
@@ -67,7 +67,7 @@ export function skipWaiting() {
   controller.postMessage({ type: 'SKIP_WAITING' });
 }
 
-// Cache-Events abhören
+// listen to cache events
 export function onCacheServed(callback) {
   if (!('serviceWorker' in navigator)) return;
 

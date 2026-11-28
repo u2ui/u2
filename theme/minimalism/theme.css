@@ -3,9 +3,9 @@
 /* this is a very modern minimalist theme */
 
 html {
-    --hsl-h: 220; /* Dunkelblauer Farbton */
-    --hsl-s: 20%; /* Sättigung */
-    --hsl-l: 90%; /* Helligkeit */
+    --hsl-h: 220; /* dark blue hue */
+    --hsl-s: 20%; /* saturation */
+    --hsl-l: 90%; /* lightness */
 
     /* misc */
     --width: 42rem;

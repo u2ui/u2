@@ -52,7 +52,7 @@ function getMessage(el, lang) {
 }
 
 function langOf(el) {
-    return el.closest('[lang]')?.getAttribute('lang') || navigator.language.substring(0,2) || 'en';
+    return (el.closest('[lang]')?.lang || navigator.language).substring(0,2) || 'en';
 }
 
 const sure = {

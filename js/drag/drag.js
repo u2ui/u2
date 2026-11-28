@@ -2,9 +2,9 @@
 export let dragged = null;
 
 document.addEventListener('dragstart', (e) => {
-    // composedPath() statt e.target: bei Events aus einem Shadow-Root ist e.target auf den
-    // Host retargetiert -> wir würden das falsche Element ziehen. Das gezogene Element ist
-    // das erste [draggable] im Pfad (funktioniert in Light- und Shadow-DOM gleich).
+    // composedPath() instead of e.target: for events from a shadow root e.target is retargeted
+    // to the host -> we would drag the wrong element. The dragged element is the first
+    // [draggable] in the path (works the same in light and shadow DOM).
     dragged = e.composedPath().find(n => n.nodeType === 1 && n.draggable);
     if (!dragged) return;
     dragged.classList.add(':dragging-image');

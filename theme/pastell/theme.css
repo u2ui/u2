@@ -3,9 +3,9 @@
 /* this is a very pastel theme */
 
 html {
-    --hsl-h: 210; /* Blauer Farbton */
-    --hsl-s: 100%; /* Sättigung */
-    --hsl-l: 85%; /* Helligkeit */
+    --hsl-h: 210; /* blue hue */
+    --hsl-s: 100%; /* saturation */
+    --hsl-l: 85%; /* lightness */
 
     /* misc */
     --width: 42rem;

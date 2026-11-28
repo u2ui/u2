@@ -78,7 +78,7 @@ export function init(el) {
     }
 
 
-    // wenn ausschliesslich notwendige cookies, dann nur akzeptieren anzeigen
+    // if there are only necessary cookies, show accept only
     if (categories.length === 1 && categories[0] === 'necessary') {
         el.querySelector('[name="settings"]').style.display = 'none';
         el.querySelector('[name="decline"]').style.display = 'none';

@@ -1,5 +1,5 @@
 import U2Element from '../../u2/Element.js';
-// Type-Handler mit Lifecycle
+// type handler with lifecycle
 class TypeHandler {
     constructor(element, shadow) {
         this.element = element;
@@ -11,8 +11,8 @@ class TypeHandler {
     get input() { return '<slot name=start></slot><slot></slot><slot name=end></slot>'; }
     get css() { return ''; }
 
-    init() { } // wird nach DOM-Aufbau aufgerufen
-    cleanup() { } // wird vor Type-Wechsel aufgerufen
+    init() { } // called after the DOM is built
+    cleanup() { } // called before the type changes
 }
 
 // Concrete Handlers
@@ -53,13 +53,13 @@ class SelectHandler extends TypeHandler {
     renderOptions(options) {
         const value = this.element.getAttribute('value');
 
-        options = options.map(opt =>  // Normalisiere Options-Format
+        options = options.map(opt =>  // normalize the options format
             typeof opt === 'string' ? { value: opt, label: opt } : opt
         );
 
-        // Bestimme selected value (Priorität: value Attribut > <option selected>)
+        // determine the selected value (priority: value attribute > <option selected>)
         const selectedValue = value || (this.element.querySelector('option[selected]')?.value ?? value);
-        // Füge selectedValue hinzu wenn nicht in options
+        // add selectedValue if not among the options
         if (selectedValue && !options.some(o => o.value === selectedValue)) {
             options.unshift({ value: selectedValue, label: selectedValue });
         }
@@ -74,7 +74,7 @@ class SelectHandler extends TypeHandler {
     }
 
     async init() {
-        // Validierung: value und <select> schließen sich aus
+        // validation: value and <select> exclude each other
 //        if (this.element.hasAttribute('value') && this.element.querySelector('select')) throw new Error('u2-input: Cannot use both "value" attribute and <select> element. Use either <select> with <option selected> or "value" with "list".');
         let options = [];
 
@@ -86,10 +86,10 @@ class SelectHandler extends TypeHandler {
         const listId = this.element.getAttribute('list');
         
         
-        // Lade Remote-Daten (mit Cache)
+        // load remote data (cached)
 
         if (src) {
-            if (selectCache.has(src)) options = selectCache.get(src);
+            if (selectCache.has(src)) options = [...selectCache.get(src)]; // a copy: local options are added below
             else {
                 fetch(src).then(r => r.json()).then(options => {
                     selectCache.set(src, options);
@@ -98,7 +98,7 @@ class SelectHandler extends TypeHandler {
             }
         }
 
-        // Fallback auf lokale Daten wenn Remote fehlschlägt oder nicht vorhanden
+        // fall back to local data if remote fails or is missing
         if (listId) {
             const list = document.getElementById(listId);
             list?.querySelectorAll('option').forEach(opt => options.push({
@@ -112,7 +112,7 @@ class SelectHandler extends TypeHandler {
             }));
         }
                 
-        // Befülle Select
+        // fill the select
         this.renderOptions(options);
     }
 }
@@ -532,17 +532,17 @@ export default class U2Input extends U2Element {
     }
 
     _updateType(type) {
-        // Cleanup alter Handler
+        // clean up the old handler
         this._currentHandler?.cleanup();
 
-        // Fallback-Content entfernen wenn vorhanden
+        // remove fallback content if present
         const mainSlot = this.shadowRoot.querySelector('slot:not([name])');
         if (this.fallbackActive) {
             mainSlot.assignedNodes().forEach(node => node.remove());
             this.fallbackActive = false;
         }
 
-        // Fallback erstellen wenn kein Content vorhanden
+        // create a fallback if there is no content
         const HandlerClass = TYPE_REGISTRY[type] ?? TextHandler;
         if (!mainSlot.assignedElements().length) {
             const handler = new HandlerClass(this, this.shadowRoot);
@@ -553,7 +553,7 @@ export default class U2Input extends U2Element {
         this.realInput = this.querySelector('input,textarea,select');
         this._updateOwnFormValue();
 
-        // Handler initialisieren
+        // initialize the handler
         this._currentHandler = new HandlerClass(this, this.shadowRoot);
         this.shadowRoot.getElementById('input').innerHTML = this._currentHandler.input;
         this.shadowRoot.getElementById('typeCss').textContent = this._currentHandler.css;
@@ -579,7 +579,7 @@ export default class U2Input extends U2Element {
     get value() { return this.realInput?.value; }
     set value(v) { if (this.realInput) this.realInput.value = v; }
 
-    // API für eigene Type-Handler
+    // API for custom type handlers
     static registerType(name, HandlerClass) {
         TYPE_REGISTRY[name] = HandlerClass;
     }
@@ -598,7 +598,7 @@ export default class U2Input extends U2Element {
         btn.id = 'picker-trigger';
         btn.type = 'button';
         btn.ariaHasPopup = 'true';
-        btn.ariaControls = element.id;
+        btn.setAttribute('aria-controls', element.id); // there is no ariaControls reflection
         btn.innerHTML = `<u2-ico icon="${icon}" inline></u2-ico>`;
 
         btn.onclick = () => this._picker.element.matches(':popover-open') ? this._hidePicker() : this._showPicker();
@@ -652,7 +652,7 @@ export default class U2Input extends U2Element {
 }
 customElements.get('u2-input') || customElements.define('u2-input', U2Input);
 
-// Globales File-Drag-Feedback
+// global file drag feedback
 document.addEventListener('dragenter', e => {
     if (e.relatedTarget != null) return;
     const hasFile = [...e.dataTransfer.items].some(item => item.kind === 'file');

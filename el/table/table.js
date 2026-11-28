@@ -15,7 +15,7 @@ export default class U2Table extends HTMLElement {
     connectedCallback() {
         this.mutObs = new MutationObserver(mutations => {
             // console.log('check?', !this._isUpdating)
-            if (this._isUpdating) return; // IGNORIEREN WÄHREND UPDATE
+            if (this._isUpdating) return; // ignore own changes
             if (!this._watchCells && !mutations.some(m => isSkeleton(m.target))) return;
             this.columns?.refresh();
             this.#checkTable();
@@ -31,7 +31,7 @@ export default class U2Table extends HTMLElement {
         this.table = this.querySelector(':scope > table');
         if (!this.table) return;
 
-        this._isUpdating = true; // FLAG SETZEN
+        this._isUpdating = true; // set flag
 
 
         this.addEventListener('click', tableCheckboxMultiSelectListener);
@@ -191,7 +191,7 @@ function tableSortListener(e) {
 
 
 /**
- * Multi-Select Listener (click) für Tabellen mit Checkboxen (Shift/Ctrl/Meta-Unterstützung).
+ * Multi-select click listener for tables with checkboxes (shift-click selects a range).
  * @param {MouseEvent} e 
  */
 function tableCheckboxMultiSelectListener(e) {
@@ -202,26 +202,25 @@ function tableCheckboxMultiSelectListener(e) {
     const table = checkbox.closest('table');
     if (!tr || !table || table.getAttribute('aria-multiselectable') !== 'true') return;
 
-    // 1. Einfache Klick-Logik (Reset oder Setzen)
+    // 1. plain click: remember the anchor
     if (!e.shiftKey || !table._lastSelectedCheckbox) {
         table._lastSelectedCheckbox = checkbox;
         return;
     }
 
-    // --- Shift-Klick: Bereichsauswahl ---
+    // --- shift-click: range selection ---
 
     const columns = getTableColumns(table);
 
     const lastTr = table._lastSelectedCheckbox.closest('tr');
-    const targetState = table._lastSelectedCheckbox.checked; // Status übernehmen
+    const targetState = table._lastSelectedCheckbox.checked; // take over its state
     const scope = table.dataset.selectScope || 'any';
 
-    // 2. Bereich bestimmen (Zeilen)
-    // tr.rowIndex ist native DOM API und sehr schnell
+    // 2. row range (tr.rowIndex is native and fast)
     const startRowIndex = Math.min(lastTr.rowIndex, tr.rowIndex);
     const endRowIndex = Math.max(lastTr.rowIndex, tr.rowIndex);
 
-    // 3. Bereich bestimmen (Spalten)
+    // 3. column range
     let minColIndex = 0;
     let maxColIndex = Infinity;
 
@@ -229,34 +228,33 @@ function tableCheckboxMultiSelectListener(e) {
         const lastCell = table._lastSelectedCheckbox.closest('td, th');
         const currentCell = checkbox.closest('td, th');
 
-        // Hier nutzen wir unser neues, schnelles indexOf()
+        // the fast indexOf() of Columns
         const lastColIdx = columns.indexOf(lastCell);
         const currentColIdx = columns.indexOf(currentCell);
 
         if (scope === 'column') {
-            // Nur die Spalte der aktuell angeklickten Checkbox
+            // only the column of the clicked checkbox
             minColIndex = maxColIndex = currentColIdx;
-        } else { // scope === 'any' (Rechteck)
+        } else { // scope === 'any' (rectangle)
             minColIndex = Math.min(lastColIdx, currentColIdx);
             maxColIndex = Math.max(lastColIdx, currentColIdx);
         }
     }
 
-    // 4. Iteration und Selektion
-    // Wir iterieren direkt über die rows Collection (enthält alle tr)
+    // 4. select, iterating table.rows (all tr)
     for (let r = startRowIndex; r <= endRowIndex; r++) {
         const row = table.rows[r];
 
-        // Optimierung: Wenn Scope 'row' ist, brauchen wir keine Spaltenprüfung
+        // scope 'row' needs no column check
         if (scope === 'row') {
             const inputs = row.querySelectorAll('input[type="checkbox"]');
             for (const input of inputs) input.checked = targetState;
             continue;
         }
 
-        // Für 'column' oder 'any': Zellen prüfen
+        // 'column' or 'any': check the cells
         for (const cell of row.cells) {
-            // Ist die Zelle im relevanten Spaltenbereich?
+            // is the cell inside the column range?
             const cellColIdx = columns.indexOf(cell);
 
             if (cellColIdx >= minColIndex && cellColIdx <= maxColIndex) {
@@ -306,7 +304,7 @@ class Columns {
         this._matrix = [];
         this._cellIndexMap = new Map();
 
-        // Wir nutzen table.rows, da dies alle tr (thead, tbody, tfoot) in korrekter Reihenfolge enthält
+        // table.rows holds every tr (thead, tbody, tfoot) in document order
         const rows = this.table.rows;
 
         for (let r = 0; r < rows.length; r++) {
@@ -316,13 +314,13 @@ class Columns {
             let colIdx = 0;
 
             for (const cell of row.children) {
-                // 1. Überspringe Plätze, die durch ein rowspan von oben belegt sind
+                // 1. skip slots taken by a rowspan from above
                 while (this._matrix[r][colIdx]) colIdx++;
 
-                // 2. Speichere den Index für diese Zelle
+                // 2. remember the cell's index
                 this._cellIndexMap.set(cell, colIdx);
 
-                // 3. Markiere das Grid basierend auf colspan und rowspan
+                // 3. mark the grid by colspan and rowspan
                 const spanX = cell.colSpan;
                 const spanY = cell.rowSpan;
 
@@ -331,13 +329,12 @@ class Columns {
                         const targetRow = r + y;
                         this._matrix[targetRow] ??= [];
 
-                        // Wir markieren den Slot als "belegt"
-                        // (Man könnte hier auch die Cell-Referenz speichern)
+                        // the slot is taken by this cell
                         this._matrix[targetRow][colIdx + x] = cell;
                     }
                 }
 
-                // Index weiterschieben um die Breite der aktuellen Zelle
+                // advance by the cell's width
                 colIdx += spanX;
             }
         }
@@ -345,7 +342,7 @@ class Columns {
 
     get length() {
         this._ensureMatrix();
-        return this._matrix.length > 0 ? this._matrix[0].length : 0;
+        return this._matrix[0]?.length ?? 0;
     }
 
     indexOf(cell) {
@@ -354,8 +351,7 @@ class Columns {
     }
 
     item(i) {
-        this._columns[i] ??= new Column(this, i);
-        return this._columns[i];
+        return this._columns[i] ??= new Column(this, i);
     }
 
     cellAt(rowIndex, colIndex) {
@@ -388,10 +384,10 @@ class Columns {
         const pushCols = (elements) => {
             for (const el of elements) {
                 const span = parseInt(el.getAttribute('span')) || 1;
-                // Wenn es eine colgroup mit cols ist, iterieren wir deren cols
+                // a colgroup with cols: take its cols
                 const innerCols = el.tagName === 'COLGROUP' ? el.querySelectorAll(':scope > col') : [];
 
-                if (innerCols.length > 0) {
+                if (innerCols.length) {
                     pushCols(innerCols);
                 } else {
                     for (let i = 0; i < span; i++) colMap.push(el);
@@ -399,9 +395,9 @@ class Columns {
             }
         }
 
-        // Standardisiert colgroups und cols verarbeiten
-        if (colgroups.length > 0) pushCols(colgroups);
-        pushCols(standaloneCols); // Falls cols außerhalb von colgroups existieren (selten, aber valide)
+        // process colgroups and cols the standard way
+        pushCols(colgroups);
+        pushCols(standaloneCols); // cols outside colgroups (rare, but valid)
 
         return colMap;
     }
@@ -409,14 +405,14 @@ class Columns {
 
 class Column {
     constructor(columnsInstance, index) {
-        this.columns = columnsInstance; // Referenz auf die Hauptklasse
+        this.columns = columnsInstance; // reference to the main class
         this.table = columnsInstance.table;
         this.index = index;
     }
 
     get cells() {
         const cells = [];
-        // Wir iterieren über alle Gruppen (thead, tbody, tfoot)
+        // all groups (thead, tbody, tfoot)
         for (const group of this.table.children) {
             if (group.tagName === 'COLGROUP' || group.tagName === 'CAPTION') continue;
             cells.push(...this.cellsByGroup(group));
@@ -430,11 +426,11 @@ class Column {
 
     cellsByGroup(group) {
         const cells = [];
-        // Iteriere über die Zeilen dieser Gruppe
+        // the rows of this group
         for (const row of group.children) {
             if (row.tagName !== 'TR') continue;
             const cell = this.columns.cellAt(row.rowIndex, this.index);
-            // Die Matrix füllt auch die Slots, die ein colspan/rowspan von woanders her belegt
+            // the matrix also fills slots that a colspan/rowspan from elsewhere takes
             if (cell?.parentNode === row && this.columns.indexOf(cell) === this.index) cells.push(cell);
         }
         return cells;

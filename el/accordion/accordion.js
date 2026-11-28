@@ -121,7 +121,7 @@ export default class U2Accordion extends U2Element {
                     `;
                     // chrome needs this extra <div style="overflow:hidden">
                     item.querySelector('.trigger').addEventListener("mousedown", e => {
-                        if (e.detail === 2) e.preventDefault(); // Doppelklick
+                        if (e.detail === 2) e.preventDefault(); // double click
                     });
                     container.appendChild(item);
                 }

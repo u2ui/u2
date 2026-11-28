@@ -25,7 +25,7 @@ export default class U2Spot extends HTMLElement {
             this.moveTo(el);
             return;
         }
-        // sonst prüfen, ob noch irgendein Element matcht
+        // else check whether any element still matches
         const match = this.parent.querySelector(`${this.targetSelector}${this.activeSelector}`);
         match ? this.moveTo(match) : this.reset();
     }
@@ -34,7 +34,7 @@ export default class U2Spot extends HTMLElement {
     moveTo(el) {
         clearTimeout(this._currentTimeout);
         this.style.opacity = 1;
-        if (this.currentTarget === el) return; // Redundante Updates vermeiden
+        if (this.currentTarget === el) return; // avoid redundant updates
         this._anchorTo(el) || this._positionTo(el);
         this.style.setProperty('--target-border-radius', getComputedStyle(el).borderRadius);
         this.currentTarget = el;

@@ -1,15 +1,15 @@
 
-// HINWEIS: In attr/dropzone/dropzone.js gibt es eine eigene, reichere indicateDrop-Variante
-// (horizontal/vertikal, Gap-Zentrierung, leerer Container). Bewusst noch nicht zusammengeführt —
-// diese hier kann dafür into-Rahmen + content-Box-Inset. Bei Änderungen ggf. dort mitdenken.
+// NOTE: attr/dropzone/dropzone.js has its own, richer indicateDrop variant
+// (horizontal/vertical, gap centering, empty container). Deliberately not merged yet —
+// this one has the into frame + content-box inset instead. Keep both in mind when changing.
 
 /**
- * Zeigt einen Drop-Indicator relativ zu einem Element
- * @param {'before'|'after'|'into'|null} position - Position des Indicators oder null zum Verstecken
- * @param {HTMLElement|null} element - Referenz-Element
+ * Shows a drop indicator relative to an element
+ * @param {'before'|'after'|'into'|null} position - position of the indicator, or null to hide it
+ * @param {HTMLElement|null} element - reference element
  * @param {object} [options]
- * @param {'border'|'content'} [options.box='border'] - Bezugsbox des Elements, auf allen Seiten gleich.
- *        'content' = innerhalb des Paddings (macht z.B. Einrückungen sichtbar).
+ * @param {'border'|'content'} [options.box='border'] - the element's reference box, the same on all sides.
+ *        'content' = inside the padding (shows e.g. indentation).
  */
 export function indicateDrop(position, element, { box = 'border' } = {}) {
     let indicator = document.getElementById('drop-indicator');
@@ -45,7 +45,7 @@ export function indicateDrop(position, element, { box = 'border' } = {}) {
                 &::after {
                     right:-5px; left:auto;
                 }
-                &[data-into] {  /* Rahmen statt Linie */
+                &[data-into] {  /* frame instead of line */
                     height:auto;
                     background:none;
                     background: color-mix(in srgb, var(--color) 10%, transparent);
@@ -61,7 +61,7 @@ export function indicateDrop(position, element, { box = 'border' } = {}) {
     const rect = element.getBoundingClientRect();
     const s = indicator.style;
     let top = rect.top, bottom = rect.bottom, left = rect.left, width = rect.width, height = rect.height;
-    if (box === 'content') {  // echte Content-Box, alle Seiten gleich behandelt
+    if (box === 'content') {  // real content box, all sides treated the same
         const cs = getComputedStyle(element);
         const [pt, pr, pb, pl] = ['Top', 'Right', 'Bottom', 'Left'].map(k => parseFloat(cs['padding' + k]) || 0);
         top += pt; bottom -= pb; left += pl; width -= pl + pr; height -= pt + pb;

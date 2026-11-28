@@ -4,7 +4,7 @@ export function autoFormatTable(table) {
 
     const root = table.shadowRoot || document.documentElement;
     if (!root.querySelector('style[data-autoformat]')) {
-        const style = document.createElement('style'); // ok, reicht fast immer
+        const style = document.createElement('style'); // ok, almost always enough
         style.dataset.autoformat = '';
         style.textContent = `
         /* AUTO-FORMAT STYLES (BETA) */
@@ -188,7 +188,7 @@ export function autoFormatTable(table) {
         const nonEmptyValues = values.filter(v => v !== '');
 
         // 8. LONG TEXT CHECK
-        // todo: muss nur schauen ob irgend ein text länger als 50 ist.
+        // todo: only has to check whether any text is longer than 50.
         //const avgLength = nonEmptyValues.join('').length / nonEmptyValues.length;
         const maxContentLength = Math.max(...nonEmptyValues.map(v => v.length));
         if (maxContentLength > 50) {

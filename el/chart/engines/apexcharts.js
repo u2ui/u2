@@ -13,7 +13,7 @@ export async function render(container, data, config) {
     // Let's check npm. apexcharts on npm is 3.49.1.
     // Maybe the user meant a different library or a fork?
     // Or maybe I hallucinated the version in the prompt?
-    // User prompt: "aktuelle Version 5.3.6."
+    // user prompt: "current version 5.3.6."
     // Step 189 content: "version": "5.3.6".
     // Okay, if the package.json says 5.3.6, then it is 5.3.6.
     // But wait, the dependencies in step 189 are @svgdotjs/svg.js etc.

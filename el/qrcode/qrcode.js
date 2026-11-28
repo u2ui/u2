@@ -44,5 +44,5 @@ function toSvgString(qr) {
             if (qr.getModule(x, y)) parts.push(`M${x},${y}h1v1h-1z`);
         }
     }
-    return `<svg viewBox="0 0 ${qr.size} ${qr.size}"><path d="${parts.join(" ")}"/></svg>`;
+    return `<svg viewBox="0 0 ${qr.size} ${qr.size}"><path d="${parts.join("")}"/></svg>`;
 }

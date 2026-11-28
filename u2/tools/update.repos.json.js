@@ -27,8 +27,8 @@ base = base.replace(/file:\/\/\//, '/');
         };
     }
 
-    // bug: hier wird bei jeder kategorie überschrieben
-    // todo: sollte nur einmal am ende gemacht werden
+    // bug: overwritten for every category
+    // todo: should be done only once at the end
     const str = JSON.stringify(repos, null, '  ');
     const write = Deno.writeTextFile(base+"u2/projects.json", str);
 

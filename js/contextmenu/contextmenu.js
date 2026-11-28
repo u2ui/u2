@@ -88,9 +88,9 @@ class MenuItem {
         if (options.shortcut) {
             import('../../js/shortcut/shortcut.js').then(({listen})=>{
                 listen(options.shortcut, event=>{
-                    const target = options.selector ? !event.target.closest(options.selector) : false;
-                    if (target) return; // ok?
-                    this.currentTarget = target ?? document.documentElement;
+                    const target = options.selector ? event.target.closest(options.selector) : document.documentElement;
+                    if (!target) return; // ok?
+                    this.currentTarget = target;
                     event.preventDefault();
                     options.action({target:this.currentTarget, originalEvent:event});
                 });

@@ -3,9 +3,9 @@
 /* this is a very pop pink theme */
 
 html {
-    --hsl-h: 330; /* Pinker Farbton */
-    --hsl-s: 100%; /* Sättigung */
-    --hsl-l: 70%; /* Helligkeit */
+    --hsl-h: 330; /* pink hue */
+    --hsl-s: 100%; /* saturation */
+    --hsl-l: 70%; /* lightness */
 
     /* misc */
     --width: 42rem;

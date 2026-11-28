@@ -2,9 +2,9 @@
 
 html {
     /* compatibility *
-    --hsl-h: 210; /* Blauer Farbton * /
-    --hsl-s: 90%; /* Sättigung * /
-    --hsl-l: 45%; /* Helligkeit * /
+    --hsl-h: 210; /* blue hue * /
+    --hsl-s: 90%; /* saturation * /
+    --hsl-l: 45%; /* lightness * /
     --color: hsl(var(--hsl-h), var(--hsl-s), var(--hsl-l));
     /* */
 

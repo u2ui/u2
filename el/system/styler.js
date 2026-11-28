@@ -456,7 +456,7 @@ class ColorSystemStyler extends HTMLElement {
             [u2-movable-handler] { cursor: move; background: repeating-linear-gradient(45deg,transparent 0 3px,rgba(0,0,0,0.1) 3px 6px); height:.8rem; border-radius:.2rem; }
         `;
 
-        // Gruppen vs einzelne Controls
+        // groups vs single controls
         const renderItem = (v) => {
             if (v.children) {
                 return `
@@ -532,11 +532,11 @@ class ColorSystemStyler extends HTMLElement {
         this.shadowRoot.querySelector(`.control-group[data-var="${varName}"]`).classList.toggle('disabled', !checkbox.checked);
 
         if (checkbox.checked) {
-            // Property mit aktuellem Wert setzen
+            // set the property with its current value
             const mainInput = this.shadowRoot.querySelector(`[name="${varName}"]`);
             if (mainInput) this.applyVariable(varName, mainInput.value, mainInput.dataset?.unit || '');
         } else {
-            // Property entfernen (= default Wert)
+            // remove the property (= default value)
             this.targetElement.style.removeProperty(varName);
         }
     }
@@ -577,7 +577,7 @@ function loadFont(key) {
   if (!font?.google) return;
 
   const id = 'vf-' + key;
-  if (document.getElementById(id)) return;  // schon geladen?
+  if (document.getElementById(id)) return;  // already loaded?
 
   const link = document.createElement('link');
   link.id = id;

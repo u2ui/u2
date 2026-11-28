@@ -9,15 +9,15 @@ const css = `
 document.head.insertAdjacentHTML('afterbegin', `<style>${css}</style>`);
 
 
-// pointermove statt pointerover/-out: Bewegungen INNERHALB eines Shadow-Roots erzeugen für einen
-// document-Listener keine over/out-Events (target & relatedTarget retargeten beide auf den Host ->
-// gleicher Knoten -> Event wird unterdrückt). pointermove feuert dagegen kontinuierlich, und
-// composedPath()[0] liefert das echte Element unter dem Zeiger – auch im Shadow-DOM.
+// pointermove instead of pointerover/-out: moves INSIDE a shadow root fire no over/out events for a
+// document listener (target & relatedTarget are both retargeted to the host -> same node -> the
+// event is suppressed). pointermove fires continuously, and composedPath()[0] is the real element
+// under the pointer – in shadow DOM as well.
 let activeDraggable = null;
 document.addEventListener('pointermove', e => {
     const handle = e.composedPath()[0]?.closest?.('[u2-draghandle]');
     const draggable = handle?.closest('[draggable]') ?? null;
-    if (draggable === activeDraggable) return; // kein Wechsel -> nichts tun
+    if (draggable === activeDraggable) return; // no change -> nothing to do
     activeDraggable?.setAttribute('draggable', 'false');
     activeDraggable = draggable;
     draggable?.setAttribute('draggable', 'true');
