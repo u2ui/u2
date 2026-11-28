@@ -64,9 +64,7 @@ export default class U2Typewriter extends HTMLElement {
     }
     _playNext() {
         const speed = getComputedStyle(this).getPropertyValue('--u2-typewriter-speed') || 60;
-        this.playInterval = setTimeout(() => {
-            this._playNext();
-        }, speed);
+        this.playInterval = setTimeout(() => this._playNext(), speed);
         if (this.next() === false) {
             this.pause();
             this.dispatchEvent(new CustomEvent('u2-typewriter-end', {bubbles:true}));

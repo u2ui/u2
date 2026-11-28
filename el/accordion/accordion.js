@@ -125,8 +125,7 @@ export default class U2Accordion extends U2Element {
                     });
                     container.appendChild(item);
                 }
-                const title = item.querySelector('.title');
-                title.assign(node);
+                item.querySelector('.title').assign(node);
                 activeContent = item.querySelector('.content');
                 collectedContents = [];
             } else if (activeContent) {
@@ -167,7 +166,7 @@ export default class U2Accordion extends U2Element {
                 inline: 'center'
             });
             if (this.hasAttribute('single')) {
-                [...this.items].forEach((item, i) => { i !== index && this._toggleItem(i, false); });
+                [...this.items].forEach((_, i) => i !== index && this._toggleItem(i, false));
             }
         }
     }
@@ -190,17 +189,13 @@ export default class U2Accordion extends U2Element {
         const item = trigger.parentElement;
         const idx = [...item.parentElement.children].indexOf(item);
 
-        const actions = {
-            ArrowUp: () => this._focusItem(idx - 1),
-            ArrowDown: () => this._focusItem(idx + 1),
-            Home: () => this._focusItem(0),
-            End: () => this._focusItem(this.items.length - 1),
-            Enter: () => this._toggleItem(idx),
-            Space: () => this._toggleItem(idx),
-        };
-        if (actions[e.code]) {
+        const targetIdx = { ArrowUp: idx - 1, ArrowDown: idx + 1, Home: 0, End: this.items.length - 1 }[e.code];
+        if (targetIdx !== undefined) {
             e.preventDefault();
-            actions[e.code]();
+            this._focusItem(targetIdx);
+        } else if (e.code === 'Enter' || e.code === 'Space') {
+            e.preventDefault();
+            this._toggleItem(idx);
         }
     }
 }

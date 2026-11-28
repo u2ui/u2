@@ -97,9 +97,7 @@ export default class U2Fields extends U2Element {
                 labelSlot.assign(...pair.labelNodes);
             } else {
                 const attr = ['aria-label','title','name', 'type'].find(a => pair.inputNode.hasAttribute(a));
-                if (attr) {
-                    labelSlot.textContent = pair.inputNode.getAttribute(attr);
-                }
+                if (attr) labelSlot.textContent = pair.inputNode.getAttribute(attr);
             }
             pair.inputNode.ariaLabelledByElements = [wrapperLabel]; // not working... why?
             inputSlot.assign(pair.inputNode);
@@ -110,21 +108,11 @@ export default class U2Fields extends U2Element {
         for (const input of this.querySelectorAll('[name]')) {
             const name = input.name;
             if (!name || input.form === undefined || input.disabled) continue;
-            if (input.type === 'checkbox') {
-                result[name] = input.checked;
-            }
-            else if (input.type === 'radio') {
-                if (input.checked) result[name] = input.value;
-            }
-            else if (input.type === 'file') {
-                result[name] = input.files;
-            }
-            else if (input.tagName === 'SELECT' && input.multiple) {
-                result[name] = [...input.selectedOptions].map(opt => opt.value);
-            }
-            else {
-                result[name] = input.value;
-            }
+            if (input.type === 'checkbox') result[name] = input.checked;
+            else if (input.type === 'radio') { if (input.checked) result[name] = input.value; }
+            else if (input.type === 'file') result[name] = input.files;
+            else if (input.tagName === 'SELECT' && input.multiple) result[name] = [...input.selectedOptions].map(opt => opt.value);
+            else result[name] = input.value;
         }
         return result;
     }

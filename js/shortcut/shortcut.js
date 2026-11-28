@@ -15,9 +15,7 @@ const keyAliases = Object.entries({
     'insert': ['ins'],    
     'backspace': ['back'],
 }).reduce((acc, [key, aliases]) => {
-    aliases.forEach(alias => {
-        acc[alias] = key;
-    });
+    aliases.forEach(alias => acc[alias] = key);
     return acc;
 }, {});
 

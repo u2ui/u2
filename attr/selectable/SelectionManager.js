@@ -69,27 +69,20 @@ export class SelectionManager {
 
         const idx = items.indexOf(current);
 
-        const nav = {
-            ArrowDown: () => items[Math.min(idx + 1, items.length - 1)],
-            ArrowRight: () => items[Math.min(idx + 1, items.length - 1)],
-            ArrowUp: () => items[Math.max(idx - 1, 0)],
-            ArrowLeft: () => items[Math.max(idx - 1, 0)],
-            Home: () => items[0],
-            End: () => items[items.length - 1]
-        }[e.key];
+        const next = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? items[Math.min(idx + 1, items.length - 1)]
+            : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? items[Math.max(idx - 1, 0)]
+            : e.key === 'Home' ? items[0]
+            : e.key === 'End' ? items.at(-1)
+            : null;
 
-        if (nav && !e.altKey) {
-            const next = nav();
+        if (next && !e.altKey) {
             e.preventDefault();
             this.focus(next);
 
-            if (this.multi) {
-                if (e.shiftKey) {
-                    this.clear();
-                    this.range(this.anchor || current, next);
-                }
-            } else {
-                this.only(next);
+            if (!this.multi) this.only(next);
+            else if (e.shiftKey) {
+                this.clear();
+                this.range(this.anchor || current, next);
             }
         }
 

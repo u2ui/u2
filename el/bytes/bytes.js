@@ -79,10 +79,7 @@ function convertBytes(bytes, options) {
     i = Math.min(Math.max(0, i), compact.length - 1);
 
     let unit = 'B';
-    if (i === 0) {
-        unit = 'byte';
-        if (lang === 'de') unit = 'Byte';
-    }
+    if (i === 0) unit = lang === 'de' ? 'Byte' : 'byte';
     if (lang === 'fr') unit = 'o';
     if (lang === 'ru') unit = 'б';
     

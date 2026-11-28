@@ -87,9 +87,7 @@ export function autoFormatTable(table) {
             if (maxDecimals > 0) {
                 bodyCells.forEach(cell => {
                     const num = parseFloat(cell.textContent);
-                    if (!isNaN(num)) {
-                        cell.textContent = num.toFixed(maxDecimals);
-                    }
+                    if (!isNaN(num)) cell.textContent = num.toFixed(maxDecimals);
                 });
             }
             continue; // Skip other checks if numeric
@@ -114,12 +112,8 @@ export function autoFormatTable(table) {
             /^\d+([.,]\d+)?%$/.test(v)
         );
         if (allPercentage) {
-            bodyCells.forEach(cell => {
-                cell.setAttribute('data-sort', parseFloat(cell.textContent.trim()));
-            });
-            allCells.forEach(cell => {
-                cell.classList.add('auto-percentage');
-            });
+            bodyCells.forEach(cell => cell.setAttribute('data-sort', parseFloat(cell.textContent)));
+            allCells.forEach(cell => cell.classList.add('auto-percentage'));
             continue;
         }
 
@@ -180,21 +174,6 @@ export function autoFormatTable(table) {
                 cell.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
             });
             continue;
-        }
-
-        // 8. LONG TEXT CHECK
-        const avgLength = nonEmptyValues.join('').length / nonEmptyValues.length;
-        if (avgLength > 50) {
-            bodyCells.forEach(cell => cell.classList.add('auto-long-text'));
-        }
-
-        // 9. LONG HEADER CHECK (vertical writing)
-        if (headerCell) {
-            const headerLength = headerCell.textContent.trim().length;
-            const maxContentLength = Math.max(...nonEmptyValues.map(v => v.length));
-            if (headerLength > maxContentLength * 1.5 && headerLength > 15) {
-                headerCell.classList.add('auto-vertical');
-            }
         }
     }
 

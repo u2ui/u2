@@ -34,19 +34,13 @@ export async function render(container, data, config) {
             series: chartData.map(row => row[0])
         };
 
-        if (type === 'doughnut') {
-            options.donut = true;
-        }
+        if (type === 'doughnut') options.donut = true;
     } else {
         // Line/Bar
         // Series is an array of arrays (column-major)
-        const series = cols.map((col, i) => {
-            return chartData.map(row => row[i]);
-        });
-
         formattedData = {
             labels: rows,
-            series: series
+            series: cols.map((_, i) => chartData.map(row => row[i]))
         };
     }
 

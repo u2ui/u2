@@ -48,9 +48,7 @@ export default class U2Table extends HTMLElement {
         for (const col of this.columns) {
             const colEl = col.colElement;
             if (!colEl) break; // why break? if there is no col-element for the first column, there will be no col-element at all?
-            for (const td of col.cells) {
-                td.classList.add(...colEl.classList); // test!!
-            }
+            for (const td of col.cells) td.classList.add(...colEl.classList); // test!!
         }
         if (this.hasAttribute('check-column') && !this.checkboxColumnInitialized) {
             this.checkboxColumnInitialized = true;
@@ -83,19 +81,13 @@ export default class U2Table extends HTMLElement {
                 const checks = this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]');
                 const checked = this.querySelectorAll(':scope > table > tbody > tr > td > input[type="checkbox"]:checked');
                 const allChecked = checked.length === checks.length;
-                const noneChecked = checked.length === 0;
-                const someChecked = !allChecked && !noneChecked;
                 summaryCheck.checked = allChecked;
-                summaryCheck.indeterminate = someChecked;
+                summaryCheck.indeterminate = !allChecked && checked.length > 0;
             };
             headCheckAdjust();
-            this.addEventListener('input', e=>{
-                if (e.target.classList.contains('row-checkbox')) {
-                    headCheckAdjust();
-                }
-                if (e.target === summaryCheck) {
-                    this.querySelectorAll(':scope > table > tbody > tr > td > input.row-checkbox').forEach(el => el.checked = e.target.checked);
-                }
+            this.addEventListener('input', e => {
+                if (e.target.classList.contains('row-checkbox')) headCheckAdjust();
+                if (e.target === summaryCheck) this.querySelectorAll(':scope > table > tbody > tr > td > input.row-checkbox').forEach(el => el.checked = e.target.checked);
             });
         }
         if (this.hasAttribute('drag-column') && !this.dragColumnInitialized) {
@@ -108,9 +100,7 @@ export default class U2Table extends HTMLElement {
                     group.prepend(col);
                     continue;
                 }
-                if (group.tagName === 'TBODY' && !group.hasAttribute('u2-dropzone')) {
-                    group.setAttribute('u2-dropzone', '')
-                };
+                if (group.tagName === 'TBODY' && !group.hasAttribute('u2-dropzone')) group.setAttribute('u2-dropzone', '');
                 for (const tr of group.children) {
                     const td = document.createElement('td');
                     tr.prepend(td);
@@ -147,16 +137,12 @@ export default class U2Table extends HTMLElement {
         if (firstFootTr) {
             const colCells = td => this.columns.item(this.columns.indexOf(td)).cellsByGroup(this.table.tBodies[0]);
             for (const td of firstFootTr.children) {
-                if (td.hasAttribute('data-sum')) {
-                    td.textContent = colCells(td).reduce((a, b) => a + tdValue(b), 0);
-                }
+                if (td.hasAttribute('data-sum')) td.textContent = colCells(td).reduce((a, b) => a + tdValue(b), 0);
                 if (td.hasAttribute('data-avg')) {
                     const cells = colCells(td);
                     td.textContent = cells.reduce((a, b) => a + tdValue(b), 0) / cells.length;
                 }
-                if (td.hasAttribute('data-count')) {
-                    td.textContent = colCells(td).filter(td => tdValue(td) !== null).length;
-                }
+                if (td.hasAttribute('data-count')) td.textContent = colCells(td).filter(td => tdValue(td) !== null).length;
             }
         }
 
@@ -178,9 +164,7 @@ function tableSortListener(e) {
     if (!btn) return;
     const th = btn.closest('th');
     if (!th) return;
-    const tr = th.parentNode;
-    const thead = tr.parentNode;
-    const table = thead.parentNode;
+    const table = th.parentNode.parentNode.parentNode;
 
     const columns = getTableColumns(table);
     const index = columns.indexOf(th);

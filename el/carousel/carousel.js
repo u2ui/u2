@@ -332,19 +332,14 @@ function hashchange(){
 	const el = document.getElementById(location.hash.substring(1));
 	if (!el) return;
 	const slide = el.closest('u2-carousel > *');
-	if (!slide) return;
-	const sliderEl = slide.parentElement;
-	sliderEl.slideTo(slide);
+	slide?.parentElement.slideTo(slide);
 }
 addEventListener('DOMContentLoaded', hashchange);
 addEventListener('hashchange', hashchange);
 // slide on focus
-addEventListener('focusin', e=>{
-	const el = document.activeElement;
-	const slide = el.closest('u2-carousel > *');
-	if (!slide) return;
-	const sliderEl = slide.parentElement;
-	sliderEl.slideTo(slide);
+addEventListener('focusin', () => {
+	const slide = document.activeElement?.closest('u2-carousel > *');
+	slide?.parentElement.slideTo(slide);
 });
 // keyboard nav
 addEventListener('keydown', ({target,code})=>{

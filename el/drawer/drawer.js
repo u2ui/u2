@@ -118,11 +118,9 @@ export default class U2Drawer extends HTMLElement {
                 (placement === 'top' && deltaY < 0) ||
                 (placement === 'bottom' && deltaY > 0)) {
 
-                if (placement === 'right' || placement === 'left') {
-                    this.style.transform = `translateX(${deltaX}px)`;
-                } else {
-                    this.style.transform = `translateY(${deltaY}px)`;
-                }
+                this.style.transform = placement === 'right' || placement === 'left'
+                    ? `translateX(${deltaX}px)`
+                    : `translateY(${deltaY}px)`;
             }
         }, { passive: true });
 

@@ -26,7 +26,7 @@
     // requested css properties
     const gCS = getComputedStyle;
     window.getComputedStyle = function(...args){
-        style = gCS.apply(this, args);
+        const style = gCS.apply(this, args);
         style._computedFor = args[0];
         return style;
     }
@@ -149,7 +149,7 @@ function fromElement(el) {
             const readable = !desc.value && desc.get;
             const obj = {
                 name,
-                summary: (readable?'readable':'')+' '+(readable?'writable':''),
+                summary: (readable?'readable':'')+' '+(writeable?'writable':''),
                 description: '',
                 static: false,
                 privacy: 'public',

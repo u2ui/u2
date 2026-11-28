@@ -54,10 +54,7 @@ export default class U2Textfit extends HTMLElement {
         c2d ??= document.createElement('canvas').getContext('2d');
         c2d.direction = 'ltr';
         c2d.font = `${style.fontStyle} ${style.fontWeight} 100px ${style.fontFamily}`;
-        const text = this.innerText;
-        const measure = c2d.measureText(text);
-        const left  = measure.actualBoundingBoxLeft;
-        const right = measure.actualBoundingBoxRight;
+        const {actualBoundingBoxLeft: left, actualBoundingBoxRight: right} = c2d.measureText(this.innerText);
         //const ascent = measure.actualBoundingBoxAscent;
         //const descent = measure.actualBoundingBoxDescent;
 

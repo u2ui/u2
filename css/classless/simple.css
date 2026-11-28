@@ -16,12 +16,7 @@ body {
 
 body:has(> aside) {
     display: grid;
-
-    grid-template-columns: minmax(15rem, 25%) 1fr;
-
-    gap: var(--gap);
     align-items: start;
-
     grid-template-columns: 15rem minmax(var(--gap), 1fr) minmax(20rem, var(--width)) minmax(var(--gap), 1fr);
     grid-template-areas: 
         "header header header header"
@@ -159,8 +154,6 @@ input, textarea, select {
 blockquote {
     margin: var(--gap) 0;
     padding: var(--gap);
-    
-    padding-inline-start: var(--gap);
     border-inline-start: var(--line-width) solid var(--color);
 
     font-size: .85em;
@@ -221,9 +214,7 @@ article, dialog {
     & header, & footer {
         padding:var(--gap);
     }
-    & header { padding-bottom:var(--gap); }
     & footer {
-        padding-top:auto;
         font-size: 0.9rem;
     }
 }
@@ -234,7 +225,6 @@ dialog:modal {
 article {
     display:flex;
     margin-block:var(--gap);
-    background-color: var(--color-light);
 }
 
 

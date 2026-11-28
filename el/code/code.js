@@ -88,16 +88,10 @@ export default class U2Code extends HTMLElement {
     }
     _init(){
         const elementId = this.getAttribute('element');
-        if (elementId) {
-            this.setForeignElement(document.getElementById(elementId));
-            return;
-        } else {
-            this.sourceElement = this.querySelector('pre>code,textarea,style,script') || this;
-        }
+        if (elementId) return this.setForeignElement(document.getElementById(elementId));
+        this.sourceElement = this.querySelector('pre>code,textarea,style,script') || this;
 
-        if (this.sourceElement.tagName === 'TEXTAREA') {
-            this.setAttribute('editable','');
-        }
+        if (this.sourceElement.tagName === 'TEXTAREA') this.setAttribute('editable','');
 
         this.value = this.getSourceValue();
     }
@@ -204,9 +198,7 @@ function trimCode(value){
     return lines.map(line => line.slice(minWhitespace)).join('\n');
 }
 function htmlEncode(input) {
-    return input.replace(/[\u00A0-\u9999<>\&]/g, function(i) {
-        return '&#'+i.charCodeAt(0)+';';
-    });
+    return input.replace(/[\u00A0-\u9999<>\&]/g, c => '&#' + c.charCodeAt(0) + ';');
 }
 
 

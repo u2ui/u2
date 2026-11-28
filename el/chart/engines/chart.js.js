@@ -9,6 +9,7 @@ export async function render(container, data, config) {
     const { rows, cols, data: chartData } = data;
     const { type, options, getColor } = config;
 
+    const isPie = type === 'pie' || type === 'doughnut';
     const chart = new Chart(ctx, {
         type,
         data: {
@@ -16,8 +17,8 @@ export async function render(container, data, config) {
             datasets: cols.map((col, i) => ({
                 label: col,
                 data: chartData.map(row => row[i]),
-                backgroundColor: type === 'pie' || type === 'doughnut' ? chartData.map((_, j) => getColor(j)) : getColor(i),
-                borderColor: type === 'pie' || type === 'doughnut' ? '#fff' : getColor(i),
+                backgroundColor: isPie ? chartData.map((_, j) => getColor(j)) : getColor(i),
+                borderColor: isPie ? '#fff' : getColor(i),
             }))
         },
         options

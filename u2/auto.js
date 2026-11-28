@@ -69,10 +69,8 @@ addShadowRoot(document.documentElement)
 //
 ////////////////////////////////////////////////////////////////
 
-addEventListener('keydown',e=>{
-    if (e.ctrlKey && e.key ==='F12') {
-        import('./auto.ui.js').then(ui=>ui.open())
-    }
+addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'F12') import('./auto.ui.js').then(ui => ui.open());
 });
 
 ////////////////////////////////////////////////////////////////
@@ -83,8 +81,7 @@ addEventListener('keydown',e=>{
 
 /* save all */
 function mergeNewlyNeeded(){
-    let allNeeded = localStorage.getItem('u2-needed');
-    allNeeded = JSON.parse(allNeeded) || {};
+    const allNeeded = JSON.parse(localStorage.getItem('u2-needed')) || {};
     Object.assign(allNeeded.js ||= {}, needed.js);
     Object.assign(allNeeded.css ||= {}, needed.css);
     //Object.assign(allNeeded, needed);

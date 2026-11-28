@@ -70,7 +70,6 @@ dialog {
 
 u2-alert {
     background-color: color-mix(in srgb, var(--color), var(--color-bg) 96%);
-    border-width: 0 0 0 .13em;
     border-width: 0;
     font-size: max(.85rem, 14px);
     &::part(icon) {

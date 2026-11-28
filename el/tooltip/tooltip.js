@@ -133,9 +133,7 @@ function isSpaceOccupied(referenceElement, position) {
             console.error(`Ungültige Position: ${position}`);
             return true; // Im Zweifel: Keine Platzierung erlauben
     }
-    if (testX < 0 || testX > innerWidth || testY < 0 || testY > innerHeight) {
-        return true; 
-    }
+    if (testX < 0 || testX > innerWidth || testY < 0 || testY > innerHeight) return true;
     const elementsAtPoint = document.elementsFromPoint(testX, testY);
     for (const element of elementsAtPoint) {
         if (element === referenceElement || referenceElement.contains(element)) continue;

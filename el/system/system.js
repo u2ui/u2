@@ -68,10 +68,7 @@ export default class U2System extends HTMLElement {
 customElements.get('u2-system') || customElements.define('u2-system', U2System);
 
 addEventListener('keydown', (e) => {
-    if (e.target.form !== undefined) return;
-    if (e.target.isContentEditable) return;
-    if (e.ctrlKey || e.altKey || e.metaKey) return;
-    if (e.key !== 's') return;
+    if (e.target.form !== undefined || e.target.isContentEditable || e.ctrlKey || e.altKey || e.metaKey || e.key !== 's') return;
 
     document.querySelector('u2-system')?.togglePopover();
 });

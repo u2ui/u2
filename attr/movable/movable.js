@@ -23,9 +23,7 @@ function applyPosition(element, method, initialState, deltaX, deltaY) {
     if (method === 'transform') {
         element.style.transform = `translate(${newX}px, ${newY}px)`;
     } else {
-        if (!element.style.position || element.style.position === 'static') {
-            element.style.position = 'relative';
-        }
+        if (!element.style.position || element.style.position === 'static') element.style.position = 'relative';
         element.style.left = `${newX}px`;
         element.style.top = `${newY}px`;
     }
@@ -50,7 +48,7 @@ function handleStart(e) {
     }
 
     const styles = getComputedStyle(target);
-    const threshold = parseFloat(styles.getPropertyValue('--u2-movable-threshold').trim()) || 10;
+    const threshold = parseFloat(styles.getPropertyValue('--u2-movable-threshold')) || 10;
     const method = styles.getPropertyValue('--u2-movable-method').trim() || 'transform';
     const xEnabled = styles.getPropertyValue('--u2-movable-x').trim() !== 'false';
     const yEnabled = styles.getPropertyValue('--u2-movable-y').trim() !== 'false';
@@ -70,15 +68,10 @@ function handleStart(e) {
 
     observer.onstart = (e) => e.preventDefault();
 
-    observer.onmove = (e) => {
-        const diff = observer.startDiff;
-        const distance = Math.hypot(diff.x, diff.y);
-        if (distance < threshold) return;
-
-        const deltaX = xEnabled ? diff.x : 0;
-        const deltaY = yEnabled ? diff.y : 0;
-
-        applyPosition(target, method, initialState, deltaX, deltaY);
+    observer.onmove = () => {
+        const {x, y} = observer.startDiff;
+        if (Math.hypot(x, y) < threshold) return;
+        applyPosition(target, method, initialState, xEnabled ? x : 0, yEnabled ? y : 0);
     };
 
     observer.onstop = () => {

@@ -30,13 +30,8 @@ export default class U2Menubutton extends HTMLElement {
                     e.preventDefault();
                 }
             });
-            menu.addEventListener('toggle', e => {
-                button.ariaExpanded = e.newState === 'open';
-            });
-
-            this.addEventListener('focusout', (e) => { // popover makes this not?
-               !this.contains(e.relatedTarget) && menu.hidePopover();
-            });
+            menu.addEventListener('toggle', e => button.ariaExpanded = e.newState === 'open');
+            this.addEventListener('focusout', e => !this.contains(e.relatedTarget) && menu.hidePopover()); // popover makes this not?
 
             const openby = (v) => this.getAttribute('openby')?.includes(v);
             this.addEventListener('mouseenter', () => {
@@ -46,9 +41,7 @@ export default class U2Menubutton extends HTMLElement {
                 clearTimeout(this._openTimer);
                 openby('hover') && this.close();
             });
-            this.addEventListener('focusin', () => {
-                openby('focus') && this.open()
-            });
+            this.addEventListener('focusin', () => openby('focus') && this.open());
 
             this.menu = menu;
             this.button = button;

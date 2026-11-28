@@ -42,9 +42,7 @@ export default class U2Spot extends HTMLElement {
     _anchorTo(el) {
         if (!CSS.supports('position-anchor', '--test')) return false;
         el.style.anchorName ||= `--${el.id || Math.random().toString(36).slice(2, 5)}`;
-        this._setCss(()=>{
-            this.style.positionAnchor = el.style.anchorName;
-        });
+        this._setCss(() => this.style.positionAnchor = el.style.anchorName);
         return true;
     }
     _positionTo(el){
@@ -64,9 +62,7 @@ export default class U2Spot extends HTMLElement {
         const x = elRect.left - parentRect.left + marginLeft;
         const y = elRect.top - parentRect.top + marginTop;
 
-        this._setCss(()=>{
-            this.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        });
+        this._setCss(() => this.style.transform = `translate3d(${x}px, ${y}px, 0)`);
     }
     _setCss(fn){
         if (this.currentTarget == null) {
@@ -75,9 +71,7 @@ export default class U2Spot extends HTMLElement {
             fn();
             this.offsetHeight; // Reflow
             this.style.transition = prev;
-        } else {
-            fn();
-        }
+        } else fn();
     }
     reset() {
         clearTimeout(this._currentTimeout);

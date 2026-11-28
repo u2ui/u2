@@ -235,11 +235,7 @@ export default class U2Video extends HTMLElement {
         ['poster', 'preload', 'autoplay', 'loop', 'muted', 'playsinline', 'crossorigin'].forEach((attr) => {
             const val = this.getAttribute(attr);
             if (val === null) return;
-            if (booleanAttrs.has(attr) || val === '' || val === 'true') {
-                videoEl.setAttribute(attr, '');
-                return;
-            }
-            videoEl.setAttribute(attr, val);
+            videoEl.setAttribute(attr, booleanAttrs.has(attr) || val === '' || val === 'true' ? '' : val);
         });
 
         // Native controls verstecken
@@ -298,7 +294,7 @@ export default class U2Video extends HTMLElement {
                 speedToggle.textContent = `${rate}x`;
                 speedMenu.querySelectorAll('.speed-option').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                typeof speedMenu.hidePopover === 'function' ? speedMenu.hidePopover() : speedMenu.removeAttribute('open');
+                speedMenu.hidePopover ? speedMenu.hidePopover() : speedMenu.removeAttribute('open');
             });
             speedMenu.appendChild(btn);
         });
@@ -407,11 +403,9 @@ export default class U2Video extends HTMLElement {
     }
 
     updateBuffered() {
-        if (this._video.buffered.length > 0) {
-            const bufferedEnd = this._video.buffered.end(this._video.buffered.length - 1);
-            const percent = (bufferedEnd / this._video.duration) * 100;
-            this.$('progressBuffered').style.width = `${percent}%`;
-        }
+        if (!this._video.buffered.length) return;
+        const bufferedEnd = this._video.buffered.end(this._video.buffered.length - 1);
+        this.$('progressBuffered').style.width = `${(bufferedEnd / this._video.duration) * 100}%`;
     }
 
     updateTimeDisplay() {

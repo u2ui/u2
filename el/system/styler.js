@@ -529,17 +529,13 @@ class ColorSystemStyler extends HTMLElement {
 
     handleDisableToggle(checkbox) {
         const varName = checkbox.dataset.for;
-        const controlGroup = this.shadowRoot.querySelector(`.control-group[data-var="${varName}"]`);
-        
+        this.shadowRoot.querySelector(`.control-group[data-var="${varName}"]`).classList.toggle('disabled', !checkbox.checked);
+
         if (checkbox.checked) {
-            controlGroup.classList.remove('disabled');
             // Property mit aktuellem Wert setzen
             const mainInput = this.shadowRoot.querySelector(`[name="${varName}"]`);
-            if (mainInput) {
-                this.applyVariable(varName, mainInput.value, mainInput.dataset?.unit || '');
-            }
+            if (mainInput) this.applyVariable(varName, mainInput.value, mainInput.dataset?.unit || '');
         } else {
-            controlGroup.classList.add('disabled');
             // Property entfernen (= default Wert)
             this.targetElement.style.removeProperty(varName);
         }
@@ -597,8 +593,7 @@ function parseCssLength(str) {
 }
 
 function unitToPx(value, unit, el){
-    if (!unit) return value;
-    if (unit === 'px') return value;
+    if (!unit || unit === 'px') return value;
     if (unit === 'cm') return value * 96 / 2.54;
     if (unit === 'mm') return value * 96 / 25.4;
     if (unit === 'in') return value * 96;
@@ -619,8 +614,7 @@ function unitToPx(value, unit, el){
             console.warn('lh is "normal" which is not easy to pixelize');
             return null;
         }
-        const lh = parseFloat(raw);
-        return value * lh;
+        return value * parseFloat(raw);
     }
 
     console.warn(`Unknown unit: ${unit}`);

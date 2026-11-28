@@ -16,7 +16,7 @@ export function open(){
             <head>
                 <meta charset=utf-8>
                 <script>import('${import.meta.url+'/../auto.js'}')<\/script>
-                <link rel="stylesheet" href="../../../el/ico/font/Material Icons.css">
+                <link rel="stylesheet" href="${new URL('../el/ico/font/Material Icons.css', import.meta.url)}">
                 <style>
                     html {
                         font-size:14px;
@@ -56,12 +56,9 @@ async function renderUi(el){
 const exportCode = async function(){
     await repos();
 
-    let needed = localStorage.getItem('u2-needed');
-    needed = JSON.parse(needed) || {};
+    const needed = JSON.parse(localStorage.getItem('u2-needed')) || {};
 
-
-
-    const css = Object.entries(needed.css);
+    const css = Object.entries(needed.css || {});
     const crit = css.filter(([,p]) => p === 1);
     const strCss = crit.map(([url]) => `<link href="${url}" rel="stylesheet" crossorigin>`).join('\n');
 
@@ -71,7 +68,7 @@ const exportCode = async function(){
     console.log(cssText);
 
 
-    const strJs = Object.entries(needed.js).map(([url]) => `<script src="${url}" type=module crossorigin async></script>`).join('\n');
+    const strJs = Object.entries(needed.js || {}).map(([url]) => `<script src="${url}" type=module crossorigin async></script>`).join('\n');
     const strCssNonCritical = css.filter(([,p]) => p > 1).map(([url]) => `<link rel="stylesheet" href="${url}" crossorigin>`).join('\n');
     return strCss +'\n' + strJs + '\n' + '\n<!-- non critical at the end -->\n' + strCssNonCritical;
 }

@@ -81,9 +81,7 @@ export default class U2Breadcrumb extends HTMLElement {
             separator.part = 'separator';
             //const locationUrl = location.href;
             //if (link.href === locationUrl) link.ariaCurrent = 'location';
-            requestAnimationFrame(()=>{ // chrome...
-                slot.assign(link);
-            })
+            requestAnimationFrame(() => slot.assign(link)); // chrome...
             li.append(slot, separator);
             this.ol.append(li);
             if (link.href === pageUrl) {

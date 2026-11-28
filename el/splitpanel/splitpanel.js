@@ -58,9 +58,7 @@ export default class U2Splitpanel extends HTMLElement {
             children.forEach((child) => {
                 const size = vertical ? child.clientHeight : child.clientWidth;
                 total += size;
-                requestAnimationFrame(() => {
-                    child.style.flexBasis = `${size / total * 100}%`;
-                });
+                requestAnimationFrame(() => child.style.flexBasis = `${size / total * 100}%`);
             });
         });
 

@@ -23,15 +23,14 @@ export async function render(container, data, config) {
                 color: getColor(i)
             }
         };
-        if (type === 'doughnut') {
-            s.radius = ['40%', '70%'];
-        }
+        if (type === 'doughnut') s.radius = ['40%', '70%'];
         return s;
     });
 
+    const isPie = type === 'pie' || type === 'doughnut';
     const option = {
         tooltip: {
-            trigger: (type === 'pie' || type === 'doughnut') ? 'item' : 'axis'
+            trigger: isPie ? 'item' : 'axis'
         },
         legend: {
             data: cols
@@ -39,7 +38,7 @@ export async function render(container, data, config) {
         series: series
     };
 
-    if (type !== 'pie' && type !== 'doughnut') {
+    if (!isPie) {
         option.xAxis = {
             type: 'category',
             data: rows
@@ -51,9 +50,7 @@ export async function render(container, data, config) {
 
     chart.setOption(option);
 
-    const resizeObserver = new ResizeObserver(() => {
-        chart.resize();
-    });
+    const resizeObserver = new ResizeObserver(() => chart.resize());
     resizeObserver.observe(container);
 
     return {

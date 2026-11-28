@@ -64,9 +64,7 @@ export default class U2Toc extends HTMLElement {
                 currentLi ? currentLi.append(ul) : currentUl.append(ul);
                 currentUl = ul;
             } else if (level < lastLevel) {
-                for (let i = level; i < lastLevel; i++) {
-                    currentUl = currentUl.parentElement.closest('ul') || nav;
-                }
+                for (let i = level; i < lastLevel; i++) currentUl = currentUl.parentElement.closest('ul') || nav;
             }
 
             currentLi = document.createElement('li');

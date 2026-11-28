@@ -42,9 +42,7 @@ class Menu {
     open() {
         if (!this.currentActive) return;
         this.menuItem?.el.setAttribute('aria-expanded', true);
-        this._placer().then(p =>{
-            p.followElement(this.el.parentElement);
-        });
+        this._placer().then(p => p.followElement(this.el.parentElement));
     }
     close() {
         this.menuItem?.el.removeAttribute('aria-expanded');
@@ -129,9 +127,7 @@ class MenuItem {
         this.currentActive = this._subMenu?.parseFor(element);
         this.currentTarget = this.options.selector ? element.closest(this.options.selector) : document.documentElement;
 
-        if (this.currentActive) {
-            this.el.querySelector(':scope > button > .-arrow').innerHTML = arrow;
-        }
+        if (this.currentActive) this.el.querySelector(':scope > button > .-arrow').innerHTML = arrow;
         if (this.currentActive || this.currentTarget) {
             this.el.hidden = false;
             this.options?.onparse?.call(this, {target:this.currentTarget});
@@ -285,9 +281,7 @@ rootEl.addEventListener('keydown',e=>{
 });
 
 rootEl.addEventListener('mouseenter', e => e.target.focus(),true);
-rootEl.addEventListener('toggle', e => {
-    if (e.newState === 'closed') contextMenu.close(); // close all submenus
-});
+rootEl.addEventListener('toggle', e => e.newState === 'closed' && contextMenu.close()); // close all submenus
 
 
 
@@ -311,8 +305,7 @@ shadowRoot.appendChild(rootEl);
 
 
 document.documentElement.addEventListener('contextmenu', e=>{
-    if (e.shiftKey) return;
-    if (e.target === menuContainer) return;
+    if (e.shiftKey || e.target === menuContainer) return;
     const has = contextMenu.parseFor(e.target);
     if (!has) return;
     e.preventDefault();

@@ -55,10 +55,7 @@ export default class U2Responsive extends HTMLElement {
         // debounce, not test every growing pixel if criticalWidth is known
         if (growing && this.currentLevel > 0) {
             const criticalWidth = this.criticalWidths.get(this.currentLevel-1);
-            let margin = 0;
-            if (criticalWidth != null) {
-                margin = Math.max(0, criticalWidth - width);
-            }
+            const margin = criticalWidth != null ? Math.max(0, criticalWidth - width) : 0;
             const growCheck = width > this.lastGrowingCheckAt + margin;
 
             if (growCheck) {

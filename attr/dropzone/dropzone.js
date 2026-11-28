@@ -14,8 +14,7 @@ let currentBefore = null;
 const dropzoneHandler = {
     dragstart: () => {
         if (!dnd.dragged) return; // just handle elements for now
-        const zones = document.querySelectorAll('[u2-dropzone]');
-        zones.forEach(zone => {
+        document.querySelectorAll('[u2-dropzone]').forEach(zone => {
             const valid = canDrop(zone, dnd.dragged);
             zone.classList.toggle(':drop-invalid', !valid);
             zone.classList.toggle(':drop-valid', valid);
@@ -28,13 +27,9 @@ const dropzoneHandler = {
     
     dragend: (e) => {
         // NEU: Cancel aufrufen wenn nicht gedropped (ESC oder invalid drop)
-        if (e.dataTransfer.dropEffect === 'none') {
-            currentStrategy?.cancel?.();
-        }
+        if (e.dataTransfer.dropEffect === 'none') currentStrategy?.cancel?.();
         
-        document.querySelectorAll('[u2-dropzone]').forEach(zone => {
-            zone.classList.remove(':drop-invalid', ':drop-valid', ':dragover');
-        });
+        document.querySelectorAll('[u2-dropzone]').forEach(zone => zone.classList.remove(':drop-invalid', ':drop-valid', ':dragover'));
         
         // NEU: Strategy zurücksetzen
         //currentStrategy = null; // Nein! wird noch gebraucht für effekt
@@ -408,13 +403,9 @@ function indicateDrop(container, position, element = null) {
 
         let left;
         if (siblingRect) {
-            if (position === 'before') {
-                // Zwischen previousSibling und element
-                left = (siblingRect.right + rect.left) / 2;
-            } else {
-                // Zwischen element und nextSibling
-                left = (rect.right + siblingRect.left) / 2;
-            }
+            left = position === 'before'
+                ? (siblingRect.right + rect.left) / 2 // Zwischen previousSibling und element
+                : (rect.right + siblingRect.left) / 2; // Zwischen element und nextSibling
         } else { // Kein Nachbar: Am Rand mit Margin
             const styles = getComputedStyle(element);
             const margin = parseFloat(position === 'before' ? styles.marginLeft : styles.marginRight);
@@ -432,11 +423,9 @@ function indicateDrop(container, position, element = null) {
 
         let top;
         if (siblingRect) {
-            if (position === 'before') { // Zwischen previousSibling und element
-                top = (siblingRect.bottom + rect.top) / 2;
-            } else { // Zwischen element und nextSibling
-                top = (rect.bottom + siblingRect.top) / 2;
-            }
+            top = position === 'before'
+                ? (siblingRect.bottom + rect.top) / 2 // Zwischen previousSibling und element
+                : (rect.bottom + siblingRect.top) / 2; // Zwischen element und nextSibling
         } else {
             // Kein Nachbar: Am Rand mit Margin
             const styles = getComputedStyle(element);

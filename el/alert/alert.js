@@ -104,9 +104,7 @@ export default class U2Alert extends U2Element {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         const variant = variantOf(this);
-        if (name === 'variant') {
-            this.shadowRoot.getElementById('container').role = variantData[variant]?.role || 'status'; // better to set role to host?
-        }
+        if (name === 'variant') this.shadowRoot.getElementById('container').role = variantData[variant]?.role || 'status'; // better to set role to host?
         const icon = this.getAttribute('icon') || variantData[variant]?.icon || 'info';
         this.shadowRoot.querySelector('[name=icon]').innerHTML = `<u2-ico icon=${icon}></u2-ico>`;
     }
@@ -125,14 +123,9 @@ export default class U2Alert extends U2Element {
 
         const hasActions = this.shadowRoot.querySelector('slot[name=action]')?.assignedElements().length > 0;
         clearTimeout(this.hideTimeout);
-        if (hasActions) {
-            this.role = 'alertdialog';
-        } else {
-            this.hideTimeout = setTimeout(() => this.hide(), duration);
-        }
-        return new Promise((resolve) => {
-            this.resolve = resolve;
-        });
+        if (hasActions) this.role = 'alertdialog';
+        else this.hideTimeout = setTimeout(() => this.hide(), duration);
+        return new Promise(resolve => this.resolve = resolve);
     }
 }
 
@@ -172,9 +165,7 @@ function alert(message, variant, options={}) {
     el.textContent = message;
     options.icon && el.setAttribute('icon', options.icon);
     el.setAttribute('variant', variant??'info');
-    return el.toast().then(() => {
-        setTimeout(() => el.remove(), 1000);
-    });
+    return el.toast().then(() => setTimeout(() => el.remove(), 1000));
 }
 export const info = (message, options) => alert(message, 'info', options);
 export const success = (message, options) => alert(message, 'success', options);

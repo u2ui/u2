@@ -27,8 +27,7 @@ export class PointerObserver {
     }
 	start(e) {
 		if (this.running) return;
-		if (e.type === 'mousedown' && e.button !== 0) return;
-		if (e.type === 'mousedown'  && !this.options.mouse) return;
+		if (e.type === 'mousedown' && (e.button !== 0 || !this.options.mouse)) return;
 		if (e.type === 'touchstart' && !this.options.touch) return;
 		//if (e.type === 'touchstart') this.touching = true;
 		//if (this.touching && e.type === 'mousedown') return;

@@ -26,9 +26,8 @@ export default class U2Chart extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
         if (name === 'for') {
-            this._forPromise = import('../../u2/tools/promiseElementById.js').then(({ promiseElementById }) => {
-                return promiseElementById(this.getAttribute('for'));
-            });
+            this._forPromise = import('../../u2/tools/promiseElementById.js')
+                .then(({ promiseElementById }) => promiseElementById(this.getAttribute('for')));
         }
         this._requestBuild(); // every change in attributes should trigger a rebuild
     }
@@ -92,9 +91,7 @@ export default class U2Chart extends HTMLElement {
             options.scales.x.border.display = false;
             options.scales.y.border.display = false;
         }
-        if (type === 'pie' || type === 'doughnut') {
-            options.scales = undefined;
-        }
+        if (type === 'pie' || type === 'doughnut') options.scales = undefined;
 
         try {
             const engineModule = await import(`./engines/${engine}.js`);
@@ -136,12 +133,8 @@ function extractTableData(table) {
 
     const data = trs.map(row => {
         const cells = [...row.children];
-        if (hasRowHeaders) {
-            rowHeaders.push(cells.shift().textContent.trim());
-        } else {
-            rowHeaders.push('Row ' + (rowHeaders.length + 1));
-        }
-        return cells.map(cell => parseFloat(cell.textContent.trim()));
+        rowHeaders.push(hasRowHeaders ? cells.shift().textContent.trim() : 'Row ' + (rowHeaders.length + 1));
+        return cells.map(cell => parseFloat(cell.textContent));
     });
 
     if (headTr) {
@@ -156,12 +149,9 @@ function extractTableData(table) {
 
 
 function extractDLData(dl) {
-    let dts = [...dl.querySelectorAll('dt')];
-    let dds = [...dl.querySelectorAll('dd')];
-    let rows = dts.map(dt => dt.textContent.trim());
-    let cols = [''];
-    let data = dds.map(dd => [parseFloat(dd.textContent.trim())]);
-    return { cols, rows, data };
+    const rows = [...dl.querySelectorAll('dt')].map(dt => dt.textContent.trim());
+    const data = [...dl.querySelectorAll('dd')].map(dd => [parseFloat(dd.textContent)]);
+    return { cols: [''], rows, data };
 }
 
 

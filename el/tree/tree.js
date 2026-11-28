@@ -114,9 +114,7 @@ export default class U2Tree extends HTMLElement {
         this.style.setProperty('--level', myLevel);
 
         // slot subnodes
-        for (const child of this.children) {
-            child.tagName === this.tagName && child.setAttribute('slot', 'children');
-        }
+        for (const child of this.children) if (child.tagName === this.tagName) child.setAttribute('slot', 'children');
         this.role = root === this ? 'tree' : 'treeitem';
 
         // make it selectable if its the root and no other is selected
@@ -183,9 +181,7 @@ export default class U2Tree extends HTMLElement {
                 promise.then(data => {
                     this.ariaLive = null;
                     this.ariaBusy = null;
-                    setTimeout(()=>{ // make unexpandable if no children
-                        !this.items().length && this.removeAttribute('aria-expanded');
-                    },100);
+                    setTimeout(() => !this.items().length && this.removeAttribute('aria-expanded'), 100); // make unexpandable if no children
                 }).catch(data=>{
                     this.ariaBusy = null; // allow retry
                     console.warn('todo: u2-tree: failed to load', data);
@@ -198,14 +194,13 @@ export default class U2Tree extends HTMLElement {
     }
 
     select(){
-        let old = this.root()._selected;
-        if (old) old.ariaSelected = false;
+        const root = this.root();
+        if (root._selected) root._selected.ariaSelected = false;
         this.ariaSelected = true;
-        this.root()._selected = this;
+        root._selected = this;
     }
     _select(){ // like selected but also fires event
-        const event = new CustomEvent('u2-tree-select', {bubbles: true});
-        this.dispatchEvent(event);
+        this.dispatchEvent(new CustomEvent('u2-tree-select', {bubbles: true}));
         this.select();
     }
 
@@ -213,11 +208,11 @@ export default class U2Tree extends HTMLElement {
         return this.root()._activeElement;
     }
     set activeElement(el){
-        const old = this.root()._activeElement;
-        if (old) old.row.tabIndex = -1;
+        const root = this.root();
+        if (root._activeElement) root._activeElement.row.tabIndex = -1;
         el.row.tabIndex = 0;
         el.row.focus();
-        this.root()._activeElement = el;
+        root._activeElement = el;
     }
     setFocus() {
         this.activeElement = this;

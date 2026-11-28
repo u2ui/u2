@@ -15,9 +15,7 @@ const observer = new SelectorObserver({
         setStates(el, {active, inactive: !active, success: false, error: false});
 
 
-        if ('hidden' in behavior) {
-            el.hidden = behavior.hidden(el);
-        }
+        if ('hidden' in behavior) el.hidden = behavior.hidden(el);
         
         if (behavior.text) {
             const textEl = el.innerHTML ? el.querySelector('.-text') : el;
@@ -63,12 +61,10 @@ export function register(name, fn) {
 
 
 register('close',{
-    init: (el) => {
-    },
     action: (e, el) => {
         const target = el.closest('dialog,[popover]');
-        target.close?.();
-        target.hidePopover?.();
+        target?.close?.();
+        target?.hidePopover?.();
     },
     text: {
         de: 'Schließen',
@@ -80,8 +76,6 @@ register('close',{
 });
 
 register('share',{
-    init: (el) => {
-    },
     action: (e, el) => {
         const data = {
             title: el.dataset.title || document.title,
@@ -101,23 +95,17 @@ register('share',{
 
 
 register('once',{
-    init: (el) => {},
     action: (e, el) => {
-        const id = el.id;
-        localStorage.setItem('u2-behavior-once-'+id, true);
+        localStorage.setItem('u2-behavior-once-'+el.id, true);
         el.hidden = true;
     },
     hidden(el){
-        const id = el.id;
-        return localStorage.getItem('u2-behavior-once-'+id);
+        return localStorage.getItem('u2-behavior-once-'+el.id);
     }
 });
 
 register('print',{
-    init: (el) => {},
-    action: (e, el) => {
-        window.print();
-    },
+    action: () => window.print(),
     text: {
         de: 'Drucken',
         en: 'Print',
@@ -152,16 +140,10 @@ register('webapp.install',{
 });
 
 register('fullscreen.toggle',{
-    init: (el) => {
-        return !!document.fullscreenElement;
-    },
+    init: () => !!document.fullscreenElement,
     async action(e, el){
         const state = document.fullscreenElement;
-        if (state) {
-            await document.exitFullscreen();
-        } else {
-            await el.parentElement.requestFullscreen();
-        }
+        state ? await document.exitFullscreen() : await el.parentElement.requestFullscreen();
         return !state;
     },
     text: {
@@ -202,10 +184,8 @@ register('darkmode.toggle',{
 
 register('scroll', {
     init: (el) => {
-        const checkScroll = () => {
-            el.hidden = window.scrollY < innerHeight / 2;
-        };
-        addEventListener('scroll', checkScroll);
+        const checkScroll = () => el.hidden = window.scrollY < innerHeight / 2;
+        addEventListener('scroll', checkScroll, {passive: true});
         checkScroll();
     },
     action: (e, el) => {

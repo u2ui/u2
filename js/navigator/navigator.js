@@ -76,9 +76,7 @@ class PersistentStorage {
         localStorage.setItem(`router:${url}`, JSON.stringify(data));
         this.cleanup();
       } catch (error) {
-        if (error.name === 'QuotaExceededError') {
-          this.cleanup(true);
-        }
+        if (error.name === 'QuotaExceededError') this.cleanup(true);
       }
       return;
     }
@@ -106,9 +104,7 @@ class PersistentStorage {
     for (const key of keys) {
       try {
         const item = JSON.parse(localStorage.getItem(key));
-        if (force || now - item.timestamp > CONFIG.cacheDuration) {
-          localStorage.removeItem(key);
-        }
+        if (force || now - item.timestamp > CONFIG.cacheDuration) localStorage.removeItem(key);
       } catch {
         localStorage.removeItem(key);
       }
@@ -120,9 +116,7 @@ class PersistentStorage {
 class Morph {
   static morph(oldNode, newNode) {
     if (oldNode.nodeType === Node.TEXT_NODE) {
-      if (oldNode.nodeValue !== newNode.nodeValue) {
-        oldNode.nodeValue = newNode.nodeValue;
-      }
+      if (oldNode.nodeValue !== newNode.nodeValue) oldNode.nodeValue = newNode.nodeValue;
       return;
     }
     this.#morphAttributes(oldNode, newNode);
@@ -153,17 +147,9 @@ class Morph {
       const oldChild = oldChildren[i];
       const newChild = newChildren[i];
       
-      if (!oldChild && newChild) {
-        oldNode.append(newChild);
-      } else if (oldChild && !newChild) {
-        oldChild.remove();
-      } else if (oldChild && newChild) {
-        if (this.#shouldReplace(oldChild, newChild)) {
-          oldChild.replaceWith(newChild);
-        } else {
-          this.morph(oldChild, newChild);
-        }
-      }
+      if (!oldChild && newChild) oldNode.append(newChild);
+      else if (oldChild && !newChild) oldChild.remove();
+      else if (oldChild && newChild) this.#shouldReplace(oldChild, newChild) ? oldChild.replaceWith(newChild) : this.morph(oldChild, newChild);
     }
   }
   static #shouldReplace(oldNode, newNode) {
@@ -274,9 +260,7 @@ async function loadPage(url, shouldUpdateHistory = true) {
     const parser = new DOMParser();
     const newDoc = parser.parseFromString(html, 'text/html');
     
-    if ('startViewTransition' in document) {
-        document.startViewTransition(() => morphDocument(newDoc));
-    } else morphDocument(newDoc);
+    document.startViewTransition ? document.startViewTransition(() => morphDocument(newDoc)) : morphDocument(newDoc);
     
     if (shouldUpdateHistory) history.pushState({ url }, '', url);
 

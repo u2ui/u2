@@ -83,9 +83,8 @@ const alternativeCategories = {
 window.addEventListener('u2-cookiebanner-consent', ({ detail: { consent } }) => {
   setTimeout(() => { // needed for type=module?
     document.querySelectorAll('script[type="text/plain"]').forEach(script => {
-      let value = script.dataset.cookieconsent || script.dataset.uc || script.dataset.category;
+      const value = (script.dataset.cookieconsent || script.dataset.uc || script.dataset.category)?.toLowerCase();
       if (!value) return;
-      value = value.toLowerCase();
 
       const category = alternativeCategories[value];
       if (!category) {

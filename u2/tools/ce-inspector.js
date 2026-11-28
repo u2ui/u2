@@ -61,7 +61,6 @@ class CeInspector extends HTMLElement {
                         <tbody id=cssParts>
                     </table>
                 </form>
-                </div>
                 <h2>Events</h2>
                 <div id=events></div>
             </u2-tabs>
@@ -163,7 +162,7 @@ class CeInspector extends HTMLElement {
         //     if (datalist) tr.lastElementChild.appendChild(datalist);
         // });
 
-        attributesEl.closest('u2-tabs > *').previousElementSibling.hidden = !attributes?.length;
+        attributesEl.closest('u2-tabs > *').previousElementSibling.hidden = !attrSchemes?.length;
 
         /* css */
         const cssPropertiesEl = shadow.getElementById('cssProperties');

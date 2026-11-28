@@ -16,15 +16,15 @@ export async function render(container, data, config) {
 
     // Map types to module functions
     const typeMap = {
-        'line': line(),
-        'bar': bar(),
-        'pie': pie(),
-        'doughnut': donut()
+        'line': line,
+        'bar': bar,
+        'pie': pie,
+        'doughnut': donut
     };
 
     // Default to line if type not found, but we need to make sure 'line()' is available.
     // If 'type' is unknown, we might default to line.
-    const chartTypeModule = typeMap[type] || line();
+    const chartTypeModule = (typeMap[type] || line)();
 
     // For doughnut, billboard uses 'donut' as type string usually, but let's check.
     // Actually, when using modules, we pass the module execution result to the 'type' property?

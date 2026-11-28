@@ -108,7 +108,7 @@ function dirTemplateToUrl(dir, name) {
     const upperWords = nextWord?.[0] === 'N';
     if (upperFirst) fileName = fileName.replace(/^([a-z])/, g => g[0].toUpperCase()); // first upper
     if (upperWords) fileName = fileName.replace(/-([a-z])/g, g => g[1].toUpperCase()); // camel-case
-    if (between !== '-') fileName = fileName.replace(/-/g, between);
+    if (between !== '-') fileName = fileName.replaceAll('-', between);
 
     return new URL(prefix + fileName + suffix, location.href);
 }
@@ -117,15 +117,10 @@ async function loadSvgString(url) {
     const hash = url.hash.substring(1);
 
     // internal element
-    if (url.origin === location.origin && url.pathname === location.pathname) { // svg on the same document
-        if (hash) {
-            const element = document.getElementById(hash);
-            if (element) {
-                return element.outerHTML;
-            } else {
-                throw new Error("Element with id " + hash + " not found in the document");
-            }
-        }
+    if (hash && url.origin === location.origin && url.pathname === location.pathname) { // svg on the same document
+        const element = document.getElementById(hash);
+        if (element) return element.outerHTML;
+        throw new Error("Element with id " + hash + " not found in the document");
     }
 
     // external element
@@ -134,11 +129,8 @@ async function loadSvgString(url) {
         const svgDoc = await (cachedDocuments[url] ??= loadCached(url).then(svg =>
             new DOMParser().parseFromString(svg, "image/svg+xml")));
         const element = svgDoc.getElementById(hash);
-        if (element) {
-            return element.outerHTML;
-        } else {
-            throw new Error("Element with id " + hash + " not found in the document");
-        }
+        if (element) return element.outerHTML;
+        throw new Error("Element with id " + hash + " not found in the document");
     }
 
     // external document
@@ -148,7 +140,7 @@ async function loadSvgString(url) {
 const cachedRequests = {};
 const cachedDocuments = {};
 
-async function loadCached(url) {
+function loadCached(url) {
     return cachedRequests[url] ??= fetch(url, {cache: "force-cache"}).then(res => {
         if (!res.ok) throw new Error(`Failed to fetch icon ${url}: ${res.status} ${res.statusText}`);
         return res.text();

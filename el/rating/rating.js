@@ -18,8 +18,7 @@ const style = `
         display:block;
         --size:1.2em;
     }
-    & > .active { color:inherit; }
-    & > .preview { color:inherit; }
+    & > .active, & > .preview { color:inherit; }
     & > :is(:hover,:focus) { transform:scale(1.2); outline:none; }
 }
 `;
@@ -62,10 +61,9 @@ export default class U2Rating extends U2Element {
             this.value = this.#stars().indexOf(item) + 1;
         });
         this.addEventListener('keydown', (e)=>{
-            const value = {
-                ArrowRight: () => Math.min(this.value + 1, this.#stars().length),
-                ArrowLeft: () => Math.max(this.value - 1, 1),
-            }[e.key]?.();
+            const value = e.key === 'ArrowRight' ? Math.min(this.value + 1, this.#stars().length)
+                : e.key === 'ArrowLeft' ? Math.max(this.value - 1, 1)
+                : null;
             this.#stars().forEach(star => star.classList.remove('preview'));
             if (value!=null) this.value = value;
         });
@@ -93,9 +91,7 @@ export default class U2Rating extends U2Element {
         return this.#value;
     }
     set value(value) {
-        this.#stars().forEach((star, i)=>{
-            star.classList.toggle('active', i < value);
-        });
+        this.#stars().forEach((star, i) => star.classList.toggle('active', i < value));
         this._internals.ariaValueNow = value;
         this.#value = parseFloat(value);
         this._internals.setFormValue(value);
@@ -110,11 +106,8 @@ export default class U2Rating extends U2Element {
     static observedAttributes = ['value', 'icon', 'max'];
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue === newValue) return;
-        if (name === 'value') {
-            this.value = newValue;
-        } else {
-            this.render();
-        }
+        if (name === 'value') this.value = newValue;
+        else this.render();
     }
 }
 

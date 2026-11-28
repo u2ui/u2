@@ -6,9 +6,7 @@ export async function register(options = {}) {
         // Warten auf load event
         if (document.readyState !== 'complete') {
             console.log('not "load" yet, wait for register')
-            await new Promise(resolve => {
-                addEventListener('load', resolve, { once: true });
-            });
+            await new Promise(resolve => addEventListener('load', resolve, { once: true }));
         }
 
         const registration = await navigator.serviceWorker.register('../sw.js', { // '.. ???? im selben verzeichnis'
@@ -20,9 +18,7 @@ export async function register(options = {}) {
         console.log('   Active:', registration.active?.state);
 
 
-        navigator.serviceWorker.ready.then(async (readyReg) => {
-            await registration.navigationPreload.enable();
-        });
+        navigator.serviceWorker.ready.then(() => registration.navigationPreload.enable());
 
         registration.update(); // Updates checken, macht das sinn?
         setInterval(() => registration.update(), 30 * 1000); // regelmässsig
@@ -76,9 +72,7 @@ export function onCacheServed(callback) {
   if (!('serviceWorker' in navigator)) return;
 
   navigator.serviceWorker.addEventListener('message', (event) => {
-    if (event.data?.type === 'CACHE_SERVED') {
-      callback(event.data);
-    }
+    if (event.data?.type === 'CACHE_SERVED') callback(event.data);
   });
 }
 

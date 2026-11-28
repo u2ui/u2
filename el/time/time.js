@@ -56,9 +56,7 @@ export default class U2Time extends HTMLElement {
             content = this.__type === 'relative' ? relativeData.show : absoluteData.show;
             title = this.__type === 'relative' ? absoluteData.show : relativeData.show;
             clearTimeout(this.__timer);
-            if (relativeData.nextUpdateIn < 2 * 60 * 60 * 1000) {
-                this.__timer = setTimeout(() => this.render(), relativeData.nextUpdateIn + 100);
-            }
+            if (relativeData.nextUpdateIn < 2 * 60 * 60 * 1000) this.__timer = setTimeout(() => this.render(), relativeData.nextUpdateIn + 100);
         }
         this._timeEl.setAttribute('datetime', this.getAttribute('datetime'));
         this._timeEl.setAttribute('title', title);

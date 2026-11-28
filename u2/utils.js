@@ -7,8 +7,8 @@ export function importCss(url, options={}) {
         const link = _importCss(url, options);
         if (link==null) resolve({available:true}); // already loaded
         else {
-            link.onload  = e=>resolve({available:false}); // todo, remove eventlisteners?
-            link.onerror = e=>reject();
+            link.onload  = () => resolve({available:false}); // todo, remove eventlisteners?
+            link.onerror = () => reject();
         }
     });
 }

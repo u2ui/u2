@@ -22,9 +22,7 @@ export default class U2Copy extends HTMLElement {
                 this.updateContent();
             });
         }
-        if (name === 'sync') {
-            this.sync = newValue!==null;
-        }
+        if (name === 'sync') this.sync = newValue !== null;
     }
     set sync(value) {
         if (!value) {
@@ -70,12 +68,9 @@ export default class U2Copy extends HTMLElement {
                 idMap.set(id, newId);
                 element.id = newId;
             });
-            const references = fragment.querySelectorAll('[for]');
-            references.forEach(element => {
-                const id = element.getAttribute('for');
-                if (idMap.has(id)) {
-                    element.setAttribute('for', idMap.get(id));
-                }
+            fragment.querySelectorAll('[for]').forEach(element => {
+                const newId = idMap.get(element.getAttribute('for'));
+                if (newId) element.setAttribute('for', newId);
             });
 
             this.appendChild(fragment);

@@ -7,9 +7,7 @@ export default class U2Skeleton extends HTMLElement {
     render() {
         const template = this.getAttribute('template');
         if (template == null) return;
-        requestAnimationFrame(() => {
-            this.innerHTML = templateToHtml(template)
-        });
+        requestAnimationFrame(() => this.innerHTML = templateToHtml(template));
     }
     static observedAttributes = ['template'];
     attributeChangedCallback(name, oldValue, newValue) {

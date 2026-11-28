@@ -89,16 +89,12 @@ class SelectHandler extends TypeHandler {
         // Lade Remote-Daten (mit Cache)
 
         if (src) {
-            try {
-                if (selectCache.has(src)) options = selectCache.get(src);
-                else {
-                    fetch(src).then(r => r.json()).then(options => {
-                        selectCache.set(src, options);
-                        this.renderOptions(options);
-                    });
-                }
-            } catch (err) {
-                console.warn('u2-input: Failed to load remote options, falling back to local', err);
+            if (selectCache.has(src)) options = selectCache.get(src);
+            else {
+                fetch(src).then(r => r.json()).then(options => {
+                    selectCache.set(src, options);
+                    this.renderOptions(options);
+                }).catch(err => console.warn('u2-input: Failed to load remote options, falling back to local', err));
             }
         }
 
@@ -185,9 +181,7 @@ class PasswordHandler extends TypeHandler {
         this.visibilityBtn.querySelector('u2-ico').setAttribute('icon', icon);
         this.realInput.type = type;
 
-        if (!visible) {
-            this.timer = setTimeout(() => this.toggleVisibility(), 20000);
-        }
+        if (!visible) this.timer = setTimeout(() => this.toggleVisibility(), 20000);
     }
 
     cleanup() {
@@ -573,11 +567,8 @@ export default class U2Input extends U2Element {
     attributeChangedCallback(name, old, val) {
         if (old === val) return;
 
-        if (name === 'type') {
-            this._updateType(val);
-        } else if (name === 'value') {
-            if (this.realInput) this.realInput.defaultValue = val;
-        }
+        if (name === 'type') this._updateType(val);
+        else if (name === 'value' && this.realInput) this.realInput.defaultValue = val;
     }
 
     formStateRestoreCallback(state) {

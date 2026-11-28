@@ -84,13 +84,17 @@ function easeOutCubic(x) {
     return 1 - (1 - x) ** 3;
 }
 
+const formatters = new Map(); // creating a formatter per frame is expensive
 function format(el, val){
-    return new Intl.NumberFormat(undefined, {
+    const digits = el._minDigits || 0;
+    const key = digits + (el.noGrouping ? '-' : '+');
+    if (!formatters.has(key)) formatters.set(key, new Intl.NumberFormat(undefined, {
         style: 'decimal',
-        minimumFractionDigits: el._minDigits || 0,
-        maximumFractionDigits: el._minDigits || 0,
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
         useGrouping: !el.noGrouping
-    }).format(val);
+    }));
+    return formatters.get(key).format(val);
 }
 
 customElements.get('u2-counter') || customElements.define('u2-counter', U2Counter)
